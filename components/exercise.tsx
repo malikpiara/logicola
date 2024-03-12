@@ -21,9 +21,9 @@ const Exercise: React.FC<ExerciseProps> = ({
     const nextQuestionIdx = questionIdx + 2;
 
     if (chapter === 6.1) {
-      return `/logicola/logic/basic-propositional-logic/easier-translations/${nextQuestionIdx}`;
+      return `/logic/basic-propositional-logic/easier-translations/${nextQuestionIdx}`;
     } else {
-      return `/logicola/logic/basic-propositional-logic/harder-translations/${nextQuestionIdx}`;
+      return `/logic/basic-propositional-logic/harder-translations/${nextQuestionIdx}`;
     }
   };
 
@@ -45,7 +45,7 @@ const Exercise: React.FC<ExerciseProps> = ({
       <div className='mx-auto w-full max-w-screen-xl p-4'>
         <div className='md:flex flex-col md:justify-between gap-5'>
           <div className='flex flex-col sm:gap-72 self-center mb-6 text-lg'>
-            <div>{question.prompt}</div>
+            <div className='text-gray-800'>{question.prompt}</div>
           </div>
 
           {question.options.map((option: any) => {

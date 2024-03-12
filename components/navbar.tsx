@@ -18,7 +18,7 @@ const Navbar = () => {
           className='flex items-center space-x-3 rtl:space-x-reverse'
         >
           <Logo />
-          <span className='self-center text-2xl font-semibold whitespace-nowrap'>
+          <span className='self-center text-2xl font-semibold text-gray-800 whitespace-nowrap'>
             LogiCola
           </span>
           <span className='bg-stone-100 text-stone-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md'>
@@ -80,7 +80,7 @@ const Navbar = () => {
 
             <li>
               <a
-                href='/logicola/answers'
+                href='/answers'
                 className='block py-2 px-3 text-black opacity-50 rounded hover:bg-stone-200 hover:opacity-100 md:hover:bg-transparent md:hover:text-primary md:p-0'
               >
                 Answers
@@ -108,7 +108,7 @@ const Navbar = () => {
           <ul>
             <li>
               <a
-                href='/logicola/logic/basic-propositional-logic'
+                href='/logic/basic-propositional-logic'
                 className='block p-3 rounded-lg hover:bg-stone-200'
               >
                 <div className='font-semibold'>Basic Propositional Logic</div>
@@ -117,7 +117,7 @@ const Navbar = () => {
             </li>
             <li>
               <a
-                href='/logicola/logic'
+                href='/logic'
                 className='block p-3 rounded-lg hover:bg-stone-200 opacity-30 cursor-not-allowed'
               >
                 <div className='font-semibold'>Quantificational Logic</div>
@@ -128,7 +128,7 @@ const Navbar = () => {
           <ul>
             <li>
               <a
-                href='/logicola/logic'
+                href='/logic'
                 className='block p-3 rounded-lg hover:bg-stone-200 opacity-30 cursor-not-allowed'
               >
                 <div className='font-semibold'>Propositional Proofs</div>
@@ -137,7 +137,7 @@ const Navbar = () => {
             </li>
             <li>
               <a
-                href='/logicola/logic'
+                href='/logic'
                 className='block p-3 rounded-lg hover:bg-stone-200 opacity-30 cursor-not-allowed'
               >
                 <div className='font-semibold'>Relations and Identity</div>

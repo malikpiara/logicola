@@ -9,7 +9,7 @@ const TableOfContent = ({ chapter }: TableOfContentProps) => {
     <div className='max-w-7xl p-6 bg-white border border-stone-200 rounded-lg mb-6'>
       {chapter === 6 ? (
         <>
-          <Link href='/logicola/logic/basic-propositional-logic/'>
+          <Link href='logic/basic-propositional-logic/'>
             <h3 className='mb-2 text-xl font-bold tracking-tight text-stone-900 hover:text-primary'>
               Chapter 6: Basic Propositional Logic
             </h3>
@@ -21,7 +21,7 @@ const TableOfContent = ({ chapter }: TableOfContentProps) => {
                 <div>
                   <ul className='text-stone-600 font-medium'>
                     <Link
-                      href='/logicola/logic/basic-propositional-logic'
+                      href='logic/basic-propositional-logic'
                       className='hover:bg-stone-200'
                     >
                       <li className='mb-1 hover:bg-stone-200 p-3 rounded-md'>
@@ -63,7 +63,7 @@ const TableOfContent = ({ chapter }: TableOfContentProps) => {
                 <div>
                   <ul className='text-stone-500 font-medium'>
                     <li className='mb-1 hover:bg-stone-200 p-3 rounded-md'>
-                      <Link href='/logicola/logic/basic-propositional-logic'>
+                      <Link href='/logic/basic-propositional-logic'>
                         Harder Translations
                       </Link>
                     </li>

@@ -8,7 +8,7 @@ const subChapters = [
       description:
         'Translating english sentences into well-formed formula (wff)',
     },
-    path: '/logicola/logic/basic-propositional-logic/easier-translations/1',
+    path: '/logic/basic-propositional-logic/easier-translations/1',
   },
   {
     id: 6.8,
@@ -17,7 +17,7 @@ const subChapters = [
       description:
         'Translating english sentences into well-formed formula (wff)',
     },
-    path: '/logicola/logic/basic-propositional-logic/harder-translations/1',
+    path: '/logic/basic-propositional-logic/harder-translations/1',
   },
 ];
 

@@ -19,7 +19,7 @@ export default function Option({
   const className = classNames(
     'w-full ps-4 text-primary flex items-center border rounded-lg',
     !isActive && 'border-stone-200',
-    showSolution && (isCorrect ? 'bg-green-100' : 'text-red-400'),
+    showSolution && (isCorrect ? 'bg-green-100' : 'border-rose-200'),
     !showSolution && isActive && 'border-primary'
   );
 
