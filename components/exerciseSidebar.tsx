@@ -82,7 +82,7 @@ const ExerciseSidebar: React.FC<ExerciseSidebarProps> = ({
                       href={`${path}${i + 1}`}
                       className={`flex flex-col p-2 rounded-lg group ${
                         isActive
-                          ? 'bg-logicolaPrimary text-white'
+                          ? 'bg-primary text-white'
                           : 'text-stone-700 hover:bg-stone-200 opacity-80'
                       }`}
                     >

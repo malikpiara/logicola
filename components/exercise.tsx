@@ -82,7 +82,7 @@ const Exercise: React.FC<ExerciseProps> = ({
           className={`text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ${
             selectedOptionId == null
               ? ' bg-stone-200 cursor-not-allowed'
-              : 'bg-logicolaPrimary hover:opacity-90'
+              : 'bg-primary hover:opacity-90'
           }`}
         >
           Check answer
@@ -94,7 +94,7 @@ const Exercise: React.FC<ExerciseProps> = ({
           <Link href={getNextHref()}>
             <button
               type='button'
-              className={`text-logicolaPrimary rounded-lg text-sm font-semibold px-5 py-2.5 me-2 mb-2 border border-logicolaPrimary hover:opacity-90 `}
+              className={`text-primary rounded-lg text-sm font-semibold px-5 py-2.5 me-2 mb-2 border border-primary hover:opacity-90 `}
             >
               Next
             </button>

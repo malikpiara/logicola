@@ -57,7 +57,7 @@ const Navbar = () => {
                 onMouseEnter={toggleMenu}
                 id='mega-menu-full-dropdown-button'
                 data-collapse-toggle='mega-menu-full-dropdown'
-                className='flex items-center justify-between w-full py-2 px-3 text-black opacity-50 rounded md:w-auto hover:bg-stone-200 md:hover:bg-transparent md:border-0 md:hover:text-logicolaPrimary hover:opacity-100 md:p-0'
+                className='flex items-center justify-between w-full py-2 px-3 text-black opacity-50 rounded md:w-auto hover:bg-stone-200 md:hover:bg-transparent md:border-0 md:hover:text-primary hover:opacity-100 md:p-0'
               >
                 Chapters{' '}
                 <svg
@@ -81,7 +81,7 @@ const Navbar = () => {
             <li>
               <a
                 href='/logicola/answers'
-                className='block py-2 px-3 text-black opacity-50 rounded hover:bg-stone-200 hover:opacity-100 md:hover:bg-transparent md:hover:text-logicolaPrimary md:p-0'
+                className='block py-2 px-3 text-black opacity-50 rounded hover:bg-stone-200 hover:opacity-100 md:hover:bg-transparent md:hover:text-primary md:p-0'
               >
                 Answers
               </a>
@@ -89,7 +89,7 @@ const Navbar = () => {
             <li>
               <a
                 href='/contact'
-                className='block py-2 px-3 text-black opacity-50 rounded hover:bg-stone-200 hover:opacity-100 md:hover:bg-transparent md:hover:text-logicolaPrimary md:p-0'
+                className='block py-2 px-3 text-black opacity-50 rounded hover:bg-stone-200 hover:opacity-100 md:hover:bg-transparent md:hover:text-primary md:p-0'
               >
                 Contact
               </a>

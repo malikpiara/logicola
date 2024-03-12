@@ -10,7 +10,7 @@ const TableOfContent = ({ chapter }: TableOfContentProps) => {
       {chapter === 6 ? (
         <>
           <Link href='/logicola/logic/basic-propositional-logic/'>
-            <h3 className='mb-2 text-xl font-bold tracking-tight text-stone-900 hover:text-logicolaPrimary'>
+            <h3 className='mb-2 text-xl font-bold tracking-tight text-stone-900 hover:text-primary'>
               Chapter 6: Basic Propositional Logic
             </h3>
           </Link>

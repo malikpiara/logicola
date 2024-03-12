@@ -17,10 +17,10 @@ export default function Option({
   onClick,
 }: OptionProps) {
   const className = classNames(
-    'w-full ps-4 text-logicolaPrimary flex items-center border rounded-lg',
+    'w-full ps-4 text-primary flex items-center border rounded-lg',
     !isActive && 'border-stone-200',
     showSolution && (isCorrect ? 'bg-green-100' : 'text-red-400'),
-    !showSolution && isActive && 'border-LogicolaPrimary'
+    !showSolution && isActive && 'border-primary'
   );
 
   return (
