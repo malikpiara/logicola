@@ -1,5 +1,25 @@
 const chapters = [
   {
+    id: 3,
+    title: 'Easier Translations',
+    questions: [
+      {
+        id: '3.1',
+        prompt: 'Science is that cold and empty worship of experiments.',
+        options: [
+          { id: 0, label: 'Too broad' },
+          { id: 1, label: 'Too narrow' },
+          { id: 2, label: 'Circular' },
+          { id: 3, label: 'Uses poorly understood terms' },
+          { id: 4, label: 'Poor match in vagueness' },
+          { id: 5, label: 'Poor match in emotional tone' },
+          { id: 6, label: 'Has non-essential properties' },
+        ],
+        correctId: 1,
+      },
+    ],
+  },
+  {
     id: 6.1,
     title: 'Easier Translations',
     questions: [

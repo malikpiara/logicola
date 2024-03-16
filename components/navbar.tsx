@@ -13,10 +13,7 @@ const Navbar = () => {
   return (
     <nav className='bg-white border-stone-200'>
       <div className='flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4'>
-        <a
-          href='/logicola'
-          className='flex items-center space-x-3 rtl:space-x-reverse'
-        >
+        <a href='/' className='flex items-center space-x-3 rtl:space-x-reverse'>
           <Logo />
           <span className='self-center text-2xl font-semibold text-gray-800 whitespace-nowrap'>
             LogiCola

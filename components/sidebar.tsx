@@ -33,7 +33,7 @@ export function Sidebar() {
           <ul className='space-y-2 font-medium'>
             <li>
               <a
-                href='/logicola/logic'
+                href='/logic'
                 className='flex items-center p-2 text-stone-900 rounded-lg  hover:bg-stone-200 group'
               >
                 <svg
@@ -50,7 +50,18 @@ export function Sidebar() {
             </li>
             <li>
               <a
-                href='/logicola/logic/basic-propositional-logic'
+                href='/logic/informal/definitions'
+                className='flex flex-col p-2 text-stone-900 rounded-lg hover:bg-stone-200 group'
+              >
+                <div className='text-xs'>CHAPTER 3</div>
+                <span className='flex-1 whitespace-nowrap'>
+                  Meaning and Definitions
+                </span>
+              </a>
+            </li>
+            <li>
+              <a
+                href='/logic/basic-propositional-logic'
                 className='flex flex-col p-2 text-stone-900 rounded-lg hover:bg-stone-200 group'
               >
                 <div className='text-xs'>CHAPTER 6</div>
