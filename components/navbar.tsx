@@ -13,7 +13,10 @@ const Navbar = () => {
   return (
     <nav className='bg-white border-stone-200'>
       <div className='flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4'>
-        <a href='/' className='flex items-center space-x-3 rtl:space-x-reverse'>
+        <Link
+          href='/'
+          className='flex items-center space-x-3 rtl:space-x-reverse'
+        >
           <Logo />
           <span className='self-center text-2xl font-semibold text-gray-800 whitespace-nowrap'>
             LogiCola
@@ -21,7 +24,7 @@ const Navbar = () => {
           <span className='bg-stone-100 text-stone-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md'>
             Beta
           </span>
-        </a>
+        </Link>
 
         <button
           type='button'
@@ -76,20 +79,20 @@ const Navbar = () => {
             </li>
 
             <li>
-              <a
+              <Link
                 href='/answers'
                 className='block py-2 px-3 text-black opacity-50 rounded hover:bg-stone-200 hover:opacity-100 md:hover:bg-transparent md:hover:text-primary md:p-0'
               >
                 Answers
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href='/contact'
                 className='block py-2 px-3 text-black opacity-50 rounded hover:bg-stone-200 hover:opacity-100 md:hover:bg-transparent md:hover:text-primary md:p-0'
               >
                 Contact
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -104,42 +107,42 @@ const Navbar = () => {
         <div className='grid max-w-screen-xl px-4 py-5 mx-auto text-stone-900 sm:grid-cols-2 md:px-6 shadow-sm'>
           <ul>
             <li>
-              <a
+              <Link
                 href='/logic/basic-propositional-logic'
                 className='block p-3 rounded-lg hover:bg-stone-200'
               >
                 <div className='font-semibold'>Basic Propositional Logic</div>
                 <span className='text-sm text-stone-500'>Chapter 6</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href='/logic'
                 className='block p-3 rounded-lg hover:bg-stone-200 opacity-30 cursor-not-allowed'
               >
                 <div className='font-semibold'>Quantificational Logic</div>
                 <span className='text-sm text-stone-500'>Chapter 8</span>
-              </a>
+              </Link>
             </li>
           </ul>
           <ul>
             <li>
-              <a
+              <Link
                 href='/logic'
                 className='block p-3 rounded-lg hover:bg-stone-200 opacity-30 cursor-not-allowed'
               >
                 <div className='font-semibold'>Propositional Proofs</div>
                 <span className='text-sm text-stone-500'>Chapter 7</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href='/logic'
                 className='block p-3 rounded-lg hover:bg-stone-200 opacity-30 cursor-not-allowed'
               >
                 <div className='font-semibold'>Relations and Identity</div>
                 <span className='text-sm text-stone-500'>Chapter 9</span>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

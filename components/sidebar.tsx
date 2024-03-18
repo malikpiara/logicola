@@ -1,3 +1,10 @@
+import Link from 'next/link';
+
+/*
+I want to abstract the 'href' part. Instead of writing
+the url manually, I'll do so dynamically based on the content I have.
+*/
+
 export function Sidebar() {
   return (
     <>
@@ -32,7 +39,7 @@ export function Sidebar() {
         <div className='h-full w-full px-4 py-4 overflow-y-auto bg-stone-50'>
           <ul className='space-y-2 font-medium'>
             <li>
-              <a
+              <Link
                 href='/logic'
                 className='flex items-center p-2 text-stone-900 rounded-lg  hover:bg-stone-200 group'
               >
@@ -46,10 +53,10 @@ export function Sidebar() {
                   <path d='M19.9 6.58c0-.009 0-.019-.006-.027l-2-4A1 1 0 0 0 17 2h-4a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v9a1 1 0 0 0 1 1h.3c-.03.165-.047.332-.051.5a3.25 3.25 0 1 0 6.5 0A3.173 3.173 0 0 0 7.7 12h4.6c-.03.165-.047.332-.051.5a3.25 3.25 0 1 0 6.5 0 3.177 3.177 0 0 0-.049-.5h.3a1 1 0 0 0 1-1V7a.99.99 0 0 0-.1-.42ZM16.382 4l1 2H13V4h3.382ZM4.5 13.75a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Zm11 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Z' />
                 </svg>
                 <span className='ms-3'>Introduction to Logic</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href='/logic/informal/definitions'
                 className='flex flex-col p-2 text-stone-900 rounded-lg hover:bg-stone-200 group'
               >
@@ -57,10 +64,10 @@ export function Sidebar() {
                 <span className='flex-1 whitespace-nowrap'>
                   Meaning and Definitions
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href='/logic/basic-propositional-logic'
                 className='flex flex-col p-2 text-stone-900 rounded-lg hover:bg-stone-200 group'
               >
@@ -68,10 +75,10 @@ export function Sidebar() {
                 <span className='flex-1 whitespace-nowrap'>
                   Basic Propositional Logic
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href='#'
                 className='flex flex-col p-2 text-stone-700 rounded-lg  hover:bg-stone-200 opacity-30 cursor-not-allowed'
               >
@@ -79,10 +86,10 @@ export function Sidebar() {
                 <span className='flex-1 whitespace-nowrap'>
                   Propositional Proofs
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href='#'
                 className='flex flex-col p-2 text-stone-700 rounded-lg hover:bg-stone-200 opacity-30 cursor-not-allowed'
               >
@@ -90,10 +97,10 @@ export function Sidebar() {
                 <span className='flex-1 whitespace-nowrap'>
                   Quantificational Logic
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href='#'
                 className='flex flex-col p-2 text-stone-700 rounded-lg dark:text-white hover:bg-stone-200 opacity-30 cursor-not-allowed'
               >
@@ -101,7 +108,7 @@ export function Sidebar() {
                 <span className='flex-1 whitespace-nowrap'>
                   Relations and Identity
                 </span>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
