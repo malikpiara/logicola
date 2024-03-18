@@ -22,6 +22,9 @@ const Exercise: React.FC<ExerciseProps> = ({
 
     if (chapter === 6.1) {
       return `/logic/basic-propositional-logic/easier-translations/${nextQuestionIdx}`;
+    }
+    if (chapter === 3) {
+      return `/logic/informal/definitions/${nextQuestionIdx}`;
     } else {
       return `/logic/basic-propositional-logic/harder-translations/${nextQuestionIdx}`;
     }

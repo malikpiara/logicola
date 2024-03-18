@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import Logo from './logo';
+import { Roboto_Slab } from 'next/font/google';
 
 const Navbar = () => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);

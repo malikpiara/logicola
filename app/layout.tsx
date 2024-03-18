@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { Inter } from 'next/font/google';
+import { Inter, Roboto_Slab } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/navbar';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+  subsets: ['latin'],
+});
+//const roboto = Roboto_Slab({ weight: ['400', '700'], subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Logicola',
@@ -38,7 +40,7 @@ export default function RootLayout({
         className={`antialiased min-h-screen bg-white text-primary ${inter.className}`}
       >
         <Navbar />
-        <main className='flex'>{children}</main>
+        <main className={`flex`}>{children}</main>
       </body>
     </html>
   );
