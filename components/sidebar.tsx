@@ -57,7 +57,7 @@ export function Sidebar() {
             </li>
             <li>
               <Link
-                href='/informal/definitions'
+                href='/informal/definitions/1'
                 className='flex flex-col p-2 text-stone-900 rounded-lg hover:bg-stone-200 group'
               >
                 <div className='text-xs'>CHAPTER 3</div>

@@ -3,15 +3,18 @@ import React, { useState } from 'react';
 import Option from './option';
 import { chapters } from '@/content';
 import Link from 'next/link';
+import Prompt from './prompt';
 
 interface ExerciseProps {
   initialQuestionIdx: number;
   chapter: number;
+  showExerciseId: boolean;
 }
 
 const Exercise: React.FC<ExerciseProps> = ({
   initialQuestionIdx = 0,
   chapter = 1,
+  showExerciseId = true,
 }) => {
   const [questionIdx, setQuestionIdx] = useState(initialQuestionIdx);
   const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
@@ -42,14 +45,14 @@ const Exercise: React.FC<ExerciseProps> = ({
 
   return (
     <div className='max-w-7xl p-6 bg-white border border-stone-200 rounded-lg mb-6'>
-      <h3 className='mb-2 text-xl font-bold tracking-tight text-stone-900'>
-        {questionIdx + 1}.
-      </h3>
+      {showExerciseId && (
+        <h3 className='mb-2 text-xl font-bold tracking-tight text-stone-900'>
+          {questionIdx + 1}.
+        </h3>
+      )}
       <div className='mx-auto w-full max-w-screen-xl p-4'>
         <div className='md:flex flex-col md:justify-between gap-5'>
-          <div className='flex flex-col sm:gap-72 self-center mb-6 text-lg'>
-            <div className='text-gray-800'>{question.prompt}</div>
-          </div>
+          <Prompt value={question.prompt} />
 
           {question.options.map((option: any) => {
             return (
