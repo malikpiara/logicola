@@ -10,7 +10,11 @@ export default function EasierTranslations() {
           <h1 className='mb-6 text-3xl font-bold text-stone-900'>
             Quiz (6.1.a)
           </h1>
-          <Exercise chapter={6.1} initialQuestionIdx={0} />
+          <Exercise
+            chapter={6.1}
+            initialQuestionIdx={0}
+            showExerciseId={true}
+          />
         </div>
       </div>
     </>
