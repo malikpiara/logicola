@@ -13,17 +13,22 @@ export default function ExercisePage({
     <>
       <div className='flex w-full h-screen overflow-scroll'>
         <ExerciseSidebar
-          chapter={3}
-          path='/logic/informal/definitions/'
+          chapter={6.8}
+          path='/basic-propositional-logic/harder-translations/'
           isQuestionActive={(index) => {
-            return pathname === `/logic/informal/definitions/${index + 1}`;
+            return (
+              pathname ===
+              `/basic-propositional-logic/harder-translations/${index + 1}`
+            );
           }}
           initialQuestionIdx={0}
         />
         <div className='p-4 w-full'>
-          <h1 className='mb-6 text-3xl font-bold text-stone-900'>Quiz Q</h1>
+          <h1 className='mb-6 text-3xl font-bold text-stone-900'>
+            Quiz (6.8.a)
+          </h1>
           {/* We're subtracting 1 from the parameters because the index of the exercises starts at 0 */}
-          <Exercise chapter={3} initialQuestionIdx={params.exercise - 1} />
+          <Exercise chapter={6.8} initialQuestionIdx={params.exercise - 1} />
         </div>
       </div>
     </>

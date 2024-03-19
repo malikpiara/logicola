@@ -57,7 +57,7 @@ export function Sidebar() {
             </li>
             <li>
               <Link
-                href='/logic/informal/definitions'
+                href='/informal/definitions'
                 className='flex flex-col p-2 text-stone-900 rounded-lg hover:bg-stone-200 group'
               >
                 <div className='text-xs'>CHAPTER 3</div>
@@ -68,7 +68,7 @@ export function Sidebar() {
             </li>
             <li>
               <Link
-                href='/logic/basic-propositional-logic'
+                href='/basic-propositional-logic'
                 className='flex flex-col p-2 text-stone-900 rounded-lg hover:bg-stone-200 group'
               >
                 <div className='text-xs'>CHAPTER 6</div>

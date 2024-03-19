@@ -109,7 +109,7 @@ const Navbar = () => {
           <ul>
             <li>
               <Link
-                href='/logic/basic-propositional-logic'
+                href='/basic-propositional-logic'
                 className='block p-3 rounded-lg hover:bg-stone-200'
               >
                 <div className='font-semibold'>Basic Propositional Logic</div>

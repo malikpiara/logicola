@@ -21,12 +21,12 @@ const Exercise: React.FC<ExerciseProps> = ({
     const nextQuestionIdx = questionIdx + 2;
 
     if (chapter === 6.1) {
-      return `/logic/basic-propositional-logic/easier-translations/${nextQuestionIdx}`;
+      return `/basic-propositional-logic/easier-translations/${nextQuestionIdx}`;
     }
     if (chapter === 3) {
-      return `/logic/informal/definitions/${nextQuestionIdx}`;
+      return `/informal/definitions/${nextQuestionIdx}`;
     } else {
-      return `/logic/basic-propositional-logic/harder-translations/${nextQuestionIdx}`;
+      return `/basic-propositional-logic/harder-translations/${nextQuestionIdx}`;
     }
   };
 
@@ -94,7 +94,7 @@ const Exercise: React.FC<ExerciseProps> = ({
         {/* I'm displaying a "next" button as long as
       there are exercises left in the array. */}
         {questionIdx < currentChapter.questions.length - 1 && (
-          <Link href={getNextHref()}>
+          <Link href={getNextHref()} scroll={false}>
             <button
               type='button'
               className={`text-primary rounded-lg text-sm font-semibold px-5 py-2.5 me-2 mb-2 border border-primary hover:opacity-90 `}

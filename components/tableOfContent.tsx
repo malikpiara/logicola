@@ -63,7 +63,7 @@ const TableOfContent = ({ chapter }: TableOfContentProps) => {
                 <div>
                   <ul className='text-stone-500 font-medium'>
                     <li className='mb-1 hover:bg-stone-200 p-3 rounded-md'>
-                      <Link href='/logic/basic-propositional-logic'>
+                      <Link href='/basic-propositional-logic'>
                         Harder Translations
                       </Link>
                     </li>
