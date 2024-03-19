@@ -19,7 +19,7 @@ interface Question {
   id: string;
   prompt: string;
   options: Option[];
-  correctId: number;
+  correctId: number | number[];
   answer: string;
 }
 
@@ -39,7 +39,7 @@ const Quiz: React.FC<QuizProps> = ({
 
   // Function for moving to the next question
   const handleNextQuestion = () => {
-    if (questionIdx < currentChapter.questions.length - 1) {
+    if (questionIdx < currentChapter!.questions.length - 1) {
       setQuestionIdx(questionIdx + 1);
       setSelectedOptionId(null); // Reset selected option
       setShowSolution(false); // Hide solution
@@ -72,7 +72,7 @@ const Quiz: React.FC<QuizProps> = ({
 
   const [questionOrder, setQuestionOrder] = useState<number[]>([]);
 
-  const currentQuestion = currentChapter.questions[questionOrder[questionIdx]]; // Update how the question is accessed
+  const currentQuestion = currentChapter!.questions[questionOrder[questionIdx]]; // Update how the question is accessed
 
   return (
     <div className='max-w-7xl p-6 bg-white border border-stone-200 rounded-lg mb-6'>
@@ -102,7 +102,10 @@ const Quiz: React.FC<QuizProps> = ({
       {selectedOptionId != null && showSolution && (
         <div className='p-2 mb-3 text-stone-800'>
           You selected option {selectedOptionId + 1}. The correct answer is{' '}
-          {currentQuestion.correctId + 1}.
+          {Array.isArray(currentQuestion.correctId)
+            ? currentQuestion.correctId.map((id) => id + 1).join(', ')
+            : currentQuestion.correctId + 1}
+          .
         </div>
       )}
 
@@ -126,7 +129,7 @@ const Quiz: React.FC<QuizProps> = ({
       there are exercises left in the array. */}
         {/* selectedOptionId */}
         {selectedOptionId &&
-          questionIdx < currentChapter.questions.length - 1 && (
+          questionIdx < currentChapter!.questions.length - 1 && (
             <button
               onClick={handleNextQuestion}
               type='button'
