@@ -37,8 +37,6 @@ const Quiz: React.FC<QuizProps> = ({
 
   const currentChapter = chapters.find((c) => c.id === chapter);
 
-  const currentQuestion = currentChapter.questions[questionIdx];
-
   // Function for moving to the next question
   const handleNextQuestion = () => {
     if (questionIdx < currentChapter.questions.length - 1) {
@@ -47,6 +45,34 @@ const Quiz: React.FC<QuizProps> = ({
       setShowSolution(false); // Hide solution
     }
   };
+
+  useEffect(() => {
+    if (!currentChapter) return; // Exit early if no chapter.
+
+    // Generate random question order
+    const generateQuestionOrder = () => {
+      const questionIndices = Array.from(
+        { length: currentChapter.questions.length },
+        (_, i) => i
+      );
+      // Use a shuffling algorithm like Fisher-Yates:
+      for (let i = questionIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [questionIndices[i], questionIndices[j]] = [
+          questionIndices[j],
+          questionIndices[i],
+        ];
+      }
+      return questionIndices;
+    };
+
+    const randomQuestionOrder = generateQuestionOrder();
+    setQuestionOrder(randomQuestionOrder);
+  }, []); // Include chapter in dependencies
+
+  const [questionOrder, setQuestionOrder] = useState<number[]>([]);
+
+  const currentQuestion = currentChapter.questions[questionOrder[questionIdx]]; // Update how the question is accessed
 
   return (
     <div className='max-w-7xl p-6 bg-white border border-stone-200 rounded-lg mb-6'>
