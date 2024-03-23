@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import Logo from './logo';
-import { Roboto_Slab } from 'next/font/google';
+import NavTopic from './navTopic';
 
 const Navbar = () => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
@@ -107,36 +107,20 @@ const Navbar = () => {
       >
         <div className='grid max-w-screen-xl px-4 py-5 mx-auto text-stone-900 sm:grid-cols-2 md:px-6 shadow-sm'>
           <ul>
-            <li>
-              <Link
-                href='/basic-propositional-logic'
-                className='block p-3 rounded-lg hover:bg-stone-200'
-              >
-                <div className='font-semibold'>Basic Propositional Logic</div>
-                <span className='text-sm text-stone-500'>Chapter 6</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href='/logic'
-                className='block p-3 rounded-lg hover:bg-stone-200 opacity-30 cursor-not-allowed'
-              >
-                <div className='font-semibold'>Quantificational Logic</div>
-                <span className='text-sm text-stone-500'>Chapter 8</span>
-              </Link>
-            </li>
+            <NavTopic
+              chapter='Chapter 3'
+              title='Meanings and Definitions'
+              path='/informal/definitions/1'
+              newLabel
+            />
           </ul>
           <ul>
-            <li>
-              <Link
-                href='/logic'
-                className='block p-3 rounded-lg hover:bg-stone-200 opacity-30 cursor-not-allowed'
-              >
-                <div className='font-semibold'>Propositional Proofs</div>
-                <span className='text-sm text-stone-500'>Chapter 7</span>
-              </Link>
-            </li>
-            <li>
+            <NavTopic
+              chapter='Chapter 6'
+              title='Basic Propositional Logic'
+              path='/basic-propositional-logic'
+            />
+            {/* <li>
               <Link
                 href='/logic'
                 className='block p-3 rounded-lg hover:bg-stone-200 opacity-30 cursor-not-allowed'
@@ -144,7 +128,7 @@ const Navbar = () => {
                 <div className='font-semibold'>Relations and Identity</div>
                 <span className='text-sm text-stone-500'>Chapter 9</span>
               </Link>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>
