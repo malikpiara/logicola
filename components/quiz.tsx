@@ -92,6 +92,38 @@ const Quiz: React.FC<QuizProps> = ({
                   onClick={() => {
                     setSelectedOptionId(option.id);
                   }}
+                  onKeyDown={(event: any) => {
+                    event.preventDefault(); // Preventing the page from scrolling when the arrow keys are used.
+                    switch (event.key) {
+                      case 'ArrowDown':
+                        setSelectedOptionId(selectedOptionId! + 1);
+                        break;
+                      case 'ArrowUp':
+                        setSelectedOptionId(selectedOptionId! - 1);
+                        break;
+                      case '1':
+                        setSelectedOptionId(0);
+                        break;
+                      case '2':
+                        setSelectedOptionId(1);
+                        break;
+                      case '3':
+                        setSelectedOptionId(2);
+                        break;
+                      case '4':
+                        setSelectedOptionId(3);
+                        break;
+                      case '5':
+                        setSelectedOptionId(4);
+                        break;
+                      case '6':
+                        setSelectedOptionId(5);
+                        break;
+                      case '7':
+                        setSelectedOptionId(6);
+                        break;
+                    }
+                  }}
                 />
               );
             })}
