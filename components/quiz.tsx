@@ -90,11 +90,11 @@ const Quiz: React.FC<QuizProps> = ({
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
-        setSelectedOptionId((prevId) => Math.min(prevId + 1, lastOptionIndex));
+        setSelectedOptionId((prevId) => Math.min(prevId! + 1, lastOptionIndex));
         break;
       case 'ArrowUp':
         event.preventDefault();
-        setSelectedOptionId((prevId) => Math.max(prevId - 1, 0));
+        setSelectedOptionId((prevId) => Math.max(prevId! - 1, 0));
         break;
       case '1':
       case '2':
@@ -138,33 +138,35 @@ const Quiz: React.FC<QuizProps> = ({
       {selectedOptionId != null && showSolution && (
         <div className='p-2 mb-3 text-stone-800'>
           You selected option {selectedOptionId + 1}. The correct answer is{' '}
-          {Array.isArray(currentQuestion.correctId)
+          {Array.isArray(currentQuestion?.correctId)
             ? currentQuestion.correctId.map((id) => id + 1).join(', ')
-            : currentQuestion.correctId + 1}
+            : currentQuestion!.correctId + 1}
           .
         </div>
       )}
 
       <div className='flex justify-between'>
-        <button
-          type='button'
-          disabled={selectedOptionId == null}
-          onClick={() => {
-            setShowSolution(true);
-          }}
-          className={`text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ${
-            selectedOptionId == null
-              ? ' bg-stone-200 cursor-not-allowed'
-              : 'bg-primary hover:opacity-90'
-          }`}
-        >
-          Check answer
-        </button>
+        {!showSolution && (
+          <button
+            type='button'
+            disabled={selectedOptionId == null}
+            onClick={() => {
+              setShowSolution(true);
+            }}
+            className={`text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ${
+              selectedOptionId == null
+                ? ' bg-stone-200 cursor-not-allowed'
+                : 'bg-primary hover:opacity-90'
+            }`}
+          >
+            Check answer
+          </button>
+        )}
 
         {/* I'm displaying a "next" button as long as
       there are exercises left in the array. */}
         {/* selectedOptionId */}
-        {selectedOptionId &&
+        {selectedOptionId != null &&
           questionIdx < currentChapter!.questions.length - 1 && (
             <button
               onClick={handleNextQuestion}
