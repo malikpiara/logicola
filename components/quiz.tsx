@@ -80,7 +80,7 @@ const Quiz: React.FC<QuizProps> = ({
 
   const [questionOrder, setQuestionOrder] = useState<number[]>([]);
 
-  const currentQuestion = currentChapter?.questions[questionIdx];
+  const currentQuestion = currentChapter!.questions[questionOrder[questionIdx]];
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (!currentQuestion) return;
