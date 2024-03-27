@@ -935,6 +935,7 @@ const chapters = [
           { id: 3, label: '(~A V ~B)' },
         ],
         correctId: 1,
+        answer: '',
       },
       {
         id: '6.1a.2',
@@ -946,6 +947,7 @@ const chapters = [
           { id: 3, label: '(A · B) V (A · C)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.1a.3',
@@ -957,6 +959,7 @@ const chapters = [
           { id: 3, label: '(A V B) · C' },
         ],
         correctId: 2,
+        answer: '',
       },
       {
         id: '6.1a.4',
@@ -968,6 +971,7 @@ const chapters = [
           { id: 3, label: '(A V B) → C' },
         ],
         correctId: 1,
+        answer: '',
       },
       {
         id: '6.1a.5',
@@ -979,6 +983,7 @@ const chapters = [
           { id: 3, label: '(A → B) V C' },
         ],
         correctId: 3,
+        answer: '',
       },
       {
         id: '6.1a.6',
@@ -990,6 +995,7 @@ const chapters = [
           { id: 3, label: '~A → (B V ~C)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.1a.7',
@@ -1001,6 +1007,7 @@ const chapters = [
           { id: 3, label: '~A → (B V ~C)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.1a.8',
@@ -1012,6 +1019,7 @@ const chapters = [
           { id: 3, label: '(A V B) → C' },
         ],
         correctId: 1,
+        answer: '',
       },
       {
         id: '6.1a.9',
@@ -1023,6 +1031,7 @@ const chapters = [
           { id: 3, label: '(A V (B · C))' },
         ],
         correctId: 3,
+        answer: '',
       },
       {
         id: '6.1a.10',
@@ -1034,6 +1043,7 @@ const chapters = [
           { id: 3, label: '(A → (B · C))' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.1a.11',
@@ -1046,6 +1056,7 @@ const chapters = [
           { id: 3, label: 'E → (B · M)' },
         ],
         correctId: 2,
+        answer: '',
       },
       {
         id: '6.1a.12',
@@ -1058,6 +1069,7 @@ const chapters = [
           { id: 3, label: '((C · B) → (T · W))' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.1a.13',
@@ -1070,6 +1082,7 @@ const chapters = [
           { id: 3, label: '(((~X) · (~M)) → G)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.1a.14',
@@ -1081,6 +1094,7 @@ const chapters = [
           { id: 3, label: '(~C → M)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.1a.15',
@@ -1093,6 +1107,7 @@ const chapters = [
           { id: 3, label: '((E V P) → ~R)' },
         ],
         correctId: 2,
+        answer: '',
       },
       {
         id: '6.1a.16',
@@ -1105,6 +1120,7 @@ const chapters = [
           { id: 3, label: '(P → M)' },
         ],
         correctId: 3,
+        answer: '',
       },
       {
         id: '6.1a.17',
@@ -1117,6 +1133,7 @@ const chapters = [
           { id: 3, label: '(D · (C V L))' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.1a.18',
@@ -1129,6 +1146,7 @@ const chapters = [
           { id: 3, label: '((H V J) → F)' },
         ],
         correctId: 1,
+        answer: '',
       },
       {
         id: '6.1a.19',
@@ -1140,6 +1158,7 @@ const chapters = [
           { id: 3, label: '(R V (F · L))' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.1a.20',
@@ -1151,6 +1170,7 @@ const chapters = [
           { id: 3, label: 'E' },
         ],
         correctId: 3,
+        answer: '',
       },
     ],
   },
@@ -1168,6 +1188,7 @@ const chapters = [
           { id: 3, label: '(S V (A · I))' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.8a.2',
@@ -1179,6 +1200,7 @@ const chapters = [
           { id: 3, label: '(S V F)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.8a.3',
@@ -1190,6 +1212,7 @@ const chapters = [
           { id: 3, label: '(Q → R)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.8a.4',
@@ -1201,6 +1224,7 @@ const chapters = [
           { id: 3, label: '(T V P)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.8a.5',
@@ -1212,6 +1236,7 @@ const chapters = [
           { id: 3, label: '(T V ~P)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.8a.6',
@@ -1223,6 +1248,7 @@ const chapters = [
           { id: 3, label: '(M V R)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.8a.7',
@@ -1234,6 +1260,7 @@ const chapters = [
           { id: 3, label: '(F → D)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.8a.8',
@@ -1245,6 +1272,7 @@ const chapters = [
           { id: 3, label: '(A V ~H)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.8a.9',
@@ -1257,6 +1285,7 @@ const chapters = [
           { id: 3, label: '(N V A)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.8a.10',
@@ -1268,6 +1297,7 @@ const chapters = [
           { id: 3, label: '(A V E)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.8a.11',
@@ -1279,6 +1309,7 @@ const chapters = [
           { id: 3, label: '(Y V I)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.8a.12',
@@ -1290,6 +1321,7 @@ const chapters = [
           { id: 3, label: '(F V ~K)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.8a.13',
@@ -1302,6 +1334,7 @@ const chapters = [
           { id: 3, label: '(T V ~K)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.8a.14',
@@ -1313,6 +1346,7 @@ const chapters = [
           { id: 3, label: '(M V ~F)' },
         ],
         correctId: 0,
+        answer: '',
       },
       {
         id: '6.8a.15',
@@ -1324,6 +1358,7 @@ const chapters = [
           { id: 3, label: '(S V W)' },
         ],
         correctId: 0,
+        answer: '',
       },
     ],
   },
