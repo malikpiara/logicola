@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import { M_PLUS_1 } from 'next/font/google';
 import React from 'react';
 
 export interface OptionProps {
@@ -29,7 +28,6 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
     return (
       <button
         ref={ref}
-        index={index}
         onClick={onClick}
         className={className}
         onKeyDown={onKeyDown}
