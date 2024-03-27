@@ -118,6 +118,7 @@ const Quiz: React.FC<QuizProps> = ({
             {currentQuestion.options.map((option: any, index) => {
               return (
                 <Option
+                  index={option.id + 1}
                   isActive={option.id === selectedOptionId}
                   isCorrect={option.id === currentQuestion.correctId}
                   showSolution={showSolution}
@@ -145,37 +146,39 @@ const Quiz: React.FC<QuizProps> = ({
         </div>
       )}
 
-      <div className='flex justify-between'>
-        {!showSolution && (
-          <button
-            type='button'
-            disabled={selectedOptionId == null}
-            onClick={() => {
-              setShowSolution(true);
-            }}
-            className={`text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ${
-              selectedOptionId == null
-                ? ' bg-stone-200 cursor-not-allowed'
-                : 'bg-primary hover:opacity-90'
-            }`}
-          >
-            Check answer
-          </button>
-        )}
+      <div className='fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600'>
+        <div className='grid h-full grid-cols-1 m-2'>
+          <div className='flex justify-end h-max'>
+            {!showSolution && (
+              <button
+                type='button'
+                disabled={selectedOptionId == null}
+                onClick={() => {
+                  setShowSolution(true);
+                }}
+                className={`text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ${
+                  selectedOptionId == null
+                    ? ' bg-stone-200 cursor-not-allowed'
+                    : 'bg-primary hover:opacity-90'
+                }`}
+              >
+                Check answer
+              </button>
+            )}
 
-        {/* I'm displaying a "next" button as long as
-      there are exercises left in the array. */}
-        {/* selectedOptionId */}
-        {selectedOptionId != null &&
-          questionIdx < currentChapter!.questions.length - 1 && (
-            <button
-              onClick={handleNextQuestion}
-              type='button'
-              className={`text-primary rounded-lg text-sm font-semibold px-5 py-2.5 me-2 mb-2 border border-primary hover:opacity-90 `}
-            >
-              Next
-            </button>
-          )}
+            {selectedOptionId != null &&
+              questionIdx < currentChapter!.questions.length - 1 &&
+              showSolution && (
+                <button
+                  onClick={handleNextQuestion}
+                  type='button'
+                  className={`text-primary rounded-lg text-sm font-semibold px-5 py-2.5 me-2 mb-2 border border-primary hover:opacity-90`}
+                >
+                  Next Question
+                </button>
+              )}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import Quiz from '@/components/quiz';
 export default function QuizPage({ params }: { params: { exercise: number } }) {
   return (
     <>
-      <div className='flex w-full h-screen overflow-scroll'>
+      <div className='flex w-full h-screen'>
         {/* <ExerciseSidebar
           chapter={3}
           path='/informal/definitions/'
