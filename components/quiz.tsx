@@ -37,12 +37,15 @@ const Quiz: React.FC<QuizProps> = ({
 
   const currentChapter = chapters.find((c) => c.id === chapter);
 
+  const [questionCounter, setQuestionCounter] = useState<number>(1);
+
   // Function for moving to the next question
   const handleNextQuestion = () => {
     if (questionIdx < currentChapter!.questions.length - 1) {
       setQuestionIdx(questionIdx + 1);
       setSelectedOptionId(null); // Reset selected option
       setShowSolution(false); // Hide solution
+      setQuestionCounter(questionCounter + 1);
     }
   };
 
@@ -156,8 +159,9 @@ const Quiz: React.FC<QuizProps> = ({
       )}
 
       <div className='fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600'>
-        <div className='grid h-full grid-cols-1 m-2'>
-          <div className='flex justify-end h-max'>
+        <div className='flex justify-end gap-5 items-center h-full align-bottom'>
+          <div className='flex'>{questionCounter} / 10</div>
+          <div className='flex h-max'>
             {!showSolution && (
               <button
                 type='button'
