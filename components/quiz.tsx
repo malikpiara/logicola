@@ -20,7 +20,7 @@ interface Question {
   prompt: string;
   options: Option[];
   correctId: number | number[];
-  answer: string;
+  answer?: string; // Gensler's hints
 }
 
 /* const pickRandExerciseNum = (min: number, max: number) =>
@@ -115,6 +115,10 @@ const Quiz: React.FC<QuizProps> = ({
           <div className='md:flex flex-col md:justify-between gap-5'>
             <Prompt value={currentQuestion.prompt} />
 
+            <h2 className='text-xl font-bold text-stone-800'>
+              What is wrong with this definition?
+            </h2>
+
             {currentQuestion.options.map((option: any, index) => {
               return (
                 <Option
@@ -138,11 +142,16 @@ const Quiz: React.FC<QuizProps> = ({
       <hr className='h-px my-4 bg-stone-200 border-0' />
       {selectedOptionId != null && showSolution && (
         <div className='p-2 mb-3 text-stone-800'>
-          You selected option {selectedOptionId + 1}. The correct answer is{' '}
+          {/* You selected option {selectedOptionId + 1}. The correct answer is{' '}
           {Array.isArray(currentQuestion?.correctId)
             ? currentQuestion.correctId.map((id) => id + 1).join(', ')
             : currentQuestion!.correctId + 1}
-          .
+          . */}
+          {currentQuestion.answer ? (
+            <h1>{currentQuestion.answer}</h1>
+          ) : (
+            <h1>Answer unavailable</h1>
+          )}
         </div>
       )}
 
