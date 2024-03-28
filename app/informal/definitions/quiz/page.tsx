@@ -1,10 +1,11 @@
-import ExerciseSidebar from '@/components/exerciseSidebar';
-import Quiz from '@/components/quiz';
+import ExerciseSidebar from "@/components/exerciseSidebar";
+import NoSSR from "@/components/NoSSR";
+import Quiz from "@/components/quiz";
 
 export default function QuizPage({ params }: { params: { exercise: number } }) {
   return (
     <>
-      <div className='flex w-full h-screen'>
+      <div className="flex w-full h-screen">
         {/* <ExerciseSidebar
           chapter={3}
           path='/informal/definitions/'
@@ -13,8 +14,10 @@ export default function QuizPage({ params }: { params: { exercise: number } }) {
           }}
           initialQuestionIdx={0}
         /> */}
-        <div className='p-4 w-full'>
-          <Quiz initialQuestionIdx={0} chapter={3} showExerciseId={false} />
+        <div className="p-4 w-full">
+          <NoSSR>
+            <Quiz initialQuestionIdx={0} chapter={3} showExerciseId={false} />
+          </NoSSR>
         </div>
       </div>
     </>
