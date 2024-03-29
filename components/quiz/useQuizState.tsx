@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { chapters } from "@/content";
+import { chapters } from '@/content';
 
 export default function useQuizState(
   chapter: number,
@@ -9,6 +9,8 @@ export default function useQuizState(
   const [questionIdx, setQuestionIdx] = useState(initialQuestionIdx);
   const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
   const [showSolution, setShowSolution] = useState(false);
+  const [showStartScreen, setShowStartScreen] = useState(true);
+  const [showEndScreen, setShowEndScreen] = useState(false);
 
   const currentChapter = chapters.find((c) => c.id === chapter);
 
@@ -42,6 +44,9 @@ export default function useQuizState(
       setShowSolution(false); // Hide solution
       setQuestionCounter(questionCounter + 1);
     }
+    if (questionCounter > 9) {
+      onShowEndScreen();
+    }
   };
 
   function randomizeQuestionOrder() {
@@ -71,7 +76,17 @@ export default function useQuizState(
     setShowSolution(true);
   }
 
+  function onShowStartScreen() {
+    setShowStartScreen(false);
+  }
+
+  function onShowEndScreen() {
+    setShowEndScreen(true);
+  }
+
   return {
+    showStartScreen,
+    showEndScreen,
     questionIdx,
     selectedOptionId,
     showSolution,
@@ -83,5 +98,7 @@ export default function useQuizState(
     selectPreviousOption,
     selectOption,
     onShowSolution,
+    onShowStartScreen,
+    onShowEndScreen,
   };
 }
