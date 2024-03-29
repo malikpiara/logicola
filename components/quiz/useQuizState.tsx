@@ -31,6 +31,7 @@ export default function useQuizState(
   };
 
   const [questionCounter, setQuestionCounter] = useState<number>(1);
+  const [numOfCorrectQuestions, setnumOfCorrectQuestions] = useState<number>(0);
 
   const [questionOrder, setQuestionOrder] = useState<number[]>(
     generateQuestionOrder()
@@ -43,8 +44,11 @@ export default function useQuizState(
       setSelectedOptionId(null); // Reset selected option
       setShowSolution(false); // Hide solution
       setQuestionCounter(questionCounter + 1);
+
+      // TODO: if correct answer was selected -> setnumOfCorrectQuestions(numOfCorrectQuestions + 1)
     }
     if (questionCounter > 9) {
+      // If the user does more than 10 questions, exit the program.
       onShowEndScreen();
     }
   };
@@ -76,6 +80,12 @@ export default function useQuizState(
     setShowSolution(true);
   }
 
+  function incrementScore(optionId: number, correctId: number | number[]) {
+    if (optionId === correctId) {
+      setnumOfCorrectQuestions(numOfCorrectQuestions + 1);
+    }
+  }
+
   function onShowStartScreen() {
     setShowStartScreen(false);
   }
@@ -93,6 +103,8 @@ export default function useQuizState(
     currentChapter,
     currentQuestion,
     questionCounter,
+    numOfCorrectQuestions,
+    incrementScore,
     handleNextQuestion,
     selectNextOption,
     selectPreviousOption,
@@ -100,5 +112,6 @@ export default function useQuizState(
     onShowSolution,
     onShowStartScreen,
     onShowEndScreen,
+    setnumOfCorrectQuestions,
   };
 }

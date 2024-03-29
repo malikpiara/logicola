@@ -39,7 +39,8 @@ const Quiz: React.FC<QuizProps> = ({
     currentChapter,
     currentQuestion,
     questionCounter,
-
+    numOfCorrectQuestions,
+    incrementScore,
     handleNextQuestion,
     selectNextOption,
     selectPreviousOption,
@@ -47,6 +48,7 @@ const Quiz: React.FC<QuizProps> = ({
     onShowSolution,
     onShowStartScreen,
     onShowEndScreen,
+    setnumOfCorrectQuestions,
   } = useQuizState(chapter, initialQuestionIdx);
 
   // Creating refs to make each option focusable with the keyboard shorcuts.
@@ -87,7 +89,7 @@ const Quiz: React.FC<QuizProps> = ({
       {showStartScreen ? (
         <StartScreen />
       ) : showEndScreen ? (
-        <EndScreen />
+        <EndScreen numOfCorrectQuestions={numOfCorrectQuestions} />
       ) : (
         <div className='max-w-7xl p-6 bg-white border border-stone-200 rounded-lg mb-6'>
           <div className='mx-auto w-full max-w-screen-xl p-4'>
@@ -156,7 +158,10 @@ const Quiz: React.FC<QuizProps> = ({
               <button
                 type='button'
                 disabled={selectedOptionId == null}
-                onClick={onShowSolution}
+                onClick={() => {
+                  incrementScore(selectedOptionId!, currentQuestion.correctId);
+                  onShowSolution();
+                }}
                 className={`text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ${
                   selectedOptionId == null
                     ? ' bg-stone-200 cursor-not-allowed'
