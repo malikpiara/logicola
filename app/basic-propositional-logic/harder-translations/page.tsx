@@ -7,7 +7,7 @@ export default function HarderTranslations() {
       <div className='flex w-full h-screen overflow-scroll'>
         <Sidebar />
         <div className='p-4 w-full'>
-          <h1 className='mb-6 text-3xl font-bold text-stone-900'>
+          <h1 className='mb-6 text-3xl font-bold text-gray-900'>
             Quiz (6.8.a)
           </h1>
           <Exercise

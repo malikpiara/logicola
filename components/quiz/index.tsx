@@ -91,13 +91,13 @@ const Quiz: React.FC<QuizProps> = ({
       ) : showEndScreen ? (
         <EndScreen numOfCorrectQuestions={numOfCorrectQuestions} />
       ) : (
-        <div className='max-w-7xl p-6 bg-white border border-stone-200 rounded-lg mb-6'>
+        <div className='animate-in max-w-7xl p-6 bg-white border border-gray-200 rounded-lg mb-6'>
           <div className='mx-auto w-full max-w-screen-xl p-4'>
             {currentQuestion && ( // Ensure questions are loaded
               <div className='md:flex flex-col md:justify-between gap-5'>
                 <Prompt value={currentQuestion.prompt} />
 
-                <h2 className='text-xl font-bold text-stone-800'>
+                <h2 className='text-xl font-bold text-gray-800'>
                   What is wrong with this definition?
                 </h2>
 
@@ -124,9 +124,9 @@ const Quiz: React.FC<QuizProps> = ({
               </div>
             )}
           </div>
-          <hr className='h-px my-4 bg-stone-200 border-0' />
+          <hr className='h-px my-4 bg-gray-200 border-0' />
           {selectedOptionId != null && showSolution && (
-            <div className='p-2 mb-3 text-stone-800'>
+            <div className='p-2 mb-3 text-gray-800'>
               {currentQuestion.answer ? (
                 <h1>{currentQuestion.answer}</h1>
               ) : (
@@ -164,7 +164,7 @@ const Quiz: React.FC<QuizProps> = ({
                 }}
                 className={`text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ${
                   selectedOptionId == null
-                    ? ' bg-stone-200 cursor-not-allowed'
+                    ? ' bg-gray-200 cursor-not-allowed'
                     : 'bg-primary hover:opacity-90'
                 }`}
               >

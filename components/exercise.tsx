@@ -44,9 +44,9 @@ const Exercise: React.FC<ExerciseProps> = ({
   const [showSolution, setShowSolution] = useState(false);
 
   return (
-    <div className='max-w-7xl p-6 bg-white border border-stone-200 rounded-lg mb-6'>
+    <div className='max-w-7xl p-6 bg-white border border-gray-200 rounded-lg mb-6'>
       {showExerciseId && (
-        <h3 className='mb-2 text-xl font-bold tracking-tight text-stone-900'>
+        <h3 className='mb-2 text-xl font-bold tracking-tight text-gray-900'>
           {questionIdx + 1}.
         </h3>
       )}
@@ -70,9 +70,9 @@ const Exercise: React.FC<ExerciseProps> = ({
           })}
         </div>
       </div>
-      <hr className='h-px my-4 bg-stone-200 border-0' />
+      <hr className='h-px my-4 bg-gray-200 border-0' />
       {selectedOptionId != null && showSolution && (
-        <div className='p-2 mb-3 text-stone-800'>
+        <div className='p-2 mb-3 text-gray-800'>
           You selected option {selectedOptionId + 1}. The correct answer is{' '}
           {question.correctId + 1}.
         </div>
@@ -87,7 +87,7 @@ const Exercise: React.FC<ExerciseProps> = ({
           }}
           className={`text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ${
             selectedOptionId == null
-              ? ' bg-stone-200 cursor-not-allowed'
+              ? ' bg-gray-200 cursor-not-allowed'
               : 'bg-primary hover:opacity-90'
           }`}
         >

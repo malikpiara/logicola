@@ -22,7 +22,7 @@ const NavTopic = ({
 }: TableOfContentProps) => {
   return (
     <li>
-      <Link href={path} className='block p-3 rounded-lg hover:bg-stone-200'>
+      <Link href={path} className='block p-3 rounded-lg hover:bg-gray-200'>
         <div className='flex gap-3'>
           <div className='font-semibold'>{title}</div>
           {newLabel && (
@@ -31,7 +31,7 @@ const NavTopic = ({
             </span>
           )}
         </div>
-        <span className='text-sm text-stone-500'>{chapter}</span>
+        <span className='text-sm text-gray-500'>{chapter}</span>
       </Link>
     </li>
   );

@@ -28,11 +28,11 @@ const TopicTable = () => {
         return (
           <div
             key={item.id}
-            className='max-w-7xl p-6 bg-white border border-stone-200 rounded-lg mb-6'
+            className='max-w-7xl p-6 bg-white border border-gray-200 rounded-lg mb-6'
           >
             <div>
               <Link href={item.path}>
-                <h3 className='mb-2 text-xl font-bold tracking-tight text-stone-900 hover:text-primary'>
+                <h3 className='mb-2 text-xl font-bold tracking-tight text-gray-900 hover:text-primary'>
                   {item.title}
                 </h3>
               </Link>
@@ -41,11 +41,11 @@ const TopicTable = () => {
                 <div className='md:flex md:justify-between'>
                   <div className='flex flex-col w-full'>
                     <div>
-                      <ul className='text-stone-500 font-medium'>
+                      <ul className='text-gray-500 font-medium'>
                         <Link href={item.path}>
-                          <div className='flex items-center mb-4 p-3 rounded-md hover:bg-stone-200 gap-2'>
+                          <div className='flex items-center mb-4 p-3 rounded-md hover:bg-gray-200 gap-2'>
                             <svg
-                              className='w-5 h-5 text-stone-500'
+                              className='w-5 h-5 text-gray-500'
                               aria-hidden='true'
                               xmlns='http://www.w3.org/2000/svg'
                               fill='none'

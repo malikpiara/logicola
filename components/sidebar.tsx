@@ -13,7 +13,7 @@ export function Sidebar() {
         data-drawer-toggle='default-sidebar'
         aria-controls='default-sidebar'
         type='button'
-        className='inline-flex items-center p-2 mt-2 ms-3 text-sm text-stone-500 rounded-lg sm:hidden hover:bg-stone-200 focus:outline-none focus:ring-2 focus:ring-stone-200'
+        className='inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-stone-200'
       >
         <span className='sr-only'>Open sidebar</span>
         <svg
@@ -36,15 +36,15 @@ export function Sidebar() {
         className='flex shrink-0 top-0 left-0 z-40 w-80 h-screen transition-transform -translate-x-full sm:translate-x-0'
         aria-label='Sidebar'
       >
-        <div className='h-full w-full px-4 py-4 overflow-y-auto bg-stone-50'>
+        <div className='h-full w-full px-4 py-4 overflow-y-auto bg-gray-50'>
           <ul className='space-y-2 font-medium'>
             <li>
               <Link
                 href='/logic'
-                className='flex items-center p-2 text-stone-900 rounded-lg  hover:bg-stone-200 group'
+                className='flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-200 group'
               >
                 <svg
-                  className='w-5 h-5 text-stone-600'
+                  className='w-5 h-5 text-gray-600'
                   aria-hidden='true'
                   xmlns='http://www.w3.org/2000/svg'
                   fill='currentColor'
@@ -58,7 +58,7 @@ export function Sidebar() {
             <li>
               <Link
                 href='/informal/definitions/1'
-                className='flex flex-col p-2 text-stone-900 rounded-lg hover:bg-stone-200 group'
+                className='flex flex-col p-2 text-gray-900 rounded-lg hover:bg-gray-200 group'
               >
                 <div className='text-xs'>CHAPTER 3</div>
                 <span className='flex-1 whitespace-nowrap'>
@@ -69,7 +69,7 @@ export function Sidebar() {
             <li>
               <Link
                 href='/basic-propositional-logic'
-                className='flex flex-col p-2 text-stone-900 rounded-lg hover:bg-stone-200 group'
+                className='flex flex-col p-2 text-gray-900 rounded-lg hover:bg-gray-200 group'
               >
                 <div className='text-xs'>CHAPTER 6</div>
                 <span className='flex-1 whitespace-nowrap'>
@@ -80,7 +80,7 @@ export function Sidebar() {
             <li>
               <Link
                 href='#'
-                className='flex flex-col p-2 text-stone-700 rounded-lg  hover:bg-stone-200 opacity-30 cursor-not-allowed'
+                className='flex flex-col p-2 text-gray-700 rounded-lg  hover:bg-gray-200 opacity-30 cursor-not-allowed'
               >
                 <div className='text-xs'>CHAPTER 7</div>
                 <span className='flex-1 whitespace-nowrap'>
@@ -91,7 +91,7 @@ export function Sidebar() {
             <li>
               <Link
                 href='#'
-                className='flex flex-col p-2 text-stone-700 rounded-lg hover:bg-stone-200 opacity-30 cursor-not-allowed'
+                className='flex flex-col p-2 text-gray-700 rounded-lg hover:bg-gray-200 opacity-30 cursor-not-allowed'
               >
                 <div className='text-xs'>CHAPTER 8</div>
                 <span className='flex-1 whitespace-nowrap'>
@@ -102,7 +102,7 @@ export function Sidebar() {
             <li>
               <Link
                 href='#'
-                className='flex flex-col p-2 text-stone-700 rounded-lg dark:text-white hover:bg-stone-200 opacity-30 cursor-not-allowed'
+                className='flex flex-col p-2 text-gray-700 rounded-lg dark:text-white hover:bg-gray-200 opacity-30 cursor-not-allowed'
               >
                 <div className='text-xs'>CHAPTER 9</div>
                 <span className='flex-1 whitespace-nowrap'>

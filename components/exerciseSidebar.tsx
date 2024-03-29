@@ -30,7 +30,7 @@ const ExerciseSidebar: React.FC<ExerciseSidebarProps> = ({
         data-drawer-toggle='default-sidebar'
         aria-controls='default-sidebar'
         type='button'
-        className='inline-flex items-center p-2 mt-2 ms-3 text-sm text-stone-500 rounded-lg sm:hidden hover:bg-stone-200 focus:outline-none focus:ring-2 focus:ring-stone-200'
+        className='inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-stone-200'
       >
         <span className='sr-only'>Open sidebar</span>
         <svg
@@ -57,10 +57,10 @@ const ExerciseSidebar: React.FC<ExerciseSidebarProps> = ({
             <li>
               <Link
                 href='#'
-                className='flex items-center p-2 text-stone-900 rounded-lg  hover:bg-stone-200 group'
+                className='flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-200 group'
               >
                 <svg
-                  className='w-5 h-5 text-stone-600'
+                  className='w-5 h-5 text-gray-600'
                   aria-hidden='true'
                   xmlns='http://www.w3.org/2000/svg'
                   fill='currentColor'
@@ -83,7 +83,7 @@ const ExerciseSidebar: React.FC<ExerciseSidebarProps> = ({
                       className={`flex flex-col p-2 rounded-lg group ${
                         isActive
                           ? 'bg-primary text-white'
-                          : 'text-stone-700 hover:bg-stone-200 opacity-80'
+                          : 'text-gray-700 hover:bg-gray-200 opacity-80'
                       }`}
                     >
                       <span className='flex-1 whitespace-nowrap'>

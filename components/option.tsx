@@ -22,7 +22,7 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
       'w-full ps-4 text-gray-900 flex items-center border rounded-lg focus:outline-primary transition-colors duration-300',
       {
         'border-gray-200': !isActive && !showSolution,
-        'bg-green-200': showSolution && isCorrect,
+        'bg-[#1ad85f]': showSolution && isCorrect,
         'border-rose-200 text-red-500 cursor-not-allowed':
           showSolution && !isCorrect,
         'border-primary border-2': !showSolution && isActive,
@@ -38,8 +38,19 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
         onKeyDown={onKeyDown}
       >
         <div className='flex items-center align-middle gap-3'>
-          <div className='rounded-full border-2 flex wrap w-8 h-8 items-center align-middle self-center'>
-            <div className='items-center self-center font-medium w-full text-gray-900'>
+          <div
+            className={classNames(
+              'rounded-full border-2 flex wrap w-8 h-8 items-center align-middle self-center',
+              showSolution && isCorrect && 'border-gray-700',
+              showSolution && !isCorrect && 'border-red-500'
+            )}
+          >
+            <div
+              className={classNames(
+                'items-center self-center font-medium w-full text-gray-900',
+                showSolution && !isCorrect && 'text-red-500'
+              )}
+            >
               {index}
             </div>
           </div>
