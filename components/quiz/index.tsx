@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import Option from '../option';
 import Prompt from '../prompt';
 import useQuizState from './useQuizState';
@@ -59,30 +59,71 @@ const Quiz: React.FC<QuizProps> = ({
     activeOptionRef.current?.focus();
   }, [selectedOptionId]);
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (!currentQuestion) return;
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLButtonElement>) => {
+      if (!currentQuestion) return;
 
-    switch (event.key) {
-      case 'ArrowDown':
-        event.preventDefault();
-        selectNextOption();
-        break;
-      case 'ArrowUp':
-        event.preventDefault();
-        selectPreviousOption();
-        break;
-      case '1':
-      case '2':
-      case '3':
-      case '4':
-      case '5':
-      case '6':
-      case '7':
-        event.preventDefault();
-        selectOption(parseInt(event.key) - 1);
-        break;
-    }
-  };
+      switch (event.key) {
+        case 'ArrowDown':
+          event.preventDefault();
+          selectNextOption();
+          break;
+        case 'ArrowUp':
+          event.preventDefault();
+          selectPreviousOption();
+          break;
+        case 'Enter':
+          event.preventDefault();
+          //console.log('Enter');
+          if (showStartScreen) {
+            onShowStartScreen();
+          }
+          if (!showStartScreen && !showSolution && selectedOptionId != null) {
+            incrementScore(selectedOptionId!, currentQuestion.correctId);
+            onShowSolution();
+          }
+          if (showSolution) {
+            // Remove focus from the active option
+            activeOptionRef.current?.blur(); // Assuming you have a ref to the active option
+            handleNextQuestion();
+          }
+          break;
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+          event.preventDefault();
+          selectOption(parseInt(event.key) - 1);
+          break;
+      }
+    },
+    [
+      currentQuestion,
+      handleNextQuestion,
+      incrementScore,
+      onShowSolution,
+      onShowStartScreen,
+      selectNextOption,
+      selectOption,
+      selectPreviousOption,
+      selectedOptionId,
+      showSolution,
+      showStartScreen,
+    ]
+  );
+
+  useEffect(() => {
+    // Attach event listener when component mounts
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Remove event listener when component unmounts
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]); // Include handleKeyDown in the dependency array to ensure it's updated when it changes
 
   return (
     <>
@@ -117,7 +158,7 @@ const Quiz: React.FC<QuizProps> = ({
                         selectOption(option.id);
                         onShowStartScreen();
                       }}
-                      onKeyDown={handleKeyDown}
+                      //onKeyDown={handleKeyDown}
                     />
                   );
                 })}
@@ -146,6 +187,7 @@ const Quiz: React.FC<QuizProps> = ({
             {showStartScreen && (
               <button
                 type='button'
+                //onKeyDown={handleKeyDown}
                 onClick={onShowStartScreen}
                 className={`text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 
                bg-primary hover:opacity-90

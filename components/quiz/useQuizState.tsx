@@ -44,8 +44,6 @@ export default function useQuizState(
       setSelectedOptionId(null); // Reset selected option
       setShowSolution(false); // Hide solution
       setQuestionCounter(questionCounter + 1);
-
-      // TODO: if correct answer was selected -> setnumOfCorrectQuestions(numOfCorrectQuestions + 1)
     }
     if (questionCounter > 9) {
       // If the user does more than 10 questions, exit the program.
