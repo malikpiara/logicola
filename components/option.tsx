@@ -10,14 +10,10 @@ export interface OptionProps {
   showSolution: boolean;
 
   onClick: () => void;
-  onKeyDown?: (event: React.KeyboardEvent) => void;
 }
 
 const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
-  (
-    { index, label, isActive, isCorrect, showSolution, onClick, onKeyDown },
-    ref
-  ) => {
+  ({ index, label, isActive, isCorrect, showSolution, onClick }, ref) => {
     const optionClasses = classNames(
       'w-full ps-4 text-gray-900 flex items-center border rounded-lg focus:outline-primary transition-colors duration-300',
       {
@@ -31,12 +27,7 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
     );
 
     return (
-      <button
-        ref={ref}
-        onClick={onClick}
-        className={optionClasses}
-        onKeyDown={onKeyDown}
-      >
+      <button ref={ref} onClick={onClick} className={optionClasses}>
         <div className='flex items-center align-middle gap-3'>
           <div
             className={classNames(

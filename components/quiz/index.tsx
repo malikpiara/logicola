@@ -158,7 +158,6 @@ const Quiz: React.FC<QuizProps> = ({
                         selectOption(option.id);
                         onShowStartScreen();
                       }}
-                      //onKeyDown={handleKeyDown}
                     />
                   );
                 })}
@@ -187,7 +186,6 @@ const Quiz: React.FC<QuizProps> = ({
             {showStartScreen && (
               <button
                 type='button'
-                //onKeyDown={handleKeyDown}
                 onClick={onShowStartScreen}
                 className={`text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 
                bg-primary hover:opacity-90
