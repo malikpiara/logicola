@@ -5,6 +5,7 @@ import Prompt from '../prompt';
 import useQuizState from './useQuizState';
 import { StartScreen } from './startScreen';
 import { EndScreen } from './endScreen';
+import Button from '../button';
 
 export interface QuizProps {
   initialQuestionIdx: number;
@@ -35,6 +36,7 @@ const Quiz: React.FC<QuizProps> = ({
     showEndScreen,
     questionIdx,
     selectedOptionId,
+    checkAnswer,
     showSolution,
     currentChapter,
     currentQuestion,
@@ -45,6 +47,7 @@ const Quiz: React.FC<QuizProps> = ({
     selectNextOption,
     selectPreviousOption,
     selectOption,
+    onCheckAnswer,
     onShowSolution,
     onShowStartScreen,
     onShowEndScreen,
@@ -166,7 +169,7 @@ const Quiz: React.FC<QuizProps> = ({
             )}
           </div>
           <hr className='h-px my-4 bg-gray-200 border-0' />
-          {selectedOptionId != null && showSolution && (
+          {selectedOptionId != null && checkAnswer && (
             <div className='p-2 mb-3 text-gray-800'>
               {currentQuestion.answer ? (
                 <h1>{currentQuestion.answer}</h1>
@@ -185,45 +188,30 @@ const Quiz: React.FC<QuizProps> = ({
           )}
           <div className='flex h-max'>
             {showStartScreen && (
-              <button
-                type='button'
-                onClick={onShowStartScreen}
-                className={`text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 
-               bg-primary hover:opacity-90
-           }`}
-              >
-                Start
-              </button>
+              <Button label='Start' onClick={onShowStartScreen} />
             )}
             {!showSolution && !showStartScreen && !showEndScreen && (
-              <button
-                type='button'
-                disabled={selectedOptionId == null}
-                onClick={() => {
-                  incrementScore(selectedOptionId!, currentQuestion.correctId);
-                  onShowSolution();
-                }}
-                className={`text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ${
-                  selectedOptionId == null
-                    ? ' bg-gray-200 cursor-not-allowed'
-                    : 'bg-primary hover:opacity-90'
-                }`}
-              >
-                Check answer
-              </button>
+              <>
+                <Button
+                  label='Check Answer'
+                  disabled={selectedOptionId == null}
+                  onClick={() => {
+                    incrementScore(
+                      selectedOptionId!,
+                      currentQuestion.correctId
+                    );
+                    onShowSolution();
+                    //onCheckAnswer();
+                  }}
+                />
+              </>
             )}
 
-            {selectedOptionId != null &&
-              questionIdx < currentChapter!.questions.length - 1 &&
-              showSolution && (
-                <button
-                  onClick={handleNextQuestion}
-                  type='button'
-                  className={`text-primary rounded-lg text-sm font-semibold px-5 py-2.5 me-2 mb-2 border border-primary hover:opacity-90`}
-                >
-                  Next Question
-                </button>
-              )}
+            {selectedOptionId != null && showSolution && (
+              <>
+                <Button label='Next Question' onClick={handleNextQuestion} />
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -9,6 +9,7 @@ export default function useQuizState(
   const [questionIdx, setQuestionIdx] = useState(initialQuestionIdx);
   const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
   const [showSolution, setShowSolution] = useState(false);
+  const [checkAnswer, setCheckAnswer] = useState(false);
   const [showStartScreen, setShowStartScreen] = useState(true);
   const [showEndScreen, setShowEndScreen] = useState(false);
 
@@ -77,6 +78,11 @@ export default function useQuizState(
   function onShowSolution() {
     setShowSolution(true);
   }
+  function onCheckAnswer() {
+    setCheckAnswer(true);
+    // Check if the selected option is correct.
+    // if it's not, change the styling of the component
+  }
 
   function incrementScore(optionId: number, correctId: number | number[]) {
     if (optionId === correctId) {
@@ -98,6 +104,7 @@ export default function useQuizState(
     questionIdx,
     selectedOptionId,
     showSolution,
+    checkAnswer,
     currentChapter,
     currentQuestion,
     questionCounter,
@@ -108,6 +115,7 @@ export default function useQuizState(
     selectPreviousOption,
     selectOption,
     onShowSolution,
+    onCheckAnswer,
     onShowStartScreen,
     onShowEndScreen,
     setnumOfCorrectQuestions,
