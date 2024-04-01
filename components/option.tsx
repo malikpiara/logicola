@@ -10,7 +10,7 @@ export interface OptionProps {
   showSolution: boolean;
 
   onClick: () => void;
-  onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent) => void;
 }
 
 const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
