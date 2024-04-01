@@ -60,7 +60,7 @@ const Quiz: React.FC<QuizProps> = ({
   }, [selectedOptionId]);
 
   const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent) => {
+    (event: KeyboardEvent) => {
       if (!currentQuestion) return;
 
       switch (event.key) {
