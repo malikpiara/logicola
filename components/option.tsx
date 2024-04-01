@@ -24,7 +24,8 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
         'bg-[#1ad85f]': showSolution && isCorrect,
         'border-rose-200 text-red-500 cursor-not-allowed':
           showSolution && !isCorrect,
-        'border-primary border-2': !showSolution && isActive,
+        'border-primary outline-double outline-primary outline-offset-0 ring-2 ring-offset-0 ring-primary':
+          !showSolution && isActive,
         'hover:border-primary focus:border-primary': !showSolution,
       }
     );
