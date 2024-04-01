@@ -146,6 +146,7 @@ const Quiz: React.FC<QuizProps> = ({
                   return (
                     <Option
                       index={option.id + 1}
+                      showIndex
                       isActive={option.id === selectedOptionId}
                       isCorrect={option.id === currentQuestion.correctId}
                       showSolution={showSolution}

@@ -77,39 +77,6 @@ export function Sidebar() {
                 </span>
               </Link>
             </li>
-            <li>
-              <Link
-                href='#'
-                className='flex flex-col p-2 text-gray-700 rounded-lg  hover:bg-gray-200 opacity-30 cursor-not-allowed'
-              >
-                <div className='text-xs'>CHAPTER 7</div>
-                <span className='flex-1 whitespace-nowrap'>
-                  Propositional Proofs
-                </span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href='#'
-                className='flex flex-col p-2 text-gray-700 rounded-lg hover:bg-gray-200 opacity-30 cursor-not-allowed'
-              >
-                <div className='text-xs'>CHAPTER 8</div>
-                <span className='flex-1 whitespace-nowrap'>
-                  Quantificational Logic
-                </span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href='#'
-                className='flex flex-col p-2 text-gray-700 rounded-lg dark:text-white hover:bg-gray-200 opacity-30 cursor-not-allowed'
-              >
-                <div className='text-xs'>CHAPTER 9</div>
-                <span className='flex-1 whitespace-nowrap'>
-                  Relations and Identity
-                </span>
-              </Link>
-            </li>
           </ul>
         </div>
       </aside>
