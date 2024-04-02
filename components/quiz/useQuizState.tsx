@@ -80,8 +80,16 @@ export default function useQuizState(chapter: number) {
   }
 
   function incrementScore(optionId: number, correctId: number | number[]) {
-    if (optionId === correctId) {
-      setnumOfCorrectQuestions(numOfCorrectQuestions + 1);
+    if (Array.isArray(correctId)) {
+      // Check if correctId is an array
+      if (correctId.includes(optionId)) {
+        setnumOfCorrectQuestions(numOfCorrectQuestions + 1);
+      }
+    } else {
+      // Treat as a single correct answer
+      if (optionId === correctId) {
+        setnumOfCorrectQuestions(numOfCorrectQuestions + 1);
+      }
     }
   }
 

@@ -58,7 +58,7 @@ const Exercise: React.FC<ExerciseProps> = ({
             return (
               <Option
                 isSelected={option.id === selectedOptionId}
-                isCorrect={option.id === question.correctId}
+                isCorrect={question.correctId.includes(option.id)}
                 showSolution={showSolution}
                 key={option.id}
                 label={option.label}

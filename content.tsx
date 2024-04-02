@@ -30,7 +30,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 1,
+        correctId: [1],
         answer: 'This violates 2 (tents might be made of nylon)',
       },
       {
@@ -45,7 +45,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: 'This violates 1.',
       },
       {
@@ -60,7 +60,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 5,
+        correctId: [5],
         answer: 'This violates 6.',
       },
       {
@@ -75,7 +75,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 4,
+        correctId: [4],
         answer: 'This violates 5.',
       },
       {
@@ -90,7 +90,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 1,
+        correctId: [1],
         answer:
           'This violates 2 (solitary and many computer games can involve only a single player).',
       },
@@ -106,7 +106,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 5,
+        correctId: [5],
         answer: 'This violates 6.',
       },
       {
@@ -121,7 +121,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: 'This violates 1 (whales are not fish).',
       },
       {
@@ -151,7 +151,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 5,
+        correctId: [5],
         answer: 'This violates 6.',
       },
       {
@@ -166,7 +166,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 1,
+        correctId: [1],
         answer:
           'This violates 2 (an only child can be an uncle by being married to a sister of a parent).',
       },
@@ -182,7 +182,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 1,
+        correctId: [1],
         answer: 'This violates 2 (most knowledge is not absolutely certain).',
       },
       {
@@ -197,7 +197,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 6,
+        correctId: [6],
         answer: 'This violates 7.',
       },
       {
@@ -212,7 +212,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: 'This violates 1 (you study other things too).',
       },
       {
@@ -227,7 +227,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 3,
+        correctId: [3],
         answer: 'This violates 4.',
       },
       {
@@ -258,7 +258,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 4,
+        correctId: [4],
         answer: 'This violates 5.',
       },
       {
@@ -273,7 +273,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 1,
+        correctId: [1],
         answer: 'This violates 2 (some religions believe in many gods).',
       },
       {
@@ -288,7 +288,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 5,
+        correctId: [5],
         answer: 'This violates 6.',
       },
       {
@@ -318,7 +318,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 2,
+        correctId: [2],
         answer: 'This violates 3.',
       },
       {
@@ -333,7 +333,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 1,
+        correctId: [1],
         answer: 'This violates 2.',
       },
       {
@@ -348,7 +348,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 3,
+        correctId: [3],
         answer: 'This violates 4.',
       },
       {
@@ -379,7 +379,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 3,
+        correctId: [3],
         answer: 'This violates 4.',
       },
       {
@@ -410,7 +410,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: 'This violates 1 (consider pipe organs).',
       },
       {
@@ -426,7 +426,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: 'This violates 1 (coaches also work for such teams).',
       },
       {
@@ -457,7 +457,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer:
           'This violates 1 (dentists drilling your teeth are not punishing you).',
       },
@@ -473,7 +473,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: 'This violates 1 (consider presidents and dictators).',
       },
       {
@@ -503,7 +503,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: 'This violates 1 (a true belief might be a lucky guess).',
       },
       {
@@ -519,7 +519,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 3,
+        correctId: [3],
         answer: 'This violates 4.',
       },
       {
@@ -550,7 +550,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 3,
+        correctId: [3],
         answer: 'This violates 4.',
       },
       {
@@ -565,7 +565,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 1,
+        correctId: [1],
         answer: 'This violates 2 (many doctors are women).',
       },
       {
@@ -581,7 +581,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 2,
+        correctId: [2],
         answer: 'This violates 3.',
       },
       {
@@ -612,7 +612,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer:
           'This violates 1 (if you do not know that it is false, it is just a mistake and not a lie).',
       },
@@ -629,7 +629,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 6,
+        correctId: [6],
         answer: 'This violates 7.',
       },
       {
@@ -644,7 +644,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 4,
+        correctId: [4],
         answer: 'This violates 5.',
       },
       {
@@ -659,7 +659,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 4,
+        correctId: [4],
         answer: 'This violates 5.',
       },
       {
@@ -674,7 +674,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 2,
+        correctId: [2],
         answer: 'This violates 3.',
       },
       {
@@ -689,7 +689,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 4,
+        correctId: [4],
         answer: 'This violates 5.',
       },
       {
@@ -704,7 +704,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 1,
+        correctId: [1],
         answer: "This violates 2 (consider liars who don't steal).",
       },
       {
@@ -719,7 +719,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: 'This violates 1 (consider accidental killing).',
       },
       {
@@ -749,7 +749,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 5,
+        correctId: [5],
         answer: 'This violates 6.',
       },
       {
@@ -810,7 +810,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 4,
+        correctId: [4],
         answer: 'This violates 5.',
       },
       {
@@ -826,7 +826,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 2,
+        correctId: [2],
         answer: 'This violates 3.',
       },
       {
@@ -841,7 +841,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 1,
+        correctId: [1],
         answer: 'This violates 2 (kittens can be male).',
       },
       {
@@ -856,7 +856,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 6,
+        correctId: [6],
         answer: 'This violates 7.',
       },
       {
@@ -871,7 +871,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 3,
+        correctId: [3],
         answer: 'This violates 4.',
       },
       {
@@ -916,7 +916,7 @@ const chapters = [
           { id: 5, label: 'Poor match in emotional tone' },
           { id: 6, label: 'Has non-essential properties' },
         ],
-        correctId: 4,
+        correctId: [4],
         answer: 'This violates 5.',
       },
     ],
@@ -934,7 +934,7 @@ const chapters = [
           { id: 2, label: '(~A · ~B)' },
           { id: 3, label: '(~A V ~B)' },
         ],
-        correctId: 1,
+        correctId: [1],
         answer: '',
       },
       {
@@ -946,7 +946,7 @@ const chapters = [
           { id: 2, label: '~(A · (B V C))' },
           { id: 3, label: '(A · B) V (A · C)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -958,7 +958,7 @@ const chapters = [
           { id: 2, label: '((A · B) V C)' },
           { id: 3, label: '(A V B) · C' },
         ],
-        correctId: 2,
+        correctId: [2],
         answer: '',
       },
       {
@@ -970,7 +970,7 @@ const chapters = [
           { id: 2, label: '~(A → (B V C))' },
           { id: 3, label: '(A V B) → C' },
         ],
-        correctId: 1,
+        correctId: [1],
         answer: '',
       },
       {
@@ -982,7 +982,7 @@ const chapters = [
           { id: 2, label: '(A V B) → C' },
           { id: 3, label: '(A → B) V C' },
         ],
-        correctId: 3,
+        correctId: [3],
         answer: '',
       },
       {
@@ -994,7 +994,7 @@ const chapters = [
           { id: 2, label: '~(~A → (~B V C))' },
           { id: 3, label: '~A → (B V ~C)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1006,7 +1006,7 @@ const chapters = [
           { id: 2, label: '~(~A → (~B V C))' },
           { id: 3, label: '~A → (B V ~C)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1018,7 +1018,7 @@ const chapters = [
           { id: 2, label: '~((A V B) · C)' },
           { id: 3, label: '(A V B) → C' },
         ],
-        correctId: 1,
+        correctId: [1],
         answer: '',
       },
       {
@@ -1030,7 +1030,7 @@ const chapters = [
           { id: 2, label: '(A V B) · C' },
           { id: 3, label: '(A V (B · C))' },
         ],
-        correctId: 3,
+        correctId: [3],
         answer: '',
       },
       {
@@ -1042,7 +1042,7 @@ const chapters = [
           { id: 2, label: '~(A → ~(~B · ~C))' },
           { id: 3, label: '(A → (B · C))' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1055,7 +1055,7 @@ const chapters = [
           { id: 2, label: 'E → (B V M)' },
           { id: 3, label: 'E → (B · M)' },
         ],
-        correctId: 2,
+        correctId: [2],
         answer: '',
       },
       {
@@ -1068,7 +1068,7 @@ const chapters = [
           { id: 2, label: '(C → ((~B) V (T · W)))' },
           { id: 3, label: '((C · B) → (T · W))' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1081,7 +1081,7 @@ const chapters = [
           { id: 2, label: '((~X V M) → G)' },
           { id: 3, label: '(((~X) · (~M)) → G)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1093,7 +1093,7 @@ const chapters = [
           { id: 2, label: '(C → ~M)' },
           { id: 3, label: '(~C → M)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1106,7 +1106,7 @@ const chapters = [
           { id: 2, label: '(~(E V P) → ~R)' },
           { id: 3, label: '((E V P) → ~R)' },
         ],
-        correctId: 2,
+        correctId: [2],
         answer: '',
       },
       {
@@ -1119,7 +1119,7 @@ const chapters = [
           { id: 2, label: '(M V (O → W))' },
           { id: 3, label: '(P → M)' },
         ],
-        correctId: 3,
+        correctId: [3],
         answer: '',
       },
       {
@@ -1132,7 +1132,7 @@ const chapters = [
           { id: 2, label: '((D V C) · L)' },
           { id: 3, label: '(D · (C V L))' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1145,7 +1145,7 @@ const chapters = [
           { id: 2, label: '(H → (J V F))' },
           { id: 3, label: '((H V J) → F)' },
         ],
-        correctId: 1,
+        correctId: [1],
         answer: '',
       },
       {
@@ -1157,7 +1157,7 @@ const chapters = [
           { id: 2, label: '(R → (F · L))' },
           { id: 3, label: '(R V (F · L))' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1169,7 +1169,7 @@ const chapters = [
           { id: 2, label: '(M · F)' },
           { id: 3, label: 'E' },
         ],
-        correctId: 3,
+        correctId: [3],
         answer: '',
       },
     ],
@@ -1187,7 +1187,7 @@ const chapters = [
           { id: 2, label: '(S → (~A · ~I))' },
           { id: 3, label: '(S V (A · I))' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1199,7 +1199,7 @@ const chapters = [
           { id: 2, label: '(S → ~F)' },
           { id: 3, label: '(S V F)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1211,7 +1211,7 @@ const chapters = [
           { id: 2, label: '(Q V ~R)' },
           { id: 3, label: '(Q → R)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1223,7 +1223,7 @@ const chapters = [
           { id: 2, label: '(T → ~P)' },
           { id: 3, label: '(T V P)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1235,7 +1235,7 @@ const chapters = [
           { id: 2, label: '(~T → P)' },
           { id: 3, label: '(T V ~P)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1247,7 +1247,7 @@ const chapters = [
           { id: 2, label: '(~M ≡ R)' },
           { id: 3, label: '(M V R)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1259,7 +1259,7 @@ const chapters = [
           { id: 2, label: '(F V ~D)' },
           { id: 3, label: '(F → D)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1271,7 +1271,7 @@ const chapters = [
           { id: 2, label: '(~A · H)' },
           { id: 3, label: '(A V ~H)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1284,7 +1284,7 @@ const chapters = [
           { id: 2, label: '(~N ≡ A)' },
           { id: 3, label: '(N V A)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1296,7 +1296,7 @@ const chapters = [
           { id: 2, label: '(A → ~E)' },
           { id: 3, label: '(A V E)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1308,7 +1308,7 @@ const chapters = [
           { id: 2, label: '(Y → ~I)' },
           { id: 3, label: '(Y V I)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1320,7 +1320,7 @@ const chapters = [
           { id: 2, label: '(F → K)' },
           { id: 3, label: '(F V ~K)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1333,7 +1333,7 @@ const chapters = [
           { id: 2, label: '(~T → K)' },
           { id: 3, label: '(T V ~K)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1345,7 +1345,7 @@ const chapters = [
           { id: 2, label: '(~M V F)' },
           { id: 3, label: '(M V ~F)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
       {
@@ -1357,7 +1357,7 @@ const chapters = [
           { id: 2, label: '(S → ~W)' },
           { id: 3, label: '(S V W)' },
         ],
-        correctId: 0,
+        correctId: [0],
         answer: '',
       },
     ],

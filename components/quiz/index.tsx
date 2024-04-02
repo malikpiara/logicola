@@ -145,7 +145,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter = 3 }) => {
                       index={option.id + 1}
                       showIndex
                       isSelected={option.id === selectedOptionId}
-                      isCorrect={option.id === currentQuestion.correctId}
+                      isCorrect={currentQuestion.correctId.includes(option.id)}
                       showSolution={showSolution}
                       ref={
                         index === selectedOptionId ? activeOptionRef : undefined
