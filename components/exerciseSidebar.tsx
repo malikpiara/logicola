@@ -75,13 +75,13 @@ const ExerciseSidebar: React.FC<ExerciseSidebarProps> = ({
             {chaptersMap
               .get(chapter)
               .questions.map((item: string, i: number) => {
-                const isActive = isQuestionActive(i);
+                const isSelected = isQuestionActive(i);
                 return (
                   <li key={i}>
                     <Link
                       href={`${path}${i + 1}`}
                       className={`flex flex-col p-2 rounded-lg group ${
-                        isActive
+                        isSelected
                           ? 'bg-primary text-white'
                           : 'text-gray-700 hover:bg-gray-200 opacity-80'
                       }`}

@@ -57,7 +57,7 @@ const Exercise: React.FC<ExerciseProps> = ({
           {question.options.map((option: any) => {
             return (
               <Option
-                isActive={option.id === selectedOptionId}
+                isSelected={option.id === selectedOptionId}
                 isCorrect={option.id === question.correctId}
                 showSolution={showSolution}
                 key={option.id}
