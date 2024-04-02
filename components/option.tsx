@@ -6,7 +6,7 @@ export interface OptionProps {
   index?: number;
   showIndex?: boolean;
   label: string;
-  isActive: boolean;
+  isSelected: boolean;
   isCorrect: boolean;
   showSolution: boolean;
   onClick: () => void;
@@ -14,18 +14,18 @@ export interface OptionProps {
 
 const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
   (
-    { index, showIndex, label, isActive, isCorrect, showSolution, onClick },
+    { index, showIndex, label, isSelected, isCorrect, showSolution, onClick },
     ref
   ) => {
     const optionClasses = classNames(
       'w-full ps-4 text-gray-900 flex items-center border rounded-lg focus:outline-primary transition-colors duration-300',
       {
-        'border-gray-200': !isActive && !showSolution,
+        'border-gray-200': !isSelected && !showSolution,
+        'cursor-not-allowed': showSolution,
         'bg-[#1ad85f]': showSolution && isCorrect,
-        'border-rose-200 text-red-500 cursor-not-allowed':
-          showSolution && !isCorrect,
+        'border-rose-200 text-red-500': showSolution && !isCorrect,
         'border-primary outline-double outline-primary outline-offset-0 ring-2 ring-offset-0 ring-primary':
-          !showSolution && isActive,
+          !showSolution && isSelected,
         'hover:border-primary focus:border-primary': !showSolution,
       }
     );

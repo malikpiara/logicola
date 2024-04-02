@@ -8,7 +8,6 @@ import { EndScreen } from './endScreen';
 import Button from '../button';
 
 export interface QuizProps {
-  initialQuestionIdx: number;
   chapter: number;
   showExerciseId: boolean;
 }
@@ -16,6 +15,7 @@ export interface QuizProps {
 interface Option {
   id: number;
   label: string;
+  isChecked: boolean;
 }
 
 interface Question {
@@ -24,19 +24,15 @@ interface Question {
   options: Option[];
   correctId: number | number[];
   answer?: string; // Gensler's hints
+  isChecked?: boolean;
 }
 
-const Quiz: React.FC<QuizProps> = ({
-  initialQuestionIdx = 0,
-  chapter = 3,
-  showExerciseId = true,
-}) => {
+const Quiz: React.FC<QuizProps> = ({ chapter = 3 }) => {
   const {
     showStartScreen,
     showEndScreen,
     questionIdx,
     selectedOptionId,
-    checkAnswer,
     showSolution,
     currentChapter,
     currentQuestion,
@@ -47,12 +43,10 @@ const Quiz: React.FC<QuizProps> = ({
     selectNextOption,
     selectPreviousOption,
     selectOption,
-    onCheckAnswer,
     onShowSolution,
     onShowStartScreen,
     onShowEndScreen,
-    setnumOfCorrectQuestions,
-  } = useQuizState(chapter, initialQuestionIdx);
+  } = useQuizState(chapter);
 
   // Creating refs to make each option focusable with the keyboard shorcuts.
   const activeOptionRef = useRef<HTMLButtonElement>(null);
@@ -150,7 +144,7 @@ const Quiz: React.FC<QuizProps> = ({
                     <Option
                       index={option.id + 1}
                       showIndex
-                      isActive={option.id === selectedOptionId}
+                      isSelected={option.id === selectedOptionId}
                       isCorrect={option.id === currentQuestion.correctId}
                       showSolution={showSolution}
                       ref={
@@ -169,7 +163,7 @@ const Quiz: React.FC<QuizProps> = ({
             )}
           </div>
           <hr className='h-px my-4 bg-gray-200 border-0' />
-          {selectedOptionId != null && checkAnswer && (
+          {selectedOptionId != null && showSolution && (
             <div className='p-2 mb-3 text-gray-800'>
               {currentQuestion.answer ? (
                 <h1>{currentQuestion.answer}</h1>
@@ -201,7 +195,6 @@ const Quiz: React.FC<QuizProps> = ({
                       currentQuestion.correctId
                     );
                     onShowSolution();
-                    //onCheckAnswer();
                   }}
                 />
               </>

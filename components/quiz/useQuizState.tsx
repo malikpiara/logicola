@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react';
-
 import { chapters } from '@/content';
 
-export default function useQuizState(
-  chapter: number,
-  initialQuestionIdx: number
-) {
-  const [questionIdx, setQuestionIdx] = useState(initialQuestionIdx);
+export default function useQuizState(chapter: number) {
+  const [questionIdx, setQuestionIdx] = useState(0);
   const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
   const [showSolution, setShowSolution] = useState(false);
   const [checkAnswer, setCheckAnswer] = useState(false);
@@ -79,9 +75,8 @@ export default function useQuizState(
     setShowSolution(true);
   }
   function onCheckAnswer() {
-    setCheckAnswer(true);
-    // Check if the selected option is correct.
-    // if it's not, change the styling of the component
+    // TODO: Implement function that checks if the selected
+    // option is correct. If it's not, append a style+classname.
   }
 
   function incrementScore(optionId: number, correctId: number | number[]) {
