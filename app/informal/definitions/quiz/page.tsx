@@ -14,11 +14,11 @@ export default function QuizPage({ params }: { params: { exercise: number } }) {
           }}
           initialQuestionIdx={0}
         /> */}
-        <div className='p-4 w-full'>
+        <main className='p-4 w-full'>
           <NoSSR>
             <Quiz initialQuestionIdx={0} chapter={3} showExerciseId={false} />
           </NoSSR>
-        </div>
+        </main>
       </div>
     </>
   );
