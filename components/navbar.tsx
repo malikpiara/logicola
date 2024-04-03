@@ -110,7 +110,7 @@ const Navbar = () => {
             <NavTopic
               chapter='Chapter 3'
               title='Meanings and Definitions'
-              path='/informal/definitions/1'
+              path='/informal/definitions/quiz'
               newLabel
             />
           </ul>
