@@ -1,7 +1,7 @@
 export function StartScreen() {
   return (
     <>
-      <section className='animate-in max-w-7xl rounded-lg bg-amber-950 w-full h-screen text-center m-0 p-0 text-white flex-col flex justify-center'>
+      <section className='animate-in max-w-7xl rounded-lg bg-rose-950 w-full h-screen text-center p-0 text-white flex-col flex justify-center m-auto'>
         <h1 className='mb-2 text-3xl font-bold'>Ready for a challenge?</h1>
         <p className='mb-5'>
           Test yourself on the skills in this course and earn mastery points for
