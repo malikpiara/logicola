@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import Logo from './logo';
+import NavTopic from './navTopic';
 
 const Navbar = () => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
@@ -11,24 +12,24 @@ const Navbar = () => {
   };
 
   return (
-    <nav className='bg-white border-stone-200'>
+    <nav className='bg-white border-gray-200'>
       <div className='flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4'>
-        <a
-          href='/logicola'
+        <Link
+          href='/'
           className='flex items-center space-x-3 rtl:space-x-reverse'
         >
           <Logo />
           <span className='self-center text-2xl font-semibold text-gray-800 whitespace-nowrap'>
             LogiCola
           </span>
-          <span className='bg-stone-100 text-stone-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md'>
+          <span className='bg-gray-100 text-gray-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded-md'>
             Beta
           </span>
-        </a>
+        </Link>
 
         <button
           type='button'
-          className='inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-stone-500 rounded-lg md:hidden hover:bg-stone-200 focus:outline-none focus:ring-2 focus:ring-stone-200 '
+          className='inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-stone-200 '
         >
           <span className='sr-only'>Open main menu</span>
           <svg
@@ -48,16 +49,16 @@ const Navbar = () => {
           </svg>
         </button>
         <div
-          className={`items-center justify-between font-medium w-full md:flex md:w-auto md:order-1`}
+          className={`items-center justify-between font-semibold w-full md:flex md:w-auto md:order-1`}
         >
-          <ul className='flex flex-col p-4 md:p-0 mt-4 border border-stone-100 rounded-lg bg-stone-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white'>
+          <ul className='flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white'>
             <li>
               <button
                 type='button'
                 onMouseEnter={toggleMenu}
                 id='mega-menu-full-dropdown-button'
                 data-collapse-toggle='mega-menu-full-dropdown'
-                className='flex items-center justify-between w-full py-2 px-3 text-black opacity-50 rounded md:w-auto hover:bg-stone-200 md:hover:bg-transparent md:border-0 md:hover:text-primary hover:opacity-100 md:p-0'
+                className='flex items-center justify-between w-full py-2 px-3 text-black opacity-50 rounded md:w-auto hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-primary hover:opacity-100 md:p-0'
               >
                 Chapters{' '}
                 <svg
@@ -79,20 +80,12 @@ const Navbar = () => {
             </li>
 
             <li>
-              <a
-                href='/answers'
-                className='block py-2 px-3 text-black opacity-50 rounded hover:bg-stone-200 hover:opacity-100 md:hover:bg-transparent md:hover:text-primary md:p-0'
+              <Link
+                href='https://github.com/sponsors/malikpiara'
+                className='block py-2 px-3 text-black opacity-50 rounded hover:bg-gray-200 hover:opacity-100 md:hover:bg-transparent md:hover:text-primary md:p-0'
               >
-                Answers
-              </a>
-            </li>
-            <li>
-              <a
-                href='/contact'
-                className='block py-2 px-3 text-black opacity-50 rounded hover:bg-stone-200 hover:opacity-100 md:hover:bg-transparent md:hover:text-primary md:p-0'
-              >
-                Contact
-              </a>
+                Donate
+              </Link>
             </li>
           </ul>
         </div>
@@ -102,48 +95,32 @@ const Navbar = () => {
         onMouseLeave={toggleMenu}
         className={`${
           !isDropdownVisible && 'hidden'
-        } border-stone-200 shadow-sm bg-stone-50 md:bg-white absolute w-full z-50`}
+        } border-gray-200 shadow-sm bg-gray-50 md:bg-white absolute w-full z-50`}
       >
-        <div className='grid max-w-screen-xl px-4 py-5 mx-auto text-stone-900 sm:grid-cols-2 md:px-6 shadow-sm'>
+        <div className='grid max-w-screen-xl px-4 py-5 mx-auto text-gray-900 sm:grid-cols-2 md:px-6 shadow-sm'>
           <ul>
-            <li>
-              <a
-                href='/logic/basic-propositional-logic'
-                className='block p-3 rounded-lg hover:bg-stone-200'
-              >
-                <div className='font-semibold'>Basic Propositional Logic</div>
-                <span className='text-sm text-stone-500'>Chapter 6</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href='/logic'
-                className='block p-3 rounded-lg hover:bg-stone-200 opacity-30 cursor-not-allowed'
-              >
-                <div className='font-semibold'>Quantificational Logic</div>
-                <span className='text-sm text-stone-500'>Chapter 8</span>
-              </a>
-            </li>
+            <NavTopic
+              chapter='Chapter 3'
+              title='Meanings and Definitions'
+              path='/informal/definitions/quiz'
+              newLabel
+            />
           </ul>
           <ul>
-            <li>
-              <a
+            <NavTopic
+              chapter='Chapter 6'
+              title='Basic Propositional Logic'
+              path='/basic-propositional-logic'
+            />
+            {/* <li>
+              <Link
                 href='/logic'
-                className='block p-3 rounded-lg hover:bg-stone-200 opacity-30 cursor-not-allowed'
-              >
-                <div className='font-semibold'>Propositional Proofs</div>
-                <span className='text-sm text-stone-500'>Chapter 7</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href='/logic'
-                className='block p-3 rounded-lg hover:bg-stone-200 opacity-30 cursor-not-allowed'
+                className='block p-3 rounded-lg hover:bg-gray-200 opacity-30 cursor-not-allowed'
               >
                 <div className='font-semibold'>Relations and Identity</div>
-                <span className='text-sm text-stone-500'>Chapter 9</span>
-              </a>
-            </li>
+                <span className='text-sm text-gray-500'>Chapter 9</span>
+              </Link>
+            </li> */}
           </ul>
         </div>
       </div>

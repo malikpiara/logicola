@@ -1,33 +1,63 @@
 import classNames from 'classnames';
+import React from 'react';
 
 export interface OptionProps {
+  ref?: React.Ref<HTMLButtonElement>;
+  index?: number;
+  showIndex?: boolean;
   label: string;
-  isActive: boolean;
+  isSelected: boolean;
   isCorrect: boolean;
   showSolution: boolean;
-
   onClick: () => void;
 }
-export default function Option({
-  label,
-  isActive,
-  isCorrect,
-  showSolution,
 
-  onClick,
-}: OptionProps) {
-  const className = classNames(
-    'w-full ps-4 text-primary flex items-center border rounded-lg',
-    !isActive && 'border-stone-200',
-    showSolution && (isCorrect ? 'bg-green-100' : 'border-rose-200'),
-    !showSolution && isActive && 'border-primary'
-  );
+const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
+  (
+    { index, showIndex, label, isSelected, isCorrect, showSolution, onClick },
+    ref
+  ) => {
+    const optionClasses = classNames(
+      'w-full ps-4 text-gray-900 flex items-center border rounded-lg focus:outline-primary transition-colors duration-300',
+      {
+        'border-gray-200': !isSelected && !showSolution,
+        'cursor-not-allowed': showSolution,
+        'bg-[#1ad85f]': showSolution && isCorrect,
+        'border-rose-200 text-red-500': showSolution && !isCorrect,
+        'border-primary outline-double outline-primary outline-offset-0 ring-2 ring-offset-0 ring-primary':
+          !showSolution && isSelected,
+        'hover:border-primary focus:border-primary': !showSolution,
+      }
+    );
 
-  return (
-    <button onClick={onClick} className={className}>
-      <div className='flex'>
-        <div className='py-4 ms-2 font-medium text-stone-900'>{label}</div>
-      </div>
-    </button>
-  );
-}
+    return (
+      <button ref={ref} onClick={onClick} className={optionClasses}>
+        <div className='flex items-center align-middle gap-3'>
+          {showIndex && (
+            <div
+              className={classNames(
+                'rounded-full border-2 flex wrap w-8 h-8 items-center align-middle self-center',
+                showSolution && isCorrect && 'border-gray-700',
+                showSolution && !isCorrect && 'border-red-500'
+              )}
+            >
+              <div
+                className={classNames(
+                  'items-center self-center font-medium w-full text-gray-900',
+                  showSolution && !isCorrect && 'text-red-500'
+                )}
+              >
+                {index}
+              </div>
+            </div>
+          )}
+          <div className='py-4 ms-2 font-medium'>{label}</div>
+        </div>
+      </button>
+    );
+  }
+);
+
+Option.displayName = 'Option'; // Add display name here
+
+export default Option;
