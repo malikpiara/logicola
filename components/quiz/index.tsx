@@ -129,10 +129,10 @@ const Quiz: React.FC<QuizProps> = ({ chapter = 3 }) => {
       ) : showEndScreen ? (
         <EndScreen numOfCorrectQuestions={numOfCorrectQuestions} />
       ) : (
-        <div className='animate-in max-w-7xl p-6 bg-white border border-gray-200 rounded-lg mb-6'>
+        <div className='animate-in max-w-7xl p-6 bg-white border border-gray-200 rounded-lg mb-6 m-auto'>
           <div className='mx-auto w-full max-w-screen-xl p-4'>
             {currentQuestion && ( // Ensure questions are loaded
-              <div className='md:flex flex-col md:justify-between gap-5'>
+              <div className='md:flex flex-col md:justify-between gap-5 max-sm:flex max-sm:gap-5'>
                 <Prompt value={currentQuestion.prompt} />
 
                 <h2 className='text-xl font-bold text-gray-800'>
@@ -176,7 +176,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter = 3 }) => {
       )}
 
       <div className='fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200'>
-        <div className='flex justify-end gap-5 items-center h-full align-bottom'>
+        <div className='flex justify-end gap-5 items-center h-full align-bottom text-gray-800 font-semibold'>
           {!showStartScreen && !showEndScreen && (
             <div className='flex'>{questionCounter} of 10</div>
           )}
