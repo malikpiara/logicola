@@ -26,12 +26,12 @@ const NavTopic = ({
         <div className='flex gap-3'>
           <div className='font-semibold'>{title}</div>
           {newLabel && (
-            <span className='bg-primary text-white text-xs font-medium me-2 px-2.5 py-1 rounded-md'>
+            <span className='bg-primary text-white text-xs font-semibold me-2 px-2.5 py-1 rounded-md'>
               New
             </span>
           )}
         </div>
-        <span className='text-sm text-gray-500'>{chapter}</span>
+        <span className='text-sm font-medium text-gray-500'>{chapter}</span>
       </Link>
     </li>
   );

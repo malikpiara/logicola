@@ -22,7 +22,7 @@ const Navbar = () => {
           <span className='self-center text-2xl font-semibold text-gray-800 whitespace-nowrap'>
             LogiCola
           </span>
-          <span className='bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md'>
+          <span className='bg-gray-100 text-gray-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded-md'>
             Beta
           </span>
         </Link>
@@ -49,7 +49,7 @@ const Navbar = () => {
           </svg>
         </button>
         <div
-          className={`items-center justify-between font-medium w-full md:flex md:w-auto md:order-1`}
+          className={`items-center justify-between font-semibold w-full md:flex md:w-auto md:order-1`}
         >
           <ul className='flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white'>
             <li>
@@ -81,18 +81,10 @@ const Navbar = () => {
 
             <li>
               <Link
-                href='/answers'
+                href='https://github.com/sponsors/malikpiara'
                 className='block py-2 px-3 text-black opacity-50 rounded hover:bg-gray-200 hover:opacity-100 md:hover:bg-transparent md:hover:text-primary md:p-0'
               >
-                Answers
-              </Link>
-            </li>
-            <li>
-              <Link
-                href='/contact'
-                className='block py-2 px-3 text-black opacity-50 rounded hover:bg-gray-200 hover:opacity-100 md:hover:bg-transparent md:hover:text-primary md:p-0'
-              >
-                Contact
+                Donate
               </Link>
             </li>
           </ul>
