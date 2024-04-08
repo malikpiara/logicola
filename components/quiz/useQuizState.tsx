@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { chapters } from '@/content';
+import { chapters } from '@/contentOld';
 
 export default function useQuizState(chapter: number) {
   const [questionIdx, setQuestionIdx] = useState(0);
