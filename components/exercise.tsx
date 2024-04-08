@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Option from './option';
-import { chapters } from '@/content';
+import { chapters } from '@/contentOld';
 import Link from 'next/link';
 import Prompt from './prompt';
 
