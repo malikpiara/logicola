@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { useState } from 'react';
 import Logo from './logo';
 import NavTopic from './navTopic';
+import { Content } from '@/types';
 
-const Navbar = () => {
+const Navbar = ({ chapters }: { chapters: Content['chapters'] }) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
 
   const toggleMenu = () => {
@@ -97,32 +98,17 @@ const Navbar = () => {
           !isDropdownVisible && 'hidden'
         } border-gray-200 shadow-sm bg-gray-50 md:bg-white absolute w-full z-50`}
       >
-        <div className='grid max-w-screen-xl px-4 py-5 mx-auto text-gray-900 sm:grid-cols-2 md:px-6 shadow-sm'>
-          <ul>
+        <ul className='grid max-w-screen-xl px-4 py-5 mx-auto text-gray-900 sm:grid-cols-2 md:px-6 shadow-sm'>
+          {Object.entries(chapters).map(([slug, chapter]) => (
             <NavTopic
-              chapter='Chapter 3'
-              title='Meanings and Definitions'
-              path='/informal/definitions/quiz'
-              newLabel
+              key={slug}
+              chapter={`Chapter ${chapter.index}`}
+              title={chapter.title}
+              path={`/${slug}`}
+              badge={chapter.displayBadge}
             />
-          </ul>
-          <ul>
-            <NavTopic
-              chapter='Chapter 6'
-              title='Basic Propositional Logic'
-              path='/basic-propositional-logic'
-            />
-            {/* <li>
-              <Link
-                href='/logic'
-                className='block p-3 rounded-lg hover:bg-gray-200 opacity-30 cursor-not-allowed'
-              >
-                <div className='font-semibold'>Relations and Identity</div>
-                <span className='text-sm text-gray-500'>Chapter 9</span>
-              </Link>
-            </li> */}
-          </ul>
-        </div>
+          ))}
+        </ul>
       </div>
     </nav>
   );

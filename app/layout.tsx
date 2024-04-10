@@ -3,6 +3,7 @@ import { Inter, Roboto_Slab } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/navbar';
 import { Footer } from '@/components/footer';
+import { content } from '@/content';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -40,7 +41,7 @@ export default function RootLayout({
       <body
         className={`antialiased min-h-screen h-screen bg-white text-primary ${inter.className}`}
       >
-        <Navbar />
+        <Navbar chapters={content.chapters} />
         <main className='w-full h-full flex'>{children}</main>
         <Footer />
       </body>

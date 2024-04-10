@@ -7,6 +7,7 @@ export type Content = {
 export type Chapter = {
   title: string;
   index: number;
+  displayBadge?: string;
   subChapters: {
     [key: string]: SubChapter;
   };

@@ -43,6 +43,7 @@ export const content: Content = {
     'meaning-and-definitions': {
       title: 'Meaning and Definitions',
       index: 3,
+      displayBadge: 'New',
       subChapters: {
         'uses-of-language': {
           title: 'Uses of Language',
