@@ -1,40 +1,52 @@
-type Content = {
-  chapters: {
-    [key: string]: Chapter;
-  };
-};
-
-type Chapter = {
-  title: string;
-  index: number;
-  subChapters: {
-    [key: string]: SubChapter;
-  };
-};
-
-type SubChapter = {
-  title: string;
-  index: number;
-  exercises: Exercise[];
-};
-
-type Exercise = {
-  prompt: string;
-  options: string[];
-  correctIndices: number[];
-  answer: string;
-};
+import { Content } from './types';
 
 export const content: Content = {
   chapters: {
-    definitions: {
-      title: 'Definitions',
+    test: {
+      title: 'test chapter',
+      index: 1,
+      subChapters: {
+        teste: {
+          title: 'teste',
+          description: 'test',
+          index: 0,
+          questions: [
+            {
+              prompt: 'test',
+              options: ['test1', 'test2', 'test3', 'test4'],
+              correctIndices: [0, 1, 2],
+              answer: 'test',
+            },
+            {
+              prompt: 'test',
+              options: ['test1', 'test2', 'test3', 'test4'],
+              correctIndices: [1],
+              answer: 'test',
+            },
+            {
+              prompt: 'test',
+              options: ['test1', 'test2', 'test3', 'test4'],
+              correctIndices: [2],
+              answer: 'test',
+            },
+            {
+              prompt: 'test',
+              options: ['test1', 'test2', 'test3', 'test4'],
+              correctIndices: [3],
+              answer: 'test',
+            },
+          ],
+        },
+      },
+    },
+    'meaning-and-definitions': {
+      title: 'Meaning and Definitions',
       index: 3,
       subChapters: {
-        definitions: {
-          title: 'Definitions',
-          index: 0,
-          exercises: [
+        'uses-of-language': {
+          title: 'Uses of Language',
+          index: 1,
+          questions: [
             {
               prompt: 'Science is that cold and empty worship of experiments.',
               options: [
@@ -908,14 +920,15 @@ export const content: Content = {
         },
       },
     },
-    'easier-translations': {
-      title: 'Easier Translations',
-      index: 6.1,
+    'basic-propositional-logic': {
+      title: 'Basic Propositional Logic',
+      index: 6,
       subChapters: {
-        definitions: {
-          title: 'Definitions',
-          index: 0,
-          exercises: [
+        'easier-translations': {
+          index: 1,
+          title: 'Easier Translations',
+          description: 'Placeholder',
+          questions: [
             {
               prompt: 'Not both A and B',
               options: ['~(A V B)', '~(A · B)', '(~A · ~B)', '(~A V ~B)'],
@@ -1131,16 +1144,11 @@ export const content: Content = {
             },
           ],
         },
-      },
-    },
-    'harder-translations': {
-      title: 'Harder Translations',
-      index: 6.8,
-      subChapters: {
-        definitions: {
-          title: 'Definitions',
-          index: 0,
-          exercises: [
+        'harder-translations': {
+          index: 8,
+          title: 'Harder Translations',
+          description: 'Placeholder',
+          questions: [
             {
               prompt: 'If she goes, then you’ll be alone but I’ll be here.',
               options: [

@@ -69,9 +69,19 @@ const transformChapters = (oldChapters: OldChapter[]): NewContent => {
   return newContent;
 };
 
+const transformQuestions = (oldQuestions: OldQuestion[]): NewExercise[] => {
+  return oldQuestions.map((question) => ({
+    prompt: question.prompt,
+    options: question.options.map((option) => option.label),
+    correctIndices: question.correctId,
+    answer: question.answer,
+  }));
+};
+
 import { chapters } from '@/contentOld';
 import { writeFile } from 'fs';
 
+/* 
 const newContent = transformChapters(chapters);
 console.log(newContent);
 
@@ -84,3 +94,8 @@ writeFile('new-content.json', str, (err) => {
   }
   console.log('File has been created');
 });
+ */
+
+const newQuestions = transformQuestions(chapters[0].questions);
+
+console.log(newQuestions);

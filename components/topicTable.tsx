@@ -1,48 +1,32 @@
-import Link from 'next/link';
+import { SubChapter } from '@/types';
+import DynamicLink from '@/components/dynamicLink';
 
-const subChapters = [
-  {
-    id: 6.1,
-    title: 'Easier Translations (6.1)',
-    topic: {
-      description:
-        'Translating english sentences into well-formed formula (wff)',
-    },
-    path: '/basic-propositional-logic/easier-translations/1',
-  },
-  {
-    id: 6.8,
-    title: 'Harder Translations (6.8)',
-    topic: {
-      description:
-        'Translating english sentences into well-formed formula (wff)',
-    },
-    path: '/basic-propositional-logic/harder-translations/1',
-  },
-];
-
-const TopicTable = () => {
+const TopicTable = ({
+  subChapters,
+}: {
+  subChapters: { [key: string]: SubChapter };
+}) => {
   return (
     <>
-      {subChapters.map((item) => {
+      {Object.entries(subChapters).map(([slug, subChapter]) => {
         return (
           <div
-            key={item.id}
+            key={slug}
             className='max-w-7xl p-6 bg-white border border-gray-200 rounded-lg mb-6'
           >
             <div>
-              <Link href={item.path}>
+              <DynamicLink href={slug}>
                 <h3 className='mb-2 text-xl font-bold tracking-tight text-gray-900 hover:text-primary'>
-                  {item.title}
+                  {subChapter.title}
                 </h3>
-              </Link>
+              </DynamicLink>
 
               <div className='mx-auto w-full max-w-screen-xl py-2'>
                 <div className='md:flex md:justify-between'>
                   <div className='flex flex-col w-full'>
                     <div>
                       <ul className='text-gray-500 font-medium'>
-                        <Link href={item.path}>
+                        <DynamicLink href={slug}>
                           <div className='flex items-center mb-4 p-3 rounded-md hover:bg-gray-200 gap-2'>
                             <svg
                               className='w-5 h-5 text-gray-500'
@@ -59,9 +43,9 @@ const TopicTable = () => {
                                 d='M7.418 17.861 1 20l2.139-6.418m4.279 4.279 10.7-10.7a3.027 3.027 0 0 0-2.14-5.165c-.802 0-1.571.319-2.139.886l-10.7 10.7m4.279 4.279-4.279-4.279m2.139 2.14 7.844-7.844m-1.426-2.853 4.279 4.279'
                               />
                             </svg>
-                            <li>{item.topic.description}</li>
+                            <li>{subChapter.description}</li>
                           </div>
-                        </Link>
+                        </DynamicLink>
                       </ul>
                     </div>
                   </div>
