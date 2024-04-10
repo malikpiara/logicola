@@ -5,22 +5,31 @@ import { Question } from '@/types';
 import { QuestionHeader } from './questionHeader';
 import { OptionsList } from './optionsList';
 import { SolutionDisplay } from './solutionDisplay';
+import { shuffleOptionsWithCorrectIndices } from '@/lib/utils';
+import NoSSR from '../NoSSR';
 
 type ExerciseProps = {
   question: Question;
   questionIndexToShow?: number;
   nextQuestionButton: ReactNode;
+  randomizeOptions?: boolean;
 };
 
 const QuestionComponent: React.FC<ExerciseProps> = ({
   question,
   questionIndexToShow,
   nextQuestionButton,
+  randomizeOptions = false,
 }) => {
   const [selectedOptionIndices, setSelectedOptionIndices] = useState<
     Set<number>
   >(new Set());
+
   const [showSolution, setShowSolution] = useState(false);
+
+  const [shuffledQuestion] = useState<Question>(() =>
+    randomizeOptions ? shuffleOptionsWithCorrectIndices(question) : question
+  );
 
   const hasMultipleAnswers = question.correctIndices.length > 1;
 
@@ -48,15 +57,18 @@ const QuestionComponent: React.FC<ExerciseProps> = ({
       )}
       <div className='mx-auto w-full max-w-screen-xl p-4'>
         <div className='md:flex flex-col md:justify-between gap-5'>
-          <Prompt value={question.prompt} />
+          <Prompt value={shuffledQuestion.prompt} />
 
-          <OptionsList
-            options={question.options}
-            selectedOptionIndices={selectedOptionIndices}
-            showSolution={showSolution}
-            correctIndices={question.correctIndices}
-            onOptionClick={handleOptionClick}
-          />
+          {/* Can't use ssr because of hydration mismatch when shuffling/randomizing options */}
+          <NoSSR>
+            <OptionsList
+              options={shuffledQuestion.options}
+              selectedOptionIndices={selectedOptionIndices}
+              showSolution={showSolution}
+              correctIndices={shuffledQuestion.correctIndices}
+              onOptionClick={handleOptionClick}
+            />
+          </NoSSR>
         </div>
       </div>
       <hr className='h-px my-4 bg-gray-200 border-0' />
@@ -64,8 +76,8 @@ const QuestionComponent: React.FC<ExerciseProps> = ({
       {showSolution && (
         <SolutionDisplay
           selectedOptionIndices={selectedOptionIndices}
-          correctIndices={question.correctIndices}
-          answer={question.answer}
+          correctIndices={shuffledQuestion.correctIndices}
+          answer={shuffledQuestion.answer}
         />
       )}
 

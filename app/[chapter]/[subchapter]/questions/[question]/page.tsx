@@ -1,9 +1,9 @@
 'use client';
 import { content } from '@/content';
-import Question from '@/components/question/question';
 import Link from 'next/link';
+import Question from '@/components/question/question';
 
-export default function SubchapterPage({
+export default function SubchapterQuestionsPage({
   params: {
     chapter: chapterSlug,
     subchapter: subChapterSlug,
@@ -36,6 +36,7 @@ export default function SubchapterPage({
             question={questions[questionIndex]}
             questionIndexToShow={questionIndex}
             nextQuestionButton={nextQuestionButton}
+            randomizeOptions={subChapter.randomizeQuestions}
           />
         </div>
       </div>

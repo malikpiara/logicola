@@ -17,6 +17,7 @@ export type SubChapter = {
   description?: string;
   index: number;
   questions: Question[];
+  randomizeQuestions?: boolean;
 };
 
 export type Question = {

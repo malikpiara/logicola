@@ -10,6 +10,7 @@ export const content: Content = {
           title: 'teste',
           description: 'test',
           index: 0,
+          randomizeQuestions: true,
           questions: [
             {
               prompt: 'test',
