@@ -38,10 +38,10 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`antialiased min-h-screen bg-white text-primary ${inter.className}`}
+        className={`antialiased min-h-screen h-screen bg-white text-primary ${inter.className}`}
       >
         <Navbar />
-        <main className={`flex`}>{children}</main>
+        <main className='w-full h-full flex'>{children}</main>
         <Footer />
       </body>
     </html>

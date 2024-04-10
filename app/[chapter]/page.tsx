@@ -1,4 +1,3 @@
-import { Sidebar } from '@/components/sidebar';
 import TopicTable from '@/components/topicTable';
 import { content } from '@/content';
 
@@ -25,8 +24,7 @@ export default function ChapterPage({ params }: Props) {
 
   return (
     <>
-      <div className='flex w-full h-screen overflow-scroll'>
-        <Sidebar />
+      <div className='flex w-full h-full overflow-scroll'>
         <div className='p-4 w-full'>
           <h1 className='mb-6 text-3xl font-bold text-gray-900'>
             Chapter {chapter.index + 1}: {chapter.title}

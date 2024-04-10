@@ -23,15 +23,15 @@ const Option: React.FC<OptionProps> = ({
   ...props
 }) => {
   const optionClasses = classNames(
-    'w-full ps-4 text-gray-900 flex items-center border rounded-lg focus:outline-primary transition-colors duration-300',
+    'w-full ps-4 text-gray-900 flex items-center border rounded-lg focus:outline-green-600 transition-colors duration-300',
     {
       'border-gray-200': !isSelected && !showSolution,
       'cursor-not-allowed': showSolution,
       'bg-[#1ad85f]': showSolution && isCorrect,
       'border-rose-200 text-red-500': showSolution && !isCorrect,
-      'border-primary outline-double outline-primary outline-offset-0 ring-2 ring-offset-0 ring-primary':
+      'border-green-600 outline-double outline-green-600 outline-offset-0 ring-2 ring-offset-0 ring-green-600':
         !showSolution && isSelected,
-      'hover:border-primary focus:border-primary': !showSolution,
+      'hover:border-green-600 focus:border-green-600': !showSolution,
     }
   );
 

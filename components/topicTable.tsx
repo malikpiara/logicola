@@ -9,13 +9,14 @@ const TopicTable = ({
   return (
     <>
       {Object.entries(subChapters).map(([slug, subChapter]) => {
+        const firstQuestionPath = `${slug}/questions/1`;
         return (
           <div
             key={slug}
             className='max-w-7xl p-6 bg-white border border-gray-200 rounded-lg mb-6'
           >
             <div>
-              <DynamicLink href={slug}>
+              <DynamicLink href={firstQuestionPath}>
                 <h3 className='mb-2 text-xl font-bold tracking-tight text-gray-900 hover:text-primary'>
                   {subChapter.title}
                 </h3>
@@ -26,7 +27,7 @@ const TopicTable = ({
                   <div className='flex flex-col w-full'>
                     <div>
                       <ul className='text-gray-500 font-medium'>
-                        <DynamicLink href={slug}>
+                        <DynamicLink href={firstQuestionPath}>
                           <div className='flex items-center mb-4 p-3 rounded-md hover:bg-gray-200 gap-2'>
                             <svg
                               className='w-5 h-5 text-gray-500'
