@@ -19,7 +19,6 @@ const Option: React.FC<OptionProps> = ({
   isCorrect,
   showSolution,
   onClick,
-  type = 'button',
   ...props
 }) => {
   const optionClasses = classNames(
@@ -36,7 +35,12 @@ const Option: React.FC<OptionProps> = ({
   );
 
   return (
-    <button onClick={onClick} className={optionClasses} {...props}>
+    <button
+      {...props}
+      type='button'
+      onClick={onClick}
+      className={optionClasses}
+    >
       <div className='flex items-center align-middle gap-3'>
         {showIndex && (
           <div
