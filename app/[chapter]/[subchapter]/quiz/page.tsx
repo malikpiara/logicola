@@ -1,6 +1,8 @@
 'use client';
 import NoSSR from '@/components/NoSSR';
 import QuestionComponent from '@/components/question/question';
+import { EndScreen } from '@/components/quiz/endScreen';
+import { StartScreen } from '@/components/quiz/startScreen';
 import { content } from '@/content';
 import { shuffleArray } from '@/lib/utils';
 import type { Question } from '@/types';
@@ -14,11 +16,14 @@ export default function QuizPage({
 }: {
   params: { chapter: string; subchapter: string };
 }) {
+  const [isStartScreen, setIsStartScreen] = useState(true);
+  const [isEndScreen, setIsEndScreen] = useState(false);
+
   const chapter = content.chapters[chapterSlug];
   const subChapter = chapter.subChapters[subChapterSlug];
 
   const [showSolution, setShowSolution] = useState(false);
-  const [questions] = useState<Question[]>(
+  const [questions, setQuestions] = useState<Question[]>(
     take10RandomQuestions(subChapter.questions)
   );
 
@@ -35,6 +40,8 @@ export default function QuizPage({
           setCurrentQuestionIndex(currentQuestionIndex + 1);
           setSelectedOptionIndices(new Set());
           setShowSolution(false);
+        } else {
+          setIsEndScreen(true);
         }
       }}
     >
@@ -45,6 +52,32 @@ export default function QuizPage({
   const [selectedOptionIndices, setSelectedOptionIndices] = useState<
     Set<number>
   >(new Set());
+
+  if (isStartScreen) {
+    return (
+      <StartScreen
+        onClickStart={() => setIsStartScreen(false)}
+        questionsCount={questions.length}
+      />
+    );
+  }
+
+  if (isEndScreen) {
+    return (
+      <EndScreen
+        correctQuestionsCount={score}
+        totalQuestionsCount={questions.length}
+        onClickTryAgain={() => {
+          setIsEndScreen(false);
+          setCurrentQuestionIndex(0);
+          setScore(0);
+          setSelectedOptionIndices(new Set());
+          setShowSolution(false);
+          setQuestions(take10RandomQuestions(subChapter.questions));
+        }}
+      />
+    );
+  }
 
   return (
     <>

@@ -23,7 +23,7 @@ export const Sidebar = () => {
   }>();
 
   return (
-    <aside className='flex h-full bg-gray-50 p-4 overflow-scroll'>
+    <aside className='flex h-full bg-gray-50 p-4 overflow-scroll z-40'>
       <Accordion
         type='multiple'
         className='w-80 h-full'
