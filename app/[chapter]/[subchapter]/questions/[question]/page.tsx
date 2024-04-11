@@ -2,8 +2,9 @@
 import { content } from '@/content';
 import Link from 'next/link';
 import Question from '@/components/question/question';
+import { useState } from 'react';
 
-export default function SubchapterQuestionsPage({
+export default function SubchapterQuestionPage({
   params: {
     chapter: chapterSlug,
     subchapter: subChapterSlug,
@@ -25,6 +26,12 @@ export default function SubchapterQuestionsPage({
     </Link>
   );
 
+  const [selectedOptionIndices, setSelectedOptionIndices] = useState<
+    Set<number>
+  >(new Set());
+
+  const [showSolution, setShowSolution] = useState(false);
+
   return (
     <>
       <div className='flex w-full h-full overflow-scroll'>
@@ -36,7 +43,11 @@ export default function SubchapterQuestionsPage({
             question={questions[questionIndex]}
             questionIndexToShow={questionIndex}
             nextQuestionButton={nextQuestionButton}
+            selectedOptionIndices={selectedOptionIndices}
+            setSelectedOptionIndices={setSelectedOptionIndices}
             randomizeOptions={subChapter.randomizeQuestions}
+            showSolution={showSolution}
+            onAnswerCheck={() => setShowSolution(true)}
           />
         </div>
       </div>

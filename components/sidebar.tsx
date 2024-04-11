@@ -70,6 +70,19 @@ export const Sidebar = () => {
                               : undefined
                           }
                         >
+                          <Link
+                            className={classNames(
+                              'pl-2 flex flex-1 items-center justify-between py-2 transition-all rounded-lg',
+                              currentChapter === chapterSlug &&
+                                currentSubChapter === subChapterSlug &&
+                                !currentQuestion
+                                ? 'bg-green-600 text-white'
+                                : ' hover:bg-gray-200'
+                            )}
+                            href={`/${chapterSlug}/${subChapterSlug}/quiz`}
+                          >
+                            Quiz
+                          </Link>
                           {subChapter.questions.map((_, index) => (
                             <AccordionItem key={index} value={index.toString()}>
                               <Link

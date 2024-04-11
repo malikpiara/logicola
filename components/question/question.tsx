@@ -1,5 +1,5 @@
 'use client';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import Prompt from '../prompt';
 import { Question } from '@/types';
 import { QuestionHeader } from './questionHeader';
@@ -12,24 +12,34 @@ type ExerciseProps = {
   question: Question;
   questionIndexToShow?: number;
   nextQuestionButton: ReactNode;
+  selectedOptionIndices: Set<number>;
+  setSelectedOptionIndices: React.Dispatch<React.SetStateAction<Set<number>>>;
   randomizeOptions?: boolean;
+  showSolution?: boolean;
+  onAnswerCheck: (isCorrect: boolean) => void;
+  scoreboard?: ReactNode;
 };
 
 const QuestionComponent: React.FC<ExerciseProps> = ({
   question,
   questionIndexToShow,
   nextQuestionButton,
+  selectedOptionIndices,
+  setSelectedOptionIndices,
   randomizeOptions = false,
+  showSolution = false,
+  onAnswerCheck,
+  scoreboard,
 }) => {
-  const [selectedOptionIndices, setSelectedOptionIndices] = useState<
-    Set<number>
-  >(new Set());
-
-  const [showSolution, setShowSolution] = useState(false);
-
-  const [shuffledQuestion] = useState<Question>(() =>
+  const [shuffledQuestion, setShuffledQuestion] = useState<Question>(() =>
     randomizeOptions ? shuffleOptionsWithCorrectIndices(question) : question
   );
+
+  useEffect(() => {
+    setShuffledQuestion(
+      randomizeOptions ? shuffleOptionsWithCorrectIndices(question) : question
+    );
+  }, [question, randomizeOptions]);
 
   const hasMultipleAnswers = question.correctIndices.length > 1;
 
@@ -49,6 +59,8 @@ const QuestionComponent: React.FC<ExerciseProps> = ({
       setSelectedOptionIndices(isSelected ? new Set() : new Set([optionIndex]));
     }
   };
+
+  console.log(showSolution);
 
   return (
     <div className='max-w-7xl p-6 bg-white border border-gray-200 rounded-lg mb-6'>
@@ -84,18 +96,20 @@ const QuestionComponent: React.FC<ExerciseProps> = ({
       <div className='flex justify-between'>
         <button
           type='button'
-          disabled={selectedOptionIndices.size === 0}
+          disabled={showSolution || selectedOptionIndices.size === 0}
           onClick={() => {
-            setShowSolution(true);
+            // if selected options and correct options are the same, then the answer is correct
+            const isCorrect = shuffledQuestion.correctIndices.every(
+              (correctIndex) => selectedOptionIndices.has(correctIndex)
+            );
+            onAnswerCheck(isCorrect);
           }}
-          className={`text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ${
-            selectedOptionIndices.size === 0
-              ? ' bg-gray-200 cursor-not-allowed'
-              : 'bg-green-600 hover:opacity-90'
-          }`}
+          className='text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 disabled:bg-gray-200 disabled:cursor-not-allowed bg-green-600 hover:opacity-90'
         >
           Check answer
         </button>
+
+        {scoreboard}
 
         {nextQuestionButton}
       </div>
