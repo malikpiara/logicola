@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import mascotPic from '@/public/mascot.png';
+import { EmailForm } from './emailForm';
 
 const header = {
   title: 'LogiCola on every device',
@@ -23,6 +24,7 @@ export function Header() {
               <p className='text-center sm:text-left text-lg font-normal text-gray-500 lg:text-xl'>
                 {header.description}
               </p>
+              <EmailForm />
             </div>
           </div>
         </div>
