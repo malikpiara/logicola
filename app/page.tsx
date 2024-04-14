@@ -15,7 +15,7 @@ const accordionData = [
   {
     title: "What's the difference between this and the original software?",
     content:
-      'This version of LogiCola is a remake of the original, built with web software. You can use in any device that has an internet connection, regardless of the operating system. It only has a couple of months, so, most chapters and exercises are missing.',
+      'This version of LogiCola is a remake of the original, built with web software. You can use it in any device that has an internet connection, regardless of the operating system. It only has a couple of months, so, most chapters and exercises are missing.',
   },
   {
     title: 'Is there also a new version of Logiskor?',

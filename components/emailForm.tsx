@@ -1,11 +1,25 @@
+'use client';
+import { useState } from 'react';
+import Button from './button';
+
 export function EmailForm() {
+  const [email, setEmail] = useState('');
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setEmail(value);
+  };
+
+  const handleSubmit = () => {
+    console.log(email);
+  };
   return (
     <>
-      <form action='#'>
+      <form onSubmit={handleSubmit}>
         <div className='items-center mx-auto mb-3 mt-8 space-y-4 max-w-screen-sm sm:flex sm:space-y-0'>
           <div className='relative w-full'>
             <label
-              for='email'
+              htmlFor='email'
               className='hidden mb-2 text-sm font-medium text-gray-900'
             >
               Email address
@@ -22,24 +36,24 @@ export function EmailForm() {
               </svg>
             </div>
             <input
-              className='block p-3 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg focus:ring-primary-500 focus:border-primary-500'
-              placeholder='Enter your email'
-              type='email'
+              className='block p-3 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500'
               id='email'
-              required=''
+              placeholder={'Enter your email'}
+              type='email'
+              onChange={handleEmailChange}
+              value={email}
+              required
             />
           </div>
-          <div>
-            <button
-              type='submit'
-              className='py-3 px-5 w-full text-sm font-medium text-center text-white rounded-lg border cursor-pointer bg-primary border-primary-600 sm:rounded-none sm:rounded-r-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300'
-            >
-              Subscribe
+          <div className='sm:w-80 flex m-0'>
+            <button className='sm:ml-2 py-3 px-5 w-full text-sm font-semibold text-center text-white rounded-lg border cursor-pointer bg-primary border-primary hover:bg-primary focus:ring-4 focus:ring-primary'>
+              Send me updates
             </button>
+            {/* <Button label='Send me updates' /> */}
           </div>
         </div>
         <div className='mx-auto max-w-screen-sm text-sm text-left text-gray-500 newsletter-form-footer'>
-          We'll never share your data or send you SPAM.
+          We&apos;ll never share your data or send you SPAM.
         </div>
       </form>
     </>
