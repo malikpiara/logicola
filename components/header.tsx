@@ -1,10 +1,11 @@
 import Image from 'next/image';
 import mascotPic from '@/public/mascot.png';
+import { EmailForm } from './emailForm';
 
 const header = {
-  title: 'LogiCola for Everyone',
+  title: 'LogiCola on every device',
   description:
-    'LogiCola helps you learn logic. This is a web version of the original software built by the late Professor Harry Gensler.',
+    'The new and improved version works without emulators or installation. Designed to help students learn logic.',
 };
 
 export function Header() {
@@ -23,6 +24,7 @@ export function Header() {
               <p className='text-center sm:text-left text-lg font-normal text-gray-500 lg:text-xl'>
                 {header.description}
               </p>
+              <EmailForm />
             </div>
           </div>
         </div>
