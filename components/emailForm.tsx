@@ -1,6 +1,9 @@
 'use client';
 import { useState } from 'react';
+import { createClient } from '@/utils/supabase/client';
 import Button from './button';
+
+const supabase = createClient();
 
 export function EmailForm() {
   const [email, setEmail] = useState('');
@@ -11,11 +14,26 @@ export function EmailForm() {
     setEmail(value);
   };
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
-    console.log(email);
-    setEmail('');
-    setFormIsSubmitted(true);
+    try {
+      const { error } = await supabase
+        .from('email_subscriptions')
+        .insert({ email });
+
+      if (error) {
+        // Handle potential errors (e.g., duplicate)
+        console.error('Subscription error:', error);
+        // You might want to display an error message to the user here
+      } else {
+        console.log('Subscription successful');
+        setEmail('');
+        setFormIsSubmitted(true);
+      }
+    } catch (error) {
+      console.error('Subscription error:', error);
+      // Handle general errors
+    }
   };
   return (
     <>
