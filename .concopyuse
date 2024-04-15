@@ -1,5 +1,3 @@
-app/*.tsx
-app/**/*.tsx
-app/**/**/*.tsx
-app/**/**/**/*.tsx
-app/**/**/**/**/*.tsx
+app/[chapter]/[subchapter]/quiz/page.tsx
+components/question/*
+components/quiz/*

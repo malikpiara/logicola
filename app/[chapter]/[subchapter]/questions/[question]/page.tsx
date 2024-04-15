@@ -47,6 +47,7 @@ export default function SubchapterQuestionPage({
             setSelectedOptionIndices={setSelectedOptionIndices}
             randomizeOptions={subChapter.randomizeQuestions}
             showSolution={showSolution}
+            setShowSolution={setShowSolution}
             onAnswerCheck={() => setShowSolution(true)}
           />
         </div>

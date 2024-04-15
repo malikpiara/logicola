@@ -9,7 +9,10 @@ import type { Question } from '@/types';
 import { useState } from 'react';
 
 const take10RandomQuestions = (questions: Question[]) =>
-  shuffleArray(questions).slice(0, 10);
+  shuffleArray(questions).slice(
+    0,
+    process.env.NODE_ENV === 'production' ? 10 : 1
+  );
 
 export default function QuizPage({
   params: { chapter: chapterSlug, subchapter: subChapterSlug },
@@ -95,17 +98,14 @@ export default function QuizPage({
               selectedOptionIndices={selectedOptionIndices}
               setSelectedOptionIndices={setSelectedOptionIndices}
               showSolution={showSolution}
-              onAnswerCheck={(isCorrect) => {
+              setShowSolution={setShowSolution}
+              onAnswerCheck={(isCorrect, isFirstTry) => {
                 setShowSolution(true);
-                if (isCorrect) {
+                if (isCorrect && isFirstTry) {
                   setScore(score + 1);
                 }
               }}
-              scoreboard={
-                <div className='text-gray-900 font-semibold'>
-                  Score: {score} / {questions.length}
-                </div>
-              }
+              maxRetries={3}
             />
           </NoSSR>
         </div>

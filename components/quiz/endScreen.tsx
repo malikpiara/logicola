@@ -15,7 +15,7 @@ export function EndScreen({
   return (
     <>
       {scoreGood && <Fireworks autorun={{ speed: 1, duration: 5000 }} />}
-      <section className='max-w-7xl rounded-lg bg-rose-950 w-full h-full text-center m-auto p-0 text-white flex-col flex justify-center'>
+      <section className='bg-rose-950 w-full h-full text-center m-auto p-0 text-white flex-col flex justify-center'>
         <h1 className='mb-2 text-3xl font-bold'>
           {scoreGood ? 'Hurray! Keep going!' : 'Oh no! Try again.'}
         </h1>
