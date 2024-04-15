@@ -14,7 +14,7 @@ const TopicTable = ({
         return (
           <div
             key={slug}
-            className='max-w-7xl p-6 bg-white border border-gray-200 rounded-lg mb-6'
+            className='mb-6 max-w-7xl rounded-lg border border-gray-200 bg-white p-6'
           >
             <div>
               <DynamicLink href={firstQuestionPath}>
@@ -25,13 +25,13 @@ const TopicTable = ({
 
               <div className='mx-auto w-full max-w-screen-xl py-2'>
                 <div className='md:flex md:justify-between'>
-                  <div className='flex flex-col w-full'>
+                  <div className='flex w-full flex-col'>
                     <div>
-                      <ul className='text-gray-500 font-medium'>
+                      <ul className='font-medium text-gray-500'>
                         <DynamicLink href={firstQuestionPath}>
-                          <div className='flex items-center mb-4 p-3 rounded-md hover:bg-gray-200 gap-2'>
+                          <div className='mb-4 flex items-center gap-2 rounded-md p-3 hover:bg-gray-200'>
                             <svg
-                              className='w-5 h-5 text-gray-500'
+                              className='h-5 w-5 text-gray-500'
                               aria-hidden='true'
                               xmlns='http: //www.w3.org/2000/svg'
                               fill='none'
@@ -49,9 +49,9 @@ const TopicTable = ({
                           </div>
                         </DynamicLink>
                         <DynamicLink href={quizPath}>
-                          <div className='flex items-center mb-4 p-3 rounded-md hover:bg-gray-200 gap-2'>
+                          <div className='mb-4 flex items-center gap-2 rounded-md p-3 hover:bg-gray-200'>
                             <svg
-                              className='w-5 h-5 text-gray-500'
+                              className='h-5 w-5 text-gray-500'
                               aria-hidden='true'
                               xmlns='http://www.w3.org/2000/svg'
                               fill='none'

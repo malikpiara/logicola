@@ -24,8 +24,8 @@ export default function ChapterPage({ params }: Props) {
 
   return (
     <>
-      <div className='flex w-full h-full overflow-scroll'>
-        <div className='p-4 w-full'>
+      <div className='flex h-full w-full overflow-scroll'>
+        <div className='w-full p-4'>
           <h1 className='mb-6 text-3xl font-bold text-gray-900'>
             Chapter {chapter.index + 1}: {chapter.title}
           </h1>

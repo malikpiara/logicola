@@ -19,7 +19,7 @@ export default function SubchapterQuestionPage({
 
   const nextQuestionButton = questionIndex < questions.length - 1 && (
     <Link
-      className='text-green-600 rounded-lg text-sm font-semibold px-5 py-2.5 me-2 mb-2 border border-green-600 hover:opacity-90'
+      className='mb-2 me-2 rounded-lg border border-green-600 px-5 py-2.5 text-sm font-semibold text-green-600 hover:opacity-90'
       href={`/${chapterSlug}/${subChapterSlug}/questions/${questionIndex + 2}`}
     >
       Next
@@ -34,8 +34,8 @@ export default function SubchapterQuestionPage({
 
   return (
     <>
-      <div className='flex w-full h-full overflow-scroll'>
-        <div className='p-4 w-full'>
+      <div className='flex h-full w-full overflow-scroll'>
+        <div className='w-full p-4'>
           <h1 className='mb-6 text-3xl font-bold text-gray-900'>
             {subChapter.title}
           </h1>

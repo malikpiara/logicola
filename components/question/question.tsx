@@ -72,12 +72,12 @@ const QuestionComponent: React.FC<ExerciseProps> = ({
   const posthog = usePostHog();
 
   return (
-    <div className='max-w-7xl p-6 bg-white border border-gray-200 rounded-lg mb-6'>
+    <div className='mb-6 max-w-7xl rounded-lg border border-gray-200 bg-white p-6'>
       {questionIndexToShow !== undefined && (
         <QuestionHeader questionIndexToShow={questionIndexToShow} />
       )}
       <div className='mx-auto w-full max-w-screen-xl p-4'>
-        <div className='md:flex flex-col md:justify-between gap-5'>
+        <div className='flex-col gap-5 md:flex md:justify-between'>
           <Prompt value={shuffledQuestion.prompt} />
 
           {/* Can't use ssr because of hydration mismatch when shuffling/randomizing options */}
@@ -92,7 +92,7 @@ const QuestionComponent: React.FC<ExerciseProps> = ({
           </NoSSR>
         </div>
       </div>
-      <hr className='h-px my-4 bg-gray-200 border-0' />
+      <hr className='my-4 h-px border-0 bg-gray-200' />
 
       {showSolution && (
         <SolutionDisplay
@@ -114,7 +114,7 @@ const QuestionComponent: React.FC<ExerciseProps> = ({
               setSelectedOptionIndices(new Set());
               setShowSolution(false);
             }}
-            className='text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 disabled:bg-gray-200 disabled:cursor-not-allowed bg-green-600 hover:opacity-90'
+            className='mb-2 me-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:bg-gray-200'
           >
             Try again
           </button>
@@ -138,7 +138,7 @@ const QuestionComponent: React.FC<ExerciseProps> = ({
               onAnswerCheck(isCorrect, isFirstTry);
               setRetriesCounter((prev) => prev + 1);
             }}
-            className='text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 disabled:bg-gray-200 disabled:cursor-not-allowed bg-green-600 hover:opacity-90'
+            className='mb-2 me-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:bg-gray-200'
           >
             Check answer
           </button>

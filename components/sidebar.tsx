@@ -23,10 +23,10 @@ export const Sidebar = () => {
   }>();
 
   return (
-    <aside className='flex h-full bg-gray-50 p-4 overflow-scroll z-40'>
+    <aside className='z-40 flex h-full overflow-scroll bg-gray-50 p-4'>
       <Accordion
         type='multiple'
-        className='w-80 h-full'
+        className='h-full w-80'
         defaultValue={currentChapter ? [currentChapter] : []}
       >
         {Object.entries(content.chapters).map(([chapterSlug, chapter]) => (
@@ -72,7 +72,7 @@ export const Sidebar = () => {
                         >
                           <Link
                             className={classNames(
-                              'pl-2 flex flex-1 items-center justify-between py-2 transition-all rounded-lg',
+                              'flex flex-1 items-center justify-between rounded-lg py-2 pl-2 transition-all',
                               currentChapter === chapterSlug &&
                                 currentSubChapter === subChapterSlug &&
                                 !currentQuestion
@@ -87,7 +87,7 @@ export const Sidebar = () => {
                             <AccordionItem key={index} value={index.toString()}>
                               <Link
                                 className={classNames(
-                                  'pl-2 flex flex-1 items-center justify-between py-2 transition-all rounded-lg',
+                                  'flex flex-1 items-center justify-between rounded-lg py-2 pl-2 transition-all',
                                   currentChapter === chapterSlug &&
                                     currentSubChapter === subChapterSlug &&
                                     parseInt(currentQuestion) === index + 1

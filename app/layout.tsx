@@ -41,10 +41,10 @@ export default function RootLayout({
     <html lang='en'>
       <CSPostHogProvider>
         <body
-          className={`antialiased min-h-screen h-screen bg-white text-primary ${inter.className}`}
+          className={`h-screen min-h-screen bg-white text-primary antialiased ${inter.className}`}
         >
           <Navbar chapters={content.chapters} />
-          <main className='w-full h-full flex'>{children}</main>
+          <main className='flex h-full w-full'>{children}</main>
           <Footer />
         </body>
       </CSPostHogProvider>

@@ -11,7 +11,7 @@ export function StartScreen({
 }: StartScreenProps) {
   return (
     <>
-      <section className='animate-in bg-rose-950 w-full h-full text-center p-0 text-white flex-col flex justify-center m-auto'>
+      <section className='m-auto flex h-full w-full flex-col justify-center bg-rose-950 p-0 text-center text-white animate-in'>
         <h1 className='mb-2 text-3xl font-bold'>Ready for a challenge?</h1>
         <p className='mb-5'>
           Test yourself on the skills in this course and earn mastery points for

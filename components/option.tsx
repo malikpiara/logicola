@@ -41,18 +41,18 @@ const Option: React.FC<OptionProps> = ({
       onClick={onClick}
       className={optionClasses}
     >
-      <div className='flex items-center align-middle gap-3'>
+      <div className='flex items-center gap-3 align-middle'>
         {showIndex && (
           <div
             className={classNames(
-              'rounded-full border-2 flex wrap w-8 h-8 items-center align-middle self-center',
+              'wrap flex h-8 w-8 items-center self-center rounded-full border-2 align-middle',
               showSolution && isCorrect && 'border-gray-700',
               showSolution && !isCorrect && 'border-red-500'
             )}
           >
             <div
               className={classNames(
-                'items-center self-center font-medium w-full text-gray-900',
+                'w-full items-center self-center font-medium text-gray-900',
                 showSolution && !isCorrect && 'text-red-500'
               )}
             >
@@ -60,7 +60,7 @@ const Option: React.FC<OptionProps> = ({
             </div>
           </div>
         )}
-        <div className='py-4 ms-2 font-medium'>{label}</div>
+        <div className='ms-2 py-4 font-medium'>{label}</div>
       </div>
     </button>
   );
