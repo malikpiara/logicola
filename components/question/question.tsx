@@ -7,6 +7,7 @@ import { OptionsList } from './optionsList';
 import { SolutionDisplay } from './solutionDisplay';
 import { shuffleOptionsWithCorrectIndices } from '@/lib/utils';
 import NoSSR from '../NoSSR';
+import { usePostHog } from 'posthog-js/react';
 
 type ExerciseProps = {
   question: Question;
@@ -68,6 +69,8 @@ const QuestionComponent: React.FC<ExerciseProps> = ({
     }
   };
 
+  const posthog = usePostHog();
+
   return (
     <div className='max-w-7xl p-6 bg-white border border-gray-200 rounded-lg mb-6'>
       {questionIndexToShow !== undefined && (
@@ -120,7 +123,19 @@ const QuestionComponent: React.FC<ExerciseProps> = ({
             type='button'
             disabled={selectedOptionIndices.size === 0}
             onClick={() => {
-              onAnswerCheck(isCorrect, retriesCounter === 0);
+              const isFirstTry = retriesCounter === 0;
+              posthog.capture('question_answered', {
+                questionIndex: questionIndexToShow,
+                isCorrect,
+                isFirstTry,
+                selectedOptionIndices: Array.from(selectedOptionIndices),
+                correctIndices: shuffledQuestion.correctIndices,
+                retriesCount: retriesCounter,
+                maxRetries,
+                randomizeOptions,
+              });
+
+              onAnswerCheck(isCorrect, isFirstTry);
               setRetriesCounter((prev) => prev + 1);
             }}
             className='text-white font-semibold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 disabled:bg-gray-200 disabled:cursor-not-allowed bg-green-600 hover:opacity-90'

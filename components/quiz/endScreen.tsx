@@ -1,5 +1,7 @@
 import Fireworks from 'react-canvas-confetti/dist/presets/fireworks';
 import Button from '../button';
+import { useEffect } from 'react';
+import { usePostHog } from 'posthog-js/react';
 
 export function EndScreen({
   correctQuestionsCount,
@@ -11,6 +13,16 @@ export function EndScreen({
   onClickTryAgain: () => void;
 }) {
   const scoreGood = correctQuestionsCount >= totalQuestionsCount / 1.5;
+
+  const posthog = usePostHog();
+
+  useEffect(() => {
+    posthog.capture('quiz_completed', {
+      correctQuestionsCount,
+      totalQuestionsCount,
+      scorePercentage: (correctQuestionsCount / totalQuestionsCount) * 100,
+    });
+  }, [correctQuestionsCount, posthog, totalQuestionsCount]);
 
   return (
     <>

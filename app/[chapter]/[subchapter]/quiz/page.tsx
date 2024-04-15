@@ -6,6 +6,7 @@ import { StartScreen } from '@/components/quiz/startScreen';
 import { content } from '@/content';
 import { shuffleArray } from '@/lib/utils';
 import type { Question } from '@/types';
+import { usePostHog } from 'posthog-js/react';
 import { useState } from 'react';
 
 const take10RandomQuestions = (questions: Question[]) =>
@@ -34,6 +35,8 @@ export default function QuizPage({
 
   const [score, setScore] = useState(0);
 
+  const posthog = usePostHog();
+
   const nextQuestionButton = (
     <button
       disabled={!showSolution}
@@ -59,7 +62,12 @@ export default function QuizPage({
   if (isStartScreen) {
     return (
       <StartScreen
-        onClickStart={() => setIsStartScreen(false)}
+        onClickStart={() => {
+          posthog.capture('quiz_started', {
+            questionsCount: questions.length,
+          });
+          setIsStartScreen(false);
+        }}
         questionsCount={questions.length}
       />
     );
@@ -71,6 +79,11 @@ export default function QuizPage({
         correctQuestionsCount={score}
         totalQuestionsCount={questions.length}
         onClickTryAgain={() => {
+          posthog.capture('quiz_try_again', {
+            score,
+            totalQuestionsCount: questions.length,
+          });
+
           setIsEndScreen(false);
           setCurrentQuestionIndex(0);
           setScore(0);
