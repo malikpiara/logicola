@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className='p-4 bg-white sm:p-6'>
+    <footer className='p-4 mt-4 bg-white sm:p-6'>
       <div className='mx-auto max-w-screen-xl'>
         <div className='md:flex md:justify-between'>
           <div className='mb-6 md:mb-0'>
