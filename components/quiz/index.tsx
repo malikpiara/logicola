@@ -6,6 +6,7 @@ import useQuizState from './useQuizState';
 import { StartScreen } from './startScreen';
 import { EndScreen } from './endScreen';
 import Button from '../button';
+import { KeyboardKeys } from './keyboardKeys';
 
 export interface QuizProps {
   chapter: number;
@@ -175,8 +176,12 @@ const Quiz: React.FC<QuizProps> = ({ chapter = 3 }) => {
         </div>
       )}
 
-      <div className='fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200'>
-        <div className='flex justify-end gap-5 items-center h-full align-bottom text-gray-800 font-semibold'>
+      <div className='fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 flex items-center justify-between'>
+        <div className='ml-5'>
+          {!showStartScreen && !showEndScreen && <KeyboardKeys />}
+        </div>
+
+        <div className='flex justify-end gap-5 items-center h-full align-bottom text-gray-800 font-medium'>
           {!showStartScreen && !showEndScreen && (
             <div className='flex'>{questionCounter} of 10</div>
           )}
