@@ -32,7 +32,7 @@ export default function Home() {
         <h1 className='text-center mb-10 text-3xl font-extrabold tracking-tight leading-none text-gray-800 md:text-3xl lg:text-3xl'>
           Frequently Asked Questions
         </h1>
-        <div className='accordion'>
+        <section className='accordion'>
           {accordionData.map((item) => (
             <AccordionItem
               key={item.title}
@@ -40,7 +40,7 @@ export default function Home() {
               content={item.content}
             />
           ))}
-        </div>
+        </section>
         <div className='p-4 w-full'></div>
       </div>
     </>
