@@ -11,6 +11,7 @@
     "format:fix": "prettier --write --ignore-path .gitignore .",
     "test": "vitest"
   },
+  "type": "module",
   "dependencies": {
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-slot": "^1.0.2",
@@ -30,6 +31,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^15.0.2",
     "@types/node": "^20",
     "@types/react": "^18",
