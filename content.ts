@@ -2,44 +2,6 @@ import { Content } from './types';
 
 export const content: Content = {
   chapters: {
-    test: {
-      title: 'test chapter',
-      index: 1,
-      subChapters: {
-        teste: {
-          title: 'teste',
-          description: 'test',
-          index: 0,
-          randomizeQuestions: true,
-          questions: [
-            {
-              prompt: 'test',
-              options: ['test1', 'test2', 'test3', 'test4'],
-              correctIndices: [0, 1, 2],
-              answer: 'test',
-            },
-            {
-              prompt: 'test',
-              options: ['test1', 'test2', 'test3', 'test4'],
-              correctIndices: [1],
-              answer: 'test',
-            },
-            {
-              prompt: 'test',
-              options: ['test1', 'test2', 'test3', 'test4'],
-              correctIndices: [2],
-              answer: 'test',
-            },
-            {
-              prompt: 'test',
-              options: ['test1', 'test2', 'test3', 'test4'],
-              correctIndices: [3],
-              answer: 'test',
-            },
-          ],
-        },
-      },
-    },
     'meaning-and-definitions': {
       title: 'Meaning and Definitions',
       index: 3,
