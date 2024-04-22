@@ -8,6 +8,8 @@ import { SolutionDisplay } from './solutionDisplay';
 import { shuffleOptionsWithCorrectIndices } from '@/lib/utils';
 import NoSSR from '../NoSSR';
 import { usePostHog } from 'posthog-js/react';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { KeyboardKeys } from '../quiz/keyboardKeys';
 
 type ExerciseProps = {
   question: Question;
@@ -71,6 +73,25 @@ const QuestionComponent: React.FC<ExerciseProps> = ({
 
   const posthog = usePostHog();
 
+  const handleAnswerCheck = () => {
+    const isFirstTry = retriesCounter === 0;
+    posthog.capture('question_answered', {
+      questionIndex: questionIndexToShow,
+      isCorrect,
+      isFirstTry,
+      selectedOptionIndices: Array.from(selectedOptionIndices),
+      correctIndices: shuffledQuestion.correctIndices,
+      retriesCount: retriesCounter,
+      maxRetries,
+      randomizeOptions,
+    });
+
+    onAnswerCheck(isCorrect, isFirstTry);
+    setRetriesCounter((prev) => prev + 1);
+  };
+
+  useHotkeys('enter', handleAnswerCheck);
+
   return (
     <div className='mb-6 max-w-7xl rounded-lg border border-gray-200 bg-white p-6'>
       {questionIndexToShow !== undefined && (
@@ -122,27 +143,14 @@ const QuestionComponent: React.FC<ExerciseProps> = ({
           <button
             type='button'
             disabled={selectedOptionIndices.size === 0}
-            onClick={() => {
-              const isFirstTry = retriesCounter === 0;
-              posthog.capture('question_answered', {
-                questionIndex: questionIndexToShow,
-                isCorrect,
-                isFirstTry,
-                selectedOptionIndices: Array.from(selectedOptionIndices),
-                correctIndices: shuffledQuestion.correctIndices,
-                retriesCount: retriesCounter,
-                maxRetries,
-                randomizeOptions,
-              });
-
-              onAnswerCheck(isCorrect, isFirstTry);
-              setRetriesCounter((prev) => prev + 1);
-            }}
+            onClick={() => handleAnswerCheck()}
             className='mb-2 me-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:bg-gray-200'
           >
             Check answer
           </button>
         )}
+
+        <KeyboardKeys questionsAmount={question.options.length} />
 
         {nextQuestionButton}
       </div>

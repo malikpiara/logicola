@@ -22,12 +22,13 @@ export const OptionsList = ({
         return (
           <Option
             key={option}
+            keyboardShortcut={(optionIndex + 1).toString()}
             isSelected={isSelected}
             isCorrect={correctIndices.includes(optionIndex)}
             showSolution={showSolution}
             label={option}
             disabled={showSolution}
-            onClick={() => onOptionClick(optionIndex)}
+            onSelect={() => onOptionClick(optionIndex)}
           />
         );
       })}

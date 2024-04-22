@@ -1,18 +1,18 @@
-export function KeyboardKeys() {
+export function KeyboardKeys({ questionsAmount }: { questionsAmount: number }) {
   return (
-    <p className='text-gray-500 hidden lg:block'>
+    <p className='hidden text-sm text-gray-500 lg:block'>
       You can use keys{' '}
-      <kbd className='px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg'>
+      <kbd className='rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800'>
         1
       </kbd>{' '}
       to{' '}
-      <kbd className='px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg'>
-        7
+      <kbd className='rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800'>
+        {questionsAmount}
       </kbd>
       {' or '}
-      <kbd className='inline-flex items-center px-2 py-1.5 text-gray-800 bg-gray-100 border border-gray-200 rounded-lg'>
+      <kbd className='inline-flex items-center rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-gray-800'>
         <svg
-          className='w-2.5 h-2.5'
+          className='h-2.5 w-2.5'
           aria-hidden='true'
           xmlns='http://www.w3.org/2000/svg'
           fill='currentColor'
@@ -22,9 +22,9 @@ export function KeyboardKeys() {
         </svg>
         <span className='sr-only'>Arrow key up</span>
       </kbd>{' '}
-      <kbd className='inline-flex items-center px-2 py-1.5 text-gray-800 bg-gray-100 border border-gray-200 rounded-lg'>
+      <kbd className='inline-flex items-center rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-gray-800'>
         <svg
-          className='w-2.5 h-2.5'
+          className='h-2.5 w-2.5'
           aria-hidden='true'
           xmlns='http://www.w3.org/2000/svg'
           fill='currentColor'
@@ -35,7 +35,7 @@ export function KeyboardKeys() {
         <span className='sr-only'>Arrow key down</span>
       </kbd>
       {' + '}
-      <kbd className='px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg'>
+      <kbd className='rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800'>
         Enter
       </kbd>{' '}
       to navigate the quiz.

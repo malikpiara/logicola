@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 export interface OptionProps extends React.HTMLProps<HTMLButtonElement> {
   index?: number;
@@ -8,7 +9,8 @@ export interface OptionProps extends React.HTMLProps<HTMLButtonElement> {
   isSelected: boolean;
   isCorrect: boolean;
   showSolution: boolean;
-  onClick: () => void;
+  onSelect: () => void;
+  keyboardShortcut: string;
 }
 
 const Option: React.FC<OptionProps> = ({
@@ -18,7 +20,8 @@ const Option: React.FC<OptionProps> = ({
   isSelected,
   isCorrect,
   showSolution,
-  onClick,
+  onSelect,
+  keyboardShortcut,
   ...props
 }) => {
   const optionClasses = classNames(
@@ -34,11 +37,17 @@ const Option: React.FC<OptionProps> = ({
     }
   );
 
+  useHotkeys(keyboardShortcut, () => {
+    if (showSolution) return;
+    onSelect();
+    (document.activeElement as HTMLElement)?.blur();
+  });
+
   return (
     <button
+      onClick={onSelect}
       {...props}
       type='button'
-      onClick={onClick}
       className={optionClasses}
     >
       <div className='flex items-center gap-3 align-middle'>

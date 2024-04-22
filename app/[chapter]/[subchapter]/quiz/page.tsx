@@ -63,6 +63,7 @@ export default function QuizPage({
     return (
       <StartScreen
         onClickStart={() => {
+          console.log('quiz_started');
           posthog.capture('quiz_started', {
             questionsCount: questions.length,
           });

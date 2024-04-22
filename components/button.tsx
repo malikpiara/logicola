@@ -1,6 +1,8 @@
 import { cn } from '@/lib/utils';
 
-type ButtonProps = React.HTMLProps<HTMLButtonElement>;
+type ButtonProps = React.ComponentPropsWithoutRef<'button'> & {
+  onClick?: () => void;
+};
 
 const Button = (props: ButtonProps) => {
   return (
