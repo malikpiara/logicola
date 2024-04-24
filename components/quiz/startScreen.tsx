@@ -1,3 +1,4 @@
+import { useHotkeys } from 'react-hotkeys-hook';
 import Button from '../button';
 
 type StartScreenProps = {
@@ -9,6 +10,8 @@ export function StartScreen({
   onClickStart,
   questionsCount,
 }: StartScreenProps) {
+  useHotkeys('enter', onClickStart);
+
   return (
     <>
       <section className='m-auto flex h-full w-full flex-col justify-center bg-rose-950 p-0 text-center text-white animate-in'>

@@ -90,7 +90,11 @@ const QuestionComponent: React.FC<ExerciseProps> = ({
     setRetriesCounter((prev) => prev + 1);
   };
 
-  useHotkeys('enter', handleAnswerCheck);
+  useHotkeys('enter', () => {
+    if (!showSolution && selectedOptionIndices.size > 0) {
+      handleAnswerCheck();
+    }
+  });
 
   return (
     <div className='mb-6 max-w-7xl rounded-lg border border-gray-200 bg-white p-6'>

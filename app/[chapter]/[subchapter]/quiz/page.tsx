@@ -12,7 +12,7 @@ import { useState } from 'react';
 const take10RandomQuestions = (questions: Question[]) =>
   shuffleArray(questions).slice(
     0,
-    process.env.NODE_ENV === 'production' ? 10 : 1
+    process.env.NODE_ENV === 'production' ? 10 : 3
   );
 
 export default function QuizPage({
