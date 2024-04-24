@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/accordion';
 import classNames from 'classnames';
 import { useParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 export const Sidebar = () => {
   const {
@@ -21,6 +22,12 @@ export const Sidebar = () => {
     subchapter: string;
     question: string;
   }>();
+
+  const pathname = usePathname();
+
+  if (pathname.endsWith('/quiz')) {
+    return null;
+  }
 
   return (
     <aside className='z-40 flex h-full overflow-scroll bg-gray-50 p-4'>
