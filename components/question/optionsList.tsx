@@ -29,6 +29,8 @@ export const OptionsList = ({
             label={option}
             disabled={showSolution}
             onSelect={() => onOptionClick(optionIndex)}
+            index={optionIndex + 1}
+            showIndex={true}
           />
         );
       })}
