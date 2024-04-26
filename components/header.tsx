@@ -12,16 +12,16 @@ export function Header() {
   return (
     <>
       <header className='bg-white animate-in'>
-        <div className='py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-28'>
-          <div className='flex sm:gap-10 flex-col sm:flex-row'>
+        <div className='mx-auto max-w-screen-xl px-4 py-8 lg:px-28 lg:py-16'>
+          <div className='flex flex-col sm:flex-row sm:gap-10'>
             <div>
               <Mascot />
             </div>
             <div className='mt-4 sm:mt-16'>
-              <h1 className='text-center sm:text-left mb-4 text-4xl font-extrabold tracking-tight leading-none text-primary md:text-5xl lg:text-5xl'>
+              <h1 className='mb-4 text-center text-4xl font-extrabold leading-none tracking-tight text-primary sm:text-left md:text-5xl lg:text-5xl'>
                 {header.title}
               </h1>
-              <p className='text-center sm:text-left text-lg font-normal text-gray-500 lg:text-xl'>
+              <p className='text-center text-lg font-normal text-gray-500 sm:text-left lg:text-xl'>
                 {header.description}
               </p>
               <EmailForm />

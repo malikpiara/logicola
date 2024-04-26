@@ -27,9 +27,9 @@ const accordionData = [
 export default function Home() {
   return (
     <>
-      <div className='flex flex-col m-auto'>
+      <div className='m-auto flex flex-col'>
         <Header />
-        <h1 className='text-center mb-10 text-3xl font-extrabold tracking-tight leading-none text-gray-800 md:text-3xl lg:text-3xl'>
+        <h1 className='mb-10 text-center text-3xl font-extrabold leading-none tracking-tight text-gray-800 md:text-3xl lg:text-3xl'>
           Frequently Asked Questions
         </h1>
         <section className='accordion'>
@@ -41,7 +41,7 @@ export default function Home() {
             />
           ))}
         </section>
-        <div className='p-4 w-full'></div>
+        <div className='w-full p-4'></div>
       </div>
     </>
   );

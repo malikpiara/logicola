@@ -9,7 +9,7 @@ function AccordionItem({ title, content, initiallyOpen = false }: any) {
       <h2>
         <button
           type='button'
-          className='flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 first:rounded-t-xl focus:ring-4 focus:ring-gray-200 hover:bg-gray-100 gap-3'
+          className='flex w-full items-center justify-between gap-3 border border-b-0 border-gray-200 p-5 font-medium text-gray-500 first:rounded-t-xl hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 rtl:text-right'
           onClick={() => setIsOpen(!isOpen)}
           aria-expanded={isOpen}
           aria-controls={`accordion-body-${title
@@ -19,7 +19,7 @@ function AccordionItem({ title, content, initiallyOpen = false }: any) {
           <span className='flex items-center'>{title}</span>
           <svg
             data-accordion-icon
-            className={`w-3 h-3 shrink-0 transition-transform ${
+            className={`h-3 w-3 shrink-0 transition-transform ${
               isOpen ? 'rotate-180' : ''
             }`}
             aria-hidden='true'
@@ -38,7 +38,7 @@ function AccordionItem({ title, content, initiallyOpen = false }: any) {
         </button>
       </h2>
       <div
-        className={`p-5 border border-b-0 border-gray-200 max-w-[1280px] mb-2 text-gray-500 ${
+        className={`mb-2 max-w-[1280px] border border-b-0 border-gray-200 p-5 text-gray-500 ${
           isOpen ? '' : 'hidden'
         }`}
       >
