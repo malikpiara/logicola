@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# LogiCola
 
-## Getting Started
+LogiCola is a web-based instructional program that helps students learn logic. It is a remake of the original LogiCola software created by the late Professor Harry Gensler, built using modern web technologies.
 
-First, run the development server:
+## Project Structure
+
+The project follows a standard Next.js project structure with some additional directories and files:
+
+- `__tests__`: Contains test files for various components and pages.
+
+  - `app`: Contains tests for pages.
+  - `components`: Contains tests for individual components.
+
+- `app`: Contains the main application code.
+
+  - `[chapter]`: Dynamic route for individual chapters.
+    - `[subchapter]`: Dynamic route for subchapters within a chapter.
+      - `quiz`: Contains the quiz page for a subchapter.
+    - `layout.tsx`: Layout component for chapter pages.
+    - `page.tsx`: Page component for displaying a chapter.
+  - `auth`: Contains the authentication page.
+  - `error`: Contains the error page.
+  - `layout.tsx`: Main layout component for the application.
+  - `page.tsx`: Home page component.
+
+- `components`: Contains reusable components used throughout the application.
+
+  - `NoSSR`: Component for rendering content only on the client-side.
+  - `question`: Contains components related to displaying and interacting with questions.
+  - `quiz`: Contains components for the quiz functionality.
+  - `ui`: Contains UI components such as accordion, button, card, dropdown menu, input, and label, coming from [ShadCN UI](https://ui.shadcn.com/)
+  - Other individual component files.
+
+- `lib`: Contains utility functions and libraries.
+
+  - `serversidePostHog.ts`: PostHog client for server-side usage.
+
+  - `supabase-browser.ts`: Supabase client for browser-side usage.
+
+  - `supabase-server.ts`: Supabase client for server-side usage.
+
+  - `utils.ts`: Utility functions used in the application.
+
+- `public`: Contains public assets such as images.
+
+- `types`: Contains TypeScript type definitions.
+
+- Other configuration files and directories such as `next.config.js`, `tailwind.config.js`, `tsconfig.json`, etc.
+
+## Testing
+
+The project includes tests for various components and pages. The tests are located in the `__tests__` directory and are organized into subdirectories corresponding to the component or page being tested (they "mirror" the project structure).
+
+The tests are written using Vitest and React Testing Library.
+
+The project uses Tailwind CSS for styling. The styles are defined in the `tailwind.config.js` file and are applied to components using utility classes.
+
+## Prerequisites
+
+The project uses the PNPM package manager. To install PNPM, run the following command:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install -g pnpm
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+For user authentication, the project uses Supabase.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+For analytics, the project uses PostHog.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+You will need to create accounts for these services and set up projects to get the required environment variables.
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+The project uses environment variables to store sensitive information such as API keys and secrets. These variables are stored in a `.env.local` file at the root of the project.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The following environment variables are required:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- `NEXT_PUBLIC_SUPABASE_URL`: The URL of your Supabase project.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: The anonymous key for your Supabase project.
 
-## Deploy on Vercel
+- `NEXT_PUBLIC_POSTHOG_API_KEY`: The API key for your PostHog project.
+- `NEXT_PUBLIC_POSTHOG_HOST`: The host for your PostHog project.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Create a `.env.local` file at the root of the project and add these variables to it.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Installation
+
+To install the project dependencies, run the following command:
+
+```bash
+pnpm install
+```
+
+## Development
+
+To start the development server, run the following command:
+
+```bash
+pnpm dev
+```
+
+This will start the Next.js development server and open the application in your default browser.
+
+## Build
+
+To build the project for production, run the following command:
+
+```bash
+pnpm build
+```

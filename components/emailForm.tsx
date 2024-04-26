@@ -1,11 +1,9 @@
 'use client';
 import { useState } from 'react';
-import { createClient } from '@/utils/supabase/client';
-import Button from './button';
-
-const supabase = createClient();
+import useSupabaseBrowser from '@/lib/supabase-browser';
 
 export function EmailForm() {
+  const supabase = useSupabaseBrowser();
   const [email, setEmail] = useState('');
   const [formIsSubmitted, setFormIsSubmitted] = useState(false);
 
@@ -39,17 +37,17 @@ export function EmailForm() {
     <>
       {!formIsSubmitted ? (
         <form onSubmit={handleSubmit}>
-          <div className='items-center mx-auto mb-3 mt-8 space-y-4 max-w-screen-sm sm:flex sm:space-y-0 transition-all'>
+          <div className='mx-auto mb-3 mt-8 max-w-screen-sm items-center space-y-4 transition-all sm:flex sm:space-y-0'>
             <div className='relative w-full'>
               <label
                 htmlFor='email'
-                className='hidden mb-2 text-sm font-medium text-gray-900'
+                className='mb-2 hidden text-sm font-medium text-gray-900'
               >
                 Email address
               </label>
-              <div className='flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none'>
+              <div className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
                 <svg
-                  className='w-5 h-5 text-gray-500'
+                  className='h-5 w-5 text-gray-500'
                   fill='currentColor'
                   viewBox='0 0 20 20'
                   xmlns='http://www.w3.org/2000/svg'
@@ -59,7 +57,7 @@ export function EmailForm() {
                 </svg>
               </div>
               <input
-                className='block p-3 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+                className='focus:ring-primary-500 focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 pl-10 text-sm text-gray-900'
                 id='email'
                 placeholder={'Enter your email'}
                 type='email'
@@ -68,14 +66,14 @@ export function EmailForm() {
                 required
               />
             </div>
-            <div className='sm:w-80 flex m-0'>
-              <button className='sm:ml-2 py-3 px-5 w-full text-sm font-semibold text-center text-white rounded-lg border cursor-pointer bg-primary border-primary hover:bg-primary focus:ring-4 focus:ring-primary'>
+            <div className='m-0 flex sm:w-80'>
+              <button className='w-full cursor-pointer rounded-lg border border-primary bg-primary px-5 py-3 text-center text-sm font-semibold text-white hover:bg-primary focus:ring-4 focus:ring-primary sm:ml-2'>
                 Send me updates
               </button>
               {/* <Button label='Send me updates' /> */}
             </div>
           </div>
-          <div className='mx-auto max-w-screen-sm text-sm text-left text-gray-500 newsletter-form-footer'>
+          <div className='newsletter-form-footer mx-auto max-w-screen-sm text-left text-sm text-gray-500'>
             We&apos;ll never share your data or send you SPAM.
           </div>
         </form>
@@ -89,7 +87,7 @@ export function EmailForm() {
 function successState() {
   return (
     <>
-      <div className='mx-auto mb-3 mt-8 space-y-4 max-w-screen-sm sm:flex sm:space-y-0 text-gray-900 font-normal text-xl'>
+      <div className='mx-auto mb-3 mt-8 max-w-screen-sm space-y-4 text-xl font-normal text-gray-900 sm:flex sm:space-y-0'>
         Success! Thank you for subscribing! 🎉
       </div>
     </>
