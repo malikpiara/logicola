@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Question from '@/components/question/question';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 export default function SubchapterQuestionPage({
   params: {

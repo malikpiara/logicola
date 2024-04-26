@@ -67,6 +67,8 @@ For user authentication, the project uses Supabase.
 
 For analytics, the project uses PostHog.
 
+To explain questions, the project uses the OpenAI API.
+
 You will need to create accounts for these services and set up projects to get the required environment variables.
 
 ## Environment Variables
@@ -80,6 +82,8 @@ The following environment variables are required:
 
 - `NEXT_PUBLIC_POSTHOG_API_KEY`: The API key for your PostHog project.
 - `NEXT_PUBLIC_POSTHOG_HOST`: The host for your PostHog project.
+
+- `OPENAI_API_KEY`: The API key for the OpenAI API.
 
 Create a `.env.local` file at the root of the project and add these variables to it.
 
