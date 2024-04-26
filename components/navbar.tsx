@@ -1,9 +1,12 @@
 'use client';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Logo from './logo';
 import NavTopic from './navTopic';
 import { Content } from '@/types';
+import useSupabaseBrowser from '@/lib/supabase-browser';
+import { User } from '@supabase/supabase-js';
+import NavProfileDropdown from './navProfileDropdown';
 
 const Navbar = ({ chapters }: { chapters: Content['chapters'] }) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
@@ -11,6 +14,22 @@ const Navbar = ({ chapters }: { chapters: Content['chapters'] }) => {
   const toggleMenu = () => {
     setDropdownVisible(!isDropdownVisible);
   };
+
+  const supabase = useSupabaseBrowser();
+
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    supabase.auth.refreshSession().then(() =>
+      supabase.auth.getSession().then((value) => {
+        console.log(value);
+        setUser(value?.data.session?.user ?? null);
+      })
+    );
+    supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+  }, [supabase]);
 
   return (
     <nav className='border-gray-200 bg-white'>
@@ -87,6 +106,20 @@ const Navbar = ({ chapters }: { chapters: Content['chapters'] }) => {
               >
                 Donate
               </Link>
+            </li>
+            <li>
+              {user ? (
+                <NavProfileDropdown
+                  onClickLogout={() => supabase.auth.signOut()}
+                />
+              ) : (
+                <Link
+                  href='/auth'
+                  className='block rounded px-3 py-2 text-black opacity-50 hover:bg-gray-200 hover:opacity-100 md:p-0 md:hover:bg-transparent md:hover:text-primary'
+                >
+                  Log in / Sign up
+                </Link>
+              )}
             </li>
           </ul>
         </div>
