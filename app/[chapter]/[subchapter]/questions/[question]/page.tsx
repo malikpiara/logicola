@@ -3,6 +3,8 @@ import { content } from '@/content';
 import Link from 'next/link';
 import Question from '@/components/question/question';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function SubchapterQuestionPage({
   params: {
@@ -32,6 +34,24 @@ export default function SubchapterQuestionPage({
 
   const [showSolution, setShowSolution] = useState(false);
 
+  const explanationMutation = useMutation({
+    mutationKey: ['explanation', questions[questionIndex]],
+    mutationFn: async () => {
+      const response = await fetch('api', {
+        method: 'POST',
+        body: JSON.stringify({
+          question: questions[questionIndex],
+        }),
+      });
+
+      const data = await response.text();
+      console.log(data);
+      return data;
+    },
+  });
+
+  console.log(explanationMutation.isSuccess);
+
   return (
     <>
       <div className='flex h-full w-full overflow-scroll'>
@@ -50,6 +70,25 @@ export default function SubchapterQuestionPage({
             setShowSolution={setShowSolution}
             onAnswerCheck={() => setShowSolution(true)}
           />
+          {explanationMutation.isSuccess ? (
+            <div className='mt-4 max-w-[50%]'>
+              <h2 className='text-xl font-bold text-gray-900'>Explanation</h2>
+              <p className='break-words text-gray-700'>
+                {explanationMutation.data}
+              </p>
+            </div>
+          ) : (
+            <Button
+              onClick={
+                explanationMutation.isPending
+                  ? undefined
+                  : () => explanationMutation.mutateAsync()
+              }
+              disabled={explanationMutation.isPending}
+            >
+              {explanationMutation.isPending ? 'Loading...' : 'Get explanation'}
+            </Button>
+          )}
         </div>
       </div>
     </>
