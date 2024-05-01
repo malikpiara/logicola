@@ -3,6 +3,7 @@ import { Inter, Roboto_Slab } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/navbar';
 import { Footer } from '@/components/footer';
+import { CSPostHogProvider } from '@/components/providers';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -37,13 +38,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body
-        className={`antialiased min-h-screen bg-white text-primary ${inter.className}`}
-      >
-        <Navbar />
-        <main className={`flex`}>{children}</main>
-        <Footer />
-      </body>
+      <CSPostHogProvider>
+        <body
+          className={`antialiased min-h-screen bg-white text-primary ${inter.className}`}
+        >
+          <Navbar />
+          <main className={`flex`}>{children}</main>
+          <Footer />
+        </body>
+      </CSPostHogProvider>
     </html>
   );
 }
