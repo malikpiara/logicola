@@ -7,6 +7,7 @@ import { StartScreen } from './startScreen';
 import { EndScreen } from './endScreen';
 import Button from '../button';
 import { KeyboardKeys } from './keyboardKeys';
+import { usePostHog } from 'posthog-js/react';
 
 export interface QuizProps {
   chapter: number;

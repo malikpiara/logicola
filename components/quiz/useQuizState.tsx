@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { chapters } from '@/content';
+import posthog from 'posthog-js';
 
 export default function useQuizState(chapter: number) {
   const [questionIdx, setQuestionIdx] = useState(0);
@@ -94,6 +95,9 @@ export default function useQuizState(chapter: number) {
   }
 
   function onShowStartScreen() {
+    posthog.capture('quiz_started', {
+      Chapter: 'Meanings and Definitions',
+    });
     setShowStartScreen(false);
   }
 
