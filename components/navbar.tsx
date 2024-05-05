@@ -18,8 +18,7 @@ const Navbar = () => {
           href='/'
           className='flex items-center space-x-3 rtl:space-x-reverse'
         >
-          <Logo />
-          <span className='self-center text-2xl font-semibold text-gray-800 whitespace-nowrap'>
+          <span className='self-center text-2xl font-bold text-gray-900 whitespace-nowrap font-stretch'>
             LogiCola
           </span>
           <span className='bg-gray-100 text-gray-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded-md'>

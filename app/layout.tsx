@@ -1,14 +1,15 @@
 import type { Metadata } from 'next';
-import { Inter, Roboto_Slab } from 'next/font/google';
+import { Roboto_Flex } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/navbar';
 import { Footer } from '@/components/footer';
 import { CSPostHogProvider } from '@/components/providers';
 
-const inter = Inter({
+const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
+  weight: 'variable',
+  axes: ['wdth'],
 });
-//const roboto = Roboto_Slab({ weight: ['400', '700'], subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Logicola',
@@ -40,7 +41,7 @@ export default function RootLayout({
     <html lang='en'>
       <CSPostHogProvider>
         <body
-          className={`antialiased min-h-screen bg-white text-primary ${inter.className}`}
+          className={`antialiased min-h-screen bg-white text-primary ${robotoFlex.className}`}
         >
           <Navbar />
           <main className={`flex`}>{children}</main>

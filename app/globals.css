@@ -6,6 +6,12 @@
   animation: animateIn 0.3s ease 0.15s both;
 }
 
+@layer utilities {
+  .font-stretch {
+    font-stretch: ultra-expanded;
+  }
+}
+
 @keyframes animateIn {
   from {
     opacity: 0;

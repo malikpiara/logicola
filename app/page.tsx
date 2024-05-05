@@ -29,7 +29,7 @@ export default function Home() {
     <>
       <div className='flex flex-col m-auto'>
         <Header />
-        <h1 className='text-center mb-10 text-3xl font-extrabold tracking-tight leading-none text-gray-800 md:text-3xl lg:text-3xl'>
+        <h1 className='text-center mb-10 text-3xl font-bold tracking-tight leading-none text-gray-800 md:text-3xl lg:text-3xl font-stretch'>
           Frequently Asked Questions
         </h1>
         <section className='accordion'>
