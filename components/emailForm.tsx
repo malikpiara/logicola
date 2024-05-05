@@ -59,7 +59,7 @@ export function EmailForm() {
                 </svg>
               </div>
               <input
-                className='block p-3 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+                className='block p-3 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primaryColor focus:border-primaryColor'
                 id='email'
                 placeholder={'Enter your email'}
                 type='email'
@@ -69,7 +69,7 @@ export function EmailForm() {
               />
             </div>
             <div className='sm:w-80 flex m-0'>
-              <button className='sm:ml-2 py-3 px-5 w-full text-sm font-extrabold text-center text-white rounded-lg border cursor-pointer bg-primary border-primary hover:bg-primary focus:ring-4 focus:ring-primary'>
+              <button className='sm:ml-2 py-3 px-5 w-full text-sm font-extrabold text-center text-white rounded-lg border cursor-pointer bg-primaryColor border-primaryColor hover:bg-primaryColor focus:ring-4 focus:ring-primaryColor'>
                 Send me updates
               </button>
               {/* <Button label='Send me updates' /> */}

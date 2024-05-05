@@ -41,7 +41,7 @@ export default function RootLayout({
     <html lang='en'>
       <CSPostHogProvider>
         <body
-          className={`antialiased min-h-screen bg-white text-primary ${robotoFlex.className}`}
+          className={`antialiased min-h-screen bg-white text-primaryColor ${robotoFlex.className}`}
         >
           <Navbar />
           <main className={`flex`}>{children}</main>

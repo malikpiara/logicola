@@ -32,7 +32,7 @@ const TopicTable = () => {
           >
             <div>
               <Link href={item.path}>
-                <h3 className='mb-2 text-xl font-bold tracking-tight text-gray-900 hover:text-primary'>
+                <h3 className='mb-2 text-xl font-bold tracking-tight text-gray-900 hover:text-primaryColor'>
                   {item.title}
                 </h3>
               </Link>
