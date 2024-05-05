@@ -5,7 +5,7 @@
 const chapters = [
   {
     id: 6,
-    title: 'Propositional Translations Easy',
+    title: 'Propositional Translations: Easy',
     header: 'Translates into logic as:',
     questions: [
       {
@@ -756,7 +756,7 @@ const chapters = [
   },
   {
     id: 3,
-    title: 'Definitions',
+    title: 'Meanings and Definitions',
     header: 'What is wrong with this definition?',
     questions: [
       {

@@ -96,14 +96,14 @@ export default function useQuizState(chapter: number) {
 
   function onShowStartScreen() {
     posthog.capture('quiz_started', {
-      Chapter: 'Meanings and Definitions',
+      chapter: currentChapter!.title,
     });
     setShowStartScreen(false);
   }
 
   function onShowEndScreen() {
     posthog.capture('quiz_completed', {
-      Chapter: 'Meanings and Definitions',
+      chapter: currentChapter!.title,
       correctQuestionsCount: numOfCorrectQuestions, // Different quizes might have more than 10 questions. We need to rethink this to have useful information.
       scorePercentage: (numOfCorrectQuestions / 10) * 100, // 10 is the number of questions we load in the quiz. That might change!
     });
