@@ -6,8 +6,8 @@ const Prompt: React.FC<PromptProps> = ({
   value = 'Replace this with a question.',
 }) => {
   return (
-    <div className='flex flex-col sm:gap-72 self-center mb-6 text-lg'>
-      <div className='text-gray-800'>{value}</div>
+    <div className='flex flex-col sm:gap-72 self-center mb-6 text-xl'>
+      <div className='text-gray-900'>{value}</div>
     </div>
   );
 };

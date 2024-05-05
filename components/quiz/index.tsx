@@ -138,7 +138,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter = 3 }) => {
                 <Prompt value={currentQuestion.prompt} />
 
                 <h2 className='text-xl font-bold text-gray-800'>
-                  What is wrong with this definition?
+                  {currentChapter!.header}
                 </h2>
 
                 {currentQuestion.options.map((option, index) => {
@@ -170,7 +170,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter = 3 }) => {
               {currentQuestion.answer ? (
                 <h1>{currentQuestion.answer}</h1>
               ) : (
-                <h1>Answer unavailable</h1>
+                <></>
               )}
             </div>
           )}

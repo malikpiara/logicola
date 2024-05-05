@@ -109,7 +109,8 @@ const Navbar = () => {
             <NavTopic
               chapter='Set C'
               title='Propositional Logic'
-              path='/basic-propositional-logic'
+              path='/propositional/translations/quiz'
+              newLabel
             />
             {/* <li>
               <Link
