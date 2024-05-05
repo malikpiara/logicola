@@ -69,7 +69,7 @@ export function EmailForm() {
               />
             </div>
             <div className='sm:w-80 flex m-0'>
-              <button className='sm:ml-2 py-3 px-5 w-full text-sm font-extrabold text-center text-white rounded-lg border cursor-pointer bg-primaryColor border-primaryColor hover:bg-primaryColor focus:ring-4 focus:ring-primaryColor'>
+              <button className='sm:ml-2 py-3 px-5 w-full text-sm font-semibold text-center text-white rounded-lg border cursor-pointer bg-primaryColor border-primaryColor hover:bg-primaryColor focus:ring-4 focus:ring-primaryColor'>
                 Send me updates
               </button>
               {/* <Button label='Send me updates' /> */}

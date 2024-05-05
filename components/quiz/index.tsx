@@ -188,7 +188,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter = 3 }) => {
           )}
           <div className='flex h-max'>
             {showStartScreen && (
-              <Button label='Start' onClick={onShowStartScreen} />
+              <Button label='Start Quiz' onClick={onShowStartScreen} />
             )}
             {!showSolution && !showStartScreen && !showEndScreen && (
               <>

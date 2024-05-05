@@ -1,3 +1,5 @@
+import Button from '../button';
+
 export function StartScreen() {
   return (
     <>
@@ -5,12 +7,13 @@ export function StartScreen() {
         <h1 className='mb-3 text-4xl font-bold font-stretch'>
           Ready for a challenge?
         </h1>
-        <p className='mb-5 max-w-96 mx-auto'>
+        <p className='mb-5 max-w-96 mx-auto text-lg font-light'>
           Test your knowledge on this chapter and see how much you already know!
         </p>
-        <div className='font-bold text-orange-300'>10 questions</div>
+        <div className='font-semibold text-orange-300'>10 questions</div>
+
         {
-          // Temporary filler to make the content be displayed a couple of pixels above.
+          // Temporary filler to make the text content be displayed a couple of pixels above.
           <div className='h-40' />
         }
       </section>

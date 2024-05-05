@@ -9,7 +9,7 @@ import {
 const accordionData = [
   {
     title: 'What is LogiCola?',
-    content: `LogiCola is an instructional program that goes with Gensler's Introduction to Logic (Routledge Press). Since Harry Gesnler, the original creator has passed away, I decided to create a new version to preserve an important learning resource and honour his legacy.`,
+    content: `LogiCola is an instructional program that goes with Gensler's Introduction to Logic (Routledge Press). Since Harry Gensler, the original creator has passed away, I decided to create a new version to preserve an important learning resource and honour his legacy.`,
   },
   {
     title: 'Do I have to pay anything to use it?',
@@ -34,13 +34,13 @@ export default function Home() {
       <div className='flex flex-col m-auto'>
         <Header />
 
-        <section className='p-4 w-full max-w-[1000px] m-auto'>
+        <section className='py-8 px-4 w-full max-w-screen-xl mx-auto'>
           <h1 className='text-center mb-10 text-3xl font-bold tracking-tight leading-none text-gray-800 md:text-3xl lg:text-3xl font-stretch'>
             Frequently Asked Questions
           </h1>
           <Accordion className='text-gray-800 text-lg' type='multiple'>
             {accordionData.map((item) => (
-              <AccordionItem value={item.title}>
+              <AccordionItem value={item.title} key={item.title}>
                 <AccordionTrigger>{item.title}</AccordionTrigger>
                 <AccordionContent className='text-lg text-gray-500'>
                   {item.content}

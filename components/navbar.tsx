@@ -57,7 +57,7 @@ const Navbar = () => {
                 onMouseEnter={toggleMenu}
                 id='mega-menu-full-dropdown-button'
                 data-collapse-toggle='mega-menu-full-dropdown'
-                className='flex items-center justify-between w-full py-2 px-3 text-black opacity-50 rounded md:w-auto hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-primaryColor hover:opacity-100 md:p-0'
+                className='flex items-center justify-between w-full py-2 px-3 text-gray-500 rounded md:w-auto hover:bg-gray-200  md:border-0 md:hover:text-primaryColor'
               >
                 Chapters{' '}
                 <svg
@@ -81,7 +81,7 @@ const Navbar = () => {
             <li>
               <Link
                 href='https://github.com/sponsors/malikpiara'
-                className='block py-2 px-3 text-black opacity-50 rounded hover:bg-gray-200 hover:opacity-100 md:hover:bg-transparent md:hover:text-primaryColor md:p-0'
+                className='block py-2 px-3 text-gray-500 rounded hover:bg-gray-200  md:hover:text-primaryColor'
               >
                 Donate
               </Link>
