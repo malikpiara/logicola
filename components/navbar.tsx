@@ -99,7 +99,7 @@ const Navbar = () => {
         <div className='grid max-w-screen-xl px-4 py-5 mx-auto text-gray-900 sm:grid-cols-2 md:px-6 shadow-sm'>
           <ul>
             <NavTopic
-              chapter='Chapter 3'
+              chapter='Set Q'
               title='Meanings and Definitions'
               path='/informal/definitions/quiz'
               newLabel
@@ -107,8 +107,8 @@ const Navbar = () => {
           </ul>
           <ul>
             <NavTopic
-              chapter='Chapter 6'
-              title='Basic Propositional Logic'
+              chapter='Set C'
+              title='Propositional Logic'
               path='/basic-propositional-logic'
             />
             {/* <li>

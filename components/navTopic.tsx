@@ -31,7 +31,7 @@ const NavTopic = ({
             </span>
           )}
         </div>
-        <span className='text-sm font-medium text-gray-500'>{chapter}</span>
+        <span className='font-medium text-gray-500'>{chapter}</span>
       </Link>
     </li>
   );
