@@ -1,6 +1,10 @@
 import Button from '../button';
 
-export function StartScreen() {
+interface StartScreenProps {
+  onStartQuiz: () => void;
+}
+
+export function StartScreen({ onStartQuiz }: StartScreenProps) {
   return (
     <>
       <section className='animate-in max-w-7xl rounded-xl bg-orange-950 w-full h-screen text-center p-0 text-white flex-col flex justify-center m-auto'>
@@ -11,7 +15,7 @@ export function StartScreen() {
           Test your knowledge on this chapter and see how much you already know!
         </p>
         <div className='font-semibold text-orange-300'>10 questions</div>
-
+        <Button label='Start Quiz' onClick={onStartQuiz} />
         {
           // Temporary filler to make the text content be displayed a couple of pixels above.
           <div className='h-40' />

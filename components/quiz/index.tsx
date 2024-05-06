@@ -1,13 +1,12 @@
 'use client';
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
+import Button from '../button';
 import Option from '../option';
 import Prompt from '../prompt';
-import useQuizState from './useQuizState';
-import { StartScreen } from './startScreen';
 import { EndScreen } from './endScreen';
-import Button from '../button';
 import { KeyboardKeys } from './keyboardKeys';
-import { usePostHog } from 'posthog-js/react';
+import { StartScreen } from './startScreen';
+import useQuizState from './useQuizState';
 
 export interface QuizProps {
   chapter: number;
@@ -127,7 +126,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter = 3 }) => {
   return (
     <>
       {showStartScreen ? (
-        <StartScreen />
+        <StartScreen onStartQuiz={onShowStartScreen} />
       ) : showEndScreen ? (
         <EndScreen numOfCorrectQuestions={numOfCorrectQuestions} />
       ) : (
@@ -187,9 +186,6 @@ const Quiz: React.FC<QuizProps> = ({ chapter = 3 }) => {
             <div className='flex'>{questionCounter} of 10</div>
           )}
           <div className='flex h-max'>
-            {showStartScreen && (
-              <Button label='Start Quiz' onClick={onShowStartScreen} />
-            )}
             {!showSolution && !showStartScreen && !showEndScreen && (
               <>
                 <Button
