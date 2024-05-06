@@ -1,4 +1,4 @@
-import Button from '../button';
+import { Button } from '../ui/button';
 
 interface StartScreenProps {
   onStartQuiz: () => void;
@@ -15,7 +15,14 @@ export function StartScreen({ onStartQuiz }: StartScreenProps) {
           Test your knowledge on this chapter and see how much you already know!
         </p>
         <div className='font-semibold text-orange-300'>10 questions</div>
-        <Button label='Start Quiz' onClick={onStartQuiz} />
+        <Button
+          size={'lg'}
+          className='w-fit transition-all self-center mt-5 font-stretch'
+          onClick={onStartQuiz}
+        >
+          Start Quiz
+        </Button>
+
         {
           // Temporary filler to make the text content be displayed a couple of pixels above.
           <div className='h-40' />
