@@ -1,11 +1,12 @@
 import classNames from 'classnames';
 import React from 'react';
+import KatexSpan from './katexSpan';
 
 export interface OptionProps {
   ref?: React.Ref<HTMLButtonElement>;
   index?: number;
   showIndex?: boolean;
-  label: string;
+  label: string | JSX.Element; // Allow label to be string or JSX
   isSelected: boolean;
   isCorrect: boolean;
   showSolution: boolean;
@@ -18,15 +19,15 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
     ref
   ) => {
     const optionClasses = classNames(
-      'w-full ps-4 text-gray-900 flex items-center border rounded-lg focus:outline-primaryColor transition-colors duration-300',
+      'w-full ps-4 text-gray-900 flex items-center border rounded-lg focus:outline-primary transition-colors duration-300',
       {
         'border-gray-200': !isSelected && !showSolution,
         'cursor-not-allowed': showSolution,
         'bg-[#1ad85f]': showSolution && isCorrect,
         'border-rose-200 text-red-500': showSolution && !isCorrect,
-        'border-primaryColor outline-double outline-primaryColor outline-offset-0 ring-2 ring-offset-0 ring-primary':
+        'border-primary outline-double outline-primary outline-offset-0 ring-2 ring-offset-0 ring-primary':
           !showSolution && isSelected,
-        'hover:border-primaryColor focus:border-primaryColor': !showSolution,
+        'hover:border-primary focus:border-primary': !showSolution,
       }
     );
 
@@ -51,7 +52,9 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
               </div>
             </div>
           )}
-          <div className='py-4 ms-2 font-medium'>{label}</div>
+          <div className='py-4 ms-2 font-medium'>
+            <KatexSpan text={label} />
+          </div>
         </div>
       </button>
     );
