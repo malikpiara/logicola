@@ -228,7 +228,7 @@ const chapters = [
         correctId: [1],
         answer: '',
       },
-      {
+      /* {
         id: '1.19',
         prompt: "I'm the smartest doctor in Chicago.",
         options: [
@@ -239,7 +239,7 @@ const chapters = [
         ],
         correctId: [0],
         answer: `"The smartest doctor" ${feedback_single_person}`,
-      },
+      }, */
       {
         id: '1.20',
         prompt: 'All pickpockets in Rome hurt people who are fortunate.',
