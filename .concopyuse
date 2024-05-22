@@ -1,5 +1,0 @@
-app/*.tsx
-app/**/*.tsx
-app/**/**/*.tsx
-app/**/**/**/*.tsx
-app/**/**/**/**/*.tsx
