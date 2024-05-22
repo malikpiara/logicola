@@ -1094,7 +1094,7 @@ const chapters = [
       },
       {
         id: '3.23',
-        prompt: 'A net is anything with interstitial vaculties.',
+        prompt: 'A net is anything with interstitial vacuities.',
         options: [
           { id: 0, label: 'Too broad' },
           { id: 1, label: 'Too narrow' },
@@ -1125,7 +1125,7 @@ const chapters = [
       },
       {
         id: '3.25',
-        prompt: 'Bread is the staff (stuff?) of life.',
+        prompt: 'Bread is the staff of life.', // stuff? Not sure if it was a typo from Gensler.
         options: [
           { id: 0, label: 'Too broad' },
           { id: 1, label: 'Too narrow' },
