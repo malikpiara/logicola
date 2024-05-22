@@ -1,7 +1,6 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
-import Logo from './logo';
 import NavTopic from './navTopic';
 
 const Navbar = () => {
@@ -99,10 +98,15 @@ const Navbar = () => {
         <div className='grid max-w-screen-xl px-4 py-5 mx-auto text-gray-900 sm:grid-cols-2 md:px-6 shadow-sm'>
           <ul>
             <NavTopic
+              chapter='Set A'
+              title='Syllogistic Logic'
+              path='/syllogistic/translations/quiz'
+              newLabel
+            />
+            <NavTopic
               chapter='Set Q'
               title='Meanings and Definitions'
               path='/informal/definitions/quiz'
-              newLabel
             />
           </ul>
           <ul>
@@ -110,17 +114,7 @@ const Navbar = () => {
               chapter='Set C'
               title='Propositional Logic'
               path='/propositional/translations/quiz'
-              newLabel
             />
-            {/* <li>
-              <Link
-                href='/logic'
-                className='block p-3 rounded-lg hover:bg-gray-200 opacity-30 cursor-not-allowed'
-              >
-                <div className='font-semibold'>Relations and Identity</div>
-                <span className='text-sm text-gray-500'>Chapter 9</span>
-              </Link>
-            </li> */}
           </ul>
         </div>
       </div>
