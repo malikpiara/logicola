@@ -14,7 +14,7 @@
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@supabase/ssr": "^0.3.0",
-    "@supabase/supabase-js": "^2.43.1",
+    "@supabase/supabase-js": "^2.43.4",
     "@types/katex": "^0.16.7",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
