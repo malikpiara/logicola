@@ -5,18 +5,25 @@
 const feedback_single_person =
   'stands for a single person, and so translates into a small letter.';
 
+export interface Option {
+  id: number;
+  label: string;
+}
+
+export interface Question {
+  id: string;
+  prompt: string;
+  options: Option[];
+  correctId: number[];
+  answer: string;
+}
+
 export interface Chapter {
   slugs: string[];
   id: number;
   title: string;
   header: string;
-  questions: {
-    id: string;
-    prompt: string;
-    options: { id: number; label: string }[];
-    correctId: number[];
-    answer: string;
-  }[];
+  questions: Question[];
 }
 
 const chapters = [

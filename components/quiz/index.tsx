@@ -10,26 +10,9 @@ import useQuizState from './useQuizState';
 
 export interface QuizProps {
   chapter: number;
-  showExerciseId: boolean;
 }
 
-interface Option {
-  id: number;
-  label: string;
-  isChecked: boolean;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-interface Question {
-  id: string;
-  prompt: string;
-  options: Option[];
-  correctId: number | number[];
-  answer?: string; // Gensler's hints
-  isChecked?: boolean;
-}
-
-const Quiz: React.FC<QuizProps> = ({ chapter = 3 }) => {
+const Quiz: React.FC<QuizProps> = ({ chapter }) => {
   const {
     showStartScreen,
     showEndScreen,
