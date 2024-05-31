@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import posthog from 'posthog-js';
-import { chapters } from '@/contentOld';
+import { chapters } from '@/content';
 
 export default function useQuizState(chapter: number) {
   const [questionIdx, setQuestionIdx] = useState(0);

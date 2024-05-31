@@ -1,3 +1,6 @@
+import { chapters } from '@/content';
+import { writeFile } from 'fs';
+
 type OldChapter = {
   id: number | string;
   title: string;
@@ -42,7 +45,7 @@ type NewExercise = {
 const transformChapters = (oldChapters: OldChapter[]): NewContent => {
   const newContent: NewContent = { chapters: {} };
 
-  oldChapters.forEach((chapter, index) => {
+  oldChapters.forEach((chapter) => {
     const chapterKey = chapter.title.toLowerCase().replace(/ /g, '-');
     const newChapter: NewChapter = {
       title: chapter.title,
@@ -68,9 +71,6 @@ const transformChapters = (oldChapters: OldChapter[]): NewContent => {
 
   return newContent;
 };
-
-import { chapters } from '@/contentOld';
-import { writeFile } from 'fs';
 
 const newContent = transformChapters(chapters);
 console.log(newContent);

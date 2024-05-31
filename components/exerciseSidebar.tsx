@@ -1,5 +1,5 @@
 'use client';
-import { chapters } from '@/contentOld';
+import { chapters } from '@/content';
 import { useState } from 'react';
 import Link from 'next/link';
 
