@@ -3,7 +3,10 @@ import { renderHook, act } from '@testing-library/react-hooks';
 import useQuizState from './useQuizState';
 
 const mockQuiz = {
+  id: 0,
   title: '',
+  header: '',
+  slugs: [],
   questions: [
     {
       id: '',
@@ -81,6 +84,37 @@ describe('Option selection and scoring', () => {
 
       expect(result.current.showSolution).toBe(true);
       expect(result.current.numOfCorrectQuestions).toBe(1);
+    });
+  });
+  it("doesn't count a question as correct if it wasn't solved on the first try", async () => {
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useQuizState(mockQuiz)
+    );
+
+    const incorrectId = 1;
+    const correctId = result.current.currentQuestion.correctId;
+
+    const optionId = Array.isArray(correctId) ? correctId[0] : correctId;
+
+    await act(async () => {
+      result.current.selectOption(incorrectId);
+
+      await waitForNextUpdate();
+
+      expect(result.current.selectedOptionId).toBe(incorrectId);
+
+      result.current.onCheckAnswer();
+
+      expect(result.current.showSolution).toBe(false);
+      expect(result.current.previousGuesses).toStrictEqual([incorrectId]);
+
+      result.current.selectOption(optionId);
+
+      result.current.onCheckAnswer();
+
+      expect(result.current.showSolution).toBe(true);
+      expect(result.current.numOfCorrectQuestions).toBe(0);
+      expect(result.current.numOfCorrectQuestions).toBe(0);
     });
   });
 });

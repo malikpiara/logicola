@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import posthog from 'posthog-js';
 import { Chapter } from '@/content';
 
-export default function useQuizState(
-  chapter: Pick<Chapter, 'questions' | 'title'>
-) {
+export default function useQuizState(chapter: Chapter) {
   const [questionIdx, setQuestionIdx] = useState(0);
   const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
   const [showSolution, setShowSolution] = useState(false);
