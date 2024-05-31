@@ -31,6 +31,8 @@ export default function useQuizState(chapter: number) {
   const [questionCounter, setQuestionCounter] = useState<number>(1);
   const [numOfCorrectQuestions, setnumOfCorrectQuestions] = useState<number>(0);
 
+  const [previousGuesses, setPreviousGuesses] = useState<number[]>([]);
+
   const [questionOrder, setQuestionOrder] = useState<number[]>(
     generateQuestionOrder()
   );
@@ -40,6 +42,7 @@ export default function useQuizState(chapter: number) {
     if (questionIdx < currentChapter!.questions.length - 1) {
       setQuestionIdx(questionIdx + 1);
       setSelectedOptionId(null); // Reset selected option
+      setPreviousGuesses([]);
       setShowSolution(false); // Hide solution
       setQuestionCounter(questionCounter + 1);
     }
@@ -75,21 +78,29 @@ export default function useQuizState(chapter: number) {
   function onShowSolution() {
     setShowSolution(true);
   }
-  function onCheckAnswer() {
-    // TODO: Implement function that checks if the selected
-    // option is correct. If it's not, append a style+classname.
+
+  function isAnswerCorrect(optionId: number, correctId: number | number[]) {
+    if (Array.isArray(correctId)) {
+      return correctId.includes(optionId);
+    } else {
+      return optionId === correctId;
+    }
   }
 
-  function incrementScore(optionId: number, correctId: number | number[]) {
-    if (Array.isArray(correctId)) {
-      // Check if correctId is an array
-      if (correctId.includes(optionId)) {
-        setnumOfCorrectQuestions(numOfCorrectQuestions + 1);
-      }
+  function onCheckAnswer() {
+    if (selectedOptionId == null) return;
+
+    if (isAnswerCorrect(selectedOptionId, currentQuestion.correctId)) {
+      setnumOfCorrectQuestions(numOfCorrectQuestions + 1);
+      onShowSolution();
     } else {
-      // Treat as a single correct answer
-      if (optionId === correctId) {
-        setnumOfCorrectQuestions(numOfCorrectQuestions + 1);
+      setPreviousGuesses([...previousGuesses, selectedOptionId]);
+      setSelectedOptionId(null);
+      if (
+        [...previousGuesses, selectedOptionId].length ===
+        currentQuestion.options.length - 1
+      ) {
+        onShowSolution();
       }
     }
   }
@@ -121,7 +132,7 @@ export default function useQuizState(chapter: number) {
     currentQuestion,
     questionCounter,
     numOfCorrectQuestions,
-    incrementScore,
+    previousGuesses,
     handleNextQuestion,
     selectNextOption,
     selectPreviousOption,

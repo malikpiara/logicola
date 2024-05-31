@@ -11,11 +11,21 @@ export interface OptionProps {
   isCorrect: boolean;
   showSolution: boolean;
   onClick: () => void;
+  hasBeenIncorrectlyGuessed?: boolean;
 }
 
 const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
   (
-    { index, showIndex, label, isSelected, isCorrect, showSolution, onClick },
+    {
+      index,
+      showIndex,
+      label,
+      isSelected,
+      isCorrect,
+      showSolution,
+      onClick,
+      hasBeenIncorrectlyGuessed = false,
+    },
     ref
   ) => {
     const optionClasses = classNames(
@@ -24,7 +34,8 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
         'border-gray-200': !isSelected && !showSolution,
         'cursor-not-allowed': showSolution,
         'bg-[#1ad85f]': showSolution && isCorrect,
-        'border-rose-200 text-red-500': showSolution && !isCorrect,
+        'border-rose-200 text-red-500':
+          (showSolution && !isCorrect) || hasBeenIncorrectlyGuessed,
         'border-primary outline-double outline-primary outline-offset-0 ring-2 ring-offset-0 ring-primary':
           !showSolution && isSelected,
         'hover:border-primary focus:border-primary': !showSolution,

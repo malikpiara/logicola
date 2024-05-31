@@ -22,13 +22,14 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
     currentQuestion,
     questionCounter,
     numOfCorrectQuestions,
-    incrementScore,
+    onCheckAnswer,
     handleNextQuestion,
     selectNextOption,
     selectPreviousOption,
     selectOption,
     onShowSolution,
     onShowStartScreen,
+    previousGuesses,
   } = useQuizState(chapter);
 
   // Creating refs to make each option focusable with the keyboard shorcuts.
@@ -54,13 +55,11 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
           break;
         case 'Enter':
           event.preventDefault();
-          //console.log('Enter');
           if (showStartScreen) {
             onShowStartScreen();
           }
           if (!showStartScreen && !showSolution && selectedOptionId != null) {
-            incrementScore(selectedOptionId!, currentQuestion.correctId);
-            onShowSolution();
+            onCheckAnswer();
           }
           if (showSolution) {
             // Remove focus from the active option
@@ -83,7 +82,6 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
     [
       currentQuestion,
       handleNextQuestion,
-      incrementScore,
       onShowSolution,
       onShowStartScreen,
       selectNextOption,
@@ -133,6 +131,9 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
                       ref={
                         index === selectedOptionId ? activeOptionRef : undefined
                       }
+                      hasBeenIncorrectlyGuessed={previousGuesses.includes(
+                        option.id
+                      )}
                       key={option.id}
                       label={option.label}
                       onClick={() => {
@@ -148,11 +149,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
           <hr className='h-px my-4 bg-gray-200 border-0' />
           {selectedOptionId != null && showSolution && (
             <div className='p-2 mb-3 text-gray-800'>
-              {currentQuestion.answer ? (
-                <h1>{currentQuestion.answer}</h1>
-              ) : (
-                <></>
-              )}
+              <h1>{currentQuestion.answer}</h1>
             </div>
           )}
         </div>
@@ -169,25 +166,14 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
           )}
           <div className='flex h-max'>
             {!showSolution && !showStartScreen && !showEndScreen && (
-              <>
-                <Button
-                  label='Check Answer'
-                  disabled={selectedOptionId == null}
-                  onClick={() => {
-                    incrementScore(
-                      selectedOptionId!,
-                      currentQuestion.correctId
-                    );
-                    onShowSolution();
-                  }}
-                />
-              </>
+              <Button
+                label='Check Answer'
+                disabled={selectedOptionId == null}
+                onClick={onCheckAnswer}
+              />
             )}
-
             {selectedOptionId != null && showSolution && (
-              <>
-                <Button label='Next Question' onClick={handleNextQuestion} />
-              </>
+              <Button label='Next Question' onClick={handleNextQuestion} />
             )}
           </div>
         </div>
