@@ -14,6 +14,7 @@ const robotoFlex = Roboto_Flex({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://logicola.org'),
   title: 'Logicola',
   description:
     'LogiCola is a program to help students learn logic. This is a web version of the original software built by the late Professor Harry Gensler.',
@@ -47,7 +48,6 @@ export const metadata: Metadata = {
   icons: {
     icon: '/next.svg',
   },
-  metadataBase: new URL('https://next-dashboard.pinkjelly.org/'),
 };
 
 export default function RootLayout({
