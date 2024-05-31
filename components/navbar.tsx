@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import NavTopic from './navTopic';
+import { chapters } from '@/content';
 
 const Navbar = () => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
@@ -9,6 +10,8 @@ const Navbar = () => {
   const toggleMenu = () => {
     setDropdownVisible(!isDropdownVisible);
   };
+
+  const splitIndex = Math.ceil(chapters.length / 2);
 
   return (
     <nav className='bg-white border-gray-200'>
@@ -97,24 +100,26 @@ const Navbar = () => {
       >
         <div className='grid max-w-screen-xl px-4 py-5 mx-auto text-gray-900 sm:grid-cols-2 md:px-6 shadow-sm'>
           <ul>
-            <NavTopic
-              chapter='Set A'
-              title='Syllogistic Logic'
-              path='/syllogistic/translations/quiz'
-              newLabel
-            />
-            <NavTopic
-              chapter='Set Q'
-              title='Meanings and Definitions'
-              path='/informal/definitions/quiz'
-            />
+            {chapters.slice(0, splitIndex).map((i) => (
+              <NavTopic
+                key={i.id}
+                chapter={i.set}
+                title={i.title}
+                path={'/' + i.slugs.join('/') + '/quiz'}
+                newLabel={i.isNew}
+              />
+            ))}
           </ul>
           <ul>
-            <NavTopic
-              chapter='Set C'
-              title='Propositional Logic'
-              path='/propositional/translations/quiz'
-            />
+            {chapters.slice(splitIndex).map((i) => (
+              <NavTopic
+                key={i.id}
+                chapter={i.set}
+                title={i.title}
+                path={'/' + i.slugs.join('/') + '/quiz'}
+                newLabel={i.isNew}
+              />
+            ))}
           </ul>
         </div>
       </div>
