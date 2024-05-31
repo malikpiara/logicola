@@ -6,6 +6,7 @@ const feedback_single_person =
   'stands for a single person, and so translates into a small letter.';
 
 export interface Chapter {
+  slugs: string[];
   id: number;
   title: string;
   header: string;
@@ -20,6 +21,7 @@ export interface Chapter {
 
 const chapters = [
   {
+    slugs: ['syllogistic', 'translations'],
     id: 1,
     title: 'Syllogistic Translations: Easy',
     header: 'Translates into logic as:',
@@ -401,6 +403,7 @@ const chapters = [
     ],
   },
   {
+    slugs: ['propositional', 'translations'],
     id: 6,
     title: 'Propositional Translations: Easy',
     header: 'Translates into logic as:',
@@ -1152,6 +1155,7 @@ const chapters = [
     ],
   },
   {
+    slugs: ['informal', 'definitions'],
     id: 3,
     title: 'Meanings and Definitions',
     header: 'What is wrong with this definition?',
@@ -2075,6 +2079,7 @@ const chapters = [
     ],
   },
   {
+    slugs: ['translations', 'easy'],
     id: 6.1,
     title: 'Easier Translations',
     header: 'Translates into logic as:',
@@ -2329,6 +2334,7 @@ const chapters = [
     ],
   },
   {
+    slugs: ['translations', 'hard'],
     id: 6.8,
     title: 'Harder Translations',
     header: 'Translates into logic as:',
