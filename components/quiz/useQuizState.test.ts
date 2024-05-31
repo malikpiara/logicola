@@ -33,18 +33,27 @@ describe('Navigation between questions', () => {
 });
 
 describe('Option selection and scoring', () => {
-  it('selects an option and increments score if the answer is correct', () => {
+  it('selects an option and increments score if the answer is correct', async () => {
     const chapterId = 1;
-    const { result } = renderHook(() => useQuizState(chapterId));
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useQuizState(chapterId)
+    );
 
-    // Mocking the correct answer ID and the selection process
-    const correctOptionId = 0;
-    act(() => {
-      result.current.selectOption(correctOptionId);
-      result.current.incrementScore(correctOptionId, correctOptionId);
+    const correctId = result.current.currentQuestion.correctId;
+
+    const optionId = Array.isArray(correctId) ? correctId[0] : correctId;
+
+    await act(async () => {
+      result.current.selectOption(optionId);
+
+      await waitForNextUpdate();
+
+      expect(result.current.selectedOptionId).toBe(optionId);
+
+      result.current.onCheckAnswer();
+
+      expect(result.current.showSolution).toBe(true);
+      expect(result.current.numOfCorrectQuestions).toBe(1);
     });
-
-    expect(result.current.selectedOptionId).toBe(correctOptionId);
-    expect(result.current.numOfCorrectQuestions).toBe(1);
   });
 });
