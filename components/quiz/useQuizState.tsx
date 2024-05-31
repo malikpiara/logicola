@@ -91,7 +91,11 @@ export default function useQuizState(chapter: number) {
     if (selectedOptionId == null) return;
 
     if (isAnswerCorrect(selectedOptionId, currentQuestion.correctId)) {
-      setnumOfCorrectQuestions(numOfCorrectQuestions + 1);
+      const correctOnFirstTry = previousGuesses.length === 0;
+
+      if (correctOnFirstTry) {
+        setnumOfCorrectQuestions(numOfCorrectQuestions + 1);
+      }
       onShowSolution();
     } else {
       setPreviousGuesses([...previousGuesses, selectedOptionId]);
