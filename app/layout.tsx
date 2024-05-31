@@ -5,7 +5,7 @@ import Navbar from '@/components/navbar';
 import { Footer } from '@/components/footer';
 import { CSPostHogProvider } from '@/components/providers';
 
-import thumbnail from '../../public/thumbnail.jpg';
+import thumbnail from '../public/thumbnail.jpg';
 
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
