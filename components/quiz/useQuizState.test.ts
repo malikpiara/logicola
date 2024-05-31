@@ -45,9 +45,7 @@ describe('useQuizState', () => {
     expect(result.current.checkAnswer).toBe(false);
     expect(result.current.showStartScreen).toBe(true);
     expect(result.current.showEndScreen).toBe(false);
-    expect(result.current.numOfCorrectQuestions).toBe(0);
-    // expect(Array.isArray(result.current.questionOrder)).toBe(true);
-    // expect(result.current.questionOrder.length).toBeGreaterThan(0); // Assumes there are questions
+    expect(result.current.correctQuestions).toStrictEqual([]);
   });
 });
 
@@ -69,32 +67,29 @@ describe('Option selection and scoring', () => {
       useQuizState(mockQuiz)
     );
 
-    const correctId = result.current.currentQuestion.correctId;
-
-    const optionId = Array.isArray(correctId) ? correctId[0] : correctId;
+    const correctId = result.current.currentQuestion.correctId[0];
 
     await act(async () => {
-      result.current.selectOption(optionId);
+      result.current.selectOption(correctId);
 
       await waitForNextUpdate();
 
-      expect(result.current.selectedOptionId).toBe(optionId);
+      expect(result.current.selectedOptionId).toBe(correctId);
 
       result.current.onCheckAnswer();
 
       expect(result.current.showSolution).toBe(true);
-      expect(result.current.numOfCorrectQuestions).toBe(1);
+      expect(result.current.correctQuestions).toStrictEqual(['']);
     });
   });
+
   it("doesn't count a question as correct if it wasn't solved on the first try", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useQuizState(mockQuiz)
     );
 
     const incorrectId = 1;
-    const correctId = result.current.currentQuestion.correctId;
-
-    const optionId = Array.isArray(correctId) ? correctId[0] : correctId;
+    const correctId = result.current.currentQuestion.correctId[0];
 
     await act(async () => {
       result.current.selectOption(incorrectId);
@@ -108,13 +103,11 @@ describe('Option selection and scoring', () => {
       expect(result.current.showSolution).toBe(false);
       expect(result.current.previousGuesses).toStrictEqual([incorrectId]);
 
-      result.current.selectOption(optionId);
-
+      result.current.selectOption(correctId);
       result.current.onCheckAnswer();
 
       expect(result.current.showSolution).toBe(true);
-      expect(result.current.numOfCorrectQuestions).toBe(0);
-      expect(result.current.numOfCorrectQuestions).toBe(0);
+      expect(result.current.correctQuestions).toStrictEqual([]);
     });
   });
 });

@@ -22,7 +22,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
     currentChapter,
     currentQuestion,
     questionCounter,
-    numOfCorrectQuestions,
+    correctQuestions,
     onCheckAnswer,
     handleNextQuestion,
     selectNextOption,
@@ -109,7 +109,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
       {showStartScreen ? (
         <StartScreen onStartQuiz={onShowStartScreen} />
       ) : showEndScreen ? (
-        <EndScreen numOfCorrectQuestions={numOfCorrectQuestions} />
+        <EndScreen numOfCorrectQuestions={correctQuestions.length} />
       ) : (
         <div className='animate-in max-w-7xl p-6 bg-white border border-gray-200 rounded-lg mb-6 m-auto'>
           <div className='mx-auto w-full max-w-screen-xl p-4'>
@@ -173,7 +173,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
                 onClick={onCheckAnswer}
               />
             )}
-            {selectedOptionId != null && showSolution && (
+            {showSolution && (
               <Button label='Next Question' onClick={handleNextQuestion} />
             )}
           </div>

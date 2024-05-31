@@ -27,7 +27,7 @@ export default function useQuizState(chapter: Chapter) {
   };
 
   const [questionCounter, setQuestionCounter] = useState<number>(1);
-  const [numOfCorrectQuestions, setnumOfCorrectQuestions] = useState<number>(0);
+  const [correctQuestions, setCorrectQuestions] = useState<string[]>([]);
 
   const [previousGuesses, setPreviousGuesses] = useState<number[]>([]);
 
@@ -77,12 +77,8 @@ export default function useQuizState(chapter: Chapter) {
     setShowSolution(true);
   }
 
-  function isAnswerCorrect(optionId: number, correctId: number | number[]) {
-    if (Array.isArray(correctId)) {
-      return correctId.includes(optionId);
-    } else {
-      return optionId === correctId;
-    }
+  function isAnswerCorrect(optionId: number, correctId: number[]) {
+    return correctId.includes(optionId);
   }
 
   function onCheckAnswer() {
@@ -92,7 +88,7 @@ export default function useQuizState(chapter: Chapter) {
       const correctOnFirstTry = previousGuesses.length === 0;
 
       if (correctOnFirstTry) {
-        setnumOfCorrectQuestions(numOfCorrectQuestions + 1);
+        setCorrectQuestions([...correctQuestions, currentQuestion.id]);
       }
       onShowSolution();
     } else {
@@ -117,8 +113,8 @@ export default function useQuizState(chapter: Chapter) {
   function onShowEndScreen() {
     posthog.capture('quiz_completed', {
       chapter: chapter.title,
-      correctQuestionsCount: numOfCorrectQuestions, // Different quizes might have more than 10 questions. We need to rethink this to have useful information.
-      scorePercentage: (numOfCorrectQuestions / 10) * 100, // 10 is the number of questions we load in the quiz. That might change!
+      correctQuestionsCount: correctQuestions.length, // Different quizes might have more than 10 questions. We need to rethink this to have useful information.
+      scorePercentage: (correctQuestions.length / 10) * 100, // 10 is the number of questions we load in the quiz. That might change!
     });
     setShowEndScreen(true);
   }
@@ -133,7 +129,6 @@ export default function useQuizState(chapter: Chapter) {
     currentChapter: chapter,
     currentQuestion,
     questionCounter,
-    numOfCorrectQuestions,
     previousGuesses,
     handleNextQuestion,
     selectNextOption,
@@ -143,6 +138,6 @@ export default function useQuizState(chapter: Chapter) {
     onCheckAnswer,
     onShowStartScreen,
     onShowEndScreen,
-    setnumOfCorrectQuestions,
+    correctQuestions,
   };
 }
