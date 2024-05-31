@@ -1,8 +1,10 @@
-import ExerciseSidebar from '@/components/exerciseSidebar';
 import NoSSR from '@/components/NoSSR';
 import Quiz from '@/components/quiz';
 
-export default function QuizPage({ params }: { params: { exercise: number } }) {
+export interface QuizPageProps {
+  params: { exercise: number };
+}
+export default function QuizPage({}: QuizPageProps) {
   return (
     <>
       <div className='flex w-full h-screen'>

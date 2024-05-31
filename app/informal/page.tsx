@@ -1,5 +1,4 @@
 import { Sidebar } from '@/components/sidebar';
-import TopicTable from '@/components/topicTable';
 
 export const metadata = {
   title: 'Logicola | Informal Logic',

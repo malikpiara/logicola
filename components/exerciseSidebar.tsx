@@ -16,6 +16,7 @@ const ExerciseSidebar: React.FC<ExerciseSidebarProps> = ({
   path,
   chapter,
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [questionIdx, setQuestionIdx] = useState(initialQuestionIdx);
 
   const chaptersMap = new Map();

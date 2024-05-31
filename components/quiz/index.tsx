@@ -19,6 +19,7 @@ interface Option {
   isChecked: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Question {
   id: string;
   prompt: string;
@@ -32,7 +33,6 @@ const Quiz: React.FC<QuizProps> = ({ chapter = 3 }) => {
   const {
     showStartScreen,
     showEndScreen,
-    questionIdx,
     selectedOptionId,
     showSolution,
     currentChapter,
@@ -46,7 +46,6 @@ const Quiz: React.FC<QuizProps> = ({ chapter = 3 }) => {
     selectOption,
     onShowSolution,
     onShowStartScreen,
-    onShowEndScreen,
   } = useQuizState(chapter);
 
   // Creating refs to make each option focusable with the keyboard shorcuts.

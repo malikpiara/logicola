@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+![Logicola Mascot](/malikpiara/logicola/public/mascot.png)
+
+LogiCola is an instructional program that goes with Gensler's Introduction to Logic (Routledge Press). Since Harry Gensler, the original creator has passed away, I decided to create a new version to preserve an important learning resource and honour his legacy.
 
 ## Getting Started
 

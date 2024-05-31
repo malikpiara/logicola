@@ -1,7 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import Button from './button';
 
 const supabase = createClient();
 
@@ -14,7 +13,7 @@ export function EmailForm() {
     setEmail(value);
   };
 
-  const handleSubmit = async (event: any) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       const { error } = await supabase

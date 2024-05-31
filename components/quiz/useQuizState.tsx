@@ -6,7 +6,7 @@ export default function useQuizState(chapter: number) {
   const [questionIdx, setQuestionIdx] = useState(0);
   const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
   const [showSolution, setShowSolution] = useState(false);
-  const [checkAnswer, setCheckAnswer] = useState(false);
+  const [checkAnswer] = useState(false);
   const [showStartScreen, setShowStartScreen] = useState(true);
   const [showEndScreen, setShowEndScreen] = useState(false);
 

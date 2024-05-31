@@ -5,6 +5,19 @@
 const feedback_single_person =
   'stands for a single person, and so translates into a small letter.';
 
+export interface Chapter {
+  id: number;
+  title: string;
+  header: string;
+  questions: {
+    id: string;
+    prompt: string;
+    options: { id: number; label: string }[];
+    correctId: number[];
+    answer: string;
+  }[];
+}
+
 const chapters = [
   {
     id: 1,
@@ -2504,5 +2517,5 @@ const chapters = [
       },
     ],
   },
-];
+] satisfies Chapter[];
 export { chapters };
