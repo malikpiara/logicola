@@ -5,6 +5,8 @@ import Navbar from '@/components/navbar';
 import { Footer } from '@/components/footer';
 import { CSPostHogProvider } from '@/components/providers';
 
+import thumbnail from '../../public/thumbnail.jpg';
+
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
   weight: 'variable',
@@ -24,12 +26,28 @@ export const metadata: Metadata = {
   ],
   publisher: 'Malik Piara',
   openGraph: {
-    images: '/thumbnail.jpg',
+    images: [
+      {
+        url: thumbnail.src,
+        width: thumbnail.width,
+        height: thumbnail.height,
+      },
+    ],
     authors: ['Malik'],
+  },
+  twitter: {
+    images: [
+      {
+        url: thumbnail.src,
+        width: thumbnail.width,
+        height: thumbnail.height,
+      },
+    ],
   },
   icons: {
     icon: '/next.svg',
   },
+  metadataBase: new URL('https://next-dashboard.pinkjelly.org/'),
 };
 
 export default function RootLayout({
