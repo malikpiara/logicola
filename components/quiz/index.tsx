@@ -7,9 +7,10 @@ import { EndScreen } from './endScreen';
 import { KeyboardKeys } from './keyboardKeys';
 import { StartScreen } from './startScreen';
 import useQuizState from './useQuizState';
+import { Chapter } from '@/content';
 
 export interface QuizProps {
-  chapter: number;
+  chapter: Chapter;
 }
 
 const Quiz: React.FC<QuizProps> = ({ chapter }) => {

@@ -36,7 +36,7 @@ export default function QuizPage({ params }: QuizPageProps) {
         /> */}
       <main className='p-4 w-full'>
         <NoSSR>
-          <Quiz chapter={chapter.id} />
+          <Quiz chapter={chapter} />
         </NoSSR>
       </main>
     </div>

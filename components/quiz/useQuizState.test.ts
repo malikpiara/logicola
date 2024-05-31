@@ -2,10 +2,39 @@ import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react-hooks';
 import useQuizState from './useQuizState';
 
+const mockQuiz = {
+  title: '',
+  questions: [
+    {
+      id: '',
+      prompt: '',
+      options: [
+        {
+          id: 0,
+          label: '',
+        },
+      ],
+      correctId: [0],
+      answer: '',
+    },
+    {
+      id: '',
+      prompt: '',
+      options: [
+        {
+          id: 0,
+          label: '',
+        },
+      ],
+      correctId: [0],
+      answer: '',
+    },
+  ],
+};
+
 describe('useQuizState', () => {
   it('initializes state correctly', () => {
-    const chapterId = 1; // assuming chapter ID 1 exists
-    const { result } = renderHook(() => useQuizState(chapterId));
+    const { result } = renderHook(() => useQuizState(mockQuiz));
 
     expect(result.current.questionIdx).toBe(0);
     expect(result.current.selectedOptionId).toBeNull();
@@ -21,8 +50,7 @@ describe('useQuizState', () => {
 
 describe('Navigation between questions', () => {
   it('increments the question index by 1 on handleNextQuestion call', () => {
-    const chapterId = 1;
-    const { result } = renderHook(() => useQuizState(chapterId));
+    const { result } = renderHook(() => useQuizState(mockQuiz));
 
     act(() => {
       result.current.handleNextQuestion();
@@ -34,9 +62,8 @@ describe('Navigation between questions', () => {
 
 describe('Option selection and scoring', () => {
   it('selects an option and increments score if the answer is correct', async () => {
-    const chapterId = 1;
     const { result, waitForNextUpdate } = renderHook(() =>
-      useQuizState(chapterId)
+      useQuizState(mockQuiz)
     );
 
     const correctId = result.current.currentQuestion.correctId;

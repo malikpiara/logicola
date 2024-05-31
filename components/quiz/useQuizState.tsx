@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import posthog from 'posthog-js';
-import { chapters } from '@/content';
+import { Chapter } from '@/content';
 
-export default function useQuizState(chapter: number) {
+export default function useQuizState(
+  chapter: Pick<Chapter, 'questions' | 'title'>
+) {
   const [questionIdx, setQuestionIdx] = useState(0);
   const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
   const [showSolution, setShowSolution] = useState(false);
@@ -10,11 +12,9 @@ export default function useQuizState(chapter: number) {
   const [showStartScreen, setShowStartScreen] = useState(true);
   const [showEndScreen, setShowEndScreen] = useState(false);
 
-  const currentChapter = chapters.find((c) => c.id === chapter);
-
   const generateQuestionOrder = () => {
     const questionIndices = Array.from(
-      { length: currentChapter!.questions.length },
+      { length: chapter.questions.length },
       (_, i) => i
     );
     // Use a shuffling algorithm like Fisher-Yates:
@@ -39,7 +39,7 @@ export default function useQuizState(chapter: number) {
 
   // Function for moving to the next question
   const handleNextQuestion = () => {
-    if (questionIdx < currentChapter!.questions.length - 1) {
+    if (questionIdx < chapter.questions.length - 1) {
       setQuestionIdx(questionIdx + 1);
       setSelectedOptionId(null); // Reset selected option
       setPreviousGuesses([]);
@@ -57,12 +57,12 @@ export default function useQuizState(chapter: number) {
   }
 
   useEffect(() => {
-    if (currentChapter) {
+    if (chapter) {
       randomizeQuestionOrder();
     }
-  }, [currentChapter]);
+  }, [chapter]);
 
-  const currentQuestion = currentChapter!.questions[questionOrder[questionIdx]];
+  const currentQuestion = chapter.questions[questionOrder[questionIdx]];
 
   const lastOptionIndex = currentQuestion.options.length - 1;
 
@@ -111,14 +111,14 @@ export default function useQuizState(chapter: number) {
 
   function onShowStartScreen() {
     posthog.capture('quiz_started', {
-      chapter: currentChapter!.title,
+      chapter: chapter.title,
     });
     setShowStartScreen(false);
   }
 
   function onShowEndScreen() {
     posthog.capture('quiz_completed', {
-      chapter: currentChapter!.title,
+      chapter: chapter.title,
       correctQuestionsCount: numOfCorrectQuestions, // Different quizes might have more than 10 questions. We need to rethink this to have useful information.
       scorePercentage: (numOfCorrectQuestions / 10) * 100, // 10 is the number of questions we load in the quiz. That might change!
     });
@@ -132,7 +132,7 @@ export default function useQuizState(chapter: number) {
     selectedOptionId,
     showSolution,
     checkAnswer,
-    currentChapter,
+    currentChapter: chapter,
     currentQuestion,
     questionCounter,
     numOfCorrectQuestions,
