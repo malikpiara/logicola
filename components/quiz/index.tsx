@@ -175,7 +175,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
           dismissible={false}
           open
           modal={false}
-          snapPoints={['150px', '500px']}
+          snapPoints={['150px', '450px']}
           activeSnapPoint={snap}
           setActiveSnapPoint={setSnap}
         >
@@ -207,8 +207,24 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
                 </div>
               </div>
             </DrawerHeader>
-            <div className='flex flex-col justify-center self-center gap-10'>
-              <SkeletonCard />
+            <div className='flex flex-col justify-center gap-10 ml-8 text-gray-500'>
+              <div>
+                <h3 className='text-2xl font-semibold text-gray-800'>
+                  What makes a well-formed formula (wff)?
+                </h3>
+                <p>{`A wff must have one of these eight forms (where other capitals can replace "A" and "B" and other small letters "c" and "d"):`}</p>
+              </div>
+
+              <div className='grid grid-cols-2 gap-4'>
+                <div>All A is B</div>
+                <div>No A is B</div>
+                <div>Some A is B</div>
+                <div>Some A is not B</div>
+                <div>c is A</div>
+                <div>c is A</div>
+                <div>c is not A</div>
+                <div>c is not D</div>
+              </div>
             </div>
           </DrawerContent>
         </Drawer>
