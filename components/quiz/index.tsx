@@ -125,10 +125,10 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
       ) : showEndScreen ? (
         <EndScreen numOfCorrectQuestions={correctQuestions.length} />
       ) : (
-        <div className='animate-in max-w-7xl p-6 bg-white border border-gray-200 rounded-lg mb-6 m-auto'>
+        <div className='animate-in max-w-7xl p-0 md:p-6 bg-white md:border border-gray-200 rounded-lg mb-6 m-auto'>
           <div className='mx-auto w-full max-w-screen-xl p-4'>
             {currentQuestion && ( // Ensure questions are loaded
-              <div className='md:flex flex-col md:justify-between gap-5 max-sm:flex max-sm:gap-5'>
+              <div className='flex flex-col md:justify-between gap-5 max-sm:flex'>
                 <Prompt value={currentQuestion.prompt} />
 
                 <h2 className='text-xl font-bold text-gray-800'>
