@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import Button from '../button';
 import Option from '../option';
 import Prompt from '../prompt';
@@ -8,6 +8,18 @@ import { KeyboardKeys } from './keyboardKeys';
 import { StartScreen } from './startScreen';
 import useQuizState from './useQuizState';
 import { Chapter } from '@/content';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
+import { SkeletonCard } from '../ui/skeletonCard';
 
 export interface QuizProps {
   chapter: Chapter;
@@ -104,6 +116,8 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
     };
   }, [handleKeyDown]); // Include handleKeyDown in the dependency array to ensure it's updated when it changes
 
+  const [snap, setSnap] = useState<number | string | null>('148px');
+
   return (
     <>
       {showStartScreen ? (
@@ -156,29 +170,49 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
         </div>
       )}
 
-      <div className='fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 flex items-center justify-between'>
-        <div className='ml-5'>
-          {!showStartScreen && !showEndScreen && <KeyboardKeys />}
-        </div>
-
-        <div className='flex justify-end gap-5 items-center h-full align-bottom text-gray-800 font-medium'>
-          {!showStartScreen && !showEndScreen && (
-            <div className='flex'>{questionCounter} of 10</div>
-          )}
-          <div className='flex h-max'>
-            {!showSolution && !showStartScreen && !showEndScreen && (
-              <Button
-                label='Check Answer'
-                disabled={selectedOptionId == null}
-                onClick={onCheckAnswer}
-              />
-            )}
-            {showSolution && (
-              <Button label='Next Question' onClick={handleNextQuestion} />
-            )}
-          </div>
-        </div>
-      </div>
+      {!showStartScreen && !showEndScreen && (
+        <Drawer
+          dismissible={false}
+          open
+          modal={false}
+          snapPoints={['150px', '500px']}
+          activeSnapPoint={snap}
+          setActiveSnapPoint={setSnap}
+        >
+          <DrawerContent className='fixed flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]'>
+            <DrawerHeader>
+              <div className='left-0 z-50 w-full h-16 bg-white flex items-center justify-between'>
+                <div className='ml-5'>
+                  {!showStartScreen && !showEndScreen && <KeyboardKeys />}
+                </div>
+                <div className='flex justify-end gap-5 items-center h-full align-bottom text-gray-800 font-medium'>
+                  {!showStartScreen && !showEndScreen && (
+                    <div className='flex'>{questionCounter} of 10</div>
+                  )}
+                  <div className='flex h-max'>
+                    {!showSolution && !showStartScreen && !showEndScreen && (
+                      <Button
+                        label='Check Answer'
+                        disabled={selectedOptionId == null}
+                        onClick={onCheckAnswer}
+                      />
+                    )}
+                    {showSolution && (
+                      <Button
+                        label='Next Question'
+                        onClick={handleNextQuestion}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </DrawerHeader>
+            <div className='flex flex-col justify-center self-center gap-10'>
+              <SkeletonCard />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
     </>
   );
 };
