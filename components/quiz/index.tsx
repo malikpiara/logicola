@@ -207,7 +207,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
                 </div>
               </div>
             </DrawerHeader>
-            <div className='flex flex-col justify-center gap-10 ml-8 text-gray-500'>
+            <div className='flex flex-col justify-center gap-10 mx-4 md:mx-8 text-gray-500'>
               <div>
                 <h3 className='text-2xl font-semibold text-gray-800'>
                   What makes a well-formed formula (wff)?

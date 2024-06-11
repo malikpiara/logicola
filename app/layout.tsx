@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Roboto_Flex } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/navbar';
+import MobileNavbar from '@/components/mobile/navbar';
 import { Footer } from '@/components/footer';
 import { CSPostHogProvider } from '@/components/providers';
 
@@ -61,6 +62,7 @@ export default function RootLayout({
         <body
           className={`antialiased min-h-screen bg-white text-primaryColor ${robotoFlex.className}`}
         >
+          <MobileNavbar />
           <Navbar />
           <main className={`flex`}>{children}</main>
           <Footer />
