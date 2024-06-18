@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState, useRef } from 'react';
 import Button from '../button';
 import Option from '../option';
 import Prompt from '../prompt';
+import KatexSpan from '../katexSpan';
 import { EndScreen } from './endScreen';
 import { KeyboardKeys } from './keyboardKeys';
 import { StartScreen } from './startScreen';
@@ -208,23 +209,47 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
             </DrawerHeader>
 
             <div className='flex flex-col justify-center gap-10 mx-4 md:mx-8 text-gray-500'>
-              <div>
-                <h3 className='text-xl md:text-2xl font-semibold text-gray-800'>
-                  What makes a well-formed formula (wff)?
-                </h3>
-                <p>{`A wff must have one of these eight forms (where other capitals can replace "A" and "B" and other small letters "c" and "d"):`}</p>
-              </div>
+              {(currentChapter.id === 1 && (
+                <>
+                  <div>
+                    <h3 className='text-xl md:text-2xl font-semibold text-gray-800'>
+                      What makes a well-formed formula (wff)?
+                    </h3>
 
-              <div className='grid grid-cols-2 gap-4'>
-                <div>All A is B</div>
-                <div>No A is B</div>
-                <div>Some A is B</div>
-                <div>Some A is not B</div>
-                <div>c is A</div>
-                <div>c is A</div>
-                <div>c is not A</div>
-                <div>c is not D</div>
-              </div>
+                    <p>{`A wff must have one of these eight forms (where other capitals can replace "A" and "B" and other small letters "c" and "d"):`}</p>
+                  </div>
+
+                  <div className='grid grid-cols-2 gap-4'>
+                    <div>All A is B</div>
+                    <div>No A is B</div>
+                    <div>Some A is B</div>
+                    <div>Some A is not B</div>
+                    <div>c is A</div>
+                    <div>c is A</div>
+                    <div>c is not A</div>
+                    <div>c is not D</div>
+                  </div>
+                </>
+              )) ||
+                (currentChapter.id === 6 && (
+                  <>
+                    <h3 className='text-xl md:text-2xl font-semibold text-gray-800'>
+                      What makes a well-formed formula (wff)?
+                    </h3>
+                    <p>
+                      Use a pair of parentheses for each &quot;
+                      <KatexSpan className='inline' text={'$ \\cdot $'} />
+                      &quot; (AND), &quot;
+                      <KatexSpan className='inline' text={'$ \\vee $'} />
+                      &quot; (OR), &quot;
+                      <KatexSpan className='inline' text={'$ \\rightarrow $'} />
+                      &quot; (IF-THEN) and &quot;
+                      <KatexSpan className='inline' text={'$ \\equiv $'} />
+                      &quot; (IFF).{' '}
+                    </p>
+                    <p>Do not use any other parentheses.</p>
+                  </>
+                ))}
             </div>
           </DrawerContent>
         </Drawer>
