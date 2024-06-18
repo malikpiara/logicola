@@ -10,7 +10,7 @@ const Button = ({ label, ...props }: ButtonProps) => {
     <>
       <button
         type='button'
-        className={`text-white w-full font-semibold rounded-md text-sm px-7 py-2.5  mb-2 ${
+        className={`text-white w-full font-semibold rounded-md text-base md:text-sm px-7 py-2.5  mb-2 ${
           props.disabled
             ? ' bg-gray-200 cursor-not-allowed'
             : 'bg-primaryColor hover:opacity-90'

@@ -209,7 +209,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
 
             <div className='flex flex-col justify-center gap-10 mx-4 md:mx-8 text-gray-500'>
               <div>
-                <h3 className='text-2xl font-semibold text-gray-800'>
+                <h3 className='text-xl md:text-2xl font-semibold text-gray-800'>
                   What makes a well-formed formula (wff)?
                 </h3>
                 <p>{`A wff must have one of these eight forms (where other capitals can replace "A" and "B" and other small letters "c" and "d"):`}</p>
