@@ -249,6 +249,34 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
                     </p>
                     <p>Do not use any other parentheses.</p>
                   </>
+                )) ||
+                (currentChapter.id === 3 && (
+                  <>
+                    <h3 className='text-xl md:text-2xl font-semibold text-gray-800'>
+                      What is a definition?
+                    </h3>
+                    <p>
+                      A definition is a rule of paraphrase designed to explain
+                      meaning. More precisely, a definition of a word or phrase
+                      is a rule saying how to eliminate this word or phrase in
+                      any sentence using it and produce a second sentence that
+                      means the same thing – the purpose of this being to
+                      explain or clarify the meaning of the word or phrase.
+                    </p>
+                    <p>
+                      Definitions may be stipulative (specifying your own usage)
+                      or lexical (explaining current usage). A good lexical
+                      definition should allow us to &quot;paraphrase out&quot; a
+                      term – to produce a second sentence that means the same
+                      thing but doesn&apos;t use the defined term. A good
+                      lexical definition should: be neither too broad nor too
+                      narrow, avoid circularity and poorly understood terms,
+                      match in vagueness the term defined, match, as far as
+                      possible, the emotional tone (positive or negative or
+                      neutral) of the term defined, and include only properties
+                      essential to the term.
+                    </p>
+                  </>
                 ))}
             </div>
           </DrawerContent>
