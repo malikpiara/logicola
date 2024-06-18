@@ -19,7 +19,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
-import { SkeletonCard } from '../ui/skeletonCard';
 
 export interface QuizProps {
   chapter: Chapter;
@@ -175,21 +174,21 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
           dismissible={false}
           open
           modal={false}
-          snapPoints={['150px', '450px']}
+          snapPoints={['180px', '460px', 1]}
           activeSnapPoint={snap}
           setActiveSnapPoint={setSnap}
         >
           <DrawerContent className='fixed flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]'>
             <DrawerHeader>
-              <div className='left-0 z-50 w-full h-16 bg-white flex items-center justify-between'>
-                <div className='ml-5'>
+              <div className='left-0 z-50 w-full h-24 bg-white flex items-center justify-center md:justify-between'>
+                <div className='ml-0 md:ml-5'>
                   {!showStartScreen && !showEndScreen && <KeyboardKeys />}
                 </div>
-                <div className='flex justify-end gap-5 items-center h-full align-bottom text-gray-800 font-medium'>
+                <div className='flex justify-between gap-5 items-center h-full align-bottom text-gray-800 font-medium flex-col md:flex-row w-full md:w-fit'>
                   {!showStartScreen && !showEndScreen && (
                     <div className='flex'>{questionCounter} of 10</div>
                   )}
-                  <div className='flex h-max'>
+                  <div className='flex h-max w-full md:w-fit'>
                     {!showSolution && !showStartScreen && !showEndScreen && (
                       <Button
                         label='Check Answer'
@@ -207,6 +206,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
                 </div>
               </div>
             </DrawerHeader>
+
             <div className='flex flex-col justify-center gap-10 mx-4 md:mx-8 text-gray-500'>
               <div>
                 <h3 className='text-2xl font-semibold text-gray-800'>
