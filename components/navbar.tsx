@@ -14,7 +14,7 @@ const Navbar = () => {
   const splitIndex = Math.ceil(chapters.length / 2);
 
   return (
-    <nav className='bg-white border-gray-200'>
+    <nav className='bg-white border-gray-200 hidden md:block'>
       <div className='flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4'>
         <Link
           href='/'
@@ -61,7 +61,7 @@ const Navbar = () => {
                 data-collapse-toggle='mega-menu-full-dropdown'
                 className='flex items-center justify-between w-full py-2 px-3 text-gray-500 rounded md:w-auto hover:bg-gray-200  md:border-0 md:hover:text-primaryColor'
               >
-                Chapters{' '}
+                Exercises{' '}
                 <svg
                   className='w-2.5 h-2.5 ms-2.5'
                   aria-hidden='true'
