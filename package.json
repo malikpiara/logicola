@@ -24,7 +24,7 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "katex": "^0.16.10",
-    "lucide-react": "^0.379.0",
+    "lucide-react": "^0.396.0",
     "next": "14.2.3",
     "posthog-js": "^1.131.4",
     "react": "^18",
