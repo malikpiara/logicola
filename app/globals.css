@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .animate-in {
-  animation: animateIn 0.3s ease 0.15s both;
+  animation: animateIn 0.3s ease-out 0.15s both;
 }
 
 @layer utilities {
