@@ -7,6 +7,7 @@ import { Footer } from '@/components/footer';
 import { CSPostHogProvider } from '@/components/providers';
 import thumbnail from '../public/thumbnail.jpg';
 import ExerciseNavbar from '@/components/mobile/exerciseNavbar';
+import RegisterSW from '@/components/providers/service-worker';
 
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
@@ -72,6 +73,7 @@ export default function RootLayout({
 
           <Navbar />
           <main className={`flex`}>{children}</main>
+          <RegisterSW />
           <Footer />
         </body>
       </CSPostHogProvider>
