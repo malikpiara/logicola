@@ -7,6 +7,7 @@ import { Footer } from '@/components/footer';
 import { CSPostHogProvider } from '@/components/providers';
 import thumbnail from '../public/thumbnail.jpg';
 import ExerciseNavbar from '@/components/mobile/exerciseNavbar';
+import RegisterSW from '@/components/providers/service-worker';
 
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
@@ -16,6 +17,7 @@ const robotoFlex = Roboto_Flex({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://logicola.org'),
+  themeColor: '#ffffff',
   title: 'Logicola',
   description:
     'LogiCola is a program to help students learn logic. This is a web version of the original software built by the late Professor Harry Gensler.',
@@ -58,6 +60,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
+      <head>
+        <meta name='theme-color' content='#FFFFFF' />
+        <link rel='manifest' href='/manifest.json' />
+      </head>
       <CSPostHogProvider>
         <body
           className={`antialiased min-h-screen bg-white text-primaryColor ${robotoFlex.className}`}
@@ -67,6 +73,7 @@ export default function RootLayout({
 
           <Navbar />
           <main className={`flex`}>{children}</main>
+          <RegisterSW />
           <Footer />
         </body>
       </CSPostHogProvider>
