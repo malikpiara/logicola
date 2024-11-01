@@ -58,12 +58,20 @@ export function Footer() {
                       Github
                     </Link>
                   </li>
-                  <li>
+                  <li className='mb-4'>
                     <Link
-                      href='https://twitter.com/LogicolaWeb'
+                      href='https://twitter.com/LogicolaThree'
                       className='hover:underline'
                     >
                       Twitter
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href='https://www.linkedin.com/company/logicola'
+                      className='hover:underline'
+                    >
+                      LinkedIn
                     </Link>
                   </li>
                 </ul>
