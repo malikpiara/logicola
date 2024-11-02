@@ -6,6 +6,9 @@ const urlsToCache = [
   // Add other static assets like
   '/globals.css',
   // Add any other pages/routes you want to cache
+  '/syllogistic/translations/quiz',
+  'informal/definitions/quiz',
+  'propositional/translations/quiz',
 ];
 
 self.addEventListener('install', (event) => {
