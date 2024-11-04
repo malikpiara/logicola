@@ -31,7 +31,7 @@
     "react-dom": "^18",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "vaul": "^0.9.1"
+    "vaul": "^1.1.1"
   },
   "devDependencies": {
     "@testing-library/react": "^15.0.7",
