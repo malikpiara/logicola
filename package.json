@@ -26,7 +26,7 @@
     "katex": "^0.16.10",
     "lucide-react": "^0.379.0",
     "next": "14.2.10",
-    "posthog-js": "^1.131.4",
+    "posthog-js": "^1.200.1",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.3.0",
