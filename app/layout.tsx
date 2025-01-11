@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     ],
   },
   icons: {
-    icon: '/next.svg',
+    icon: '/icon.svg',
   },
 };
 
