@@ -4,7 +4,6 @@ const setJ: Set = {
   name: 'Set J',
   logicType: 'Modal',
   slugs: ['informal', 'definitions'],
-  isNew: true,
   id: 3,
   title: 'Modal Translations: Basic',
   header: 'What is wrong with this definition?',

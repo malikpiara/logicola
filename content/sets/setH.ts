@@ -4,7 +4,6 @@ const setH: Set = {
   name: 'Set H',
   slugs: ['informal', 'definitions'],
   logicType: 'Quantificational Logic',
-  isNew: true,
   id: 3,
   title: 'Quantificational Translations: Easy',
   header: 'What is wrong with this definition?',
