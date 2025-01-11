@@ -1,35 +1,14 @@
-import { chapters } from '@/content';
-import { writeFile } from 'fs';
-
-type OldChapter = {
-  id: number | string;
-  title: string;
-  questions: OldQuestion[];
-};
-
-type OldQuestion = {
-  id: string;
-  prompt: string;
-  options: { id: number; label: string }[];
-  correctId: number[];
-  answer: string;
-};
+import * as sets from '@/content/sets';
+import { Set, SubSet } from '@/content/types';
+import { writeFile } from 'fs/promises';
 
 type NewContent = {
-  chapters: {
-    [key: string]: NewChapter;
+  subsets: {
+    [key: string]: NewSubSet;
   };
 };
 
-type NewChapter = {
-  title: string;
-  index: number;
-  subChapters: {
-    [key: string]: NewSubChapter;
-  };
-};
-
-type NewSubChapter = {
+type NewSubSet = {
   title: string;
   index: number;
   exercises: NewExercise[];
@@ -42,22 +21,27 @@ type NewExercise = {
   answer: string;
 };
 
-const transformChapters = (oldChapters: OldChapter[]): NewContent => {
-  const newContent: NewContent = { chapters: {} };
+// Utility to extract all subsets from sets
+const extractSubSets = (allSets: Set[]): SubSet[] => {
+  return allSets.flatMap((set) => set.subSets);
+};
 
-  oldChapters.forEach((chapter) => {
-    const chapterKey = chapter.title.toLowerCase().replace(/ /g, '-');
-    const newChapter: NewChapter = {
-      title: chapter.title,
-      index: chapter.id as number,
-      subChapters: {},
-    };
+const transformSubSets = (oldSubSets: SubSet[]): NewContent => {
+  const newContent: NewContent = { subsets: {} };
 
-    const subChapterKey = 'definitions'; // Assuming a single subChapter for simplicity
-    const newSubChapter: NewSubChapter = {
-      title: 'Definitions',
-      index: 0,
-      exercises: chapter.questions.map((question) => ({
+  oldSubSets.forEach((subSet) => {
+    if (!subSet || !subSet.questions || subSet.questions.length === 0) {
+      console.warn(
+        `Skipping empty or invalid subset: ${subSet?.title || 'Unknown'}`
+      );
+      return;
+    }
+
+    const subSetKey = subSet.title.toLowerCase().replace(/ /g, '-');
+    const newSubSet: NewSubSet = {
+      title: subSet.title,
+      index: subSet.id,
+      exercises: subSet.questions.map((question) => ({
         prompt: question.prompt,
         options: question.options.map((option) => option.label),
         correctIndices: question.correctId,
@@ -65,22 +49,38 @@ const transformChapters = (oldChapters: OldChapter[]): NewContent => {
       })),
     };
 
-    newChapter.subChapters[subChapterKey] = newSubChapter;
-    newContent.chapters[chapterKey] = newChapter;
+    newContent.subsets[subSetKey] = newSubSet;
   });
 
   return newContent;
 };
 
-const newContent = transformChapters(chapters);
-console.log(newContent);
+(async () => {
+  try {
+    const allSets: Set[] = Object.values(sets);
 
-const str = JSON.stringify(newContent, null, 2);
+    if (allSets.length === 0) {
+      console.error('No valid sets found to transform.');
+      return;
+    }
 
-writeFile('new-content.json', str, (err) => {
-  if (err) {
-    console.error(err);
-    return;
+    // Extract all subsets from sets
+    const allSubSets: SubSet[] = extractSubSets(allSets);
+
+    if (allSubSets.length === 0) {
+      console.error('No valid subsets found to transform.');
+      return;
+    }
+
+    const newContent = transformSubSets(allSubSets);
+    console.log('Transformed Content:', newContent);
+
+    const fileName = `new-content-${Date.now()}.json`;
+    const str = JSON.stringify(newContent, null, 2);
+
+    await writeFile(fileName, str);
+    console.log(`File has been created: ${fileName}`);
+  } catch (error) {
+    console.error('Error transforming subsets or writing file:', error);
   }
-  console.log('File has been created');
-});
+})();

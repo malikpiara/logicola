@@ -2,16 +2,22 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import NavTopic from './navTopic';
-import { chapters } from '@/content';
+import * as sets from '@/content/sets';
+import { Set } from '@/content/types';
+import { getAllSubSets } from '@/utils/getAllSubsets';
 
 const Navbar = () => {
+  const allSets: Set[] = Object.values(sets);
+  console.log(allSets);
+  const allSubSets = getAllSubSets(allSets); // Flattened array of sub-sets
+
   const [isDropdownVisible, setDropdownVisible] = useState(false);
 
   const toggleMenu = () => {
     setDropdownVisible(!isDropdownVisible);
   };
 
-  const splitIndex = Math.ceil(chapters.length / 2);
+  const splitIndex = Math.ceil(allSubSets.length / 2);
 
   return (
     <nav className='bg-white border-gray-200 hidden md:block'>
@@ -100,10 +106,10 @@ const Navbar = () => {
       >
         <div className='grid max-w-screen-xl px-4 py-5 mx-auto text-gray-900 sm:grid-cols-2 md:px-6 shadow-sm'>
           <ul>
-            {chapters.slice(0, splitIndex).map((i) => (
+            {allSubSets.slice(0, splitIndex).map((i) => (
               <NavTopic
                 key={i.id}
-                chapter={i.set}
+                chapter={i.name}
                 title={i.title}
                 path={'/' + i.slugs.join('/') + '/quiz'}
                 newLabel={i.isNew}
@@ -111,10 +117,10 @@ const Navbar = () => {
             ))}
           </ul>
           <ul>
-            {chapters.slice(splitIndex).map((i) => (
+            {allSubSets.slice(splitIndex).map((i) => (
               <NavTopic
                 key={i.id}
-                chapter={i.set}
+                chapter={i.name}
                 title={i.title}
                 path={'/' + i.slugs.join('/') + '/quiz'}
                 newLabel={i.isNew}

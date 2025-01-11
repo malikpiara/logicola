@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import Button from '../button';
 import Option from '../option';
@@ -8,30 +9,19 @@ import { EndScreen } from './endScreen';
 import { KeyboardKeys } from './keyboardKeys';
 import { StartScreen } from './startScreen';
 import useQuizState from './useQuizState';
-import { Chapter } from '@/content';
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer';
+import { SubSet } from '@/content/types';
+import { Drawer, DrawerContent, DrawerHeader } from '@/components/ui/drawer';
 
 export interface QuizProps {
-  chapter: Chapter;
+  subSet: SubSet; // Replaces QuizProps { chapter: Chapter }
 }
 
-const Quiz: React.FC<QuizProps> = ({ chapter }) => {
+const Quiz: React.FC<QuizProps> = ({ subSet }) => {
   const {
     showStartScreen,
     showEndScreen,
     selectedOptionId,
     showSolution,
-    currentChapter,
     currentQuestion,
     questionCounter,
     correctQuestions,
@@ -40,15 +30,15 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
     selectNextOption,
     selectPreviousOption,
     selectOption,
-    onShowSolution,
+    // onShowSolution: not used in this snippet, but you can keep/remove if your hook returns it
     onShowStartScreen,
     previousGuesses,
-  } = useQuizState(chapter);
+  } = useQuizState(subSet);
 
-  // Creating refs to make each option focusable with the keyboard shorcuts.
+  // Creating ref to make each option focusable with keyboard shortcuts
   const activeOptionRef = useRef<HTMLButtonElement>(null);
 
-  // Focus the active option when the selectedOptionId changes
+  // Focus the active option when selectedOptionId changes
   useEffect(() => {
     activeOptionRef.current?.focus();
   }, [selectedOptionId]);
@@ -70,13 +60,15 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
           event.preventDefault();
           if (showStartScreen) {
             onShowStartScreen();
+            break;
           }
           if (!showStartScreen && !showSolution && selectedOptionId != null) {
             onCheckAnswer();
+            break;
           }
           if (showSolution) {
             // Remove focus from the active option
-            activeOptionRef.current?.blur(); // Assuming you have a ref to the active option
+            activeOptionRef.current?.blur();
             handleNextQuestion();
           }
           break;
@@ -94,29 +86,26 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
     },
     [
       currentQuestion,
-      handleNextQuestion,
-      onShowSolution,
-      onShowStartScreen,
-      selectNextOption,
-      selectOption,
-      selectPreviousOption,
-      selectedOptionId,
-      showSolution,
       showStartScreen,
+      showSolution,
+      selectedOptionId,
+      onShowStartScreen,
+      onCheckAnswer,
+      handleNextQuestion,
+      selectNextOption,
+      selectPreviousOption,
+      selectOption,
     ]
   );
 
   useEffect(() => {
-    // Attach event listener when component mounts
     window.addEventListener('keydown', handleKeyDown);
-
-    // Remove event listener when component unmounts
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleKeyDown]); // Include handleKeyDown in the dependency array to ensure it's updated when it changes
+  }, [handleKeyDown]);
 
-  const [snap, setSnap] = useState<number | string | null>('148px');
+  const [snap, setSnap] = useState<number | string | null>('180px');
 
   return (
     <>
@@ -127,37 +116,35 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
       ) : (
         <div className='animate-in max-w-7xl p-0 md:p-6 bg-white md:border border-gray-200 rounded-lg mb-6 m-auto'>
           <div className='mx-auto w-full max-w-screen-xl p-4'>
-            {currentQuestion && ( // Ensure questions are loaded
+            {currentQuestion && (
               <div className='flex flex-col md:justify-between gap-5 max-sm:flex'>
                 <Prompt value={currentQuestion.prompt} />
 
                 <h2 className='text-xl font-bold text-gray-800'>
-                  {currentChapter!.header}
+                  {subSet.header}
                 </h2>
 
-                {currentQuestion.options.map((option, index) => {
-                  return (
-                    <Option
-                      index={option.id + 1}
-                      showIndex
-                      isSelected={option.id === selectedOptionId}
-                      isCorrect={currentQuestion.correctId.includes(option.id)}
-                      showSolution={showSolution}
-                      ref={
-                        index === selectedOptionId ? activeOptionRef : undefined
-                      }
-                      hasBeenIncorrectlyGuessed={previousGuesses.includes(
-                        option.id
-                      )}
-                      key={option.id}
-                      label={option.label}
-                      onClick={() => {
-                        selectOption(option.id);
-                        onShowStartScreen();
-                      }}
-                    />
-                  );
-                })}
+                {currentQuestion.options.map((option, index) => (
+                  <Option
+                    key={option.id}
+                    index={option.id + 1}
+                    showIndex
+                    isSelected={option.id === selectedOptionId}
+                    isCorrect={currentQuestion.correctId.includes(option.id)}
+                    showSolution={showSolution}
+                    ref={
+                      index === selectedOptionId ? activeOptionRef : undefined
+                    }
+                    hasBeenIncorrectlyGuessed={previousGuesses.includes(
+                      option.id
+                    )}
+                    label={option.label}
+                    onClick={() => {
+                      selectOption(option.id);
+                      onShowStartScreen();
+                    }}
+                  />
+                ))}
               </div>
             )}
           </div>
@@ -209,7 +196,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
             </DrawerHeader>
 
             <div className='flex flex-col justify-center gap-10 mx-4 md:mx-8 text-gray-500'>
-              {(currentChapter.id === 1 && (
+              {(subSet.id === 1 && (
                 <>
                   <div>
                     <h3 className='text-xl md:text-2xl font-semibold text-gray-800'>
@@ -231,7 +218,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
                   </div>
                 </>
               )) ||
-                (currentChapter.id === 6 && (
+                (subSet.id === 6 && (
                   <>
                     <h3 className='text-xl md:text-2xl font-semibold text-gray-800'>
                       What makes a well-formed formula (wff)?
@@ -250,7 +237,7 @@ const Quiz: React.FC<QuizProps> = ({ chapter }) => {
                     <p>Do not use any other parentheses.</p>
                   </>
                 )) ||
-                (currentChapter.id === 3 && (
+                (subSet.id === 3 && (
                   <>
                     <h3 className='text-xl md:text-2xl font-semibold text-gray-800'>
                       What is a definition?
