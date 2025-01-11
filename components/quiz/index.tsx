@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from '../button';
 import Option from '../option';
 import Prompt from '../prompt';
@@ -11,6 +11,7 @@ import { StartScreen } from './startScreen';
 import useQuizState from './useQuizState';
 import { SubSet } from '@/content/types';
 import { Drawer, DrawerContent, DrawerHeader } from '@/components/ui/drawer';
+import useKeyboardNavigation from './useKeyboardNavigation';
 
 export interface QuizProps {
   subSet: SubSet;
@@ -33,6 +34,19 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
     onShowStartScreen,
     previousGuesses,
   } = useQuizState(subSet);
+
+  useKeyboardNavigation({
+    currentQuestion,
+    showStartScreen,
+    showSolution,
+    selectedOptionId,
+    onShowStartScreen,
+    selectNextOption,
+    selectPreviousOption,
+    selectOption,
+    handleCheckAnswerAndExpandDrawer,
+    handleNextQuestion,
+  });
 
   // Drawer snap state initialized to the smallest snap point
   const [snap, setSnap] = useState<number | string | null>('180px');
@@ -63,70 +77,6 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
   useEffect(() => {
     activeOptionRef.current?.focus();
   }, [selectedOptionId]);
-
-  /**
-   * Keyboard handling
-   */
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      if (!currentQuestion) return;
-
-      switch (event.key) {
-        case 'ArrowDown':
-          event.preventDefault();
-          selectNextOption();
-          break;
-        case 'ArrowUp':
-          event.preventDefault();
-          selectPreviousOption();
-          break;
-        case 'Enter':
-          event.preventDefault();
-          if (showStartScreen) {
-            onShowStartScreen();
-            break;
-          }
-          if (!showStartScreen && !showSolution && selectedOptionId != null) {
-            handleCheckAnswerAndExpandDrawer();
-            break;
-          }
-          if (showSolution) {
-            activeOptionRef.current?.blur();
-            handleNextQuestion();
-          }
-          break;
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-          event.preventDefault();
-          selectOption(parseInt(event.key) - 1);
-          break;
-      }
-    },
-    [
-      currentQuestion,
-      showStartScreen,
-      showSolution,
-      selectedOptionId,
-      onShowStartScreen,
-      selectNextOption,
-      selectPreviousOption,
-      selectOption,
-      handleCheckAnswerAndExpandDrawer,
-      handleNextQuestion,
-    ]
-  );
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [handleKeyDown]);
 
   return (
     <>
