@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "test": "npx vitest",
+    "test": "vitest",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "eslint": "eslint . --ext .ts,.tsx && tsc --noEmit",
-    "lint-all": "npm run lint; npm run eslint; npm run format",
+    "lint-all": "next lint && eslint . --ext .ts,.tsx && prettier --check --ignore-path .gitignore .",
     "format": "prettier --check --ignore-path .gitignore .",
     "format:fix": "prettier --write --ignore-path .gitignore ."
   },

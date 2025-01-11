@@ -82,7 +82,9 @@ export default function useQuizState(subSet: SubSet) {
       setPreviousGuesses([]);
       setShowSolution(false);
       setQuestionCounter(questionCounter + 1);
-    } else {
+    }
+    if (questionCounter > 9) {
+      // If the user does more than 10 questions, exit the program.
       onShowEndScreen();
     }
   }

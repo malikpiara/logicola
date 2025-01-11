@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Button from '../button';
 import Option from '../option';
 import Prompt from '../prompt';
@@ -13,7 +13,7 @@ import { SubSet } from '@/content/types';
 import { Drawer, DrawerContent, DrawerHeader } from '@/components/ui/drawer';
 
 export interface QuizProps {
-  subSet: SubSet; // Replaces QuizProps { chapter: Chapter }
+  subSet: SubSet;
 }
 
 const Quiz: React.FC<QuizProps> = ({ subSet }) => {
@@ -30,10 +30,31 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
     selectNextOption,
     selectPreviousOption,
     selectOption,
-    // onShowSolution: not used in this snippet, but you can keep/remove if your hook returns it
     onShowStartScreen,
     previousGuesses,
   } = useQuizState(subSet);
+
+  // Drawer snap state initialized to the smallest snap point
+  const [snap, setSnap] = useState<number | string | null>('180px');
+
+  // Ref to track if the drawer has been expanded before
+  const hasExpanded = useRef(false);
+
+  /**
+   * When users click "Check Answer," we want to:
+   * - run onCheckAnswer() (quiz logic)
+   * - snap to "460px" only if it's the first time
+   */
+  function handleCheckAnswerAndExpandDrawer() {
+    onCheckAnswer();
+
+    if (!hasExpanded.current) {
+      setSnap('460px'); // Snap to the largest point on first click
+      hasExpanded.current = true; // Mark that the drawer has been expanded
+    } else {
+      setSnap('180px'); // Keep it at the smallest point on subsequent clicks
+    }
+  }
 
   // Creating ref to make each option focusable with keyboard shortcuts
   const activeOptionRef = useRef<HTMLButtonElement>(null);
@@ -43,6 +64,9 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
     activeOptionRef.current?.focus();
   }, [selectedOptionId]);
 
+  /**
+   * Keyboard handling
+   */
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (!currentQuestion) return;
@@ -63,11 +87,10 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
             break;
           }
           if (!showStartScreen && !showSolution && selectedOptionId != null) {
-            onCheckAnswer();
+            handleCheckAnswerAndExpandDrawer();
             break;
           }
           if (showSolution) {
-            // Remove focus from the active option
             activeOptionRef.current?.blur();
             handleNextQuestion();
           }
@@ -90,11 +113,11 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
       showSolution,
       selectedOptionId,
       onShowStartScreen,
-      onCheckAnswer,
-      handleNextQuestion,
       selectNextOption,
       selectPreviousOption,
       selectOption,
+      handleCheckAnswerAndExpandDrawer,
+      handleNextQuestion,
     ]
   );
 
@@ -104,8 +127,6 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleKeyDown]);
-
-  const [snap, setSnap] = useState<number | string | null>('180px');
 
   return (
     <>
@@ -157,10 +178,16 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
         </div>
       )}
 
+      {/** If we're not on start/end screen, show the Drawer */}
       {!showStartScreen && !showEndScreen && (
         <Drawer
-          dismissible={false}
+          /**
+           *  We keep the drawer always open by setting `open` to true.
+           *  "modal={false}" so it won't be over the entire screen as a modal.
+           */
           open
+          onOpenChange={() => {}} // No action needed since it's always open
+          dismissible={false}
           modal={false}
           snapPoints={['180px', '460px', 1]}
           activeSnapPoint={snap}
@@ -181,7 +208,7 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
                       <Button
                         label='Check Answer'
                         disabled={selectedOptionId == null}
-                        onClick={onCheckAnswer}
+                        onClick={handleCheckAnswerAndExpandDrawer}
                       />
                     )}
                     {showSolution && (
@@ -196,13 +223,12 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
             </DrawerHeader>
 
             <div className='flex flex-col justify-center gap-10 mx-4 md:mx-8 text-gray-500'>
-              {(subSet.id === 1 && (
+              {subSet.id === 1 && (
                 <>
                   <div>
                     <h3 className='text-xl md:text-2xl font-semibold text-gray-800'>
                       What makes a well-formed formula (wff)?
                     </h3>
-
                     <p>{`A wff must have one of these eight forms (where other capitals can replace "A" and "B" and other small letters "c" and "d"):`}</p>
                   </div>
 
@@ -217,54 +243,55 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
                     <div>c is not D</div>
                   </div>
                 </>
-              )) ||
-                (subSet.id === 6 && (
-                  <>
-                    <h3 className='text-xl md:text-2xl font-semibold text-gray-800'>
-                      What makes a well-formed formula (wff)?
-                    </h3>
-                    <p>
-                      Use a pair of parentheses for each &quot;
-                      <KatexSpan className='inline' text={'$ \\cdot $'} />
-                      &quot; (AND), &quot;
-                      <KatexSpan className='inline' text={'$ \\vee $'} />
-                      &quot; (OR), &quot;
-                      <KatexSpan className='inline' text={'$ \\rightarrow $'} />
-                      &quot; (IF-THEN) and &quot;
-                      <KatexSpan className='inline' text={'$ \\equiv $'} />
-                      &quot; (IFF).{' '}
-                    </p>
-                    <p>Do not use any other parentheses.</p>
-                  </>
-                )) ||
-                (subSet.id === 3 && (
-                  <>
-                    <h3 className='text-xl md:text-2xl font-semibold text-gray-800'>
-                      What is a definition?
-                    </h3>
-                    <p>
-                      A definition is a rule of paraphrase designed to explain
-                      meaning. More precisely, a definition of a word or phrase
-                      is a rule saying how to eliminate this word or phrase in
-                      any sentence using it and produce a second sentence that
-                      means the same thing – the purpose of this being to
-                      explain or clarify the meaning of the word or phrase.
-                    </p>
-                    <p>
-                      Definitions may be stipulative (specifying your own usage)
-                      or lexical (explaining current usage). A good lexical
-                      definition should allow us to &quot;paraphrase out&quot; a
-                      term – to produce a second sentence that means the same
-                      thing but doesn&apos;t use the defined term. A good
-                      lexical definition should: be neither too broad nor too
-                      narrow, avoid circularity and poorly understood terms,
-                      match in vagueness the term defined, match, as far as
-                      possible, the emotional tone (positive or negative or
-                      neutral) of the term defined, and include only properties
-                      essential to the term.
-                    </p>
-                  </>
-                ))}
+              )}
+
+              {subSet.id === 6 && (
+                <>
+                  <h3 className='text-xl md:text-2xl font-semibold text-gray-800'>
+                    What makes a well-formed formula (wff)?
+                  </h3>
+                  <p>
+                    Use a pair of parentheses for each &quot;
+                    <KatexSpan className='inline' text={'$ \\cdot $'} />
+                    &quot; (AND), &quot;
+                    <KatexSpan className='inline' text={'$ \\vee $'} />
+                    &quot; (OR), &quot;
+                    <KatexSpan className='inline' text={'$ \\rightarrow $'} />
+                    &quot; (IF-THEN) and &quot;
+                    <KatexSpan className='inline' text={'$ \\equiv $'} />
+                    &quot; (IFF).{' '}
+                  </p>
+                  <p>Do not use any other parentheses.</p>
+                </>
+              )}
+
+              {subSet.id === 3 && (
+                <>
+                  <h3 className='text-xl md:text-2xl font-semibold text-gray-800'>
+                    What is a definition?
+                  </h3>
+                  <p>
+                    A definition is a rule of paraphrase designed to explain
+                    meaning. More precisely, a definition of a word or phrase is
+                    a rule saying how to eliminate this word or phrase in any
+                    sentence using it and produce a second sentence that means
+                    the same thing – the purpose of this being to explain or
+                    clarify the meaning of the word or phrase.
+                  </p>
+                  <p>
+                    Definitions may be stipulative (specifying your own usage)
+                    or lexical (explaining current usage). A good lexical
+                    definition should allow us to &quot;paraphrase out&quot; a
+                    term – to produce a second sentence that means the same
+                    thing but doesn&apos;t use the defined term. A good lexical
+                    definition should: be neither too broad nor too narrow,
+                    avoid circularity and poorly understood terms, match in
+                    vagueness the term defined, match, as far as possible, the
+                    emotional tone (positive or negative or neutral) of the term
+                    defined, and include only properties essential to the term.
+                  </p>
+                </>
+              )}
             </div>
           </DrawerContent>
         </Drawer>

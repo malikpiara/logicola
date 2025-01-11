@@ -8,7 +8,7 @@ import { getAllSubSets } from '@/utils/getAllSubsets';
 
 const Navbar = () => {
   const allSets: Set[] = Object.values(sets);
-  console.log(allSets);
+
   const allSubSets = getAllSubSets(allSets); // Flattened array of sub-sets
 
   const [isDropdownVisible, setDropdownVisible] = useState(false);
