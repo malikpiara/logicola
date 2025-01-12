@@ -162,7 +162,7 @@ export default function useQuizState(subSet: SubSet) {
    */
   function onShowStartScreen() {
     posthog.capture('quiz_started', {
-      subSet: subSet.title,
+      title: subSet.title,
     });
     setShowStartScreen(false);
   }
