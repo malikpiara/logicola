@@ -215,6 +215,105 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
                 </>
               )}
 
+              {subSet.id === 4 && (
+                <div className='p-4 pb-0'>
+                  <div className=' inline-flex gap-10'>
+                    <div className='space-y-4'>
+                      <h4 className='font-medium'>
+                        Use a pair of parentheses for each:
+                      </h4>
+                      <div className='grid gap-2 text-sm'>
+                        <div className='flex items-center gap-2'>
+                          <code className='rounded bg-muted px-1 text-lg'>
+                            <KatexSpan className='inline' text={'$ \\cdot $'} />
+                          </code>
+                          <span>AND</span>
+                          <code className='rounded bg-muted px-1 text-lg'>
+                            <KatexSpan
+                              className='inline'
+                              text={'$ (P \\cdot Q) $'}
+                            />
+                          </code>
+                        </div>
+                        <div className='flex items-center gap-2'>
+                          <code className='rounded bg-muted px-1 text-lg'>
+                            <KatexSpan className='inline' text={'$ \\vee $'} />
+                          </code>
+                          <span>OR</span>
+                          <code className='rounded bg-muted px-1 text-lg'>
+                            <KatexSpan
+                              className='inline'
+                              text={'$ (P \\vee Q) $'}
+                            />
+                          </code>
+                        </div>
+                        <div className='flex items-center gap-2'>
+                          <code className='rounded bg-muted px-1 text-lg'>
+                            <KatexSpan
+                              className='inline'
+                              text={'$ \\supset $'}
+                            />
+                          </code>
+                          <span>IF-THEN</span>
+                          <code className='rounded bg-muted px-1 text-lg'>
+                            <KatexSpan
+                              className='inline'
+                              text={'$ (P \\supset Q) $'}
+                            />
+                          </code>
+                        </div>
+                        <div className='flex items-center gap-2'>
+                          <code className='rounded bg-muted px-1 text-lg'>
+                            <KatexSpan
+                              className='inline'
+                              text={'$ \\equiv $'}
+                            />
+                          </code>
+                          <span>IFF</span>
+                          <code className='rounded bg-muted px-1 text-lg'>
+                            <KatexSpan
+                              className='inline'
+                              text={'$( P \\equiv Q) $'}
+                            />
+                          </code>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='space-y-4'>
+                      <h4 className='font-medium'>
+                        Do not use additional grouping parentheses for:
+                      </h4>
+                      <div className='grid gap-2 text-sm'>
+                        <div className='flex items-center gap-2'>
+                          <code className='rounded bg-muted px-1 text-lg'>
+                            <KatexSpan className='inline' text={'$ \\sim $'} />
+                          </code>
+                          <span>NOT</span>
+                        </div>
+                        <div className='flex items-center gap-2'>
+                          <code className='rounded bg-muted px-1 text-lg'>
+                            <KatexSpan
+                              className='inline'
+                              text={'$ \\square $'}
+                            />
+                          </code>
+                          <span>NECESSARY</span>
+                        </div>
+                        <div className='flex items-center gap-2'>
+                          <code className='rounded bg-muted px-1 text-lg'>
+                            <KatexSpan
+                              className='inline'
+                              text={'$ \\lozenge $'}
+                            />
+                          </code>
+                          <span>POSSIBLE</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {subSet.id === 3 && (
                 <>
                   <h3 className='text-xl md:text-2xl font-semibold text-gray-800'>
