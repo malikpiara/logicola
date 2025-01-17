@@ -1,3 +1,10 @@
+import {
+  HINT_AMBIGUOUS,
+  HINT_DOESNT_ENTAIL,
+  HINT_ONLY_SECOND_PART_IMPOSSIBLE,
+  HINT_ONLY_SECOND_PART_NECESSARY,
+  HINT_TRANSLATE_NECESSARY_NOT,
+} from '../constants';
 import { Set } from '../types';
 
 const setJ: Set = {
@@ -358,6 +365,353 @@ const setJ: Set = {
             { id: 1, label: '$ (F \\supset \\square C) $' },
             { id: 2, label: '$ \\square F \\supset C $' },
             { id: 3, label: '$ \\square (F \\supset C) $' },
+          ],
+          correctId: [0],
+          answer: '',
+        },
+        {
+          id: '4.28',
+          prompt: "If D is true, then C couldn't be true",
+          options: [
+            { id: 0, label: 'Ambiguous between 2 & 3' },
+            { id: 1, label: '$ (D \\supset \\square \\sim C) $' },
+            { id: 2, label: '$ \\square (D \\supset \\sim C) $' },
+            { id: 3, label: '$ \\square D \\supset \\sim C $' },
+          ],
+          correctId: [0],
+          answer: '',
+        },
+        {
+          id: '4.29',
+          prompt: 'C entails M',
+          options: [
+            { id: 0, label: '$ (C \\supset \\square M) $' },
+            { id: 1, label: '$ \\square (C \\supset M) $' },
+            { id: 2, label: 'Ambiguous between 1 & 2' },
+            { id: 3, label: '$ \\square C \\supset M $' },
+          ],
+          correctId: [1],
+          answer: '',
+        },
+        {
+          id: '4.30',
+          prompt: 'If F is necessary then P is necessary',
+          options: [
+            { id: 0, label: '$ (\\square F \\supset \\square P) $' },
+            { id: 1, label: '$ \\square (F \\supset \\square P) $' },
+            { id: 2, label: '$ \\square F \\supset \\square P $' },
+            { id: 3, label: '$ \\square (F \\supset P) $' },
+          ],
+          correctId: [0],
+          answer: '',
+        },
+        {
+          id: '4.31',
+          prompt: "It must be that you aren't cowardly",
+          options: [
+            { id: 0, label: '$ \\sim \\square (C) $' },
+            { id: 1, label: '$ \\square \\sim C $' },
+            { id: 2, label: '$ (\\square \\sim C) $' },
+            { id: 3, label: '$ \\sim \\square C $' },
+          ],
+          correctId: [1],
+          answer: '',
+        },
+        {
+          id: '4.32',
+          prompt:
+            "It's necessary that if P is true then P (by itself) is necessary",
+          options: [
+            { id: 0, label: '$ \\square (P \\supset P) $' },
+            { id: 1, label: '$ \\square (P \\supset \\square (P)) $' },
+            { id: 2, label: '$ \\square (P \\supset \\square P) $' },
+            { id: 3, label: '$ (\\square (P \\supset \\square P)) $' },
+          ],
+          correctId: [2],
+          answer: '',
+        },
+        {
+          id: '4.33',
+          prompt: "Necessarily, if you're a customer then you're strong",
+          options: [
+            { id: 0, label: '$ \\square (C \\supset S) $' },
+            { id: 1, label: '$ \\square C \\supset S $' },
+            { id: 2, label: 'Ambiguous between 1 & 4' },
+            { id: 3, label: '$ (C \\supset \\square S) $' },
+          ],
+          correctId: [0],
+          answer: '',
+        },
+        {
+          id: '4.34',
+          prompt: 'Either P is necessary or C is necessary',
+          options: [
+            { id: 0, label: '$ \\square (P \\vee \\square C) $' },
+            { id: 1, label: '$ (\\square P \\vee \\square C) $' },
+            { id: 2, label: '$ \\square P \\vee \\square C $' },
+            { id: 3, label: '$ \\square (P \\vee C) $' },
+          ],
+          correctId: [1],
+          answer: '',
+        },
+        {
+          id: '4.35',
+          prompt: "It must be that you aren't filthy",
+          options: [
+            { id: 0, label: '$ \\square \\sim F $' },
+            { id: 1, label: '$ \\sim \\square F $' },
+            { id: 2, label: '$ (\\square \\sim F) $' },
+            { id: 3, label: '$ \\sim \\square (F) $' },
+          ],
+          correctId: [0],
+          answer: '',
+        },
+        {
+          id: '4.36',
+          prompt:
+            "It's necessary that if M is true then M (by itself) is necessary",
+          options: [
+            { id: 0, label: '$ \\square (M \\supset \\square (M)) $' },
+            { id: 1, label: '$ (\\square (M \\supset \\square M)) $' },
+            {
+              id: 2,
+              label: '$ \\square (M \\supset M) $',
+              hint: '$ You need another "\\square" $',
+            },
+            { id: 3, label: '$ \\square (M \\supset \\square M) $' },
+          ],
+          correctId: [3],
+          answer: '',
+        },
+        {
+          id: '4.37',
+          prompt: 'If P, then S (by itself) is impossible',
+          options: [
+            { id: 0, label: '$ (P \\supset \\square \\sim S) $' },
+            {
+              id: 1,
+              label: 'Ambiguous between 1 & 4',
+              hint: `${HINT_ONLY_SECOND_PART_IMPOSSIBLE}\n\n${HINT_AMBIGUOUS}`,
+            },
+            { id: 2, label: '$ \\square P \\supset \\sim S $' },
+            {
+              id: 3,
+              label: '$ \\square (P \\supset \\sim S) $',
+              hint: HINT_ONLY_SECOND_PART_IMPOSSIBLE,
+            },
+          ],
+          correctId: [0],
+          answer: '',
+        },
+        {
+          id: '4.38',
+          prompt: 'P is true',
+          options: [
+            { id: 0, label: '$ \\square P $' },
+            { id: 1, label: '$ \\square (P) $' },
+            { id: 2, label: '$ P $' },
+            { id: 3, label: '$ (\\square (P)) $' },
+          ],
+          correctId: [2],
+          answer: '',
+        },
+        {
+          id: '4.39',
+          prompt: "It's necessary that M is false",
+          options: [
+            {
+              id: 0,
+              label: '$ \\sim \\square M $',
+              hint: HINT_TRANSLATE_NECESSARY_NOT,
+            },
+            { id: 1, label: '$ \\square \\sim M $' },
+            { id: 2, label: '$ (\\square \\sim M) $' },
+            { id: 3, label: '$ \\sim \\square (M) $' },
+          ],
+          correctId: [1],
+          answer: '',
+        },
+        {
+          id: '4.40',
+          prompt:
+            "It's necessary that if C is true then C (by itself) is necessary",
+          options: [
+            { id: 0, label: '$ \\square (C \\supset \\square C) $' },
+            { id: 1, label: '$ \\square (C \\supset C) $' },
+            { id: 2, label: '$ (\\square (C \\supset \\square C)) $' },
+            { id: 3, label: '$ \\square (C \\supset \\square (C)) $' },
+          ],
+          correctId: [0],
+          answer: '',
+        },
+        {
+          id: '4.41',
+          prompt: 'If S, then M (by itself) is necessary',
+          options: [
+            {
+              id: 0,
+              label: 'Ambiguous between 2 & 4',
+              hint: `${HINT_ONLY_SECOND_PART_NECESSARY}\n\n${HINT_AMBIGUOUS}`,
+            },
+            { id: 1, label: '$ (S \\supset \\square M) $' },
+            { id: 2, label: '$ \\square S \\supset M $' },
+            { id: 3, label: '$ \\square (S \\supset M) $' },
+          ],
+          correctId: [1],
+          answer: '',
+        },
+        {
+          id: '4.42',
+          prompt: "'You're a teacher' doesn't entail 'You're poor'",
+          options: [
+            { id: 0, label: '$ \\square (T \\supset \\sim P) $' },
+            { id: 1, label: '$ (T \\supset \\square \\sim P) $' },
+            {
+              id: 2,
+              label: 'Ambiguous between 1 & 2',
+              hint: HINT_AMBIGUOUS,
+            },
+            { id: 3, label: '$ \\sim \\square (T \\supset P) $' },
+          ],
+          correctId: [3],
+          answer: '',
+        },
+        {
+          id: '4.43',
+          prompt: "It's necessary that H is false",
+          options: [
+            { id: 0, label: '$ (\\square \\sim H) $' },
+            { id: 1, label: '$ \\square \\sim H $' },
+            { id: 2, label: '$ \\sim \\square (H) $' },
+            { id: 3, label: '$ \\sim \\square H $' },
+          ],
+          correctId: [1],
+          answer: '',
+        },
+        {
+          id: '4.44',
+          prompt: 'N is self-contradictory',
+          options: [
+            { id: 0, label: '$ \\sim \\lozenge (N) $' },
+            { id: 1, label: '$ \\sim (\\lozenge N) $' },
+            {
+              id: 2,
+              label: '$ \\lozenge \\sim N $',
+              hint: '$ Your translation means "It\'s possible that N is false." \n Translate "self-contradictory" as "\\sim \\lozenge" ("not possible"). $',
+            },
+            { id: 3, label: '$ \\sim \\lozenge N $' },
+          ],
+          correctId: [3],
+          answer: '',
+        },
+        {
+          id: '4.45',
+          prompt: 'If C, then S (by itself) is necessary',
+          options: [
+            { id: 0, label: '$ (C \\supset \\square S) $' },
+            { id: 1, label: '$ \\square C \\supset S $' },
+            { id: 2, label: '$ \\square (C \\supset S) $' },
+            {
+              id: 3,
+              label: 'Ambiguous between 1 & 3',
+              hint: `${HINT_ONLY_SECOND_PART_NECESSARY}\n\n${HINT_AMBIGUOUS}`,
+            },
+          ],
+          correctId: [0],
+          answer: '',
+        },
+        {
+          id: '4.46',
+          prompt: "C doesn't entail not-T",
+          options: [
+            {
+              id: 0,
+              label: '$ \\square (C \\supset T) $',
+              hint: HINT_DOESNT_ENTAIL,
+            },
+            {
+              id: 1,
+              label: 'Ambiguous between 1 & 3',
+              hint: HINT_AMBIGUOUS,
+            },
+            {
+              id: 2,
+              label: '$ (C \\supset T) $',
+              hint: HINT_DOESNT_ENTAIL,
+            },
+            { id: 3, label: '$ \\sim \\square (C \\supset \\sim T) $' },
+          ],
+          correctId: [3],
+          answer: '',
+        },
+        {
+          id: '4.47',
+          prompt: "It must be that you aren't dangerous",
+          options: [
+            {
+              id: 0,
+              label: '$ \\sim \\square D $',
+              hint: HINT_TRANSLATE_NECESSARY_NOT,
+            },
+            { id: 1, label: '$ \\sim \\square (D) $' },
+            { id: 2, label: '$ (\\square \\sim D) $' },
+            { id: 3, label: '$ \\square \\sim D $' },
+          ],
+          correctId: [3],
+          answer: '',
+        },
+        {
+          id: '4.48',
+          prompt: 'T is self-contradictory',
+          options: [
+            {
+              id: 0,
+              label: '$ \\lozenge \\sim T $',
+              hint: '$ Your translation means "It\'s possible that T is false." \n Translate "self-contradictory" as "\\sim \\lozenge" ("not possible"). $',
+            },
+            { id: 1, label: '$ \\sim \\lozenge (T) $' },
+            { id: 2, label: '$ \\sim \\lozenge T $' },
+            { id: 3, label: '$ \\sim (\\lozenge T) $' },
+          ],
+          correctId: [2],
+          answer: '',
+        },
+        {
+          id: '4.49',
+          prompt: "If C, then M (by itself) can't be true",
+          options: [
+            { id: 0, label: '$ \\square \\supset \\sim M $' },
+            { id: 1, label: '$ \\square (C \\supset \\sim M) $' },
+            { id: 2, label: '$ (C \\supset \\square \\sim M) $' },
+            {
+              id: 3,
+              label: 'Ambiguous between 2 & 3',
+              hint: `${HINT_ONLY_SECOND_PART_IMPOSSIBLE}\n\n${HINT_AMBIGUOUS}`,
+            },
+          ],
+          correctId: [2],
+          answer: '',
+        },
+        {
+          id: '4.50',
+          prompt: "'You're a fugitive' doesn't entail 'You're bright'",
+          options: [
+            { id: 0, label: '$ \\sim \\square (F \\supset B) $' },
+            {
+              id: 1,
+              label: '$ (F \\supset \\square \\sim B) $',
+              hint: HINT_DOESNT_ENTAIL,
+            },
+            {
+              id: 2,
+              label: '$ \\square (F \\supset \\sim B) $',
+              hint: HINT_DOESNT_ENTAIL,
+            },
+            {
+              id: 3,
+              label: 'Ambiguous between 2 & 3',
+              hint: HINT_AMBIGUOUS,
+            },
           ],
           correctId: [0],
           answer: '',

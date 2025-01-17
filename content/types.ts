@@ -5,6 +5,7 @@
 export interface Option {
   id: number;
   label: string;
+  hint?: string; // Gensler hints
 }
 
 export interface Question {
