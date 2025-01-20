@@ -26,9 +26,11 @@
     "katex": "^0.16.10",
     "lucide-react": "^0.379.0",
     "next": "14.2.10",
+    "next-themes": "^0.4.4",
     "posthog-js": "^1.131.4",
     "react": "^18",
     "react-dom": "^18",
+    "sonner": "^1.7.2",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.1"

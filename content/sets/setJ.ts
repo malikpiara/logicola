@@ -718,6 +718,181 @@ const setJ: Set = {
         },
       ],
     },
+    {
+      name: 'Set Jq',
+      logicType: 'Modal',
+      isNew: true,
+      slugs: ['modal', 'translations', 'quantified'],
+      id: 4,
+      title: 'Modal Translations: Quantified',
+      header: 'Translates into logic as:',
+      questions: [
+        {
+          id: '4.1',
+          prompt: "It's necessary that all guitarists are frightened",
+          options: [
+            {
+              id: 0,
+              label: 'Ambiguous between 2 & 4',
+              hint: 'The sentence isn\'t ambiguous. \n You need to say that the whole statement "All guitarists are frightened" is necessary.',
+            },
+            { id: 1, label: '$ \\square (x)(Gx \\supset Fx) $' },
+            { id: 2, label: '$ \\square (x)(Gx \\supset \\square Fx) $' },
+            { id: 3, label: '$ (x)(Gx \\supset \\square Fx) $' },
+          ],
+          correctId: [1],
+          answer: '',
+        },
+        {
+          id: '4.2',
+          prompt: 'Someone has the property of being necessarily C',
+          options: [
+            { id: 0, label: '$ (\\exists x)(\\square Cx) $' },
+            {
+              id: 1,
+              label: '$ \\square (\\exists x)Cx $',
+              hint: 'Your translation means "It\'s necessary that someone is C.',
+            },
+            { id: 2, label: '$ (\\exists x)\\square Cx $' },
+            { id: 3, label: '$ \\square ((\\exists x) Cx) $' },
+          ],
+          correctId: [2],
+          answer: '',
+        },
+        {
+          id: '4.3',
+          prompt: "It's necessary that someone is B",
+          options: [
+            { id: 0, label: '$ \\square ((\\exists x)Bx) $' },
+            { id: 1, label: '$ (\\exists x)(\\square Bx) $' },
+            { id: 2, label: '$ \\square (\\exists x)Bx $' },
+            { id: 3, label: '$ (\\exists x)\\square Bx $' },
+          ],
+          correctId: [2],
+          answer: '',
+        },
+        {
+          id: '4.4',
+          prompt: 'Every dentist is necessarily corteous',
+          options: [
+            {
+              id: 0,
+              label: '$ (x)(Dx \\supset \\square Cx) $',
+              hint: 'The sentence could mean either of these two: \n "It\'s necessary that all dentists are courteous" or "Each dentist has the property of being-necessarily-courteous."',
+            },
+            { id: 1, label: 'Ambiguous between 1 & 4' },
+            { id: 2, label: '$ \\square (x)(Dx \\supset \\square Cx) $' },
+            { id: 3, label: '$ \\square (x)(Dx \\supset Cx) $' },
+          ],
+          correctId: [1],
+          answer: '',
+        },
+        {
+          id: '4.5',
+          prompt: "It's necessary that all prisioners are creative",
+          options: [
+            {
+              id: 0,
+              label: '$ \\square (x)(Px \\supset \\square Cx) $',
+              hint: 'Your translation has too many boxes',
+            },
+            {
+              id: 1,
+              label: '$ (x)(Px \\supset \\square Cx) $',
+              hint: 'You need to say that the whole statement "All prisioners are creative" is necessary',
+            },
+            { id: 2, label: '$ \\square (x)(Px \\supset Cx) $' },
+            {
+              id: 3,
+              label: 'Ambiguous between 2 & 3',
+              hint: 'The sentence isn\'t ambiguous. \n You need to say that the whole statement "All prisioners are creative" is necessary.',
+            },
+          ],
+          correctId: [2],
+          answer: '',
+        },
+        {
+          id: '4.6',
+          prompt: "It's necessary that all prisioners are creative",
+          options: [
+            { id: 0, label: '$ \\square (x)(Px \\supset \\square Cx) $' },
+            { id: 1, label: '$ (x)(Px \\supset \\square Cx) $' },
+            { id: 2, label: '$ \\square (x)(Px \\supset Cx) $' },
+            { id: 3, label: 'Ambiguous between 2 & 3' },
+          ],
+          correctId: [2],
+          answer: '',
+        },
+        {
+          id: '4.7',
+          prompt: 'Someone has the property of being necessarily strong',
+          options: [
+            { id: 0, label: '$ (\\exists x)\\square Sx $' },
+            { id: 1, label: '$ \\square (\\exists x)Sx $' },
+            { id: 2, label: '$ \\square ((\\exists x)Sx) $' },
+            { id: 3, label: '$ (\\exists x)(\\square Sx) $' },
+          ],
+          correctId: [0],
+          answer: '',
+        },
+        {
+          id: '4.8',
+          prompt: "It's necessary that everyone is clean",
+          options: [
+            {
+              id: 0,
+              label: '$ (x)\\square Cx $',
+              hint: 'Translate "necessary every" as "$ \\square(x) $."',
+            },
+            { id: 1, label: '$ (x)(\\square Cx) $' },
+            { id: 2, label: '$ \\square ((x)Cx) $' },
+            { id: 3, label: '$ \\square (x)Cx $' },
+          ],
+          correctId: [3],
+          answer: '',
+        },
+        {
+          id: '4.9',
+          prompt: 'All politicians are necessarily courageous',
+          options: [
+            {
+              id: 0,
+              label: '$ \\square (x)(Px \\supset \\square Cx) $',
+              hint: 'The sentence could mean either of these two: \n "It\'s necessary that all politicians are courageous," or "Each politician has the property of being-necessarily-courageous."',
+            },
+            { id: 1, label: 'Ambiguous between 3 & 4' },
+            { id: 2, label: '$ (x)(Px \\supset \\square Cx) $' },
+            { id: 3, label: '$ \\square (x)(Px \\supset Cx) $' },
+          ],
+          correctId: [1],
+          answer: '',
+        },
+        {
+          id: '4.10',
+          prompt: "It's necessary that every Canadian is greedy",
+          options: [
+            { id: 0, label: '$ \\square (x)(Cx \\supset Gx) $' },
+            {
+              id: 1,
+              label: '$ (x)(Cx \\supset \\square Gx) $',
+              hint: 'You need to say that the whole statement "Every Canadian is greedy" is necessary.',
+            },
+            {
+              id: 2,
+              label: '$ \\square (x)(Cx \\supset \\square Gx) $',
+              hint: 'Your translation has too many boxes.',
+            },
+            {
+              id: 3,
+              label: 'Ambiguous between 1 & 2',
+              hint: 'The sentence isn\'t ambguous. \n You need to say that the whole statement "Every Canadian is greedy" is necessary.',
+            },
+          ],
+          correctId: [0],
+          answer: '',
+        },
+      ],
+    },
   ],
 };
 
