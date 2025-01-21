@@ -778,7 +778,7 @@ const setJ: Set = {
             {
               id: 0,
               label: '$ (x)(Dx \\supset \\square Cx) $',
-              hint: 'The sentence could mean either of these two: \n "It\'s necessary that all dentists are courteous" or "Each dentist has the property of being-necessarily-courteous."',
+              hint: 'The sentence could mean either of these two: \n "It\'s necessary that all dentists are corteous" or "Each dentist has the property of being-necessarily-corteous."',
             },
             { id: 1, label: 'Ambiguous between 1 & 4' },
             { id: 2, label: '$ \\square (x)(Dx \\supset \\square Cx) $' },
@@ -789,7 +789,7 @@ const setJ: Set = {
         },
         {
           id: '4.5',
-          prompt: "It's necessary that all prisioners are creative",
+          prompt: "It's necessary that all prisoners are creative",
           options: [
             {
               id: 0,
@@ -799,13 +799,13 @@ const setJ: Set = {
             {
               id: 1,
               label: '$ (x)(Px \\supset \\square Cx) $',
-              hint: 'You need to say that the whole statement "All prisioners are creative" is necessary',
+              hint: 'You need to say that the whole statement "All prisoners are creative" is necessary',
             },
             { id: 2, label: '$ \\square (x)(Px \\supset Cx) $' },
             {
               id: 3,
               label: 'Ambiguous between 2 & 3',
-              hint: 'The sentence isn\'t ambiguous. \n You need to say that the whole statement "All prisioners are creative" is necessary.',
+              hint: 'The sentence isn\'t ambiguous. \n You need to say that the whole statement "All prisoners are creative" is necessary.',
             },
           ],
           correctId: [2],
@@ -813,14 +813,14 @@ const setJ: Set = {
         },
         {
           id: '4.6',
-          prompt: "It's necessary that all prisioners are creative",
+          prompt: "It's possible that someone is D",
           options: [
-            { id: 0, label: '$ \\square (x)(Px \\supset \\square Cx) $' },
-            { id: 1, label: '$ (x)(Px \\supset \\square Cx) $' },
-            { id: 2, label: '$ \\square (x)(Px \\supset Cx) $' },
-            { id: 3, label: 'Ambiguous between 2 & 3' },
+            { id: 0, label: '$ (\\exists x)(\\lozenge Dx) $' },
+            { id: 1, label: '$ \\lozenge (\\exists x)Dx $' },
+            { id: 2, label: '$ (\\exists x)\\lozenge Dx $' },
+            { id: 3, label: '$ \\lozenge ((\\exists x)Dx) $' },
           ],
-          correctId: [2],
+          correctId: [1],
           answer: '',
         },
         {
@@ -887,6 +887,172 @@ const setJ: Set = {
               label: 'Ambiguous between 1 & 2',
               hint: 'The sentence isn\'t ambguous. \n You need to say that the whole statement "Every Canadian is greedy" is necessary.',
             },
+          ],
+          correctId: [0],
+          answer: '',
+        },
+        {
+          id: '4.11',
+          prompt: 'Every druggist has the property of being necessarily gentle',
+          options: [
+            {
+              id: 0,
+              label: 'Ambiguous between 2 & 4',
+              hint: "The sentence isn't ambiguous. \n You need to predicate being-necessarily-gentle of each druggist.",
+            },
+            { id: 1, label: '$ (x)(Dx \\supset \\square Gx) $' },
+            { id: 2, label: '$ \\square (x)(Dx \\supset  \\square Gx) $' },
+            { id: 3, label: '$ \\square (x)(Dx \\supset Gx) $' },
+          ],
+          correctId: [1],
+          answer: '',
+        },
+        {
+          id: '4.12',
+          prompt: "It's possible that everyone is C",
+          options: [
+            { id: 0, label: '$ (x)(\\lozenge Cx) $' },
+            {
+              id: 1,
+              label: '$ (x)\\lozenge Cx $',
+              hint: '$ Translate "possible every" as "\\lozenge (x)" $',
+            },
+            { id: 2, label: '$ \\lozenge ((x)Cx) $' },
+            { id: 3, label: '$ \\lozenge (x)Cx $' },
+          ],
+          correctId: [3],
+          answer: '',
+        },
+        {
+          id: '4.13',
+          prompt: "It's necessary that everyone is C",
+          options: [
+            {
+              id: 0,
+              label: '$ (x)\\square Cx $',
+              hint: '$ Translate "necessary every" as "\\square(x)." $',
+            },
+            { id: 1, label: '$ \\square ((x)Cx) $' },
+            { id: 2, label: '$ (x)(\\square Cx) $' },
+            { id: 3, label: '$ \\square (x)(Cx) $' },
+          ],
+          correctId: [3],
+          answer: '',
+        },
+        {
+          id: '4.14',
+          prompt: 'Being dull is an accidental property of Tom',
+          options: [
+            {
+              id: 0,
+              label: '$ (\\lozenge Dt \\cdot \\lozenge \\sim Dt) $',
+              hint: 'You need to say: \n "Tom is dull but might not have been dull."',
+            },
+            {
+              id: 1,
+              label: '$ \\lozenge Dt $',
+              hint: 'You need to say: \n "Tom is dull but might not have been dull."',
+            },
+            { id: 2, label: '$ (Dt \\cdot \\lozenge \\sim Dt) $' },
+            { id: 3, label: '$ D \\lozenge t $' },
+          ],
+          correctId: [2],
+          answer: '',
+        },
+        {
+          id: '4.15',
+          prompt:
+            'Every customer has the property of being necessarily dishonest',
+          options: [
+            {
+              id: 0,
+              label: '$ \\square (x)(Cx \\supset Dx) $',
+              hint: 'You need to predicate being-necessarily-dishonest of each customer.',
+            },
+            {
+              id: 1,
+              label: 'Ambiguous between 1 & 4',
+              hint: "The sentence isn't ambiguous. \n You need to predicate being-necessarily-dishonest of each customer.",
+            },
+            {
+              id: 2,
+              label: '$ \\square (x)(Cx \\supset \\square Dx) $',
+              hint: 'Your translation has too many boxes.',
+            },
+            { id: 3, label: '$ (x)(Cx \\supset \\square Dx) $' },
+          ],
+          correctId: [3],
+          answer: '',
+        },
+        {
+          id: '4.16',
+          prompt: 'Being tough is a contingent property of Gensler',
+          options: [
+            {
+              id: 0,
+              label: '$ \\lozenge Tp $',
+              hint: 'You need to say: \n "Gensler is tough but might not have been tough.',
+            },
+            { id: 1, label: '$ (Tp \\cdot \\lozenge \\sim Tp) $' },
+            { id: 2, label: '$ (\\lozenge Tp \\cdot \\lozenge \\sim Tp) $' },
+            { id: 3, label: '$ T \\lozenge p $' },
+          ],
+          correctId: [1],
+          answer: '',
+        },
+        {
+          id: '4.17',
+          prompt:
+            'All pessimists have the property of being necessarily forgetful',
+          options: [
+            { id: 0, label: '$ (x)(Px \\supset \\square Fx) $' },
+            { id: 1, label: '$ \\square (x)(Px \\supset \\square Fx)) $' },
+            { id: 2, label: '$ \\square (x)(Px \\supset Fx) $' },
+            { id: 3, label: '$ Ambiguous between 1 & 3 $' },
+          ],
+          correctId: [0],
+          answer: '',
+        },
+        {
+          id: '4.18',
+          prompt: "It's possible that everyone is fortunate",
+          options: [
+            { id: 0, label: '$ (x)(\\lozenge Fx) $' },
+            {
+              id: 1,
+              label: '$ (x)\\lozenge Fx $',
+              hint: '$ Translate "possible every" as "\\lozenge (x)." $',
+            },
+            { id: 2, label: '$ \\lozenge ((x)Fx) $' },
+            { id: 3, label: '$ \\lozenge (x)Fx $' },
+          ],
+          correctId: [3],
+          answer: '',
+        },
+        {
+          id: '4.19',
+          prompt: 'Someone has the property of being necessarily T',
+          options: [
+            {
+              id: 0,
+              label: '$ \\square (\\exists x)Tx $',
+              hint: 'Your translation means "It\'s necessary that someone is T."',
+            },
+            { id: 1, label: '$ (\\exists x)(\\square Tx) $' },
+            { id: 2, label: '$ (\\exists x)\\square Tx $' },
+            { id: 3, label: '$ \\square ((\\exists x)Tx) $' },
+          ],
+          correctId: [2],
+          answer: '',
+        },
+        {
+          id: '4.20',
+          prompt: 'Not being miserable is a necessary property of Sally',
+          options: [
+            { id: 0, label: '$ \\square \\sim Ms $' },
+            { id: 1, label: '$ (\\square \\sim Ms) $' },
+            { id: 2, label: '$ \\square (\\sim Ms) $' },
+            { id: 3, label: '$ \\sim M \\square s $' },
           ],
           correctId: [0],
           answer: '',
