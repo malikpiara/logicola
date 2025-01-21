@@ -18,6 +18,7 @@ const SHORTHAND_REPLACEMENTS = [
   { find: ',i', replaceWith: '\\supset ' },
   { find: ',eq', replaceWith: '\\equiv ' },
   { find: ',ex', replaceWith: '\\exists ' },
+  { find: ',u', replaceWith: '\\underline{} ' },
 ];
 
 /** KaTeX button definitions. */
@@ -30,6 +31,11 @@ const LATEX_BUTTONS = [
   { command: '\\supset', label: 'IMPLIES', preview: '$ \\supset $' },
   { command: '\\equiv', label: 'EQUIV', preview: '$ \\equiv $' },
   { command: '\\exists', label: 'EXISTS', preview: '$ \\exists $' },
+  {
+    command: '\\underline{}',
+    label: 'UNDERLINE',
+    preview: '$ \\underline{U} $',
+  },
 ];
 
 /**
@@ -140,6 +146,8 @@ export default function LabelGeneratorPage() {
   /**
    * Insert the LaTeX command at the current cursor or over the selection,
    * then run the same logic that processes shorthands + preserves cursor.
+   *
+   * *** This is where we add the special case for underline. ***
    */
   function insertLatex(latex: string) {
     if (!textareaRef.current) return;
@@ -147,12 +155,35 @@ export default function LabelGeneratorPage() {
     const oldVal = input;
     const start = textareaRef.current.selectionStart;
     const end = textareaRef.current.selectionEnd;
+    const selectedText = oldVal.slice(start, end);
 
-    // Insert "latex + " " at the cursor/selection
-    const newVal = oldVal.slice(0, start) + latex + ' ' + oldVal.slice(end);
-    const newCursor = start + latex.length + 1; // after inserted command + 1 space
+    // If it's the underline command, we want to wrap the selected text in \underline{}.
+    if (latex === '\\underline{}') {
+      let newVal;
+      let newCursor;
 
-    setAndReplaceShorthands(newVal, newCursor);
+      // If there's a selection, wrap it.
+      if (selectedText.length > 0) {
+        // e.g. from "text" to "\underline{text}"
+        const inserted = `\\underline{${selectedText}} `;
+        newVal = oldVal.slice(0, start) + inserted + oldVal.slice(end);
+        // Cursor goes just after the inserted text
+        newCursor = start + inserted.length;
+      } else {
+        // No selection: just insert "\underline{} " and put cursor between braces
+        const inserted = '\\underline{} ';
+        newVal = oldVal.slice(0, start) + inserted + oldVal.slice(end);
+        // Place the cursor right after the '{'
+        newCursor = start + '\\underline{'.length;
+      }
+
+      setAndReplaceShorthands(newVal, newCursor);
+    } else {
+      // All other commands use the old insertion logic
+      const newVal = oldVal.slice(0, start) + latex + ' ' + oldVal.slice(end);
+      const newCursor = start + latex.length + 1;
+      setAndReplaceShorthands(newVal, newCursor);
+    }
   }
 
   /**
