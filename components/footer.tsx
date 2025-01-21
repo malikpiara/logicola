@@ -35,12 +35,23 @@ export function Footer() {
                       Classic Logicola
                     </Link>
                   </li>
-                  <li>
+                  <li className='mb-4'>
                     <Link
                       href='https://www.routledge.com/Introduction-to-Logic/Gensler/p/book/9781138910591'
                       className='hover:underline'
                     >
                       Get the Book
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href='/keyboard'
+                      className='hover:underline flex gap-2'
+                    >
+                      Keyboard{' '}
+                      <div className='bg-primaryColor text-white text-xs font-semibold me-5 px-2 py-1 rounded-full'>
+                        New
+                      </div>
                     </Link>
                   </li>
                 </ul>
@@ -98,7 +109,7 @@ export function Footer() {
           <hr className='my-6 border-gray-200 sm:mx-auto lg:my-8' />
           <div className='sm:flex sm:items-center sm:justify-between'>
             <span className='text-sm text-gray-500 sm:text-center '>
-              © 2024{' '}
+              © 2025{' '}
               <Link href='https://logicola.com' className='hover:underline'>
                 Logicola
               </Link>
@@ -106,7 +117,7 @@ export function Footer() {
             </span>
             <div className='flex mt-4 space-x-6 sm:justify-center sm:mt-0'>
               <Link
-                href='https://twitter.com/LogicolaWeb'
+                href='https://twitter.com/LogicolaThree'
                 className='text-gray-500 hover:text-gray-900'
               >
                 <svg

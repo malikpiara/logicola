@@ -1,5 +1,5 @@
-'use client';
-import { chapters } from '@/content';
+/* 'use client';
+import { chapters } from '@/content/types';
 import { useState } from 'react';
 import Link from 'next/link';
 
@@ -102,3 +102,4 @@ const ExerciseSidebar: React.FC<ExerciseSidebarProps> = ({
 };
 
 export default ExerciseSidebar;
+ */

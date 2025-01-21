@@ -1,6 +1,8 @@
 import NoSSR from '@/components/NoSSR';
 import Quiz from '@/components/quiz';
-import { chapters } from '@/content';
+import * as sets from '@/content/sets';
+import { Set, SubSet } from '@/content/types';
+import { getAllSubSets } from '@/utils/getAllSubsets';
 import { Metadata } from 'next';
 
 const arraysAreSame = (array1: string[], array2: string[]) =>
@@ -11,11 +13,14 @@ export interface QuizPageProps {
   params: { slugs: string[]; exercise: number };
 }
 export default function QuizPage({ params }: QuizPageProps) {
-  const chapter = chapters.find((i) =>
+  const allSets: Set[] = Object.values(sets);
+  const allSubSets: SubSet[] = getAllSubSets(allSets);
+
+  const subSet = allSubSets.find((i) =>
     arraysAreSame(i.slugs.concat(['quiz']), params.slugs)
   );
 
-  if (!chapter)
+  if (!subSet)
     return (
       <div className='flex w-full h-screen'>
         <main className='p-4 w-full'>
@@ -36,7 +41,7 @@ export default function QuizPage({ params }: QuizPageProps) {
         /> */}
       <main className='p-4 w-full'>
         <NoSSR>
-          <Quiz chapter={chapter} />
+          <Quiz subSet={subSet} />
         </NoSSR>
       </main>
     </div>
@@ -46,11 +51,14 @@ export default function QuizPage({ params }: QuizPageProps) {
 export async function generateMetadata({
   params,
 }: QuizPageProps): Promise<Metadata> {
-  const chapter = chapters.find((i) =>
+  const allSets: Set[] = Object.values(sets);
+  const allSubSets: SubSet[] = getAllSubSets(allSets);
+
+  const subSet = allSubSets.find((i) =>
     arraysAreSame(i.slugs.concat(['quiz']), params.slugs)
   );
 
   return {
-    title: (chapter?.title || 'Not found') + ' | Logicola',
+    title: (subSet?.title || 'Not found') + ' | Logicola',
   };
 }

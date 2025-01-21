@@ -2,10 +2,14 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import NavTopic from '../navTopic';
-import { chapters } from '@/content';
+import * as sets from '@/content/sets';
+import { Set } from '@/content/types';
+import { getAllSubSets } from '@/utils/getAllSubsets';
 import { usePathname } from 'next/navigation';
 
 const Navbar = () => {
+  const allSets: Set[] = Object.values(sets); // All top-level sets
+  const allSubSets = getAllSubSets(allSets); // Flattened array of sub-sets
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const pathname = usePathname();
 
@@ -13,11 +17,12 @@ const Navbar = () => {
     setDropdownVisible(!isDropdownVisible);
   };
 
-  const splitIndex = Math.ceil(chapters.length / 2);
+  const splitIndex = Math.ceil(allSubSets.length / 2); // Split for two-column layout
 
+  // Display only for non-quiz pages
   if (!pathname.includes('quiz'))
     return (
-      <nav className='bg-white border-gray-200 md:hidden '>
+      <nav className='bg-white border-gray-200 md:hidden'>
         <div className='flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4'>
           <Link
             href='/'
@@ -30,8 +35,8 @@ const Navbar = () => {
 
           <button
             type='button'
-            className='inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-stone-200 '
-            onClick={() => setDropdownVisible(!isDropdownVisible)}
+            className='inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-stone-200'
+            onClick={toggleMenu}
           >
             <span className='sr-only'>Open main menu</span>
             <svg
@@ -100,25 +105,26 @@ const Navbar = () => {
           } border-gray-200 shadow-sm bg-gray-50 md:bg-white absolute w-full z-50`}
         >
           <div className='grid max-w-screen-xl px-4 py-5 mx-auto text-gray-900 sm:grid-cols-2 md:px-6 shadow-sm'>
+            {/* Display only sub-sets */}
             <ul>
-              {chapters.slice(0, splitIndex).map((i) => (
+              {allSubSets.slice(0, splitIndex).map((subSet) => (
                 <NavTopic
-                  key={i.id}
-                  chapter={i.set}
-                  title={i.title}
-                  path={'/' + i.slugs.join('/') + '/quiz'}
-                  newLabel={i.isNew}
+                  key={subSet.id}
+                  chapter={subSet.name}
+                  title={subSet.title}
+                  path={'/' + subSet.slugs.join('/') + '/quiz'}
+                  newLabel={subSet.isNew || false} // Correctly access `isNew` from sub-set
                 />
               ))}
             </ul>
             <ul>
-              {chapters.slice(splitIndex).map((i) => (
+              {allSubSets.slice(splitIndex).map((subSet) => (
                 <NavTopic
-                  key={i.id}
-                  chapter={i.set}
-                  title={i.title}
-                  path={'/' + i.slugs.join('/') + '/quiz'}
-                  newLabel={i.isNew}
+                  key={subSet.id}
+                  chapter={subSet.name}
+                  title={subSet.title}
+                  path={'/' + subSet.slugs.join('/') + '/quiz'}
+                  newLabel={subSet.isNew || false} // Correctly access `isNew` from sub-set
                 />
               ))}
             </ul>
@@ -126,6 +132,9 @@ const Navbar = () => {
         </div>
       </nav>
     );
+
+  // If the user is on a quiz page, return null
+  return null;
 };
 
 export default Navbar;
