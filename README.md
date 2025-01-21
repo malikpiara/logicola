@@ -1,6 +1,6 @@
 ![Logicola Mascot](public/mascot.png)
 
-LogiCola is an instructional program that goes with Gensler's Introduction to Logic (Routledge Press). Since Harry Gensler, the original creator has passed away, I decided to create a new version to preserve an important learning resource and honour his legacy.
+LogiCola 3 is an instructional program that goes with Gensler's Introduction to Logic (Routledge Press). Since Harry Gensler, the original creator has passed away, I decided to create a new version to preserve an important learning resource and honour his legacy.
 
 ## Getting Started
 
