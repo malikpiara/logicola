@@ -19,6 +19,15 @@ const SHORTHAND_REPLACEMENTS = [
   { find: ',eq', replaceWith: '\\equiv ' },
   { find: ',ex', replaceWith: '\\exists ' },
   { find: ',u', replaceWith: '\\underline{} ' },
+  { find: ',1', replaceWith: '\\sim ' },
+  { find: ',2', replaceWith: '\\square ' },
+  { find: ',3', replaceWith: '\\lozenge ' },
+  { find: ',4', replaceWith: '\\cdot ' },
+  { find: ',5', replaceWith: '\\vee ' },
+  { find: ',6', replaceWith: '\\supset ' },
+  { find: ',7', replaceWith: '\\equiv ' },
+  { find: ',8', replaceWith: '\\exists ' },
+  { find: ',9', replaceWith: '\\underline{} ' },
 ];
 
 /** KaTeX button definitions. */
