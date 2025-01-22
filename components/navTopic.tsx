@@ -14,12 +14,7 @@ type TableOfContentProps = {
   newLabel?: boolean;
 };
 
-const NavTopic = ({
-  title = 'Basic Propositional Logic',
-  chapter = 'Chapter 6',
-  path = '/basic-propositional-logic',
-  newLabel = false,
-}: TableOfContentProps) => {
+const NavTopic = ({ chapter, title, path, newLabel }: TableOfContentProps) => {
   return (
     <li>
       <Link href={path} className='block p-3 rounded-lg hover:bg-gray-200'>

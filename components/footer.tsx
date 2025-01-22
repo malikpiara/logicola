@@ -17,7 +17,7 @@ export function Footer() {
               alt='FlowBite Logo'
             /> */}
                 <span className='self-center text-2xl font-bold whitespace-nowrap font-stretch'>
-                  LogiCola
+                  LogiCola 3
                 </span>
               </Link>
             </div>
