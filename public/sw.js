@@ -23,7 +23,26 @@ const urlsToCache = [
   
   'informal/definitions/quiz',
   'propositional/translations/quiz',
-  'keyboard'
+  'keyboard',
+
+  '/syllogistic/translations/basic/quiz',
+  '/syllogistic/translations/hard/quiz',
+  '/syllogistic',
+
+  '/propositional/translations/quiz',
+  '/propositional/translations/hard/quiz',
+  '/modal/translations/basic/quiz',
+  '/modal/translations/quantified/quiz',
+
+  '/Deontic/translations/Imperative/quiz',
+  '/Deontic/translations/Deontic/quiz',
+  '/belief/translations/basic/quiz',
+  '/belief/translations/willing/quiz',
+  '/belief/translations/rationality/quiz',
+  
+  '/informal/definitions/quiz',
+  '/propositional/translations/quiz',
+  '/keyboard'
 ];
 
 self.addEventListener('install', (event) => {
