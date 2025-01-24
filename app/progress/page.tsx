@@ -55,7 +55,7 @@ const logicSections = [
   {
     title: 'Deontic',
     icon: Book,
-    progress: 0,
+    progress: 30,
     items: [
       { label: 'L. Translations', href: '#' },
       { label: 'M. Proofs', href: '#' },
@@ -64,7 +64,7 @@ const logicSections = [
   {
     title: 'Belief',
     icon: Brain,
-    progress: 0,
+    progress: 30,
     items: [
       { label: 'N. Translations', href: '#' },
       { label: 'O. Proofs', href: '#' },
