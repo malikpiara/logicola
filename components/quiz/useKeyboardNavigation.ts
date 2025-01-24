@@ -10,7 +10,7 @@ interface UseKeyboardNavigationProps {
   selectNextOption: () => void;
   selectPreviousOption: () => void;
   selectOption: (index: number) => void;
-  handleCheckAnswerAndExpandDrawer: () => void;
+  handleCheckAnswer: () => void;
   handleNextQuestion: () => void;
 }
 
@@ -23,7 +23,7 @@ const useKeyboardNavigation = ({
   selectNextOption,
   selectPreviousOption,
   selectOption,
-  handleCheckAnswerAndExpandDrawer,
+  handleCheckAnswer,
   handleNextQuestion,
 }: UseKeyboardNavigationProps) => {
   const handleKeyDown = useCallback(
@@ -50,7 +50,7 @@ const useKeyboardNavigation = ({
             !showSolution &&
             selectedOptionIndex != null
           ) {
-            handleCheckAnswerAndExpandDrawer();
+            handleCheckAnswer();
             break;
           }
           if (showSolution) {
@@ -80,7 +80,7 @@ const useKeyboardNavigation = ({
       selectNextOption,
       selectPreviousOption,
       selectOption,
-      handleCheckAnswerAndExpandDrawer,
+      handleCheckAnswer,
       handleNextQuestion,
     ]
   );

@@ -35,6 +35,18 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
     previousGuesses,
   } = useQuizState(subSet);
 
+  /**
+   * 1) Keep track of the drawer snap state.
+   *    Default to "180px" or whichever is your "collapsed" height.
+   */
+  const [snap, setSnap] = useState<string | number | null>('180px');
+
+  /**
+   * 2) We'll keep a ref to the DrawerContent (or the <Drawer> itself).
+   *    Then we'll detect clicks outside of this container.
+   */
+  const drawerRef = useRef<HTMLDivElement>(null);
+
   useKeyboardNavigation({
     currentQuestion,
     showStartScreen,
@@ -44,30 +56,12 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
     selectNextOption,
     selectPreviousOption,
     selectOption,
-    handleCheckAnswerAndExpandDrawer,
+    handleCheckAnswer,
     handleNextQuestion,
   });
 
-  // Drawer snap state initialized to the smallest snap point
-  const [snap, setSnap] = useState<number | string | null>('180px');
-
-  // Ref to track if the drawer has been expanded before
-  const hasExpanded = useRef(false);
-
-  /**
-   * When users click "Check Answer," we want to:
-   * - run onCheckAnswer() (quiz logic)
-   * - snap to "460px" only if it's the first time
-   */
-  function handleCheckAnswerAndExpandDrawer() {
+  function handleCheckAnswer() {
     onCheckAnswer();
-
-    if (!hasExpanded.current) {
-      setSnap('460px'); // Snap to the largest point on first click
-      hasExpanded.current = true; // Mark that the drawer has been expanded
-    } else {
-      setSnap('180px'); // Keep it at the smallest point on subsequent clicks
-    }
   }
 
   // Creating ref to make each option focusable with keyboard shortcuts
@@ -77,6 +71,28 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
   useEffect(() => {
     activeOptionRef.current?.focus();
   }, [selectedOptionIndex]);
+
+  /**
+   * 3) Watch for clicks on the entire document. If the user clicked
+   *    outside our DrawerContent, set the snap back to "180px".
+   */
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        drawerRef.current &&
+        !drawerRef.current.contains(event.target as Node)
+      ) {
+        // If the drawer is currently snapped open beyond 180px, snap back
+        // (Or you can just always set to 180px unconditionally.)
+        setSnap('180px');
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -143,9 +159,12 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
           modal={false}
           snapPoints={['180px', '460px', 1]}
           activeSnapPoint={snap}
-          setActiveSnapPoint={setSnap}
+          setActiveSnapPoint={(value) => setSnap(value)}
         >
-          <DrawerContent className='fixed flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]'>
+          <DrawerContent
+            ref={drawerRef}
+            className='fixed flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]'
+          >
             <DrawerHeader>
               <div className='left-0 z-50 w-full h-24 bg-white flex items-center justify-center md:justify-between'>
                 <div className='ml-0 md:ml-5'>
@@ -160,7 +179,7 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
                       <Button
                         label='Check Answer'
                         disabled={selectedOptionIndex == null}
-                        onClick={handleCheckAnswerAndExpandDrawer}
+                        onClick={handleCheckAnswer}
                       />
                     )}
                     {showSolution && (

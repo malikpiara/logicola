@@ -12,6 +12,7 @@ const setL: Set = {
       name: 'Set L',
       logicType: 'Basic Translations',
       slugs: ['Deontic', 'translations', 'Imperative'],
+      shuffleOptions: true,
       id: 12,
       title: 'Deontic Translations: Imperative',
       header: 'Translates into logic as:',
@@ -19,10 +20,14 @@ const setL: Set = {
       questions: [
         {
           id: '12.1',
-          prompt: 'Don\'t conform without despairing',
+          prompt: "Don't conform without despairing",
           options: [
             { id: 0, label: '$ (Cu\\supset \\sim D\\underline{u} ) $' },
-            { id: 1, label: '$ \\sim (C\\underline{u} \\cdot \\sim D\\underline{u} ) $' },
+            {
+              id: 1,
+              label:
+                '$ \\sim (C\\underline{u} \\cdot \\sim D\\underline{u} ) $',
+            },
             { id: 2, label: '$ \\sim (C\\underline{u}\\cdot \\sim Du ) $' },
             { id: 3, label: '$ \\sim (Cu\\cdot \\sim D\\underline{u} ) $' },
           ],
@@ -31,12 +36,24 @@ const setL: Set = {
         },
         {
           id: '12.2',
-          prompt: 'Sing and don\'tsing is inconsistent',
+          prompt: "Sing and don'tsing is inconsistent",
           options: [
             { id: 0, label: '$ \\sim \\lozenge (Su\\cdot \\sim Su) $' },
-            { id: 1, label: '$ \\sim (S\\underline{u}\\cdot \\sim S\\underline{u}  ) $' },
-            { id: 2, label: '$ (\\sim \\lozenge (S\\underline{u}\\cdot \\sim S\\underline{u}  )) $' },
-            { id: 3, label: '$ \\sim \\lozenge (S\\underline{u}\\cdot \\sim S\\underline{u}  ) $' },
+            {
+              id: 1,
+              label:
+                '$ \\sim (S\\underline{u}\\cdot \\sim S\\underline{u}  ) $',
+            },
+            {
+              id: 2,
+              label:
+                '$ (\\sim \\lozenge (S\\underline{u}\\cdot \\sim S\\underline{u}  )) $',
+            },
+            {
+              id: 3,
+              label:
+                '$ \\sim \\lozenge (S\\underline{u}\\cdot \\sim S\\underline{u}  ) $',
+            },
           ],
           correctId: [3],
           answer: '',
@@ -57,7 +74,10 @@ const setL: Set = {
           id: '12.4',
           prompt: 'Don\t comçine selling with forfeiting',
           options: [
-            { id: 0, label: '$ \\sim (S\\underline{u} \\cdot F\\underline{u} ) $' },
+            {
+              id: 0,
+              label: '$ \\sim (S\\underline{u} \\cdot F\\underline{u} ) $',
+            },
             { id: 1, label: '$ (Su\\supset \\sim F\\underline{u} ) $' },
             { id: 2, label: '$ \\sim (Su\\cdot F\\underline{u} ) $' },
             { id: 3, label: '$ \\sim (S\\underline{u}\\cdot Fu ) $' },
@@ -67,12 +87,24 @@ const setL: Set = {
         },
         {
           id: '12.5',
-          prompt: 'Talk and don\'t talk',
+          prompt: "Talk and don't talk",
           options: [
             { id: 0, label: '$ \\sim \\lozenge (Tu\\cdot \\sim Tu) $' },
-            { id: 1, label: '$ (\\sim \\lozenge (T\\underline{u}\\cdot \\sim T\\underline{u}  )) $' },
-            { id: 2, label: '$ \\sim (T\\underline{u} \\cdot \\sim T\\underline{u} ) $' },
-            { id: 3, label: '$ \\sim \\lozenge (T\\underline{u} \\cdot \\sim T\\underline{u} ) $' },
+            {
+              id: 1,
+              label:
+                '$ (\\sim \\lozenge (T\\underline{u}\\cdot \\sim T\\underline{u}  )) $',
+            },
+            {
+              id: 2,
+              label:
+                '$ \\sim (T\\underline{u} \\cdot \\sim T\\underline{u} ) $',
+            },
+            {
+              id: 3,
+              label:
+                '$ \\sim \\lozenge (T\\underline{u} \\cdot \\sim T\\underline{u} ) $',
+            },
           ],
           correctId: [3],
           answer: '',
@@ -94,7 +126,10 @@ const setL: Set = {
           prompt: 'Don\t combine sleeping with parking',
           options: [
             { id: 0, label: '$ (Su\\supset \\sim P\\underline{u} ) $' },
-            { id: 1, label: '$ \\sim (S\\underline{u} \\cdot P\\underline{u} ) $' },
+            {
+              id: 1,
+              label: '$ \\sim (S\\underline{u} \\cdot P\\underline{u} ) $',
+            },
             { id: 2, label: '$ \\sim (Su\\cdot P\\underline{u} ) $' },
             { id: 3, label: '$ \\sim (S\\underline{u} \\cdot Pu) $' },
           ],
@@ -103,7 +138,7 @@ const setL: Set = {
         },
         {
           id: '12.8',
-          prompt: 'You\'re praying but don\'t pray',
+          prompt: "You're praying but don't pray",
           options: [
             { id: 0, label: '$ \\lozenge (Pu\\cdot \\sim Pu) $' },
             { id: 1, label: '$ \\lozenge (Pu\\cdot \\sim P\\underline{u} ) $' },
@@ -115,7 +150,7 @@ const setL: Set = {
         },
         {
           id: '12.9',
-          prompt: 'Don\'t distrub Tom',
+          prompt: "Don't distrub Tom",
           options: [
             { id: 0, label: '$ \\sim D\\underline{t} $' },
             { id: 1, label: '$ \\sim Dut $' },
@@ -131,7 +166,11 @@ const setL: Set = {
           options: [
             { id: 0, label: '$ \\sim (Cu\\cdot \\sim L\\underline{u} ) $' },
             { id: 1, label: '$ \\sim (C\\underline{u} \\cdot \\sim Lu) $' },
-            { id: 2, label: '$ \\sim (C\\underline{u} \\cdot \\sim L\\underline{u} ) $' },
+            {
+              id: 2,
+              label:
+                '$ \\sim (C\\underline{u} \\cdot \\sim L\\underline{u} ) $',
+            },
             { id: 3, label: '$ (Cu\\supset \\sim L\\underline{u} ) $' },
           ],
           correctId: [2],
@@ -142,7 +181,10 @@ const setL: Set = {
           prompt: 'If you cry, then don\t sing',
           options: [
             { id: 0, label: '$ (Cu\\supset \\sim S\\underline{u} ) $' },
-            { id: 1, label: '$ (C\\underline{u}\\supset \\sim S\\underline{u} ) $' },
+            {
+              id: 1,
+              label: '$ (C\\underline{u}\\supset \\sim S\\underline{u} ) $',
+            },
             { id: 2, label: '$ (Cu\\supset \\sim Su) $' },
             { id: 3, label: '$ (Cu\\supset O\\sim S\\underline{u} ) $' },
           ],
@@ -165,10 +207,13 @@ const setL: Set = {
           id: '12.13',
           prompt: 'Let someone who is selling bluff',
           options: [
-            { id: 0, label: '$ (\exists x)(Sx\\cdot Bx) $' },
-            { id: 1, label: '$ (\exists x)(S\\underline{x} \\cdot Bx) $' },
-            { id: 2, label: '$ (\exists x)(S\\underline{x} \\cdot B\\underline{x} ) $' },
-            { id: 3, label: '$ (\exists x)(Sx\\cdot B\\underline{x} ) $' },
+            { id: 0, label: '$ (exists x)(Sx\\cdot Bx) $' },
+            { id: 1, label: '$ (exists x)(S\\underline{x} \\cdot Bx) $' },
+            {
+              id: 2,
+              label: '$ (exists x)(S\\underline{x} \\cdot B\\underline{x} ) $',
+            },
+            { id: 3, label: '$ (exists x)(Sx\\cdot B\\underline{x} ) $' },
           ],
           correctId: [3],
           answer: '',
@@ -180,7 +225,10 @@ const setL: Set = {
             { id: 0, label: '$ (Acu\\supset Auc) $' },
             { id: 1, label: '$ (Acu\\supset A\\underline{u}c ) $' },
             { id: 2, label: '$ (Acu\\supset OA\\underline{u} c) $' },
-            { id: 3, label: '$ (A\\underline{c}u\\supset A\\underline{u} c ) $' },
+            {
+              id: 3,
+              label: '$ (A\\underline{c}u\\supset A\\underline{u} c ) $',
+            },
           ],
           correctId: [1],
           answer: '',
@@ -204,7 +252,10 @@ const setL: Set = {
             { id: 0, label: '$ (x)(Fx\\supset S\\underline{x} ) $' },
             { id: 1, label: '$ (x)(Fx\\supset Sx) $' },
             { id: 2, label: '$ (x)(F\\underline{x} \\supset Sx) $' },
-            { id: 3, label: '$ (x)(F\\underline{x} \\supset S\\underline{x} ) $' },
+            {
+              id: 3,
+              label: '$ (x)(F\\underline{x} \\supset S\\underline{x} ) $',
+            },
           ],
           correctId: [0],
           answer: '',
@@ -223,7 +274,7 @@ const setL: Set = {
         },
         {
           id: '12.18',
-          prompt: 'Don\'t appoint Donna',
+          prompt: "Don't appoint Donna",
           options: [
             { id: 0, label: '$ \\sim A\\underline{d} $' },
             { id: 1, label: '$ \\sim Aud $' },
@@ -237,10 +288,10 @@ const setL: Set = {
           id: '12.19',
           prompt: 'Would that no one cheat',
           options: [
-            { id: 0, label: '$ \\sim (\exists x)C\\underline{x} $' },
-            { id: 1, label: '$ O\\sim (\exists x)C\\underline{x} $' },
+            { id: 0, label: '$ \\sim (exists x)C\\underline{x} $' },
+            { id: 1, label: '$ O\\sim (exists x)C\\underline{x} $' },
             { id: 2, label: '$ (\\exists\\underline{x}) Cx $' },
-            { id: 3, label: '$ \\sim (\exists x)Cx $' },
+            { id: 3, label: '$ \\sim (exists x)Cx $' },
           ],
           correctId: [0],
           answer: '',
@@ -259,7 +310,7 @@ const setL: Set = {
         },
         {
           id: '12.21',
-          prompt: 'Don\'t insult Donna',
+          prompt: "Don't insult Donna",
           options: [
             { id: 0, label: '$ \\sim I\\underline{u} d $' },
             { id: 1, label: '$ \\sim I\\underline{d} $' },
@@ -271,9 +322,13 @@ const setL: Set = {
         },
         {
           id: '12.22',
-          prompt: 'Don\'t laughm and don\'t sleep',
+          prompt: "Don't laughm and don't sleep",
           options: [
-            { id: 0, label: '$ (\\sim L\\underline{u} \\cdot \\sim S\\underline{u} ) $' },
+            {
+              id: 0,
+              label:
+                '$ (\\sim L\\underline{u} \\cdot \\sim S\\underline{u} ) $',
+            },
             { id: 1, label: '$ (\\sim Lu\\cdot \\sim Su) $' },
             { id: 2, label: '$ (\\sim Lu\\cdot \\sim S\\underline{u} ) $' },
             { id: 3, label: '$ (\\sim L\\underline{u}\\cdot \\sim Su ) $' },
@@ -283,11 +338,14 @@ const setL: Set = {
         },
         {
           id: '12.23',
-          prompt: 'If you pray, then don\'t cheer',
+          prompt: "If you pray, then don't cheer",
           options: [
             { id: 0, label: '$ (Pu\\supset O\\sim C\\underline{u} ) $' },
             { id: 1, label: '$ (Pu\\supset \\sim Cu) $' },
-            { id: 2, label: '$ (P\\underline{u}\\supset \\sim C\\underline{u}  ) $' },
+            {
+              id: 2,
+              label: '$ (P\\underline{u}\\supset \\sim C\\underline{u}  ) $',
+            },
             { id: 3, label: '$ (Pu\\supset \\sim C\\underline{u} ) $' },
           ],
           correctId: [3],
@@ -331,7 +389,7 @@ const setL: Set = {
         },
         {
           id: '12.27',
-          prompt: 'If you\'re crying, then sing',
+          prompt: "If you're crying, then sing",
           options: [
             { id: 0, label: '$ (Cu\\supset OS\\underline{u} ) $' },
             { id: 1, label: '$ (Cu\\supset S\\underline{u} ) $' },
@@ -347,7 +405,11 @@ const setL: Set = {
           options: [
             { id: 0, label: '$ (\\exists x)(Px\\cdot Sx) $' },
             { id: 1, label: '$ (\\exists x)(P\\underline{x}\\cdot Sx ) $' },
-            { id: 2, label: '$ (\\exists x)(P\\underline{x}\\cdot S\\underline{x}  ) $' },
+            {
+              id: 2,
+              label:
+                '$ (\\exists x)(P\\underline{x}\\cdot S\\underline{x}  ) $',
+            },
             { id: 3, label: '$ (\\exists x)(Px\\cdot S\\underline{x} ) $' },
           ],
           correctId: [1],
@@ -355,9 +417,13 @@ const setL: Set = {
         },
         {
           id: '12.29',
-          prompt: 'Don\'t speak, and don\'t pray',
+          prompt: "Don't speak, and don't pray",
           options: [
-            { id: 0, label: '$ (\\sim S\\underline{u}\\cdot \\sim P\\underline{u}  ) $' },
+            {
+              id: 0,
+              label:
+                '$ (\\sim S\\underline{u}\\cdot \\sim P\\underline{u}  ) $',
+            },
             { id: 1, label: '$ (\\sim Su\\cdot \\sim P\\underline{u} ) $' },
             { id: 2, label: '$ (\\sim Su\\cdot \\sim Pu) $' },
             { id: 3, label: '$ (\\sim S\\underline{u}\\cdot \\sim Pu ) $' },
@@ -367,11 +433,14 @@ const setL: Set = {
         },
         {
           id: '12.30',
-          prompt: 'If you stay, then don\'t invest',
+          prompt: "If you stay, then don't invest",
           options: [
             { id: 0, label: '$ (Su\\supset O\\sim I\\underline{u} ) $' },
             { id: 1, label: '$ (Su\\supset \\sim I\\underline{u} ) $' },
-            { id: 2, label: '$ (S\\underline{u}\\supset \\sim I\\underline{u}  ) $' },
+            {
+              id: 2,
+              label: '$ (S\\underline{u}\\supset \\sim I\\underline{u}  ) $',
+            },
             { id: 3, label: '$ (Su\\supset \\sim Iu) $' },
           ],
           correctId: [1],
@@ -384,7 +453,11 @@ const setL: Set = {
             { id: 0, label: '$ (\\exists x)(L\\underline{x} \\cdot Cx) $' },
             { id: 1, label: '$ (\\exists x)(Lx\\cdot C\\underline{x} ) $' },
             { id: 2, label: '$ (\\exists x)(Lx\\cdot Cx) $' },
-            { id: 3, label: '$ (\\exists x)(L\\underline{x}\\cdot C\\underline{x}  ) $' },
+            {
+              id: 3,
+              label:
+                '$ (\\exists x)(L\\underline{x}\\cdot C\\underline{x}  ) $',
+            },
           ],
           correctId: [1],
           answer: '',
@@ -415,7 +488,7 @@ const setL: Set = {
         },
         {
           id: '12.34',
-          prompt: '\'Let everyone cheer\'is consistent',
+          prompt: "'Let everyone cheer'is consistent",
           options: [
             { id: 0, label: '$ \\lozenge (x)C\\underline{x} $' },
             { id: 1, label: '$ (x)C\\underline{x} $' },
@@ -442,7 +515,10 @@ const setL: Set = {
           prompt: 'If Madonna is arresting you, then arrest Madonna',
           options: [
             { id: 0, label: '$ (Amu\\supset Aum) $' },
-            { id: 1, label: '$ (A\\underline{m} u\\supset A\\underline{u}m ) $' },
+            {
+              id: 1,
+              label: '$ (A\\underline{m} u\\supset A\\underline{u}m ) $',
+            },
             { id: 2, label: '$ (Amu\\supset OA\\underline{u}m ) $' },
             { id: 3, label: '$ (Amu \\supset A\\underline{u} m) $' },
           ],
@@ -451,12 +527,15 @@ const setL: Set = {
         },
         {
           id: '12.37',
-          prompt: 'Either don\'t fail, or don\'t sing',
+          prompt: "Either don't fail, or don't sing",
           options: [
             { id: 0, label: '$ (\\sim Fu\\vee \\sim Su) $' },
             { id: 1, label: '$ (\\sim F\\underline{u}\\vee \\sim Su ) $' },
             { id: 2, label: '$ (\\sim Fu\\vee \\sim S\\underline{u} ) $' },
-            { id: 3, label: '$ (\\sim F\\underline{u}\\vee \\sim S\\underline{u}  ) $' },
+            {
+              id: 3,
+              label: '$ (\\sim F\\underline{u}\\vee \\sim S\\underline{u}  ) $',
+            },
           ],
           correctId: [3],
           answer: '',
@@ -511,9 +590,12 @@ const setL: Set = {
         },
         {
           id: '12.42',
-          prompt: 'If you invest, then don\'t despair',
+          prompt: "If you invest, then don't despair",
           options: [
-            { id: 0, label: '$ (I\\underline{u}\\supset \\sim D\\underline{u}  ) $' },
+            {
+              id: 0,
+              label: '$ (I\\underline{u}\\supset \\sim D\\underline{u}  ) $',
+            },
             { id: 1, label: '$ (Iu\\supset \\sim Du) $' },
             { id: 2, label: '$ (Iu\\supset \\sim D\\underline{u} ) $' },
             { id: 3, label: '$ (Iu\\supset O\\sim D\\underline{u} ) $' },
@@ -547,7 +629,7 @@ const setL: Set = {
         },
         {
           id: '12.45',
-          prompt: 'If you\'re sellin, then cheer',
+          prompt: "If you're sellin, then cheer",
           options: [
             { id: 0, label: '$ (Su\\supset OC\\underline{u} ) $' },
             { id: 1, label: '$ (Su\\supset Cu) $' },
@@ -559,12 +641,15 @@ const setL: Set = {
         },
         {
           id: '12.46',
-          prompt: 'You\'re logical but don\'t be logical',
+          prompt: "You're logical but don't be logical",
           options: [
             { id: 0, label: '$ (Lu\\cdot \\sim Lu) $' },
             { id: 1, label: '$ (Lu\\cdot O\\sim L\\underline{u} ) $' },
             { id: 2, label: '$ (Lu\\cdot \\sim L\\underline{u} ) $' },
-            { id: 3, label: '$ (L\\underline{u}\\cdot \\sim L\\underline{u}  ) $' },
+            {
+              id: 3,
+              label: '$ (L\\underline{u}\\cdot \\sim L\\underline{u}  ) $',
+            },
           ],
           correctId: [2],
           answer: '',
@@ -616,13 +701,14 @@ const setL: Set = {
           ],
           correctId: [1],
           answer: '',
-        }
+        },
       ],
     },
     {
       name: 'Set L',
       logicType: 'Basic Translations',
       slugs: ['Deontic', 'translations', 'Deontic'],
+      shuffleOptions: true,
       id: 12,
       title: 'Deontic Translations: Deontic',
       header: 'Translates into logic as:',
@@ -642,7 +728,7 @@ const setL: Set = {
         },
         {
           id: '12.2',
-          prompt: '\'You\'re crying but don\'t cry\' is consistent',
+          prompt: "'You're crying but don't cry' is consistent",
           options: [
             { id: 0, label: '$ (\\lozenge Cu\\cdot \\sim C\\underline{u} ) $' },
             { id: 1, label: '$ \\lozenge (Cu\\cdot \\sim C\\underline{u} ) $' },
@@ -678,7 +764,7 @@ const setL: Set = {
         },
         {
           id: '12.5',
-          prompt: '\'You\'re selling but don\'t sell\' is consistent',
+          prompt: "'You're selling but don't sell' is consistent",
           options: [
             { id: 0, label: '$ (Su\\cdot 1,S\\underline{u} ) $' },
             { id: 1, label: '$ \\lozenge (Su\\cdot \\sim S\\underline{u} ) $' },
@@ -702,7 +788,7 @@ const setL: Set = {
         },
         {
           id: '12.7',
-          prompt: 'It\'s required that you cry',
+          prompt: "It's required that you cry",
           options: [
             { id: 0, label: '$ RC\\underline{u} $' },
             { id: 1, label: '$ OCu $' },
@@ -714,31 +800,53 @@ const setL: Set = {
         },
         {
           id: '12.8',
-          prompt: '\'Sing and don\'t sing\' is inconsistent',
+          prompt: "'Sing and don't sing' is inconsistent",
           options: [
             { id: 0, label: '$ \\sim \\lozenge (Su\\cdot \\sim Su) $' },
-            { id: 1, label: '$ (\\sim \\lozenge (S\\underline{u}\\cdot \\sim S\\underline{u}  )) $' },
-            { id: 2, label: '$ \\sim (S\\underline{u}\\cdot \\sim S\\underline{u}  ) $' },
-            { id: 3, label: '$ \\sim \\lozenge (S\\underline{u}\\cdot 1S\\underline{u}  ) $' },
+            {
+              id: 1,
+              label:
+                '$ (\\sim \\lozenge (S\\underline{u}\\cdot \\sim S\\underline{u}  )) $',
+            },
+            {
+              id: 2,
+              label:
+                '$ \\sim (S\\underline{u}\\cdot \\sim S\\underline{u}  ) $',
+            },
+            {
+              id: 3,
+              label:
+                '$ \\sim \\lozenge (S\\underline{u}\\cdot 1S\\underline{u}  ) $',
+            },
           ],
           correctId: [3],
           answer: '',
         },
         {
           id: '12.9',
-          prompt: '\'You ought to steal\' doesn\'t entail\'You actually do steal\'',
+          prompt: "'You ought to steal' doesn't entail'You actually do steal'",
           options: [
-            { id: 0, label: '$ \\sim \\square (OSu\\supset S\\underline{u} ) $' },
+            {
+              id: 0,
+              label: '$ \\sim \\square (OSu\\supset S\\underline{u} ) $',
+            },
             { id: 1, label: '$ \\sim \\square (OSu\\supset Su) $' },
-            { id: 2, label: '$ \\sim \\square (S\\underline{u}\\supset Su ) $' },
-            { id: 3, label: '$ \\sim \\square (OS\\underline{u}\\supset S\\underline{u}  ) $' },
+            {
+              id: 2,
+              label: '$ \\sim \\square (S\\underline{u}\\supset Su ) $',
+            },
+            {
+              id: 3,
+              label:
+                '$ \\sim \\square (OS\\underline{u}\\supset S\\underline{u}  ) $',
+            },
           ],
           correctId: [2],
           answer: '',
         },
         {
           id: '12.10',
-          prompt: 'It\'s permissible for you to sell',
+          prompt: "It's permissible for you to sell",
           options: [
             { id: 0, label: '$ OS\\underline{u} $' },
             { id: 1, label: '$ RSu $' },
@@ -749,7 +857,7 @@ const setL: Set = {
           answer: '',
         },
       ],
-    }
+    },
   ],
 };
 
