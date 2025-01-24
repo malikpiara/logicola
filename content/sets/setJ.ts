@@ -16,7 +16,7 @@ const setJ: Set = {
   header: 'What is wrong with this definition?',
   subSets: [
     {
-      name: 'Set Jb',
+      name: 'Set J',
       logicType: 'Modal',
       isNew: true,
       slugs: ['modal', 'translations', 'basic'],
@@ -719,7 +719,7 @@ const setJ: Set = {
       ],
     },
     {
-      name: 'Set Jq',
+      name: 'Set J',
       logicType: 'Modal',
       isNew: true,
       slugs: ['modal', 'translations', 'quantified'],

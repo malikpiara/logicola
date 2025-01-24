@@ -9,7 +9,8 @@ const setC: Set = {
   header: 'Translates into logic as:',
   subSets: [
     {
-      name: 'Set Ce',
+      name: 'Set C',
+      shuffleOptions: true,
       logicType: 'Propositional Translations',
       slugs: ['propositional', 'translations'],
       id: 6,
@@ -524,7 +525,7 @@ const setC: Set = {
           id: '6.43',
           prompt: 'Either not B or P',
           options: [
-            { id: 0, label: '$ \\sim(B \\vee P) $' },
+            { id: 0, label: '$ \\sim(B\\, \\vee P) $' },
             { id: 1, label: '$ \\sim B \\vee P $' },
             { id: 2, label: '$ (\\sim B \\vee P) $' },
             { id: 3, label: '$ (\\sim B \\vee \\sim P) $' },
@@ -763,7 +764,8 @@ const setC: Set = {
       ],
     },
     {
-      name: 'Set Ch',
+      name: 'Set C',
+      shuffleOptions: true,
       logicType: 'Propositional Translations',
       slugs: ['propositional', 'translations', 'hard'],
       isNew: true,

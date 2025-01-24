@@ -10,8 +10,9 @@ const setA: Set = {
   header: 'Translates into logic as:',
   subSets: [
     {
-      name: 'Set Ae',
+      name: 'Set A',
       logicType: 'Basic Translations',
+      shuffleOptions: true,
       slugs: ['syllogistic', 'translations', 'basic'],
       id: 1,
       title: 'Syllogistic Translations: Easy',
@@ -635,8 +636,9 @@ const setA: Set = {
       ],
     },
     {
-      name: 'Set Ah',
+      name: 'Set A',
       logicType: 'Syllogistic',
+      shuffleOptions: true,
       slugs: ['syllogistic', 'translations', 'hard'],
       id: 1,
       isNew: true,

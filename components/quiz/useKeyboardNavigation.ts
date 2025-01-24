@@ -5,7 +5,7 @@ interface UseKeyboardNavigationProps {
   currentQuestion: Question | undefined; // Not sure if it's a string?
   showStartScreen: boolean;
   showSolution: boolean;
-  selectedOptionId: number | null;
+  selectedOptionIndex: number | null;
   onShowStartScreen: () => void;
   selectNextOption: () => void;
   selectPreviousOption: () => void;
@@ -18,7 +18,7 @@ const useKeyboardNavigation = ({
   currentQuestion,
   showStartScreen,
   showSolution,
-  selectedOptionId,
+  selectedOptionIndex,
   onShowStartScreen,
   selectNextOption,
   selectPreviousOption,
@@ -45,7 +45,11 @@ const useKeyboardNavigation = ({
             onShowStartScreen();
             break;
           }
-          if (!showStartScreen && !showSolution && selectedOptionId != null) {
+          if (
+            !showStartScreen &&
+            !showSolution &&
+            selectedOptionIndex != null
+          ) {
             handleCheckAnswerAndExpandDrawer();
             break;
           }
@@ -71,7 +75,7 @@ const useKeyboardNavigation = ({
       currentQuestion,
       showStartScreen,
       showSolution,
-      selectedOptionId,
+      selectedOptionIndex,
       onShowStartScreen,
       selectNextOption,
       selectPreviousOption,

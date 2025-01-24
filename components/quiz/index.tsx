@@ -21,7 +21,7 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
   const {
     showStartScreen,
     showEndScreen,
-    selectedOptionId,
+    selectedOptionIndex,
     showSolution,
     currentQuestion,
     questionCounter,
@@ -39,7 +39,7 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
     currentQuestion,
     showStartScreen,
     showSolution,
-    selectedOptionId,
+    selectedOptionIndex,
     onShowStartScreen,
     selectNextOption,
     selectPreviousOption,
@@ -73,10 +73,10 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
   // Creating ref to make each option focusable with keyboard shortcuts
   const activeOptionRef = useRef<HTMLButtonElement>(null);
 
-  // Focus the active option when selectedOptionId changes
+  // Focus the active option when selectedOptionIndex changes
   useEffect(() => {
     activeOptionRef.current?.focus();
-  }, [selectedOptionId]);
+  }, [selectedOptionIndex]);
 
   return (
     <>
@@ -98,20 +98,22 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
                 {currentQuestion.options.map((option, index) => (
                   <Option
                     key={option.id}
-                    index={option.id + 1}
+                    index={index + 1}
                     showIndex
-                    isSelected={option.id === selectedOptionId}
+                    isSelected={index === selectedOptionIndex}
                     isCorrect={currentQuestion.correctId.includes(option.id)}
                     showSolution={showSolution}
                     ref={
-                      index === selectedOptionId ? activeOptionRef : undefined
+                      index === selectedOptionIndex
+                        ? activeOptionRef
+                        : undefined
                     }
                     hasBeenIncorrectlyGuessed={previousGuesses.includes(
                       option.id
                     )}
                     label={option.label}
                     onClick={() => {
-                      selectOption(option.id);
+                      selectOption(index);
                       onShowStartScreen();
                     }}
                   />
@@ -120,7 +122,7 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
             )}
           </div>
           <hr className='h-px my-4 bg-gray-200 border-0' />
-          {selectedOptionId != null && showSolution && (
+          {selectedOptionIndex != null && showSolution && (
             <div className='p-2 mb-3 text-gray-800'>
               <h1>{currentQuestion.answer}</h1>
             </div>
@@ -157,7 +159,7 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
                     {!showSolution && !showStartScreen && !showEndScreen && (
                       <Button
                         label='Check Answer'
-                        disabled={selectedOptionId == null}
+                        disabled={selectedOptionIndex == null}
                         onClick={handleCheckAnswerAndExpandDrawer}
                       />
                     )}

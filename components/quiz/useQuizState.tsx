@@ -1,15 +1,23 @@
-// components/quiz/useQuizState.tsx
-
 import { useEffect, useState } from 'react';
 import posthog from 'posthog-js';
-import { SubSet } from '@/content/types';
+import { SubSet, Question } from '@/content/types';
+
+/** Helper to shuffle array in-place using Fisher-Yates */
+function shuffleArray<T>(array: T[]): void {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
 
 export default function useQuizState(subSet: SubSet) {
   // Index of the current question in the shuffled order
   const [questionIdx, setQuestionIdx] = useState(0);
 
   // Which option the user has currently selected (by index)
-  const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(
+    null
+  );
 
   // Do we show the correct answer?
   const [showSolution, setShowSolution] = useState(false);
@@ -55,11 +63,33 @@ export default function useQuizState(subSet: SubSet) {
     generateQuestionOrder()
   );
 
-  // If subSet changes, re-generate the random order
+  // We'll also keep a separate copy of our questions (with possibly shuffled options)
+  const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
+
+  // On subSet change, we re-generate question order and optionally shuffle the options
   useEffect(() => {
-    setQuestionOrder(generateQuestionOrder());
+    // 1) Shuffle which questions appear in which order
+    const newOrder = generateQuestionOrder();
+    setQuestionOrder(newOrder);
+
+    // 2) Make a shallow copy of each question so we don’t mutate subSet directly
+    const deepCopy: Question[] = subSet.questions.map((q) => ({
+      ...q,
+      options: [...q.options], // copy the options array
+    }));
+
+    // 3) Only shuffle the OPTIONS if subSet.shuffleOptions === true
+    if (subSet.shuffleOptions) {
+      deepCopy.forEach((question) => {
+        shuffleArray(question.options);
+      });
+    }
+
+    setShuffledQuestions(deepCopy);
+
+    // 4) Reset all quiz states
     setQuestionIdx(0);
-    setSelectedOptionId(null);
+    setSelectedOptionIndex(null);
     setShowSolution(false);
     setShowStartScreen(true);
     setShowEndScreen(false);
@@ -69,7 +99,8 @@ export default function useQuizState(subSet: SubSet) {
   }, [subSet]);
 
   // currentQuestion is whichever question is at questionOrder[questionIdx]
-  const currentQuestion = subSet.questions[questionOrder[questionIdx]];
+  // but we read from shuffledQuestions now, because it may have shuffled options
+  const currentQuestion = shuffledQuestions[questionOrder[questionIdx]];
 
   /**
    * Move to next question or show the end screen if we’re done
@@ -78,7 +109,7 @@ export default function useQuizState(subSet: SubSet) {
     // If not at last question yet
     if (questionIdx < subSet.questions.length - 1) {
       setQuestionIdx(questionIdx + 1);
-      setSelectedOptionId(null);
+      setSelectedOptionIndex(null);
       setPreviousGuesses([]);
       setShowSolution(false);
       setQuestionCounter(questionCounter + 1);
@@ -95,9 +126,9 @@ export default function useQuizState(subSet: SubSet) {
   function selectNextOption() {
     if (!currentQuestion) return;
     const lastOptionIndex = currentQuestion.options.length - 1;
-    setSelectedOptionId((prevId) => {
-      if (prevId == null) return 0;
-      return Math.min(prevId + 1, lastOptionIndex);
+    setSelectedOptionIndex((prev) => {
+      if (prev == null) return 0;
+      return Math.min(prev + 1, lastOptionIndex);
     });
   }
 
@@ -106,17 +137,17 @@ export default function useQuizState(subSet: SubSet) {
    */
   function selectPreviousOption() {
     if (!currentQuestion) return;
-    setSelectedOptionId((prevId) => {
-      if (prevId == null) return 0;
-      return Math.max(prevId - 1, 0);
+    setSelectedOptionIndex((prev) => {
+      if (prev == null) return 0;
+      return Math.max(prev - 1, 0);
     });
   }
 
   /**
    * Manual selection (click)
    */
-  function selectOption(optionId: number) {
-    setSelectedOptionId(optionId);
+  function selectOption(index: number) {
+    setSelectedOptionIndex(index);
   }
 
   /**
@@ -137,22 +168,25 @@ export default function useQuizState(subSet: SubSet) {
    * The user pressed "Check Answer"
    */
   function onCheckAnswer() {
-    if (selectedOptionId == null || !currentQuestion) return;
+    if (selectedOptionIndex == null || !currentQuestion) return;
 
-    if (isAnswerCorrect(selectedOptionId, currentQuestion.correctId)) {
-      // Only count as correct if first attempt
+    // Retrieve the chosen option object
+    const chosenOption = currentQuestion.options[selectedOptionIndex];
+
+    // Use the helper function to see if the chosen option is correct
+    if (isAnswerCorrect(chosenOption.id, currentQuestion.correctId)) {
       if (previousGuesses.length === 0) {
         setCorrectQuestions((prev) => [...prev, currentQuestion.id]);
       }
-      onShowSolution();
+      setShowSolution(true);
     } else {
       // Mark the guess as wrong & let them keep trying
-      setPreviousGuesses((prev) => [...prev, selectedOptionId]);
-      setSelectedOptionId(null);
+      setPreviousGuesses((prev) => [...prev, chosenOption.id]);
+      setSelectedOptionIndex(null);
 
       // If the user has guessed all but one possible option, reveal solution
       if (previousGuesses.length + 1 === currentQuestion.options.length - 1) {
-        onShowSolution();
+        setShowSolution(true);
       }
     }
   }
@@ -194,7 +228,7 @@ export default function useQuizState(subSet: SubSet) {
     currentQuestion,
 
     // Selection & correctness
-    selectedOptionId,
+    selectedOptionIndex,
     correctQuestions,
     previousGuesses,
 

@@ -35,4 +35,5 @@ export interface SubSet {
   header: string; // Header text for the sub-set
   isNew?: boolean; // Indicates if this sub-set is new
   questions: Question[]; // Array of questions within this sub-set
+  shuffleOptions?: boolean;
 }
