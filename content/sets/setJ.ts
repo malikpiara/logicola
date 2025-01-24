@@ -1008,7 +1008,7 @@ const setJ: Set = {
             { id: 0, label: '$ (x)(Px \\supset \\square Fx) $' },
             { id: 1, label: '$ \\square (x)(Px \\supset \\square Fx)) $' },
             { id: 2, label: '$ \\square (x)(Px \\supset Fx) $' },
-            { id: 3, label: '$ Ambiguous between 1 & 3 $' },
+            { id: 3, label: 'Ambiguous between 1 & 3' },
           ],
           correctId: [0],
           answer: '',
