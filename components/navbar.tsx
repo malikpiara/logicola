@@ -32,7 +32,7 @@ const Navbar = () => {
                   <NavigationMenuTrigger className='text-primaryColor hover:bg-gray-200 hover:text-primaryColor font-mono font-semibold'>
                     Exercises
                   </NavigationMenuTrigger>
-                  <NavigationMenuContent className='md:w-screen font-mono'>
+                  <NavigationMenuContent className='xl:w-[1250px] lg:w-[1000px] md:w-[800px] font-mono'>
                     <div className='grid gap-3 p-4 md:grid-cols-2'>
                       <div>
                         <ul className='grid gap-3 p-4'>
