@@ -1,5 +1,7 @@
+//import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Head from 'next/head';
+//import Link from 'next/link';
 
 export default function SyllogisticLogicPage() {
   return (
@@ -87,6 +89,11 @@ export default function SyllogisticLogicPage() {
             </CardContent>
           </Card>
         </section>
+        {/* <Link href={'/syllogistic/translations/basic/quiz'}>
+          <Button size={'lg'} variant={'secondary'}>
+            Practice Easy Translations
+          </Button>
+        </Link> */}
 
         {/* --------------------- Harder Translations ---------------------- */}
         <section className='space-y-6'>
