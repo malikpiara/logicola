@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Roboto_Flex } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/navbar';
@@ -18,7 +18,6 @@ const robotoFlex = Roboto_Flex({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://logicola.org'),
-  themeColor: '#ffffff',
   title: 'Logicola',
   description:
     'LogiCola is a program to help students learn logic. This is a web version of the original software built by the late Professor Harry Gensler.',
@@ -54,6 +53,10 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: '#ffffff',
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -62,7 +65,6 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <head>
-        <meta name='theme-color' content='#FFFFFF' />
         <link rel='manifest' href='/manifest.json' />
       </head>
       <CSPostHogProvider>

@@ -1,17 +1,21 @@
-import dynamic from 'next/dynamic';
-import React from 'react';
+'use client';
+
+import { ReactNode, useEffect, useState } from 'react';
 
 export interface NoSSRProps {
-  children: JSX.Element;
+  children: ReactNode;
 }
 
-const NoSSR = (props: NoSSRProps) => (
-  <React.Fragment>{props.children}</React.Fragment>
-);
+export default function NoSSR({ children }: NoSSRProps) {
+  const [isMounted, setIsMounted] = useState(false);
 
-/**
- * based on https://stackoverflow.com/a/57173209
- */
-export default dynamic(() => Promise.resolve(NoSSR), {
-  ssr: false,
-});
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
+
+  return <>{children}</>;
+}
