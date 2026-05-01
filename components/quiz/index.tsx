@@ -17,7 +17,11 @@ export interface QuizProps {
   subSet: SubSet;
 }
 
-const Quiz: React.FC<QuizProps> = ({ subSet }) => {
+export default function Quiz({ subSet }: QuizProps) {
+  return <QuizSession key={subSet.id} subSet={subSet} />;
+}
+
+const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
   const {
     showStartScreen,
     showEndScreen,
@@ -207,5 +211,3 @@ const Quiz: React.FC<QuizProps> = ({ subSet }) => {
     </>
   );
 };
-
-export default Quiz;

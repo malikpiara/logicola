@@ -36,6 +36,7 @@ async function main() {
           waitUntil: 'networkidle',
           timeout: 30_000,
         });
+        await page.waitForTimeout(1_000);
         await page.addStyleTag({
           content:
             '*,:before,:after{animation:none!important;transition:none!important;scroll-behavior:auto!important;}',

@@ -6,7 +6,7 @@ export interface OptionProps {
   ref?: React.Ref<HTMLButtonElement>;
   index?: number;
   showIndex?: boolean;
-  label: string | JSX.Element; // Allow label to be string or JSX
+  label: React.ReactNode; // Allow label to be string or rendered content
   isSelected: boolean;
   isCorrect: boolean;
   showSolution: boolean;

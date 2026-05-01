@@ -1,17 +1,21 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useSyncExternalStore } from 'react';
 
 export interface NoSSRProps {
   children: ReactNode;
 }
 
-export default function NoSSR({ children }: NoSSRProps) {
-  const [isMounted, setIsMounted] = useState(false);
+function subscribe() {
+  return () => {};
+}
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+export default function NoSSR({ children }: NoSSRProps) {
+  const isMounted = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
 
   if (!isMounted) {
     return null;

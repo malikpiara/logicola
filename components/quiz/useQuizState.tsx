@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import posthog from 'posthog-js';
 import { SubSet, Question } from '@/content/types';
 
@@ -8,6 +8,35 @@ function shuffleArray<T>(array: T[]): void {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
+}
+
+function generateQuestionOrder(questionCount: number) {
+  const questionIndices = Array.from({ length: questionCount }, (_, i) => i);
+
+  for (let i = questionIndices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [questionIndices[i], questionIndices[j]] = [
+      questionIndices[j],
+      questionIndices[i],
+    ];
+  }
+
+  return questionIndices;
+}
+
+function buildShuffledQuestions(subSet: SubSet) {
+  const deepCopy: Question[] = subSet.questions.map((question) => ({
+    ...question,
+    options: [...question.options],
+  }));
+
+  if (subSet.shuffleOptions) {
+    deepCopy.forEach((question) => {
+      shuffleArray(question.options);
+    });
+  }
+
+  return deepCopy;
 }
 
 export default function useQuizState(subSet: SubSet) {
@@ -37,66 +66,15 @@ export default function useQuizState(subSet: SubSet) {
   // Track any incorrect guesses (option IDs) for the current question.
   const [previousGuesses, setPreviousGuesses] = useState<number[]>([]);
 
-  /**
-   * We create a random order of question indices based on subSet.questions.length.
-   * Then the quiz will proceed in that shuffled order.
-   */
-  const generateQuestionOrder = useCallback(() => {
-    // Create an array [0, 1, 2, ..., n-1]
-    const questionIndices = Array.from(
-      { length: subSet.questions.length },
-      (_, i) => i
-    );
-    // Use Fisher-Yates shuffle
-    for (let i = questionIndices.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [questionIndices[i], questionIndices[j]] = [
-        questionIndices[j],
-        questionIndices[i],
-      ];
-    }
-    return questionIndices;
-  }, [subSet.questions.length]);
-
   // Keep the random order in state, initialized once
-  const [questionOrder, setQuestionOrder] = useState<number[]>(() =>
-    generateQuestionOrder()
+  const [questionOrder] = useState<number[]>(() =>
+    generateQuestionOrder(subSet.questions.length)
   );
 
   // We'll also keep a separate copy of our questions (with possibly shuffled options)
-  const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
-
-  // On subSet change, we re-generate question order and optionally shuffle the options
-  useEffect(() => {
-    // 1) Shuffle which questions appear in which order
-    const newOrder = generateQuestionOrder();
-    setQuestionOrder(newOrder);
-
-    // 2) Make a shallow copy of each question so we don’t mutate subSet directly
-    const deepCopy: Question[] = subSet.questions.map((q) => ({
-      ...q,
-      options: [...q.options], // copy the options array
-    }));
-
-    // 3) Only shuffle the OPTIONS if subSet.shuffleOptions === true
-    if (subSet.shuffleOptions) {
-      deepCopy.forEach((question) => {
-        shuffleArray(question.options);
-      });
-    }
-
-    setShuffledQuestions(deepCopy);
-
-    // 4) Reset all quiz states
-    setQuestionIdx(0);
-    setSelectedOptionIndex(null);
-    setShowSolution(false);
-    setShowStartScreen(true);
-    setShowEndScreen(false);
-    setQuestionCounter(1);
-    setCorrectQuestions([]);
-    setPreviousGuesses([]);
-  }, [generateQuestionOrder, subSet]);
+  const [shuffledQuestions] = useState<Question[]>(() =>
+    buildShuffledQuestions(subSet)
+  );
 
   // currentQuestion is whichever question is at questionOrder[questionIdx]
   // but we read from shuffledQuestions now, because it may have shuffled options

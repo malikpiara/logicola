@@ -10,14 +10,16 @@ const arraysAreSame = (array1: string[], array2: string[]) =>
   array1.every((value, index) => value === array2[index]);
 
 export interface QuizPageProps {
-  params: { slugs: string[]; exercise: number };
+  params: Promise<{ slugs: string[] }>;
 }
-export default function QuizPage({ params }: QuizPageProps) {
+
+export default async function QuizPage({ params }: QuizPageProps) {
+  const { slugs } = await params;
   const allSets: Set[] = Object.values(sets);
   const allSubSets: SubSet[] = getAllSubSets(allSets);
 
   const subSet = allSubSets.find((i) =>
-    arraysAreSame(i.slugs.concat(['quiz']), params.slugs)
+    arraysAreSame(i.slugs.concat(['quiz']), slugs)
   );
 
   if (!subSet)
@@ -51,11 +53,12 @@ export default function QuizPage({ params }: QuizPageProps) {
 export async function generateMetadata({
   params,
 }: QuizPageProps): Promise<Metadata> {
+  const { slugs } = await params;
   const allSets: Set[] = Object.values(sets);
   const allSubSets: SubSet[] = getAllSubSets(allSets);
 
   const subSet = allSubSets.find((i) =>
-    arraysAreSame(i.slugs.concat(['quiz']), params.slugs)
+    arraysAreSame(i.slugs.concat(['quiz']), slugs)
   );
 
   return {

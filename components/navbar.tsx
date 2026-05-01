@@ -84,15 +84,12 @@ const Navbar = () => {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <Link
+                  <NavigationMenuLink
+                    className='text-gray-500 hover:bg-gray-200 hover:text-primaryColor block py-2 px-3 rounded md:hover:text-primaryColor font-mono font-semibold'
                     href='https://github.com/sponsors/malikpiara'
-                    legacyBehavior
-                    passHref
                   >
-                    <NavigationMenuLink className='text-gray-500 hover:bg-gray-200 hover:text-primaryColor block py-2 px-3 rounded md:hover:text-primaryColor font-mono font-semibold'>
-                      Donate
-                    </NavigationMenuLink>
-                  </Link>
+                    Donate
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
