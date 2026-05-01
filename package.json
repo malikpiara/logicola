@@ -44,7 +44,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",
-    "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/postcss": "^4.2.4",
+    "@tailwindcss/typography": "^0.5.19",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
@@ -60,7 +61,7 @@
     "pngjs": "^7.0.0",
     "postcss": "^8.5.13",
     "prettier": "^3.8.3",
-    "tailwindcss": "^3.3.0",
+    "tailwindcss": "^4.2.4",
     "typescript": "^6.0.3",
     "vite": "^8.0.10",
     "vitest": "^4.1.5"
