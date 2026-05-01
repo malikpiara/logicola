@@ -44,7 +44,6 @@ async function main() {
         const filename = `${entry.name}-${viewport.name}.png`;
         await page.screenshot({
           path: path.join(outputDir, filename),
-          fullPage: true,
         });
 
         console.log(`Captured ${filename}`);
