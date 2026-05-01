@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import posthog from 'posthog-js';
 import { SubSet, Question } from '@/content/types';
 
@@ -41,7 +41,7 @@ export default function useQuizState(subSet: SubSet) {
    * We create a random order of question indices based on subSet.questions.length.
    * Then the quiz will proceed in that shuffled order.
    */
-  const generateQuestionOrder = () => {
+  const generateQuestionOrder = useCallback(() => {
     // Create an array [0, 1, 2, ..., n-1]
     const questionIndices = Array.from(
       { length: subSet.questions.length },
@@ -56,7 +56,7 @@ export default function useQuizState(subSet: SubSet) {
       ];
     }
     return questionIndices;
-  };
+  }, [subSet.questions.length]);
 
   // Keep the random order in state, initialized once
   const [questionOrder, setQuestionOrder] = useState<number[]>(() =>
@@ -96,7 +96,7 @@ export default function useQuizState(subSet: SubSet) {
     setQuestionCounter(1);
     setCorrectQuestions([]);
     setPreviousGuesses([]);
-  }, [subSet]);
+  }, [generateQuestionOrder, subSet]);
 
   // currentQuestion is whichever question is at questionOrder[questionIdx]
   // but we read from shuffledQuestions now, because it may have shuffled options

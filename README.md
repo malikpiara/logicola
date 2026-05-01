@@ -4,23 +4,34 @@ LogiCola 3 is an instructional program that goes with Gensler's Introduction to 
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies with pnpm:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+```
+
+Run the development server:
+
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Verification
+
+Run the core verification checks:
+
+```bash
+pnpm build
+pnpm test
+```
+
+For the dependency-upgrade workflow, use the checklist in [docs/modernization-checklist.md](/Users/malik/Code/logicola/docs/modernization-checklist.md).
+
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Roboto Flex.
 
 ## Learn More
 

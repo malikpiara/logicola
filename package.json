@@ -2,8 +2,10 @@
   "name": "logicola",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9.4.0",
   "scripts": {
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -11,7 +13,10 @@
     "eslint": "eslint . --ext .ts,.tsx && tsc --noEmit",
     "lint-all": "next lint && eslint . --ext .ts,.tsx && prettier --check --ignore-path .gitignore .",
     "format": "prettier --check --ignore-path .gitignore .",
-    "format:fix": "prettier --write --ignore-path .gitignore ."
+    "format:fix": "prettier --write --ignore-path .gitignore .",
+    "visual:baseline": "node scripts/visual-snapshots.mjs baseline",
+    "visual:capture": "node scripts/visual-snapshots.mjs current",
+    "visual:compare": "node scripts/compare-visual-snapshots.mjs"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.1.2",
@@ -39,8 +44,8 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.16",
+    "@playwright/test": "^1.56.1",
     "@testing-library/react": "^15.0.7",
-    "@testing-library/react-hooks": "^8.0.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -50,6 +55,8 @@
     "eslint-config-next": "14.2.3",
     "eslint-config-prettier": "^9.1.0",
     "jsdom": "^24.1.0",
+    "pixelmatch": "^7.1.0",
+    "pngjs": "^7.0.0",
     "postcss": "^8",
     "prettier": "^3.2.5",
     "tailwindcss": "^3.3.0",
