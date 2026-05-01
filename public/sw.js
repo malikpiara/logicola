@@ -20,7 +20,7 @@ const urlsToCache = [
   'belief/translations/basic/quiz',
   'belief/translations/willing/quiz',
   'belief/translations/rationality/quiz',
-  
+
   'informal/definitions/quiz',
   'propositional/translations/quiz',
   'keyboard',
@@ -39,27 +39,25 @@ const urlsToCache = [
   '/belief/translations/basic/quiz',
   '/belief/translations/willing/quiz',
   '/belief/translations/rationality/quiz',
-  
+
   '/informal/definitions/quiz',
   '/propositional/translations/quiz',
-  '/keyboard'
+  '/keyboard',
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(urlsToCache);
-      })
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(urlsToCache);
+    })
   );
 });
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
-      })
+    caches.match(event.request).then((response) => {
+      // Return cached version or fetch from network
+      return response || fetch(event.request);
+    })
   );
 });

@@ -17,10 +17,7 @@ async function compareFile(filename) {
   const baseline = await readPng(path.join(baselineDir, filename));
   const current = await readPng(path.join(currentDir, filename));
 
-  if (
-    baseline.width !== current.width ||
-    baseline.height !== current.height
-  ) {
+  if (baseline.width !== current.width || baseline.height !== current.height) {
     throw new Error(`Dimension mismatch for ${filename}`);
   }
 
