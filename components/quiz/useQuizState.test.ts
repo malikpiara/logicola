@@ -2,10 +2,8 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import useQuizState from './useQuizState';
 
-vi.mock('posthog-js', () => ({
-  default: {
-    capture: vi.fn(),
-  },
+vi.mock('@/lib/analytics', () => ({
+  captureAnalyticsEvent: vi.fn(),
 }));
 
 const mockQuiz = {

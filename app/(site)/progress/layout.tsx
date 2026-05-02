@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Roboto_Flex } from 'next/font/google';
-import '../globals.css';
-import thumbnail from '../../public/thumbnail.jpg';
+import thumbnail from '../../../public/thumbnail.jpg';
 
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],

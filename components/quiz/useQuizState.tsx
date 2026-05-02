@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import posthog from 'posthog-js';
 import { SubSet, Question } from '@/content/types';
+import { captureAnalyticsEvent } from '@/lib/analytics';
 
 /** Helper to shuffle array in-place using Fisher-Yates */
 function shuffleArray<T>(array: T[]): void {
@@ -173,7 +173,7 @@ export default function useQuizState(subSet: SubSet) {
    * Transition from "start screen" to first question
    */
   function onShowStartScreen() {
-    posthog.capture('quiz_started', {
+    void captureAnalyticsEvent('quiz_started', {
       title: subSet.title,
     });
     setShowStartScreen(false);
@@ -183,7 +183,7 @@ export default function useQuizState(subSet: SubSet) {
    * Final screen / user has finished all questions
    */
   function onShowEndScreen() {
-    posthog.capture('quiz_completed', {
+    void captureAnalyticsEvent('quiz_completed', {
       subSet: subSet.title,
       correctQuestionsCount: correctQuestions.length,
       scorePercentage:

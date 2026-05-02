@@ -1,9 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import * as sets from '@/content/sets';
-import type { Set } from '@/content/types';
-import { getAllSubSets } from '@/utils/getAllSubsets';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,11 +10,14 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 import NavTopic from './navTopic';
+import type { QuizCatalogEntry } from '@/lib/quizCatalog';
 
-const Navbar = () => {
-  const allSets: Set[] = Object.values(sets);
-  const allSubSets = getAllSubSets(allSets);
-  const splitIndex = Math.ceil(allSubSets.length / 2);
+interface NavbarProps {
+  quizCatalog: QuizCatalogEntry[];
+}
+
+const Navbar = ({ quizCatalog }: NavbarProps) => {
+  const splitIndex = Math.ceil(quizCatalog.length / 2);
 
   return (
     <nav className='bg-white border-gray-200 hidden md:block'>
@@ -36,12 +36,12 @@ const Navbar = () => {
                     <div className='grid gap-3 p-4 md:grid-cols-2'>
                       <div>
                         <ul className='grid gap-3 p-4'>
-                          {allSubSets.slice(0, splitIndex).map((item) => (
+                          {quizCatalog.slice(0, splitIndex).map((item) => (
                             <NavTopic
-                              key={item.id}
-                              chapter={item.name}
+                              key={item.quizPath}
+                              chapter={item.chapter}
                               title={item.title}
-                              path={`/${item.slugs.join('/')}/quiz`}
+                              path={item.quizPath}
                               newLabel={item.isNew}
                             />
                           ))}
@@ -49,12 +49,12 @@ const Navbar = () => {
                       </div>
                       <div>
                         <ul className='grid gap-3 p-4'>
-                          {allSubSets.slice(splitIndex).map((item) => (
+                          {quizCatalog.slice(splitIndex).map((item) => (
                             <NavTopic
-                              key={item.id}
-                              chapter={item.name}
+                              key={item.quizPath}
+                              chapter={item.chapter}
                               title={item.title}
-                              path={`/${item.slugs.join('/')}/quiz`}
+                              path={item.quizPath}
                               newLabel={item.isNew}
                             />
                           ))}
