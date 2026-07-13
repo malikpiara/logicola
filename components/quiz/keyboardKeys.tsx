@@ -1,4 +1,16 @@
-export function KeyboardKeys() {
+interface KeyboardKeysProps {
+  /**
+   * Number of options in the current question. Drives the upper
+   * bound shown in the "use keys 1 to N" hint. Defaults to 4 (the
+   * common case across most sets); Set Q's "Meanings & Definitions"
+   * subset has 7 options.
+   */
+  optionCount?: number;
+}
+
+export function KeyboardKeys({ optionCount = 4 }: KeyboardKeysProps) {
+  // Clamp to the digit range the keyboard handler supports.
+  const upperKey = Math.max(2, Math.min(optionCount, 9));
   return (
     <p className='text-gray-500 hidden lg:block'>
       You can use keys{' '}
@@ -7,7 +19,7 @@ export function KeyboardKeys() {
       </kbd>{' '}
       to{' '}
       <kbd className='px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg'>
-        7
+        {upperKey}
       </kbd>
       {' or '}
       <kbd className='inline-flex items-center px-2 py-1.5 text-gray-800 bg-gray-100 border border-gray-200 rounded-lg'>

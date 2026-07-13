@@ -3,6 +3,7 @@ import { Roboto_Flex } from 'next/font/google';
 import './globals.css';
 import thumbnail from '../public/thumbnail.jpg';
 import RegisterSW from '@/components/providers/service-worker';
+import WebsiteAnalytics from '@/components/providers/website-analytics';
 import { Toaster } from '@/components/ui/sonner';
 
 const robotoFlex = Roboto_Flex({
@@ -68,6 +69,7 @@ export default function RootLayout({
         {children}
         <Toaster />
         <RegisterSW />
+        <WebsiteAnalytics />
       </body>
     </html>
   );

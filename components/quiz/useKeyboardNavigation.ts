@@ -1,5 +1,5 @@
 import { Question } from '@/content/types';
-import { useEffect, useCallback } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 
 interface UseKeyboardNavigationProps {
   currentQuestion: Question | undefined; // Not sure if it's a string?
@@ -12,6 +12,8 @@ interface UseKeyboardNavigationProps {
   selectOption: (index: number) => void;
   handleCheckAnswer: () => void;
   handleNextQuestion: () => void;
+  /** Optional: collapse / dismiss the bottom drawer. Bound to Escape. */
+  collapseDrawer?: () => void;
 }
 
 const useKeyboardNavigation = ({
@@ -25,72 +27,70 @@ const useKeyboardNavigation = ({
   selectOption,
   handleCheckAnswer,
   handleNextQuestion,
+  collapseDrawer,
 }: UseKeyboardNavigationProps) => {
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      if (!currentQuestion) return;
+  const onKeyDown = useEffectEvent((event: KeyboardEvent) => {
+    if (!currentQuestion) return;
 
-      switch (event.key) {
-        case 'ArrowDown':
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        selectNextOption();
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        selectPreviousOption();
+        break;
+      case 'Escape':
+        if (collapseDrawer) {
           event.preventDefault();
-          selectNextOption();
+          collapseDrawer();
+        }
+        break;
+      case 'Enter':
+        event.preventDefault();
+        if (showStartScreen) {
+          onShowStartScreen();
           break;
-        case 'ArrowUp':
-          event.preventDefault();
-          selectPreviousOption();
+        }
+        if (!showStartScreen && !showSolution && selectedOptionIndex != null) {
+          handleCheckAnswer();
           break;
-        case 'Enter':
-          event.preventDefault();
-          if (showStartScreen) {
-            onShowStartScreen();
-            break;
-          }
-          if (
-            !showStartScreen &&
-            !showSolution &&
-            selectedOptionIndex != null
-          ) {
-            handleCheckAnswer();
-            break;
-          }
-          if (showSolution) {
-            handleNextQuestion();
-          }
-          break;
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-          event.preventDefault();
-          selectOption(parseInt(event.key) - 1);
-          break;
-        default:
-          break;
+        }
+        if (showSolution) {
+          handleNextQuestion();
+        }
+        break;
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9': {
+        const idx = parseInt(event.key) - 1;
+        if (idx >= currentQuestion.options.length) break;
+        event.preventDefault();
+        selectOption(idx);
+        break;
       }
-    },
-    [
-      currentQuestion,
-      showStartScreen,
-      showSolution,
-      selectedOptionIndex,
-      onShowStartScreen,
-      selectNextOption,
-      selectPreviousOption,
-      selectOption,
-      handleCheckAnswer,
-      handleNextQuestion,
-    ]
-  );
+      default:
+        break;
+    }
+  });
 
   useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      onKeyDown(event);
+    }
+
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleKeyDown]);
+  }, []);
 };
 
 export default useKeyboardNavigation;
