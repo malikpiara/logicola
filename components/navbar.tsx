@@ -10,21 +10,15 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 import NavTopic from './navTopic';
-import type { QuizCatalogEntry } from '@/lib/quizCatalog';
+import { quizCatalog } from '@/lib/quizCatalog';
 
-interface NavbarProps {
-  quizCatalog: QuizCatalogEntry[];
-}
-
-const Navbar = ({ quizCatalog }: NavbarProps) => {
+const Navbar = () => {
   const splitIndex = Math.ceil(quizCatalog.length / 2);
 
   return (
     <nav className='bg-white border-gray-200 hidden md:block'>
       <div className='mx-auto max-w-screen-xl p-4'>
-        {/* Create a 3-column grid */}
         <div className='grid grid-cols-3 items-center'>
-          {/* Left Column: Exercises */}
           <div>
             <NavigationMenu>
               <NavigationMenuList>
@@ -67,7 +61,6 @@ const Navbar = ({ quizCatalog }: NavbarProps) => {
             </NavigationMenu>
           </div>
 
-          {/* Center Column: Logo */}
           <div className='justify-self-center'>
             <Link
               href='/'
@@ -79,16 +72,17 @@ const Navbar = ({ quizCatalog }: NavbarProps) => {
             </Link>
           </div>
 
-          {/* Right Column: Donate */}
           <div className='justify-self-end'>
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuLink
-                    className='text-gray-500 hover:bg-gray-200 hover:text-primaryColor block py-2 px-3 rounded md:hover:text-primaryColor font-mono font-semibold'
-                    href='https://github.com/sponsors/malikpiara'
-                  >
-                    Donate
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href='https://github.com/sponsors/malikpiara'
+                      className='motion-button text-gray-500 hover:bg-gray-200 hover:text-primaryColor block py-2 px-3 rounded md:hover:text-primaryColor font-mono font-semibold'
+                    >
+                      Donate
+                    </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
               </NavigationMenuList>

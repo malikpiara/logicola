@@ -1,7 +1,6 @@
 import Navbar from '@/components/navbar';
 import MobileNavbar from '@/components/mobile/navbar';
 import { Footer } from '@/components/footer';
-import { quizCatalog } from '@/lib/quizCatalog';
 
 export default function SiteLayout({
   children,
@@ -10,8 +9,8 @@ export default function SiteLayout({
 }>) {
   return (
     <>
-      <MobileNavbar quizCatalog={quizCatalog} />
-      <Navbar quizCatalog={quizCatalog} />
+      <MobileNavbar />
+      <Navbar />
       <main className='flex'>{children}</main>
       <Footer />
     </>

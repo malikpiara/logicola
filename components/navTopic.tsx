@@ -17,12 +17,15 @@ type TableOfContentProps = {
 const NavTopic = ({ chapter, title, path, newLabel }: TableOfContentProps) => {
   return (
     <li>
-      <Link href={path} className='block p-3 rounded-lg hover:bg-gray-200'>
-        <div className='flex gap-3'>
+      <Link
+        href={path}
+        className='motion-button block p-3 rounded-lg hover:bg-gray-200'
+      >
+        <div className='flex items-baseline gap-3'>
           <div className='font-semibold'>{title}</div>
           {newLabel && (
-            <span className='bg-primaryColor text-white text-xs font-semibold me-2 px-2.5 py-1 rounded-md'>
-              New
+            <span className='shrink-0 rounded-full bg-fuchsia-600 px-2.5 py-1 text-[0.6875rem] font-semibold tracking-[0.08em] text-fuchsia-50'>
+              NEW
             </span>
           )}
         </div>

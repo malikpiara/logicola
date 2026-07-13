@@ -8,7 +8,11 @@ const currentFile = fileURLToPath(import.meta.url);
 const scriptsDir = path.dirname(currentFile);
 const projectRoot = path.resolve(scriptsDir, '..');
 
-const BUILD_MANIFEST_PATH = path.join(projectRoot, '.next', 'build-manifest.json');
+const BUILD_MANIFEST_PATH = path.join(
+  projectRoot,
+  '.next',
+  'build-manifest.json'
+);
 const BUILD_ID_PATH = path.join(projectRoot, '.next', 'BUILD_ID');
 const QUIZ_MANIFEST_PATH = path.join(
   projectRoot,
@@ -19,7 +23,11 @@ const QUIZ_MANIFEST_PATH = path.join(
   '[...slugs]',
   'page_client-reference-manifest.js'
 );
-const QUIZ_CATALOG_PATH = path.join(projectRoot, 'content', 'quiz-catalog.json');
+const QUIZ_CATALOG_PATH = path.join(
+  projectRoot,
+  'content',
+  'quiz-catalog.json'
+);
 const OUTPUT_PATH = path.join(projectRoot, 'public', 'offline-manifest.json');
 const QUIZ_MANIFEST_KEY = '/(quiz)/[...slugs]/page';
 
@@ -91,7 +99,10 @@ async function main() {
     urls.add(normalizeBuildAsset(assetPath));
   }
 
-  for (const assetPath of collectRouteAssets(rscManifest, '[project]/app/layout')) {
+  for (const assetPath of collectRouteAssets(
+    rscManifest,
+    '[project]/app/layout'
+  )) {
     urls.add(assetPath);
   }
 

@@ -10,7 +10,10 @@ export interface QuizCatalogEntry {
 
 export const quizCatalog: QuizCatalogEntry[] = quizCatalogData;
 
-export const quizRouteSlugs = quizCatalog.map(({ slugs }) => [...slugs, 'quiz']);
+export const quizRouteSlugs = quizCatalog.map(({ slugs }) => [
+  ...slugs,
+  'quiz',
+]);
 
 export function normalizeQuizSlugs(slugs: string[]) {
   return slugs.at(-1) === 'quiz' ? slugs.slice(0, -1) : slugs;
