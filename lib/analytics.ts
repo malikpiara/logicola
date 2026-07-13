@@ -1,6 +1,11 @@
 let postHogClientPromise: Promise<
-  typeof import('posthog-js')['default'] | null
+  (typeof import('posthog-js'))['default'] | null
 > | null = null;
+
+export type AnalyticsProperties = Record<
+  string,
+  string | number | boolean | null | undefined
+>;
 
 async function getPostHogClient() {
   if (typeof window === 'undefined') {
@@ -16,6 +21,8 @@ async function getPostHogClient() {
     postHogClientPromise = import('posthog-js').then(({ default: posthog }) => {
       posthog.init(apiKey, {
         api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+        autocapture: true,
+        capture_pageview: false,
       });
 
       return posthog;
@@ -25,9 +32,17 @@ async function getPostHogClient() {
   return postHogClientPromise;
 }
 
+export async function capturePageview() {
+  const posthog = await getPostHogClient();
+
+  posthog?.capture('$pageview', {
+    $current_url: window.location.href,
+  });
+}
+
 export async function captureAnalyticsEvent(
   eventName: string,
-  properties?: Record<string, string | number>
+  properties?: AnalyticsProperties
 ) {
   const posthog = await getPostHogClient();
 

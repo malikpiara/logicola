@@ -1,4 +1,9 @@
 import Link from 'next/link';
+import { TrackedFooterLink } from './trackedFooterLink';
+
+const GET_THE_BOOK_URL =
+  'https://www.routledge.com/Introduction-to-Logic/Gensler/p/book/9781138910591';
+const REDDIT_URL = 'https://www.reddit.com/r/Logicola/';
 
 export function Footer() {
   return (
@@ -21,21 +26,32 @@ export function Footer() {
                 <li className='mb-4'>
                   <Link
                     href='https://harrycola.com/lc/index.htm'
-                    className='hover:underline'
+                    className='motion-colors hover:underline'
                   >
                     Classic Logicola
                   </Link>
                 </li>
                 <li className='mb-4'>
-                  <Link
-                    href='https://www.routledge.com/Introduction-to-Logic/Gensler/p/book/9781138910591'
-                    className='hover:underline'
+                  <TrackedFooterLink
+                    href={GET_THE_BOOK_URL}
+                    eventName='book_cta_clicked'
+                    properties={{
+                      link_text: 'Get the Book',
+                      link_url: GET_THE_BOOK_URL,
+                      link_location: 'footer_resources',
+                      destination_domain: 'routledge.com',
+                      resource_type: 'book',
+                    }}
+                    className='motion-colors hover:underline'
                   >
                     Get the Book
-                  </Link>
+                  </TrackedFooterLink>
                 </li>
                 <li>
-                  <Link href='/keyboard' className='hover:underline flex gap-2'>
+                  <Link
+                    href='/keyboard'
+                    className='motion-colors hover:underline flex gap-2'
+                  >
                     Keyboard{' '}
                     <div className='bg-primaryColor text-white text-xs font-semibold me-5 px-2 py-1 rounded-full'>
                       New
@@ -52,23 +68,31 @@ export function Footer() {
                 <li className='mb-4'>
                   <Link
                     href='https://github.com/malikpiara/logicola'
-                    className='hover:underline '
+                    className='motion-colors hover:underline'
                   >
-                    Github
+                    GitHub
                   </Link>
                 </li>
                 <li className='mb-4'>
                   <Link
                     href='https://twitter.com/LogicolaThree'
-                    className='hover:underline'
+                    className='motion-colors hover:underline'
                   >
                     Twitter
+                  </Link>
+                </li>
+                <li className='mb-4'>
+                  <Link
+                    href={REDDIT_URL}
+                    className='motion-colors hover:underline'
+                  >
+                    Reddit
                   </Link>
                 </li>
                 <li>
                   <Link
                     href='https://www.linkedin.com/company/logicola'
-                    className='hover:underline'
+                    className='motion-colors hover:underline'
                   >
                     LinkedIn
                   </Link>
@@ -81,12 +105,12 @@ export function Footer() {
               </h2>
               <ul className='text-gray-500'>
                 <li className='mb-4'>
-                  <Link href='#' className='hover:underline'>
+                  <Link href='#' className='motion-colors hover:underline'>
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href='#' className='hover:underline'>
+                  <Link href='#' className='motion-colors hover:underline'>
                     Terms &amp; Conditions
                   </Link>
                 </li>
@@ -98,15 +122,33 @@ export function Footer() {
         <div className='sm:flex sm:items-center sm:justify-between'>
           <span className='text-sm text-gray-500 sm:text-center '>
             © 2025{' '}
-            <Link href='https://logicola.com' className='hover:underline'>
+            <Link
+              href='https://logicola.com'
+              className='motion-colors hover:underline'
+            >
               Logicola
             </Link>
             . Some Rights Reserved.
           </span>
           <div className='flex mt-4 space-x-6 sm:justify-center sm:mt-0'>
             <Link
+              href={REDDIT_URL}
+              className='motion-colors text-gray-500 hover:text-gray-900'
+              aria-label='Logicola on Reddit'
+            >
+              <svg
+                className='w-5 h-5'
+                fill='currentColor'
+                viewBox='0 0 24 24'
+                aria-hidden='true'
+              >
+                <path d='M21.6 12.2c0-1.4-1.1-2.5-2.5-2.5-.7 0-1.3.3-1.8.8-1.3-.9-3-1.5-4.8-1.6l.8-3.7 2.6.6c.1 1 .9 1.7 1.9 1.7 1.1 0 1.9-.9 1.9-1.9s-.9-1.9-1.9-1.9c-.7 0-1.4.4-1.7 1l-3.2-.7c-.3-.1-.6.1-.7.4l-1 4.5c-1.9.1-3.6.6-4.9 1.6-.5-.5-1.1-.8-1.8-.8-1.4 0-2.5 1.1-2.5 2.5 0 .9.5 1.7 1.2 2.2v.7c0 3.4 4 6.1 8.8 6.1s8.8-2.7 8.8-6.1v-.7c.8-.5 1.3-1.3 1.3-2.2ZM7.8 14.1c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4-.6 1.4-1.4 1.4-1.4-.6-1.4-1.4Zm7.5 3.9c-.9.9-2.6 1-3.3 1s-2.4-.1-3.3-1c-.2-.2-.2-.5 0-.7s.5-.2.7 0c.5.5 1.6.7 2.6.7s2.1-.2 2.6-.7c.2-.2.5-.2.7 0s.2.5 0 .7Zm-.5-2.5c-.8 0-1.4-.6-1.4-1.4s.6-1.4 1.4-1.4 1.4.6 1.4 1.4-.6 1.4-1.4 1.4Z' />
+              </svg>
+            </Link>
+            <Link
               href='https://twitter.com/LogicolaThree'
-              className='text-gray-500 hover:text-gray-900'
+              className='motion-colors text-gray-500 hover:text-gray-900'
+              aria-label='Logicola on Twitter'
             >
               <svg
                 className='w-5 h-5'
@@ -119,7 +161,8 @@ export function Footer() {
             </Link>
             <a
               href='https://github.com/malikpiara/logicola'
-              className='text-gray-500 hover:text-gray-900'
+              className='motion-colors text-gray-500 hover:text-gray-900'
+              aria-label='Logicola on GitHub'
             >
               <svg
                 className='w-5 h-5'
