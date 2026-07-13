@@ -29,7 +29,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [3, 5],
-          answer: 'This violates 4 and 6',
+          answer: 'This violates 4 and 6.',
         },
         {
           id: '3.2',
@@ -44,7 +44,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [1],
-          answer: 'This violates 2 (tents might be made of nylon)',
+          answer: 'This violates 2 (tents might be made of nylon).',
         },
         {
           id: '3.3',
@@ -63,7 +63,7 @@ const setQ: Set = {
         },
         {
           id: '3.4',
-          prompt: 'Logic is that dreadful discipline that analyses reasoning.',
+          prompt: 'Logic is that dreadful discipline that analyzes reasoning.',
           options: [
             { id: 0, label: 'Too broad' },
             { id: 1, label: 'Too narrow' },
@@ -756,7 +756,7 @@ const setQ: Set = {
         },
         {
           id: '3.49',
-          prompt: 'Logic is that wonderful discipline that analyses reasoning.',
+          prompt: 'Logic is that wonderful discipline that analyzes reasoning.',
           options: [
             { id: 0, label: 'Too broad' },
             { id: 1, label: 'Too narrow' },

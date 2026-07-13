@@ -321,7 +321,7 @@ const setA: Set = {
           answer: `"The brightest" ${feedback_single_person}`,
         },
         {
-          id: '1.25',
+          id: '1.51',
           prompt: 'Some vicious criminals are boring.',
           options: [
             { id: 0, label: 'C is b' },
@@ -633,6 +633,71 @@ const setA: Set = {
           correctId: [3],
           answer: ``,
         },
+        // T1.5 (May 9, 2026): five *12 ("$S $C people are $As")
+        // questions added to cover the variable-quantifier form.
+        // Subject "$C people" is a class (capital from the
+        // adjective $C), predicate $As is a class (capital from
+        // the noun's first letter).
+        {
+          id: '1.52',
+          prompt: 'Some kind people are doctors.',
+          options: [
+            { id: 0, label: 'all K is D' },
+            { id: 1, label: 'some K is D' },
+            { id: 2, label: 'some k is d' },
+            { id: 3, label: 'K is D' },
+          ],
+          correctId: [1],
+          answer: '',
+        },
+        {
+          id: '1.53',
+          prompt: 'All cheerful people are scholars.',
+          options: [
+            { id: 0, label: 'all C is S' },
+            { id: 1, label: 'some C is S' },
+            { id: 2, label: 'C is S' },
+            { id: 3, label: 'all c is s' },
+          ],
+          correctId: [0],
+          answer: '',
+        },
+        {
+          id: '1.54',
+          prompt: 'Some boring people are pessimists.',
+          options: [
+            { id: 0, label: 'B is P' },
+            { id: 1, label: 'some b is p' },
+            { id: 2, label: 'some B is P' },
+            { id: 3, label: 'all B is P' },
+          ],
+          correctId: [2],
+          answer: '',
+        },
+        {
+          id: '1.55',
+          prompt: 'All sociable people are bachelors.',
+          options: [
+            { id: 0, label: 'all s is b' },
+            { id: 1, label: 'all S is B' },
+            { id: 2, label: 'some S is B' },
+            { id: 3, label: 'S is B' },
+          ],
+          correctId: [1],
+          answer: '',
+        },
+        {
+          id: '1.56',
+          prompt: 'Some clean people are dancers.',
+          options: [
+            { id: 0, label: 'some c is d' },
+            { id: 1, label: 'all C is D' },
+            { id: 2, label: 'some C is D' },
+            { id: 3, label: 'C is D' },
+          ],
+          correctId: [2],
+          answer: '',
+        },
       ],
     },
     {
@@ -645,18 +710,6 @@ const setA: Set = {
       title: 'Syllogistic Translations: Hard',
       header: 'Translates into logic as:',
       questions: [
-        {
-          id: '1.1',
-          prompt: "People who aren't biologists aren't clean.",
-          options: [
-            { id: 0, label: 'all B is not C' },
-            { id: 1, label: 'B is not C' },
-            { id: 2, label: 'some B is not C' },
-            { id: 3, label: 'no B is C' },
-          ],
-          correctId: [3],
-          answer: '',
-        },
         {
           id: '1.2',
           prompt: 'People who are dancers are wild.',
@@ -689,18 +742,6 @@ const setA: Set = {
             { id: 1, label: 'D is C' },
             { id: 2, label: 'all D is C' },
             { id: 3, label: 'some D is C' },
-          ],
-          correctId: [2],
-          answer: '',
-        },
-        {
-          id: '1.5',
-          prompt: "People who aren't backpackers aren't rich",
-          options: [
-            { id: 0, label: 'all B is not R' },
-            { id: 1, label: 'B is not R' },
-            { id: 2, label: 'no B is R' },
-            { id: 3, label: 'some B is not R' },
           ],
           correctId: [2],
           answer: '',
@@ -838,18 +879,6 @@ const setA: Set = {
           answer: '',
         },
         {
-          id: '1.17',
-          prompt: "People who aren't backpackers aren't rich",
-          options: [
-            { id: 0, label: 'all D is not S' },
-            { id: 1, label: 'D is not S' },
-            { id: 2, label: 'some D is not S' },
-            { id: 3, label: 'no D is S' },
-          ],
-          correctId: [3],
-          answer: '',
-        },
-        {
           id: '1.18',
           prompt: "A person isn't mean unless he or she is comical",
           options: [
@@ -887,7 +916,7 @@ const setA: Set = {
         },
         {
           id: '1.21',
-          prompt: "People who soldiers aren't bright",
+          prompt: "People who are soldiers aren't bright",
           options: [
             { id: 0, label: 'all S is not B' },
             { id: 1, label: 'no S is B' },
@@ -1244,6 +1273,47 @@ const setA: Set = {
           ],
           correctId: [2],
           answer: '',
+        },
+        // T1.5 (May 9, 2026): three *1 ("$J is the $C one in $p")
+        // questions added to cover the proper-name-superlative form.
+        // Convention: $J → uppercase first letter (proper name as
+        // class-of-one); "the $C one" picks out a single individual
+        // → lowercase.
+        {
+          id: '1.51',
+          prompt: 'Harry is the smartest one in NYC.',
+          options: [
+            { id: 0, label: 'H is S' },
+            { id: 1, label: 'h is s' },
+            { id: 2, label: 'H is s' },
+            { id: 3, label: 'h is S' },
+          ],
+          correctId: [2],
+          answer: `"The smartest one" ${feedback_single_person}`,
+        },
+        {
+          id: '1.52',
+          prompt: 'Carol is the kindest one in Boston.',
+          options: [
+            { id: 0, label: 'c is K' },
+            { id: 1, label: 'C is k' },
+            { id: 2, label: 'c is k' },
+            { id: 3, label: 'C is K' },
+          ],
+          correctId: [1],
+          answer: `"The kindest one" ${feedback_single_person}`,
+        },
+        {
+          id: '1.53',
+          prompt: 'George is the boldest one in Tokyo.',
+          options: [
+            { id: 0, label: 'G is B' },
+            { id: 1, label: 'g is b' },
+            { id: 2, label: 'G is b' },
+            { id: 3, label: 'g is B' },
+          ],
+          correctId: [2],
+          answer: `"The boldest one" ${feedback_single_person}`,
         },
       ],
     },

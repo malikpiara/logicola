@@ -1,0 +1,2778 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`setA > matches snapshot 1`] = `
+{
+  "header": "Translates into logic as:",
+  "id": 1,
+  "logicType": "Syllogistic",
+  "name": "Set A",
+  "slugs": [
+    "syllogistic",
+    "translations",
+  ],
+  "subSets": [
+    {
+      "header": "Translates into logic as:",
+      "id": 1,
+      "logicType": "Basic Translations",
+      "name": "Set A",
+      "questions": [
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.1",
+          "options": [
+            {
+              "id": 0,
+              "label": "u is not B",
+            },
+            {
+              "id": 1,
+              "label": "U is not b",
+            },
+            {
+              "id": 2,
+              "label": "U is not B",
+            },
+            {
+              "id": 3,
+              "label": "u is not b",
+            },
+          ],
+          "prompt": "You aren't the cleanest biologist.",
+        },
+        {
+          "answer": ""A short convict" could describe many persons, and so translates into a capital letter.",
+          "correctId": [
+            2,
+          ],
+          "id": "1.2",
+          "options": [
+            {
+              "id": 0,
+              "label": "u is not c",
+            },
+            {
+              "id": 1,
+              "label": "U is not c",
+            },
+            {
+              "id": 2,
+              "label": "u is not C",
+            },
+            {
+              "id": 3,
+              "label": "U is not C",
+            },
+          ],
+          "prompt": "You aren't a short convict.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.3",
+          "options": [
+            {
+              "id": 0,
+              "label": "D is not C",
+            },
+            {
+              "id": 1,
+              "label": "D is not c",
+            },
+            {
+              "id": 2,
+              "label": "d is not C",
+            },
+            {
+              "id": 3,
+              "label": "d is not c",
+            },
+          ],
+          "prompt": "The dancer isn't the most cheerful person.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.4",
+          "options": [
+            {
+              "id": 0,
+              "label": "S is F",
+            },
+            {
+              "id": 1,
+              "label": "all S is F",
+            },
+            {
+              "id": 2,
+              "label": "all s is F",
+            },
+            {
+              "id": 3,
+              "label": "all F is S",
+            },
+          ],
+          "prompt": "All soldiers in Berlin forgive people who are remarkable.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.5",
+          "options": [
+            {
+              "id": 0,
+              "label": "u is not C",
+            },
+            {
+              "id": 1,
+              "label": "U is not C",
+            },
+            {
+              "id": 2,
+              "label": "U is not c",
+            },
+            {
+              "id": 3,
+              "label": "u is not c",
+            },
+          ],
+          "prompt": "You aren't the smartest criminal.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.6",
+          "options": [
+            {
+              "id": 0,
+              "label": "U is not d",
+            },
+            {
+              "id": 1,
+              "label": "u is not D",
+            },
+            {
+              "id": 2,
+              "label": "U is not D",
+            },
+            {
+              "id": 3,
+              "label": "u is not d",
+            },
+          ],
+          "prompt": "You aren't a slow druggist.",
+        },
+        {
+          "answer": ""The cheapest poet" stands for a single person, and so translates into a small letter.",
+          "correctId": [
+            3,
+          ],
+          "id": "1.7",
+          "options": [
+            {
+              "id": 0,
+              "label": "I is P",
+            },
+            {
+              "id": 1,
+              "label": "i is P",
+            },
+            {
+              "id": 2,
+              "label": "I is p",
+            },
+            {
+              "id": 3,
+              "label": "i is p",
+            },
+          ],
+          "prompt": "I'm the cheapest poet in Paris.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.8",
+          "options": [
+            {
+              "id": 0,
+              "label": "all H is D",
+            },
+            {
+              "id": 1,
+              "label": "all D is H",
+            },
+            {
+              "id": 2,
+              "label": "all d is H",
+            },
+            {
+              "id": 3,
+              "label": "D is H",
+            },
+          ],
+          "prompt": "All detectives in London hate people who are frantic.",
+        },
+        {
+          "answer": ""The wildest plumber" stands for a single person, and so translates into a small letter.",
+          "correctId": [
+            1,
+          ],
+          "id": "1.9",
+          "options": [
+            {
+              "id": 0,
+              "label": "u is not P",
+            },
+            {
+              "id": 1,
+              "label": "u is not p",
+            },
+            {
+              "id": 2,
+              "label": "U is not P",
+            },
+            {
+              "id": 3,
+              "label": "U is not p",
+            },
+          ],
+          "prompt": "You aren't the wildest plumber.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.10",
+          "options": [
+            {
+              "id": 0,
+              "label": "U is not c",
+            },
+            {
+              "id": 1,
+              "label": "U is not C",
+            },
+            {
+              "id": 2,
+              "label": "u is not c",
+            },
+            {
+              "id": 3,
+              "label": "u is not C",
+            },
+          ],
+          "prompt": "You aren't a short customer.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.11",
+          "options": [
+            {
+              "id": 0,
+              "label": "I is G",
+            },
+            {
+              "id": 1,
+              "label": "i is g",
+            },
+            {
+              "id": 2,
+              "label": "i is G",
+            },
+            {
+              "id": 3,
+              "label": "I is g",
+            },
+          ],
+          "prompt": "I'm the boldest guitarist in New York.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.12",
+          "options": [
+            {
+              "id": 0,
+              "label": "J is A",
+            },
+            {
+              "id": 1,
+              "label": "all J is A",
+            },
+            {
+              "id": 2,
+              "label": "all A is J",
+            },
+            {
+              "id": 3,
+              "label": "all j is A",
+            },
+          ],
+          "prompt": "All judges in Madrid appreciate people who are tactful.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.13",
+          "options": [
+            {
+              "id": 0,
+              "label": "U is not d",
+            },
+            {
+              "id": 1,
+              "label": "u is not d",
+            },
+            {
+              "id": 2,
+              "label": "u is not D",
+            },
+            {
+              "id": 3,
+              "label": "U is not D",
+            },
+          ],
+          "prompt": "You aren't the slowest dentist.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.14",
+          "options": [
+            {
+              "id": 0,
+              "label": "P is not B",
+            },
+            {
+              "id": 1,
+              "label": "some P is B",
+            },
+            {
+              "id": 2,
+              "label": "some P is not B",
+            },
+            {
+              "id": 3,
+              "label": "some p is not B",
+            },
+          ],
+          "prompt": "Some prisoners don't blame any frivolous people.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.15",
+          "options": [
+            {
+              "id": 0,
+              "label": "I is M",
+            },
+            {
+              "id": 1,
+              "label": "i is M",
+            },
+            {
+              "id": 2,
+              "label": "I is m",
+            },
+            {
+              "id": 3,
+              "label": "i is m",
+            },
+          ],
+          "prompt": "I'm the cleanest musician in Moscow.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.16",
+          "options": [
+            {
+              "id": 0,
+              "label": "P is E",
+            },
+            {
+              "id": 1,
+              "label": "all E is P",
+            },
+            {
+              "id": 2,
+              "label": "all P is E",
+            },
+            {
+              "id": 3,
+              "label": "all p is E",
+            },
+          ],
+          "prompt": "All pessimists in Detroit encourage people who are dishonest.",
+        },
+        {
+          "answer": ""The meanest politician" stands for a single person, and so translates into a small letter.",
+          "correctId": [
+            2,
+          ],
+          "id": "1.17",
+          "options": [
+            {
+              "id": 0,
+              "label": "U is not P",
+            },
+            {
+              "id": 1,
+              "label": "U is not p",
+            },
+            {
+              "id": 2,
+              "label": "u is not p",
+            },
+            {
+              "id": 3,
+              "label": "u is not P",
+            },
+          ],
+          "prompt": "You aren't the meanest politician.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.18",
+          "options": [
+            {
+              "id": 0,
+              "label": "some R is H",
+            },
+            {
+              "id": 1,
+              "label": "some R is not H",
+            },
+            {
+              "id": 2,
+              "label": "R is not H",
+            },
+            {
+              "id": 3,
+              "label": "some r is not H",
+            },
+          ],
+          "prompt": "Some republicans don't hate any filthy people.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.20",
+          "options": [
+            {
+              "id": 0,
+              "label": "all H is P",
+            },
+            {
+              "id": 1,
+              "label": "All P is H",
+            },
+            {
+              "id": 2,
+              "label": "P is H",
+            },
+            {
+              "id": 3,
+              "label": "all p is H",
+            },
+          ],
+          "prompt": "All pickpockets in Rome hurt people who are fortunate.",
+        },
+        {
+          "answer": ""The strongest banker" stands for a single person, and so translates into a small letter.",
+          "correctId": [
+            1,
+          ],
+          "id": "1.21",
+          "options": [
+            {
+              "id": 0,
+              "label": "U is not b",
+            },
+            {
+              "id": 1,
+              "label": "u is not b",
+            },
+            {
+              "id": 2,
+              "label": "U is not B",
+            },
+            {
+              "id": 3,
+              "label": "u is not B",
+            },
+          ],
+          "prompt": "You aren't the strongest banker.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.22",
+          "options": [
+            {
+              "id": 0,
+              "label": "some G is B",
+            },
+            {
+              "id": 1,
+              "label": "some g is not B",
+            },
+            {
+              "id": 2,
+              "label": "some G is not B",
+            },
+            {
+              "id": 3,
+              "label": "G is not B",
+            },
+          ],
+          "prompt": "Some Germans don't blame any miserable people.",
+        },
+        {
+          "answer": ""The cruelest bachelor" stands for a single person, and so translates into a small letter.",
+          "correctId": [
+            2,
+          ],
+          "id": "1.23",
+          "options": [
+            {
+              "id": 0,
+              "label": "I is b",
+            },
+            {
+              "id": 1,
+              "label": "i is B",
+            },
+            {
+              "id": 2,
+              "label": "i is b",
+            },
+            {
+              "id": 3,
+              "label": "I is B",
+            },
+          ],
+          "prompt": "I'm the cruelest bachelor in Santa Monica.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.24",
+          "options": [
+            {
+              "id": 0,
+              "label": "all c is B",
+            },
+            {
+              "id": 1,
+              "label": "all B is C",
+            },
+            {
+              "id": 2,
+              "label": "all C is B",
+            },
+            {
+              "id": 3,
+              "label": "C is B",
+            },
+          ],
+          "prompt": "All carpenters in Virginia bother people who are dangerous.",
+        },
+        {
+          "answer": ""The brightest" stands for a single person, and so translates into a small letter.",
+          "correctId": [
+            2,
+          ],
+          "id": "1.25",
+          "options": [
+            {
+              "id": 0,
+              "label": "u is not C",
+            },
+            {
+              "id": 1,
+              "label": "u is not c",
+            },
+            {
+              "id": 2,
+              "label": "U is not C",
+            },
+            {
+              "id": 3,
+              "label": "U is not c",
+            },
+          ],
+          "prompt": "You aren't the brightest convict.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.51",
+          "options": [
+            {
+              "id": 0,
+              "label": "C is b",
+            },
+            {
+              "id": 1,
+              "label": "some C is B",
+            },
+            {
+              "id": 2,
+              "label": "some C is b",
+            },
+            {
+              "id": 3,
+              "label": "C is B",
+            },
+          ],
+          "prompt": "Some vicious criminals are boring.",
+        },
+        {
+          "answer": ""The slowest diabetic" stands for a single person, and so translates into a small letter.",
+          "correctId": [
+            2,
+          ],
+          "id": "1.26",
+          "options": [
+            {
+              "id": 0,
+              "label": "I is d",
+            },
+            {
+              "id": 1,
+              "label": "I is D",
+            },
+            {
+              "id": 2,
+              "label": "i is d",
+            },
+            {
+              "id": 3,
+              "label": "i is D",
+            },
+          ],
+          "prompt": "I'm the slowest diabetic in Boston.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.27",
+          "options": [
+            {
+              "id": 0,
+              "label": "B is K",
+            },
+            {
+              "id": 1,
+              "label": "all b is K",
+            },
+            {
+              "id": 2,
+              "label": "all B is K",
+            },
+            {
+              "id": 3,
+              "label": "all K is B",
+            },
+          ],
+          "prompt": "All backpackers in Mexico City know people who are prosperous.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.28",
+          "options": [
+            {
+              "id": 0,
+              "label": "u is not C",
+            },
+            {
+              "id": 1,
+              "label": "u is not c",
+            },
+            {
+              "id": 2,
+              "label": "U is not C",
+            },
+            {
+              "id": 3,
+              "label": "U is not c",
+            },
+          ],
+          "prompt": "You aren't the tallest cannibal.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.29",
+          "options": [
+            {
+              "id": 0,
+              "label": "F is D",
+            },
+            {
+              "id": 1,
+              "label": "F is d",
+            },
+            {
+              "id": 2,
+              "label": "some F is D",
+            },
+            {
+              "id": 3,
+              "label": "some F is d",
+            },
+          ],
+          "prompt": "Some notorious fugitives are dishonest.",
+        },
+        {
+          "answer": ""The meanest bandit" stands for a single person, and so translates into a small letter.",
+          "correctId": [
+            3,
+          ],
+          "id": "1.30",
+          "options": [
+            {
+              "id": 0,
+              "label": "i is B",
+            },
+            {
+              "id": 1,
+              "label": "I is B",
+            },
+            {
+              "id": 2,
+              "label": "I is b",
+            },
+            {
+              "id": 3,
+              "label": "i is b",
+            },
+          ],
+          "prompt": "I'm the meanest bandit in Bratislava.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.31",
+          "options": [
+            {
+              "id": 0,
+              "label": "t is not C",
+            },
+            {
+              "id": 1,
+              "label": "T is not c",
+            },
+            {
+              "id": 2,
+              "label": "T is not C",
+            },
+            {
+              "id": 3,
+              "label": "t is not c",
+            },
+          ],
+          "prompt": "This terrorist isn't a candid person.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.32",
+          "options": [
+            {
+              "id": 0,
+              "label": "I is b",
+            },
+            {
+              "id": 1,
+              "label": "I is B",
+            },
+            {
+              "id": 2,
+              "label": "i is b",
+            },
+            {
+              "id": 3,
+              "label": "i is B",
+            },
+          ],
+          "prompt": "I'm the smartest biologist in Kiev.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.33",
+          "options": [
+            {
+              "id": 0,
+              "label": "C is G",
+            },
+            {
+              "id": 1,
+              "label": "some C is G",
+            },
+            {
+              "id": 2,
+              "label": "some C is g",
+            },
+            {
+              "id": 3,
+              "label": "C is g",
+            },
+          ],
+          "prompt": "Some miserable convicts are gloomy.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.34",
+          "options": [
+            {
+              "id": 0,
+              "label": "u is not c",
+            },
+            {
+              "id": 1,
+              "label": "u is not C",
+            },
+            {
+              "id": 2,
+              "label": "U is not C",
+            },
+            {
+              "id": 3,
+              "label": "u is not c",
+            },
+          ],
+          "prompt": "You aren't the wildest criminal.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.35",
+          "options": [
+            {
+              "id": 0,
+              "label": "all F is not P",
+            },
+            {
+              "id": 1,
+              "label": "f is not P",
+            },
+            {
+              "id": 2,
+              "label": "F is not P",
+            },
+            {
+              "id": 3,
+              "label": "no F is P",
+            },
+          ],
+          "prompt": "No dangerous foreigner is poetic",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.36",
+          "options": [
+            {
+              "id": 0,
+              "label": "i is d",
+            },
+            {
+              "id": 1,
+              "label": "I is d",
+            },
+            {
+              "id": 2,
+              "label": "i is D",
+            },
+            {
+              "id": 3,
+              "label": "I is D",
+            },
+          ],
+          "prompt": "I'm the shortest diabetic in Berlin.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.37",
+          "options": [
+            {
+              "id": 0,
+              "label": "D is S",
+            },
+            {
+              "id": 1,
+              "label": "some D is s",
+            },
+            {
+              "id": 2,
+              "label": "some D is S",
+            },
+            {
+              "id": 3,
+              "label": "D is s",
+            },
+          ],
+          "prompt": "Some boring druggists are sociable.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.38",
+          "options": [
+            {
+              "id": 0,
+              "label": "u is not f",
+            },
+            {
+              "id": 1,
+              "label": "u is not F",
+            },
+            {
+              "id": 2,
+              "label": "U is not f",
+            },
+            {
+              "id": 3,
+              "label": "U is not F",
+            },
+          ],
+          "prompt": "You aren't the brightest farmer.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.39",
+          "options": [
+            {
+              "id": 0,
+              "label": "c is not G",
+            },
+            {
+              "id": 1,
+              "label": "no C is G",
+            },
+            {
+              "id": 2,
+              "label": "C is not G",
+            },
+            {
+              "id": 3,
+              "label": "all C is not G",
+            },
+          ],
+          "prompt": "No prosperous cannibal is gentle.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.40",
+          "options": [
+            {
+              "id": 0,
+              "label": "M is B",
+            },
+            {
+              "id": 1,
+              "label": "m is b",
+            },
+            {
+              "id": 2,
+              "label": "M is b",
+            },
+            {
+              "id": 3,
+              "label": "m is B",
+            },
+          ],
+          "prompt": "Adriano is a boastful person in Barcelona.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.41",
+          "options": [
+            {
+              "id": 0,
+              "label": "some P is c",
+            },
+            {
+              "id": 1,
+              "label": "P is C",
+            },
+            {
+              "id": 2,
+              "label": "P is c",
+            },
+            {
+              "id": 3,
+              "label": "some P is C",
+            },
+          ],
+          "prompt": "Some dishonest plumbers are cowardly.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.42",
+          "options": [
+            {
+              "id": 0,
+              "label": "all H is C",
+            },
+            {
+              "id": 1,
+              "label": "all C is H",
+            },
+            {
+              "id": 2,
+              "label": "all c is H",
+            },
+            {
+              "id": 3,
+              "label": "C is H",
+            },
+          ],
+          "prompt": "All customers in Milan hate people who are famous.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.43",
+          "options": [
+            {
+              "id": 0,
+              "label": "no C is G",
+            },
+            {
+              "id": 1,
+              "label": "c is not G",
+            },
+            {
+              "id": 2,
+              "label": "C is not G",
+            },
+            {
+              "id": 3,
+              "label": "all C is not G",
+            },
+          ],
+          "prompt": "No brilliant clown is greedy.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.44",
+          "options": [
+            {
+              "id": 0,
+              "label": "I is j",
+            },
+            {
+              "id": 1,
+              "label": "i is J",
+            },
+            {
+              "id": 2,
+              "label": "I is J",
+            },
+            {
+              "id": 3,
+              "label": "i is j",
+            },
+          ],
+          "prompt": "I'm the richest judge in Hamburg",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.45",
+          "options": [
+            {
+              "id": 0,
+              "label": "some P is m",
+            },
+            {
+              "id": 1,
+              "label": "P is M",
+            },
+            {
+              "id": 2,
+              "label": "some P is M",
+            },
+            {
+              "id": 3,
+              "label": "P is m",
+            },
+          ],
+          "prompt": "Some disgusting prisioners are miserable.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.46",
+          "options": [
+            {
+              "id": 0,
+              "label": "some M is not H",
+            },
+            {
+              "id": 1,
+              "label": "some M is H",
+            },
+            {
+              "id": 2,
+              "label": "M is not H",
+            },
+            {
+              "id": 3,
+              "label": "some m is not H",
+            },
+          ],
+          "prompt": "Some musicians don't hurt any naive people",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.47",
+          "options": [
+            {
+              "id": 0,
+              "label": "no P is R",
+            },
+            {
+              "id": 1,
+              "label": "P is not R",
+            },
+            {
+              "id": 2,
+              "label": "p is not R",
+            },
+            {
+              "id": 3,
+              "label": "all P is not R",
+            },
+          ],
+          "prompt": "No demented pessimist is romantic",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.48",
+          "options": [
+            {
+              "id": 0,
+              "label": "i is p",
+            },
+            {
+              "id": 1,
+              "label": "i is P",
+            },
+            {
+              "id": 2,
+              "label": "I is p",
+            },
+            {
+              "id": 3,
+              "label": "I is P",
+            },
+          ],
+          "prompt": "I'm the cleanest pharmacist in Dallas",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.49",
+          "options": [
+            {
+              "id": 0,
+              "label": "U is not R",
+            },
+            {
+              "id": 1,
+              "label": "u is not r",
+            },
+            {
+              "id": 2,
+              "label": "u is not R",
+            },
+            {
+              "id": 3,
+              "label": "U is not r",
+            },
+          ],
+          "prompt": "You aren't the shortest republican",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.50",
+          "options": [
+            {
+              "id": 0,
+              "label": "some d is not A",
+            },
+            {
+              "id": 1,
+              "label": "D is not A",
+            },
+            {
+              "id": 2,
+              "label": "some D is A",
+            },
+            {
+              "id": 3,
+              "label": "some D is not A",
+            },
+          ],
+          "prompt": "Some doctors don't appreciate any frivolous people",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.52",
+          "options": [
+            {
+              "id": 0,
+              "label": "all K is D",
+            },
+            {
+              "id": 1,
+              "label": "some K is D",
+            },
+            {
+              "id": 2,
+              "label": "some k is d",
+            },
+            {
+              "id": 3,
+              "label": "K is D",
+            },
+          ],
+          "prompt": "Some kind people are doctors.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.53",
+          "options": [
+            {
+              "id": 0,
+              "label": "all C is S",
+            },
+            {
+              "id": 1,
+              "label": "some C is S",
+            },
+            {
+              "id": 2,
+              "label": "C is S",
+            },
+            {
+              "id": 3,
+              "label": "all c is s",
+            },
+          ],
+          "prompt": "All cheerful people are scholars.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.54",
+          "options": [
+            {
+              "id": 0,
+              "label": "B is P",
+            },
+            {
+              "id": 1,
+              "label": "some b is p",
+            },
+            {
+              "id": 2,
+              "label": "some B is P",
+            },
+            {
+              "id": 3,
+              "label": "all B is P",
+            },
+          ],
+          "prompt": "Some boring people are pessimists.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.55",
+          "options": [
+            {
+              "id": 0,
+              "label": "all s is b",
+            },
+            {
+              "id": 1,
+              "label": "all S is B",
+            },
+            {
+              "id": 2,
+              "label": "some S is B",
+            },
+            {
+              "id": 3,
+              "label": "S is B",
+            },
+          ],
+          "prompt": "All sociable people are bachelors.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.56",
+          "options": [
+            {
+              "id": 0,
+              "label": "some c is d",
+            },
+            {
+              "id": 1,
+              "label": "all C is D",
+            },
+            {
+              "id": 2,
+              "label": "some C is D",
+            },
+            {
+              "id": 3,
+              "label": "C is D",
+            },
+          ],
+          "prompt": "Some clean people are dancers.",
+        },
+      ],
+      "shuffleOptions": true,
+      "slugs": [
+        "syllogistic",
+        "translations",
+        "basic",
+      ],
+      "title": "Syllogistic Translations: Easy",
+    },
+    {
+      "header": "Translates into logic as:",
+      "id": 1,
+      "isNew": true,
+      "logicType": "Syllogistic",
+      "name": "Set A",
+      "questions": [
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.2",
+          "options": [
+            {
+              "id": 0,
+              "label": "W is D",
+            },
+            {
+              "id": 1,
+              "label": "all D is W",
+            },
+            {
+              "id": 2,
+              "label": "D is W",
+            },
+            {
+              "id": 3,
+              "label": "some D is W",
+            },
+          ],
+          "prompt": "People who are dancers are wild.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.3",
+          "options": [
+            {
+              "id": 0,
+              "label": "no F is C",
+            },
+            {
+              "id": 1,
+              "label": "all F is C",
+            },
+            {
+              "id": 2,
+              "label": "some F is not C",
+            },
+            {
+              "id": 3,
+              "label": "F is not C",
+            },
+          ],
+          "prompt": "It isn't true that somre foreigners are cruel.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.4",
+          "options": [
+            {
+              "id": 0,
+              "label": "not some D is C",
+            },
+            {
+              "id": 1,
+              "label": "D is C",
+            },
+            {
+              "id": 2,
+              "label": "all D is C",
+            },
+            {
+              "id": 3,
+              "label": "some D is C",
+            },
+          ],
+          "prompt": "It is false that some druggists aren't confused.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.6",
+          "options": [
+            {
+              "id": 0,
+              "label": "all P is B",
+            },
+            {
+              "id": 1,
+              "label": "some P is B",
+            },
+            {
+              "id": 2,
+              "label": "P is B",
+            },
+            {
+              "id": 3,
+              "label": "B is P",
+            },
+          ],
+          "prompt": "People who are poets are bright",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.7",
+          "options": [
+            {
+              "id": 0,
+              "label": "D is not S",
+            },
+            {
+              "id": 1,
+              "label": "not D is S",
+            },
+            {
+              "id": 2,
+              "label": "all D is S",
+            },
+            {
+              "id": 3,
+              "label": "some D is not S",
+            },
+          ],
+          "prompt": "It isn't true that some detectives are slow",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.8",
+          "options": [
+            {
+              "id": 0,
+              "label": "all B is D",
+            },
+            {
+              "id": 1,
+              "label": "some B is D",
+            },
+            {
+              "id": 2,
+              "label": "not some B is D",
+            },
+            {
+              "id": 3,
+              "label": "B is D",
+            },
+          ],
+          "prompt": "It is false that some bandits aren't disgusting",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.9",
+          "options": [
+            {
+              "id": 0,
+              "label": "no C is D",
+            },
+            {
+              "id": 1,
+              "label": "all C is not D",
+            },
+            {
+              "id": 2,
+              "label": "C is not D",
+            },
+            {
+              "id": 3,
+              "label": "some C is not D",
+            },
+          ],
+          "prompt": "People who are customers aren't dull",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.10",
+          "options": [
+            {
+              "id": 0,
+              "label": "all P is R",
+            },
+            {
+              "id": 1,
+              "label": "R is P",
+            },
+            {
+              "id": 2,
+              "label": "some P is R",
+            },
+            {
+              "id": 3,
+              "label": "P is R",
+            },
+          ],
+          "prompt": "People who are pilots are rich",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.11",
+          "options": [
+            {
+              "id": 0,
+              "label": "all D is R",
+            },
+            {
+              "id": 1,
+              "label": "some D is not R",
+            },
+            {
+              "id": 2,
+              "label": "no D is R",
+            },
+            {
+              "id": 3,
+              "label": "D is not R",
+            },
+          ],
+          "prompt": "It isn't true that some dentists are rough",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.12",
+          "options": [
+            {
+              "id": 0,
+              "label": "all N is F",
+            },
+            {
+              "id": 1,
+              "label": "N is F",
+            },
+            {
+              "id": 2,
+              "label": "some N is F",
+            },
+            {
+              "id": 3,
+              "label": "not some N is F",
+            },
+          ],
+          "prompt": "It is false that some novelists aren't frivolous",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.13",
+          "options": [
+            {
+              "id": 0,
+              "label": "some P is not C",
+            },
+            {
+              "id": 1,
+              "label": "all P is not C",
+            },
+            {
+              "id": 2,
+              "label": "P is not C",
+            },
+            {
+              "id": 3,
+              "label": "no P is C",
+            },
+          ],
+          "prompt": "People who are pharmacists aren't cheap",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.14",
+          "options": [
+            {
+              "id": 0,
+              "label": "all T is R",
+            },
+            {
+              "id": 1,
+              "label": "no T is R",
+            },
+            {
+              "id": 2,
+              "label": "T is not R",
+            },
+            {
+              "id": 3,
+              "label": "all R is T",
+            },
+          ],
+          "prompt": "A person isn't tall unless he or she is remarkable",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.15",
+          "options": [
+            {
+              "id": 0,
+              "label": "S is not W",
+            },
+            {
+              "id": 1,
+              "label": "all S is W",
+            },
+            {
+              "id": 2,
+              "label": "no S is W",
+            },
+            {
+              "id": 3,
+              "label": "some S is not W",
+            },
+          ],
+          "prompt": "It isn't true that some senators are wild",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.16",
+          "options": [
+            {
+              "id": 0,
+              "label": "some B is F",
+            },
+            {
+              "id": 1,
+              "label": "all B is F",
+            },
+            {
+              "id": 2,
+              "label": "not some B is F",
+            },
+            {
+              "id": 3,
+              "label": "B is F",
+            },
+          ],
+          "prompt": "It is false that some bankers aren't fanatical",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.18",
+          "options": [
+            {
+              "id": 0,
+              "label": "M is not C",
+            },
+            {
+              "id": 1,
+              "label": "no M is C",
+            },
+            {
+              "id": 2,
+              "label": "all M is C",
+            },
+            {
+              "id": 3,
+              "label": "all C is M",
+            },
+          ],
+          "prompt": "A person isn't mean unless he or she is comical",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.19",
+          "options": [
+            {
+              "id": 0,
+              "label": "P is not R",
+            },
+            {
+              "id": 1,
+              "label": "some P is not R",
+            },
+            {
+              "id": 2,
+              "label": "no P is R",
+            },
+            {
+              "id": 3,
+              "label": "all P is R",
+            },
+          ],
+          "prompt": "It isn't true that some professors are rich",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.20",
+          "options": [
+            {
+              "id": 0,
+              "label": "R is not D",
+            },
+            {
+              "id": 1,
+              "label": "all R is D",
+            },
+            {
+              "id": 2,
+              "label": "no R is D",
+            },
+            {
+              "id": 3,
+              "label": "all D is R",
+            },
+          ],
+          "prompt": "No one is rough unless he or she is demented",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.21",
+          "options": [
+            {
+              "id": 0,
+              "label": "all S is not B",
+            },
+            {
+              "id": 1,
+              "label": "no S is B",
+            },
+            {
+              "id": 2,
+              "label": "S is not B",
+            },
+            {
+              "id": 3,
+              "label": "some S is not B",
+            },
+          ],
+          "prompt": "People who are soldiers aren't bright",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.22",
+          "options": [
+            {
+              "id": 0,
+              "label": "all C is S",
+            },
+            {
+              "id": 1,
+              "label": "all S is C",
+            },
+            {
+              "id": 2,
+              "label": "no S is C",
+            },
+            {
+              "id": 3,
+              "label": "S is not C",
+            },
+          ],
+          "prompt": "A person isn't slow unless he or she is charitable",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.23",
+          "options": [
+            {
+              "id": 0,
+              "label": "all C is S",
+            },
+            {
+              "id": 1,
+              "label": "some C is not S",
+            },
+            {
+              "id": 2,
+              "label": "C is not S",
+            },
+            {
+              "id": 3,
+              "label": "no C is S",
+            },
+          ],
+          "prompt": "It isn't true that some criminals are strong",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.24",
+          "options": [
+            {
+              "id": 0,
+              "label": "W is not F",
+            },
+            {
+              "id": 1,
+              "label": "all W is F",
+            },
+            {
+              "id": 2,
+              "label": "all F is W",
+            },
+            {
+              "id": 3,
+              "label": "no W is F",
+            },
+          ],
+          "prompt": "No one is wild unless he or she is faithful",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.25",
+          "options": [
+            {
+              "id": 0,
+              "label": "no F is S",
+            },
+            {
+              "id": 1,
+              "label": "F is not S",
+            },
+            {
+              "id": 2,
+              "label": "all F is not S",
+            },
+            {
+              "id": 3,
+              "label": "some F is not S",
+            },
+          ],
+          "prompt": "People who are farmers aren't short",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.26",
+          "options": [
+            {
+              "id": 0,
+              "label": "B is not M",
+            },
+            {
+              "id": 1,
+              "label": "all M is B",
+            },
+            {
+              "id": 2,
+              "label": "all B is M",
+            },
+            {
+              "id": 3,
+              "label": "no B is M",
+            },
+          ],
+          "prompt": "A person isn't bold unless he or she is mediocre",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.27",
+          "options": [
+            {
+              "id": 0,
+              "label": "D is not T",
+            },
+            {
+              "id": 1,
+              "label": "some D is not T",
+            },
+            {
+              "id": 2,
+              "label": "all D is T",
+            },
+            {
+              "id": 3,
+              "label": "no D is T",
+            },
+          ],
+          "prompt": "It isn't true that some detectives are tough",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.28",
+          "options": [
+            {
+              "id": 0,
+              "label": "no W is N",
+            },
+            {
+              "id": 1,
+              "label": "all N is W",
+            },
+            {
+              "id": 2,
+              "label": "W is not N",
+            },
+            {
+              "id": 3,
+              "label": "all W is N",
+            },
+          ],
+          "prompt": "No one is weak unless he or she is naive",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.29",
+          "options": [
+            {
+              "id": 0,
+              "label": "D is S",
+            },
+            {
+              "id": 1,
+              "label": "all S is D",
+            },
+            {
+              "id": 2,
+              "label": "all D is S",
+            },
+            {
+              "id": 3,
+              "label": "S is D",
+            },
+          ],
+          "prompt": "Whoever is dangerous is sarcastic",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.30",
+          "options": [
+            {
+              "id": 0,
+              "label": "no C is T",
+            },
+            {
+              "id": 1,
+              "label": "all C is T",
+            },
+            {
+              "id": 2,
+              "label": "C is not T",
+            },
+            {
+              "id": 3,
+              "label": "all T is C",
+            },
+          ],
+          "prompt": "A person isn't cruel unless he or she is talented",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.31",
+          "options": [
+            {
+              "id": 0,
+              "label": "all G is W",
+            },
+            {
+              "id": 1,
+              "label": "all W is G",
+            },
+            {
+              "id": 2,
+              "label": "W is not G",
+            },
+            {
+              "id": 3,
+              "label": "no W is G",
+            },
+          ],
+          "prompt": "No one is wild unless he or she is gentle",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.32",
+          "options": [
+            {
+              "id": 0,
+              "label": "M is D",
+            },
+            {
+              "id": 1,
+              "label": "D is M",
+            },
+            {
+              "id": 2,
+              "label": "some D is not M",
+            },
+            {
+              "id": 3,
+              "label": "some D is M",
+            },
+          ],
+          "prompt": "One or more dentists are mean",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.33",
+          "options": [
+            {
+              "id": 0,
+              "label": "P is not D",
+            },
+            {
+              "id": 1,
+              "label": "all D is not P",
+            },
+            {
+              "id": 2,
+              "label": "no P is D",
+            },
+            {
+              "id": 3,
+              "label": "all P is not D",
+            },
+          ],
+          "prompt": "Whoever is powerful isn't dishonest",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.34",
+          "options": [
+            {
+              "id": 0,
+              "label": "some D is not R",
+            },
+            {
+              "id": 1,
+              "label": "some D is R",
+            },
+            {
+              "id": 2,
+              "label": "D is not R",
+            },
+            {
+              "id": 3,
+              "label": "all D is not R",
+            },
+          ],
+          "prompt": "Not all druggists are rough",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.35",
+          "options": [
+            {
+              "id": 0,
+              "label": "W is not C",
+            },
+            {
+              "id": 1,
+              "label": "all C is W",
+            },
+            {
+              "id": 2,
+              "label": "no W is C",
+            },
+            {
+              "id": 3,
+              "label": "all W is C",
+            },
+          ],
+          "prompt": "No one is weak unless he or she is confused",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.36",
+          "options": [
+            {
+              "id": 0,
+              "label": "some P is C",
+            },
+            {
+              "id": 1,
+              "label": "C is P",
+            },
+            {
+              "id": 2,
+              "label": "P is C",
+            },
+            {
+              "id": 3,
+              "label": "some P is not C",
+            },
+          ],
+          "prompt": "One or more poets are cheap",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.37",
+          "options": [
+            {
+              "id": 0,
+              "label": "B is not F",
+            },
+            {
+              "id": 1,
+              "label": "all F is not B",
+            },
+            {
+              "id": 2,
+              "label": "all B is not F",
+            },
+            {
+              "id": 3,
+              "label": "no B is F",
+            },
+          ],
+          "prompt": "Whoever is beautiful isn't frantic",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.38",
+          "options": [
+            {
+              "id": 0,
+              "label": "all G is M",
+            },
+            {
+              "id": 1,
+              "label": "not some G is M",
+            },
+            {
+              "id": 2,
+              "label": "some G is M",
+            },
+            {
+              "id": 3,
+              "label": "G is M",
+            },
+          ],
+          "prompt": "It is false that some grocers aren't mediocre",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.39",
+          "options": [
+            {
+              "id": 0,
+              "label": "all H is C",
+            },
+            {
+              "id": 1,
+              "label": "no C is H",
+            },
+            {
+              "id": 2,
+              "label": "all C is H",
+            },
+            {
+              "id": 3,
+              "label": "C is not H",
+            },
+          ],
+          "prompt": "No one is clean unless he or she is humorous",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.40",
+          "options": [
+            {
+              "id": 0,
+              "label": "i is c",
+            },
+            {
+              "id": 1,
+              "label": "i is C",
+            },
+            {
+              "id": 2,
+              "label": "I is C",
+            },
+            {
+              "id": 3,
+              "label": "I is c",
+            },
+          ],
+          "prompt": "I'm a wild clown in Berlin",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.41",
+          "options": [
+            {
+              "id": 0,
+              "label": "no D is R",
+            },
+            {
+              "id": 1,
+              "label": "all D is not R",
+            },
+            {
+              "id": 2,
+              "label": "D is not R",
+            },
+            {
+              "id": 3,
+              "label": "all R is not D",
+            },
+          ],
+          "prompt": "Whoever is dangerous isn't romantic",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.42",
+          "options": [
+            {
+              "id": 0,
+              "label": "some P is C",
+            },
+            {
+              "id": 1,
+              "label": "all P is C",
+            },
+            {
+              "id": 2,
+              "label": "not some P is C",
+            },
+            {
+              "id": 3,
+              "label": "P is C",
+            },
+          ],
+          "prompt": "It is false that some prisioners aren't curious",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.43",
+          "options": [
+            {
+              "id": 0,
+              "label": "M is not B",
+            },
+            {
+              "id": 1,
+              "label": "all M is B",
+            },
+            {
+              "id": 2,
+              "label": "no M is B",
+            },
+            {
+              "id": 3,
+              "label": "all B is M",
+            },
+          ],
+          "prompt": "No one is mean unless he or she is boring",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            3,
+          ],
+          "id": "1.44",
+          "options": [
+            {
+              "id": 0,
+              "label": "I is r",
+            },
+            {
+              "id": 1,
+              "label": "i is r",
+            },
+            {
+              "id": 2,
+              "label": "I is R",
+            },
+            {
+              "id": 3,
+              "label": "i is R",
+            },
+          ],
+          "prompt": "I'm a bright reporter in Lisbon",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.45",
+          "options": [
+            {
+              "id": 0,
+              "label": "all G is not F",
+            },
+            {
+              "id": 1,
+              "label": "no G is F",
+            },
+            {
+              "id": 2,
+              "label": "all F is not G",
+            },
+            {
+              "id": 3,
+              "label": "G is not F",
+            },
+          ],
+          "prompt": "Whoever is generous isn't frighened",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.46",
+          "options": [
+            {
+              "id": 0,
+              "label": "all S is G",
+            },
+            {
+              "id": 1,
+              "label": "some S is G",
+            },
+            {
+              "id": 2,
+              "label": "not some S is G",
+            },
+            {
+              "id": 3,
+              "label": "S is G",
+            },
+          ],
+          "prompt": "It is false that some senators aren't gentle",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            1,
+          ],
+          "id": "1.47",
+          "options": [
+            {
+              "id": 0,
+              "label": "no C is P",
+            },
+            {
+              "id": 1,
+              "label": "all C is P",
+            },
+            {
+              "id": 2,
+              "label": "all P is C",
+            },
+            {
+              "id": 3,
+              "label": "C is not P",
+            },
+          ],
+          "prompt": "No one is cruel unless he or she is powerful",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "1.48",
+          "options": [
+            {
+              "id": 0,
+              "label": "i is B",
+            },
+            {
+              "id": 1,
+              "label": "I is b",
+            },
+            {
+              "id": 2,
+              "label": "i is b",
+            },
+            {
+              "id": 3,
+              "label": "I is B",
+            },
+          ],
+          "prompt": "I'm a short banker in Paris",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.49",
+          "options": [
+            {
+              "id": 0,
+              "label": "C is not B",
+            },
+            {
+              "id": 1,
+              "label": "all B is not C",
+            },
+            {
+              "id": 2,
+              "label": "no C is B",
+            },
+            {
+              "id": 3,
+              "label": "all C is not B",
+            },
+          ],
+          "prompt": "Whoever is childish isn't bitter",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            2,
+          ],
+          "id": "1.50",
+          "options": [
+            {
+              "id": 0,
+              "label": "not some G is C",
+            },
+            {
+              "id": 1,
+              "label": "G is C",
+            },
+            {
+              "id": 2,
+              "label": "all G is C",
+            },
+            {
+              "id": 3,
+              "label": "some G is C",
+            },
+          ],
+          "prompt": "It is false that some Germans aren't confused",
+        },
+        {
+          "answer": ""The smartest one" stands for a single person, and so translates into a small letter.",
+          "correctId": [
+            2,
+          ],
+          "id": "1.51",
+          "options": [
+            {
+              "id": 0,
+              "label": "H is S",
+            },
+            {
+              "id": 1,
+              "label": "h is s",
+            },
+            {
+              "id": 2,
+              "label": "H is s",
+            },
+            {
+              "id": 3,
+              "label": "h is S",
+            },
+          ],
+          "prompt": "Harry is the smartest one in NYC.",
+        },
+        {
+          "answer": ""The kindest one" stands for a single person, and so translates into a small letter.",
+          "correctId": [
+            1,
+          ],
+          "id": "1.52",
+          "options": [
+            {
+              "id": 0,
+              "label": "c is K",
+            },
+            {
+              "id": 1,
+              "label": "C is k",
+            },
+            {
+              "id": 2,
+              "label": "c is k",
+            },
+            {
+              "id": 3,
+              "label": "C is K",
+            },
+          ],
+          "prompt": "Carol is the kindest one in Boston.",
+        },
+        {
+          "answer": ""The boldest one" stands for a single person, and so translates into a small letter.",
+          "correctId": [
+            2,
+          ],
+          "id": "1.53",
+          "options": [
+            {
+              "id": 0,
+              "label": "G is B",
+            },
+            {
+              "id": 1,
+              "label": "g is b",
+            },
+            {
+              "id": 2,
+              "label": "G is b",
+            },
+            {
+              "id": 3,
+              "label": "g is B",
+            },
+          ],
+          "prompt": "George is the boldest one in Tokyo.",
+        },
+      ],
+      "shuffleOptions": true,
+      "slugs": [
+        "syllogistic",
+        "translations",
+        "hard",
+      ],
+      "title": "Syllogistic Translations: Hard",
+    },
+  ],
+  "title": "Syllogistic Translations: Easy",
+}
+`;

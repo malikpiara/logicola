@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
-import posthog from 'posthog-js';
+import { useRef, useState } from 'react';
 import { SubSet, Question } from '@/content/types';
+import { AnalyticsProperties, captureAnalyticsEvent } from '@/lib/analytics';
+
+const QUIZ_QUESTION_LIMIT = 10;
 
 /** Helper to shuffle array in-place using Fisher-Yates */
 function shuffleArray<T>(array: T[]): void {
@@ -10,7 +12,57 @@ function shuffleArray<T>(array: T[]): void {
   }
 }
 
+function generateQuestionOrder(questionCount: number) {
+  const questionIndices = Array.from({ length: questionCount }, (_, i) => i);
+
+  for (let i = questionIndices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [questionIndices[i], questionIndices[j]] = [
+      questionIndices[j],
+      questionIndices[i],
+    ];
+  }
+
+  return questionIndices;
+}
+
+function buildShuffledQuestions(subSet: SubSet) {
+  const deepCopy: Question[] = subSet.questions.map((question) => ({
+    ...question,
+    options: [...question.options],
+  }));
+
+  if (subSet.shuffleOptions) {
+    deepCopy.forEach((question) => {
+      shuffleArray(question.options);
+    });
+  }
+
+  return deepCopy;
+}
+
+function buildQuizAnalyticsProperties(
+  subSet: SubSet,
+  totalQuestionCount: number
+): AnalyticsProperties {
+  return {
+    quiz_id: subSet.id,
+    quiz_title: subSet.title,
+    quiz_name: subSet.name,
+    quiz_logic_type: subSet.logicType,
+    quiz_slug: subSet.slugs.join('/'),
+    total_questions: totalQuestionCount,
+  };
+}
+
 export default function useQuizState(subSet: SubSet) {
+  const totalQuestionCount = Math.min(
+    QUIZ_QUESTION_LIMIT,
+    subSet.questions.length
+  );
+  const hasStartedRef = useRef(false);
+  const hasCompletedRef = useRef(false);
+
   // Index of the current question in the shuffled order
   const [questionIdx, setQuestionIdx] = useState(0);
 
@@ -37,66 +89,15 @@ export default function useQuizState(subSet: SubSet) {
   // Track any incorrect guesses (option IDs) for the current question.
   const [previousGuesses, setPreviousGuesses] = useState<number[]>([]);
 
-  /**
-   * We create a random order of question indices based on subSet.questions.length.
-   * Then the quiz will proceed in that shuffled order.
-   */
-  const generateQuestionOrder = () => {
-    // Create an array [0, 1, 2, ..., n-1]
-    const questionIndices = Array.from(
-      { length: subSet.questions.length },
-      (_, i) => i
-    );
-    // Use Fisher-Yates shuffle
-    for (let i = questionIndices.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [questionIndices[i], questionIndices[j]] = [
-        questionIndices[j],
-        questionIndices[i],
-      ];
-    }
-    return questionIndices;
-  };
-
   // Keep the random order in state, initialized once
   const [questionOrder, setQuestionOrder] = useState<number[]>(() =>
-    generateQuestionOrder()
+    generateQuestionOrder(subSet.questions.length)
   );
 
   // We'll also keep a separate copy of our questions (with possibly shuffled options)
-  const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
-
-  // On subSet change, we re-generate question order and optionally shuffle the options
-  useEffect(() => {
-    // 1) Shuffle which questions appear in which order
-    const newOrder = generateQuestionOrder();
-    setQuestionOrder(newOrder);
-
-    // 2) Make a shallow copy of each question so we don’t mutate subSet directly
-    const deepCopy: Question[] = subSet.questions.map((q) => ({
-      ...q,
-      options: [...q.options], // copy the options array
-    }));
-
-    // 3) Only shuffle the OPTIONS if subSet.shuffleOptions === true
-    if (subSet.shuffleOptions) {
-      deepCopy.forEach((question) => {
-        shuffleArray(question.options);
-      });
-    }
-
-    setShuffledQuestions(deepCopy);
-
-    // 4) Reset all quiz states
-    setQuestionIdx(0);
-    setSelectedOptionIndex(null);
-    setShowSolution(false);
-    setShowStartScreen(true);
-    setShowEndScreen(false);
-    setQuestionCounter(1);
-    setCorrectQuestions([]);
-    setPreviousGuesses([]);
-  }, [subSet]);
+  const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>(() =>
+    buildShuffledQuestions(subSet)
+  );
 
   // currentQuestion is whichever question is at questionOrder[questionIdx]
   // but we read from shuffledQuestions now, because it may have shuffled options
@@ -106,18 +107,21 @@ export default function useQuizState(subSet: SubSet) {
    * Move to next question or show the end screen if we’re done
    */
   function handleNextQuestion() {
-    // If not at last question yet
+    if (questionCounter >= totalQuestionCount) {
+      onShowEndScreen();
+      return;
+    }
+
     if (questionIdx < subSet.questions.length - 1) {
       setQuestionIdx(questionIdx + 1);
       setSelectedOptionIndex(null);
       setPreviousGuesses([]);
       setShowSolution(false);
       setQuestionCounter(questionCounter + 1);
+      return;
     }
-    if (questionCounter > 9) {
-      // If the user does more than 10 questions, exit the program.
-      onShowEndScreen();
-    }
+
+    onShowEndScreen();
   }
 
   /**
@@ -195,8 +199,14 @@ export default function useQuizState(subSet: SubSet) {
    * Transition from "start screen" to first question
    */
   function onShowStartScreen() {
-    posthog.capture('quiz_started', {
+    if (hasStartedRef.current) {
+      return;
+    }
+
+    hasStartedRef.current = true;
+    void captureAnalyticsEvent('quiz_started', {
       title: subSet.title,
+      ...buildQuizAnalyticsProperties(subSet, totalQuestionCount),
     });
     setShowStartScreen(false);
   }
@@ -205,13 +215,43 @@ export default function useQuizState(subSet: SubSet) {
    * Final screen / user has finished all questions
    */
   function onShowEndScreen() {
-    posthog.capture('quiz_completed', {
+    if (hasCompletedRef.current) {
+      return;
+    }
+
+    hasCompletedRef.current = true;
+    void captureAnalyticsEvent('quiz_completed', {
       subSet: subSet.title,
+      ...buildQuizAnalyticsProperties(subSet, totalQuestionCount),
+      totalQuestions: totalQuestionCount,
       correctQuestionsCount: correctQuestions.length,
-      scorePercentage:
-        (correctQuestions.length / subSet.questions.length) * 100,
+      scorePercentage: (correctQuestions.length / totalQuestionCount) * 100,
+      correct_questions_count: correctQuestions.length,
+      score_percentage: (correctQuestions.length / totalQuestionCount) * 100,
     });
     setShowEndScreen(true);
+  }
+
+  function onTryAgain() {
+    void captureAnalyticsEvent('quiz_retried', {
+      ...buildQuizAnalyticsProperties(subSet, totalQuestionCount),
+      correct_questions_count: correctQuestions.length,
+      score_percentage: (correctQuestions.length / totalQuestionCount) * 100,
+      source: 'quiz_end_screen',
+    });
+
+    hasStartedRef.current = true;
+    hasCompletedRef.current = false;
+    setQuestionIdx(0);
+    setSelectedOptionIndex(null);
+    setShowSolution(false);
+    setShowStartScreen(false);
+    setShowEndScreen(false);
+    setQuestionCounter(1);
+    setCorrectQuestions([]);
+    setPreviousGuesses([]);
+    setQuestionOrder(generateQuestionOrder(subSet.questions.length));
+    setShuffledQuestions(buildShuffledQuestions(subSet));
   }
 
   return {
@@ -244,5 +284,6 @@ export default function useQuizState(subSet: SubSet) {
     onCheckAnswer,
     onShowStartScreen,
     onShowEndScreen,
+    onTryAgain,
   };
 }
