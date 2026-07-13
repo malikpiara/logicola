@@ -1,20 +1,138 @@
 @config "../tailwind.config.mjs";
-@import "tailwindcss";
+@import 'tailwindcss';
 
-.animate-in {
-  animation: animateIn 0.3s ease 0.15s both;
+.motion-enter {
+  animation: animateIn var(--motion-page-enter) var(--ease-out-quart) 80ms both;
 }
 
 @layer utilities {
   .font-stretch {
     font-stretch: ultra-expanded;
   }
+
+  .motion-colors {
+    transition-duration: var(--motion-feedback);
+    transition-property:
+      color, background-color, border-color, text-decoration-color, fill,
+      stroke, opacity, box-shadow;
+    transition-timing-function: var(--ease-ui);
+  }
+
+  .motion-button {
+    cursor: pointer;
+    transform: translateZ(0);
+    transition-duration: 120ms;
+    transition-property:
+      color, background-color, border-color, box-shadow, opacity, transform;
+    transition-timing-function: var(--ease-ui);
+  }
+
+  .motion-button:disabled,
+  .motion-button[aria-disabled='true'] {
+    cursor: not-allowed;
+  }
+
+  .motion-button:active:not(:disabled):not([aria-disabled='true']) {
+    transform: scale(0.97);
+  }
+
+  .motion-panel {
+    transition-duration: var(--motion-standard);
+    transition-property: opacity, transform, box-shadow;
+    transition-timing-function: var(--ease-out-quart);
+    will-change: opacity, transform;
+  }
+
+  .motion-card {
+    transform: translateZ(0);
+    transition-duration: var(--motion-standard);
+    transition-property: border-color, box-shadow, transform;
+    transition-timing-function: var(--ease-out-cubic);
+  }
+
+  .motion-option {
+    cursor: pointer;
+    transform: translateZ(0);
+    transform-origin: center;
+    transition-duration: 120ms;
+    transition-property:
+      color, background-color, border-color, box-shadow, opacity, transform;
+    transition-timing-function: var(--ease-ui);
+  }
+
+  .motion-option[aria-pressed='true'] {
+    transform: scale(1.002);
+  }
+
+  .motion-option:active {
+    transform: scale(0.992);
+  }
+
+  .motion-quiz-question {
+    animation: quizQuestionIn 150ms var(--ease-out-quart) both;
+    transform-origin: center top;
+    transition-duration: 90ms;
+    transition-property: opacity, transform;
+    transition-timing-function: var(--ease-out-cubic);
+    will-change: opacity, transform;
+  }
+
+  .motion-quiz-question[data-motion='leaving'] {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.998);
+  }
+
+  .motion-answer-reveal {
+    animation: quizAnswerReveal 160ms var(--ease-out-quart) both;
+    transform-origin: center top;
+    will-change: opacity, transform;
+  }
+
+  .motion-chevron {
+    transition-duration: var(--motion-feedback);
+    transition-property: transform;
+    transition-timing-function: var(--ease-in-out-cubic);
+  }
+
+  .motion-progress {
+    transition-duration: 420ms;
+    transition-property: transform;
+    transition-timing-function: var(--ease-out-cubic);
+    will-change: transform;
+  }
+
+  .mobile-menu {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-6px) scale(0.99);
+    transform-origin: top center;
+    transition-duration: var(--motion-standard);
+    transition-property: opacity, transform, visibility;
+    transition-timing-function: var(--ease-out-quart);
+    visibility: hidden;
+  }
+
+  .mobile-menu[data-state='open'] {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+    visibility: visible;
+  }
+
+  .quiz-controls-drawer[data-vaul-drawer][data-vaul-snap-points='true'][data-vaul-delayed-snap-points='false'][data-vaul-drawer-direction='bottom'] {
+    transform: translate3d(
+      0,
+      var(--snap-point-height, var(--initial-transform, 100%)),
+      0
+    );
+    transition: none;
+  }
 }
 
 @keyframes animateIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -22,8 +140,38 @@
   }
 }
 
+@keyframes quizQuestionIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes quizAnswerReveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @layer base {
   :root {
+    --ease-ui: ease;
+    --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+    --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+    --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+    --motion-feedback: 140ms;
+    --motion-standard: 190ms;
+    --motion-page-enter: 220ms;
+
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
 
@@ -66,5 +214,62 @@
     font-feature-settings:
       'rlig' 1,
       'calt' 1;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .motion-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .motion-option:hover {
+    transform: scale(1.002);
+  }
+
+  .motion-option[aria-pressed='true']:hover {
+    transform: scale(1.003);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-enter,
+  .motion-colors,
+  .motion-button,
+  .motion-panel,
+  .motion-card,
+  .motion-option,
+  .motion-quiz-question,
+  .motion-answer-reveal,
+  .motion-chevron,
+  .motion-progress,
+  .mobile-menu {
+    animation: none;
+    transition: none;
+  }
+
+  .animate-in,
+  .animate-out,
+  .animate-pulse,
+  .animate-accordion-down,
+  .animate-accordion-up {
+    animation: none;
+    transition: none;
+  }
+
+  .motion-button,
+  .motion-button:active,
+  .motion-card,
+  .motion-card:hover,
+  .motion-option,
+  .motion-option:active,
+  .motion-option[aria-pressed='true'],
+  .motion-option:hover,
+  .motion-option[aria-pressed='true']:hover,
+  .motion-quiz-question,
+  .motion-quiz-question[data-motion='leaving'],
+  .motion-answer-reveal,
+  .mobile-menu,
+  .mobile-menu[data-state='open'] {
+    transform: none;
   }
 }

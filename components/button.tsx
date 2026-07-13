@@ -9,10 +9,10 @@ const Button = ({ label, ...props }: ButtonProps) => {
     <>
       <button
         type='button'
-        className={`text-white w-full font-semibold rounded-md text-base md:text-sm px-7 py-2.5  mb-2 ${
+        className={`motion-button text-white w-full font-semibold rounded-md text-base md:text-sm px-7 py-2.5 mb-2 disabled:transform-none disabled:cursor-not-allowed ${
           props.disabled
-            ? ' bg-gray-200 cursor-not-allowed'
-            : 'bg-primaryColor hover:opacity-90'
+            ? ' bg-gray-200'
+            : 'bg-primaryColor hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primaryColor focus-visible:ring-offset-2'
         }`}
         {...props}
       >

@@ -13,7 +13,7 @@ export default function SyllogisticLogicPage() {
           content='A concise overview of Syllogistic Translations, including basic and harder examples.'
         />
       </Head>
-      <div className='container mx-auto py-8 space-y-8 max-w-4xl animate-in'>
+      <div className='container mx-auto py-8 space-y-8 max-w-4xl motion-enter'>
         <h1 className='text-3xl font-bold mb-6 text-black'>
           Syllogistic Translations
         </h1>

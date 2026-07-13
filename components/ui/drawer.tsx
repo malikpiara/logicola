@@ -28,31 +28,69 @@ const DrawerOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Overlay
     ref={ref}
-    className={cn('fixed inset-0 z-50 bg-black/40', className)}
+    className={cn(
+      'fixed inset-0 z-50 bg-black/40 duration-200 ease-[var(--ease-out-quart)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in data-[state=closed]:fade-out',
+      className
+    )}
     {...props}
   />
 ));
 DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName;
 
+interface DrawerContentExtraProps {
+  /**
+   * Optional click handler attached to the drawer's grabber bar.
+   * When provided, the grabber becomes a `<button>` and fires on a
+   * pure click (no drag), in addition to its native vaul drag
+   * behaviour. Used to let users tap the grabber to cycle through
+   * snap points without having to drag.
+   */
+  onGrabberClick?: () => void;
+  disableOpenAnimation?: boolean;
+}
+
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
->(({ className, children, ...props }, ref) => (
-  <DrawerPortal>
-    <DrawerOverlay />
-    <DrawerPrimitive.Content
-      ref={ref}
-      className={cn(
-        'fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0',
-        className
-      )}
-      {...props}
-    >
-      <div className='mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted cursor-grab' />
-      {children}
-    </DrawerPrimitive.Content>
-  </DrawerPortal>
-));
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> &
+    DrawerContentExtraProps
+>(
+  (
+    {
+      className,
+      children,
+      onGrabberClick,
+      disableOpenAnimation = false,
+      ...props
+    },
+    ref
+  ) => (
+    <DrawerPortal>
+      <DrawerOverlay />
+      <DrawerPrimitive.Content
+        ref={ref}
+        className={cn(
+          'fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0',
+          !disableOpenAnimation &&
+            'motion-panel duration-200 ease-[var(--ease-out-quart)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-bottom-6 data-[state=closed]:slide-out-to-bottom-5',
+          className
+        )}
+        {...props}
+      >
+        {onGrabberClick ? (
+          <button
+            type='button'
+            onClick={onGrabberClick}
+            aria-label='Cycle drawer snap point'
+            className='block mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted cursor-grab transition-colors hover:bg-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400'
+          />
+        ) : (
+          <div className='mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted cursor-grab' />
+        )}
+        {children}
+      </DrawerPrimitive.Content>
+    </DrawerPortal>
+  )
+);
 DrawerContent.displayName = 'DrawerContent';
 
 const DrawerHeader = ({
