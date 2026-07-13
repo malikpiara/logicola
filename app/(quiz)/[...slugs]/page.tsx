@@ -1,4 +1,6 @@
 import Quiz from '@/components/quiz';
+import QuizClient from '@/components/quiz/QuizClient';
+import ExerciseNavbar from '@/components/mobile/exerciseNavbar';
 import { findQuizCatalogEntry, quizRouteSlugs } from '@/lib/quizCatalog';
 import { loadPublishedQuizSubSet } from '@/lib/publishedQuizLookup';
 import { Metadata } from 'next';
@@ -16,26 +18,36 @@ export default async function QuizPage({ params }: QuizPageProps) {
     notFound();
   }
 
-  const subSet = await loadPublishedQuizSubSet(slugs);
+  const loaded = await loadPublishedQuizSubSet(slugs);
 
-  if (!subSet) {
+  if (!loaded) {
     notFound();
   }
 
   return (
-    <div className='flex w-full h-screen'>
-      {/* <ExerciseSidebar
-          chapter={3}
-          path={params.slugs.slice(0, -1)}
-          isQuestionActive={(index) => {
-            return pathname === `/informal/definitions/${index + 1}`;
-          }}
-          initialQuestionIdx={0}
-        /> */}
-      <main className='p-4 w-full'>
-        <Quiz subSet={subSet} />
-      </main>
-    </div>
+    <>
+      <ExerciseNavbar />
+      <div className='flex w-full min-h-[calc(100vh-4rem)]'>
+        {/* <ExerciseSidebar
+            chapter={3}
+            path={params.slugs.slice(0, -1)}
+            isQuestionActive={(index) => {
+              return pathname === `/informal/definitions/${index + 1}`;
+            }}
+            initialQuestionIdx={0}
+          /> */}
+        <main className='p-4 w-full'>
+          {loaded.runtime === 'static' ? (
+            <Quiz subSet={loaded.subSet} />
+          ) : (
+            <QuizClient
+              setKey={loaded.setKey}
+              subsetIndex={loaded.subsetIndex}
+            />
+          )}
+        </main>
+      </div>
+    </>
   );
 }
 

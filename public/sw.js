@@ -34,9 +34,9 @@ self.addEventListener('activate', (event) => {
         cacheNames
           .filter(
             (cacheName) =>
-              ((cacheName.startsWith(CACHE_PREFIX) &&
+              (cacheName.startsWith(CACHE_PREFIX) &&
                 cacheName !== manifest.cacheName) ||
-                cacheName.startsWith(LEGACY_CACHE_PREFIX))
+              cacheName.startsWith(LEGACY_CACHE_PREFIX)
           )
           .map((cacheName) => caches.delete(cacheName))
       );
@@ -57,6 +57,38 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      (async () => {
+        try {
+          return await fetch(event.request);
+        } catch {
+          const cachedResponse = await caches.match(event.request);
+
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+
+          const offlineResponse = await caches.match(OFFLINE_FALLBACK_URL);
+
+          if (offlineResponse) {
+            return offlineResponse;
+          }
+
+          return new Response('Offline resource unavailable.', {
+            status: 503,
+            statusText: 'Offline',
+            headers: {
+              'Content-Type': 'text/plain; charset=utf-8',
+            },
+          });
+        }
+      })()
+    );
+
+    return;
+  }
+
   event.respondWith(
     (async () => {
       const cachedResponse = await caches.match(event.request);
@@ -67,7 +99,7 @@ self.addEventListener('fetch', (event) => {
 
       try {
         return await fetch(event.request);
-      } catch (error) {
+      } catch {
         if (event.request.mode === 'navigate') {
           const offlineResponse = await caches.match(OFFLINE_FALLBACK_URL);
 

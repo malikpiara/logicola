@@ -9,9 +9,22 @@ export default function RegisterSW() {
     }
 
     if (process.env.NODE_ENV !== 'production') {
+      const reloadKey = 'logicola-sw-dev-reloaded';
+
       navigator.serviceWorker.getRegistrations().then((registrations) => {
-        registrations.forEach((registration) => {
-          void registration.unregister();
+        Promise.all(
+          registrations.map((registration) => registration.unregister())
+        ).then(() => {
+          if (navigator.serviceWorker.controller) {
+            if (sessionStorage.getItem(reloadKey) !== 'true') {
+              sessionStorage.setItem(reloadKey, 'true');
+              window.location.reload();
+            }
+
+            return;
+          }
+
+          sessionStorage.removeItem(reloadKey);
         });
       });
 
