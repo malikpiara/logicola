@@ -38,7 +38,7 @@ export function EmailForm() {
     <>
       {!formIsSubmitted ? (
         <form onSubmit={handleSubmit}>
-          <div className='items-center mx-auto mb-3 mt-8 space-y-4 max-w-screen-sm sm:flex sm:space-y-0 transition-all'>
+          <div className='motion-enter items-center mx-auto mb-3 mt-8 space-y-4 max-w-screen-sm sm:flex sm:space-y-0'>
             <div className='relative w-full'>
               <label
                 htmlFor='email'
@@ -58,7 +58,7 @@ export function EmailForm() {
                 </svg>
               </div>
               <input
-                className='block p-3 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primaryColor focus:border-primaryColor'
+                className='motion-colors block p-3 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primaryColor focus:border-primaryColor'
                 id='email'
                 placeholder={'Enter your email'}
                 type='email'
@@ -68,7 +68,7 @@ export function EmailForm() {
               />
             </div>
             <div className='sm:w-80 flex m-0'>
-              <button className='sm:ml-2 py-3 px-5 w-full text-sm font-semibold text-center text-white rounded-lg border cursor-pointer bg-primaryColor border-primaryColor hover:bg-primaryColor focus:ring-4 focus:ring-primaryColor'>
+              <button className='motion-button sm:ml-2 py-3 px-5 w-full text-sm font-semibold text-center text-white rounded-lg border cursor-pointer bg-primaryColor border-primaryColor hover:bg-primaryColor focus:ring-4 focus:ring-primaryColor'>
                 Send me updates
               </button>
               {/* <Button label='Send me updates' /> */}
@@ -88,7 +88,7 @@ export function EmailForm() {
 function successState() {
   return (
     <>
-      <div className='mx-auto mb-3 mt-8 space-y-4 max-w-screen-sm sm:flex sm:space-y-0 text-gray-900 font-normal text-xl'>
+      <div className='motion-enter mx-auto mb-3 mt-8 space-y-4 max-w-screen-sm sm:flex sm:space-y-0 text-gray-900 font-normal text-xl'>
         Success! Thank you for subscribing! 🎉
       </div>
     </>

@@ -2,15 +2,15 @@ import Image from 'next/image';
 import mascotPic from '@/public/mascot.png';
 
 const header = {
-  title: 'LogiCola on every device',
+  title: 'Master Formal Logic',
   description:
-    'The new and improved version works without emulators or installation. Designed to help students learn logic.',
+    'Generate endless, error-free exercises with smart step-by-step hints. Works offline, directly in your browser.',
 };
 
 export function Header() {
   return (
     <>
-      <header className='bg-white animate-in'>
+      <header className='bg-white motion-enter'>
         <div className='py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-28'>
           <div className='flex sm:gap-10 flex-col sm:flex-row'>
             <div>
