@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`mulberry32 > first 5 values match a recorded golden (catches accidental algorithm changes) 1`] = `
+[
+  0.6011037519201636,
+  0.44829055899754167,
+  0.8524657934904099,
+  0.6697340414393693,
+  0.17481389874592423,
+]
+`;

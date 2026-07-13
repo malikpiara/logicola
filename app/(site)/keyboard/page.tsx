@@ -254,7 +254,7 @@ export default function LabelGeneratorPage() {
   const previewLines = input.split(/\r?\n/);
 
   return (
-    <div className='container mx-auto p-4'>
+    <div className='motion-enter container mx-auto p-4'>
       <h1 className='text-3xl font-bold mb-6 text-center font-stretch'>
         LaTeX Keyboard
       </h1>
@@ -323,7 +323,7 @@ export default function LabelGeneratorPage() {
           <CardContent>
             <div className='bg-gray-100 dark:bg-gray-800 p-4 rounded-md overflow-x-auto space-y-2'>
               {previewLines.map((line, idx) => (
-                <KatexSpan key={idx} text={`$${line}$`} />
+                <KatexSpan as='div' key={idx} text={`$${line}$`} />
               ))}
             </div>
           </CardContent>

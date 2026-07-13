@@ -8,10 +8,12 @@
 
 # testing
 /coverage
+/artifacts/visual/
 
 # next.js
 /.next/
 /out/
+/public/offline-manifest.json
 
 # production
 /build
@@ -35,4 +37,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-

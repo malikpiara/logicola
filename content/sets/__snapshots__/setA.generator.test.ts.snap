@@ -1,0 +1,664 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
+{
+  "header": "Translates into logic as:",
+  "id": 1,
+  "logicType": "Syllogistic",
+  "name": "Set A",
+  "slugs": [
+    "syllogistic",
+    "translations",
+  ],
+  "subSets": [
+    {
+      "header": "Translates into logic as:",
+      "id": 1,
+      "logicType": "Basic Translations",
+      "name": "Set A",
+      "questions": [
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.12.0",
+          "options": [
+            {
+              "id": 0,
+              "label": "all N is D",
+            },
+            {
+              "hint": "Use the first letters of “notorious” and “druggists”.",
+              "id": 1,
+              "label": "some N is D",
+            },
+            {
+              "hint": "Use the first letters of “notorious” and “druggists”.",
+              "id": 2,
+              "label": "all n is d",
+            },
+            {
+              "hint": "Use the first letters of “notorious” and “druggists”.",
+              "id": 3,
+              "label": "N is D",
+            },
+          ],
+          "prompt": "All notorious people are druggists.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.0.1",
+          "options": [
+            {
+              "id": 0,
+              "label": "D is T",
+            },
+            {
+              "hint": "Use the first letters of “Donna” and “tall”.
+“A tall person” could describe many persons, and so translates into a capital letter.",
+              "id": 1,
+              "label": "D is t",
+            },
+            {
+              "hint": "Use the first letters of “Donna” and “tall”.",
+              "id": 2,
+              "label": "d is T",
+            },
+            {
+              "hint": "Use the first letters of “Donna” and “tall”.
+“A tall person” could describe many persons, and so translates into a capital letter.",
+              "id": 3,
+              "label": "d is t",
+            },
+          ],
+          "prompt": "Donna is a tall person in London.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.11.2",
+          "options": [
+            {
+              "id": 0,
+              "label": "no D is C",
+            },
+            {
+              "hint": "Use the first letters of “dentist” and “careful”.",
+              "id": 1,
+              "label": "all D is not C",
+            },
+            {
+              "hint": "Use the first letters of “dentist” and “careful”.",
+              "id": 2,
+              "label": "D is not C",
+            },
+            {
+              "hint": "Use the first letters of “dentist” and “careful”.
+The term “poetic dentist” could describe many persons, and so translates into a capital letter.",
+              "id": 3,
+              "label": "d is not C",
+            },
+          ],
+          "prompt": "No poetic dentist is careful.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.12.3",
+          "options": [
+            {
+              "id": 0,
+              "label": "all R is P",
+            },
+            {
+              "hint": "Use the first letters of “remarkable” and “professors”.",
+              "id": 1,
+              "label": "some R is P",
+            },
+            {
+              "hint": "Use the first letters of “remarkable” and “professors”.",
+              "id": 2,
+              "label": "all r is p",
+            },
+            {
+              "hint": "Use the first letters of “remarkable” and “professors”.",
+              "id": 3,
+              "label": "R is P",
+            },
+          ],
+          "prompt": "All remarkable people are professors.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.5.4",
+          "options": [
+            {
+              "id": 0,
+              "label": "p is not f",
+            },
+            {
+              "hint": "Use the first letters of “pessimist” and “fortunate”.
+“The most fortunate person” stands for a single person, and so translates into a small letter.",
+              "id": 1,
+              "label": "p is not F",
+            },
+            {
+              "hint": "Use the first letters of “pessimist” and “fortunate”.",
+              "id": 2,
+              "label": "P is not f",
+            },
+            {
+              "hint": "Use the first letters of “pessimist” and “fortunate”.
+“The most fortunate person” stands for a single person, and so translates into a small letter.",
+              "id": 3,
+              "label": "P is not F",
+            },
+          ],
+          "prompt": "This pessimist isn't the most fortunate person.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.12.5",
+          "options": [
+            {
+              "id": 0,
+              "label": "some C is D",
+            },
+            {
+              "hint": "Use the first letters of “clean” and “diabetics”.",
+              "id": 1,
+              "label": "all C is D",
+            },
+            {
+              "hint": "Use the first letters of “clean” and “diabetics”.",
+              "id": 2,
+              "label": "some c is d",
+            },
+            {
+              "hint": "Use the first letters of “clean” and “diabetics”.",
+              "id": 3,
+              "label": "C is D",
+            },
+          ],
+          "prompt": "Some clean people are diabetics.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.5.6",
+          "options": [
+            {
+              "id": 0,
+              "label": "p is not b",
+            },
+            {
+              "hint": "Use the first letters of “prisoner” and “boastful”.
+“The most boastful person” stands for a single person, and so translates into a small letter.",
+              "id": 1,
+              "label": "p is not B",
+            },
+            {
+              "hint": "Use the first letters of “prisoner” and “boastful”.",
+              "id": 2,
+              "label": "P is not b",
+            },
+            {
+              "hint": "Use the first letters of “prisoner” and “boastful”.
+“The most boastful person” stands for a single person, and so translates into a small letter.",
+              "id": 3,
+              "label": "P is not B",
+            },
+          ],
+          "prompt": "This prisoner isn't the most boastful person.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.10.7",
+          "options": [
+            {
+              "id": 0,
+              "label": "some N is G",
+            },
+            {
+              "hint": "Use the first letters of “novelists” and “greedy”.",
+              "id": 1,
+              "label": "N is G",
+            },
+            {
+              "hint": "Use the first letters of “novelists” and “greedy”.",
+              "id": 2,
+              "label": "some n is g",
+            },
+            {
+              "hint": "Use the first letters of “novelists” and “greedy”.
+Why did you switch the letters around?",
+              "id": 3,
+              "label": "some G is N",
+            },
+          ],
+          "prompt": "Some virtuous novelists are greedy.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.4.8",
+          "options": [
+            {
+              "id": 0,
+              "label": "j is not S",
+            },
+            {
+              "hint": "Use the first letters of “judge” and “sociable”.
+“A sociable person” could describe many persons, and so translates into a capital letter.",
+              "id": 1,
+              "label": "j is not s",
+            },
+            {
+              "hint": "Use the first letters of “judge” and “sociable”.",
+              "id": 2,
+              "label": "J is not S",
+            },
+            {
+              "hint": "Use the first letters of “judge” and “sociable”.
+“A sociable person” could describe many persons, and so translates into a capital letter.",
+              "id": 3,
+              "label": "J is not s",
+            },
+          ],
+          "prompt": "This judge isn't a sociable person.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.0.9",
+          "options": [
+            {
+              "id": 0,
+              "label": "K is L",
+            },
+            {
+              "hint": "Use the first letters of “Keith” and “logical”.
+“A logical person” could describe many persons, and so translates into a capital letter.",
+              "id": 1,
+              "label": "K is l",
+            },
+            {
+              "hint": "Use the first letters of “Keith” and “logical”.",
+              "id": 2,
+              "label": "k is L",
+            },
+            {
+              "hint": "Use the first letters of “Keith” and “logical”.
+“A logical person” could describe many persons, and so translates into a capital letter.",
+              "id": 3,
+              "label": "k is l",
+            },
+          ],
+          "prompt": "Keith is a logical person in Hamburg.",
+        },
+      ],
+      "shuffleOptions": true,
+      "slugs": [
+        "syllogistic",
+        "translations",
+        "basic",
+      ],
+      "title": "Syllogistic Translations: Easy",
+    },
+    {
+      "header": "Translates into logic as:",
+      "id": 1,
+      "logicType": "Syllogistic",
+      "name": "Set A",
+      "questions": [
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.21.0",
+          "options": [
+            {
+              "id": 0,
+              "label": "some S is M",
+            },
+            {
+              "hint": "Use the first letters of “soldiers” and “mean”.
+Why did you switch the letters around?",
+              "id": 1,
+              "label": "M is S",
+            },
+            {
+              "hint": "Use the first letters of “soldiers” and “mean”.",
+              "id": 2,
+              "label": "S is M",
+            },
+            {
+              "hint": "Use the first letters of “soldiers” and “mean”.
+Why did you put in the ‘not’?",
+              "id": 3,
+              "label": "some S is not M",
+            },
+          ],
+          "prompt": "One or more soldiers are mean.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.20.1",
+          "options": [
+            {
+              "id": 0,
+              "label": "no L is C",
+            },
+            {
+              "hint": "Use the first letters of “logicians” and “cowardly”.
+Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
+              "id": 1,
+              "label": "all L is not C",
+            },
+            {
+              "hint": "Use the first letters of “logicians” and “cowardly”.
+Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
+              "id": 2,
+              "label": "L is not C",
+            },
+            {
+              "hint": "Use the first letters of “logicians” and “cowardly”.
+Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
+              "id": 3,
+              "label": "some L is not C",
+            },
+          ],
+          "prompt": "People who are logicians aren't cowardly.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.17.2",
+          "options": [
+            {
+              "id": 0,
+              "label": "no F is C",
+            },
+            {
+              "hint": "Use the first letters of “fugitives” and “confused”.
+‘Not some’ means ‘none.’",
+              "id": 1,
+              "label": "all F is C",
+            },
+            {
+              "hint": "Use the first letters of “fugitives” and “confused”.",
+              "id": 2,
+              "label": "F is not C",
+            },
+            {
+              "hint": "Use the first letters of “fugitives” and “confused”.
+‘Not some’ means ‘none.’",
+              "id": 3,
+              "label": "some F is not C",
+            },
+          ],
+          "prompt": "It isn't true that some fugitives are confused.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.20.3",
+          "options": [
+            {
+              "id": 0,
+              "label": "no D is S",
+            },
+            {
+              "hint": "Use the first letters of “druggists” and “slow”.
+Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
+              "id": 1,
+              "label": "all D is not S",
+            },
+            {
+              "hint": "Use the first letters of “druggists” and “slow”.
+Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
+              "id": 2,
+              "label": "D is not S",
+            },
+            {
+              "hint": "Use the first letters of “druggists” and “slow”.
+Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
+              "id": 3,
+              "label": "some D is not S",
+            },
+          ],
+          "prompt": "People who are druggists aren't slow.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.22.4",
+          "options": [
+            {
+              "id": 0,
+              "label": "all C is L",
+            },
+            {
+              "hint": "Use the first letters of “Canadians” and “logical”.
+‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "id": 1,
+              "label": "not some C is L",
+            },
+            {
+              "hint": "Use the first letters of “Canadians” and “logical”.
+‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "id": 2,
+              "label": "some C is L",
+            },
+            {
+              "hint": "Use the first letters of “Canadians” and “logical”.
+‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "id": 3,
+              "label": "C is L",
+            },
+          ],
+          "prompt": "It is false that some Canadians aren't logical.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.1.5",
+          "options": [
+            {
+              "id": 0,
+              "label": "G is h",
+            },
+            {
+              "hint": "Use the first letters of “George” and “hideous”.
+“The most hideous one” stands for a single person, and so translates into a small letter.",
+              "id": 1,
+              "label": "G is H",
+            },
+            {
+              "hint": "Use the first letters of “George” and “hideous”.",
+              "id": 2,
+              "label": "g is h",
+            },
+            {
+              "hint": "Use the first letters of “George” and “hideous”.
+“The most hideous one” stands for a single person, and so translates into a small letter.",
+              "id": 3,
+              "label": "g is H",
+            },
+          ],
+          "prompt": "George is the most hideous one in Hamburg.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.17.6",
+          "options": [
+            {
+              "id": 0,
+              "label": "no C is F",
+            },
+            {
+              "hint": "Use the first letters of “customers” and “frivolous”.
+‘Not some’ means ‘none.’",
+              "id": 1,
+              "label": "all C is F",
+            },
+            {
+              "hint": "Use the first letters of “customers” and “frivolous”.",
+              "id": 2,
+              "label": "C is not F",
+            },
+            {
+              "hint": "Use the first letters of “customers” and “frivolous”.
+‘Not some’ means ‘none.’",
+              "id": 3,
+              "label": "some C is not F",
+            },
+          ],
+          "prompt": "It isn't true that some customers are frivolous.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.22.7",
+          "options": [
+            {
+              "id": 0,
+              "label": "all C is G",
+            },
+            {
+              "hint": "Use the first letters of “carpenters” and “generous”.
+‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "id": 1,
+              "label": "not some C is G",
+            },
+            {
+              "hint": "Use the first letters of “carpenters” and “generous”.
+‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "id": 2,
+              "label": "some C is G",
+            },
+            {
+              "hint": "Use the first letters of “carpenters” and “generous”.
+‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "id": 3,
+              "label": "C is G",
+            },
+          ],
+          "prompt": "It is false that some carpenters aren't generous.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.22.8",
+          "options": [
+            {
+              "id": 0,
+              "label": "all P is V",
+            },
+            {
+              "hint": "Use the first letters of “plumbers” and “virtuous”.
+‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "id": 1,
+              "label": "not some P is V",
+            },
+            {
+              "hint": "Use the first letters of “plumbers” and “virtuous”.
+‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "id": 2,
+              "label": "some P is V",
+            },
+            {
+              "hint": "Use the first letters of “plumbers” and “virtuous”.
+‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "id": 3,
+              "label": "P is V",
+            },
+          ],
+          "prompt": "It is false that some plumbers aren't virtuous.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.16.9",
+          "options": [
+            {
+              "id": 0,
+              "label": "some L is not C",
+            },
+            {
+              "hint": "Use the first letters of “librarians” and “careful”.
+You forgot the ‘not.’",
+              "id": 1,
+              "label": "some L is C",
+            },
+            {
+              "hint": "Use the first letters of “librarians” and “careful”.",
+              "id": 2,
+              "label": "L is not C",
+            },
+            {
+              "hint": "Use the first letters of “librarians” and “careful”.
+People often get this one wrong.",
+              "id": 3,
+              "label": "all L is not C",
+            },
+          ],
+          "prompt": "Not all librarians are careful.",
+        },
+      ],
+      "shuffleOptions": true,
+      "slugs": [
+        "syllogistic",
+        "translations",
+        "hard",
+      ],
+      "title": "Syllogistic Translations: Hard",
+    },
+  ],
+  "title": "Syllogistic Translations: Easy",
+}
+`;

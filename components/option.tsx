@@ -6,7 +6,7 @@ export interface OptionProps {
   ref?: React.Ref<HTMLButtonElement>;
   index?: number;
   showIndex?: boolean;
-  label: string | JSX.Element; // Allow label to be string or JSX
+  label: React.ReactNode; // Allow label to be string or rendered content
   isSelected: boolean;
   isCorrect: boolean;
   showSolution: boolean;
@@ -29,10 +29,9 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
     ref
   ) => {
     const optionClasses = classNames(
-      'w-full ps-4 text-gray-900 flex items-center border rounded-lg focus:outline-primary transition-colors duration-300',
+      'motion-option w-full cursor-pointer ps-4 pe-4 text-left text-base leading-6 text-gray-900 flex items-start border rounded-lg focus:outline-primary',
       {
         'border-gray-200': !isSelected && !showSolution,
-        'cursor-not-allowed': showSolution,
         'bg-[#1ad85f]': showSolution && isCorrect,
         'border-rose-200 text-red-500':
           (showSolution && !isCorrect) || hasBeenIncorrectlyGuessed,
@@ -43,19 +42,26 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
     );
 
     return (
-      <button ref={ref} onClick={onClick} className={optionClasses}>
-        <div className='flex items-center align-middle gap-3'>
+      <button
+        type='button'
+        ref={ref}
+        onClick={onClick}
+        className={optionClasses}
+        aria-pressed={isSelected}
+        data-solution={showSolution ? 'shown' : 'hidden'}
+      >
+        <div className='flex items-start gap-3'>
           {showIndex && (
             <div
               className={classNames(
-                'rounded-full border-2 flex wrap w-8 h-8 items-center align-middle self-center',
+                'rounded-full border-2 flex w-8 h-8 shrink-0 items-center self-start justify-center mt-3.5 tabular-nums',
                 showSolution && isCorrect && 'border-gray-700',
                 showSolution && !isCorrect && 'border-red-500'
               )}
             >
               <div
                 className={classNames(
-                  'items-center self-center font-medium w-full text-gray-900',
+                  'font-medium leading-none text-center text-gray-900',
                   showSolution && !isCorrect && 'text-red-500'
                 )}
               >

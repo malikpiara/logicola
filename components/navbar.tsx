@@ -1,9 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import * as sets from '@/content/sets';
-import type { Set } from '@/content/types';
-import { getAllSubSets } from '@/utils/getAllSubsets';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,18 +10,15 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 import NavTopic from './navTopic';
+import { quizCatalog } from '@/lib/quizCatalog';
 
 const Navbar = () => {
-  const allSets: Set[] = Object.values(sets);
-  const allSubSets = getAllSubSets(allSets);
-  const splitIndex = Math.ceil(allSubSets.length / 2);
+  const splitIndex = Math.ceil(quizCatalog.length / 2);
 
   return (
     <nav className='bg-white border-gray-200 hidden md:block'>
       <div className='mx-auto max-w-screen-xl p-4'>
-        {/* Create a 3-column grid */}
         <div className='grid grid-cols-3 items-center'>
-          {/* Left Column: Exercises */}
           <div>
             <NavigationMenu>
               <NavigationMenuList>
@@ -36,12 +30,12 @@ const Navbar = () => {
                     <div className='grid gap-3 p-4 md:grid-cols-2'>
                       <div>
                         <ul className='grid gap-3 p-4'>
-                          {allSubSets.slice(0, splitIndex).map((item) => (
+                          {quizCatalog.slice(0, splitIndex).map((item) => (
                             <NavTopic
-                              key={item.id}
-                              chapter={item.name}
+                              key={item.quizPath}
+                              chapter={item.chapter}
                               title={item.title}
-                              path={`/${item.slugs.join('/')}/quiz`}
+                              path={item.quizPath}
                               newLabel={item.isNew}
                             />
                           ))}
@@ -49,12 +43,12 @@ const Navbar = () => {
                       </div>
                       <div>
                         <ul className='grid gap-3 p-4'>
-                          {allSubSets.slice(splitIndex).map((item) => (
+                          {quizCatalog.slice(splitIndex).map((item) => (
                             <NavTopic
-                              key={item.id}
-                              chapter={item.name}
+                              key={item.quizPath}
+                              chapter={item.chapter}
                               title={item.title}
-                              path={`/${item.slugs.join('/')}/quiz`}
+                              path={item.quizPath}
                               newLabel={item.isNew}
                             />
                           ))}
@@ -67,7 +61,6 @@ const Navbar = () => {
             </NavigationMenu>
           </div>
 
-          {/* Center Column: Logo */}
           <div className='justify-self-center'>
             <Link
               href='/'
@@ -79,20 +72,18 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Right Column: Donate */}
           <div className='justify-self-end'>
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <Link
-                    href='https://github.com/sponsors/malikpiara'
-                    legacyBehavior
-                    passHref
-                  >
-                    <NavigationMenuLink className='text-gray-500 hover:bg-gray-200 hover:text-primaryColor block py-2 px-3 rounded md:hover:text-primaryColor font-mono font-semibold'>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href='https://github.com/sponsors/malikpiara'
+                      className='motion-button text-gray-500 hover:bg-gray-200 hover:text-primaryColor block py-2 px-3 rounded md:hover:text-primaryColor font-mono font-semibold'
+                    >
                       Donate
-                    </NavigationMenuLink>
-                  </Link>
+                    </Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>

@@ -1,5 +1,3 @@
-'use client';
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
@@ -84,7 +82,7 @@ const logicSections = [
 
 export default function LogicDashboard() {
   return (
-    <div className='p-6 min-h-screen'>
+    <div className='motion-enter p-6 min-h-screen'>
       <div className='max-w-7xl mx-auto'>
         <h1 className='text-3xl font-bold text-green-900 mb-6'>
           Migraton to Logicola 3
@@ -92,10 +90,7 @@ export default function LogicDashboard() {
 
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {logicSections.map((section) => (
-            <Card
-              key={section.title}
-              className='hover:shadow-lg transition-shadow'
-            >
+            <Card key={section.title} className='hover:shadow-lg'>
               <CardHeader className='pb-2'>
                 <div className='flex items-center justify-between mb-2'>
                   <CardTitle className='text-xl text-green-800 flex items-center gap-2'>

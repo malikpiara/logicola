@@ -1,65 +1,121 @@
-const CACHE_NAME = 'logicola-cache-v1';
-const urlsToCache = [
-  '/',
-  '/manifest.json',
-  '/icon.svg',
-  // Add other static assets like
-  '/globals.css',
-  // Add any other pages/routes you want to cache
-  'syllogistic/translations/basic/quiz',
-  'syllogistic/translations/hard/quiz',
-  'syllogistic',
+const CACHE_PREFIX = 'logicola-offline-';
+const LEGACY_CACHE_PREFIX = 'logicola-cache-';
+const OFFLINE_FALLBACK_URL = '/offline';
 
-  'propositional/translations/quiz',
-  'propositional/translations/hard/quiz',
-  'modal/translations/basic/quiz',
-  'modal/translations/quantified/quiz',
+async function getOfflineManifest() {
+  const response = await fetch('/offline-manifest.json', { cache: 'no-store' });
 
-  'Deontic/translations/Imperative/quiz',
-  'Deontic/translations/Deontic/quiz',
-  'belief/translations/basic/quiz',
-  'belief/translations/willing/quiz',
-  'belief/translations/rationality/quiz',
-  
-  'informal/definitions/quiz',
-  'propositional/translations/quiz',
-  'keyboard',
+  if (!response.ok) {
+    throw new Error(`Failed to load offline manifest: ${response.status}`);
+  }
 
-  '/syllogistic/translations/basic/quiz',
-  '/syllogistic/translations/hard/quiz',
-  '/syllogistic',
-
-  '/propositional/translations/quiz',
-  '/propositional/translations/hard/quiz',
-  '/modal/translations/basic/quiz',
-  '/modal/translations/quantified/quiz',
-
-  '/Deontic/translations/Imperative/quiz',
-  '/Deontic/translations/Deontic/quiz',
-  '/belief/translations/basic/quiz',
-  '/belief/translations/willing/quiz',
-  '/belief/translations/rationality/quiz',
-  
-  '/informal/definitions/quiz',
-  '/propositional/translations/quiz',
-  '/keyboard'
-];
+  return response.json();
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(urlsToCache);
-      })
+    (async () => {
+      const manifest = await getOfflineManifest();
+      const cache = await caches.open(manifest.cacheName);
+
+      await cache.addAll(manifest.urls);
+      await self.skipWaiting();
+    })()
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    (async () => {
+      const manifest = await getOfflineManifest();
+      const cacheNames = await caches.keys();
+
+      await Promise.all(
+        cacheNames
+          .filter(
+            (cacheName) =>
+              (cacheName.startsWith(CACHE_PREFIX) &&
+                cacheName !== manifest.cacheName) ||
+              cacheName.startsWith(LEGACY_CACHE_PREFIX)
+          )
+          .map((cacheName) => caches.delete(cacheName))
+      );
+
+      await self.clients.claim();
+    })()
   );
 });
 
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
+  const url = new URL(event.request.url);
+
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      (async () => {
+        try {
+          return await fetch(event.request);
+        } catch {
+          const cachedResponse = await caches.match(event.request);
+
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+
+          const offlineResponse = await caches.match(OFFLINE_FALLBACK_URL);
+
+          if (offlineResponse) {
+            return offlineResponse;
+          }
+
+          return new Response('Offline resource unavailable.', {
+            status: 503,
+            statusText: 'Offline',
+            headers: {
+              'Content-Type': 'text/plain; charset=utf-8',
+            },
+          });
+        }
+      })()
+    );
+
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
-      })
+    (async () => {
+      const cachedResponse = await caches.match(event.request);
+
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      try {
+        return await fetch(event.request);
+      } catch {
+        if (event.request.mode === 'navigate') {
+          const offlineResponse = await caches.match(OFFLINE_FALLBACK_URL);
+
+          if (offlineResponse) {
+            return offlineResponse;
+          }
+        }
+
+        return new Response('Offline resource unavailable.', {
+          status: 503,
+          statusText: 'Offline',
+          headers: {
+            'Content-Type': 'text/plain; charset=utf-8',
+          },
+        });
+      }
+    })()
   );
 });
