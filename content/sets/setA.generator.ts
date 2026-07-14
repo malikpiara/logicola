@@ -2,23 +2,30 @@
  * Set A — Syllogistic Translations: live-random generator.
  *
  * Phase 1 / T1.5. Ports Gensler's 2008 LCEXE Set A as a procedural
- * drill engine. Coverage: all 23 templates plus the two layers of
- * 2008 hints (per-template `m:` letter-pair hint, plus per-mistake
- * `*e`-block explanations) attached to wrong options via
+ * drill engine. Coverage: all 23 templates plus the per-mistake
+ * `*e`-block explanations from 2008, attached to wrong options via
  * `Option.hint`. The runtime renders the hint in red below the
  * answer reveal at `components/quiz/index.tsx:142`.
  *
- * Letter convention (cross-checked against 2008 source original program bindings
- * and existing LC3 hand-authored questions):
+ * The 2008 per-template `m:` letter-pair line ("the first letters
+ * in 'Sally' and 'humorous'") is NOT a wrong-answer hint — in the
+ * original it's instruction text for type-the-answer mode
+ * ("Symbolize using $m"), a mode LC3 hasn't built yet. Source:
+ * the original program for Set A.
  *
- *   Lowercase letter — single specific referent
+ * Letter convention (Gensler §2.1; verified against the original program
+ * letter-binding block — dKJJ = lowercase name, dRJ = uppercase —
+ * see the Set A fidelity audit):
+ *
+ *   Lowercase letter — singular term (picks out one individual)
+ *     proper names (Sally → s; "G is C" is Gensler's canonical
+ *       non-wff)
  *     "you" / "I" (pronouns)
  *     "the [SUPERLATIVE] X" (definite description picking out a
  *     unique individual)
  *     "this X" (demonstrative)
  *
- *   Uppercase letter — class
- *     proper names treated as class-of-one (Sally → S)
+ *   Uppercase letter — general term (class)
  *     "a [ADJ] X" (indefinite, referring to the class)
  *     "$ADJ people" (subject class defined by adjective)
  *     plural noun phrases ("biologists" → B)
@@ -135,34 +142,26 @@ function superlative(adj: string): string {
   return `most ${adj}`;
 }
 
-/**
- * Combine the per-template Layer-1 hint (always shown on any wrong
- * answer) with an optional per-option Layer-2 explanation.
- */
-function hintLine(layer1: string, layer2?: string): string {
-  return layer2 ? `${layer1}\n${layer2}` : layer1;
-}
-
 /** Spec for one option being assembled. */
 interface OptionSpec {
   label: string;
-  /** Optional Layer-2 explanation; concatenated with Layer-1 on wrong options. */
+  /** Optional per-mistake explanation (2008 `*e` block), shown on wrong options. */
   layer2?: string;
 }
 
 /**
  * Assemble Option[] + correctId from per-option specs. The correct
- * option carries no hint; every wrong option carries Layer-1 (and
- * Layer-2 if specified for that option).
+ * option carries no hint; a wrong option carries its per-mistake
+ * explanation if one is specified.
  */
 function buildOptions(
   specs: readonly OptionSpec[],
-  correctIdx: number,
-  layer1: string
+  correctIdx: number
 ): { options: Option[]; correctId: number[] } {
   const options: Option[] = specs.map((s, i) => {
-    if (i === correctIdx) return { id: i, label: s.label };
-    return { id: i, label: s.label, hint: hintLine(layer1, s.layer2) };
+    if (i === correctIdx || s.layer2 === undefined)
+      return { id: i, label: s.label };
+    return { id: i, label: s.label, hint: s.layer2 };
   });
   return { options, correctId: [correctIdx] };
 }
@@ -193,10 +192,11 @@ function pickDifferentLetter<T extends string>(
 /**
  * *0 — "$J is a $C person in $p"
  *
- *   "Adriano is a boastful person in Barcelona." → A is B
+ *   "Sally is a humorous person in Paris." → s is H
  *
- * Subject: proper name → CAPITAL (class-of-one).
- * Predicate: "a $C person" → CAPITAL (class).
+ * Subject: proper name (singular term) → lowercase.
+ * Predicate: "a $C person in $p" → CAPITAL (class).
+ * 2008 correct option is `$K is $k` = lower(name) is upper(adj).
  */
 function template0(rng: Rng, counter: number): Question {
   const name = pickFrom(rng, names);
@@ -206,21 +206,22 @@ function template0(rng: Rng, counter: number): Question {
   const j = name[0]!.toLowerCase();
   const C = adj[0]!.toUpperCase();
   const c = adj[0]!.toLowerCase();
-  const layer1 = `Use the first letters of “${name}” and “${adj}”.`;
-  const classTerm = `A ${adj} person`;
+  const classTerm = `A ${adj} person in ${place}`;
 
   return {
     id: qid('0', counter),
     prompt: `${name} is a ${adj} person in ${place}.`,
     ...buildOptions(
       [
-        { label: `${J} is ${C}` },
-        { label: `${J} is ${c}`, layer2: classHint(classTerm) },
         { label: `${j} is ${C}` },
         { label: `${j} is ${c}`, layer2: classHint(classTerm) },
+        { label: `${J} is ${C}`, layer2: individualHint(name) },
+        {
+          label: `${J} is ${c}`,
+          layer2: `${individualHint(name)}\n${classHint(classTerm)}`,
+        },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -241,7 +242,6 @@ function template2(rng: Rng, counter: number): Question {
   const place = pickFrom(rng, places);
   const A = noun[0]!.toUpperCase();
   const a = noun[0]!.toLowerCase();
-  const layer1 = `Use the first letters of “I” and “${noun}”.`;
   const classTerm = `A ${adjB} ${noun}`;
 
   return {
@@ -254,8 +254,7 @@ function template2(rng: Rng, counter: number): Question {
         { label: `I is ${A}` },
         { label: `I is ${a}`, layer2: classHint(classTerm) },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -277,7 +276,6 @@ function template3(rng: Rng, counter: number): Question {
   const A = noun[0]!.toUpperCase();
   const a = noun[0]!.toLowerCase();
   const sup = superlative(adj);
-  const layer1 = `Use the first letters of “I” and “${noun}”.`;
   const indTerm = `The ${sup} ${noun}`;
 
   return {
@@ -290,8 +288,7 @@ function template3(rng: Rng, counter: number): Question {
         { label: `I is ${a}` },
         { label: `I is ${A}`, layer2: individualHint(indTerm) },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -313,7 +310,6 @@ function template4(rng: Rng, counter: number): Question {
   const a = noun[0]!.toLowerCase();
   const C = adj[0]!.toUpperCase();
   const c = adj[0]!.toLowerCase();
-  const layer1 = `Use the first letters of “${noun}” and “${adj}”.`;
   const classTerm = `A ${adj} person`;
 
   return {
@@ -326,8 +322,7 @@ function template4(rng: Rng, counter: number): Question {
         { label: `${A} is not ${C}` },
         { label: `${A} is not ${c}`, layer2: classHint(classTerm) },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -349,7 +344,6 @@ function template5(rng: Rng, counter: number): Question {
   const a = noun[0]!.toLowerCase();
   const C = adj[0]!.toUpperCase();
   const c = adj[0]!.toLowerCase();
-  const layer1 = `Use the first letters of “${noun}” and “${adj}”.`;
   const indTerm = `The most ${adj} person`;
 
   return {
@@ -362,8 +356,7 @@ function template5(rng: Rng, counter: number): Question {
         { label: `${A} is not ${c}` },
         { label: `${A} is not ${C}`, layer2: individualHint(indTerm) },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -382,7 +375,6 @@ function template6(rng: Rng, counter: number): Question {
   const adjB = pickFrom(rng, adjectives);
   const A = noun[0]!.toUpperCase();
   const a = noun[0]!.toLowerCase();
-  const layer1 = `Use “u” and the first letter of “${noun}”.`;
   const classTerm = `A ${adjB} ${noun}`;
 
   return {
@@ -395,8 +387,7 @@ function template6(rng: Rng, counter: number): Question {
         { label: `U is not ${A}` },
         { label: `U is not ${a}`, layer2: classHint(classTerm) },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -416,7 +407,6 @@ function template7(rng: Rng, counter: number): Question {
   const A = noun[0]!.toUpperCase();
   const a = noun[0]!.toLowerCase();
   const sup = superlative(adj);
-  const layer1 = `Use “u” and the first letter of “${noun}”.`;
   const indTerm = `The ${sup} ${noun}`;
 
   return {
@@ -429,8 +419,7 @@ function template7(rng: Rng, counter: number): Question {
         { label: `U is not ${a}` },
         { label: `U is not ${A}`, layer2: individualHint(indTerm) },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -454,7 +443,6 @@ function template8(rng: Rng, counter: number): Question {
   const A = noun[0]!.toUpperCase();
   const a = noun[0]!.toLowerCase();
   const D = verb[0]!.toUpperCase();
-  const layer1 = `Use the first letters of “${noun}” and “${verb}”.`;
 
   return {
     id: qid('8', counter),
@@ -466,8 +454,7 @@ function template8(rng: Rng, counter: number): Question {
         { label: `all ${a} is ${D}` },
         { label: `${A} is ${D}` },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -486,7 +473,6 @@ function template9(rng: Rng, counter: number): Question {
   const A = noun[0]!.toUpperCase();
   const a = noun[0]!.toLowerCase();
   const D = verb[0]!.toUpperCase();
-  const layer1 = `Use the first letters of “${pluralize(noun)}” and “${verb}”.`;
 
   return {
     id: qid('9', counter),
@@ -498,8 +484,7 @@ function template9(rng: Rng, counter: number): Question {
         { label: `${A} is not ${D}` },
         { label: `some ${a} is not ${D}` },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -522,7 +507,6 @@ function template10(rng: Rng, counter: number): Question {
   const a = noun[0]!.toLowerCase();
   const C = adjPred[0]!.toUpperCase();
   const c = adjPred[0]!.toLowerCase();
-  const layer1 = `Use the first letters of “${pluralize(noun)}” and “${adjPred}”.`;
 
   return {
     id: qid('10', counter),
@@ -534,8 +518,7 @@ function template10(rng: Rng, counter: number): Question {
         { label: `some ${a} is ${c}` },
         { label: `some ${C} is ${A}`, layer2: HINT_SWITCHED },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -556,7 +539,6 @@ function template11(rng: Rng, counter: number): Question {
   const A = noun[0]!.toUpperCase();
   const a = noun[0]!.toLowerCase();
   const C = adjPred[0]!.toUpperCase();
-  const layer1 = `Use the first letters of “${noun}” and “${adjPred}”.`;
   const subjectTermHint = `The term “${adjSubj} ${noun}” could describe many persons, and so translates into a capital letter.`;
 
   return {
@@ -569,8 +551,7 @@ function template11(rng: Rng, counter: number): Question {
         { label: `${A} is not ${C}` },
         { label: `${a} is not ${C}`, layer2: subjectTermHint },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -596,7 +577,6 @@ function template12(rng: Rng, counter: number): Question {
   const Quant = isAll ? 'All' : 'Some';
   const quant = isAll ? 'all' : 'some';
   const otherQuant = isAll ? 'some' : 'all';
-  const layer1 = `Use the first letters of “${adjSubj}” and “${pluralize(noun)}”.`;
 
   return {
     id: qid('12', counter),
@@ -608,8 +588,7 @@ function template12(rng: Rng, counter: number): Question {
         { label: `${quant} ${c} is ${a}` },
         { label: `${C} is ${A}` },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -637,10 +616,11 @@ const easyTemplates = [
 /**
  * *1 — "$J is the $C one in $p"
  *
- *   "Harry is the smartest one in NYC." → H is s
+ *   "Harry is the smartest one in NYC." → h is s
  *
- * Subject: proper name → CAPITAL.
- * Predicate: "the $C one" (definite description) → lowercase.
+ * Subject: proper name (singular term) → lowercase.
+ * Predicate: "the $C one in $p" (definite description) → lowercase.
+ * 2008 correct option is `$K is $f` = lower(name) is lower(adj).
  */
 function template1(rng: Rng, counter: number): Question {
   const name = pickFrom(rng, names);
@@ -651,21 +631,22 @@ function template1(rng: Rng, counter: number): Question {
   const C = adj[0]!.toUpperCase();
   const c = adj[0]!.toLowerCase();
   const sup = superlative(adj);
-  const layer1 = `Use the first letters of “${name}” and “${adj}”.`;
-  const indTerm = `The ${sup} one`;
+  const indTerm = `The ${sup} one in ${place}`;
 
   return {
     id: qid('1', counter),
     prompt: `${name} is the ${sup} one in ${place}.`,
     ...buildOptions(
       [
-        { label: `${J} is ${c}` },
-        { label: `${J} is ${C}`, layer2: individualHint(indTerm) },
         { label: `${j} is ${c}` },
         { label: `${j} is ${C}`, layer2: individualHint(indTerm) },
+        { label: `${J} is ${c}`, layer2: individualHint(name) },
+        {
+          label: `${J} is ${C}`,
+          layer2: `${individualHint(name)}\n${individualHint(indTerm)}`,
+        },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -681,7 +662,6 @@ function template13(rng: Rng, counter: number): Question {
   const adjD = pickDifferentLetter(rng, adjectives, adjC);
   const C = adjC[0]!.toUpperCase();
   const D = adjD[0]!.toUpperCase();
-  const layer1 = `Use the first letters of “${adjC}” and “${adjD}”.`;
 
   return {
     id: qid('13', counter),
@@ -693,8 +673,7 @@ function template13(rng: Rng, counter: number): Question {
         { label: `${C} is ${D}` },
         { label: `${D} is ${C}`, layer2: HINT_13_ONLY },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -710,7 +689,6 @@ function template14(rng: Rng, counter: number): Question {
   const adjD = pickDifferentLetter(rng, adjectives, adjC);
   const C = adjC[0]!.toUpperCase();
   const D = adjD[0]!.toUpperCase();
-  const layer1 = `Use the first letters of “${adjC}” and “${adjD}”.`;
 
   return {
     id: qid('14', counter),
@@ -722,8 +700,7 @@ function template14(rng: Rng, counter: number): Question {
         { label: `${C} is not ${D}` },
         { label: `all ${D} is not ${C}`, layer2: HINT_13_ONLY },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -740,7 +717,6 @@ function template15(rng: Rng, counter: number): Question {
   const adjD = pickDifferentLetter(rng, adjectives, adjB);
   const B = adjB[0]!.toUpperCase();
   const D = adjD[0]!.toUpperCase();
-  const layer1 = `Use the first letters of “${adjB}” and “${adjD}”.`;
 
   return {
     id: qid('15', counter),
@@ -752,8 +728,7 @@ function template15(rng: Rng, counter: number): Question {
         { label: `no ${B} is ${D}`, layer2: HINT_15_ALL },
         { label: `${B} is not ${D}`, layer2: HINT_15_ALL },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -770,7 +745,6 @@ function template16(rng: Rng, counter: number): Question {
   const adj = pickDifferentLetter(rng, adjectives, noun);
   const A = noun[0]!.toUpperCase();
   const B = adj[0]!.toUpperCase();
-  const layer1 = `Use the first letters of “${pluralize(noun)}” and “${adj}”.`;
 
   return {
     id: qid('16', counter),
@@ -782,8 +756,7 @@ function template16(rng: Rng, counter: number): Question {
         { label: `${A} is not ${B}` },
         { label: `all ${A} is not ${B}`, layer2: HINT_16_COMMON_MISTAKE },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -800,7 +773,6 @@ function template17(rng: Rng, counter: number): Question {
   const adj = pickDifferentLetter(rng, adjectives, noun);
   const A = noun[0]!.toUpperCase();
   const B = adj[0]!.toUpperCase();
-  const layer1 = `Use the first letters of “${pluralize(noun)}” and “${adj}”.`;
 
   return {
     id: qid('17', counter),
@@ -812,8 +784,7 @@ function template17(rng: Rng, counter: number): Question {
         { label: `${A} is not ${B}` },
         { label: `some ${A} is not ${B}`, layer2: HINT_17_NOT_SOME },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -830,7 +801,6 @@ function template18(rng: Rng, counter: number): Question {
   const adjD = pickDifferentLetter(rng, adjectives, adjB);
   const B = adjB[0]!.toUpperCase();
   const D = adjD[0]!.toUpperCase();
-  const layer1 = `Use the first letters of “${adjB}” and “${adjD}”.`;
 
   return {
     id: qid('18', counter),
@@ -842,8 +812,7 @@ function template18(rng: Rng, counter: number): Question {
         { label: `no ${B} is ${D}`, layer2: HINT_15_ALL },
         { label: `${B} is not ${D}`, layer2: HINT_15_ALL },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -859,7 +828,6 @@ function template19(rng: Rng, counter: number): Question {
   const adj = pickDifferentLetter(rng, adjectives, noun);
   const A = noun[0]!.toUpperCase();
   const B = adj[0]!.toUpperCase();
-  const layer1 = `Use the first letters of “${pluralize(noun)}” and “${adj}”.`;
 
   return {
     id: qid('19', counter),
@@ -871,8 +839,7 @@ function template19(rng: Rng, counter: number): Question {
         { label: `${A} is ${B}`, layer2: HINT_19_AS_ARE_BS },
         { label: `some ${A} is ${B}`, layer2: HINT_19_AS_ARE_BS },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -888,7 +855,6 @@ function template20(rng: Rng, counter: number): Question {
   const adj = pickDifferentLetter(rng, adjectives, noun);
   const A = noun[0]!.toUpperCase();
   const B = adj[0]!.toUpperCase();
-  const layer1 = `Use the first letters of “${pluralize(noun)}” and “${adj}”.`;
 
   return {
     id: qid('20', counter),
@@ -900,8 +866,7 @@ function template20(rng: Rng, counter: number): Question {
         { label: `${A} is not ${B}`, layer2: HINT_20_AS_NOT_BS },
         { label: `some ${A} is not ${B}`, layer2: HINT_20_AS_NOT_BS },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -917,7 +882,6 @@ function template21(rng: Rng, counter: number): Question {
   const adj = pickDifferentLetter(rng, adjectives, noun);
   const A = noun[0]!.toUpperCase();
   const B = adj[0]!.toUpperCase();
-  const layer1 = `Use the first letters of “${pluralize(noun)}” and “${adj}”.`;
 
   return {
     id: qid('21', counter),
@@ -929,8 +893,7 @@ function template21(rng: Rng, counter: number): Question {
         { label: `${A} is ${B}` },
         { label: `some ${A} is not ${B}`, layer2: HINT_PUT_NOT },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };
@@ -947,7 +910,6 @@ function template22(rng: Rng, counter: number): Question {
   const adj = pickDifferentLetter(rng, adjectives, noun);
   const A = noun[0]!.toUpperCase();
   const C = adj[0]!.toUpperCase();
-  const layer1 = `Use the first letters of “${pluralize(noun)}” and “${adj}”.`;
 
   return {
     id: qid('22', counter),
@@ -959,8 +921,7 @@ function template22(rng: Rng, counter: number): Question {
         { label: `some ${A} is ${C}`, layer2: HINT_22_NOT_SINGLE },
         { label: `${A} is ${C}`, layer2: HINT_22_NOT_SINGLE },
       ],
-      0,
-      layer1
+      0
     ),
     answer: '',
   };

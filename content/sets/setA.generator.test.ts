@@ -120,6 +120,78 @@ describe('setA generator — property tests', () => {
   );
 });
 
+describe('setA generator — Gensler fidelity', () => {
+  const SWEEP_SEEDS = [1, 42, 99, 12345];
+
+  /** Gensler's eight wff forms (Introduction to Logic, 3rd ed., §2.1):
+   *  wffs beginning with a word use two capitals; wffs beginning with
+   *  a letter begin with a small letter. */
+  const WFF_FORMS = [
+    /^all [A-Z] is [A-Z]$/,
+    /^no [A-Z] is [A-Z]$/,
+    /^some [A-Z] is [A-Z]$/,
+    /^some [A-Z] is not [A-Z]$/,
+    /^[a-z] is [A-Za-z]$/,
+    /^[a-z] is not [A-Za-z]$/,
+  ];
+
+  const allQuestions = (seed: number) =>
+    generateSetA(seed, 50).subSets.flatMap((s) => s.questions);
+
+  it.each(SWEEP_SEEDS)(
+    'seed %i: every correct answer is one of the eight wff forms with correct case',
+    (seed) => {
+      for (const q of allQuestions(seed)) {
+        const correct = q.options.find((o) => q.correctId.includes(o.id))!;
+        expect(
+          WFF_FORMS.some((re) => re.test(correct.label)),
+          `"${correct.label}" (for "${q.prompt}") is not a wff`
+        ).toBe(true);
+      }
+    }
+  );
+
+  it.each(SWEEP_SEEDS)(
+    'seed %i: *0 proper name is lowercase, class predicate capital (s is H)',
+    (seed) => {
+      const qs = allQuestions(seed).filter((q) => q.id.startsWith('gen.A.0.'));
+      expect(qs.length).toBeGreaterThan(0);
+      for (const q of qs) {
+        const correct = q.options.find((o) => q.correctId.includes(o.id))!;
+        expect(correct.label).toMatch(/^[a-z] is [A-Z]$/);
+        // subject letter = lowercased first letter of the name in the prompt
+        expect(correct.label[0]).toBe(q.prompt[0]!.toLowerCase());
+      }
+    }
+  );
+
+  it.each(SWEEP_SEEDS)(
+    'seed %i: *1 name and definite description are both lowercase (h is s)',
+    (seed) => {
+      const qs = allQuestions(seed).filter((q) => q.id.startsWith('gen.A.1.'));
+      expect(qs.length).toBeGreaterThan(0);
+      for (const q of qs) {
+        const correct = q.options.find((o) => q.correctId.includes(o.id))!;
+        expect(correct.label).toMatch(/^[a-z] is [a-z]$/);
+        expect(correct.label[0]).toBe(q.prompt[0]!.toLowerCase());
+      }
+    }
+  );
+
+  it.each(SWEEP_SEEDS)(
+    'seed %i: no option hint carries the type-answer letter instruction',
+    (seed) => {
+      for (const q of allQuestions(seed)) {
+        for (const o of q.options) {
+          if (o.hint) {
+            expect(o.hint).not.toMatch(/first letter/i);
+          }
+        }
+      }
+    }
+  );
+});
+
 describe('setA generator — streaming iterators', () => {
   it('easyQuestions yields indefinitely (sanity-check first 100)', () => {
     const it = easyQuestions(TEST_SEED);
