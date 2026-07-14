@@ -638,7 +638,8 @@ function template6(rng: Rng, counter: number): Question {
       },
       {
         raw: `(∃x)(${E}{x} · ${F}{x})`,
-        layer2: '‘Everyone’ is the universal `(x)`, not the existential `(∃x)`.',
+        layer2:
+          '‘Everyone’ is the universal `(x)`, not the existential `(∃x)`.',
       },
       {
         raw: `(x)(${E}{x} ∨ ${F}{x})`,
