@@ -335,7 +335,7 @@ function template1(rng: Rng, counter: number): Question {
         layer2: HINT_FORGOT_UNDERLINE + ' (The consequent is the imperative.)',
       },
       {
-        raw: negate ? `∼(${E}u · ${F}{u})` : `(${E}u · ${F}{u})`,
+        raw: negate ? `(${E}u · ∼${F}{u})` : `(${E}u · ${F}{u})`,
         layer2: '‘If A then B’ is `(A ⊃ B)`, not `(A · B)`.',
       },
     ],
@@ -486,9 +486,10 @@ function template3(rng: Rng, counter: number): Question {
     [
       { raw: `(∼${E}{u} ∨ ∼${F}{u})` },
       {
-        raw: `∼(${E}{u} · ${F}{u})`,
+        raw: `(∼${E}u ∨ ∼${F}{u})`,
         layer2:
-          'By De Morgan, this is logically equivalent — but the canonical form for ‘either don’t A or don’t B’ keeps the ‘∨’ explicit.',
+          HINT_FORGOT_UNDERLINE +
+          ' Both parts are imperatives here — underline both u’s.',
       },
       { raw: `(∼${E}{u} · ∼${F}{u})`, layer2: '‘Or’ is ‘∨’, not ‘·’.' },
       {
@@ -636,13 +637,8 @@ function template6(rng: Rng, counter: number): Question {
         layer2: HINT_FORGOT_UNDERLINE + ' (Both predicates are imperative.)',
       },
       {
-        raw: `((x)${E}{x} · (x)${F}{x})`,
-        layer2:
-          'Logically equivalent but unnecessarily verbose — combine the quantifier scope: `(x)(' +
-          E +
-          '{x} · ' +
-          F +
-          '{x})`.',
+        raw: `(∃x)(${E}{x} · ${F}{x})`,
+        layer2: '‘Everyone’ is the universal `(x)`, not the existential `(∃x)`.',
       },
       {
         raw: `(x)(${E}{x} ∨ ${F}{x})`,
@@ -1069,11 +1065,11 @@ function template13(rng: Rng, counter: number): Question {
       { raw: `R${V}{u}`, layer2: HINT_R_VS_O + ' ‘Required’ is `O`, not `R`.' },
       { raw: `O${V}u`, layer2: HINT_O_ON_DESCRIPTIVE },
       {
-        raw: `∼R∼${V}{u}`,
+        raw: `R∼${V}{u}`,
         layer2:
-          'That’s logically equivalent to `O' +
+          '`R∼' +
           V +
-          '{u}` but a more verbose form. The canonical translation uses `O` directly.',
+          '{u}` says you’re *permitted to refrain*. ‘Required’ is `O` (obligated to do), not `R∼`.',
       },
     ],
     0,

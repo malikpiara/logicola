@@ -89,6 +89,8 @@ const HINT_COND_BELIEF =
   '‘If you believe A, then don’t believe B’ → `(u:A ⊃ ∼{u}:B)`. The antecedent is descriptive (you do believe), the consequent is imperative (don’t-believe-it!).';
 const HINT_DONT_COMBINE_BELIEF =
   '‘Don’t combine believing A with believing B’ → `∼({u}:A · {u}:B)`. Forbids the conjunction; both inner u’s are imperative.';
+const HINT_DONT_COMBINE_WILL =
+  '‘Don’t combine wanting yourself to do A with not doing A’ → `∼({u}:A{u} · ∼Au)`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.';
 const HINT_QUANT_BELIEVE =
   '‘Everyone believes that they ought to do A’ → `(x)x:OA{x}`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.';
 const HINT_WANT_SOMEONE =
@@ -568,7 +570,7 @@ function willingWantSomeone(rng: Rng, counter: number): Question {
       {
         raw: `u:${V}${n}u`,
         layer2:
-          HINT_FORGOT_UNDERLINE_U.replace('u', name + '’s letter ' + n) +
+          HINT_FORGOT_UNDERLINE_U.replace('the u', name + '’s letter ' + n) +
           ' (' +
           name +
           ' is the imperative agent.)',
@@ -616,7 +618,7 @@ function willingWantEveryone(rng: Rng, counter: number): Question {
       {
         raw: `u:(x)${V}x`,
         layer2:
-          HINT_FORGOT_UNDERLINE_U.replace('u', 'x') +
+          HINT_FORGOT_UNDERLINE_U.replace('the u', 'the x') +
           ' (The inner ' +
           V +
           'x is imperative.)',
@@ -661,7 +663,7 @@ function willingImperative(rng: Rng, counter: number): Question {
       {
         raw: `{u}:(x)${V}x`,
         layer2:
-          HINT_FORGOT_UNDERLINE_U.replace('u', 'x') +
+          HINT_FORGOT_UNDERLINE_U.replace('the u', 'the x') +
           ' (The inner ' +
           V +
           'x is also imperative.)',
@@ -764,7 +766,7 @@ function willingDontCombine(rng: Rng, counter: number): Question {
       },
     ],
     0,
-    HINT_DONT_COMBINE_BELIEF
+    HINT_DONT_COMBINE_WILL
   );
 }
 
