@@ -1,4 +1,3 @@
-export { setA } from './setA';
 export { setC } from './setC';
 export { setQ } from './setQ';
 export { setJ } from './setJ';
