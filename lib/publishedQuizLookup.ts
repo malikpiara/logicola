@@ -94,11 +94,11 @@ const generatedRoutes: Record<
   // §12.3 boundary. Underline imperative-marker convention
   // preserved as `\underline{u}` in KaTeX. See
   // notes/textbook/setL.md.
-  [getQuizRouteKey(['Deontic', 'translations', 'Imperative'])]: {
+  [getQuizRouteKey(['deontic', 'translations', 'imperative'])]: {
     setKey: 'setL',
     subsetIndex: 0,
   },
-  [getQuizRouteKey(['Deontic', 'translations', 'Deontic'])]: {
+  [getQuizRouteKey(['deontic', 'translations', 'deontic'])]: {
     setKey: 'setL',
     subsetIndex: 1,
   },
