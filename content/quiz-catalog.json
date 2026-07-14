@@ -42,15 +42,15 @@
   {
     "chapter": "Set L",
     "title": "Deontic Translations: Imperative",
-    "slugs": ["Deontic", "translations", "Imperative"],
-    "quizPath": "/Deontic/translations/Imperative/quiz",
+    "slugs": ["deontic", "translations", "imperative"],
+    "quizPath": "/deontic/translations/imperative/quiz",
     "isNew": true
   },
   {
     "chapter": "Set L",
     "title": "Deontic Translations: Deontic",
-    "slugs": ["Deontic", "translations", "Deontic"],
-    "quizPath": "/Deontic/translations/Deontic/quiz",
+    "slugs": ["deontic", "translations", "deontic"],
+    "quizPath": "/deontic/translations/deontic/quiz",
     "isNew": true
   },
   {
