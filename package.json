@@ -4,6 +4,7 @@
   "private": true,
   "packageManager": "pnpm@9.4.0",
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks || true",
     "test": "vitest run",
     "test:watch": "vitest",
     "dev": "next dev",

@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+# Pre-push gate — mirrors CI's lint job (`pnpm lint-all` = eslint + tsc +
+# prettier) so formatting/lint/type failures are caught locally instead of
+# turning CI red after the push.
+#
+# Runs in ~8s. Bypass in a pinch with:  git push --no-verify
+#
+# Version-controlled and auto-wired: the package.json "prepare" script
+# points git's core.hooksPath at this .githooks/ directory on install.
+
+echo "→ pre-push: running pnpm lint-all (eslint + tsc + prettier)…"
+
+if ! pnpm lint-all; then
+  echo
+  echo "✗ lint-all failed — push blocked."
+  echo "  • formatting issues?  fix with:  pnpm format:fix"
+  echo "  • then commit the changes and push again."
+  echo "  • to bypass this once:  git push --no-verify"
+  exit 1
+fi
+
+echo "✓ lint-all passed — pushing."
