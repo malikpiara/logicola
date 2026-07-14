@@ -366,19 +366,19 @@ You inverted the negations — the prompt says you DON’T believe both.",
               "label": "$ \\sim (\\underline{u}:C\\underline{u} \\cdot  \\sim Cu) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 ‘Don’t combine A with B’ is the don’t-combine form \`∼(A · B)\`, not the if-then \`(A ⊃ ∼B)\`.",
               "id": 1,
               "label": "$ (\\underline{u}:C\\underline{u} \\supset  Cu) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 The second conjunct is descriptive (you don’t actually conform) — don’t underline the u in Cu.",
               "id": 2,
               "label": "$ \\sim (\\underline{u}:C\\underline{u} \\cdot  \\sim C\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner C{u} is imperative — what you’re wanting yourself to do.)",
               "id": 3,
               "label": "$ \\sim (\\underline{u}:Cu \\cdot  \\sim Cu) $",
@@ -398,19 +398,19 @@ You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` a
               "label": "$ \\sim (\\underline{u}:P\\underline{u} \\cdot  \\sim Pu) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 ‘Don’t combine A with B’ is the don’t-combine form \`∼(A · B)\`, not the if-then \`(A ⊃ ∼B)\`.",
               "id": 1,
               "label": "$ (\\underline{u}:P\\underline{u} \\supset  Pu) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 The second conjunct is descriptive (you don’t actually pray) — don’t underline the u in Pu.",
               "id": 2,
               "label": "$ \\sim (\\underline{u}:P\\underline{u} \\cdot  \\sim P\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner P{u} is imperative — what you’re wanting yourself to do.)",
               "id": 3,
               "label": "$ \\sim (\\underline{u}:Pu \\cdot  \\sim Pu) $",
@@ -437,7 +437,7 @@ Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be un
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-Yox forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Sx is also imperative.)",
+You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Sx is also imperative.)",
               "id": 2,
               "label": "$ \\underline{u}:(x)Sx $",
             },
@@ -494,19 +494,19 @@ Since the sentence DESCRIBES what you believe, the letter before ‘:’ should 
               "label": "$ \\sim (\\underline{u}:F\\underline{u} \\cdot  \\sim Fu) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 ‘Don’t combine A with B’ is the don’t-combine form \`∼(A · B)\`, not the if-then \`(A ⊃ ∼B)\`.",
               "id": 1,
               "label": "$ (\\underline{u}:F\\underline{u} \\supset  Fu) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 The second conjunct is descriptive (you don’t actually forfeit) — don’t underline the u in Fu.",
               "id": 2,
               "label": "$ \\sim (\\underline{u}:F\\underline{u} \\cdot  \\sim F\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner F{u} is imperative — what you’re wanting yourself to do.)",
               "id": 3,
               "label": "$ \\sim (\\underline{u}:Fu \\cdot  \\sim Fu) $",
@@ -533,7 +533,7 @@ Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be un
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-Yox forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Px is also imperative.)",
+You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Px is also imperative.)",
               "id": 2,
               "label": "$ \\underline{u}:(x)Px $",
             },
@@ -565,7 +565,7 @@ Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be un
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-Yox forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Sx is also imperative.)",
+You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Sx is also imperative.)",
               "id": 2,
               "label": "$ \\underline{u}:(x)Sx $",
             },
@@ -590,19 +590,19 @@ Yox forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` a
               "label": "$ \\sim (\\underline{u}:I\\underline{u} \\cdot  \\sim Iu) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 ‘Don’t combine A with B’ is the don’t-combine form \`∼(A · B)\`, not the if-then \`(A ⊃ ∼B)\`.",
               "id": 1,
               "label": "$ (\\underline{u}:I\\underline{u} \\supset  Iu) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 The second conjunct is descriptive (you don’t actually invest) — don’t underline the u in Iu.",
               "id": 2,
               "label": "$ \\sim (\\underline{u}:I\\underline{u} \\cdot  \\sim I\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner I{u} is imperative — what you’re wanting yourself to do.)",
               "id": 3,
               "label": "$ \\sim (\\underline{u}:Iu \\cdot  \\sim Iu) $",
@@ -622,19 +622,19 @@ You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` a
               "label": "$ \\sim (\\underline{u}:G\\underline{u} \\cdot  \\sim Gu) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 ‘Don’t combine A with B’ is the don’t-combine form \`∼(A · B)\`, not the if-then \`(A ⊃ ∼B)\`.",
               "id": 1,
               "label": "$ (\\underline{u}:G\\underline{u} \\supset  Gu) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 The second conjunct is descriptive (you don’t actually groan) — don’t underline the u in Gu.",
               "id": 2,
               "label": "$ \\sim (\\underline{u}:G\\underline{u} \\cdot  \\sim G\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner G{u} is imperative — what you’re wanting yourself to do.)",
               "id": 3,
               "label": "$ \\sim (\\underline{u}:Gu \\cdot  \\sim Gu) $",
@@ -661,7 +661,7 @@ Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be un
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-Yox forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Px is also imperative.)",
+You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Px is also imperative.)",
               "id": 2,
               "label": "$ \\underline{u}:(x)Px $",
             },

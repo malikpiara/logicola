@@ -2,7 +2,7 @@
  * Set J — Modal Translations: live-random generator.
  *
  * Phase 1 / T1.4. Ports Gensler's 2008 LCEXE Set J as a procedural
- * drill engine. Coverage: 26 of the 31 procedural templates from
+ * drill engine. Coverage: all 31 procedural templates from
  * `notes/exercises/2008/decoded/set_J.txt`, split into Basic
  * (`*0`..`*21`) and Quantified (`*22`..`*30`) subsets matching
  * Gensler's chapter 10 / 11.2 boundary.
@@ -1036,14 +1036,16 @@ function template24(rng: Rng, counter: number): Question {
 function template25(rng: Rng, counter: number): Question {
   const adj = pickFrom(rng, adjectives);
   const V = adj[0]!.toUpperCase();
-  const phrasings = [
-    `Everyone is necessarily ${adj}.`,
-    `Everyone has the property of being necessarily ${adj}.`,
-  ];
+  // Only the disambiguated phrasing is used. Gensler §11.2 treats the
+  // bare "Everyone is necessarily A" as AMBIGUOUS (de re (x)☐Vx vs de
+  // dicto ☐(x)Vx — both valid), so keying one as correct would mark the
+  // other wrong. The 2008 engine's *25 ships only this "has the property
+  // of being necessarily" wording, which unambiguously means de re; the
+  // ambiguous form is drilled separately by *28.
   return buildQuestion(
     25,
     counter,
-    pickFrom(rng, phrasings),
+    `Everyone has the property of being necessarily ${adj}.`,
     [
       { raw: `(x)☐${V}x` },
       {

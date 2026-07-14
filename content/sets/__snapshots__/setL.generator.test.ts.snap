@@ -319,9 +319,9 @@ There’s no ‘ought’ in the prompt — drop the \`O\`.",
             },
             {
               "hint": "‘Don’t combine doing A with doing B’ → \`∼(A{u} · B{u})\` — both action letters are imperative (underlined).
-By De Morgan, this is logically equivalent — but the canonical form for ‘either don’t A or don’t B’ keeps the ‘∨’ explicit.",
+You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs. Both parts are imperatives here — underline both u’s.",
               "id": 1,
-              "label": "$ \\sim (S\\underline{u} \\cdot  F\\underline{u}) $",
+              "label": "$ (\\sim Su \\vee  \\sim F\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine doing A with doing B’ → \`∼(A{u} · B{u})\` — both action letters are imperative (underlined).
