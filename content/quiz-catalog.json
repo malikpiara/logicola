@@ -79,5 +79,12 @@
     "title": "Meanings and Definitions",
     "slugs": ["informal", "definitions"],
     "quizPath": "/informal/definitions/quiz"
+  },
+  {
+    "chapter": "Set R",
+    "title": "Informal Fallacies",
+    "slugs": ["informal", "fallacies"],
+    "quizPath": "/informal/fallacies/quiz",
+    "isNew": true
   }
 ]

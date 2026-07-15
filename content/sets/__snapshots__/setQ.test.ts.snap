@@ -15,7 +15,10 @@ exports[`setQ > matches snapshot 1`] = `
       "header": "What is wrong with this definition?",
       "id": 3,
       "logicType": "Informal",
+      "maxWrongGuesses": 3,
+      "multiSelect": true,
       "name": "Set Q",
+      "optionLayout": "grid",
       "questions": [
         {
           "answer": "This violates 4 and 6.",

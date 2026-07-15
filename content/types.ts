@@ -6,6 +6,12 @@ export interface Option {
   id: number;
   label: string;
   hint?: string; // Gensler hints
+  /**
+   * Short typeable code for this option (Set R's fallacy abbreviations,
+   * e.g. 'ah'). When present it replaces the numeric badge and the digit
+   * keyboard shortcut: typing the code selects the option.
+   */
+  abbreviation?: string;
 }
 
 export interface Question {
@@ -36,4 +42,23 @@ export interface SubSet {
   isNew?: boolean; // Indicates if this sub-set is new
   questions: Question[]; // Array of questions within this sub-set
   shuffleOptions?: boolean;
+  /**
+   * How to lay out answer options. 'list' (default) is the classic
+   * full-width vertical stack; 'grid' is a compact multi-column grid for
+   * sets with many options (Set R shows all 18 fallacies per question).
+   */
+  optionLayout?: 'list' | 'grid';
+  /**
+   * Reveal the solution after this many wrong guesses. Defaults to the
+   * classic behavior (all options but one exhausted) — which is far too
+   * punishing for large option counts like Set R's 18.
+   */
+  maxWrongGuesses?: number;
+  /**
+   * Let the user select several options and submit them together (Set R,
+   * where a passage can commit more than one fallacy). Graded by the
+   * subset rule: correct when every selected option is one of
+   * `correctId` and at least one is picked. Defaults to single-select.
+   */
+  multiSelect?: boolean;
 }

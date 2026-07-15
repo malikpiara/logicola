@@ -121,6 +121,17 @@ const generatedRoutes: Record<
     setKey: 'setN',
     subsetIndex: 2,
   },
+  // Phase 2 (Jul 15, 2026): Set R — Informal Fallacies
+  // Passage-identification drill against the full 18-fallacy
+  // taxonomy (compact grid UI). One passage variant per fallacy
+  // type per session, matching the original program's uniform-over-types
+  // draw. All 18 fallacies drilled, including op/pc from original program
+  // section 14 (dropped by the legacy parsed JSON). See
+  // the Set R fidelity audit + tools/the Set R port.
+  [getQuizRouteKey(['informal', 'fallacies'])]: {
+    setKey: 'setR',
+    subsetIndex: 0,
+  },
 };
 
 export async function loadPublishedQuizSubSet(
