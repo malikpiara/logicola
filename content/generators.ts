@@ -34,6 +34,7 @@ import { generateSetC } from './sets/setC.generator';
 import { generateSetJ } from './sets/setJ.generator';
 import { generateSetL } from './sets/setL.generator';
 import { generateSetN } from './sets/setN.generator';
+import { generateSetR } from './sets/setR.generator';
 
 /**
  * Generator function signature. Every Phase-1 generator conforms.
@@ -51,7 +52,8 @@ export type Generator = (seed?: number, perSubset?: number) => Set;
  * The known set keys that can be generated. Add to this union when a
  * new generator is registered. Set Q is omitted because it's static.
  */
-export type GeneratedSetKey = 'setA' | 'setC' | 'setJ' | 'setL' | 'setN';
+export type GeneratedSetKey =
+  'setA' | 'setC' | 'setJ' | 'setL' | 'setN' | 'setR';
 
 /**
  * Generator registry. Per-set entries are added as each generator
@@ -63,6 +65,7 @@ const generators: Partial<Record<GeneratedSetKey, Generator>> = {
   setJ: generateSetJ, // T1.4 (May 10, 2026)
   setL: generateSetL, // T1.3 (May 10, 2026)
   setN: generateSetN, // T1.2 (May 10, 2026) — fixes P0 Rationality prompt-truncation bug
+  setR: generateSetR, // Phase 2 (Jul 15, 2026) — Informal Fallacies, full 18-option taxonomy
 };
 
 /**

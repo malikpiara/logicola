@@ -71,11 +71,11 @@ const logicSections = [
   {
     title: 'Informal',
     icon: MessageSquare,
-    progress: 33,
+    progress: 66,
     items: [
       { label: 'P. Probability', href: '#' },
       { label: 'Q. Definitions', href: '#' },
-      { label: 'R. Fallacies', href: '#' },
+      { label: 'R. Fallacies', href: '/informal/fallacies/quiz' },
     ],
   },
 ];

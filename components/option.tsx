@@ -12,6 +12,16 @@ export interface OptionProps {
   showSolution: boolean;
   onClick: () => void;
   hasBeenIncorrectlyGuessed?: boolean;
+  /** Tighter paddings and a smaller index badge, for grid-layout subsets. */
+  compact?: boolean;
+  /** Typeable code shown in the badge instead of the index (e.g. 'ah'). */
+  abbreviation?: string;
+  /**
+   * Keyboard cursor is on this option (multi-select, where the cursor is
+   * distinct from the committed selection). Renders a lighter highlight
+   * than `isSelected` so "where I am" reads apart from "what I've picked".
+   */
+  isCursor?: boolean;
 }
 
 const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
@@ -25,11 +35,14 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
       showSolution,
       onClick,
       hasBeenIncorrectlyGuessed = false,
+      compact = false,
+      abbreviation,
+      isCursor = false,
     },
     ref
   ) => {
     const optionClasses = classNames(
-      'motion-option w-full cursor-pointer ps-4 pe-4 text-left text-base leading-6 text-gray-900 flex items-start border rounded-lg focus:outline-primary',
+      'motion-option w-full cursor-pointer ps-4 pe-4 text-left text-base leading-6 text-gray-900 flex items-start border rounded-xl focus:outline-primary',
       {
         'border-gray-200': !isSelected && !showSolution,
         'bg-[#1ad85f]': showSolution && isCorrect,
@@ -37,6 +50,10 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
           (showSolution && !isCorrect) || hasBeenIncorrectlyGuessed,
         'border-primary outline-double outline-primary outline-offset-0 ring-2 ring-offset-0 ring-primary':
           !showSolution && isSelected,
+        // Cursor-only (not yet picked): a lighter ring so it's clearly the
+        // keyboard focus, not a committed selection.
+        'border-primary ring-1 ring-primary':
+          !showSolution && !isSelected && isCursor,
         'hover:border-primary focus:border-primary': !showSolution,
       }
     );
@@ -54,7 +71,8 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
           {showIndex && (
             <div
               className={classNames(
-                'rounded-full border-2 flex w-8 h-8 shrink-0 items-center self-start justify-center mt-3.5 tabular-nums',
+                'rounded-full border-2 flex shrink-0 items-center self-start justify-center tabular-nums',
+                compact ? 'w-6 h-6 mt-3.5 text-xs' : 'w-8 h-8 mt-3.5',
                 showSolution && isCorrect && 'border-gray-700',
                 showSolution && !isCorrect && 'border-red-500'
               )}
@@ -62,14 +80,23 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
               <div
                 className={classNames(
                   'font-medium leading-none text-center text-gray-900',
+                  abbreviation && 'font-mono lowercase',
                   showSolution && !isCorrect && 'text-red-500'
                 )}
               >
-                {index}
+                {abbreviation ?? index}
               </div>
             </div>
           )}
-          <div className='py-4 ms-2 font-medium'>
+          <div
+            className={classNames(
+              // Grid options (Set R) read a touch stronger — semibold at
+              // the same size keeps the label crisp without more wrapping.
+              compact
+                ? 'py-3.5 ms-1 text-sm leading-5 font-semibold'
+                : 'py-4 ms-2 font-medium'
+            )}
+          >
             <KatexSpan text={label} />
           </div>
         </div>

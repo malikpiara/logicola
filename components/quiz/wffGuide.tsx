@@ -1,6 +1,7 @@
 import React from 'react';
 import KatexSpan from '../katexSpan';
 import { SubSet } from '@/content/types';
+import { FALLACIES } from '@/content/sets/setR.data';
 import {
   Table,
   TableBody,
@@ -70,7 +71,10 @@ interface WffGuideProps {
   subSet: SubSet;
 }
 
-const GUIDE_SUBSET_IDS = new Set([1, 2, 3, 4, 6, 12]);
+// Keyed by subSet.id — every registered subset needs a unique id for
+// this gating to stay sound (18 = Set R, Informal Fallacies).
+const GUIDE_SUBSET_IDS = new Set([1, 2, 3, 4, 6, 12, 18]);
+const SET_R_SUBSET_ID = 18;
 
 const guideHeadingClassName =
   'text-xl md:text-2xl font-semibold leading-7 md:leading-8 text-gray-800';
@@ -433,6 +437,54 @@ export const WffGuide: React.FC<WffGuideProps> = ({ subSet }) => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {subSet.id === SET_R_SUBSET_ID && (
+        <div>
+          <h3 className={guideHeadingClassName}>
+            The eighteen informal fallacies
+          </h3>
+          <p className='mt-2 max-w-prose'>
+            From Gensler’s “Fallacies and Argumentation” chapter. Some passages
+            commit more than one fallacy and so have more than one correct
+            answer.
+          </p>
+          <div className='mt-4 rounded-md border border-gray-200'>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className='w-12'>Abbr.</TableHead>
+                  <TableHead className='w-44'>Fallacy</TableHead>
+                  <TableHead>Description</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {FALLACIES.map((fallacy) => (
+                  <TableRow key={fallacy.code}>
+                    <TableCell className='font-mono text-gray-500'>
+                      {fallacy.code}
+                    </TableCell>
+                    <TableCell className='font-medium text-gray-800'>
+                      {fallacy.name}
+                    </TableCell>
+                    <TableCell className='text-gray-700'>
+                      <div>{fallacy.description}</div>
+                      {fallacy.clauses && (
+                        <ol className='mt-1 list-none space-y-0.5 text-sm text-gray-500'>
+                          {fallacy.clauses.map((clause, i) => (
+                            <li key={i}>
+                              ({i + 1}) {clause}
+                            </li>
+                          ))}
+                        </ol>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </div>
       )}

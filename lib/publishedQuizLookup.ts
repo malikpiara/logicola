@@ -121,6 +121,17 @@ const generatedRoutes: Record<
     setKey: 'setN',
     subsetIndex: 2,
   },
+  // Phase 2 (Jul 15, 2026): Set R — Informal Fallacies
+  // Passage-identification drill against the full 18-fallacy
+  // taxonomy (compact grid UI). One passage variant per fallacy
+  // type per session, matching the 2008 engine's uniform-over-types
+  // draw. All 18 fallacies drilled, including op/pc from DSL
+  // section *14 (dropped by the legacy parsed JSON). See
+  // notes/audits/setR.md + tools/port_set_r.py in logicola-ghidra.
+  [getQuizRouteKey(['informal', 'fallacies'])]: {
+    setKey: 'setR',
+    subsetIndex: 0,
+  },
 };
 
 export async function loadPublishedQuizSubSet(

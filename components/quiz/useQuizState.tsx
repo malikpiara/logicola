@@ -41,6 +41,18 @@ function buildShuffledQuestions(subSet: SubSet) {
   return deepCopy;
 }
 
+/**
+ * How many wrong guesses reveal the solution. Classic behavior is
+ * "all options but one exhausted"; subsets with many options (Set R's
+ * 18) opt into a saner cap via `subSet.maxWrongGuesses`. Shared by
+ * `onCheckAnswer` and the quiz shell's first-miss guide expansion so
+ * the two call sites can't drift.
+ */
+export function getRevealThreshold(subSet: SubSet, question: Question): number {
+  const exhaustive = question.options.length - 1;
+  return Math.min(exhaustive, subSet.maxWrongGuesses ?? exhaustive);
+}
+
 function buildQuizAnalyticsProperties(
   subSet: SubSet,
   totalQuestionCount: number
@@ -60,16 +72,26 @@ export default function useQuizState(subSet: SubSet) {
     QUIZ_QUESTION_LIMIT,
     subSet.questions.length
   );
+  const isMulti = !!subSet.multiSelect;
   const hasStartedRef = useRef(false);
   const hasCompletedRef = useRef(false);
 
   // Index of the current question in the shuffled order
   const [questionIdx, setQuestionIdx] = useState(0);
 
-  // Which option the user has currently selected (by index)
+  // Single-select: the chosen option. Multi-select: the keyboard/focus
+  // cursor (the committed picks live in `selectedOptionIds`).
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(
     null
   );
+
+  // Multi-select: option IDs the user has toggled on for this question.
+  const [selectedOptionIds, setSelectedOptionIds] = useState<number[]>([]);
+
+  // Wrong submissions for this question. In single-select this equals
+  // previousGuesses.length; in multi-select one submission can flag
+  // several wrong picks at once, so the reveal budget counts attempts.
+  const [wrongAttempts, setWrongAttempts] = useState(0);
 
   // Do we show the correct answer?
   const [showSolution, setShowSolution] = useState(false);
@@ -115,6 +137,8 @@ export default function useQuizState(subSet: SubSet) {
     if (questionIdx < subSet.questions.length - 1) {
       setQuestionIdx(questionIdx + 1);
       setSelectedOptionIndex(null);
+      setSelectedOptionIds([]);
+      setWrongAttempts(0);
       setPreviousGuesses([]);
       setShowSolution(false);
       setQuestionCounter(questionCounter + 1);
@@ -148,9 +172,27 @@ export default function useQuizState(subSet: SubSet) {
   }
 
   /**
-   * Manual selection (click)
+   * Manual selection (click / tap / typed abbreviation). In multi-select
+   * this toggles the option's membership while moving the focus cursor;
+   * in single-select it just sets the chosen option.
    */
   function selectOption(index: number) {
+    setSelectedOptionIndex(index);
+    if (!isMulti) return;
+    const id = currentQuestion?.options[index]?.id;
+    if (id == null) return;
+    setSelectedOptionIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  }
+
+  /**
+   * Move the keyboard/focus cursor without committing a selection. In
+   * single-select the cursor IS the selection, so this reads as a plain
+   * highlight; in multi-select arrow keys move the cursor and Space
+   * toggles the option under it.
+   */
+  function moveCursor(index: number) {
     setSelectedOptionIndex(index);
   }
 
@@ -168,30 +210,58 @@ export default function useQuizState(subSet: SubSet) {
     return correctId.includes(optionId);
   }
 
+  /** Record a wrong submission and reveal the answer once the budget is spent. */
+  function registerWrongAttempt(question: Question) {
+    const attempts = wrongAttempts + 1;
+    setWrongAttempts(attempts);
+    if (attempts >= getRevealThreshold(subSet, question)) {
+      setShowSolution(true);
+    }
+  }
+
   /**
-   * The user pressed "Check Answer"
+   * The user pressed "Check Answer".
+   *
+   * Multi-select uses the subset rule: correct when at least one option is
+   * picked and every pick is one of `correctId` (i.e. only wrong for adding
+   * a fallacy the passage doesn't commit). Single-select is unchanged.
    */
   function onCheckAnswer() {
-    if (selectedOptionIndex == null || !currentQuestion) return;
+    if (!currentQuestion) return;
+    const { correctId } = currentQuestion;
 
-    // Retrieve the chosen option object
+    if (isMulti) {
+      if (selectedOptionIds.length === 0) return;
+      const wrongPicks = selectedOptionIds.filter(
+        (id) => !correctId.includes(id)
+      );
+      if (wrongPicks.length === 0) {
+        if (wrongAttempts === 0) {
+          setCorrectQuestions((prev) => [...prev, currentQuestion.id]);
+        }
+        setShowSolution(true);
+      } else {
+        // Flag the wrong picks, keep the genuine ones for another try.
+        setPreviousGuesses((prev) => [...prev, ...wrongPicks]);
+        setSelectedOptionIds((prev) =>
+          prev.filter((id) => correctId.includes(id))
+        );
+        registerWrongAttempt(currentQuestion);
+      }
+      return;
+    }
+
+    if (selectedOptionIndex == null) return;
     const chosenOption = currentQuestion.options[selectedOptionIndex];
-
-    // Use the helper function to see if the chosen option is correct
-    if (isAnswerCorrect(chosenOption.id, currentQuestion.correctId)) {
-      if (previousGuesses.length === 0) {
+    if (isAnswerCorrect(chosenOption.id, correctId)) {
+      if (wrongAttempts === 0) {
         setCorrectQuestions((prev) => [...prev, currentQuestion.id]);
       }
       setShowSolution(true);
     } else {
-      // Mark the guess as wrong & let them keep trying
       setPreviousGuesses((prev) => [...prev, chosenOption.id]);
       setSelectedOptionIndex(null);
-
-      // If the user has guessed all but one possible option, reveal solution
-      if (previousGuesses.length + 1 === currentQuestion.options.length - 1) {
-        setShowSolution(true);
-      }
+      registerWrongAttempt(currentQuestion);
     }
   }
 
@@ -244,6 +314,8 @@ export default function useQuizState(subSet: SubSet) {
     hasCompletedRef.current = false;
     setQuestionIdx(0);
     setSelectedOptionIndex(null);
+    setSelectedOptionIds([]);
+    setWrongAttempts(0);
     setShowSolution(false);
     setShowStartScreen(false);
     setShowEndScreen(false);
@@ -269,6 +341,8 @@ export default function useQuizState(subSet: SubSet) {
 
     // Selection & correctness
     selectedOptionIndex,
+    selectedOptionIds,
+    multiSelect: isMulti,
     correctQuestions,
     previousGuesses,
 
@@ -280,6 +354,7 @@ export default function useQuizState(subSet: SubSet) {
     selectNextOption,
     selectPreviousOption,
     selectOption,
+    moveCursor,
     onShowSolution,
     onCheckAnswer,
     onShowStartScreen,

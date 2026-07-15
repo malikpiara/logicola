@@ -8,7 +8,8 @@ import Prompt from '../prompt';
 import { EndScreen } from './endScreen';
 import { KeyboardKeys } from './keyboardKeys';
 import { StartScreen } from './startScreen';
-import useQuizState from './useQuizState';
+import useQuizState, { getRevealThreshold } from './useQuizState';
+import classNames from 'classnames';
 import { SubSet } from '@/content/types';
 import {
   Drawer,
@@ -30,6 +31,34 @@ export default function Quiz({ subSet }: QuizProps) {
 
 const QUESTION_EXIT_MS = 90;
 const MEANINGS_AND_DEFINITIONS_SUBSET_ID = 3;
+
+// Sets with more options than this earn a third column on desktop
+// (Set R's 18); smaller multi-option sets (Set Q's 7) stay at two.
+const GRID_THIRD_COLUMN_MIN = 13;
+
+// Static row-count classes so Tailwind's scanner can see them — the grid
+// is column-major, so rows = ceil(count / columns).
+const GRID_ROW_CLASS: Record<number, string> = {
+  1: 'grid-rows-1',
+  2: 'grid-rows-2',
+  3: 'grid-rows-3',
+  4: 'grid-rows-4',
+  5: 'grid-rows-5',
+  6: 'grid-rows-6',
+};
+
+/**
+ * Column-major answer-grid classes sized to the option count. Large
+ * taxonomies (Set R) get a third desktop column; smaller sets (Set Q)
+ * stay two columns at every width.
+ */
+function optionGridColumnClasses(optionCount: number): string {
+  if (optionCount >= GRID_THIRD_COLUMN_MIN) {
+    return 'grid grid-flow-col grid-cols-2 grid-rows-9 lg:grid-cols-3 lg:grid-rows-6';
+  }
+  const rows = GRID_ROW_CLASS[Math.ceil(optionCount / 2)] ?? 'grid-rows-6';
+  return `grid grid-flow-col grid-cols-2 ${rows}`;
+}
 
 /**
  * Approximate vertical space occupied by the drawer's grabber +
@@ -148,6 +177,8 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
     showStartScreen,
     showEndScreen,
     selectedOptionIndex,
+    selectedOptionIds,
+    multiSelect,
     showSolution,
     currentQuestion,
     questionCounter,
@@ -157,11 +188,18 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
     selectNextOption,
     selectPreviousOption,
     selectOption,
+    moveCursor,
     onShowStartScreen,
     previousGuesses,
     onTryAgain,
   } = useQuizState(subSet);
   const hasGuide = hasWffGuide(subSet);
+  const isGridLayout = subSet.optionLayout === 'grid';
+  const optionCount = currentQuestion?.options.length ?? 0;
+  // Narrower cap for two-column sets so the options aren't full-bleed;
+  // the header shares this width so their left edges line up.
+  const gridMaxWidth =
+    optionCount >= GRID_THIRD_COLUMN_MIN ? 'max-w-4xl' : 'max-w-2xl';
   const quizScreenColors = getQuizScreenColors(subSet);
 
   /**
@@ -184,6 +222,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
    *    Then we'll detect clicks outside of this container.
    */
   const drawerRef = useRef<HTMLDivElement>(null);
+  const optionsGridRef = useRef<HTMLDivElement>(null);
 
   useKeyboardNavigation({
     currentQuestion,
@@ -194,9 +233,22 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
     selectNextOption,
     selectPreviousOption,
     selectOption,
+    moveCursor,
     handleCheckAnswer,
     handleNextQuestion: handleNextQuestionTransition,
     collapseDrawer: () => setSnap(COLLAPSED_SNAP_POINT),
+    multiSelect,
+    // 2D arrow navigation for the fallacy grid — reads the rendered
+    // column count so Left/Right stay correct across breakpoints.
+    getGridColumns: isGridLayout
+      ? () => {
+          const grid = optionsGridRef.current;
+          if (!grid) return 1;
+          return getComputedStyle(grid)
+            .gridTemplateColumns.split(' ')
+            .filter(Boolean).length;
+        }
+      : undefined,
   });
 
   const selectedHint =
@@ -247,15 +299,15 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
   }
 
   function handleCheckAnswer() {
-    if (selectedOptionIndex != null && currentQuestion) {
-      const selectedOption = currentQuestion.options[selectedOptionIndex];
-      const isFirstRetryableMiss =
-        selectedOption &&
-        !currentQuestion.correctId.includes(selectedOption.id) &&
-        previousGuesses.length === 0 &&
-        previousGuesses.length + 1 < currentQuestion.options.length - 1;
+    if (currentQuestion && previousGuesses.length === 0) {
+      const { correctId } = currentQuestion;
+      const willMiss = multiSelect
+        ? selectedOptionIds.length > 0 &&
+          selectedOptionIds.some((id) => !correctId.includes(id))
+        : selectedOptionIndex != null &&
+          !correctId.includes(currentQuestion.options[selectedOptionIndex].id);
 
-      if (isFirstRetryableMiss) {
+      if (willMiss && 1 < getRevealThreshold(subSet, currentQuestion)) {
         expandGuideForFirstMiss();
       }
     }
@@ -348,7 +400,14 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
           foregroundColor={quizScreenColors.foregroundColor}
         />
       ) : (
-        <div className='motion-enter max-w-7xl p-0 md:p-6 bg-white md:border border-gray-200 rounded-lg mb-6 m-auto'>
+        <div
+          className={classNames(
+            'motion-enter max-w-7xl p-0 md:p-6 bg-white md:border border-gray-200 rounded-lg m-auto',
+            // Grid subsets (Set R's 18 options) need extra clearance so
+            // the last option rows aren't hidden under the fixed drawer.
+            isGridLayout ? 'mb-52' : 'mb-6'
+          )}
+        >
           <div className='mx-auto w-full max-w-screen-xl p-4'>
             {currentQuestion && (
               <div
@@ -358,32 +417,68 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
               >
                 <Prompt value={currentQuestion.prompt} />
 
-                <h2 className='text-xl font-bold text-gray-800'>
-                  {subSet.header}
-                </h2>
+                <div
+                  className={
+                    isGridLayout
+                      ? classNames('w-full self-center', gridMaxWidth)
+                      : ''
+                  }
+                >
+                  <h2 className='text-xl font-bold text-gray-800'>
+                    {subSet.header}
+                  </h2>
+                  {multiSelect && (
+                    <p className='mt-1 text-sm font-normal text-gray-500'>
+                      Select all that apply — more than one may be correct.
+                    </p>
+                  )}
+                </div>
 
-                {currentQuestion.options.map((option, index) => (
-                  <Option
-                    key={option.id}
-                    index={index + 1}
-                    showIndex
-                    isSelected={index === selectedOptionIndex}
-                    isCorrect={currentQuestion.correctId.includes(option.id)}
-                    showSolution={showSolution}
-                    ref={
-                      index === selectedOptionIndex
-                        ? focusSelectedOption
-                        : undefined
-                    }
-                    hasBeenIncorrectlyGuessed={previousGuesses.includes(
-                      option.id
-                    )}
-                    label={option.label}
-                    onClick={() => {
-                      selectOption(index);
-                    }}
-                  />
-                ))}
+                <div
+                  ref={optionsGridRef}
+                  className={
+                    isGridLayout
+                      ? // Column-major (options read down each column),
+                        // matching the original 2008 answer grid. Capped
+                        // width + centered so the options aren't full-bleed.
+                        classNames(
+                          optionGridColumnClasses(optionCount),
+                          'gap-3 w-full self-center',
+                          gridMaxWidth
+                        )
+                      : 'flex flex-col gap-5'
+                  }
+                >
+                  {currentQuestion.options.map((option, index) => (
+                    <Option
+                      key={option.id}
+                      index={index + 1}
+                      showIndex
+                      compact={isGridLayout}
+                      abbreviation={option.abbreviation}
+                      isSelected={
+                        multiSelect
+                          ? selectedOptionIds.includes(option.id)
+                          : index === selectedOptionIndex
+                      }
+                      isCursor={multiSelect && index === selectedOptionIndex}
+                      isCorrect={currentQuestion.correctId.includes(option.id)}
+                      showSolution={showSolution}
+                      ref={
+                        index === selectedOptionIndex
+                          ? focusSelectedOption
+                          : undefined
+                      }
+                      hasBeenIncorrectlyGuessed={previousGuesses.includes(
+                        option.id
+                      )}
+                      label={option.label}
+                      onClick={() => {
+                        selectOption(index);
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -458,6 +553,11 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                   {!showStartScreen && !showEndScreen && (
                     <KeyboardKeys
                       optionCount={currentQuestion?.options.length}
+                      hasAbbreviations={currentQuestion?.options.some(
+                        (option) => option.abbreviation
+                      )}
+                      twoDimensional={isGridLayout}
+                      multiSelect={multiSelect}
                     />
                   )}
                 </div>
@@ -471,7 +571,11 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                     {!showSolution && !showStartScreen && !showEndScreen && (
                       <Button
                         label='Check Answer'
-                        disabled={selectedOptionIndex == null}
+                        disabled={
+                          multiSelect
+                            ? selectedOptionIds.length === 0
+                            : selectedOptionIndex == null
+                        }
                         onClick={handleCheckAnswer}
                       />
                     )}

@@ -15,6 +15,13 @@ const setQ: Set = {
       id: 3,
       title: 'Meanings and Definitions',
       header: 'What is wrong with this definition?',
+      // Two-column grid + multi-select, matching Set R: a definition can
+      // have more than one flaw, and the subset rule accepts any genuine
+      // flaw(s) the user names. `answer` still references the badge
+      // numbers, so options stay unshuffled.
+      optionLayout: 'grid',
+      multiSelect: true,
+      maxWrongGuesses: 3,
       questions: [
         {
           id: '3.1',
