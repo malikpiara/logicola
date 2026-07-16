@@ -3,6 +3,14 @@ import quizCatalogData from '@/content/quiz-catalog.json';
 export interface QuizCatalogEntry {
   chapter: string;
   title: string;
+  /**
+   * One-sentence summary of what the subset drills. Mirrors the matching
+   * `SubSet.description` (which the start screen renders) and is the source
+   * for the route's meta description — the catalog is what `generateMetadata`
+   * can read without running a generator. `quizCatalog.test.ts` asserts the
+   * two stay in sync.
+   */
+  description: string;
   slugs: string[];
   quizPath: string;
   isNew?: boolean;
