@@ -121,6 +121,7 @@ const SET_C_NAME = 'Set C';
 const SET_J_NAME = 'Set J';
 const SET_L_NAME = 'Set L';
 const SET_N_NAME = 'Set N';
+const SET_R_NAME = 'Set R';
 
 function getQuizScreenColors(subSet: SubSet) {
   if (subSet.name === SET_A_NAME) {
@@ -159,6 +160,19 @@ function getQuizScreenColors(subSet: SubSet) {
       surfaceColor: '#ADE2E9',
       countColor: '#1F0D92',
       foregroundColor: '#2A0D73',
+    };
+  }
+
+  if (subSet.name === SET_R_NAME) {
+    // Orange surface in the same pastel register as Sets C/J: the default
+    // screen's #FDBA74 accent rebalanced to their chroma and lightness
+    // (HSL 31° 75% 80%). Text is an ink-dark indigo: saturated blue on
+    // saturated orange vibrates (complementary hues), so the blue is pushed
+    // near-black; the brighter Set N indigo survives as the small accent.
+    return {
+      surfaceColor: '#F2CDA6',
+      countColor: '#1F0D92',
+      foregroundColor: '#190B45',
     };
   }
 
@@ -387,6 +401,9 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
       {showStartScreen ? (
         <StartScreen
           onStartQuiz={onShowStartScreen}
+          setName={subSet.name}
+          title={subSet.title}
+          description={subSet.description}
           surfaceColor={quizScreenColors.surfaceColor}
           countColor={quizScreenColors.countColor}
           foregroundColor={quizScreenColors.foregroundColor}

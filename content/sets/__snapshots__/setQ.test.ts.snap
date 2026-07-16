@@ -12,6 +12,7 @@ exports[`setQ > matches snapshot 1`] = `
   ],
   "subSets": [
     {
+      "description": "Spot what is wrong with a definition — too broad, too narrow, circular, or worse.",
       "header": "What is wrong with this definition?",
       "id": 3,
       "logicType": "Informal",

@@ -1243,6 +1243,8 @@ export function generateSetL(seed?: number, perSubset = 10): Set {
         id: 12,
         title: 'Deontic Translations: Imperative',
         header: 'Translates into logic as:',
+        description:
+          'Translate commands and requests into imperative logic, underlining what is to be done.',
         questions: take(imperativeQuestions(seedFor(1)), perSubset),
       },
       {
@@ -1254,6 +1256,8 @@ export function generateSetL(seed?: number, perSubset = 10): Set {
         id: 12,
         title: 'Deontic Translations: Deontic',
         header: 'Translates into logic as:',
+        description:
+          'Translate ought, permissible, and forbidden into deontic logic.',
         questions: take(deonticQuestions(seedFor(2)), perSubset),
       },
     ],

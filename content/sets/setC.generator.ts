@@ -692,6 +692,8 @@ export function generateSetC(seed?: number, perSubset = 10): Set {
         id: 6,
         title: 'Propositional Translations: Easy',
         header: 'Translates into logic as:',
+        description:
+          'Translate ordinary language into symbols — and, or, if-then — without losing the structure of the argument.',
         questions: take(easyQuestions(seedFor(1)), perSubset),
       },
       {
@@ -703,6 +705,8 @@ export function generateSetC(seed?: number, perSubset = 10): Set {
         id: 6,
         title: 'Propositional Translations: Hard',
         header: 'Translates into logic as:',
+        description:
+          'Handle the connectives that trip people up — unless, only if, and necessary versus sufficient conditions.',
         questions: take(hardQuestions(seedFor(2)), perSubset),
       },
     ],

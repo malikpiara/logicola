@@ -1127,6 +1127,8 @@ export function generateSetN(seed?: number, perSubset = 10): Set {
         id: 14,
         title: 'Belief Translations: Believing',
         header: 'Translates into logic as:',
+        description:
+          'Translate claims about believing, not believing, and withholding belief into belief logic.',
         questions: take(believingQuestions(seedFor(1)), perSubset),
       },
       {
@@ -1138,6 +1140,8 @@ export function generateSetN(seed?: number, perSubset = 10): Set {
         id: 14,
         title: 'Belief Translations: Willing',
         header: 'Translates into logic as:',
+        description:
+          'Translate wanting, resolving, and acting — the willing side of belief logic — into formulas.',
         questions: take(willingQuestions(seedFor(2)), perSubset),
       },
       {
@@ -1149,6 +1153,8 @@ export function generateSetN(seed?: number, perSubset = 10): Set {
         id: 14,
         title: 'Belief Translations: Rationality',
         header: 'Translates into logic as:',
+        description:
+          'Translate what is evident, reasonable, and rational to believe into belief-logic formulas.',
         questions: take(rationalityQuestions(seedFor(3)), perSubset),
       },
     ],

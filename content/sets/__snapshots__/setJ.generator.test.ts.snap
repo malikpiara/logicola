@@ -13,6 +13,7 @@ exports[`setJ generator — top-level > matches snapshot for seed 42 1`] = `
   ],
   "subSets": [
     {
+      "description": "Translate claims about what is necessary, possible, and contingent into the box and diamond of modal logic.",
       "header": "Translates into logic as:",
       "id": 4,
       "isNew": true,
@@ -349,6 +350,7 @@ Your answer isn’t a wff — modal operators don’t take parentheses around th
       "title": "Modal Translations: Basic",
     },
     {
+      "description": "Mix modality with quantifiers, where the order of box, diamond, and “all” changes what a claim says.",
       "header": "Translates into logic as:",
       "id": 4,
       "isNew": true,

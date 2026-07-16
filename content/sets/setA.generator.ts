@@ -1000,6 +1000,8 @@ export function generateSetA(seed?: number, perSubset = 10): Set {
         id: 1,
         title: 'Syllogistic Translations: Easy',
         header: 'Translates into logic as:',
+        description:
+          'Translate everyday English — all, no, some — into syllogistic logic without losing the structure of the claim.',
         questions: take(easyQuestions(seedFor(1)), perSubset),
       },
       {
@@ -1010,6 +1012,8 @@ export function generateSetA(seed?: number, perSubset = 10): Set {
         id: 1,
         title: 'Syllogistic Translations: Hard',
         header: 'Translates into logic as:',
+        description:
+          'Tackle the trickier idioms — only, every, and sentences that reorder subject and predicate.',
         questions: take(hardQuestions(seedFor(2)), perSubset),
       },
     ],

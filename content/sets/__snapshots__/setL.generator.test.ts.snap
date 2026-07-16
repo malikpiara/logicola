@@ -12,6 +12,7 @@ exports[`setL generator — top-level > matches snapshot for seed 42 1`] = `
   ],
   "subSets": [
     {
+      "description": "Translate commands and requests into imperative logic, underlining what is to be done.",
       "header": "Translates into logic as:",
       "id": 12,
       "isNew": true,
@@ -348,6 +349,7 @@ Wrong scope — that says ‘not (E or F)’, i.e., neither. The original says �
       "title": "Deontic Translations: Imperative",
     },
     {
+      "description": "Translate ought, permissible, and forbidden into deontic logic.",
       "header": "Translates into logic as:",
       "id": 12,
       "isNew": true,

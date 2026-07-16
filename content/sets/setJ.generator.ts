@@ -1336,6 +1336,8 @@ export function generateSetJ(seed?: number, perSubset = 10): Set {
         id: 4,
         title: 'Modal Translations: Basic',
         header: 'Translates into logic as:',
+        description:
+          'Translate claims about what is necessary, possible, and contingent into the box and diamond of modal logic.',
         questions: take(basicQuestions(seedFor(1)), perSubset),
       },
       {
@@ -1347,6 +1349,8 @@ export function generateSetJ(seed?: number, perSubset = 10): Set {
         id: 4,
         title: 'Modal Translations: Quantified',
         header: 'Translates into logic as:',
+        description:
+          'Mix modality with quantifiers, where the order of box, diamond, and “all” changes what a claim says.',
         questions: take(quantifiedQuestions(seedFor(2)), perSubset),
       },
     ],

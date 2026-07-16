@@ -12,6 +12,7 @@ exports[`setN generator — top-level > matches snapshot for seed 42 1`] = `
   ],
   "subSets": [
     {
+      "description": "Translate claims about believing, not believing, and withholding belief into belief logic.",
       "header": "Translates into logic as:",
       "id": 14,
       "isNew": true,
@@ -348,6 +349,7 @@ You inverted the negations — the prompt says you DON’T believe both.",
       "title": "Belief Translations: Believing",
     },
     {
+      "description": "Translate wanting, resolving, and acting — the willing side of belief logic — into formulas.",
       "header": "Translates into logic as:",
       "id": 14,
       "isNew": true,
@@ -684,6 +686,7 @@ You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` a
       "title": "Belief Translations: Willing",
     },
     {
+      "description": "Translate what is evident, reasonable, and rational to believe into belief-logic formulas.",
       "header": "Translates into logic as:",
       "id": 14,
       "isNew": true,

@@ -22,6 +22,8 @@ const setQ: Set = {
       optionLayout: 'grid',
       multiSelect: true,
       maxWrongGuesses: 3,
+      description:
+        'Spot what is wrong with a definition — too broad, too narrow, circular, or worse.',
       questions: [
         {
           id: '3.1',

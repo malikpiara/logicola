@@ -43,6 +43,11 @@ export interface SubSet {
   questions: Question[]; // Array of questions within this sub-set
   shuffleOptions?: boolean;
   /**
+   * One-sentence description of what this drill practices, shown on the
+   * start screen instead of the generic tagline.
+   */
+  description?: string;
+  /**
    * How to lay out answer options. 'list' (default) is the classic
    * full-width vertical stack; 'grid' is a compact multi-column grid for
    * sets with many options (Set R shows all 18 fallacies per question).
