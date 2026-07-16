@@ -190,6 +190,17 @@
   }
 }
 
+/* The "new" pill in the quiz menu. An organic, off-round outline rather
+   than a symmetric pill, to sit in the same hand-painted register as the
+   watercolor blooms on the quiz start screens. The lists either side of
+   the slash are the horizontal and vertical radii, so every corner is an
+   ellipse rather than a circle — that mismatch is what keeps the silhouette
+   from settling back into a plain pill. Percentages, so it holds its shape
+   at any label width. */
+.flower-tag {
+  border-radius: 60% 40% 50% 50% / 50% 60% 40% 50%;
+}
+
 .wash-drift-a {
   animation: washDriftA 22s ease-in-out infinite alternate;
   will-change: transform;
