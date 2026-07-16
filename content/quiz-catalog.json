@@ -9,8 +9,7 @@
     "chapter": "Set A",
     "title": "Syllogistic Translations: Hard",
     "slugs": ["syllogistic", "translations", "hard"],
-    "quizPath": "/syllogistic/translations/hard/quiz",
-    "isNew": true
+    "quizPath": "/syllogistic/translations/hard/quiz"
   },
   {
     "chapter": "Set C",
@@ -22,57 +21,49 @@
     "chapter": "Set C",
     "title": "Propositional Translations: Hard",
     "slugs": ["propositional", "translations", "hard"],
-    "quizPath": "/propositional/translations/hard/quiz",
-    "isNew": true
+    "quizPath": "/propositional/translations/hard/quiz"
   },
   {
     "chapter": "Set J",
     "title": "Modal Translations: Basic",
     "slugs": ["modal", "translations", "basic"],
-    "quizPath": "/modal/translations/basic/quiz",
-    "isNew": true
+    "quizPath": "/modal/translations/basic/quiz"
   },
   {
     "chapter": "Set J",
     "title": "Modal Translations: Quantified",
     "slugs": ["modal", "translations", "quantified"],
-    "quizPath": "/modal/translations/quantified/quiz",
-    "isNew": true
+    "quizPath": "/modal/translations/quantified/quiz"
   },
   {
     "chapter": "Set L",
     "title": "Deontic Translations: Imperative",
     "slugs": ["deontic", "translations", "imperative"],
-    "quizPath": "/deontic/translations/imperative/quiz",
-    "isNew": true
+    "quizPath": "/deontic/translations/imperative/quiz"
   },
   {
     "chapter": "Set L",
     "title": "Deontic Translations: Deontic",
     "slugs": ["deontic", "translations", "deontic"],
-    "quizPath": "/deontic/translations/deontic/quiz",
-    "isNew": true
+    "quizPath": "/deontic/translations/deontic/quiz"
   },
   {
     "chapter": "Set N",
     "title": "Belief Translations: Believing",
     "slugs": ["belief", "translations", "basic"],
-    "quizPath": "/belief/translations/basic/quiz",
-    "isNew": true
+    "quizPath": "/belief/translations/basic/quiz"
   },
   {
     "chapter": "Set N",
     "title": "Belief Translations: Willing",
     "slugs": ["belief", "translations", "willing"],
-    "quizPath": "/belief/translations/willing/quiz",
-    "isNew": true
+    "quizPath": "/belief/translations/willing/quiz"
   },
   {
     "chapter": "Set N",
     "title": "Belief Translations: Rationality",
     "slugs": ["belief", "translations", "rationality"],
-    "quizPath": "/belief/translations/rationality/quiz",
-    "isNew": true
+    "quizPath": "/belief/translations/rationality/quiz"
   },
   {
     "chapter": "Set Q",
