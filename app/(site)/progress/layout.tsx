@@ -1,6 +1,5 @@
-import type { Metadata, Viewport } from 'next';
+import type { Metadata } from 'next';
 import { Roboto_Flex } from 'next/font/google';
-import thumbnail from '../../../public/thumbnail.jpg';
 
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
@@ -8,45 +7,17 @@ const robotoFlex = Roboto_Flex({
   axes: ['wdth'],
 });
 
+// This was a verbatim copy of the root layout's metadata. Everything in it
+// except the title was already inherited, and the title — 'Logicola' — only
+// served to override the brand template and put a second page in competition
+// with the homepage.
+//
+// Noindex because this renders one reader's own progress from local state: a
+// crawler sees an empty shell, and no searcher wants someone else's scores.
+// It's kept out of the sitemap for the same reason.
 export const metadata: Metadata = {
-  metadataBase: new URL('https://logicola.org'),
-  title: 'Logicola',
-  description:
-    'LogiCola is a program to help students learn logic. This is a web version of the original software built by the late Professor Harry Gensler.',
-  creator: 'Malik Piara',
-  keywords: [
-    'logic',
-    'propositional logic',
-    'introduction to logic',
-    'download logicola',
-  ],
-  publisher: 'Malik Piara',
-  openGraph: {
-    images: [
-      {
-        url: thumbnail.src,
-        width: thumbnail.width,
-        height: thumbnail.height,
-      },
-    ],
-    authors: ['Malik'],
-  },
-  twitter: {
-    images: [
-      {
-        url: thumbnail.src,
-        width: thumbnail.width,
-        height: thumbnail.height,
-      },
-    ],
-  },
-  icons: {
-    icon: '/icon.svg',
-  },
-};
-
-export const viewport: Viewport = {
-  themeColor: '#ffffff',
+  title: 'Your Progress',
+  robots: { index: false, follow: true },
 };
 
 export default function RootLayout({

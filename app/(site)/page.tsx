@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Header } from '@/components/header';
 import {
   Accordion,
@@ -28,6 +29,13 @@ const accordionData = [
   },
 ];
 
+// Title and description come from the root layout — this is the page they
+// were written for. Only the canonical is page-specific: it can't live in the
+// layout, which would aim every route's canonical at the homepage.
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+};
+
 export default function Home() {
   return (
     <>
@@ -35,9 +43,13 @@ export default function Home() {
         <Header />
 
         <section className='py-8 px-4 w-full max-w-screen-xl mx-auto'>
-          <h1 className='text-center mb-10 text-3xl font-bold tracking-tight leading-none text-gray-800 md:text-3xl lg:text-3xl font-stretch'>
+          {/* An h2, not an h1: <Header> already carries the page's h1, and a
+              second one splits the topic signal. It also restores the
+              hierarchy — the accordion's triggers are h3s, so an h1 here left
+              the page skipping a level. Styling is unchanged. */}
+          <h2 className='text-center mb-10 text-3xl font-bold tracking-tight leading-none text-gray-800 md:text-3xl lg:text-3xl font-stretch'>
             Frequently Asked Questions
-          </h1>
+          </h2>
           <Accordion className='text-gray-800 text-lg' type='multiple'>
             {accordionData.map((item) => (
               <AccordionItem value={item.title} key={item.title}>

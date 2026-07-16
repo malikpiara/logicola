@@ -61,7 +61,20 @@ export async function generateMetadata({
   const { slugs } = await params;
   const publishedQuiz = findQuizCatalogEntry(slugs);
 
+  if (!publishedQuiz) {
+    return { title: 'Not found' };
+  }
+
   return {
-    title: (publishedQuiz?.title || 'Not found') + ' | Logicola',
+    // The root layout's `title.template` appends the brand, so this is just
+    // the page's own claim. "Free Practice Quiz" is what the searcher is
+    // actually after — the set name alone left most of the ~60 usable
+    // characters unused.
+    title: `${publishedQuiz.title} — Free Practice Quiz`,
+    description: `${publishedQuiz.description} Free interactive practice from LogiCola 3.`,
+    // Self-referencing canonical. Set per-route, never in the root layout:
+    // a layout-level canonical would point every page at one URL and
+    // deindex the rest.
+    alternates: { canonical: publishedQuiz.quizPath },
   };
 }

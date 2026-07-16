@@ -2,78 +2,91 @@
   {
     "chapter": "Set A",
     "title": "Syllogistic Translations: Easy",
+    "description": "Translate everyday English — all, no, some — into syllogistic logic without losing the structure of the claim.",
     "slugs": ["syllogistic", "translations", "basic"],
     "quizPath": "/syllogistic/translations/basic/quiz"
   },
   {
     "chapter": "Set A",
     "title": "Syllogistic Translations: Hard",
+    "description": "Tackle the trickier idioms — only, every, and sentences that reorder subject and predicate.",
     "slugs": ["syllogistic", "translations", "hard"],
     "quizPath": "/syllogistic/translations/hard/quiz"
   },
   {
     "chapter": "Set C",
     "title": "Propositional Translations: Easy",
+    "description": "Translate ordinary language into symbols — and, or, if-then — without losing the structure of the argument.",
     "slugs": ["propositional", "translations"],
     "quizPath": "/propositional/translations/quiz"
   },
   {
     "chapter": "Set C",
     "title": "Propositional Translations: Hard",
+    "description": "Handle the connectives that trip people up — unless, only if, and necessary versus sufficient conditions.",
     "slugs": ["propositional", "translations", "hard"],
     "quizPath": "/propositional/translations/hard/quiz"
   },
   {
     "chapter": "Set J",
     "title": "Modal Translations: Basic",
+    "description": "Translate claims about what is necessary, possible, and contingent into the box and diamond of modal logic.",
     "slugs": ["modal", "translations", "basic"],
     "quizPath": "/modal/translations/basic/quiz"
   },
   {
     "chapter": "Set J",
     "title": "Modal Translations: Quantified",
+    "description": "Mix modality with quantifiers, where the order of box, diamond, and “all” changes what a claim says.",
     "slugs": ["modal", "translations", "quantified"],
     "quizPath": "/modal/translations/quantified/quiz"
   },
   {
     "chapter": "Set L",
     "title": "Deontic Translations: Imperative",
+    "description": "Translate commands and requests into imperative logic, underlining what is to be done.",
     "slugs": ["deontic", "translations", "imperative"],
     "quizPath": "/deontic/translations/imperative/quiz"
   },
   {
     "chapter": "Set L",
     "title": "Deontic Translations: Deontic",
+    "description": "Translate ought, permissible, and forbidden into deontic logic.",
     "slugs": ["deontic", "translations", "deontic"],
     "quizPath": "/deontic/translations/deontic/quiz"
   },
   {
     "chapter": "Set N",
     "title": "Belief Translations: Believing",
+    "description": "Translate claims about believing, not believing, and withholding belief into belief logic.",
     "slugs": ["belief", "translations", "basic"],
     "quizPath": "/belief/translations/basic/quiz"
   },
   {
     "chapter": "Set N",
     "title": "Belief Translations: Willing",
+    "description": "Translate wanting, resolving, and acting — the willing side of belief logic — into formulas.",
     "slugs": ["belief", "translations", "willing"],
     "quizPath": "/belief/translations/willing/quiz"
   },
   {
     "chapter": "Set N",
     "title": "Belief Translations: Rationality",
+    "description": "Translate what is evident, reasonable, and rational to believe into belief-logic formulas.",
     "slugs": ["belief", "translations", "rationality"],
     "quizPath": "/belief/translations/rationality/quiz"
   },
   {
     "chapter": "Set Q",
     "title": "Meanings and Definitions",
+    "description": "Spot what is wrong with a definition — too broad, too narrow, circular, or worse.",
     "slugs": ["informal", "definitions"],
     "quizPath": "/informal/definitions/quiz"
   },
   {
     "chapter": "Set R",
     "title": "Informal Fallacies",
+    "description": "Read a short passage and name the fallacy it commits — from ad hominem to post hoc.",
     "slugs": ["informal", "fallacies"],
     "quizPath": "/informal/fallacies/quiz",
     "isNew": true
