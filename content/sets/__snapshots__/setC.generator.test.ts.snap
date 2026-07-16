@@ -12,6 +12,7 @@ exports[`setC generator — top-level > matches snapshot for seed 42 1`] = `
   ],
   "subSets": [
     {
+      "description": "Translate ordinary language into symbols — and, or, if-then — without losing the structure of the argument.",
       "header": "Translates into logic as:",
       "id": 6,
       "logicType": "Propositional Translations",
@@ -326,6 +327,7 @@ Why did you put in an extra ‘∼’?",
       "title": "Propositional Translations: Easy",
     },
     {
+      "description": "Handle the connectives that trip people up — unless, only if, and necessary versus sufficient conditions.",
       "header": "Translates into logic as:",
       "id": 6,
       "isNew": true,

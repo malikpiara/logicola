@@ -162,6 +162,44 @@
   }
 }
 
+/* Ambient drift for the watercolor wash layers (quiz start/end screens).
+   Slow GPU-composited transforms — the blooms glide against the static
+   colour fields, which is what makes the wash feel alive without
+   repainting the (expensive, blurred) canvases. Amplitudes stay within
+   the layers' 6% overscan so canvas edges never enter the frame. */
+@keyframes washDriftA {
+  from {
+    transform: translate3d(-1.2%, 0.8%, 0) rotate(-1deg) scale(1.02);
+  }
+  to {
+    transform: translate3d(1.4%, -1%, 0) rotate(1.1deg) scale(1.07);
+  }
+}
+
+@keyframes washDriftB {
+  from {
+    transform: translate3d(1.2%, -0.7%, 0) rotate(0.9deg) scale(1.06);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  to {
+    transform: translate3d(-1%, 0.9%, 0) rotate(-0.8deg) scale(1.01);
+    opacity: 1;
+  }
+}
+
+.wash-drift-a {
+  animation: washDriftA 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.wash-drift-b {
+  animation: washDriftB 15s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
 @layer base {
   :root {
     --ease-ui: ease;
@@ -242,6 +280,8 @@
   .motion-answer-reveal,
   .motion-chevron,
   .motion-progress,
+  .wash-drift-a,
+  .wash-drift-b,
   .mobile-menu {
     animation: none;
     transition: none;

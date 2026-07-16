@@ -236,6 +236,8 @@ export function generateSetR(seed?: number, perSubset = 10): Set {
         // Some passages commit more than one fallacy — let the user name
         // several (subset rule: every pick must be a genuine fallacy).
         multiSelect: true,
+        description:
+          'Read a short passage and name the fallacy it commits — from ad hominem to post hoc.',
         questions: take(fallacyQuestions(seed), perSubset),
       },
     ],

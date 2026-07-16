@@ -12,6 +12,7 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
   ],
   "subSets": [
     {
+      "description": "Translate everyday English — all, no, some — into syllogistic logic without losing the structure of the claim.",
       "header": "Translates into logic as:",
       "id": 1,
       "logicType": "Basic Translations",
@@ -303,6 +304,7 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
       "title": "Syllogistic Translations: Easy",
     },
     {
+      "description": "Tackle the trickier idioms — only, every, and sentences that reorder subject and predicate.",
       "header": "Translates into logic as:",
       "id": 1,
       "logicType": "Syllogistic",
