@@ -53,6 +53,22 @@
     will-change: opacity, transform;
   }
 
+  /* Yields to the quiz's right-hand reference sheet. The Quiz component
+     writes the open sheet's live width to `--quiz-pane-offset` on <html>
+     (and removes it on close/unmount), so every surface tagged with this
+     class — the navbar, the quiz body — shifts as one layer instead of
+     the sheet sliding over some and pushing others. While the sheet is
+     being drag-resized <html> carries `data-quiz-pane-resizing` and the
+     transition is suspended so the layout tracks the pointer 1:1. */
+  .quiz-pane-push {
+    margin-right: var(--quiz-pane-offset, 0px);
+    transition: margin-right 300ms var(--ease-out-quart);
+  }
+
+  html[data-quiz-pane-resizing] .quiz-pane-push {
+    transition: none;
+  }
+
   .motion-card {
     transform: translateZ(0);
     transition-duration: var(--motion-standard);
@@ -295,6 +311,7 @@
   .motion-colors,
   .motion-button,
   .motion-panel,
+  .quiz-pane-push,
   .motion-card,
   .motion-option,
   .motion-quiz-question,

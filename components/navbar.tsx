@@ -16,7 +16,11 @@ const Navbar = () => {
   const splitIndex = Math.ceil(quizCatalog.length / 2);
 
   return (
-    <nav className='bg-white border-gray-200 hidden md:block'>
+    // `quiz-pane-push` yields to the quiz's right-hand reference sheet so the
+    // navbar shifts with the page body instead of the sheet sliding over it.
+    // Inert everywhere else: the offset variable is only set while that sheet
+    // is open (see globals.css).
+    <nav className='quiz-pane-push bg-white border-gray-200 hidden md:block'>
       <div className='mx-auto max-w-screen-xl p-4'>
         <div className='grid grid-cols-3 items-center'>
           <div>

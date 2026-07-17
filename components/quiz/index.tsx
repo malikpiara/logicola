@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { PanelRightClose, PanelRightOpen, X } from 'lucide-react';
 import Button from '../button';
 import KatexSpan from '../katexSpan';
 import Option from '../option';
@@ -235,6 +236,17 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
     COLLAPSED_SNAP_POINT
   );
   const isGuideExpanded = hasGuide && snap !== COLLAPSED_SNAP_POINT;
+  // Desktop-only: the reference guide is the same vaul sheet as on mobile,
+  // repositioned to the right edge (direction='right'), toggleable and closed
+  // by default. On mobile the guide still lives in the bottom sheet's snap
+  // points (below) — this state is inert there because the only trigger is
+  // `lg:`-gated, and the resize listener below force-closes it under `lg`.
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
+  // The desktop analogue of the mobile sheet's snap-drag: instead of discrete
+  // height snap points, the right sheet resizes continuously by dragging its
+  // left-edge grip.
+  const [paneWidth, setPaneWidth] = useState(432);
+  const [isPaneResizing, setIsPaneResizing] = useState(false);
   const [isQuestionLeaving, setIsQuestionLeaving] = useState(false);
   const isQuestionLeavingRef = useRef(false);
   const hasExpandedGuideAfterMissRef = useRef(false);
@@ -261,7 +273,10 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
     moveCursor,
     handleCheckAnswer,
     handleNextQuestion: handleNextQuestionTransition,
-    collapseDrawer: () => setSnap(COLLAPSED_SNAP_POINT),
+    collapseDrawer: () => {
+      setSnap(COLLAPSED_SNAP_POINT);
+      setIsGuideOpen(false);
+    },
     multiSelect,
     // 2D arrow navigation for the fallacy grid — reads the rendered
     // column count so Left/Right stay correct across breakpoints.
@@ -363,6 +378,84 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
   }
 
   /**
+   * Continuous width-resize for the desktop guide sheet — pointer-drag on
+   * its left-edge grip. Listeners go on `window` so the drag keeps tracking
+   * when the cursor outruns the 16px handle mid-gesture.
+   */
+  function startPaneResize(event: React.PointerEvent) {
+    event.preventDefault();
+    // The grip is our control, not vaul's: without this, the pointerdown
+    // bubbles into vaul's drag tracking, which wedges its close animation
+    // (the sheet then stays visible in data-state='closed').
+    event.stopPropagation();
+    const startX = event.clientX;
+    const startWidth = paneWidth;
+    setIsPaneResizing(true);
+    document.body.style.userSelect = 'none';
+
+    function onPointerMove(moveEvent: PointerEvent) {
+      const width = Math.min(
+        720,
+        Math.max(384, startWidth + (startX - moveEvent.clientX))
+      );
+      setPaneWidth(width);
+    }
+
+    function onPointerUp() {
+      setIsPaneResizing(false);
+      document.body.style.userSelect = '';
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+    }
+
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+  }
+
+  // The guide sheet is desktop-only; if the viewport drops below `lg` while
+  // it's open (window resize, device rotation), close it so the margin push
+  // and the portal don't leak into the mobile layout, where the bottom
+  // sheet owns the guide.
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 1024px)');
+    function onChange() {
+      if (!mediaQuery.matches) setIsGuideOpen(false);
+    }
+    mediaQuery.addEventListener('change', onChange);
+    return () => mediaQuery.removeEventListener('change', onChange);
+  }, []);
+
+  // Publish the open sheet's width as `--quiz-pane-offset` on <html> so
+  // every `.quiz-pane-push` surface — the navbar above this component as
+  // much as the quiz body inside it — yields to the sheet in one motion.
+  // The sheet only renders during the question flow, so the offset clears
+  // on the start/end screens (and on unmount) rather than leaving the
+  // navbar pushed beside a sheet that no longer exists.
+  const isSheetVisible =
+    hasGuide && isGuideOpen && !showStartScreen && !showEndScreen;
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isSheetVisible) {
+      root.style.setProperty('--quiz-pane-offset', `${paneWidth}px`);
+    } else {
+      root.style.removeProperty('--quiz-pane-offset');
+    }
+    return () => {
+      root.style.removeProperty('--quiz-pane-offset');
+    };
+  }, [isSheetVisible, paneWidth]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isPaneResizing) {
+      root.setAttribute('data-quiz-pane-resizing', '');
+    } else {
+      root.removeAttribute('data-quiz-pane-resizing');
+    }
+    return () => root.removeAttribute('data-quiz-pane-resizing');
+  }, [isPaneResizing]);
+
+  /**
    * 3) Watch for clicks on the entire document. If the user clicked
    *    outside our DrawerContent, set the snap back to "180px".
    */
@@ -435,106 +528,239 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
         />
       ) : (
         <div
-          className={classNames(
-            'motion-enter max-w-7xl p-0 md:p-6 bg-white md:border border-gray-200 rounded-lg m-auto',
-            // Grid subsets (Set R's 18 options) need extra clearance so
-            // the last option rows aren't hidden under the fixed drawer.
-            isGridLayout ? 'mb-52' : 'mb-6'
-          )}
+          // When the right sheet is open the workspace yields to it (VS Code
+          // style) instead of being covered — see `.quiz-pane-push` in
+          // globals.css. The navbar carries the same class, so the whole
+          // page shifts as one layer; the width itself is published to
+          // `--quiz-pane-offset` by the effect above.
+          className='quiz-pane-push'
         >
-          <div className='mx-auto w-full max-w-screen-xl p-4'>
-            {currentQuestion && (
-              <div
-                key={currentQuestion.id}
-                className='motion-quiz-question flex flex-col md:justify-between gap-5 max-sm:flex'
-                data-motion={isQuestionLeaving ? 'leaving' : 'entered'}
-              >
-                <Prompt value={currentQuestion.prompt} />
-
-                <div
-                  className={
-                    isGridLayout
-                      ? classNames('w-full self-center', gridMaxWidth)
-                      : ''
-                  }
+          <div
+            className={classNames(
+              'motion-enter w-full max-w-7xl p-0 md:p-6 bg-white md:border border-gray-200 rounded-lg m-auto',
+              // Below `lg` the fixed vaul sheet reserves its 180px collapsed
+              // snap, so grid subsets need extra clearance. On `lg` the
+              // controls sit inside the card (no fixed chrome), so none is
+              // needed.
+              isGridLayout ? 'mb-52 lg:mb-6' : 'mb-6'
+            )}
+          >
+            {/* In flow (not absolute) so it can never occlude the prompt when
+                the open sheet narrows the card. Top-right placement maps the
+                control to where the sheet appears (spatial correspondence). */}
+            {hasGuide && (
+              <div className='hidden justify-end lg:flex'>
+                <button
+                  type='button'
+                  onClick={() => setIsGuideOpen((open) => !open)}
+                  aria-expanded={isGuideOpen}
+                  aria-controls='quiz-reference-pane'
+                  className='inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400'
                 >
-                  <h2 className='text-xl font-bold text-gray-800'>
-                    {subSet.header}
-                  </h2>
-                  {multiSelect && (
-                    <p className='mt-1 text-sm font-normal text-gray-500'>
-                      Select all that apply — more than one may be correct.
-                    </p>
+                  {isGuideOpen ? (
+                    <PanelRightClose className='h-4 w-4' aria-hidden='true' />
+                  ) : (
+                    <PanelRightOpen className='h-4 w-4' aria-hidden='true' />
                   )}
-                </div>
-
-                <div
-                  ref={optionsGridRef}
-                  className={
-                    isGridLayout
-                      ? // Column-major (options read down each column),
-                        // matching the original 2008 answer grid. Capped
-                        // width + centered so the options aren't full-bleed.
-                        classNames(
-                          optionGridColumnClasses(optionCount),
-                          'gap-3 w-full self-center',
-                          gridMaxWidth
-                        )
-                      : 'flex flex-col gap-5'
-                  }
-                >
-                  {currentQuestion.options.map((option, index) => (
-                    <Option
-                      key={option.id}
-                      index={index + 1}
-                      showIndex
-                      compact={isGridLayout}
-                      abbreviation={option.abbreviation}
-                      isSelected={
-                        multiSelect
-                          ? selectedOptionIds.includes(option.id)
-                          : index === selectedOptionIndex
-                      }
-                      isCursor={multiSelect && index === selectedOptionIndex}
-                      isCorrect={currentQuestion.correctId.includes(option.id)}
-                      showSolution={showSolution}
-                      ref={
-                        index === selectedOptionIndex
-                          ? focusSelectedOption
-                          : undefined
-                      }
-                      hasBeenIncorrectlyGuessed={previousGuesses.includes(
-                        option.id
-                      )}
-                      label={option.label}
-                      onClick={() => {
-                        selectOption(index);
-                      }}
-                    />
-                  ))}
-                </div>
+                  {isGuideOpen ? 'Hide guide' : 'Guide'}
+                </button>
               </div>
             )}
-          </div>
-          <hr className='h-px my-4 bg-gray-200 border-0' />
-          {(hasRevealedAnswer || displayedHint) && (
-            <div
-              key={`${currentQuestion?.id}-${previousGuesses.length}-${
-                showSolution ? 'sol' : 'try'
-              }`}
-              className='motion-answer-reveal p-2 mb-3 text-base leading-6 text-gray-800'
-            >
-              {hasRevealedAnswer && (
-                <p>
-                  <KatexSpan text={currentQuestion!.answer} />
-                </p>
-              )}
-              {displayedHint && (
-                <p className='mt-2 whitespace-pre-line text-base leading-7 text-gray-700'>
-                  <KatexSpan text={displayedHint} />
-                </p>
+            <div className='mx-auto w-full max-w-screen-xl p-4'>
+              {currentQuestion && (
+                <div
+                  key={currentQuestion.id}
+                  className='motion-quiz-question flex flex-col md:justify-between gap-5 max-sm:flex'
+                  data-motion={isQuestionLeaving ? 'leaving' : 'entered'}
+                >
+                  <Prompt value={currentQuestion.prompt} />
+
+                  <div
+                    className={
+                      isGridLayout
+                        ? classNames('w-full self-center', gridMaxWidth)
+                        : ''
+                    }
+                  >
+                    <h2 className='text-xl font-bold text-gray-800'>
+                      {subSet.header}
+                    </h2>
+                    {multiSelect && (
+                      <p className='mt-1 text-sm font-normal text-gray-500'>
+                        Select all that apply — more than one may be correct.
+                      </p>
+                    )}
+                  </div>
+
+                  <div
+                    ref={optionsGridRef}
+                    className={
+                      isGridLayout
+                        ? // Column-major (options read down each column),
+                          // matching the original 2008 answer grid. Capped
+                          // width + centered so the options aren't full-bleed.
+                          classNames(
+                            optionGridColumnClasses(optionCount),
+                            'gap-3 w-full self-center',
+                            gridMaxWidth
+                          )
+                        : 'flex flex-col gap-5'
+                    }
+                  >
+                    {currentQuestion.options.map((option, index) => (
+                      <Option
+                        key={option.id}
+                        index={index + 1}
+                        showIndex
+                        compact={isGridLayout}
+                        abbreviation={option.abbreviation}
+                        isSelected={
+                          multiSelect
+                            ? selectedOptionIds.includes(option.id)
+                            : index === selectedOptionIndex
+                        }
+                        isCursor={multiSelect && index === selectedOptionIndex}
+                        isCorrect={currentQuestion.correctId.includes(
+                          option.id
+                        )}
+                        showSolution={showSolution}
+                        ref={
+                          index === selectedOptionIndex
+                            ? focusSelectedOption
+                            : undefined
+                        }
+                        hasBeenIncorrectlyGuessed={previousGuesses.includes(
+                          option.id
+                        )}
+                        label={option.label}
+                        onClick={() => {
+                          selectOption(index);
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
+            <hr className='h-px my-4 bg-gray-200 border-0' />
+            {(hasRevealedAnswer || displayedHint) && (
+              <div
+                key={`${currentQuestion?.id}-${previousGuesses.length}-${
+                  showSolution ? 'sol' : 'try'
+                }`}
+                className='motion-answer-reveal p-2 mb-3 text-base leading-6 text-gray-800'
+              >
+                {hasRevealedAnswer && (
+                  <p>
+                    <KatexSpan text={currentQuestion!.answer} />
+                  </p>
+                )}
+                {displayedHint && (
+                  <p className='mt-2 whitespace-pre-line text-base leading-7 text-gray-700'>
+                    <KatexSpan text={displayedHint} />
+                  </p>
+                )}
+              </div>
+            )}
+            {/* Desktop controls, in the flow of the card itself: the primary
+                action lives with the content it acts on, so no fixed bottom
+                chrome is needed at this breakpoint. Below `lg` the vaul
+                bottom sheet (further down) owns these controls. */}
+            <div className='hidden items-center justify-between gap-6 px-4 pb-2 pt-2 lg:flex'>
+              <div className='min-w-0'>
+                <KeyboardKeys
+                  optionCount={currentQuestion?.options.length}
+                  hasAbbreviations={currentQuestion?.options.some(
+                    (option) => option.abbreviation
+                  )}
+                  twoDimensional={isGridLayout}
+                  multiSelect={multiSelect}
+                />
+              </div>
+              <div className='flex shrink-0 items-center gap-5'>
+                <span className='font-medium tabular-nums text-gray-800'>
+                  {progressLabel(mode, questionCounter, scoreState.score)}
+                </span>
+                <div className='w-44'>
+                  {showSolution ? (
+                    <Button
+                      label='Next Question'
+                      disabled={isQuestionLeaving}
+                      onClick={handleNextQuestionTransition}
+                    />
+                  ) : (
+                    <Button
+                      label='Check Answer'
+                      disabled={
+                        multiSelect
+                          ? selectedOptionIds.length === 0
+                          : selectedOptionIndex == null
+                      }
+                      onClick={handleCheckAnswer}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop reference sheet — the same vaul Drawer as the mobile
+              bottom sheet, repositioned to the right edge. Same surface,
+              same grabber language (rotated vertical, doubling as a
+              continuous resize grip), same slide physics. Non-modal so the
+              quiz stays interactive; closed by default, toggled from the
+              card's top-right. Below `lg` it never opens — the bottom sheet
+              owns the guide there. */}
+          {hasGuide && (
+            <Drawer
+              direction='right'
+              open={isGuideOpen}
+              onOpenChange={setIsGuideOpen}
+              modal={false}
+              dismissible={false}
+              shouldScaleBackground={false}
+            >
+              <DrawerContent
+                side='right'
+                id='quiz-reference-pane'
+                className='hidden lg:flex'
+                style={{ width: paneWidth }}
+              >
+                <div
+                  role='separator'
+                  aria-orientation='vertical'
+                  aria-label='Resize the reference guide'
+                  onPointerDown={startPaneResize}
+                  className='group absolute inset-y-0 left-0 z-10 flex w-4 cursor-col-resize items-center justify-center'
+                >
+                  <div className='h-24 w-1.5 rounded-full bg-muted transition-colors group-hover:bg-gray-300' />
+                </div>
+                <div className='flex h-14 shrink-0 items-center justify-between border-b border-gray-100 pl-7 pr-4'>
+                  <DrawerTitle className='text-sm font-semibold text-gray-800'>
+                    Reference guide
+                  </DrawerTitle>
+                  <DrawerDescription className='sr-only'>
+                    The well-formed formula guide for this exercise set. Drag
+                    the left edge to resize.
+                  </DrawerDescription>
+                  <button
+                    type='button'
+                    onClick={() => setIsGuideOpen(false)}
+                    aria-label='Close reference guide'
+                    className='inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400'
+                  >
+                    <X className='h-4 w-4' aria-hidden='true' />
+                  </button>
+                </div>
+                {/* Container-queried so the guide's columns and heading sizes
+                    follow the sheet's current width (it's resizable), not the
+                    viewport — single-column when narrow, opening up as the
+                    user drags it wider. */}
+                <div className='@container min-h-0 flex-1 overflow-y-auto pl-7 pr-6 py-6 flex flex-col gap-10 text-base leading-7 text-gray-600 select-text'>
+                  <WffGuide subSet={subSet} />
+                </div>
+              </DrawerContent>
+            </Drawer>
           )}
         </div>
       )}
@@ -562,7 +788,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
           <DrawerContent
             ref={drawerRef}
             disableOpenAnimation
-            className='quiz-controls-drawer fixed flex flex-col overflow-hidden bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]'
+            className='quiz-controls-drawer fixed flex flex-col overflow-hidden bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px] lg:hidden'
             style={
               {
                 '--initial-transform': DRAWER_INITIAL_TRANSFORM,
@@ -627,7 +853,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
 
             {isGuideExpanded && (
               <div
-                className='overflow-y-auto flex flex-col gap-10 mx-4 md:mx-8 pb-8 text-base leading-7 text-gray-600 select-text'
+                className='@container overflow-y-auto flex flex-col gap-10 mx-4 md:mx-8 pb-8 text-base leading-7 text-gray-600 select-text'
                 style={{ maxHeight: guideContentMaxHeight(snap) }}
               >
                 <WffGuide subSet={subSet} />

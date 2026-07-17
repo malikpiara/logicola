@@ -47,6 +47,14 @@ interface DrawerContentExtraProps {
    */
   onGrabberClick?: () => void;
   disableOpenAnimation?: boolean;
+  /**
+   * Which edge the sheet is attached to. Must match the `direction`
+   * prop on the Drawer root. 'bottom' (the default) is the original
+   * mobile sheet with its horizontal grabber; 'right' is a
+   * full-height side sheet — the caller supplies its own edge
+   * handle there (e.g. a resize grip), so no grabber is rendered.
+   */
+  side?: 'bottom' | 'right';
 }
 
 const DrawerContent = React.forwardRef<
@@ -60,6 +68,7 @@ const DrawerContent = React.forwardRef<
       children,
       onGrabberClick,
       disableOpenAnimation = false,
+      side = 'bottom',
       ...props
     },
     ref
@@ -69,23 +78,29 @@ const DrawerContent = React.forwardRef<
       <DrawerPrimitive.Content
         ref={ref}
         className={cn(
-          'fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0',
+          side === 'bottom'
+            ? 'fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background'
+            : 'fixed inset-y-0 right-0 z-50 flex flex-col rounded-l-[10px] border bg-background',
+          'outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0',
           !disableOpenAnimation &&
-            'motion-panel duration-200 ease-[var(--ease-out-quart)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-bottom-6 data-[state=closed]:slide-out-to-bottom-5',
+            (side === 'bottom'
+              ? 'motion-panel duration-200 ease-[var(--ease-out-quart)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-bottom-6 data-[state=closed]:slide-out-to-bottom-5'
+              : 'duration-200 ease-[var(--ease-out-quart)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-right-6 data-[state=closed]:slide-out-to-right-5'),
           className
         )}
         {...props}
       >
-        {onGrabberClick ? (
-          <button
-            type='button'
-            onClick={onGrabberClick}
-            aria-label='Cycle drawer snap point'
-            className='block mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted cursor-grab transition-colors hover:bg-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400'
-          />
-        ) : (
-          <div className='mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted cursor-grab' />
-        )}
+        {side === 'bottom' &&
+          (onGrabberClick ? (
+            <button
+              type='button'
+              onClick={onGrabberClick}
+              aria-label='Cycle drawer snap point'
+              className='block mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted cursor-grab transition-colors hover:bg-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400'
+            />
+          ) : (
+            <div className='mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted cursor-grab' />
+          ))}
         {children}
       </DrawerPrimitive.Content>
     </DrawerPortal>
