@@ -9,6 +9,8 @@ import { EndScreen } from './endScreen';
 import { KeyboardKeys } from './keyboardKeys';
 import { StartScreen } from './startScreen';
 import useQuizState, { getRevealThreshold } from './useQuizState';
+import { progressLabel } from './quizMode';
+import { canScore } from '@/lib/scoring';
 import classNames from 'classnames';
 import { SubSet } from '@/content/types';
 import {
@@ -206,7 +208,16 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
     onShowStartScreen,
     previousGuesses,
     onTryAgain,
+    mode,
+    scoreState,
   } = useQuizState(subSet);
+  // Offered wherever the original's scoring has actually been derived from
+  // that set's own original program — today A/C/J/L/N (+5, halving penalty), Q (+7, flat)
+  // and R (+8, charged once, forfeits). Every published set is covered. The
+  // unpublished ones aren't: B/D/E/F/P are bespoke and the proofs sets
+  // (G/I/K/M/O) have no reward directive at all, so `canScore` returns false
+  // for them rather than lending them Set R's numbers.
+  const offerScoredRun = canScore(subSet.name);
   const hasGuide = hasWffGuide(subSet);
   const isGridLayout = subSet.optionLayout === 'grid';
   const optionCount = currentQuestion?.options.length ?? 0;
@@ -401,6 +412,8 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
       {showStartScreen ? (
         <StartScreen
           onStartQuiz={onShowStartScreen}
+          offerScoredRun={offerScoredRun}
+          scoringProfile={scoreState.profile}
           setName={subSet.name}
           title={subSet.title}
           description={subSet.description}
@@ -412,6 +425,10 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
         <EndScreen
           numOfCorrectQuestions={correctQuestions.length}
           onTryAgain={onTryAgain}
+          mode={mode}
+          score={scoreState.score}
+          questionsTaken={questionCounter}
+          offerScoredRun={offerScoredRun}
           surfaceColor={quizScreenColors.surfaceColor}
           countColor={quizScreenColors.countColor}
           foregroundColor={quizScreenColors.foregroundColor}
@@ -581,7 +598,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                 <div className='flex justify-between gap-5 items-center h-full align-bottom text-gray-800 font-medium flex-col md:flex-row w-full md:w-fit'>
                   {!showStartScreen && !showEndScreen && (
                     <div className='flex tabular-nums'>
-                      {questionCounter} of 10
+                      {progressLabel(mode, questionCounter, scoreState.score)}
                     </div>
                   )}
                   <div className='flex h-max w-full md:w-fit'>

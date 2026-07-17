@@ -1,8 +1,16 @@
 import { useRef, useState } from 'react';
 import { SubSet, Question } from '@/content/types';
 import { AnalyticsProperties, captureAnalyticsEvent } from '@/lib/analytics';
-
-const QUIZ_QUESTION_LIMIT = 10;
+import { DEFAULT_QUIZ_MODE, type QuizMode } from './quizMode';
+import {
+  SCORING_PROFILES,
+  beginProblem,
+  createScoreState,
+  isComplete,
+  profileForSet,
+  registerCorrect,
+  registerMiss,
+} from '@/lib/scoring';
 
 /** Helper to shuffle array in-place using Fisher-Yates */
 function shuffleArray<T>(array: T[]): void {
@@ -68,10 +76,31 @@ function buildQuizAnalyticsProperties(
 }
 
 export default function useQuizState(subSet: SubSet) {
-  const totalQuestionCount = Math.min(
-    QUIZ_QUESTION_LIMIT,
-    subSet.questions.length
+  // The run's end condition. Chosen on the start screen, so it's state rather
+  // than a prop — see ./quizMode.
+  const [mode, setMode] = useState<QuizMode>(DEFAULT_QUIZ_MODE);
+
+  // In `count` mode this is the denominator ("3 of 10"). In `score` mode there
+  // ISN'T one — the run ends at 100 points, whenever that happens — so this
+  // degrades to "how many questions were drawn", i.e. the ceiling before we
+  // run out of supply rather than a target.
+  const totalQuestionCount =
+    mode.kind === 'count'
+      ? Math.min(mode.total, subSet.questions.length)
+      : subSet.questions.length;
+
+  // Each set has its own economy — reward, penalty decay, and whether a
+  // missed problem forfeits. Resolved from the set letter in `subSet.name`.
+  // Sets whose original scoring hasn't been derived fall back to Set R's
+  // ONLY so the hook has a shape to hold; `canScore()` gates whether the
+  // scored run is ever offered for them, so this fallback is unreachable in
+  // practice and must never become the excuse for shipping a wrong constant.
+  const profile = profileForSet(subSet.name) ?? SCORING_PROFILES.R!;
+
+  const [scoreState, setScoreState] = useState(() =>
+    createScoreState(profile, mode.kind === 'score' ? mode.level : 0)
   );
+
   const isMulti = !!subSet.multiSelect;
   const hasStartedRef = useRef(false);
   const hasCompletedRef = useRef(false);
@@ -129,7 +158,16 @@ export default function useQuizState(subSet: SubSet) {
    * Move to next question or show the end screen if we’re done
    */
   function handleNextQuestion() {
-    if (questionCounter >= totalQuestionCount) {
+    // The end condition is the whole difference between the two modes.
+    // `count`: stop at the Nth question. `score`: stop at 100 points, however
+    // many questions that takes — so we only run out when the drawn pool is
+    // exhausted (a prototype limit; see QuizClient).
+    const finished =
+      mode.kind === 'count'
+        ? questionCounter >= totalQuestionCount
+        : isComplete(scoreState);
+
+    if (finished) {
       onShowEndScreen();
       return;
     }
@@ -142,6 +180,9 @@ export default function useQuizState(subSet: SubSet) {
       setPreviousGuesses([]);
       setShowSolution(false);
       setQuestionCounter(questionCounter + 1);
+      // original program `*m`: q := level, r := 8 — re-arm both registers for the new
+      // problem, so a miss never poisons the one after it.
+      setScoreState(beginProblem);
       return;
     }
 
@@ -239,6 +280,9 @@ export default function useQuizState(subSet: SubSet) {
         if (wrongAttempts === 0) {
           setCorrectQuestions((prev) => [...prev, currentQuestion.id]);
         }
+        // original program `ky:+$r` — awards 8 if clean, 0 if this problem was already
+        // missed (r having been zeroed by registerMiss).
+        setScoreState(registerCorrect);
         setShowSolution(true);
       } else {
         // Flag the wrong picks, keep the genuine ones for another try.
@@ -246,6 +290,9 @@ export default function useQuizState(subSet: SubSet) {
         setSelectedOptionIds((prev) =>
           prev.filter((id) => correctId.includes(id))
         );
+        // original program `*a k0<y:-2*$q` then `c0<y:q0`/`r0` — charges 2*level once, then
+        // disarms. Safe to call on every miss; only the first one costs.
+        setScoreState(registerMiss);
         registerWrongAttempt(currentQuestion);
       }
       return;
@@ -257,10 +304,12 @@ export default function useQuizState(subSet: SubSet) {
       if (wrongAttempts === 0) {
         setCorrectQuestions((prev) => [...prev, currentQuestion.id]);
       }
+      setScoreState(registerCorrect);
       setShowSolution(true);
     } else {
       setPreviousGuesses((prev) => [...prev, chosenOption.id]);
       setSelectedOptionIndex(null);
+      setScoreState(registerMiss);
       registerWrongAttempt(currentQuestion);
     }
   }
@@ -268,15 +317,23 @@ export default function useQuizState(subSet: SubSet) {
   /**
    * Transition from "start screen" to first question
    */
-  function onShowStartScreen() {
+  function onShowStartScreen(chosen: QuizMode = DEFAULT_QUIZ_MODE) {
     if (hasStartedRef.current) {
       return;
     }
 
     hasStartedRef.current = true;
+    setMode(chosen);
+    setScoreState(
+      createScoreState(profile, chosen.kind === 'score' ? chosen.level : 0)
+    );
     void captureAnalyticsEvent('quiz_started', {
       title: subSet.title,
       ...buildQuizAnalyticsProperties(subSet, totalQuestionCount),
+      // The graduation-rate measurement: what fraction of runs are scored,
+      // and of those, what fraction reach 100.
+      quiz_mode: chosen.kind,
+      scoring_level: chosen.kind === 'score' ? chosen.level : null,
     });
     setShowStartScreen(false);
   }
@@ -302,14 +359,19 @@ export default function useQuizState(subSet: SubSet) {
     setShowEndScreen(true);
   }
 
-  function onTryAgain() {
+  function onTryAgain(nextMode: QuizMode = mode) {
     void captureAnalyticsEvent('quiz_retried', {
       ...buildQuizAnalyticsProperties(subSet, totalQuestionCount),
       correct_questions_count: correctQuestions.length,
       score_percentage: (correctQuestions.length / totalQuestionCount) * 100,
       source: 'quiz_end_screen',
+      quiz_mode: nextMode.kind,
     });
 
+    setMode(nextMode);
+    setScoreState(
+      createScoreState(profile, nextMode.kind === 'score' ? nextMode.level : 0)
+    );
     hasStartedRef.current = true;
     hasCompletedRef.current = false;
     setQuestionIdx(0);
@@ -335,6 +397,11 @@ export default function useQuizState(subSet: SubSet) {
     // Indices & counters
     questionIdx,
     questionCounter,
+    totalQuestionCount,
+
+    // Run shape + scoring
+    mode,
+    scoreState,
 
     // Current question
     currentQuestion,
