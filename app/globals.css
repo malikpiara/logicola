@@ -10,6 +10,16 @@
     font-stretch: ultra-expanded;
   }
 
+  /* A shallow rounded notch at each corner, matched to the Logicola
+     cartridge's own corner. `corner-shape` is sized by `border-radius`,
+     so pair this with a rounded utility (e.g. rounded-[9px]) — the radius
+     sets how deep the step cuts. It's a pure enhancement: `corner-shape`
+     is Chrome-only for now, and everywhere else the plain rounded corner
+     from `border-radius` remains, so the button never looks broken. */
+  .corner-notch {
+    corner-shape: superellipse(-2.4);
+  }
+
   .motion-colors {
     transition-duration: var(--motion-feedback);
     transition-property:

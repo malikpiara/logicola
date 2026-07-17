@@ -49,7 +49,13 @@ export interface QuizClientProps {
 export default function QuizClient({
   setKey,
   subsetIndex,
-  perSubset = 10,
+  // PROTOTYPE SHORTCUT. A scored run has no fixed length — it ends at 100
+  // points, which takes 13 problems at best and rather more with misses. The
+  // honest fix is to consume the generator as the endless stream it already
+  // is (see the "infinite-drill mode" note above). Until then we draw a pool
+  // big enough that a scored run won't hit the bottom, and count mode simply
+  // uses the first 10 of it. Cheap: these are template substitutions, not IO.
+  perSubset = 60,
   seed,
 }: QuizClientProps) {
   // useState's lazy initializer runs exactly once per mount. F5 →
