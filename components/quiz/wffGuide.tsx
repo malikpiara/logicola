@@ -76,9 +76,18 @@ interface WffGuideProps {
 const GUIDE_SUBSET_IDS = new Set([1, 2, 3, 4, 6, 12, 18]);
 const SET_R_SUBSET_ID = 18;
 
+// Heading scale is container-queried, like the columns below: the same guide
+// renders in a wide bottom sheet (mobile/tablet) and a ~400px desktop side
+// panel, and a viewport-based `md:text-2xl` would blow the headings up in the
+// narrow panel on precisely the screens where it has the least room.
 const guideHeadingClassName =
-  'text-xl md:text-2xl font-semibold leading-7 md:leading-8 text-gray-800';
-const guideColumnsClassName = 'flex flex-col gap-8 lg:flex-row lg:gap-10';
+  'text-xl @3xl:text-2xl font-semibold leading-7 @3xl:leading-8 text-gray-800';
+// Container-query driven (`@3xl` ≈ 768px) rather than viewport `lg:` so the
+// guide's two-column layouts follow the width of whatever slot they sit in —
+// the full-width bottom sheet vs. the ~350px desktop side pane — instead of the
+// screen. In the narrow rail the container never reaches `@3xl`, so the columns
+// stay stacked; the wide bottom sheet still gets two columns where it has room.
+const guideColumnsClassName = 'flex flex-col gap-8 @3xl:flex-row @3xl:gap-10';
 const guideCodeClassName =
   'rounded bg-muted px-1.5 py-0.5 text-lg leading-none text-gray-900';
 const capsLabelClassName =
