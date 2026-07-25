@@ -155,28 +155,28 @@ The antecedent is descriptive — don’t underline u in Dgu.",
           "options": [
             {
               "id": 0,
+              "label": "$ (R\\underline{u} \\supset  Su) $",
+            },
+            {
+              "hint": "Conditional with imperative consequent: only the consequent letter is underlined — \`(Su ⊃ L{u})\` reads ‘if you’re sleeping, then leave’.
+‘Do A, only if B’ makes the imperative the antecedent: (A̲ ⊃ B) — the same as ‘If you aren’t selling, then don’t repent’: (∼B ⊃ ∼A̲).",
+              "id": 1,
               "label": "$ (Su \\supset  R\\underline{u}) $",
             },
             {
               "hint": "Conditional with imperative consequent: only the consequent letter is underlined — \`(Su ⊃ L{u})\` reads ‘if you’re sleeping, then leave’.
-The antecedent is descriptive (‘you’re selling’), not imperative — don’t underline the u in Su.",
-              "id": 1,
-              "label": "$ (S\\underline{u} \\supset  R\\underline{u}) $",
-            },
-            {
-              "hint": "Conditional with imperative consequent: only the consequent letter is underlined — \`(Su ⊃ L{u})\` reads ‘if you’re sleeping, then leave’.
-You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs. (The consequent is the imperative.)",
+You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs. (The antecedent is the imperative.)",
               "id": 2,
-              "label": "$ (Su \\supset  Ru) $",
+              "label": "$ (Ru \\supset  Su) $",
             },
             {
               "hint": "Conditional with imperative consequent: only the consequent letter is underlined — \`(Su ⊃ L{u})\` reads ‘if you’re sleeping, then leave’.
-‘If A then B’ is \`(A ⊃ B)\`, not \`(A · B)\`.",
+‘A only if B’ is a conditional \`(A ⊃ B)\`, not \`(A · B)\`.",
               "id": 3,
-              "label": "$ (Su \\cdot  R\\underline{u}) $",
+              "label": "$ (R\\underline{u} \\cdot  Su) $",
             },
           ],
-          "prompt": "If you’re selling, then repent.",
+          "prompt": "Do repent, only if you sell.",
         },
         {
           "answer": "",
