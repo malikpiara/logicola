@@ -186,7 +186,7 @@ function pickDifferentLetter<T extends string>(
 }
 
 // =============================================================
-// Easy templates: *0, *2, *3, *4, *5, *6, *7, *8, *9, *10, *11, *12
+// Easy templates: *0, *1, *2, *3, *4, *5, *6, *7, *8, *9, *10, *11
 // =============================================================
 
 /**
@@ -504,10 +504,13 @@ function template10(rng: Rng, counter: number): Question {
   const adjPred = pickDifferentLetter(rng, adjectives, noun);
   const adjSubj = pickDifferentLetter(rng, adjectives, adjPred);
   const A = noun[0]!.toUpperCase();
-  const a = noun[0]!.toLowerCase();
   const C = adjPred[0]!.toUpperCase();
   const c = adjPred[0]!.toLowerCase();
 
+  // Distractors follow 2008's *10 grid (`$h is $k`, `$h is $f`,
+  // `some $b`). A switched form (`some C is A`) must never appear
+  // here: Gensler treats `some A is B` and `some B is A` as the
+  // same wff, so it would be a correct answer marked wrong.
   return {
     id: qid('10', counter),
     prompt: `Some ${adjSubj} ${pluralize(noun)} are ${adjPred}.`,
@@ -515,8 +518,8 @@ function template10(rng: Rng, counter: number): Question {
       [
         { label: `some ${A} is ${C}` },
         { label: `${A} is ${C}` },
-        { label: `some ${a} is ${c}` },
-        { label: `some ${C} is ${A}`, layer2: HINT_SWITCHED },
+        { label: `${A} is ${c}`, layer2: classHint(adjPred) },
+        { label: `some ${A} is ${c}`, layer2: classHint(adjPred) },
       ],
       0
     ),
@@ -558,34 +561,34 @@ function template11(rng: Rng, counter: number): Question {
 }
 
 /**
- * *12 — "$S $C people are $As"  ($S = "Some" or "All")
+ * *12 — "$S $C people are $As"  ($S = "Only" (w=12) or "None but" (w=23))
  *
- *   "Some kind people are doctors." → some K is D
- *   "All cheerful people are scholars." → all C is S
+ *   "Only cheerful people are scholars." → all S is C
  *
- * Subject: "$C people" → CAPITAL (class of $C things).
- * Predicate: "$As" plural noun → CAPITAL (class).
+ * Gensler's only/none-but switching drill: ‘only’ and ‘none but’
+ * require switching the order of the letters — “$S A is B = all
+ * B is A” (2008 e-block, r=12/r=23). Options follow 2008's *12
+ * grid: `all $h is $k` (correct), `all $c` (didn't switch),
+ * `only $c` and `$k is $h` (non-wffs).
  */
 function template12(rng: Rng, counter: number): Question {
   const noun = pickFrom(rng, nounsProfessions);
   const adjSubj = pickDifferentLetter(rng, adjectives, noun);
   const C = adjSubj[0]!.toUpperCase();
-  const c = adjSubj[0]!.toLowerCase();
   const A = noun[0]!.toUpperCase();
-  const a = noun[0]!.toLowerCase();
-  const isAll = rng() < 0.5;
-  const Quant = isAll ? 'All' : 'Some';
-  const quant = isAll ? 'all' : 'some';
-  const otherQuant = isAll ? 'some' : 'all';
+  const sWord = rng() < 0.5 ? 'Only' : 'None but';
+  const switchHint = `You have to switch the parts around with ‘${sWord.toLowerCase()}.’ ‘${sWord} men are NFL football players’ doesn’t mean ‘all men are NFL football players’ — it means ‘all NFL football players are men.’`;
+  const onlyNotWffHint =
+    '‘Only’ isn’t part of the wff language — translate it as an ‘all’-sentence with the parts switched around.';
 
   return {
     id: qid('12', counter),
-    prompt: `${Quant} ${adjSubj} people are ${pluralize(noun)}.`,
+    prompt: `${sWord} ${adjSubj} people are ${pluralize(noun)}.`,
     ...buildOptions(
       [
-        { label: `${quant} ${C} is ${A}` },
-        { label: `${otherQuant} ${C} is ${A}` },
-        { label: `${quant} ${c} is ${a}` },
+        { label: `all ${A} is ${C}` },
+        { label: `all ${C} is ${A}`, layer2: switchHint },
+        { label: `only ${C} is ${A}`, layer2: onlyNotWffHint },
         { label: `${C} is ${A}` },
       ],
       0
@@ -594,8 +597,10 @@ function template12(rng: Rng, counter: number): Question {
   };
 }
 
+// 2008 split: easier = *0–*11, harder = *12–*23 (`C:wz%12 … Cm:ww+12`).
 const easyTemplates = [
   template0,
+  template1,
   template2,
   template3,
   template4,
@@ -606,11 +611,10 @@ const easyTemplates = [
   template9,
   template10,
   template11,
-  template12,
 ] as const;
 
 // =============================================================
-// Hard templates: *1, *13, *14, *15, *16, *17, *18, *19, *20, *21, *22
+// Hard templates: *12, *13, *14, *15, *16, *17, *18, *19, *20, *21, *22
 // =============================================================
 
 /**
@@ -928,7 +932,7 @@ function template22(rng: Rng, counter: number): Question {
 }
 
 const hardTemplates = [
-  template1,
+  template12,
   template13,
   template14,
   template15,

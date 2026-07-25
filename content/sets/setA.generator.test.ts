@@ -190,6 +190,69 @@ describe('setA generator — Gensler fidelity', () => {
       }
     }
   );
+
+  /** Gensler's 2008 grader treats four forms as order-insensitive
+   *  ("the order doesn't matter with these four forms"):
+   *  some A is B = some B is A; no A is B = no B is A;
+   *  x is y = y is x; x is not y = y is not x.
+   *  A distractor that is an order-swap of the correct answer is
+   *  therefore a correct answer marked wrong (the *10 P0 bug). */
+  const orderSwapped = (label: string): string | null => {
+    let m = label.match(/^some ([A-Za-z]) is ([A-Za-z])$/);
+    if (m) return `some ${m[2]} is ${m[1]}`;
+    m = label.match(/^no ([A-Za-z]) is ([A-Za-z])$/);
+    if (m) return `no ${m[2]} is ${m[1]}`;
+    m = label.match(/^([a-z]) is ([a-z])$/);
+    if (m) return `${m[2]} is ${m[1]}`;
+    m = label.match(/^([a-z]) is not ([a-z])$/);
+    if (m) return `${m[2]} is not ${m[1]}`;
+    return null;
+  };
+
+  it.each(SWEEP_SEEDS)(
+    'seed %i: no distractor is order-equivalent to the correct answer',
+    (seed) => {
+      for (const q of allQuestions(seed)) {
+        const correct = q.options.find((o) => q.correctId.includes(o.id))!;
+        const swapped = orderSwapped(correct.label);
+        for (const o of q.options) {
+          if (q.correctId.includes(o.id)) continue;
+          expect(
+            o.label,
+            `distractor equals correct answer for "${q.prompt}"`
+          ).not.toBe(correct.label);
+          if (swapped !== null) {
+            expect(
+              o.label,
+              `distractor "${o.label}" is order-equivalent to correct "${correct.label}" for "${q.prompt}"`
+            ).not.toBe(swapped);
+          }
+        }
+      }
+    }
+  );
+
+  it.each(SWEEP_SEEDS)(
+    "seed %i: *12 only/none-but switches the letters ('only C is A' = 'all A is C')",
+    (seed) => {
+      const qs = allQuestions(seed).filter((q) => q.id.startsWith('gen.A.12.'));
+      expect(qs.length).toBeGreaterThan(0);
+      for (const q of qs) {
+        expect(q.prompt).toMatch(/^(Only|None but) /);
+        const correct = q.options.find((o) => q.correctId.includes(o.id))!;
+        const m = correct.label.match(/^all ([A-Z]) is ([A-Z])$/);
+        expect(m, `"${correct.label}" is not an all-wff`).toBeTruthy();
+        // The classic didn't-switch mistake must be offered as a distractor.
+        expect(
+          q.options.some(
+            (o) =>
+              !q.correctId.includes(o.id) &&
+              o.label === `all ${m![2]} is ${m![1]}`
+          )
+        ).toBe(true);
+      }
+    }
+  );
 });
 
 describe('setA generator — streaming iterators', () => {
