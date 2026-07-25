@@ -295,14 +295,50 @@ function template0(rng: Rng, counter: number): Question {
  * *1 — Conditional imperatives.
  *   "If you're sleeping, then leave"   → (Su ⊃ L{u})
  *   "If you sleep, then don't leave"   → (Su ⊃ ∼L{u})
+ *   "Do leave, only if you're sleeping" → (L{u} ⊃ Su)
+ *
+ * 2008's *1 lists 4 paraphrases; the if-then ones share the
+ * "(Eu ⊃ ±Fu)" form, but the only-if paraphrase (p=3, original program field
+ * `($eu_ ⊃ $fu)`) puts the underlined IMPERATIVE in the
+ * antecedent — textbook §12.1: "Do A, only if you (in fact) are
+ * doing B = (A̲ ⊃ B)", equivalent to "(∼B ⊃ ∼A̲)".
  */
 function template1(rng: Rng, counter: number): Question {
   const [eVerb, fVerb] = pickDistinctLetterPair(rng, verbsB);
   const E = eVerb[0]!.toUpperCase();
   const F = fVerb[0]!.toUpperCase();
   const negate = rng() < 0.5;
-  // Per Gensler §12.1: 2008 lists 4 paraphrases for *1; the
-  // first three share the "(Eu ⊃ ±Fu)" form.
+  const onlyIf = !negate && rng() < 1 / 3;
+  if (onlyIf) {
+    return buildQuestion(
+      1,
+      counter,
+      `Do ${fVerb}, only if you ${eVerb}.`,
+      [
+        { raw: `(${F}{u} ⊃ ${E}u)` },
+        {
+          raw: `(${E}u ⊃ ${F}{u})`,
+          layer2:
+            '‘Do A, only if B’ makes the imperative the antecedent: (A̲ ⊃ B) — the same as ‘If you aren’t ' +
+            gerund(eVerb) +
+            ', then don’t ' +
+            fVerb +
+            '’: (∼B ⊃ ∼A̲).',
+        },
+        {
+          raw: `(${F}u ⊃ ${E}u)`,
+          layer2:
+            HINT_FORGOT_UNDERLINE + ' (The antecedent is the imperative.)',
+        },
+        {
+          raw: `(${F}{u} · ${E}u)`,
+          layer2: '‘A only if B’ is a conditional `(A ⊃ B)`, not `(A · B)`.',
+        },
+      ],
+      0,
+      HINT_COND_IMP
+    );
+  }
   const prompt = negate
     ? pickFrom(rng, [
         `If you’re ${gerund(eVerb)}, then don’t ${fVerb}.`,
@@ -312,7 +348,6 @@ function template1(rng: Rng, counter: number): Question {
     : pickFrom(rng, [
         `If you’re ${gerund(eVerb)}, then ${fVerb}.`,
         `If you ${eVerb}, then ${fVerb}.`,
-        `Do ${fVerb}, only if you ${eVerb}.`,
       ]);
   const correct = negate ? `(${E}u ⊃ ∼${F}{u})` : `(${E}u ⊃ ${F}{u})`;
   return buildQuestion(
