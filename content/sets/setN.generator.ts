@@ -90,7 +90,7 @@ const HINT_COND_BELIEF =
 const HINT_DONT_COMBINE_BELIEF =
   '‘Don’t combine believing A with believing B’ → `∼({u}:A · {u}:B)`. Forbids the conjunction; both inner u’s are imperative.';
 const HINT_DONT_COMBINE_WILL =
-  '‘Don’t combine wanting yourself to do A with not doing A’ → `∼({u}:A{u} · ∼Au)`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.';
+  '‘Don’t combine believing that you ought to do A with not acting to do A’ → `∼({u}:OA{u} · ∼{u}:A{u})`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.';
 const HINT_QUANT_BELIEVE =
   '‘Everyone believes that they ought to do A’ → `(x)x:OA{x}`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.';
 const HINT_WANT_SOMEONE =
@@ -184,10 +184,6 @@ function pickDifferentLetter<T extends string>(
     (x) => x[0]!.toLowerCase() !== avoid[0]!.toLowerCase()
   );
   return pickFrom(rng, filtered.length > 0 ? filtered : pool);
-}
-
-function gerund(verb: string): string {
-  return verb + 'ing';
 }
 
 function qid(num: number, n: number): string {
@@ -727,42 +723,50 @@ function willingResolve(rng: Rng, counter: number): Question {
   );
 }
 
-/** Don't combine willing: "Don't combine wanting A with not doing A" → ∼({u}:A{u} · ∼A{u}) */
+/**
+ * Don't combine willing — Gensler's conscientiousness drill (2008 *15):
+ * "Don't combine believing that you ought to A with not acting to A"
+ *   → ∼({u}:OA{u} · ∼{u}:A{u})
+ *
+ * Both conjuncts are willing formulas with the u before the colon
+ * underlined (2008 feedback: "Underline both parts."); "acting to
+ * do A" is `u̲:Au̲`, never bare descriptive `Au`. Options mirror
+ * 2008's grid: a `∼(u̲:OAu̲ · ∼u̲:Au̲)`, b `∼(u̲:OAu̲ · ∼Au̲)`,
+ * c `(u:OAu̲ · ∼u̲:Au̲)`, d `(u:OAu̲ · ∼Au̲)`.
+ */
 function willingDontCombine(rng: Rng, counter: number): Question {
   const verb = pickFrom(rng, verbsB);
   const V = verb[0]!.toUpperCase();
   const prompt = pickFrom(rng, [
-    `Don’t combine wanting yourself to ${verb} with not ${gerund(verb)}.`,
-    `Don’t want to ${verb} without actually ${gerund(verb)}.`,
-    `Don’t both want yourself to ${verb} and fail to ${verb}.`,
+    `Don’t combine believing that you ought to ${verb} with not acting to ${verb}.`,
+    `Don’t believe that you ought to ${verb} without acting to ${verb}.`,
   ]);
   return buildQuestion(
     4,
     counter,
     prompt,
     [
-      { raw: `∼({u}:${V}{u} · ∼${V}u)` },
+      { raw: `∼({u}:O${V}{u} · ∼{u}:${V}{u})` },
       {
-        raw: `({u}:${V}{u} ⊃ ${V}u)`,
+        raw: `∼({u}:O${V}{u} · ∼${V}{u})`,
         layer2:
-          '‘Don’t combine A with B’ is the don’t-combine form `∼(A · B)`, not the if-then `(A ⊃ ∼B)`.',
-      },
-      {
-        raw: `∼({u}:${V}{u} · ∼${V}{u})`,
-        layer2:
-          'The second conjunct is descriptive (you don’t actually ' +
+          '‘Acting to ' +
           verb +
-          ') — don’t underline the u in ' +
+          '’ is itself a willing formula — `{u}:' +
           V +
-          'u.',
+          '{u}`, not bare `' +
+          V +
+          '{u}`. Underline both parts, including the u before the second colon.',
       },
       {
-        raw: `∼({u}:${V}u · ∼${V}u)`,
+        raw: `(u:O${V}{u} · ∼{u}:${V}{u})`,
         layer2:
-          HINT_FORGOT_UNDERLINE_U +
-          ' (The inner ' +
-          V +
-          '{u} is imperative — what you’re wanting yourself to do.)',
+          'Use a formula that forbids a combination — the don’t-combine imperative is `∼( · )` with the u’s before the colons underlined.',
+      },
+      {
+        raw: `(u:O${V}{u} · ∼${V}{u})`,
+        layer2:
+          'This describes you (a statement), it doesn’t forbid anything — the imperative is `∼( · )` with both parts underlined.',
       },
     ],
     0,

@@ -22,26 +22,27 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "correctId": [
             0,
           ],
-          "id": "gen.A.12.0",
+          "id": "gen.A.11.0",
           "options": [
             {
               "id": 0,
-              "label": "all N is D",
+              "label": "no D is N",
             },
             {
               "id": 1,
-              "label": "some N is D",
+              "label": "all D is not N",
             },
             {
               "id": 2,
-              "label": "all n is d",
+              "label": "D is not N",
             },
             {
+              "hint": "The term “clean druggist” could describe many persons, and so translates into a capital letter.",
               "id": 3,
-              "label": "N is D",
+              "label": "d is not N",
             },
           ],
-          "prompt": "All notorious people are druggists.",
+          "prompt": "No clean druggist is notorious.",
         },
         {
           "answer": "",
@@ -78,7 +79,90 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "correctId": [
             0,
           ],
-          "id": "gen.A.11.2",
+          "id": "gen.A.10.2",
+          "options": [
+            {
+              "id": 0,
+              "label": "some D is C",
+            },
+            {
+              "id": 1,
+              "label": "D is C",
+            },
+            {
+              "hint": "“careful” could describe many persons, and so translates into a capital letter.",
+              "id": 2,
+              "label": "D is c",
+            },
+            {
+              "hint": "“careful” could describe many persons, and so translates into a capital letter.",
+              "id": 3,
+              "label": "some D is c",
+            },
+          ],
+          "prompt": "Some poetic dentists are careful.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.11.3",
+          "options": [
+            {
+              "id": 0,
+              "label": "no P is R",
+            },
+            {
+              "id": 1,
+              "label": "all P is not R",
+            },
+            {
+              "id": 2,
+              "label": "P is not R",
+            },
+            {
+              "hint": "The term “talented professor” could describe many persons, and so translates into a capital letter.",
+              "id": 3,
+              "label": "p is not R",
+            },
+          ],
+          "prompt": "No talented professor is remarkable.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.4.4",
+          "options": [
+            {
+              "id": 0,
+              "label": "p is not F",
+            },
+            {
+              "hint": "“A fortunate person” could describe many persons, and so translates into a capital letter.",
+              "id": 1,
+              "label": "p is not f",
+            },
+            {
+              "id": 2,
+              "label": "P is not F",
+            },
+            {
+              "hint": "“A fortunate person” could describe many persons, and so translates into a capital letter.",
+              "id": 3,
+              "label": "P is not f",
+            },
+          ],
+          "prompt": "This pessimist isn't a fortunate person.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.11.5",
           "options": [
             {
               "id": 0,
@@ -93,205 +177,122 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "D is not C",
             },
             {
-              "hint": "The term “poetic dentist” could describe many persons, and so translates into a capital letter.",
+              "hint": "The term “romantic diabetic” could describe many persons, and so translates into a capital letter.",
               "id": 3,
               "label": "d is not C",
             },
           ],
-          "prompt": "No poetic dentist is careful.",
+          "prompt": "No romantic diabetic is clean.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.12.3",
+          "id": "gen.A.4.6",
           "options": [
             {
               "id": 0,
-              "label": "all R is P",
-            },
-            {
-              "id": 1,
-              "label": "some R is P",
-            },
-            {
-              "id": 2,
-              "label": "all r is p",
-            },
-            {
-              "id": 3,
-              "label": "R is P",
-            },
-          ],
-          "prompt": "All remarkable people are professors.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.A.5.4",
-          "options": [
-            {
-              "id": 0,
-              "label": "p is not f",
-            },
-            {
-              "hint": "“The most fortunate person” stands for a single person, and so translates into a small letter.",
-              "id": 1,
-              "label": "p is not F",
-            },
-            {
-              "id": 2,
-              "label": "P is not f",
-            },
-            {
-              "hint": "“The most fortunate person” stands for a single person, and so translates into a small letter.",
-              "id": 3,
-              "label": "P is not F",
-            },
-          ],
-          "prompt": "This pessimist isn't the most fortunate person.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.A.12.5",
-          "options": [
-            {
-              "id": 0,
-              "label": "some C is D",
-            },
-            {
-              "id": 1,
-              "label": "all C is D",
-            },
-            {
-              "id": 2,
-              "label": "some c is d",
-            },
-            {
-              "id": 3,
-              "label": "C is D",
-            },
-          ],
-          "prompt": "Some clean people are diabetics.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.A.5.6",
-          "options": [
-            {
-              "id": 0,
-              "label": "p is not b",
-            },
-            {
-              "hint": "“The most boastful person” stands for a single person, and so translates into a small letter.",
-              "id": 1,
               "label": "p is not B",
             },
             {
-              "id": 2,
-              "label": "P is not b",
+              "hint": "“A boastful person” could describe many persons, and so translates into a capital letter.",
+              "id": 1,
+              "label": "p is not b",
             },
             {
-              "hint": "“The most boastful person” stands for a single person, and so translates into a small letter.",
-              "id": 3,
+              "id": 2,
               "label": "P is not B",
             },
+            {
+              "hint": "“A boastful person” could describe many persons, and so translates into a capital letter.",
+              "id": 3,
+              "label": "P is not b",
+            },
           ],
-          "prompt": "This prisoner isn't the most boastful person.",
+          "prompt": "This prisoner isn't a boastful person.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.10.7",
+          "id": "gen.A.9.7",
           "options": [
             {
               "id": 0,
-              "label": "some N is G",
+              "label": "some N is not H",
             },
             {
+              "hint": "You forgot the ‘not.’",
               "id": 1,
-              "label": "N is G",
+              "label": "some N is H",
             },
             {
               "id": 2,
-              "label": "some n is g",
+              "label": "N is not H",
             },
             {
-              "hint": "Why did you switch the letters around?",
               "id": 3,
-              "label": "some G is N",
+              "label": "some n is not H",
             },
           ],
-          "prompt": "Some virtuous novelists are greedy.",
+          "prompt": "Some novelists don't help any virtuous people.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.4.8",
+          "id": "gen.A.3.8",
           "options": [
             {
               "id": 0,
-              "label": "j is not S",
+              "label": "i is j",
             },
             {
-              "hint": "“A sociable person” could describe many persons, and so translates into a capital letter.",
+              "hint": "“The most sociable judge” stands for a single person, and so translates into a small letter.",
               "id": 1,
-              "label": "j is not s",
+              "label": "i is J",
             },
             {
               "id": 2,
-              "label": "J is not S",
+              "label": "I is j",
             },
             {
-              "hint": "“A sociable person” could describe many persons, and so translates into a capital letter.",
+              "hint": "“The most sociable judge” stands for a single person, and so translates into a small letter.",
               "id": 3,
-              "label": "J is not s",
+              "label": "I is J",
             },
           ],
-          "prompt": "This judge isn't a sociable person.",
+          "prompt": "I'm the most sociable judge in Berlin.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.0.9",
+          "id": "gen.A.9.9",
           "options": [
             {
               "id": 0,
-              "label": "k is L",
+              "label": "some S is not I",
             },
             {
-              "hint": "“A logical person in Hamburg” could describe many persons, and so translates into a capital letter.",
+              "hint": "You forgot the ‘not.’",
               "id": 1,
-              "label": "k is l",
+              "label": "some S is I",
             },
             {
-              "hint": "“Keith” stands for a single person, and so translates into a small letter.",
               "id": 2,
-              "label": "K is L",
+              "label": "S is not I",
             },
             {
-              "hint": "“Keith” stands for a single person, and so translates into a small letter.
-“A logical person in Hamburg” could describe many persons, and so translates into a capital letter.",
               "id": 3,
-              "label": "K is l",
+              "label": "some s is not I",
             },
           ],
-          "prompt": "Keith is a logical person in Hamburg.",
+          "prompt": "Some senators don't injure any persistent people.",
         },
       ],
       "shuffleOptions": true,
@@ -456,30 +457,28 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "correctId": [
             0,
           ],
-          "id": "gen.A.1.5",
+          "id": "gen.A.12.5",
           "options": [
             {
               "id": 0,
-              "label": "g is h",
+              "label": "all P is G",
             },
             {
-              "hint": "“The most hideous one in Hamburg” stands for a single person, and so translates into a small letter.",
+              "hint": "You have to switch the parts around with ‘none but.’ ‘None but men are NFL football players’ doesn’t mean ‘all men are NFL football players’ — it means ‘all NFL football players are men.’",
               "id": 1,
-              "label": "g is H",
+              "label": "all G is P",
             },
             {
-              "hint": "“George” stands for a single person, and so translates into a small letter.",
+              "hint": "‘Only’ isn’t part of the wff language — translate it as an ‘all’-sentence with the parts switched around.",
               "id": 2,
-              "label": "G is h",
+              "label": "only G is P",
             },
             {
-              "hint": "“George” stands for a single person, and so translates into a small letter.
-“The most hideous one in Hamburg” stands for a single person, and so translates into a small letter.",
               "id": 3,
-              "label": "G is H",
+              "label": "G is P",
             },
           ],
-          "prompt": "George is the most hideous one in Hamburg.",
+          "prompt": "None but greedy people are plumbers.",
         },
         {
           "answer": "",
