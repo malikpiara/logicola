@@ -169,6 +169,18 @@ export default function useQuizState(subSet: SubSet) {
   }
 
   /**
+   * Stable per-template analytics key. Generated ids ("gen.A.10.3")
+   * drop the draw counter → "gen.A.10", so one template's answers
+   * aggregate under one value; static ids (e.g. Set Q's "3.1") are
+   * already stable and pass through unchanged.
+   */
+  function questionTemplateKey(questionId: string): string {
+    return questionId.startsWith('gen.')
+      ? questionId.split('.').slice(0, 3).join('.')
+      : questionId;
+  }
+
+  /**
    * The user pressed "Check Answer"
    */
   function onCheckAnswer() {
@@ -176,9 +188,28 @@ export default function useQuizState(subSet: SubSet) {
 
     // Retrieve the chosen option object
     const chosenOption = currentQuestion.options[selectedOptionIndex];
+    const correct = isAnswerCorrect(chosenOption.id, currentQuestion.correctId);
+
+    // One event per Check Answer press (so a question answered
+    // wrong twice emits two events). `question_template` is the
+    // per-template aggregation key; `option_label` records which
+    // distractor pulled the miss — the pair that makes content
+    // bugs (a distractor drawing correct-answer-level traffic)
+    // visible in PostHog.
+    void captureAnalyticsEvent('question_answered', {
+      ...buildQuizAnalyticsProperties(subSet, totalQuestionCount),
+      question_id: currentQuestion.id,
+      question_template: questionTemplateKey(currentQuestion.id),
+      question_prompt: currentQuestion.prompt,
+      option_id: chosenOption.id,
+      option_label: chosenOption.label,
+      correct,
+      guess_number: previousGuesses.length + 1,
+      first_try: previousGuesses.length === 0,
+    });
 
     // Use the helper function to see if the chosen option is correct
-    if (isAnswerCorrect(chosenOption.id, currentQuestion.correctId)) {
+    if (correct) {
       if (previousGuesses.length === 0) {
         setCorrectQuestions((prev) => [...prev, currentQuestion.id]);
       }
