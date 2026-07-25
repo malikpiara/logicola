@@ -123,6 +123,10 @@ describe('Navigation between questions', () => {
 });
 
 describe('Option selection and scoring', () => {
+  beforeEach(() => {
+    vi.mocked(captureAnalyticsEvent).mockClear();
+  });
+
   it('selects an option and increments score if the answer is correct', async () => {
     const { result } = renderHook(() => useQuizState(mockQuiz));
 
@@ -206,7 +210,12 @@ describe('Option selection and scoring', () => {
       result.current.onShowStartScreen();
     });
 
-    expect(captureAnalyticsEvent).toHaveBeenCalledTimes(1);
+    // Filter by event name — question_answered events from other
+    // interactions must not count against the once-only guarantee.
+    const quizStartedCalls = vi
+      .mocked(captureAnalyticsEvent)
+      .mock.calls.filter(([eventName]) => eventName === 'quiz_started');
+    expect(quizStartedCalls).toHaveLength(1);
     expect(captureAnalyticsEvent).toHaveBeenCalledWith(
       'quiz_started',
       expect.objectContaining({
@@ -219,6 +228,38 @@ describe('Option selection and scoring', () => {
         total_questions: mockQuiz.questions.length,
       })
     );
+  });
+
+  it('captures question_answered with template key and option detail on every check', async () => {
+    const { result } = renderHook(() => useQuizState(mockQuiz));
+
+    await waitFor(() => {
+      expect(result.current.currentQuestion).toBeDefined();
+    });
+
+    const q = result.current.currentQuestion!;
+    const wrongIndex = q.options.findIndex((o) => !q.correctId.includes(o.id));
+
+    act(() => {
+      result.current.selectOption(wrongIndex);
+    });
+    act(() => {
+      result.current.onCheckAnswer();
+    });
+
+    const calls = vi
+      .mocked(captureAnalyticsEvent)
+      .mock.calls.filter(([eventName]) => eventName === 'question_answered');
+    expect(calls).toHaveLength(1);
+    expect(calls[0]![1]).toMatchObject({
+      question_id: q.id,
+      option_id: q.options[wrongIndex]!.id,
+      option_label: q.options[wrongIndex]!.label,
+      correct: false,
+      guess_number: 1,
+      first_try: true,
+      quiz_id: mockQuiz.id,
+    });
   });
 
   it('completes after 10 questions and scores against a 10-question quiz', async () => {
