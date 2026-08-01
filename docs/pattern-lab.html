@@ -1,0 +1,1995 @@
+<title>LogiCola · Start-screen pattern lab</title>
+<style>
+  :root {
+    --bg: #f3f1ec;
+    --panel: #ffffff;
+    --text: #1d1a20;
+    --muted: #6f6879;
+    --line: #e2ded6;
+    --accent: #c216ad;
+    --chip: #eae6df;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171419;
+      --panel: #201c24;
+      --text: #f0edf2;
+      --muted: #8d8791;
+      --line: #322d38;
+      --accent: #f233df;
+      --chip: #2a2530;
+    }
+  }
+  :root[data-theme='dark'] {
+    --bg: #171419;
+    --panel: #201c24;
+    --text: #f0edf2;
+    --muted: #8d8791;
+    --line: #322d38;
+    --accent: #f233df;
+    --chip: #2a2530;
+  }
+  :root[data-theme='light'] {
+    --bg: #f3f1ec;
+    --panel: #ffffff;
+    --text: #1d1a20;
+    --muted: #6f6879;
+    --line: #e2ded6;
+    --accent: #c216ad;
+    --chip: #eae6df;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+  html,
+  body {
+    height: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Avenir Next', Futura, system-ui, sans-serif;
+  }
+  .mono {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  }
+
+  .app {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ---------- control rail ---------- */
+  aside {
+    width: 300px;
+    flex: 0 0 300px;
+    border-right: 1px solid var(--line);
+    background: var(--panel);
+    padding: 24px 20px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    overflow-y: auto;
+    max-height: 100vh;
+    position: sticky;
+    top: 0;
+  }
+  .brand h1 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    letter-spacing: 0.02em;
+  }
+  .brand p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    margin: 0 0 8px;
+  }
+
+  .patterns {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .patterns button {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    text-align: left;
+    padding: 7px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .patterns button:hover {
+    background: var(--chip);
+  }
+  .patterns button[aria-pressed='true'] {
+    background: var(--chip);
+    font-weight: 600;
+  }
+  .patterns button[aria-pressed='true']::after {
+    content: '●';
+    color: var(--accent);
+    font-size: 8px;
+  }
+  .note {
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--muted);
+    border-left: 2px solid var(--accent);
+    padding-left: 10px;
+    margin: 10px 0 0;
+    min-height: 3.2em;
+  }
+  .cs-row {
+    display: flex;
+    gap: 8px;
+  }
+  .cs-row label {
+    flex: 1;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .cs-row input[type='color'] {
+    width: 100%;
+    height: 34px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 2px;
+    background: var(--panel);
+    cursor: pointer;
+  }
+  .cs-hex {
+    width: 100%;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text);
+    padding: 3px 5px;
+    text-transform: lowercase;
+  }
+  .cs-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .cs-actions button {
+    flex: 1;
+    appearance: none;
+    font: inherit;
+    font-size: 11px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--text);
+    border-radius: 8px;
+    padding: 6px 0;
+    cursor: pointer;
+  }
+  .cs-actions button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .cs-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .cs-chips button {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    cursor: pointer;
+  }
+  #csMetrics {
+    margin-top: 10px;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 10.5px;
+  }
+  #csMetrics b {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .halfway-chip {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    vertical-align: -1px;
+    border: 1px solid var(--line);
+  }
+  .chips {
+    display: flex;
+    gap: 3px;
+    margin-left: auto;
+  }
+  .chips i {
+    width: 11px;
+    height: 11px;
+    border-radius: 3px;
+    display: block;
+    border: 1px solid var(--line);
+  }
+
+  .swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 26px 8px;
+  }
+  .swatches button {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    border: 2px solid var(--line);
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+  }
+  .swatches button[aria-pressed='true'] {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .swatches button span {
+    position: absolute;
+    inset: auto 0 -18px;
+    font-size: 9px;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 0.08em;
+  }
+  .swatches {
+    margin-bottom: 16px;
+  }
+
+  .dial {
+    margin-top: 6px;
+  }
+  .dial label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .dial output {
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .dial input[type='range'] {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+  }
+  .row input[type='checkbox'] {
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .reshuffle {
+    appearance: none;
+    font: inherit;
+    font-size: 12px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--text);
+    border-radius: 8px;
+    padding: 7px 12px;
+    cursor: pointer;
+  }
+  .reshuffle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .hint {
+    margin-top: auto;
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+  }
+  .hint kbd {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0 4px;
+    font-size: 10px;
+  }
+
+  /* ---------- stage ---------- */
+  main {
+    flex: 1;
+    display: flex;
+    padding: 28px;
+    min-width: 0;
+  }
+  .card {
+    position: relative;
+    flex: 1;
+    border-radius: 14px;
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 560px;
+    padding: 40px 24px 120px;
+  }
+  .pattern-layer {
+    position: absolute;
+    inset: 0;
+    z-index: -10;
+    pointer-events: none;
+  }
+  /*
+   * Centre treatments, all flat: no masks (a mask fades shapes into exactly
+   * the gradient look this lab exists to avoid). A solid field in the
+   * surface colour sits between pattern and type; its shape is the choice.
+   */
+  .plate {
+    position: absolute;
+    z-index: -5;
+  }
+  .plate--panel {
+    left: 50%;
+    top: 44%;
+    transform: translate(-50%, -50%);
+    width: min(760px, 88%);
+    height: min(480px, 78%);
+    border-radius: 28px;
+  }
+  /* Footer needs no plate: every remaining pattern clears whole cells. */
+  .plate--footer {
+    display: none;
+  }
+  .plate--none {
+    display: none;
+  }
+  .mode {
+    display: flex;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .mode button {
+    flex: 1;
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 12px;
+    padding: 7px 0;
+    cursor: pointer;
+  }
+  .mode button[aria-pressed='true'] {
+    background: var(--chip);
+    color: var(--text);
+    font-weight: 600;
+  }
+  .dial.off {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .eyebrow {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    opacity: 0.8;
+    margin-bottom: 20px;
+  }
+  .card h2 {
+    font-size: clamp(30px, 4.5vw, 48px);
+    font-weight: 700;
+    margin: 0 0 16px;
+    padding: 0 24px;
+    text-wrap: balance;
+  }
+  .card .desc {
+    font-weight: 300;
+    font-size: 18px;
+    max-width: 32rem;
+    margin: 0 auto 32px;
+    padding: 0 24px;
+    line-height: 1.5;
+  }
+  .count {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .cta {
+    appearance: none;
+    border: 0;
+    font: inherit;
+    font-weight: 600;
+    font-size: 15px;
+    width: 100%;
+    max-width: 15rem;
+    padding: 13px 0;
+    cursor: pointer;
+    clip-path: polygon(
+      9px 0,
+      calc(100% - 9px) 0,
+      100% 9px,
+      100% calc(100% - 9px),
+      calc(100% - 9px) 100%,
+      9px 100%,
+      0 calc(100% - 9px),
+      0 9px
+    );
+    transition: opacity 0.15s;
+  }
+  .cta:hover {
+    opacity: 0.9;
+  }
+  .cta:active {
+    transform: scale(0.97);
+  }
+  .scored {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 14px;
+    margin-top: 20px;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    opacity: 0.7;
+  }
+  .scored:hover {
+    opacity: 1;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 860px) {
+    .app {
+      flex-direction: column;
+    }
+    aside {
+      width: auto;
+      flex: none;
+      position: static;
+      max-height: none;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+    main {
+      padding: 16px;
+    }
+    .card {
+      min-height: 70vh;
+    }
+    .hint {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cta {
+      transition: none;
+    }
+  }
+</style>
+
+<div class="app">
+  <aside>
+    <div class="brand">
+      <h1>Start-screen pattern lab</h1>
+      <p>
+        Flat, solid, classic — no gradients. Nineteen directions — sixteen of
+        them pixel fields drawn from real bitmap, weaving and noise traditions —
+        full-strength duotone, sets-verbatim accents.
+      </p>
+    </div>
+
+    <section>
+      <p class="label">Colour studio</p>
+      <div class="cs-row">
+        <label
+          >Surface <input type="color" id="csSurface" /><input
+            type="text"
+            id="csSurfaceHex"
+            class="cs-hex"
+            spellcheck="false"
+        /></label>
+        <label
+          >Ink <input type="color" id="csInk" /><input
+            type="text"
+            id="csInkHex"
+            class="cs-hex"
+            spellcheck="false"
+        /></label>
+        <label
+          >Accent <input type="color" id="csAccent" /><input
+            type="text"
+            id="csAccentHex"
+            class="cs-hex"
+            spellcheck="false"
+        /></label>
+      </div>
+      <p class="note" id="csMetrics" style="min-height: 0"></p>
+      <div class="dial" style="margin-top: 10px">
+        <label for="csTarget"
+          >Target stimulation <output id="csTargetOut">0.45</output></label
+        >
+        <input
+          id="csTarget"
+          type="range"
+          min="0.1"
+          max="0.9"
+          step="0.01"
+          value="0.45"
+        />
+      </div>
+      <div class="cs-actions">
+        <button type="button" id="csSuggestInk">Suggest inks</button>
+        <button type="button" id="csSuggestSurface">Suggest surfaces</button>
+        <button type="button" id="csSave">Save as set</button>
+      </div>
+      <div class="cs-chips" id="csChips"></div>
+    </section>
+
+    <section>
+      <p class="label">Pattern</p>
+      <div
+        class="patterns"
+        id="patternList"
+        role="group"
+        aria-label="Pattern"
+      ></div>
+      <p class="note" id="patternNote"></p>
+    </section>
+
+    <section>
+      <p class="label">Set palette</p>
+      <div
+        class="swatches"
+        id="swatchList"
+        role="group"
+        aria-label="Set palette"
+      ></div>
+    </section>
+
+    <section>
+      <p class="label">
+        Accent pool
+        <span class="mono" style="font-size: 9px"
+          >quilts &amp; pixel fields</span
+        >
+      </p>
+      <div
+        class="patterns"
+        id="poolList"
+        role="group"
+        aria-label="Quilt accent pool"
+      ></div>
+      <p class="note" id="poolNote"></p>
+    </section>
+
+    <section>
+      <p class="label">Tuning</p>
+      <div class="dial">
+        <label for="scale">Scale <output id="scaleOut">1.0×</output></label>
+        <input
+          id="scale"
+          type="range"
+          min="0.6"
+          max="2.6"
+          step="0.05"
+          value="1"
+        />
+      </div>
+      <p class="label" style="margin-top: 16px">Centre treatment</p>
+      <div
+        class="mode"
+        role="group"
+        aria-label="Centre treatment"
+        id="centreList"
+      >
+        <button type="button" data-centre="panel">Panel</button>
+        <button type="button" data-centre="footer">Footer</button>
+        <button type="button" data-centre="none">Off</button>
+      </div>
+      <div class="row" style="margin-top: 12px">
+        <button class="reshuffle" id="reshuffle" type="button">
+          ↻ Reshuffle scatter
+        </button>
+      </div>
+    </section>
+
+    <p class="hint">
+      <kbd>←</kbd> <kbd>→</kbd> cycle patterns · <kbd>↑</kbd> <kbd>↓</kbd> cycle
+      palettes.<br />
+      Everything is flat SVG in full-strength duotone — any winner ships as a
+      ~40-line component, no canvas, no blur filters.
+    </p>
+  </aside>
+
+  <main>
+    <section class="card" id="card" aria-label="Quiz start screen preview">
+      <div class="pattern-layer" id="layer" aria-hidden="true"></div>
+      <div class="plate" id="plate" aria-hidden="true"></div>
+      <div class="eyebrow mono" id="eyebrow">Logicola · Brand</div>
+      <h2>Ready for a challenge?</h2>
+      <p class="desc">
+        Test your knowledge on this chapter and see how much you already know!
+      </p>
+      <div class="count mono" id="count">10 questions</div>
+      <button class="cta" id="cta" type="button">Start Quiz</button>
+      <button class="scored" id="scoredLink" type="button">
+        Or take a scored run, the way the original worked →
+      </button>
+    </section>
+  </main>
+</div>
+
+<script>
+  // Real palettes from components/quiz/index.tsx (getQuizScreenColors),
+  // plus duotone pairs sampled from the social cover (brand: true).
+  const PALETTES = [
+    // Grouped by parent set: the shipped original first, then its variants.
+    // Malik's own saves take the FIRST variant slot in each family (★).
+    //
+    // Accents deepened 2026-07-30 for legibility: the accent renders as the
+    // "10 QUESTIONS" text on the surface, so it must clear 4.5:1. Hue is
+    // preserved exactly; only value moves (chroma clipped to gamut).
+
+    // ---- A · pale surface, green ink --------------------------------------
+    // The forest-ground original and both dark variants are retired — every
+    // favourite is a pale surface. Set A's green lives in the INK now; the
+    // surface claims the open pink territory. A5 is the presumptive base.
+    // NB: this 'A7' is the ex-G5, not the earlier A7 (which became A5).
+    { name: 'A5', surface: '#FFC2DA', fg: '#1C3601', accent: '#A10094' }, // pink & forest ink; magenta 2.21→4.75:1
+    { name: 'A6', surface: '#D9F2C0', fg: '#24450A', accent: '#BD00AD' }, // pale leaf & forest; magenta 2.76→4.62:1
+    { name: 'A7', surface: '#FFABC6', fg: '#4A1040', accent: '#674900' }, // was G5 — pink & plum; marigold→ochre 1.08→4.70:1
+
+    // ---- C · chartreuse ---------------------------------------------------
+    { name: 'C', surface: '#E7F099', fg: '#02302C', accent: '#02302C' }, // shipped
+    { name: 'C2', surface: '#E7F099', fg: '#0F005A', accent: '#02302C' }, // ★ was S4 — chartreuse & deep violet, 0.68
+
+    // ---- J · lilac --------------------------------------------------------
+    // Every J variant shares the original #E6ACF4 surface and varies the ink.
+    { name: 'J', surface: '#E6ACF4', fg: '#1C3601', accent: '#1C3601' }, // shipped
+    { name: 'J3', surface: '#E6ACF4', fg: '#0000A7', accent: '#1C3601' }, // ★ was S7 — lilac & deep blue, 0.58
+
+    // ---- L · mint ---------------------------------------------------------
+    { name: 'L', surface: '#C8F0E3', fg: '#3C034F', accent: '#3C034F' }, // shipped
+    { name: 'L2', surface: '#DBFAD5', fg: '#400081', accent: '#C100B2' }, // ★ was S8 — pale green & violet; magenta 2.95→4.77:1
+
+    // ---- N · sky ----------------------------------------------------------
+    // The shipped sky (#ADE2E9 / #2A0D73) was dropped; the set continues
+    // through its variants.
+    { name: 'N2', surface: '#77C6EE', fg: '#2A0D73', accent: '#1F0D92' }, // ★ was S3 — committed sky & indigo, 0.53
+    { name: 'N3', surface: '#ADE2E9', fg: '#063B3E', accent: '#B0241A' }, // deep teal ink, coral completes; 2.01→4.76:1
+
+    // ---- R · orange -------------------------------------------------------
+    // The family kept the navy ink and varied the surface's commitment —
+    // S9 (now R2) proved a committed surface carries navy fine.
+    { name: 'R', surface: '#FFD199', fg: '#190B45', accent: '#1F0D92' }, // retuned apricot
+    { name: 'R2', surface: '#FB826A', fg: '#190B45', accent: '#1F0D92' }, // ★ was S9 — committed coral & navy, 0.58
+    { name: 'R3', surface: '#FBB36A', fg: '#190B45', accent: '#1F0D92' }, // ★ was S10 — orange & navy, 0.58
+
+    // ---- MD · Meanings & Definitions --------------------------------------
+    { name: 'MD', surface: '#D9CCF9', fg: '#3E1060', accent: '#745400' }, // ★ decided; marigold→ochre 1.27→4.64:1
+    { name: 'MD2', surface: '#7B2FB0', fg: '#FFD7F0', accent: '#C3FF7A' }, // dark-surface alternative, 0.47
+
+    // ---- Unparented ------------------------------------------------------
+    // S1's accent is the one compromise: its orange and its rust ink are hue
+    // siblings, so darkening for legibility pulls it toward the ink (0.12).
+    { name: 'S1', surface: '#E4BDF7', fg: '#AD3821', accent: '#723800' }, // ★ lilac & rust; orange 1.57→5.66:1
+    { name: 'S2', surface: '#FBCB6A', fg: '#02302C', accent: '#02302C' }, // marigold & teal, 0.57
+    { name: 'G4', surface: '#FFA759', fg: '#5E1F26', accent: '#7400A7' }, // orange & maroon; purple 2.54→4.75:1
+
+    {
+      name: 'Crm',
+      surface: '#EDEDE3',
+      fg: '#05A24B',
+      accent: '#FA6C5B',
+      brand: true,
+    },
+  ];
+
+  // ---- OKLCH utilities ----------------------------------------------------
+  // The tuned pool is derived, not hand-picked: hues come from the real set
+  // surfaces, then get re-set to a shared lightness and chroma. OKLCH is the
+  // space where "same lightness, same chroma" actually looks like it.
+  function srgbToLinear(c) {
+    return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  }
+  function linearToSrgb(c) {
+    return c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
+  }
+  function hexToOklch(hex) {
+    const [R, G, B] = hexTriple(hex).map((v) => srgbToLinear(v / 255));
+    const l = Math.cbrt(0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B);
+    const m = Math.cbrt(0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B);
+    const s = Math.cbrt(0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B);
+    const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
+    const a = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
+    const b = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+    return {
+      L,
+      C: Math.hypot(a, b),
+      h: ((Math.atan2(b, a) * 180) / Math.PI + 360) % 360,
+    };
+  }
+  function oklchToHex({ L, C, h }) {
+    // Walk chroma down until the colour fits sRGB — clip chroma, never hue.
+    for (let c = C; c >= 0; c -= 0.004) {
+      const hr = (h * Math.PI) / 180;
+      const a = Math.cos(hr) * c;
+      const b2 = Math.sin(hr) * c;
+      const l = (L + 0.3963377774 * a + 0.2158037573 * b2) ** 3;
+      const m = (L - 0.1055613458 * a - 0.0638541728 * b2) ** 3;
+      const s = (L - 0.0894841775 * a - 1.291485548 * b2) ** 3;
+      const R = 4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s;
+      const G = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
+      const B = -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s;
+      if (
+        R < -0.001 ||
+        R > 1.001 ||
+        G < -0.001 ||
+        G > 1.001 ||
+        B < -0.001 ||
+        B > 1.001
+      )
+        continue;
+      const to255 = (v) =>
+        Math.round(Math.min(1, Math.max(0, linearToSrgb(v))) * 255);
+      return (
+        '#' +
+        [R, G, B].map((v) => to255(v).toString(16).padStart(2, '0')).join('')
+      );
+    }
+    return '#808080';
+  }
+
+  // ---- Quilt accent pools -------------------------------------------------
+  const SET_SURFACES = [
+    '#1C3601',
+    '#E7F099',
+    '#E6ACF4',
+    '#C8F0E3',
+    '#ADE2E9',
+    '#F2CDA6',
+  ];
+
+  const POOLS = {
+    cover: {
+      name: 'Cover',
+      note: 'The social cover&rsquo;s family, as shipped — the incumbent.',
+      colors: () => [
+        '#05A24B',
+        '#FA6C5B',
+        '#EFBB00',
+        '#7A22C9',
+        '#5726F5',
+        '#EDEDE3',
+      ],
+    },
+    sets: {
+      name: 'Sets, verbatim',
+      note: 'The quiz surfaces exactly as they ship, plus Set A&rsquo;s magenta. Unruly on purpose: chroma and value pull apart, and the pastels drop out on light grounds.',
+      colors: () => [...SET_SURFACES, '#F233DF'],
+    },
+    // "Sets, tuned", "Reference stills" and the terminal pools all retired —
+    // Sets verbatim is the working pool for the colour exercise.
+  };
+
+  // Perceptual distance in OKLab. RGB Euclidean underrates pairs like
+  // white vs pastel-lavender (clearly distinct to the eye, numerically
+  // close in RGB), which silently dropped Set J's hue from the pools.
+  function perceptualDist(hexA, hexB) {
+    const A = hexToOklch(hexA);
+    const B = hexToOklch(hexB);
+    const ha = (A.h * Math.PI) / 180;
+    const hb = (B.h * Math.PI) / 180;
+    return Math.hypot(
+      A.L - B.L,
+      A.C * Math.cos(ha) - B.C * Math.cos(hb),
+      A.C * Math.sin(ha) - B.C * Math.sin(hb)
+    );
+  }
+
+  // ---- ColorMoods engine, ported from colormoods.co generator.js v1.0.4 ---
+  // (read from the unminified source; chroma-js replaced with local math)
+
+  function hexToHsl(hex) {
+    const [r, g, b] = hexTriple(hex).map((v) => v / 255);
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const l = (max + min) / 2;
+    if (max === min) return [NaN, 0, l];
+    const d = max - min;
+    const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    let h;
+    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
+    else if (max === g) h = ((b - r) / d + 2) * 60;
+    else h = ((r - g) / d + 4) * 60;
+    return [h, s, l];
+  }
+
+  function hslToHex(h, s, l) {
+    const f = (n) => {
+      const k = (n + h / 30) % 12;
+      const c =
+        l - s * Math.min(l, 1 - l) * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+      return Math.round(c * 255)
+        .toString(16)
+        .padStart(2, '0');
+    };
+    return '#' + f(0) + f(8) + f(4);
+  }
+
+  // CIELAB lightness (0–100); ColorMoods uses HCL lightness = this.
+  function labL(hex) {
+    const [r, g, b] = hexTriple(hex).map((v) => srgbToLinear(v / 255));
+    const Y = 0.2126729 * r + 0.7151522 * g + 0.072175 * b;
+    return Y > 0.008856 ? 116 * Math.cbrt(Y) - 16 : 903.3 * Y;
+  }
+
+  // Per-colour perceptual intensity: HSL saturation corrected by per-hue
+  // max-intensity curves and by how far lightness sits from mid-value.
+  // Constants verbatim from generator.js.
+  function duruIntensity(hex) {
+    const maxIntensities = [
+      1.1, 0.9, 1.0, 0.99, 1.1, 0.99, 1.0, 0.9, 1.1, 1.0, 1.05, 0.98, 1.1,
+    ];
+    const lightnessCosCurve = [
+      0.4, -0.2, 0.8, 0.5, 0.9, 0.8, 1, 0, 0.3, 0.5, 0.8, 0.5, 0.4,
+    ];
+    const darknessCosCurve = [0, -0.3, -0.4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    const saturationCosCurve = [0, 0, 0, 0, 0.5, 0, 0, 0, 0.2, 0.4, 0.5, 0, 0];
+    const [H, S, L] = hexToHsl(hex);
+    const hue = (Number.isNaN(H) ? 0 : H) / 180; // 0..2
+    const LD = L > 0.5 ? 2 * L - 1 : 1 - 2 * L;
+    const cosHue = Math.cos(6 * Math.PI * hue);
+    const iF = Math.floor(hue * 6);
+    const iC = Math.ceil(hue * 6);
+    const cosRange = Math.abs(maxIntensities[iF] - maxIntensities[iC]) / 2;
+    const cosMid = Math.abs(maxIntensities[iF] + maxIntensities[iC]) / 2;
+    const satDiff = Math.sin((Math.PI / 2) * S) - S;
+    const sStart = saturationCosCurve[iF] * satDiff + S;
+    const sEnd = saturationCosCurve[iC] * satDiff + S;
+    const satCos =
+      Math.abs(sStart + sEnd) / 2 + cosHue * (Math.abs(sStart - sEnd) / 2);
+    const satMax = satCos * (cosMid + cosHue * cosRange);
+    const ldCurve = L > 0.5 ? lightnessCosCurve : darknessCosCurve;
+    const altDiff =
+      0.2 +
+      Math.cos((Math.PI / 2) * LD) * (satMax - 0.2) -
+      (0.2 + (1 - LD) * (satMax - 0.2));
+    const altFalse = 0.2 + (1 - LD) * (satMax - 0.2);
+    const aStart = ldCurve[iF] * altDiff + altFalse;
+    const aEnd = ldCurve[iC] * altDiff + altFalse;
+    return Math.abs(aStart + aEnd) / 2 + cosHue * (Math.abs(aStart - aEnd) / 2);
+  }
+
+  /**
+   * The pair score. stimulation = (4·σintensity + 2·ΔL + 1·θhue)/7 — intensity
+   * dominates, hue distance matters least. Vibration risk (intense + far hues
+   * + similar lightness) folds in as: score = (1−VbrX)·stimulation + VbrX.
+   */
+  function stimulationOf(hexA, hexB) {
+    const i1 = duruIntensity(hexA);
+    const i2 = duruIntensity(hexB);
+    let h1 = hexToHsl(hexA)[0] / 180;
+    let h2 = hexToHsl(hexB)[0] / 180;
+    if (Number.isNaN(h1)) h1 = (Number.isNaN(h2) ? 0 : h2) + 0.1;
+    if (Number.isNaN(h2)) h2 = h1 + 0.1;
+    const sigma = (i1 + i2) / 2;
+    const dL = Math.abs(labL(hexA) - labL(hexB)) / 100;
+    const theta = Math.min(
+      h1 - h2 < 0 ? h1 - h2 + 2 : h1 - h2,
+      h2 - h1 < 0 ? h2 - h1 + 2 : h2 - h1
+    );
+    const st = (4 * sigma + 2 * dL + theta) / 7;
+    const VI = [0, 0, 0, 0, 0.1, 0.2, 0.3, 0.43, 0.55, 0.66, 0.83, 0.96, 1];
+    const VH = [0, 0, 0.1, 0.2, 0.4, 0.55, 0.7, 0.8, 0.9, 0.975, 1];
+    const VL = [1, 0.85, 0.65, 0.5, 0.2, 0.05, 0, 0, 0, 0, 0];
+    const lerpAt = (arr, x) => {
+      const c = Math.max(0, Math.min(x, (arr.length - 1) / 10));
+      const f = Math.floor(c * 10);
+      const t = c * 10 - f;
+      return (
+        arr[f] + t * ((arr[Math.min(f + 1, arr.length - 1)] ?? arr[f]) - arr[f])
+      );
+    };
+    let VbrX =
+      1 -
+      Math.sqrt(
+        (1 - lerpAt(VI, sigma)) ** 2 +
+          (1 - lerpAt(VH, theta)) ** 2 +
+          (1 - lerpAt(VL, dL)) ** 2
+      );
+    if (VbrX < 0) VbrX = 0;
+    return {
+      i1,
+      i2,
+      sigma,
+      dL,
+      theta,
+      st,
+      vibr: VbrX,
+      score: (1 - VbrX) * st + VbrX,
+    };
+  }
+
+  const TEMP_ZONES = (hex) => {
+    const h = hexToOklch(hex).h;
+    if (h >= 25 && h < 110) return 'warm';
+    if ((h >= 110 && h < 165) || h >= 325 || h < 25) return 'lukewarm';
+    return 'cool';
+  };
+
+  function halfwayHex(hexA, hexB) {
+    const A = hexToOklch(hexA);
+    const B = hexToOklch(hexB);
+    const toAB = ({ L, C, h }) => [
+      L,
+      C * Math.cos((h * Math.PI) / 180),
+      C * Math.sin((h * Math.PI) / 180),
+    ];
+    const [L1, a1, b1] = toAB(A);
+    const [L2, a2, b2] = toAB(B);
+    const a = (a1 + a2) / 2;
+    const b = (b1 + b2) / 2;
+    return oklchToHex({
+      L: (L1 + L2) / 2,
+      C: Math.hypot(a, b),
+      h: ((Math.atan2(b, a) * 180) / Math.PI + 360) % 360,
+    });
+  }
+
+  /**
+   * ColorMoods' generation strategy with our platform structure: fix one
+   * colour, sweep HSL, keep candidates near the target score, dedupe
+   * perceptually (their ΔE>6 becomes OKLab dist). Ink candidates sweep the
+   * dark band, surface candidates the pale band.
+   */
+  function suggestPartners(fixedHex, target, mode) {
+    const Lr = mode === 'ink' ? [0.1, 0.48] : [0.7, 0.96];
+    const Sr = mode === 'ink' ? [0.2, 1.0] : [0.12, 0.95];
+    const all = [];
+    for (let h = 0; h < 360; h += 10)
+      for (let si = 0; si < 6; si++)
+        for (let li = 0; li < 6; li++) {
+          const hex = hslToHex(
+            h,
+            Sr[0] + ((Sr[1] - Sr[0]) * si) / 5,
+            Lr[0] + ((Lr[1] - Lr[0]) * li) / 5
+          );
+          const m = stimulationOf(fixedHex, hex);
+          all.push({
+            hex,
+            d: Math.abs(m.score - target),
+            score: m.score,
+            vibr: m.vibr,
+          });
+        }
+    all.sort((a, b) => a.d - b.d);
+    const picked = [];
+    for (const c of all) {
+      if (picked.length >= 8) break;
+      if (c.vibr > 0.25) continue;
+      if (picked.every((p) => perceptualDist(p.hex, c.hex) > 0.09))
+        picked.push(c);
+    }
+    return picked;
+  }
+
+  // One filter for pool chips and the quilt itself, so the chips never lie:
+  // an accent must clear the surface comfortably and not impersonate the ink.
+  // Survivors are sorted by lightness contrast AGAINST THE INK: two darks
+  // (or two lights) fight, so the first accent — the one single-accent
+  // patterns reach for — is always the pool's best value-partner for the fg.
+  // (This is what made Sets-verbatim sing on C/J but turn muddy on N/R.)
+  function filteredPool(key, p) {
+    const inkL = hexToOklch(p.fg).L;
+    return POOLS[key]
+      .colors(p.surface)
+      .filter(
+        (c) =>
+          perceptualDist(c, p.surface) > 0.17 && perceptualDist(c, p.fg) > 0.09
+      )
+      .sort(
+        (a, b) =>
+          Math.abs(hexToOklch(b).L - inkL) - Math.abs(hexToOklch(a).L - inkL)
+      );
+  }
+
+  function hexTriple(hex) {
+    const c = hex.replace('#', '');
+    return [
+      parseInt(c.slice(0, 2), 16),
+      parseInt(c.slice(2, 4), 16),
+      parseInt(c.slice(4, 6), 16),
+    ];
+  }
+  function colorDist(a, b) {
+    const [r1, g1, b1] = hexTriple(a);
+    const [r2, g2, b2] = hexTriple(b);
+    return Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
+  }
+
+  const PATTERNS = [
+    // HIDDEN 2026-07-30, not deleted — the smooth quilts may be useful later.
+    // Their generators (quiltsq / quiltmix) and the shared quiltBase engine
+    // are all still in GEN below; uncomment these two lines to bring them back.
+    // { id: 'quiltsq',  name: 'Quilt · squares',
+    //   note: 'The cover with the pills cut: one rounded square per cell, accents never touching, a 70/30 colour rhythm. The disciplined baseline.' },
+    // { id: 'quiltmix', name: 'Quilt · mixed',
+    //   note: 'Rounded squares, dots and quarter-rounds sharing one grid — the toy-box variant. Most personality per square inch.' },
+    {
+      id: 'quiltpix',
+      name: 'Quilt · pixel',
+      note: 'Quilt · mixed pushed through an 8-bit rasterizer — the same shapes rebuilt from chunky pixels.',
+    },
+    { heading: 'Pixel fields' },
+    {
+      id: 'pxtruchet',
+      name: 'Quarter rounds · pixel',
+      note: 'The Bauhaus quarter-discs re-rasterized — every arc a stair-step, orientation hashed per cell. Reshuffle re-rolls the field.',
+    },
+    {
+      id: 'pxhound',
+      name: 'Houndstooth',
+      note: 'Real houndstooth: 2/2 twill, four dark and four light threads in both warp and weft. This is the cloth&rsquo;s actual structure, not a picture of it.',
+    },
+    {
+      id: 'pxherring',
+      name: 'Herringbone',
+      note: 'Twill diagonals with the direction flipped every eight columns — herringbone straight off the loom draft.',
+    },
+    {
+      id: 'pxpinwheel',
+      name: 'Pinwheel · classic',
+      note: 'Quarter-square triangles rotating around each junction — the classic quilt block at pixel resolution.',
+    },
+    {
+      id: 'pxpinduo',
+      name: 'Pinwheel · duo',
+      note: 'Opposite sails in ink, the crossing pair in the first accent — the coloured windmill.',
+    },
+    {
+      id: 'pxpingiant',
+      name: 'Pinwheel · giant',
+      note: 'The same block at double period — statement scale, reads from across the room.',
+    },
+    {
+      id: 'pxkilim',
+      name: 'Kilim diamonds',
+      note: 'Concentric stepped diamonds — the woven medallion, rings cycling through the accent pool. Closest to your second reference.',
+    },
+    {
+      id: 'pxsteps',
+      name: 'Andean steps',
+      note: 'Stepped chevron bands descending a staircase in two colours — your fourth reference&rsquo;s structure.',
+    },
+    {
+      id: 'pxstatic',
+      name: 'Mosaic static',
+      note: 'Seeded random blocks — your third reference, held to disciplined proportions. Reshuffle re-rolls it.',
+    },
+    {
+      id: 'pxzigzag',
+      name: 'Pixel zigzag',
+      note: 'The knit chevron redrawn at terminal resolution — chunky steps instead of smooth strokes.',
+    },
+    {
+      id: 'pxstripes',
+      name: 'Candy stripes',
+      note: 'The 45° stripe rebuilt from pixel stairs — a two-colour barber pole, ink and first accent alternating.',
+    },
+    {
+      id: 'pxchecker',
+      name: 'Checker · diamond',
+      note: 'The checkerboard turned 45° — at pixel resolution the diamond edges stair-step, which is the whole point. The odd diamond goes accent.',
+    },
+    {
+      id: 'pxcamo',
+      name: 'Camo · classic',
+      note: 'Thresholded value noise — the paint-program camo tile from your reference sheet. Reshuffle re-rolls the blobs.',
+    },
+    {
+      id: 'pxcamogiant',
+      name: 'Camo · giant',
+      note: 'The same noise a scale up — continents instead of patches, with the field&rsquo;s opposite extreme in the accent. The macro end of the family.',
+    },
+    {
+      id: 'pxcontour',
+      name: 'Camo · contours',
+      note: 'One noise field sliced into alternating elevation bands — an organic topographic map, accent on the peaks.',
+    },
+    {
+      id: 'pxpebble',
+      name: 'Camo · pebbles',
+      note: 'Worley cell noise: every pebble grows from its own seeded point, so the spacing is organic, never gridlike. Roughly one in ten in accent.',
+    },
+  ];
+  // Heading rows carry no id; everything interactive filters to REAL.
+  const REAL_PATTERNS = PATTERNS.filter((x) => x.id);
+
+  const state = {
+    pattern: 'pxcamo', // camo classic/giant are the colour test patterns
+    custom: null, // working palette being edited in the Colour studio
+    // Resolved by name below — a hardcoded index breaks on every reorder.
+    palette: 0,
+    scale: 1,
+    mode: 'duotone', // fixed — Tint was cut; generators still branch on it
+    centre: 'panel', // 'panel' | 'band' | 'footer' | 'none'
+    pool: 'sets', // key into POOLS — Sets verbatim is the working pool
+    seed: 7,
+  };
+
+  function mulberry32(a) {
+    return function () {
+      a |= 0;
+      a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /**
+   * Whole-cell clearing for the rectangular centre treatments. Band and
+   * Frame clear cell-aligned regions — a shape either renders whole or not
+   * at all, never sliced — while Panel and Notch keep their plate overlay,
+   * since slicing is what makes their rounded/notched edges read. Grid
+   * generators must consume the SAME rng draws for hidden cells so the
+   * visible composition stays put when the centre treatment changes.
+   */
+  let CLEAR = null;
+
+  function clearRect(w, h) {
+    // Footer: pattern lives only in a bottom strip — the subtle option.
+    if (state.centre === 'footer') {
+      const strip = Math.min(260, Math.max(150, h * 0.22));
+      return { x: -1, y: -1, w: w + 2, h: h - strip + 1, r: 0 };
+    }
+    // Pixel patterns cannot be sliced — half a pixel breaks the illusion —
+    // so Panel clears whole cells for them, with ROUNDED corners: the hole
+    // itself is a rounded rect, and the pixels stair-step around its arcs.
+    // Smooth patterns keep the plate overlay (the plate's own radius shows).
+    if (
+      state.centre === 'panel' &&
+      (state.pattern === 'quiltpix' || state.pattern.startsWith('px'))
+    ) {
+      const pw = Math.min(760, w * 0.88);
+      const ph = Math.min(480, h * 0.78);
+      return { x: (w - pw) / 2, y: h * 0.44 - ph / 2, w: pw, h: ph, r: 28 };
+    }
+    return null;
+  }
+
+  // Exact rect vs rounded-rect intersection: a cell is hidden when it
+  // overlaps the clearing's bounding box AND is not saved by sitting in a
+  // square corner-notch beyond the corner arc.
+  function hidden(x, y, ww, hh) {
+    if (!CLEAR) return false;
+    const c = CLEAR;
+    if (x >= c.x + c.w || x + ww <= c.x || y >= c.y + c.h || y + hh <= c.y)
+      return false;
+    if (!c.r) return true;
+    if (x + ww > c.x + c.r && x < c.x + c.w - c.r) return true;
+    if (y + hh > c.y + c.r && y < c.y + c.h - c.r) return true;
+    const ccx = x + ww <= c.x + c.r + 0.01 ? c.x + c.r : c.x + c.w - c.r;
+    const ccy = y + hh <= c.y + c.r + 0.01 ? c.y + c.r : c.y + c.h - c.r;
+    const nx = Math.max(x, Math.min(ccx, x + ww));
+    const ny = Math.max(y, Math.min(ccy, y + hh));
+    return (nx - ccx) ** 2 + (ny - ccy) ** 2 <= c.r * c.r;
+  }
+
+  /**
+   * Shared engine for the three quilt variants — the social-cover riff,
+   * round 2. Malik cut the pill merges (they were the "weird" part of the
+   * cover), so every variant is strictly one shape per cell. Shared rules:
+   * accent cells never sit orthogonally adjacent, the rhythm holds at
+   * ~70% dominant / 30% accents, Tint renders mono, Duotone unlocks the
+   * full brand family.
+   */
+  function quiltBase(w, h, p, s, a, rng, shape) {
+    const solid = state.mode === 'duotone';
+    const t = 62 * s;
+    const pad = t * 0.09;
+    const cell = t - pad * 2;
+    const cols = Math.ceil(w / t) + 1;
+    const rows = Math.ceil(h / t) + 1;
+    const pool = filteredPool(state.pool, p);
+    const accent = Array.from({ length: rows }, () => Array(cols).fill(false));
+    let out = '';
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        const left = j > 0 && accent[i][j - 1];
+        const up = i > 0 && accent[i - 1][j];
+        let fillCol = p.fg;
+        if (pool.length && !left && !up && rng() < 0.28) {
+          fillCol = pool[Math.floor(rng() * pool.length)];
+          accent[i][j] = true;
+        }
+        const x = j * t + pad;
+        const y = i * t + pad;
+        const piece = shape(
+          x,
+          y,
+          cell,
+          solid ? fillCol : p.fg,
+          solid ? 1 : a,
+          rng
+        );
+        if (!hidden(x, y, cell, cell)) out += piece;
+      }
+    }
+    return out;
+  }
+
+  /**
+   * Shared renderer for the Pixel-field family. Evaluates colorAt(u, v) over
+   * a fat-pixel lattice and merges same-coloured visible runs per row, so a
+   * full card is hundreds of rects rather than tens of thousands. Clearing
+   * happens per whole pixel — pixel patterns are never sliced.
+   */
+  function pixelLattice(w, h, q, a, colorAt) {
+    const cols = Math.ceil(w / q);
+    const rows = Math.ceil(h / q);
+    let out = `<g shape-rendering="crispEdges" fill-opacity="${a}">`;
+    for (let v = 0; v < rows; v++) {
+      let u = 0;
+      while (u < cols) {
+        const c = colorAt(u, v);
+        if (!c || hidden(u * q, v * q, q, q)) {
+          u++;
+          continue;
+        }
+        let len = 1;
+        while (
+          u + len < cols &&
+          colorAt(u + len, v) === c &&
+          !hidden((u + len) * q, v * q, q, q)
+        )
+          len++;
+        out += `<rect x="${u * q}" y="${v * q}" width="${len * q}" height="${q + 0.4}" fill="${c}"/>`;
+        u += len;
+      }
+    }
+    return out + '</g>';
+  }
+
+  /**
+   * Pinwheel quadrant test on a P×P tile (P = 8 or 16): returns the quadrant
+   * index (0–3, clockwise from top-left) when the pixel is inside that
+   * quadrant's rotated quarter-square triangle, else -1.
+   */
+  function pinQuad(u, v, P) {
+    const half = P / 2;
+    const x = ((u % P) + P) % P;
+    const y = ((v % P) + P) % P;
+    const lx = x % half;
+    const ly = y % half;
+    const m = half - 1;
+    if (x < half && y < half) return lx >= ly ? 0 : -1;
+    if (x >= half && y < half) return lx + ly >= m ? 1 : -1;
+    if (x >= half && y >= half) return ly >= lx ? 2 : -1;
+    return lx + ly <= m ? 3 : -1;
+  }
+
+  // Deterministic per-coordinate hash — colorAt must be pure (the RLE
+  // renderer re-evaluates neighbours), so scatter patterns hash (u, v, seed)
+  // instead of consuming a sequential rng.
+  function pixHash(u, v, seed) {
+    let x = (u * 374761393 + v * 668265263 + (seed | 0) * 971) | 0;
+    x = Math.imul(x ^ (x >>> 13), 1274126177);
+    return ((x ^ (x >>> 16)) >>> 0) / 4294967296;
+  }
+
+  // Smoothstep-interpolated value noise over macro cells of `cell` lattice
+  // pixels — the shared engine of the camo family.
+  function valueNoise(u, v, seed, cell) {
+    const gx = Math.floor(u / cell);
+    const gy = Math.floor(v / cell);
+    const sm = (t) => t * t * (3 - 2 * t);
+    const fx = sm((((u % cell) + cell) % cell) / cell);
+    const fy = sm((((v % cell) + cell) % cell) / cell);
+    const n00 = pixHash(gx, gy, seed);
+    const n10 = pixHash(gx + 1, gy, seed);
+    const n01 = pixHash(gx, gy + 1, seed);
+    const n11 = pixHash(gx + 1, gy + 1, seed);
+    return (
+      n00 * (1 - fx) * (1 - fy) +
+      n10 * fx * (1 - fy) +
+      n01 * (1 - fx) * fy +
+      n11 * fx * fy
+    );
+  }
+
+  const GEN = {
+    quiltsq(w, h, p, s, a, rng) {
+      return quiltBase(w, h, p, s, a, rng, (x, y, c, col, op) => {
+        return `<rect x="${x}" y="${y}" width="${c}" height="${c}" rx="${c * 0.3}" fill="${col}" fill-opacity="${op}"/>`;
+      });
+    },
+
+    quiltmix(w, h, p, s, a, rng) {
+      return quiltBase(w, h, p, s, a, rng, (x, y, c, col, op, rand) => {
+        const roll = rand();
+        if (roll < 0.4) {
+          return `<rect x="${x}" y="${y}" width="${c}" height="${c}" rx="${c * 0.3}" fill="${col}" fill-opacity="${op}"/>`;
+        }
+        if (roll < 0.7) {
+          return `<circle cx="${x + c / 2}" cy="${y + c / 2}" r="${c * 0.48}" fill="${col}" fill-opacity="${op}"/>`;
+        }
+        const o = Math.floor(rand() * 4);
+        let d;
+        if (o === 0)
+          d = `M ${x} ${y} L ${x + c} ${y} A ${c} ${c} 0 0 1 ${x} ${y + c} Z`;
+        else if (o === 1)
+          d = `M ${x + c} ${y} L ${x + c} ${y + c} A ${c} ${c} 0 0 1 ${x} ${y} Z`;
+        else if (o === 2)
+          d = `M ${x + c} ${y + c} L ${x} ${y + c} A ${c} ${c} 0 0 1 ${x + c} ${y} Z`;
+        else
+          d = `M ${x} ${y + c} L ${x} ${y} A ${c} ${c} 0 0 1 ${x + c} ${y + c} Z`;
+        return `<path d="${d}" fill="${col}" fill-opacity="${op}"/>`;
+      });
+    },
+
+    /**
+     * Quilt · mixed, rasterized: each cell is a 7×7 sprite grid and every
+     * shape is rebuilt from whole pixels — midpoint-circle dots, corner-
+     * notched squares, stair-stepped quarter-rounds. Filled pixel runs are
+     * merged per row so a cell is ~7 rects, not 49.
+     */
+    quiltpix(w, h, p, s, a, rng) {
+      const P = 7;
+      return quiltBase(w, h, p, s, a, rng, (x, y, c, col, op, rand) => {
+        const q = c / P;
+        const roll = rand();
+        const fill = new Array(P * P);
+        if (roll < 0.4) {
+          // Rounded square: everything but the four corner pixels.
+          for (let j = 0; j < P; j++)
+            for (let i = 0; i < P; i++)
+              fill[j * P + i] = !(
+                (i === 0 || i === P - 1) &&
+                (j === 0 || j === P - 1)
+              );
+        } else if (roll < 0.7) {
+          // Chunky midpoint circle.
+          const R = P / 2;
+          for (let j = 0; j < P; j++)
+            for (let i = 0; i < P; i++) {
+              const dx = i + 0.5 - P / 2;
+              const dy = j + 0.5 - P / 2;
+              fill[j * P + i] = dx * dx + dy * dy <= R * R;
+            }
+        } else {
+          // Stair-stepped quarter-round anchored at a random corner.
+          const o = Math.floor(rand() * 4);
+          const cx = o === 0 || o === 3 ? 0 : P;
+          const cy = o === 0 || o === 1 ? 0 : P;
+          for (let j = 0; j < P; j++)
+            for (let i = 0; i < P; i++) {
+              const dx = i + 0.5 - cx;
+              const dy = j + 0.5 - cy;
+              fill[j * P + i] = dx * dx + dy * dy <= P * P;
+            }
+        }
+        let out = `<g fill="${col}" fill-opacity="${op}" shape-rendering="crispEdges">`;
+        for (let j = 0; j < P; j++) {
+          let i = 0;
+          while (i < P) {
+            if (!fill[j * P + i]) {
+              i++;
+              continue;
+            }
+            let len = 0;
+            while (i + len < P && fill[j * P + i + len]) len++;
+            // +0.4 vertical overlap: same-fill rows may not meet exactly
+            // after subpixel rounding, and a hairline seam breaks the sprite.
+            out += `<rect x="${x + i * q}" y="${y + j * q}" width="${len * q}" height="${q + 0.4}"/>`;
+            i += len;
+          }
+        }
+        return out + '</g>';
+      });
+    },
+
+    // ---- Pixel fields ----------------------------------------------------
+    // Every pattern below is a pure function over a fat-pixel lattice.
+    // Multicolour fields read the active accent pool; in Tint mode they all
+    // collapse to mono ink, same as the quilts.
+
+    // Quarter-discs on a grid, rasterized: the arc stair-steps per pixel,
+    // orientation hashed per cell, whole-cell clearing.
+    pxtruchet(w, h, p, s, a) {
+      const q = 8 * s;
+      const P = 8;
+      const pool = filteredPool(state.pool, p);
+      const duo = state.mode === 'duotone';
+      return pixelLattice(w, h, q, a, (u, v) => {
+        const ci = Math.floor(u / P);
+        const cj = Math.floor(v / P);
+        if (hidden(ci * P * q, cj * P * q, P * q, P * q)) return null;
+        const x = ((u % P) + P) % P;
+        const y = ((v % P) + P) % P;
+        const o = Math.floor(pixHash(ci, cj, state.seed) * 4);
+        const cx = o === 0 || o === 3 ? 0 : P;
+        const cy = o === 0 || o === 1 ? 0 : P;
+        const dx = x + 0.5 - cx;
+        const dy = y + 0.5 - cy;
+        if (dx * dx + dy * dy > P * P) return null;
+        const isA = duo && pixHash(ci, cj, state.seed + 11) < 0.08;
+        return isA ? pool[0] || p.fg : p.fg;
+      });
+    },
+
+    // 2/2 twill selects warp or weft; both are threaded 4 dark / 4 light.
+    pxhound(w, h, p, s, a) {
+      const q = 8 * s;
+      return pixelLattice(w, h, q, a, (u, v) => {
+        const warpUp = (((u - v) % 4) + 4) % 4 < 2;
+        const dark = warpUp ? u % 8 < 4 : v % 8 < 4;
+        return dark ? p.fg : null;
+      });
+    },
+
+    pxherring(w, h, p, s, a) {
+      const q = 8 * s;
+      return pixelLattice(w, h, q, a, (u, v) => {
+        const d = Math.floor(u / 8) % 2 ? u + v : u - v;
+        return ((d % 4) + 4) % 4 < 2 ? p.fg : null;
+      });
+    },
+
+    pxpinwheel(w, h, p, s, a) {
+      const q = 9 * s;
+      return pixelLattice(w, h, q, a, (u, v) =>
+        pinQuad(u, v, 8) >= 0 ? p.fg : null
+      );
+    },
+
+    pxpinduo(w, h, p, s, a) {
+      const q = 9 * s;
+      const pool = filteredPool(state.pool, p);
+      const c1 = state.mode === 'duotone' ? pool[0] || p.fg : p.fg;
+      return pixelLattice(w, h, q, a, (u, v) => {
+        const quad = pinQuad(u, v, 8);
+        if (quad < 0) return null;
+        return quad === 0 || quad === 2 ? p.fg : c1;
+      });
+    },
+
+    pxpingiant(w, h, p, s, a) {
+      const q = 9 * s;
+      return pixelLattice(w, h, q, a, (u, v) =>
+        pinQuad(u, v, 16) >= 0 ? p.fg : null
+      );
+    },
+
+    // Checkerboard at 45°: diamond cells whose edges stair-step.
+    pxchecker(w, h, p, s, a) {
+      const q = 8 * s;
+      const P = 7;
+      const pool = filteredPool(state.pool, p);
+      const duo = state.mode === 'duotone';
+      return pixelLattice(w, h, q, a, (u, v) => {
+        const i = Math.floor((u + v) / P);
+        const j = Math.floor((u - v) / P);
+        if ((((i + j) % 2) + 2) % 2 === 0) return null;
+        const isA = duo && pixHash(i, j, state.seed) < 0.07;
+        return isA ? pool[0] || p.fg : p.fg;
+      });
+    },
+
+    // The camo family: interpolate randomness FIRST (value/Worley noise),
+    // quantize to the lattice SECOND — that ordering is what makes shapes
+    // organic-but-pixelated instead of per-pixel static.
+    pxcamo(w, h, p, s, a) {
+      const q = 10 * s;
+      const pool = filteredPool(state.pool, p);
+      const duo = state.mode === 'duotone';
+      const c1 = pool[0] || p.fg;
+      return pixelLattice(w, h, q, a, (u, v) => {
+        if (valueNoise(u, v, state.seed, 6) > 0.58) return p.fg;
+        if (duo && valueNoise(u, v, state.seed + 31, 6) > 0.62) return c1;
+        return null;
+      });
+    },
+
+    // Same field, coarser cells and a bigger pixel: continents. The accent
+    // paints the field's OPPOSITE extreme, so the two families interlock.
+    pxcamogiant(w, h, p, s, a) {
+      const q = 12 * s;
+      const pool = filteredPool(state.pool, p);
+      const duo = state.mode === 'duotone';
+      const c1 = duo ? pool[0] || p.fg : p.fg;
+      return pixelLattice(w, h, q, a, (u, v) => {
+        const n = valueNoise(u, v, state.seed, 9);
+        if (n > 0.63) return p.fg;
+        if (n < 0.37) return c1;
+        return null;
+      });
+    },
+
+    // One field sliced into elevation bands; alternate bands filled.
+    pxcontour(w, h, p, s, a) {
+      const q = 10 * s;
+      const pool = filteredPool(state.pool, p);
+      const duo = state.mode === 'duotone';
+      const c1 = duo ? pool[0] || p.fg : p.fg;
+      return pixelLattice(w, h, q, a, (u, v) => {
+        const band = Math.floor(valueNoise(u, v, state.seed, 7) * 7);
+        if (band % 2 === 0) return null;
+        return band >= 5 ? c1 : p.fg;
+      });
+    },
+
+    // Worley (cellular) noise: one feature point per macro cell; a pixel is
+    // a pebble when it sits close enough to the nearest feature point.
+    pxpebble(w, h, p, s, a) {
+      const q = 9 * s;
+      const pool = filteredPool(state.pool, p);
+      const duo = state.mode === 'duotone';
+      const P = 6;
+      return pixelLattice(w, h, q, a, (u, v) => {
+        const gx = Math.floor(u / P);
+        const gy = Math.floor(v / P);
+        let best = Infinity;
+        let bestCell = 0;
+        for (let dy = -1; dy <= 1; dy++)
+          for (let dx = -1; dx <= 1; dx++) {
+            const cx = gx + dx;
+            const cy = gy + dy;
+            const fx = cx * P + pixHash(cx, cy, state.seed) * P;
+            const fy = cy * P + pixHash(cx, cy, state.seed + 7) * P;
+            const d = Math.hypot(u + 0.5 - fx, v + 0.5 - fy);
+            if (d < best) {
+              best = d;
+              bestCell = cx * 131 + cy;
+            }
+          }
+        if (best >= 2.4) return null;
+        const isA = duo && pixHash(bestCell, 3, state.seed) < 0.1;
+        return isA ? pool[0] || p.fg : p.fg;
+      });
+    },
+
+    pxkilim(w, h, p, s, a) {
+      const q = 8 * s;
+      const pool = filteredPool(state.pool, p);
+      const duo = state.mode === 'duotone';
+      const c1 = duo ? pool[0] || p.fg : p.fg;
+      const c2 = duo ? pool[1] || p.fg : p.fg;
+      const SEQ = [p.fg, c1, c1, null, c2, null, p.fg, null];
+      return pixelLattice(w, h, q, a, (u, v) => {
+        const du = Math.abs((((u % 16) + 16) % 16) - 8);
+        const dv = Math.abs((((v % 16) + 16) % 16) - 8);
+        return SEQ[(du + dv) % SEQ.length];
+      });
+    },
+
+    pxsteps(w, h, p, s, a) {
+      const q = 8 * s;
+      const pool = filteredPool(state.pool, p);
+      const duo = state.mode === 'duotone';
+      const c1 = duo ? pool[0] || p.fg : p.fg;
+      return pixelLattice(w, h, q, a, (u, v) => {
+        const t = Math.floor(u / 3) % 14;
+        const tri = t < 7 ? t : 14 - t;
+        const band = Math.floor((v + tri * 2) / 4) % 3;
+        return [p.fg, c1, null][band];
+      });
+    },
+
+    pxstatic(w, h, p, s, a) {
+      const q = 14 * s;
+      const pool = filteredPool(state.pool, p);
+      const duo = state.mode === 'duotone';
+      return pixelLattice(w, h, q, a, (u, v) => {
+        if (pixHash(u, v, state.seed) >= 0.42) return null;
+        if (!duo) return p.fg;
+        const r = pixHash(u + 7919, v + 104729, state.seed);
+        if (r < 0.5) return p.fg;
+        return pool[Math.floor((r - 0.5) * 2 * pool.length)] || p.fg;
+      });
+    },
+
+    pxzigzag(w, h, p, s, a) {
+      const q = 8 * s;
+      return pixelLattice(w, h, q, a, (u, v) => {
+        const tri = Math.abs((Math.floor(u / 2) % 8) - 4);
+        return (v + tri) % 8 < 3 ? p.fg : null;
+      });
+    },
+
+    // Candy stripes as pixel stairs; Duotone alternates ink and first accent.
+    pxstripes(w, h, p, s, a) {
+      const q = 8 * s;
+      const pool = filteredPool(state.pool, p);
+      const c1 = state.mode === 'duotone' ? pool[0] || p.fg : p.fg;
+      return pixelLattice(w, h, q, a, (u, v) => {
+        const k = (((u + v) % 12) + 12) % 12;
+        if (k < 4) return p.fg;
+        if (k >= 6 && k < 10) return c1;
+        return null;
+      });
+    },
+  };
+
+  // ---------- rendering ----------
+  const card = document.getElementById('card');
+  const layer = document.getElementById('layer');
+  const eyebrow = document.getElementById('eyebrow');
+  const countEl = document.getElementById('count');
+  const cta = document.getElementById('cta');
+  const scoredLink = document.getElementById('scoredLink');
+  const noteEl = document.getElementById('patternNote');
+
+  function render() {
+    const p = state.custom || PALETTES[state.palette];
+    const w = card.clientWidth;
+    const h = card.clientHeight;
+    if (!w || !h) return;
+
+    card.style.backgroundColor = p.surface;
+    card.style.color = p.fg;
+    const plate = document.getElementById('plate');
+    plate.className = `plate plate--${state.centre}`;
+    plate.style.backgroundColor = p.surface;
+    countEl.style.color = p.accent;
+    cta.style.backgroundColor = p.fg;
+    cta.style.color = p.surface;
+    document.querySelectorAll('#centreList button').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.centre === state.centre));
+    });
+
+    const rng = mulberry32(state.seed >>> 0);
+    CLEAR = clearRect(w, h);
+    // Pixel fields run 1.7× more macro than their tuned bases; quilts are
+    // already cell-scaled, so only the slider moves them.
+    const sEff = (state.pattern.startsWith('px') ? 1.7 : 1) * state.scale;
+    const body = GEN[state.pattern](w, h, p, sEff, 1, rng);
+    layer.innerHTML = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block">${body}</svg>`;
+
+    noteEl.innerHTML = PATTERNS.find((x) => x.id === state.pattern).note;
+    document.querySelectorAll('#patternList button').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.id === state.pattern));
+    });
+    // Pool rows: pressed state, plus live chips showing each pool as it
+    // would actually appear on the CURRENT surface (post contrast filter).
+    document.querySelectorAll('#poolList button').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.pool === state.pool));
+      const chips = b.querySelector('.chips');
+      chips.innerHTML = filteredPool(b.dataset.pool, p)
+        .map((c) => `<i style="background:${c}"></i>`)
+        .join('');
+    });
+    document.getElementById('poolNote').innerHTML = POOLS[state.pool].note;
+    document.querySelectorAll('#swatchList button').forEach((b, i) => {
+      b.setAttribute(
+        'aria-pressed',
+        String(!state.custom && i === state.palette)
+      );
+    });
+    updateStudio(p);
+  }
+
+  // ---------- controls ----------
+  const patternList = document.getElementById('patternList');
+  PATTERNS.forEach((p) => {
+    if (p.heading) {
+      const lbl = document.createElement('p');
+      lbl.className = 'label';
+      lbl.style.margin = '12px 0 4px 10px';
+      lbl.textContent = p.heading;
+      patternList.appendChild(lbl);
+      return;
+    }
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.dataset.id = p.id;
+    b.textContent = p.name;
+    b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', () => {
+      state.pattern = p.id;
+      render();
+    });
+    patternList.appendChild(b);
+  });
+
+  const poolList = document.getElementById('poolList');
+  Object.entries(POOLS).forEach(([key, pool]) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.dataset.pool = key;
+    b.setAttribute('aria-pressed', 'false');
+    const name = document.createElement('span');
+    name.textContent = pool.name;
+    const chips = document.createElement('span');
+    chips.className = 'chips';
+    b.append(name, chips);
+    b.addEventListener('click', () => {
+      state.pool = key;
+      render();
+    });
+    poolList.appendChild(b);
+  });
+
+  const swatchList = document.getElementById('swatchList');
+  function selectPalette(i) {
+    state.palette = i;
+    state.custom = null;
+    const p = PALETTES[i];
+    eyebrow.textContent = p.brand
+      ? 'Logicola · Brand'
+      : `Set ${p.name} · Practice`;
+    fillStudio(p);
+    render();
+  }
+  function buildSwatches() {
+    swatchList.innerHTML = '';
+    PALETTES.forEach((p, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.style.background = p.surface;
+      b.title = p.brand ? 'Brand cream' : `Set ${p.name}`;
+      b.setAttribute('aria-label', b.title);
+      b.setAttribute('aria-pressed', 'false');
+      const tag = document.createElement('span');
+      tag.className = 'mono';
+      tag.textContent = p.name;
+      b.appendChild(tag);
+      b.addEventListener('click', () => selectPalette(i));
+      swatchList.appendChild(b);
+    });
+  }
+  buildSwatches();
+  // Open on the brand cream, wherever it happens to sit after a reorder.
+  state.palette = Math.max(
+    0,
+    PALETTES.findIndex((p) => p.brand)
+  );
+
+  // ---- Colour studio wiring ----
+  const csSurface = document.getElementById('csSurface');
+  const csInk = document.getElementById('csInk');
+  const csAccent = document.getElementById('csAccent');
+  const csTarget = document.getElementById('csTarget');
+  const csChips = document.getElementById('csChips');
+  let savedCount = 0;
+
+  // Saved sets survive reloads: everything "Save as set" creates is mirrored
+  // to localStorage and restored on boot.
+  const SAVED_KEY = 'logicola-lab-saved-sets';
+  try {
+    const stored = JSON.parse(localStorage.getItem(SAVED_KEY) || '[]');
+    // Skip anything whose name a preset already claims (S1–S11 are baked in).
+    const names = new Set(PALETTES.map((p) => p.name));
+    stored.filter((s) => !names.has(s.name)).forEach((s) => PALETTES.push(s));
+  } catch (e) {}
+  // Seed past every S-number ever used — including the ones since renamed
+  // into their parent families (S3→N2, S4/S5→C2/C3, S6/S7→J2/J3, S8→L2,
+  // S9/S10→R2/R3, S11→A2). New saves start at S12 so no number is reused.
+  savedCount = Math.max(
+    11,
+    ...PALETTES.filter((p) => /^S\d+$/.test(p.name)).map((p) =>
+      parseInt(p.name.slice(1), 10)
+    )
+  );
+  function persistSaved() {
+    try {
+      localStorage.setItem(
+        SAVED_KEY,
+        JSON.stringify(PALETTES.filter((p) => /^S\d+$/.test(p.name)))
+      );
+    } catch (e) {}
+  }
+
+  const HEX_FIELDS = [
+    ['csSurfaceHex', csSurface],
+    ['csInkHex', csInk],
+    ['csAccentHex', csAccent],
+  ].map(([id, well]) => [document.getElementById(id), well]);
+
+  function syncHexFields() {
+    HEX_FIELDS.forEach(([field, well]) => {
+      field.value = well.value;
+    });
+  }
+  HEX_FIELDS.forEach(([field, well]) => {
+    field.addEventListener('change', () => {
+      const m = field.value.trim().match(/^#?([0-9a-fA-F]{6})$/);
+      if (!m) {
+        field.value = well.value;
+        return;
+      }
+      well.value = '#' + m[1].toLowerCase();
+      syncHexFields();
+      studioEdited();
+    });
+  });
+
+  function fillStudio(p) {
+    csSurface.value = p.surface;
+    csInk.value = p.fg;
+    csAccent.value = p.accent;
+    syncHexFields();
+    const score = stimulationOf(p.surface, p.fg).score;
+    csTarget.value = Math.max(0.1, Math.min(0.9, score)).toFixed(2);
+    document.getElementById('csTargetOut').textContent = Number(
+      csTarget.value
+    ).toFixed(2);
+  }
+
+  function studioEdited() {
+    state.custom = {
+      name: '✎',
+      surface: csSurface.value,
+      fg: csInk.value,
+      accent: csAccent.value,
+    };
+    render();
+  }
+  [csSurface, csInk, csAccent].forEach((el) =>
+    el.addEventListener('input', () => {
+      syncHexFields();
+      studioEdited();
+    })
+  );
+
+  csTarget.addEventListener('input', () => {
+    document.getElementById('csTargetOut').textContent = Number(
+      csTarget.value
+    ).toFixed(2);
+  });
+
+  function showSuggestions(mode) {
+    const p = state.custom || PALETTES[state.palette];
+    const fixed = mode === 'ink' ? p.surface : p.fg;
+    const list = suggestPartners(fixed, Number(csTarget.value), mode);
+    csChips.innerHTML = '';
+    list.forEach((c) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.style.background = c.hex;
+      b.title = `${c.hex} · stimulation ${c.score.toFixed(2)}`;
+      b.addEventListener('click', () => {
+        if (mode === 'ink') csInk.value = c.hex;
+        else csSurface.value = c.hex;
+        studioEdited();
+      });
+      csChips.appendChild(b);
+    });
+  }
+  document
+    .getElementById('csSuggestInk')
+    .addEventListener('click', () => showSuggestions('ink'));
+  document
+    .getElementById('csSuggestSurface')
+    .addEventListener('click', () => showSuggestions('surface'));
+
+  document.getElementById('csSave').addEventListener('click', () => {
+    if (!state.custom) return;
+    PALETTES.push({
+      name: `S${++savedCount}`,
+      surface: state.custom.surface,
+      fg: state.custom.fg,
+      count: state.custom.count,
+      pattern: state.custom.pattern,
+    });
+    persistSaved();
+    buildSwatches();
+    selectPalette(PALETTES.length - 1);
+  });
+
+  function updateStudio(p) {
+    const m = stimulationOf(p.surface, p.fg);
+    const half = halfwayHex(p.surface, p.fg);
+    const tA = TEMP_ZONES(p.surface);
+    const tB = TEMP_ZONES(p.fg);
+    const tempOk = tA === tB || tA === 'lukewarm' || tB === 'lukewarm';
+    const verdict =
+      m.score < 0.3
+        ? 'calm'
+        : m.score < 0.5
+          ? 'balanced'
+          : m.score < 0.68
+            ? 'energizing'
+            : 'intense';
+    const accSurf = perceptualDist(p.accent, p.surface);
+    const accInkDL = Math.abs(hexToOklch(p.accent).L - hexToOklch(p.fg).L);
+    document.getElementById('csMetrics').innerHTML =
+      `σ intensity <b>${m.sigma.toFixed(2)}</b> · ΔL <b>${m.dL.toFixed(2)}</b> · hueΔ <b>${Math.round(m.theta * 180)}°</b><br>` +
+      `stimulation <b>${m.score.toFixed(2)}</b> — ${verdict}${m.vibr > 0.2 ? ' · <b>⚠ vibration ' + m.vibr.toFixed(2) + '</b>' : ` · vibration ${m.vibr.toFixed(2)}`}<br>` +
+      `temperature ${tA} + ${tB} ${tempOk ? '✓' : '✗ crossing warm/cool'} · halfway <span class="halfway-chip" style="background:${half}"></span> ${half}<br>` +
+      `accent: vs surface ${accSurf.toFixed(2)} ${accSurf > 0.17 ? '✓' : '✗ low'} · vs ink ΔL ${accInkDL.toFixed(2)} ${accInkDL > 0.25 ? '✓' : '~'}`;
+  }
+
+  fillStudio(PALETTES[state.palette]);
+
+  const scaleIn = document.getElementById('scale');
+  scaleIn.addEventListener('input', () => {
+    state.scale = Number(scaleIn.value);
+    document.getElementById('scaleOut').textContent =
+      state.scale.toFixed(2).replace(/0$/, '') + '×';
+    render();
+  });
+  document.querySelectorAll('#centreList button').forEach((b) => {
+    b.addEventListener('click', () => {
+      state.centre = b.dataset.centre;
+      render();
+    });
+  });
+  document.getElementById('reshuffle').addEventListener('click', () => {
+    state.seed = Math.floor(Math.random() * 1e9);
+    render();
+  });
+  scoredLink.addEventListener('click', () => {});
+  cta.addEventListener('click', () => {});
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target.matches('input, button')) return;
+    const idx = REAL_PATTERNS.findIndex((p) => p.id === state.pattern);
+    if (e.key === 'ArrowRight') {
+      state.pattern = REAL_PATTERNS[(idx + 1) % REAL_PATTERNS.length].id;
+      render();
+    }
+    if (e.key === 'ArrowLeft') {
+      state.pattern =
+        REAL_PATTERNS[
+          (idx - 1 + REAL_PATTERNS.length) % REAL_PATTERNS.length
+        ].id;
+      render();
+    }
+    if (e.key === 'ArrowDown')
+      selectPalette((state.palette + 1) % PALETTES.length);
+    if (e.key === 'ArrowUp')
+      selectPalette((state.palette - 1 + PALETTES.length) % PALETTES.length);
+  });
+
+  new ResizeObserver(render).observe(card);
+  render();
+</script>
