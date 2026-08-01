@@ -9,7 +9,7 @@ The workbench is **`docs/pattern-lab.html`** — open it directly in a browser
 (no build step, no server). It was in a session scratchpad before; it now
 lives in the repo so it can't be lost again.
 
-It contains 20 palettes, 17 patterns, the ported ColorMoods stimulation
+It contains 21 palettes, 17 patterns, the ported ColorMoods stimulation
 engine, and a Colour studio (surface / ink / accent wells with hex fields,
 live metrics, partner suggestions, "Save as set" persisted to localStorage).
 
@@ -17,19 +17,48 @@ live metrics, partner suggestions, "Save as set" persisted to localStorage).
 `components/quiz/index.tsx` is untouched. The decision was: refine the whole
 system in the lab, then port once.
 
-## The 20 palettes
+The card now shows **each set's real copy** (2026-08-02) — the `title` and
+`description` of its first subset, verbatim from `content/sets/*.ts`, split
+the same way `StartScreen` splits them (`Modal Translations: Basic` →
+eyebrow `SET J · BASIC`, headline `Modal Translations`). It previously showed
+"Ready for a challenge?" / "Test your knowledge on this chapter…", which are
+only StartScreen's *fallbacks* for a subset with no title. Testing against
+them inverted the hierarchy and made every palette carry identical words —
+the opposite of the point, since colour is how a visitor tells sets apart.
+Palettes with no parent set borrow Set A's copy (the longest pair, so the
+worst case). The palette code moved to a caption **under** the card.
 
-| Family                      | Members    |
-| --------------------------- | ---------- |
-| A · pale surface, green ink | A5, A6, A7 |
-| C · chartreuse              | C, C2      |
-| J · lilac                   | J, J3      |
-| L · mint                    | L, L2      |
-| N · sky                     | N2, N3     |
-| R · orange                  | R, R2, R3  |
-| MD · Meanings & Definitions | MD, MD2    |
-| Unparented                  | S1, S2, G4 |
-| Brand                       | Crm        |
+The description is **`font-normal`, not `font-light`** (2026-08-02), in the
+lab and in `startScreen.tsx`. At `text-lg` on a saturated surface a 300 weight
+thinned the stems enough that the sentence read as decoration — and it is the
+line that says what the drill is. Hierarchy is unaffected: the headline is
+still `font-bold`.
+
+## The 21 palettes
+
+| Family                      | Members        |
+| --------------------------- | -------------- |
+| A · pink surface, green ink | A5, A7         |
+| C · chartreuse              | C, C2          |
+| J · lilac                   | J, J3, J6      |
+| L · mint                    | L, L2          |
+| N · sky                     | N2, N3         |
+| R · orange                  | R, R2, R3      |
+| MD · Meanings & Definitions | MD             |
+| Unparented                  | S1, S2, G4, G6 |
+| Held back                   | MD2, Crm       |
+
+**A6 → G6** (2026-08-02). Set A is a pink-surface family now, so a pale-leaf
+surface no longer belongs to it. The palette itself is sound and is held in
+the unparented G pool for a future set — renamed, not cut.
+
+**J6 added** (2026-08-02) — J3's lilac with the ink dropped to `#0F005A`, Set
+C2's deep violet. Nearly J3's own hue (273° vs 264°) at half the lightness:
+**9.91:1** on the lilac against J3's 7.43, stimulation **0.53** (in the
+0.45–0.65 band), no vibration. It also opens the widest value gap of any J ink
+from the family's forest accent (ΔL .079 vs J3's .029), which is the standing
+crowding problem in J. `J4` and `J5` are burned names — both were tried and
+cut — hence J6.
 
 `★` in the lab marks Malik's own saved palettes; they take the first variant
 slot in each family. Malik's stated favourites: **C, L, L2, R, MD, S1**.
@@ -38,8 +67,12 @@ slot in each family. Malik's stated favourites: **C, L, L2, R, MD, S1**.
 
 - **MD** — periwinkle `#D9CCF9` + violet ink `#3E1060`. Settled.
 - **Dark surfaces are out.** Every favourite is a pale surface; the
-  forest-ground and dark-purple variants were retired. MD2 is the last dark
-  one standing and is a candidate for removal.
+  forest-ground and dark-purple variants were retired.
+- **MD2 and Crm are held back** (2026-08-02) — out of the quiz pool, kept in
+  the lab below a "Held back" rule. MD2 tested as the most dissonant palette
+  in the set; its dark surface is parked as a **dark-mode seed**, not cut.
+  Crm stays as a **brand reference** — cream won't claim a hue, so it can't
+  carry a window. The lab marks both with `reserve:` and sorts them last.
 - **Set A moved into pink territory** — its green now lives in the ink.
 - **Every accent clears 4.5:1** against its surface (it renders as the
   "10 QUESTIONS" text). Hue was preserved; only value moved.
@@ -49,7 +82,7 @@ slot in each family. Malik's stated favourites: **C, L, L2, R, MD, S1**.
 ## Open — this is tomorrow's work
 
 1. **Pick the final palette per set.** A (A5 is the presumptive base, ranks
-   #3), R (R vs R2 vs R3), and whether MD2 survives.
+   #3) and R (R vs R2 vs R3). The MD2 question is closed — held back.
 2. **Promote bases.** Set A has no palette named `A`; Set N has no `N`.
    Decide whether to rename the winners.
 3. **The accent=ink defect.** C, J, L and S2 use their ink as their accent,
