@@ -265,6 +265,17 @@
   .swatches {
     margin-bottom: 16px;
   }
+  /* Forces a row break, so the held-back palettes read as a separate group. */
+  .swatch-break {
+    flex: 0 0 100%;
+    margin: 0;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    padding-top: 8px;
+  }
 
   .dial {
     margin-top: 6px;
@@ -333,8 +344,19 @@
   main {
     flex: 1;
     display: flex;
+    /* Column so the palette caption can sit under the card rather than
+       beside it — the card is the artefact, the caption is lab chrome. */
+    flex-direction: column;
     padding: 28px;
     min-width: 0;
+  }
+  .card-caption {
+    margin: 10px 0 0;
+    text-align: center;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
   }
   .card {
     position: relative;
@@ -422,7 +444,15 @@
     text-wrap: balance;
   }
   .card .desc {
-    font-weight: 300;
+    /*
+     * Was 300. At 18px on a saturated surface, a 300 weight thins the stems
+     * enough that the sentence reads as decoration rather than instruction —
+     * and this is the line that tells you what the drill actually is. 400 is
+     * the readable floor for body copy at this size; the hierarchy still
+     * holds, because the 700 headline above it is three steps heavier.
+     * Mirrors the `font-light` → `font-normal` change in startScreen.tsx.
+     */
+    font-weight: 400;
     font-size: 18px;
     max-width: 32rem;
     margin: 0 auto 32px;
@@ -652,10 +682,11 @@
     <section class="card" id="card" aria-label="Quiz start screen preview">
       <div class="pattern-layer" id="layer" aria-hidden="true"></div>
       <div class="plate" id="plate" aria-hidden="true"></div>
-      <div class="eyebrow mono" id="eyebrow">Logicola · Brand</div>
-      <h2>Ready for a challenge?</h2>
-      <p class="desc">
-        Test your knowledge on this chapter and see how much you already know!
+      <div class="eyebrow mono" id="eyebrow">Set Q</div>
+      <h2 id="headline">Meanings and Definitions</h2>
+      <p class="desc" id="desc">
+        Spot what is wrong with a definition — too broad, too narrow,
+        circular, or worse.
       </p>
       <div class="count mono" id="count">10 questions</div>
       <button class="cta" id="cta" type="button">Start Quiz</button>
@@ -663,10 +694,77 @@
         Or take a scored run, the way the original worked →
       </button>
     </section>
+    <!--
+      Lab chrome, deliberately OUTSIDE the card: the card now carries the
+      set's real eyebrow, so the palette code has nowhere to live inside the
+      frame without faking the content.
+    -->
+    <p class="card-caption mono" id="cardCaption">MD · Set Q</p>
   </main>
 </div>
 
 <script>
+  // Real start-screen copy, verbatim from content/sets/*.ts — the `title`
+  // and `description` of each set's FIRST subset, which is what a visitor
+  // landing on the set actually reads.
+  //
+  // The lab used to show "Ready for a challenge?" / "Test your knowledge on
+  // this chapter…". Those are StartScreen's FALLBACKS: they only render when
+  // a subset has no title, which is almost never. Testing against them got
+  // the hierarchy backwards — the generic line sat in the headline slot while
+  // the drill's actual name was absent, and every palette was judged against
+  // identical words. Colour is how a visitor tells one set from another, so
+  // the surface has to be judged against the text it will really carry.
+  const SET_COPY = {
+    A: {
+      set: 'Set A',
+      title: 'Syllogistic Translations: Easy',
+      desc: 'Translate everyday English — all, no, some — into syllogistic logic without losing the structure of the claim.',
+    },
+    C: {
+      set: 'Set C',
+      title: 'Propositional Translations: Easy',
+      desc: 'Translate ordinary language into symbols — and, or, if-then — without losing the structure of the argument.',
+    },
+    J: {
+      set: 'Set J',
+      title: 'Modal Translations: Basic',
+      desc: 'Translate claims about what is necessary, possible, and contingent into the box and diamond of modal logic.',
+    },
+    L: {
+      set: 'Set L',
+      title: 'Deontic Translations: Imperative',
+      desc: 'Translate commands and requests into imperative logic, underlining what is to be done.',
+    },
+    N: {
+      set: 'Set N',
+      title: 'Belief Translations: Believing',
+      desc: 'Translate claims about believing, not believing, and withholding belief into belief logic.',
+    },
+    // Set R's title has no ': ' — its eyebrow is the bare set name, and the
+    // headline runs short. Worth keeping: it is the one real layout outlier.
+    R: {
+      set: 'Set R',
+      title: 'Informal Fallacies',
+      desc: 'Read a short passage and name the fallacy it commits — from ad hominem to post hoc.',
+    },
+    // The MD family dresses Set Q, whose subset id is the one
+    // getQuizScreenColors special-cases by id rather than by set name.
+    MD: {
+      set: 'Set Q',
+      title: 'Meanings and Definitions',
+      desc: 'Spot what is wrong with a definition — too broad, too narrow, circular, or worse.',
+    },
+  };
+
+  // Palettes with no parent set (S1, S2, G4, G6, Crm) borrow Set A's copy: it is
+  // the longest title-and-description pair in the catalogue, so an unparented
+  // surface gets judged against the worst case rather than the kindest one.
+  function copyFor(palette) {
+    const family = /^(MD|[ACJLNR])\d*$/.exec(palette.name);
+    return SET_COPY[family ? family[1] : 'A'];
+  }
+
   // Real palettes from components/quiz/index.tsx (getQuizScreenColors),
   // plus duotone pairs sampled from the social cover (brand: true).
   const PALETTES = [
@@ -677,13 +775,13 @@
     // "10 QUESTIONS" text on the surface, so it must clear 4.5:1. Hue is
     // preserved exactly; only value moves (chroma clipped to gamut).
 
-    // ---- A · pale surface, green ink --------------------------------------
+    // ---- A · pink surface, green ink --------------------------------------
     // The forest-ground original and both dark variants are retired — every
     // favourite is a pale surface. Set A's green lives in the INK now; the
     // surface claims the open pink territory. A5 is the presumptive base.
+    // A6 (pale leaf) left the family for that reason — it is now G6.
     // NB: this 'A7' is the ex-G5, not the earlier A7 (which became A5).
     { name: 'A5', surface: '#FFC2DA', fg: '#1C3601', accent: '#A10094' }, // pink & forest ink; magenta 2.21→4.75:1
-    { name: 'A6', surface: '#D9F2C0', fg: '#24450A', accent: '#BD00AD' }, // pale leaf & forest; magenta 2.76→4.62:1
     { name: 'A7', surface: '#FFABC6', fg: '#4A1040', accent: '#674900' }, // was G5 — pink & plum; marigold→ochre 1.08→4.70:1
 
     // ---- C · chartreuse ---------------------------------------------------
@@ -694,6 +792,14 @@
     // Every J variant shares the original #E6ACF4 surface and varies the ink.
     { name: 'J', surface: '#E6ACF4', fg: '#1C3601', accent: '#1C3601' }, // shipped
     { name: 'J3', surface: '#E6ACF4', fg: '#0000A7', accent: '#1C3601' }, // ★ was S7 — lilac & deep blue, 0.58
+    // J3 with the ink dropped to Set C2's deep violet — a shade already in
+    // the system, so this borrows nothing new. Nearly the same hue as J3's
+    // blue (273° vs 264°) but much darker (OKLCH L .22 vs .33): 9.91:1 on
+    // the lilac against J3's 7.43, stimulation 0.53 (in band), no vibration.
+    // It also opens the widest value gap from the forest accent of any J ink
+    // (ΔL .079 vs J3's .029), which is the family's standing crowding problem.
+    // NB: J4 and J5 are burned names — both were tried and cut.
+    { name: 'J6', surface: '#E6ACF4', fg: '#0F005A', accent: '#1C3601' }, // lilac & deepest violet, 0.53
 
     // ---- L · mint ---------------------------------------------------------
     { name: 'L', surface: '#C8F0E3', fg: '#3C034F', accent: '#3C034F' }, // shipped
@@ -714,7 +820,6 @@
 
     // ---- MD · Meanings & Definitions --------------------------------------
     { name: 'MD', surface: '#D9CCF9', fg: '#3E1060', accent: '#745400' }, // ★ decided; marigold→ochre 1.27→4.64:1
-    { name: 'MD2', surface: '#7B2FB0', fg: '#FFD7F0', accent: '#C3FF7A' }, // dark-surface alternative, 0.47
 
     // ---- Unparented ------------------------------------------------------
     // S1's accent is the one compromise: its orange and its rust ink are hue
@@ -722,13 +827,34 @@
     { name: 'S1', surface: '#E4BDF7', fg: '#AD3821', accent: '#723800' }, // ★ lilac & rust; orange 1.57→5.66:1
     { name: 'S2', surface: '#FBCB6A', fg: '#02302C', accent: '#02302C' }, // marigold & teal, 0.57
     { name: 'G4', surface: '#FFA759', fg: '#5E1F26', accent: '#7400A7' }, // orange & maroon; purple 2.54→4.75:1
+    // Was A6. Set A went pink, so a pale-leaf surface no longer belongs to
+    // it — but the palette itself is sound and is held for a future set.
+    // Named into the G pool (unparented) rather than kept as a stray A.
+    { name: 'G6', surface: '#D9F2C0', fg: '#24450A', accent: '#BD00AD' }, // pale leaf & forest; magenta 2.76→4.62:1
 
+    // ---- Held back · not candidates for a quiz window ---------------------
+    // Everything below `reserve` is kept for reference, not for selection.
+    // It still renders in the lab so it can be compared against, but it is
+    // out of the running for a set surface.
+    {
+      name: 'MD2',
+      surface: '#7B2FB0',
+      fg: '#FFD7F0',
+      accent: '#C3FF7A',
+      reserve: 'Dark mode',
+      // The most dissonant palette in the set — user testing agreed. Its
+      // dark surface is exactly what a future dark mode wants, so it is
+      // parked rather than deleted.
+    },
     {
       name: 'Crm',
       surface: '#EDEDE3',
       fg: '#05A24B',
       accent: '#FA6C5B',
       brand: true,
+      reserve: 'Brand',
+      // The social cover's cream. A useful reference point for the whole
+      // system, but too low-commitment to carry a quiz window.
     },
   ];
 
@@ -1663,6 +1789,9 @@
   const card = document.getElementById('card');
   const layer = document.getElementById('layer');
   const eyebrow = document.getElementById('eyebrow');
+  const headlineEl = document.getElementById('headline');
+  const descEl = document.getElementById('desc');
+  const cardCaption = document.getElementById('cardCaption');
   const countEl = document.getElementById('count');
   const cta = document.getElementById('cta');
   const scoredLink = document.getElementById('scoredLink');
@@ -1708,10 +1837,10 @@
         .join('');
     });
     document.getElementById('poolNote').innerHTML = POOLS[state.pool].note;
-    document.querySelectorAll('#swatchList button').forEach((b, i) => {
+    document.querySelectorAll('#swatchList button').forEach((b) => {
       b.setAttribute(
         'aria-pressed',
-        String(!state.custom && i === state.palette)
+        String(!state.custom && Number(b.dataset.index) === state.palette)
       );
     });
     updateStudio(p);
@@ -1763,34 +1892,59 @@
     state.palette = i;
     state.custom = null;
     const p = PALETTES[i];
-    eyebrow.textContent = p.brand
-      ? 'Logicola · Brand'
-      : `Set ${p.name} · Practice`;
+    // Same split StartScreen does: 'Modal Translations: Basic' becomes the
+    // headline 'Modal Translations' and the eyebrow variant '· BASIC'.
+    const copy = copyFor(p);
+    const [head, variant] = copy.title.split(': ');
+    eyebrow.textContent = [copy.set, variant].filter(Boolean).join(' · ');
+    headlineEl.textContent = head;
+    descEl.textContent = copy.desc;
+    cardCaption.textContent = p.reserve
+      ? `${p.name} · held back (${p.reserve})`
+      : `${p.name} · ${copy.set}`;
     fillStudio(p);
     render();
   }
   function buildSwatches() {
     swatchList.innerHTML = '';
-    PALETTES.forEach((p, i) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.style.background = p.surface;
-      b.title = p.brand ? 'Brand cream' : `Set ${p.name}`;
-      b.setAttribute('aria-label', b.title);
-      b.setAttribute('aria-pressed', 'false');
-      const tag = document.createElement('span');
-      tag.className = 'mono';
-      tag.textContent = p.name;
-      b.appendChild(tag);
-      b.addEventListener('click', () => selectPalette(i));
-      swatchList.appendChild(b);
-    });
+    // One rule across the strip: everything before it is a candidate for a
+    // quiz window, everything after it is kept for reference only. Held-back
+    // palettes sort last whatever their position in PALETTES, so sets saved
+    // from the studio (appended at the end) still land in the candidate half.
+    let brokeOut = false;
+    PALETTES.map((p, i) => [p, i])
+      .sort((a, b) => Number(!!a[0].reserve) - Number(!!b[0].reserve))
+      .forEach(([p, i]) => {
+        if (p.reserve && !brokeOut) {
+          brokeOut = true;
+          const rule = document.createElement('p');
+          rule.className = 'swatch-break';
+          rule.textContent = 'Held back';
+          swatchList.appendChild(rule);
+        }
+        const b = document.createElement('button');
+        b.dataset.index = i;
+        b.type = 'button';
+        b.style.background = p.surface;
+        b.title = p.reserve
+          ? `${p.name} — held back (${p.reserve})`
+          : `Set ${p.name}`;
+        b.setAttribute('aria-label', b.title);
+        b.setAttribute('aria-pressed', 'false');
+        const tag = document.createElement('span');
+        tag.className = 'mono';
+        tag.textContent = p.name;
+        b.appendChild(tag);
+        b.addEventListener('click', () => selectPalette(i));
+        swatchList.appendChild(b);
+      });
   }
   buildSwatches();
-  // Open on the brand cream, wherever it happens to sit after a reorder.
+  // Open on MD — the one settled palette — now that the brand cream is held
+  // back and no longer a candidate.
   state.palette = Math.max(
     0,
-    PALETTES.findIndex((p) => p.brand)
+    PALETTES.findIndex((p) => p.name === 'MD')
   );
 
   // ---- Colour studio wiring ----

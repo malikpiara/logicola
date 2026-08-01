@@ -125,7 +125,13 @@ export function StartScreen({
         <h1 className='mb-4 px-6 text-4xl md:text-5xl font-bold font-stretch'>
           {headline || 'Ready for a challenge?'}
         </h1>
-        <p className='mb-8 max-w-lg px-6 mx-auto text-lg font-light'>
+        {/*
+          `font-normal`, not `font-light`. At text-lg on a saturated surface a
+          300 weight thins the stems enough that this reads as decoration, and
+          it is the line that says what the drill actually is. The hierarchy is
+          unaffected — the headline above is `font-bold`.
+        */}
+        <p className='mb-8 max-w-lg px-6 mx-auto text-lg font-normal'>
           {description}
         </p>
         <div

@@ -296,6 +296,40 @@ Family state: A [A5, A6, A7] · C [C, C2] · J [J, J3, J4] · L [L, L2] ·
 N [N2, N3] · R [R, R2, R3] · MD [MD, MD2] · free agents [S1, S2, G4] ·
 brand [Crm].
 
+**Family state 2026-08-02:** A [A5, A7] · C [C, C2] · J [J, J3, J6] ·
+L [L, L2] · N [N2, N3] · R [R, R2, R3] · MD [MD] · free agents [S1, S2, G4,
+G6] · held back [MD2, Crm]. Library is 21.
+
+- **A6 → G6.** Set A resolved into a pink-surface family, so its pale-leaf
+  member no longer belongs to it. Renamed into the unparented G pool and kept
+  for a future set rather than cut — the palette is fine, its parent was wrong.
+- **J6 added** — J3's lilac `#E6ACF4` over `#0F005A`, the ink C2 already uses.
+  Same blue hue family as J3 (273° vs 264°) at half the lightness (OKLCH L .22
+  vs .33): 9.91:1 against the surface where J3 gives 7.43, stimulation 0.53,
+  vibration 0. The reason to prefer it isn't the contrast headroom — it is the
+  **accent gap**: J's forest accent `#1C3601` sits ΔL .029 from J3's ink and
+  ΔL .079 from J6's, so J6 is the first J variant where ink and accent read as
+  two different depths rather than one.
+- Borrowing an ink that already exists elsewhere in the system is deliberate.
+  A new hex would widen the palette; reusing C2's violet keeps the catalogue's
+  ink vocabulary small, which is what makes the surfaces do the distinguishing.
+
+**MD2 and Crm held back 2026-08-02.** Neither is a candidate for a quiz
+window any more, and the lab now separates them from the set palette under a
+"Held back" rule rather than deleting them:
+
+- **MD2** (`#7B2FB0` / `#FFD7F0`) — the most dissonant palette in the set,
+  and user testing agreed. It is also the last dark surface standing, which
+  is precisely what makes it worth keeping: **it is parked as a dark-mode
+  seed, not cut.** With MD2 out, the light-surface rule is now total rather
+  than near-total — the catalogue has one structure, not two.
+- **Crm** (`#EDEDE3` / `#05A24B`) — the social cover's cream. Kept as a
+  reference point for the brand, but too low-commitment to carry a window.
+  A quiz surface has to claim a hue; cream declines to.
+
+The MD family is therefore a single settled palette, and the "does MD2
+survive?" question in the handoff is closed.
+
 **Set A is now a pink-surface family** — pink & forest ink (A5), pale leaf
 (A6), pink & plum (A7). Its green identity lives in the ink.
 
