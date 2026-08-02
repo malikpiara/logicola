@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PanelRightClose, PanelRightOpen, X } from 'lucide-react';
 import Button from '../button';
-import KatexSpan from '../katexSpan';
 import Option from '../option';
 import Prompt from '../prompt';
 import { EndScreen } from './endScreen';
@@ -11,7 +10,7 @@ import { KeyboardKeys } from './keyboardKeys';
 import { StartScreen } from './startScreen';
 import useQuizState, { getRevealThreshold } from './useQuizState';
 import { progressLabel } from './quizMode';
-import { canScore } from '@/lib/scoring';
+import { canScore, TARGET_SCORE } from '@/lib/scoring';
 import classNames from 'classnames';
 import { SubSet } from '@/content/types';
 import {
@@ -22,6 +21,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import useKeyboardNavigation from './useKeyboardNavigation';
+import { FeedbackText } from './feedbackText';
 import { hasWffGuide, WffGuide } from './wffGuide';
 
 export interface QuizProps {
@@ -227,6 +227,13 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
   const gridMaxWidth =
     optionCount >= GRID_THIRD_COLUMN_MIN ? 'max-w-4xl' : 'max-w-2xl';
   const quizScreenColors = getQuizScreenColors(subSet);
+  // The question screen inherits the set's start-screen palette (same
+  // fallbacks as StartScreen's prop defaults), so start screen → quiz reads
+  // as one continuous colored surface instead of a colored cover page
+  // opening onto a white form.
+  const quizSurface = quizScreenColors.surfaceColor ?? '#431407';
+  const quizForeground = quizScreenColors.foregroundColor ?? '#ffffff';
+  const quizAccent = quizScreenColors.countColor ?? '#fdba74';
 
   /**
    * 1) Keep track of the drawer snap state.
@@ -236,6 +243,14 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
     COLLAPSED_SNAP_POINT
   );
   const isGuideExpanded = hasGuide && snap !== COLLAPSED_SNAP_POINT;
+  // Top progress bar. Count mode fills a tenth per completed question (a
+  // question counts once its solution is shown); scored mode tracks distance
+  // to the 100-point target, which is the honest reading of a run with no
+  // fixed length.
+  const progressFraction =
+    mode.kind === 'count'
+      ? Math.min((questionCounter - (showSolution ? 0 : 1)) / mode.total, 1)
+      : Math.min(scoreState.score / TARGET_SCORE, 1);
   // Desktop-only: the reference guide is the same vaul sheet as on mobile,
   // repositioned to the right edge (direction='right'), toggleable and closed
   // by default. On mobile the guide still lives in the bottom sheet's snap
@@ -328,6 +343,28 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
       ? selectedHint
       : lastWrongHint;
   const hasRevealedAnswer = showSolution && !!currentQuestion?.answer;
+
+  /**
+   * Which option (if any) carries `displayedHint` inline, attached under
+   * its own pill — same phase logic as `displayedHint`, resolved to an
+   * option instead of a detached block at the bottom of the card. Grid
+   * sets return undefined for every option: an expanding cell would break
+   * the column-major grid, so they keep the bottom placement (their hints
+   * also self-identify by fallacy name, which softens the distance).
+   */
+  function inlineHintFor(
+    option: { id: number; hint?: string },
+    index: number
+  ): string | undefined {
+    if (isGridLayout || !option.hint) return undefined;
+    if (!showSolution) {
+      return option.id === lastWrongGuessId ? option.hint : undefined;
+    }
+    if (selectedOptionIndex != null) {
+      return index === selectedOptionIndex ? option.hint : undefined;
+    }
+    return option.id === lastWrongGuessId ? option.hint : undefined;
+  }
 
   function expandGuideForFirstMiss() {
     if (!hasGuide) return;
@@ -537,14 +574,41 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
         >
           <div
             className={classNames(
-              'motion-enter w-full max-w-7xl p-0 md:p-6 bg-white md:border border-gray-200 rounded-lg m-auto',
+              // `quiz-immersive` scopes the recolor rules in globals.css.
+              // Same rounded canvas geometry as the start screen, filled
+              // with the set's surface color; `overflow-hidden` clips the
+              // progress bar to the rounded corners.
+              'quiz-immersive relative overflow-hidden flex flex-col motion-enter w-full max-w-7xl p-2 md:p-8 rounded-xl m-auto min-h-[70vh] lg:min-h-[calc(100dvh-9rem)]',
               // Below `lg` the fixed vaul sheet reserves its 180px collapsed
               // snap, so grid subsets need extra clearance. On `lg` the
               // controls sit inside the card (no fixed chrome), so none is
               // needed.
               isGridLayout ? 'mb-52 lg:mb-6' : 'mb-6'
             )}
+            style={
+              {
+                '--quiz-surface': quizSurface,
+                '--quiz-fg': quizForeground,
+                '--quiz-accent': quizAccent,
+                backgroundColor: 'var(--quiz-surface)',
+                color: 'var(--quiz-fg)',
+              } as React.CSSProperties
+            }
           >
+            {/* Typeform-style progress line. aria-hidden: the footer's
+                numeric "n of 10" / points label is the accessible reading. */}
+            <div
+              aria-hidden
+              className='absolute inset-x-0 top-0 h-1.5 bg-[color-mix(in_srgb,var(--quiz-fg)_12%,transparent)]'
+            >
+              <div
+                className='h-full transition-[width] duration-500 ease-[var(--ease-out-quart)]'
+                style={{
+                  width: `${progressFraction * 100}%`,
+                  backgroundColor: 'var(--quiz-accent)',
+                }}
+              />
+            </div>
             {/* In flow (not absolute) so it can never occlude the prompt when
                 the open sheet narrows the card. Top-right placement maps the
                 control to where the sheet appears (spatial correspondence). */}
@@ -566,7 +630,14 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                 </button>
               </div>
             )}
-            <div className='mx-auto w-full max-w-screen-xl p-4'>
+            <div
+              className={classNames(
+                'mx-auto w-full p-4 flex-1 flex flex-col justify-center',
+                // Grid sets need the full canvas; list sets read as a
+                // centered column at a comfortable measure, Typeform-style.
+                isGridLayout ? 'max-w-screen-xl' : 'max-w-3xl'
+              )}
+            >
               {currentQuestion && (
                 <div
                   key={currentQuestion.id}
@@ -612,6 +683,8 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                         key={option.id}
                         index={index + 1}
                         showIndex
+                        immersive
+                        hint={inlineHintFor(option, index)}
                         compact={isGridLayout}
                         abbreviation={option.abbreviation}
                         isSelected={
@@ -643,7 +716,11 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
               )}
             </div>
             <hr className='h-px my-4 bg-gray-200 border-0' />
-            {(hasRevealedAnswer || displayedHint) && (
+            {/* Question-level feedback. The answer explanation belongs to
+                the question, so it stays here; option hints only appear
+                here on grid sets — list sets attach them to the pill that
+                earned them (see `inlineHintFor`). */}
+            {(hasRevealedAnswer || (isGridLayout && displayedHint)) && (
               <div
                 key={`${currentQuestion?.id}-${previousGuesses.length}-${
                   showSolution ? 'sol' : 'try'
@@ -652,12 +729,12 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
               >
                 {hasRevealedAnswer && (
                   <p>
-                    <KatexSpan text={currentQuestion!.answer} />
+                    <FeedbackText text={currentQuestion!.answer} />
                   </p>
                 )}
-                {displayedHint && (
+                {isGridLayout && displayedHint && (
                   <p className='mt-2 whitespace-pre-line text-base leading-7 text-gray-700'>
-                    <KatexSpan text={displayedHint} />
+                    <FeedbackText text={displayedHint} />
                   </p>
                 )}
               </div>
@@ -682,11 +759,20 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                   {progressLabel(mode, questionCounter, scoreState.score)}
                 </span>
                 <div className='w-44'>
+                  {/* Adaptive ink, matching the start screen CTA: the
+                      button borrows the set's foreground as its fill and
+                      the surface as its label, so it clears contrast on
+                      every palette (inline style outranks the Button's
+                      own primaryColor/gray classes). */}
                   {showSolution ? (
                     <Button
                       label='Next Question'
                       disabled={isQuestionLeaving}
                       onClick={handleNextQuestionTransition}
+                      style={{
+                        backgroundColor: 'var(--quiz-fg)',
+                        color: 'var(--quiz-surface)',
+                      }}
                     />
                   ) : (
                     <Button
@@ -697,6 +783,23 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                           : selectedOptionIndex == null
                       }
                       onClick={handleCheckAnswer}
+                      style={
+                        (
+                          multiSelect
+                            ? selectedOptionIds.length === 0
+                            : selectedOptionIndex == null
+                        )
+                          ? {
+                              backgroundColor:
+                                'color-mix(in srgb, var(--quiz-fg) 18%, transparent)',
+                              color:
+                                'color-mix(in srgb, var(--quiz-fg) 55%, transparent)',
+                            }
+                          : {
+                              backgroundColor: 'var(--quiz-fg)',
+                              color: 'var(--quiz-surface)',
+                            }
+                      }
                     />
                   )}
                 </div>

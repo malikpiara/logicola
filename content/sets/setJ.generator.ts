@@ -121,6 +121,10 @@ const HINT_NOT_WFF =
   'Your answer isn’t a wff — modal operators don’t take parentheses around their argument: write ‘☐A’, not ‘☐(A)’ or ‘(☐A)’.';
 const HINT_CONTINGENT_VS_TRUTH =
   'You translated ‘contingent truth’ instead of ‘contingent statement’ (or vice versa). A statement could be either true or false; a truth IS true.';
+// 2008 *56 `tb=y:` — aimed at the ◇-only mistake, which is NOT the
+// truth-vs-statement mixup (◇J isn't the translation of either idiom).
+const HINT_CONTINGENT_MORE_THAN_POSSIBLE =
+  '‘Contingent’ means more than ‘possible.’ (Necessary statements are also possible.)';
 const HINT_FORGOT_NOT = 'You forgot the ‘∼’.';
 const HINT_BOX_INSIDE_VS_OUTSIDE =
   '‘By itself’ / ‘intrinsically’ disambiguates to the box-inside form `(A ⊃ ☐B)`.';
@@ -813,7 +817,7 @@ function template16(rng: Rng, counter: number): Question {
     [
       { raw: `(◇${letter} · ◇∼${letter})` },
       { raw: `(${letter} · ◇∼${letter})`, layer2: HINT_CONTINGENT_VS_TRUTH },
-      { raw: `◇${letter}`, layer2: HINT_CONTINGENT_VS_TRUTH },
+      { raw: `◇${letter}`, layer2: HINT_CONTINGENT_MORE_THAN_POSSIBLE },
       {
         raw: `(☐${letter} · ☐∼${letter})`,
         layer2:

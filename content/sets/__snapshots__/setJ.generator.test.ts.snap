@@ -103,7 +103,7 @@ You translated ‘contingent truth’ instead of ‘contingent statement’ (or 
             },
             {
               "hint": "A contingent statement is one that could have been true AND could have been false — \`(◇A · ◇∼A)\`.
-You translated ‘contingent truth’ instead of ‘contingent statement’ (or vice versa). A statement could be either true or false; a truth IS true.",
+‘Contingent’ means more than ‘possible.’ (Necessary statements are also possible.)",
               "id": 2,
               "label": "$ \\lozenge A $",
             },
