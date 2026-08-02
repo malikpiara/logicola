@@ -62,6 +62,32 @@ describe('setL generator — top-level', () => {
 
 describe('setL generator — property tests', () => {
   it.each([1, 42, 99, 12345])(
+    'seed %i: forgot-underline hints sit on options with fewer underlines than the answer',
+    (seed) => {
+      // Set L's hints are authored (the original program for this set has no
+      // per-mistake feedback at all — just "Sorry, wrong"), so the bar
+      // is anatomical truth: an option accused of forgetting an
+      // underline must actually have fewer `\underline`s than the
+      // correct option.
+      const underlines = (label: string) =>
+        label.split('\\underline').length - 1;
+      const set = generateSetL(seed, TEST_PER_SUBSET);
+      for (const subset of set.subSets) {
+        for (const q of subset.questions) {
+          const correct = q.options.find((o) => q.correctId.includes(o.id))!;
+          for (const o of q.options) {
+            if (o.hint?.includes('forgot to underline')) {
+              expect(underlines(o.label)).toBeLessThan(
+                underlines(correct.label)
+              );
+            }
+          }
+        }
+      }
+    }
+  );
+
+  it.each([1, 42, 99, 12345])(
     'seed %i: every generated question has 4 unique-id options 0..3',
     (seed) => {
       const set = generateSetL(seed, TEST_PER_SUBSET);

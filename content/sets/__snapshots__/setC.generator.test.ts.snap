@@ -93,8 +93,7 @@ exports[`setC generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "$ (\\sim L \\supset  \\sim R) $",
             },
             {
-              "hint": "‘If’ translates into ‘(’; so ‘not if’ translates into ‘∼(’.
-Why did you put in an extra ‘∼’?",
+              "hint": "‘If’ translates into ‘(’; so ‘not if’ translates into ‘∼(’.",
               "id": 2,
               "label": "$ (\\sim L \\supset  R) $",
             },
@@ -124,8 +123,7 @@ You forgot the second ‘∼’!",
               "label": "$ (\\sim S \\vee  F) $",
             },
             {
-              "hint": "‘Either’ translates into ‘(’; so ‘either not’ translates into ‘(∼’.
-Why did you put in an extra ‘∼’?",
+              "hint": "‘Either’ translates into ‘(’; so ‘either not’ translates into ‘(∼’.",
               "id": 2,
               "label": "$ \\sim (S \\vee  \\sim F) $",
             },
@@ -240,13 +238,12 @@ The ‘(’ keeps the negations from canceling out.",
             },
             {
               "hint": "‘If’ translates into ‘(’; so ‘if not’ translates into ‘(∼’.
-You forgot the second ‘∼’!",
+Why did you put in an extra ‘∼’?",
               "id": 1,
               "label": "$ (\\sim C \\supset  \\sim H) $",
             },
             {
-              "hint": "‘If’ translates into ‘(’; so ‘if not’ translates into ‘(∼’.
-Why did you put in an extra ‘∼’?",
+              "hint": "‘If’ translates into ‘(’; so ‘if not’ translates into ‘(∼’.",
               "id": 2,
               "label": "$ \\sim (C \\supset  H) $",
             },
@@ -276,8 +273,7 @@ You forgot the second ‘∼’!",
               "label": "$ (\\sim P \\supset  G) $",
             },
             {
-              "hint": "‘If’ translates into ‘(’; so ‘if not’ translates into ‘(∼’.
-Why did you put in an extra ‘∼’?",
+              "hint": "‘If’ translates into ‘(’; so ‘if not’ translates into ‘(∼’.",
               "id": 2,
               "label": "$ \\sim (P \\supset  \\sim G) $",
             },
@@ -388,7 +384,7 @@ Why did you put in an extra ‘∼’?",
             {
               "hint": "The part after ‘provided that’ is the antecedent (the if-part, the part before the horseshoe).",
               "id": 3,
-              "label": "$ D \\supset  N $",
+              "label": "$ N \\supset  D $",
             },
           ],
           "prompt": "You're notorious provided that you're dishonest.",
@@ -477,7 +473,7 @@ Why did you put in an extra ‘∼’?",
             {
               "hint": "The part after ‘provided that’ is the antecedent (the if-part, the part before the horseshoe).",
               "id": 3,
-              "label": "$ F \\supset  D $",
+              "label": "$ D \\supset  F $",
             },
           ],
           "prompt": "You're dishonest provided that you're faithful.",

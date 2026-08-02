@@ -241,7 +241,7 @@ function template0(rng: Rng, counter: number): Question {
         { raw: `∼${V}{u}${n}` },
         {
           raw: `${V}{u}${n}`,
-          layer2: HINT_FORGOT_UNDERLINE.replace('underline', 'add the ‘∼’'),
+          layer2: 'You forgot the ‘∼’ — the prompt says DON’T ' + verb + '.',
         },
         { raw: `∼${V}u${n}`, layer2: HINT_FORGOT_UNDERLINE },
         {
@@ -417,8 +417,7 @@ function template3(rng: Rng, counter: number): Question {
         {
           raw: `∼${E}{u} · ∼${F}{u}`,
           layer2:
-            HINT_FORGOT_UNDERLINE.replace('underline', 'wrap in parens') +
-            ' Conjunction needs outer parens.',
+            'Not a wff — a conjunction needs outer parentheses: ‘(A · B)’.',
         },
       ],
       0,

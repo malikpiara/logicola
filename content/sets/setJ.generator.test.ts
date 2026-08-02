@@ -59,6 +59,28 @@ describe('setJ generator — top-level', () => {
 
 describe('setJ generator — property tests', () => {
   it.each([1, 42, 99, 12345])(
+    'seed %i: the truth-vs-statement mixup hint only sits on conjunction-shaped options',
+    (seed) => {
+      // Domain truth (2008 *56/*57): "You translated ‘contingent truth’
+      // instead of ‘contingent statement’ (or vice versa)" only makes
+      // sense on an option that IS the other idiom's translation — and
+      // both translations are conjunctions. A lone ‘◇J’ is neither
+      // (2008 gives it "‘Contingent’ means more than ‘possible’"), so a
+      // mixup hint on a conjunction-free option is a mis-seated hint.
+      const set = generateSetJ(seed, TEST_PER_SUBSET);
+      for (const subset of set.subSets) {
+        for (const q of subset.questions) {
+          for (const o of q.options) {
+            if (o.hint?.includes('instead of ‘contingent')) {
+              expect(o.label).toContain('\\cdot');
+            }
+          }
+        }
+      }
+    }
+  );
+
+  it.each([1, 42, 99, 12345])(
     'seed %i: every generated question has 4 unique-id options 0..3',
     (seed) => {
       const set = generateSetJ(seed, TEST_PER_SUBSET);

@@ -51,6 +51,16 @@ function toKatex(wff: string): string {
 // Layer-2 hints — per-mistake explanations from 2008 `*e` block
 // =============================================================
 
+// The 2008 `*e` block (set_C.txt) attaches these two by explicit
+// per-template-per-option conditions, not as a reusable pair:
+//   extra-∼:  r=1&y=c | r=3&y=c | r=4&y=b
+//   forgot-∼: r=7&y=c | r=9&y=b | r=10&y=b
+// (r = template number, y = option letter, option a = correct.) The
+// anatomy behind the conditions: "extra" always sits on the option with
+// MORE ‘∼’ than the answer, "forgot" on the option missing the second ‘∼’
+// of a two-negation answer — the invariant the generator test pins.
+// Everywhere else in the negation cluster, 2008 shows the Layer-1 line
+// alone.
 const HINT_EXTRA_NEG = 'Why did you put in an extra ‘∼’?';
 const HINT_FORGOT_SECOND_NEG = 'You forgot the second ‘∼’!';
 const HINT_PARENS_PREVENT_CANCEL =
@@ -153,7 +163,8 @@ const SPECS: readonly TemplateSpec[] = [
     promptAbs: 'Not both $k and $q.',
     options: ['∼($k · $q)', '(∼$k · ∼$q)', '(∼$k · $q)', '∼$k · $q'],
     layer1: HINT_NOT_BOTH,
-    layer2: [undefined, HINT_BOTH_NOT, undefined, undefined],
+    // 2008: Layer-1 alone for every wrong option (`i\r:`); the port had
+    // invented a both-not Layer-2 here.
   },
   {
     num: 1,
@@ -162,7 +173,8 @@ const SPECS: readonly TemplateSpec[] = [
     promptAbs: 'Both not $k and $q.',
     options: ['(∼$k · $q)', '∼($k · $q)', '(∼$k · ∼$q)', '∼$k · $q'],
     layer1: HINT_BOTH_NOT,
-    layer2: [undefined, HINT_EXTRA_NEG, HINT_FORGOT_SECOND_NEG, undefined],
+    // r=1&y=c: the ∼ on $q is the extra one. b/d get Layer-1 alone.
+    layer2: [undefined, undefined, HINT_EXTRA_NEG, undefined],
   },
   {
     num: 2,
@@ -171,7 +183,7 @@ const SPECS: readonly TemplateSpec[] = [
     promptAbs: 'Not either $j or $k.',
     options: ['∼($j ∨ $k)', '(∼$j ∨ $k)', '(∼$j ∨ ∼$k)', '∼$j ∨ $k'],
     layer1: HINT_NOT_EITHER,
-    layer2: [undefined, HINT_EXTRA_NEG, HINT_FORGOT_SECOND_NEG, undefined],
+    // 2008 `ir=2:` — Layer-1 alone for every wrong option.
   },
   {
     num: 3,
@@ -180,7 +192,8 @@ const SPECS: readonly TemplateSpec[] = [
     promptAbs: 'Either not $j or $k.',
     options: ['(∼$j ∨ $k)', '∼($j ∨ $k)', '(∼$j ∨ ∼$k)', '∼$j ∨ $k'],
     layer1: HINT_EITHER_NOT,
-    layer2: [undefined, HINT_EXTRA_NEG, HINT_FORGOT_SECOND_NEG, undefined],
+    // r=3&y=c: the ∼ on $k is the extra one. b/d get Layer-1 alone.
+    layer2: [undefined, undefined, HINT_EXTRA_NEG, undefined],
   },
   {
     num: 4,
@@ -189,7 +202,8 @@ const SPECS: readonly TemplateSpec[] = [
     promptAbs: 'If not $j then $q.',
     options: ['(∼$j ⊃ $q)', '(∼$j ⊃ ∼$q)', '∼($j ⊃ $q)', '∼$j ⊃ $q'],
     layer1: HINT_IF_NOT,
-    layer2: [undefined, HINT_FORGOT_SECOND_NEG, HINT_EXTRA_NEG, undefined],
+    // r=4&y=b: the ∼ on $q is the extra one. c/d get Layer-1 alone.
+    layer2: [undefined, HINT_EXTRA_NEG, undefined, undefined],
   },
   {
     num: 5,
@@ -198,7 +212,7 @@ const SPECS: readonly TemplateSpec[] = [
     promptAbs: 'Not if $j then $q.',
     options: ['∼($j ⊃ $q)', '(∼$j ⊃ ∼$q)', '(∼$j ⊃ $q)', '∼$j ⊃ $q'],
     layer1: HINT_NOT_IF,
-    layer2: [undefined, undefined, HINT_EXTRA_NEG, undefined],
+    // 2008 `ir=5:` — Layer-1 alone for every wrong option.
   },
   {
     num: 6,
@@ -221,7 +235,8 @@ const SPECS: readonly TemplateSpec[] = [
     promptAbs: 'Both not $k and not $q.',
     options: ['(∼$k · ∼$q)', '∼($k · ∼$q)', '(∼$k · $q)', '∼$k · ∼$q'],
     layer1: HINT_BOTH_NOT,
-    layer2: [undefined, HINT_EXTRA_NEG, HINT_FORGOT_SECOND_NEG, undefined],
+    // r=7&y=c: dropped the answer's second ∼. b/d get Layer-1 alone.
+    layer2: [undefined, undefined, HINT_FORGOT_SECOND_NEG, undefined],
   },
   {
     num: 8,
@@ -244,7 +259,8 @@ const SPECS: readonly TemplateSpec[] = [
     promptAbs: 'Either not $j or not $k.',
     options: ['(∼$j ∨ ∼$k)', '(∼$j ∨ $k)', '∼($j ∨ ∼$k)', '∼$j ∨ ∼$k'],
     layer1: HINT_EITHER_NOT,
-    layer2: [undefined, HINT_FORGOT_SECOND_NEG, HINT_EXTRA_NEG, undefined],
+    // r=9&y=b: dropped the answer's second ∼. c/d get Layer-1 alone.
+    layer2: [undefined, HINT_FORGOT_SECOND_NEG, undefined, undefined],
   },
   {
     num: 10,
@@ -253,7 +269,9 @@ const SPECS: readonly TemplateSpec[] = [
     promptAbs: 'If not $j then not $q.',
     options: ['(∼$j ⊃ ∼$q)', '(∼$j ⊃ $q)', '∼($j ⊃ ∼$q)', '∼$j ⊃ ∼$q'],
     layer1: HINT_IF_NOT,
-    layer2: [undefined, HINT_FORGOT_SECOND_NEG, HINT_EXTRA_NEG, undefined],
+    // r=10&y=b: dropped the answer's second ∼. c/d get Layer-1 alone
+    // (2008 routes y=c through r=50 back to the if-not Layer-1 line).
+    layer2: [undefined, HINT_FORGOT_SECOND_NEG, undefined, undefined],
   },
   {
     num: 11,
@@ -392,14 +410,15 @@ const SPECS: readonly TemplateSpec[] = [
     vars: ['j', 'q'],
     promptNL: "Only if you're $B are you $D.",
     promptAbs: 'Only if $j, $q.',
+    // Option order here is [a, b, d, c] relative to the original program letters —
+    // index 2 is the bare-wff letter d, index 3 the wrong-direction c.
     options: ['($q ⊃ $j)', '($j ≡ $q)', '$j ⊃ $q', '($j ⊃ $q)'],
     layer1: HINT_ONLY_IF_NOT_IFF,
-    layer2: [
-      undefined,
-      HINT_ONLY_IF_NOT_IFF,
-      HINT_ONLY_IF_CONSEQUENT,
-      HINT_ONLY_IF_CONSEQUENT,
-    ],
+    // 2008 `Cr=22:r21` + `Cr=21:r21+y=c`: only y=c (the wrong-direction
+    // conditional) gets the consequent hint; b and the bare d stay on
+    // the not-iff line — which Layer-1 already supplies, so a Layer-2
+    // repeat would print the same sentence twice.
+    layer2: [undefined, undefined, undefined, HINT_ONLY_IF_CONSEQUENT],
   },
   {
     num: 22,
@@ -408,7 +427,9 @@ const SPECS: readonly TemplateSpec[] = [
     promptAbs: '$j only if $q.',
     options: ['($j ⊃ $q)', '($j ≡ $q)', '($q ⊃ $j)', '$j ⊃ $q'],
     layer1: HINT_ONLY_IF_CONSEQUENT,
-    layer2: [undefined, HINT_ONLY_IF_NOT_IFF, undefined, undefined],
+    // 2008 routes b AND the bare d to the not-iff line (`Cr=22:r21`,
+    // then only y=c comes back to r22's consequent hint).
+    layer2: [undefined, HINT_ONLY_IF_NOT_IFF, undefined, HINT_ONLY_IF_NOT_IFF],
   },
   {
     num: 23,
@@ -465,7 +486,10 @@ const SPECS: readonly TemplateSpec[] = [
     vars: ['k', 'q'],
     promptNL: "You're $D provided that you're $C.",
     promptAbs: '$q provided that $k.',
-    options: ['($k ⊃ $q)', '($q ⊃ $k)', '($q ≡ $k)', '$k ⊃ $q'],
+    // original program letter d is the BARE WRONG-DIRECTION wff (`d$q ⊃ $k`, which
+    // letter b wraps as `b($d)`) — not an unparenthesized copy of the
+    // correct answer. The port originally wrote `$k ⊃ $q` here.
+    options: ['($k ⊃ $q)', '($q ⊃ $k)', '($q ≡ $k)', '$q ⊃ $k'],
     layer1: HINT_PROVIDED_ANTECEDENT,
     layer2: [undefined, undefined, HINT_PROVIDED_NOT_IFF, undefined],
   },
@@ -502,10 +526,14 @@ const SPECS: readonly TemplateSpec[] = [
     promptAbs: '$j is necessary for $k.',
     options: ['(∼$j ⊃ ∼$k)', '($j ⊃ $k)', '($j ≡ $k)', '$j ⊃ $k'],
     layer1: HINT_NECESSARY_NOT_IFF,
+    // 2008 `Cr=32:r32+8+y=c`: y=c → the not-iff line (Layer-1 already
+    // says it — repeating it in Layer-2 printed the sentence twice);
+    // b/d → "People … often get this one wrong." (2008 personalizes
+    // it with the user's place, `$p`; the port drops the place.)
     layer2: [
       undefined,
       HINT_PEOPLE_COMMON_MISTAKE,
-      HINT_NECESSARY_NOT_IFF,
+      undefined,
       HINT_PEOPLE_COMMON_MISTAKE,
     ],
   },
