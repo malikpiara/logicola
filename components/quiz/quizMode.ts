@@ -36,7 +36,11 @@ export function scoreMode(level: number = DEFAULT_LEVEL): QuizMode {
  * `count` mode can say how far through you are. `score` mode can't — it
  * reports distance to the target instead, because there is no total.
  */
-export function progressLabel(mode: QuizMode, questionCounter: number, score: number): string {
+export function progressLabel(
+  mode: QuizMode,
+  questionCounter: number,
+  score: number
+): string {
   return mode.kind === 'count'
     ? `${questionCounter} of ${mode.total}`
     : `${score} / ${TARGET_SCORE} points`;
