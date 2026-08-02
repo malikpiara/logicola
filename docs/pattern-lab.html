@@ -699,7 +699,7 @@
       set's real eyebrow, so the palette code has nowhere to live inside the
       frame without faking the content.
     -->
-    <p class="card-caption mono" id="cardCaption">MD · Set Q</p>
+    <p class="card-caption mono" id="cardCaption">Q · Set Q</p>
   </main>
 </div>
 
@@ -748,9 +748,11 @@
       title: 'Informal Fallacies',
       desc: 'Read a short passage and name the fallacy it commits — from ad hominem to post hoc.',
     },
-    // The MD family dresses Set Q, whose subset id is the one
-    // getQuizScreenColors special-cases by id rather than by set name.
-    MD: {
+    // Set Q is the one getQuizScreenColors special-cases by subset id rather
+    // than by set name — hence the palette was called 'MD' (Meanings &
+    // Definitions) for a while. Renamed to Q: palettes are named for their
+    // set.
+    Q: {
       set: 'Set Q',
       title: 'Meanings and Definitions',
       desc: 'Spot what is wrong with a definition — too broad, too narrow, circular, or worse.',
@@ -761,7 +763,7 @@
   // the longest title-and-description pair in the catalogue, so an unparented
   // surface gets judged against the worst case rather than the kindest one.
   function copyFor(palette) {
-    const family = /^(MD|[ACJLNR])\d*$/.exec(palette.name);
+    const family = /^([ACJLNQR])\d*$/.exec(palette.name);
     return SET_COPY[family ? family[1] : 'A'];
   }
 
@@ -774,42 +776,94 @@
     // Accents deepened 2026-07-30 for legibility: the accent renders as the
     // "10 QUESTIONS" text on the surface, so it must clear 4.5:1. Hue is
     // preserved exactly; only value moves (chroma clipped to gamut).
+    //
+    // WHAT MAKES AN ACCENT WORK (derived 2026-08-02, not invented). Sorting
+    // the catalogue by the accents that actually function gives one band:
+    // OKLCH L .41–.56, contrast 4.6–5.7:1 on their surface. Every accent that
+    // failed sat at L .28–.32 — i.e. at INK depth. Three gates, all needed:
+    //
+    //   1. ≥ 4.5:1 against the surface        (it is text)
+    //   2. ≥ ~40° from the SURFACE hue        (else it is a darker surface)
+    //   3. ≥ ~.10 lighter than the INK in L   (else it is a second ink)
+    //
+    // Gate 3 is the one no contrast checker measures — WCAG scores each
+    // colour against the background and never against the other foreground,
+    // which is exactly how J3 shipped with an accent .03 from its own ink.
+    // The catalogue has surfaces at L .82–.93 and inks at L .22–.35 with a
+    // hole in between; a working accent is precisely a colour in that hole.
+    //
+    // Gate 2 is a heuristic, not a law: A5 breaks it (magenta 21° off its
+    // pink surface) and still reads, because ΔL .19 does the separating that
+    // hue doesn't. Read gate 2 as "differ from the surface in hue OR clearly
+    // in value". Gate 3 has no such escape — two foregrounds at one depth
+    // read as one colour no matter how far apart their hues are.
 
-    // ---- A · pink surface, green ink --------------------------------------
+    // ---- A · pink surface -------------------------------------------------
     // The forest-ground original and both dark variants are retired — every
-    // favourite is a pale surface. Set A's green lives in the INK now; the
-    // surface claims the open pink territory. A5 is the presumptive base.
-    // A6 (pale leaf) left the family for that reason — it is now G6.
-    // NB: this 'A7' is the ex-G5, not the earlier A7 (which became A5).
-    { name: 'A5', surface: '#FFC2DA', fg: '#1C3601', accent: '#A10094' }, // pink & forest ink; magenta 2.21→4.75:1
-    { name: 'A7', surface: '#FFABC6', fg: '#4A1040', accent: '#674900' }, // was G5 — pink & plum; marigold→ochre 1.08→4.70:1
+    // favourite is a pale surface. A6 (pale leaf) left for G6; A5 was
+    // superseded by A8; A8 in turn was retired 2026-08-02, leaving A7 as the
+    // base. NB: this 'A7' is the ex-G5, not the earlier A7 (which became A5).
+    //
+    // With A8 gone, Set A's green ink goes with it: #1C3601 forest now has a
+    // single user (J), where it briefly had three. A7's plum #4A1040 is shared
+    // with N10, which is the two-user balance the vocabulary wants.
+    { name: 'A7', surface: '#FFABC6', fg: '#4A1040', accent: '#674900' }, // base; pink & plum, marigold→ochre 1.08→4.70:1
 
     // ---- C · chartreuse ---------------------------------------------------
-    { name: 'C', surface: '#E7F099', fg: '#02302C', accent: '#02302C' }, // shipped
-    { name: 'C2', surface: '#E7F099', fg: '#0F005A', accent: '#02302C' }, // ★ was S4 — chartreuse & deep violet, 0.68
+    // Accent was the teal ink (accent = ink, so nothing completed the scheme).
+    // Now G6's magenta: 4.60:1, ΔL .27 above the ink, 140° off the surface.
+    { name: 'C', surface: '#E7F099', fg: '#02302C', accent: '#BD00AD' }, // shipped + real accent
 
     // ---- J · lilac --------------------------------------------------------
-    // Every J variant shares the original #E6ACF4 surface and varies the ink.
-    { name: 'J', surface: '#E6ACF4', fg: '#1C3601', accent: '#1C3601' }, // shipped
-    { name: 'J3', surface: '#E6ACF4', fg: '#0000A7', accent: '#1C3601' }, // ★ was S7 — lilac & deep blue, 0.58
-    // J3 with the ink dropped to Set C2's deep violet — a shade already in
-    // the system, so this borrows nothing new. Nearly the same hue as J3's
-    // blue (273° vs 264°) but much darker (OKLCH L .22 vs .33): 9.91:1 on
-    // the lilac against J3's 7.43, stimulation 0.53 (in band), no vibration.
-    // It also opens the widest value gap from the forest accent of any J ink
-    // (ΔL .079 vs J3's .029), which is the family's standing crowding problem.
-    // NB: J4 and J5 are burned names — both were tried and cut.
-    { name: 'J6', surface: '#E6ACF4', fg: '#0F005A', accent: '#1C3601' }, // lilac & deepest violet, 0.53
+    // Ochre, not magenta: J's lilac surface already sits in the magenta arc
+    // (320° vs 333°), so every magenta in the catalogue reads as a darker
+    // surface rather than a third colour. A7's ochre is the one existing hue
+    // far from BOTH — 122° off the surface, 51° off the forest ink — and it
+    // clears 4.57:1. Cost: ochre is outside the pink/lilac/green register.
+    // In-register alternative is a lime #405600, but at 8° from the ink it is
+    // a lighter forest, not a third colour.
+    { name: 'J', surface: '#E6ACF4', fg: '#1C3601', accent: '#674900' }, // shipped + real accent
 
     // ---- L · mint ---------------------------------------------------------
-    { name: 'L', surface: '#C8F0E3', fg: '#3C034F', accent: '#3C034F' }, // shipped
-    { name: 'L2', surface: '#DBFAD5', fg: '#400081', accent: '#C100B2' }, // ★ was S8 — pale green & violet; magenta 2.95→4.77:1
+    // Set L is L4 alone. It began as the OKLCH midpoint of L and L2 on both
+    // surface and ink — hue 157° between L's aqua-mint 174° and L2's pale leaf
+    // 141°, ink 305° between their 315° and 295° — and then outlived both.
+    //
+    // It won by failing no axis: accent 4.75:1 where L managed only 4.52, and
+    // stimulation 0.583 dead centre of the 0.45–0.65 band. L was the palest
+    // surface in the catalogue (39% of the chroma its own L and hue allow);
+    // L2 sat .029 from G6, closer to G6 than to its own sibling. See RETIRED.
+    //
+    // Its magenta is C's, not L2's — 4.75:1 here against 4.57:1, and a hex
+    // the catalogue already carries. Only 18° from the violet ink in hue but
+    // ΔL .26 apart, so it reads bright-pink against deep-purple.
+    //
+    // NB the NAME. L4 is the base of Set L but is not called 'L', because the
+    // original 'L' is a different palette sitting in RETIRED. Renaming it
+    // would put two different colour schemes under one label — the trap the
+    // two different 'A7's already sprang. L3 is likewise burned.
+    { name: 'L4', surface: '#CFF6DD', fg: '#3F0167', accent: '#BD00AD' }, // base; ink 12.67:1, magenta 4.75:1
 
     // ---- N · sky ----------------------------------------------------------
-    // The shipped sky (#ADE2E9 / #2A0D73) was dropped; the set continues
-    // through its variants.
-    { name: 'N2', surface: '#77C6EE', fg: '#2A0D73', accent: '#1F0D92' }, // ★ was S3 — committed sky & indigo, 0.53
-    { name: 'N3', surface: '#ADE2E9', fg: '#063B3E', accent: '#B0241A' }, // deep teal ink, coral completes; 2.01→4.76:1
+    // Set N is N10 — Malik's S13, straight from the studio. Sky #9EDAFF under
+    // A7's plum and the magenta; the surface was its only new hex.
+    //
+    // It posts the best contrast pair the family ever produced — ink 9.68:1
+    // and accent 5.66:1 — passes all three gates (accent 97° off the surface,
+    // ΔL .151 over the ink), sits at 95% of the chroma available at L .86,
+    // and scores 0.530 with no vibration.
+    //
+    // Two things on the record. Its 236° has no ancestor in the original,
+    // which sits between the measured aqua 195° and blue 264° anchors — the
+    // charge that helped retire N2. And #9EDAFF is .076 from Q's periwinkle,
+    // the tightest cross-set pair in the catalogue; sky against periwinkle
+    // separates, but it is the pair to check side by side.
+    //
+    // It won over N9 on ink vocabulary as much as on contrast: N9's forest
+    // #1C3601 was already J's and A8's, and a third user would have made
+    // forest the system default and left the surfaces doing less of the work
+    // of telling sets apart. NB N4 is a burned name, cut 2026-07-30.
+    { name: 'N10', surface: '#9EDAFF', fg: '#4A1040', accent: '#8D0381' }, // ★ was S13 — base; ink 9.68:1, magenta 5.66:1
 
     // ---- R · orange -------------------------------------------------------
     // The family kept the navy ink and varied the surface's commitment —
@@ -818,26 +872,50 @@
     { name: 'R2', surface: '#FB826A', fg: '#190B45', accent: '#1F0D92' }, // ★ was S9 — committed coral & navy, 0.58
     { name: 'R3', surface: '#FBB36A', fg: '#190B45', accent: '#1F0D92' }, // ★ was S10 — orange & navy, 0.58
 
-    // ---- MD · Meanings & Definitions --------------------------------------
-    { name: 'MD', surface: '#D9CCF9', fg: '#3E1060', accent: '#745400' }, // ★ decided; marigold→ochre 1.27→4.64:1
+    // ---- Q · Meanings & Definitions ---------------------------------------
+    // Was 'MD' (the subset's name) until 2026-08-02. Palettes are named for
+    // their SET, and this dresses Set Q — every other family already followed
+    // that rule, so MD/MD2 were the exception.
+    { name: 'Q', surface: '#D9CCF9', fg: '#3E1060', accent: '#745400' }, // ★ decided; marigold→ochre 1.27→4.64:1
 
     // ---- Unparented ------------------------------------------------------
     // S1's accent is the one compromise: its orange and its rust ink are hue
     // siblings, so darkening for legibility pulls it toward the ink (0.12).
     { name: 'S1', surface: '#E4BDF7', fg: '#AD3821', accent: '#723800' }, // ★ lilac & rust; orange 1.57→5.66:1
-    { name: 'S2', surface: '#FBCB6A', fg: '#02302C', accent: '#02302C' }, // marigold & teal, 0.57
+    // G4's purple rather than the magenta: S2 shares C's teal ink, so giving
+    // it C's accent too would make the two near-siblings. 6.02:1, ΔL .15.
+    { name: 'S2', surface: '#FBCB6A', fg: '#02302C', accent: '#7400A7' }, // marigold & teal, 0.57
     { name: 'G4', surface: '#FFA759', fg: '#5E1F26', accent: '#7400A7' }, // orange & maroon; purple 2.54→4.75:1
     // Was A6. Set A went pink, so a pale-leaf surface no longer belongs to
     // it — but the palette itself is sound and is held for a future set.
     // Named into the G pool (unparented) rather than kept as a stray A.
     { name: 'G6', surface: '#D9F2C0', fg: '#24450A', accent: '#BD00AD' }, // pale leaf & forest; magenta 2.76→4.62:1
+    // Was N8, out of Set N 2026-08-02 and into the pool — the free-agent move
+    // A6→G6 made before it. Held for Set B or Set H, which exist in
+    // content/sets/ but are commented out of index.ts, so "a future set" is
+    // two real sets waiting rather than a hypothetical.
+    //
+    // It pairs with G6 by construction: same olive-forest ink #24450A, pale
+    // leaf and pale sky, magentas in both accents. Two held palettes that
+    // already rhyme with each other are a family, not two orphans. Its accent
+    // #9D038F is also A7's neighbour in the magenta arc.
+    //
+    // Surface committed on adoption: #85E9FD (L .88, C .098) → #70E8FF
+    // (L .87, C .112), 100% of the chroma the gamut allows at that lightness.
+    // The floor is set by the ink, not by taste — #24450A is light (L .352),
+    // so gate 3 needs an accent above L .452, and #9D038F is the only one in
+    // the catalogue that also clears 4.5:1 here. Push the surface past L .86
+    // and that last accent starts failing. Stimulation 0.572 stays inside the
+    // narrower 0.45–0.58 band; L .86 (C .120) and L .84 (C .142) are also
+    // reachable at 0.582 and 0.608 if more commitment is wanted later.
+    { name: 'G7', surface: '#70E8FF', fg: '#24450A', accent: '#9D038F' }, // was N8 — committed sky; ink 7.60:1, magenta 5.16:1
 
     // ---- Held back · not candidates for a quiz window ---------------------
     // Everything below `reserve` is kept for reference, not for selection.
     // It still renders in the lab so it can be compared against, but it is
     // out of the running for a set surface.
     {
-      name: 'MD2',
+      name: 'Q2',
       surface: '#7B2FB0',
       fg: '#FFD7F0',
       accent: '#C3FF7A',
@@ -857,6 +935,116 @@
       // system, but too low-commitment to carry a quiz window.
     },
   ];
+
+  /*
+   * ---- RETIRED · reference only, not a pool -------------------------------
+   *
+   * Cut 2026-08-02, kept in source because the hexes are still worth reading
+   * against. These do NOT render — uncomment one back into its family block
+   * to restore it. This is a morgue, not a "held back" tier: held-back
+   * palettes (MD2, Crm) are still live objects and still appear in the lab.
+   *
+   *   { name: 'A5', surface: '#FFC2DA', fg: '#1C3601', accent: '#A10094' },
+   *     Set A's base until A8 replaced it the same day. Not cut for any
+   *     failure — it passed every gate (ink 8.86:1, the highest in the
+   *     family; magenta 4.75:1). Cut because A8 is the same scheme with a
+   *     committed surface, and keeping both would have been two pinks 353°
+   *     apart differing only in chroma. #A10094 leaves the vocabulary with
+   *     it — no remaining palette uses that magenta.
+   *
+   *   Set N, cut down to four the day it was expanded to eight. The four
+   *   below spanned the original's two cool anchors; the survivors (N3, N8,
+   *   N9, N10) all sit in the 206–236° band between them, so with these gone
+   *   Set N no longer has an ancestral hue:
+   *
+   *   { name: 'A8', surface: '#FFB6D4', fg: '#1C3601', accent: '#9D038F' },
+   *     Set A's base for part of one day. Built to fix A5's washed-out
+   *     surface — same hue 353°, chroma up to .092 at the sRGB ceiling for
+   *     its lightness — and it did, at 8.17:1 ink and 4.53:1 accent. Retired
+   *     with A7 kept instead, which also resolves the ink concentration:
+   *     #1C3601 forest had three users (A8, J, N9) and now has one (J).
+   *     #FFB6D4 leaves the vocabulary; #9D038F survives on G7.
+   *
+   *   { name: 'N3', surface: '#ADE2E9', fg: '#063B3E', accent: '#B0241A' },
+   *     The last descendant of the shipped sky. Retired on the one criterion
+   *     it never met: its ink sat 5° from its own surface (206 vs 201), so
+   *     stimulation was 0.410, below the band, and the surface used just 45%
+   *     of the chroma available to it — the least committed live palette.
+   *     Its brick-red accent at 29° was also the only warm accent in the N
+   *     family. #ADE2E9, #063B3E and #B0241A all leave the vocabulary.
+   *
+   *   { name: 'N9', surface: '#79D9FC', fg: '#1C3601', accent: '#8D0381' },
+   *     The strongest loser: highest surface chroma in the family (.103 at
+   *     95% of cap), stimulation 0.541, and the best cross-set distance of
+   *     any N candidate (.110 from Q, against N10's .076). It lost on ink
+   *     vocabulary rather than on its own numbers — its forest #1C3601 was
+   *     already carried by J and A8, and a third user would have made forest
+   *     the system's default ink.
+   *
+   *   { name: 'N2', surface: '#77C6EE', fg: '#2A0D73', accent: '#1F0D92' },
+   *     ★ was S3 — committed sky & indigo, 0.53. Two faults: 232° matched
+   *     neither the aqua 195° nor the blue 264° anchor, and its three hues
+   *     232/284/273 all sat in the blue-violet arc with the accent ΔL .030
+   *     from the ink. It failed gate 3 — a monochrome with no third colour.
+   *     #2A0D73 leaves the vocabulary with it.
+   *
+   *   { name: 'N5', surface: '#9DBDFF', fg: '#1C3601', accent: '#8D0381' },
+   *     Marine at the true 264° blue anchor (VGA Blue, VGA Navy, Gensler's
+   *     #000077 link — all 264 to the degree), forest ink, magenta accent:
+   *     the original's Lime/Magenta chord under its Blue. L .80 came off a
+   *     sweep — above ~.84 it paled into periwinkle and collapsed onto Q,
+   *     below ~.76 no accent could clear 4.5:1 without hitting ink depth.
+   *
+   *   { name: 'N6', surface: '#56DBDB', fg: '#4A1040', accent: '#8D0381' },
+   *     Aqua at the true 195° anchor — scheme #1 of the 2008 list, Aqua/Rose.
+   *     Led the family on surface chroma (.115) and stimulation (0.578), and
+   *     was the strongest palette here on paper. Cut anyway; the eye leads.
+   *
+   *   { name: 'N7', surface: '#9DBDFF', fg: '#4A1040', accent: '#8D0381' },
+   *     N5's marine under N6's rose ink — the fourth cell of an anchor ×
+   *     chord 2x2. With N5 and N6 gone the comparison it existed to serve is
+   *     gone too. #9DBDFF and #56DBDB leave the vocabulary.
+   *
+   *   { name: 'L',  surface: '#C8F0E3', fg: '#3C034F', accent: '#BD00AD' },
+   *     The shipped Set L, retired in favour of L4. Best-positioned surface
+   *     of the three — hue 174° put it furthest from the pale-leaf cluster
+   *     (.050 from G6, where L2 managed .029) — but the palest surface in
+   *     the whole catalogue, using just 39% of the chroma available at its
+   *     own lightness and hue. Its accent margin was also the tightest at
+   *     4.52:1. Best position, weakest execution.
+   *
+   *   { name: 'L2', surface: '#DBFAD5', fg: '#400081', accent: '#C100B2' },
+   *     ★ was S8 — pale green & violet, magenta 2.95→4.77:1. Retired on a
+   *     structural fault rather than a number: its surface sat .029 from G6
+   *     in OKLab, CLOSER to G6 than to its own sibling L at .044, so keeping
+   *     it would have quietly foreclosed G6 for a future set. Lightest
+   *     surface in the catalogue (L .953) and therefore the lowest chroma
+   *     ceiling too. Unfixable in place — moving its hue off 141° to escape
+   *     G6 just turns it into L4. #C100B2 leaves the vocabulary with it.
+   *
+   * The other three were one experiment — replace a family's ink with a deep
+   * blue-violet and demote the original ink to the accent slot:
+   *
+   *   { name: 'C2', surface: '#E7F099', fg: '#0F005A', accent: '#02302C' },
+   *     ★ was S4 — chartreuse & deep violet, stimulation 0.68 (top of band).
+   *     Cut with J6: its accent sat ΔL .06 from its ink, the same defect
+   *     item #3 was about, and C now carries a real magenta accent instead.
+   *
+   *   { name: 'J3', surface: '#E6ACF4', fg: '#0000A7', accent: '#1C3601' },
+   *     ★ was S7 — lilac & deep blue, 0.58. The instructive failure: its
+   *     accent sat ΔL .03 from its ink — two foregrounds at one depth —
+   *     while passing every contrast check. That is the case that produced
+   *     gate 3 above. Ink chroma .228 also made it glare under body copy.
+   *
+   *   { name: 'J6', surface: '#E6ACF4', fg: '#0F005A', accent: '#1C3601' },
+   *     lilac & deepest violet, 0.53. Measured better than J3 on every axis
+   *     (9.91:1, ΔL .08) but lost to J on identity: at 22° from MD's
+   *     periwinkle surface with a near-identical violet ink, it made two
+   *     sets that exist to be told apart by colour read as near-twins.
+   *
+   * With these gone, #0F005A leaves the live vocabulary entirely — no
+   * remaining palette uses the deep violet ink.
+   */
 
   // ---- OKLCH utilities ----------------------------------------------------
   // The tuned pool is derived, not hand-picked: hues come from the real set
@@ -1940,11 +2128,11 @@
       });
   }
   buildSwatches();
-  // Open on MD — the one settled palette — now that the brand cream is held
+  // Open on Q — the one settled palette — now that the brand cream is held
   // back and no longer a candidate.
   state.palette = Math.max(
     0,
-    PALETTES.findIndex((p) => p.name === 'MD')
+    PALETTES.findIndex((p) => p.name === 'Q')
   );
 
   // ---- Colour studio wiring ----
