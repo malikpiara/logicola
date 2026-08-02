@@ -307,19 +307,19 @@ Set R is still undecided, with three candidates.
 
 ### Final state 2026-08-02
 
-| Set | Palette | Surface | Ink | Accent |
-| --- | ------- | ------- | --- | ------ |
-| A | A7 | `#FFABC6` | `#4A1040` | `#674900` |
-| C | C | `#E7F099` | `#02302C` | `#BD00AD` |
-| J | J | `#E6ACF4` | `#1C3601` | `#674900` |
-| L | L4 | `#CFF6DD` | `#3F0167` | `#BD00AD` |
-| N | N10 | `#9EDAFF` | `#4A1040` | `#8D0381` |
-| Q | Q | `#D9CCF9` | `#3E1060` | `#745400` |
-| R | open | R/R2/R3 | `#190B45` | `#1F0D92` |
+| Set | Palette | Surface   | Ink       | Accent    |
+| --- | ------- | --------- | --------- | --------- |
+| A   | A7      | `#FFABC6` | `#4A1040` | `#674900` |
+| C   | C       | `#E7F099` | `#02302C` | `#BD00AD` |
+| J   | J       | `#E6ACF4` | `#1C3601` | `#674900` |
+| L   | L4      | `#CFF6DD` | `#3F0167` | `#BD00AD` |
+| N   | N10     | `#9EDAFF` | `#4A1040` | `#8D0381` |
+| Q   | Q       | `#D9CCF9` | `#3E1060` | `#745400` |
+| R   | open    | R/R2/R3   | `#190B45` | `#1F0D92` |
 
 **The ink vocabulary is the quiet result.** No ink has more than two users —
 `#4A1040` (A7, N10), `#02302C` (C, S2), `#24450A` (G6, G7) — apart from
-`#190B45`, which is Set R's three candidates. That balance was the *argument*,
+`#190B45`, which is Set R's three candidates. That balance was the _argument_,
 not a side effect: **N10 beat N9 on ink concentration rather than on its own
 numbers.** N9 measured better on surface chroma (.103 vs .080) and cross-set
 distance (.110 from Q vs .076), but its `#1C3601` forest was already carried by
@@ -351,8 +351,8 @@ became `Q`/`Q2`; every other family already followed the rule.
 - **A6 → G6.** Set A resolved into a pink-surface family, so its pale-leaf
   member no longer belongs to it. Renamed into the unparented G pool and kept
   for a future set rather than cut — the palette is fine, its parent was wrong.
-- **J6 added** — *superseded the same day; J6 was retired, see "Retired
-  2026-08-02" below. Kept here because the measurement stands.*
+- **J6 added** — _superseded the same day; J6 was retired, see "Retired
+  2026-08-02" below. Kept here because the measurement stands._
   J3's lilac `#E6ACF4` over `#0F005A`, the ink C2 then used.
   Same blue hue family as J3 (273° vs 264°) at half the lightness (OKLCH L .22
   vs .33): 9.91:1 against the surface where J3 gives 7.43, stimulation 0.53,
@@ -374,7 +374,7 @@ at L .22–.35, and a working accent is a colour in the hole between them. The
 four defective palettes simply had nothing there and reused their ink.
 
 An accent must (1) clear 4.5:1 on the surface, (2) sit ≥ ~40° from the surface
-hue *or* separate from it strongly in value, and (3) sit ≥ ~.10 lighter than
+hue _or_ separate from it strongly in value, and (3) sit ≥ ~.10 lighter than
 the ink. **Gate 3 is invisible to contrast tooling** — WCAG measures each
 foreground against the background and never against the other foreground —
 which is how J3 shipped an accent .03 from its own ink while "passing".
@@ -416,9 +416,9 @@ restorable by uncommenting into the relevant family.
 
 | Name | Surface   | Ink       | Accent    | Why it lost                                                                              |
 | ---- | --------- | --------- | --------- | ---------------------------------------------------------------------------------------- |
-| C2   | `#E7F099` | `#0F005A` | `#02302C` | Accent ΔL .06 from its ink — the very defect item #3 was about. C now has a real accent.   |
-| J3   | `#E6ACF4` | `#0000A7` | `#1C3601` | Accent ΔL .03 from its ink while passing every contrast check. Ink chroma .228 glared.     |
-| J6   | `#E6ACF4` | `#0F005A` | `#1C3601` | Measured best of the three, but 22° from MD's surface with a near-identical violet ink.    |
+| C2   | `#E7F099` | `#0F005A` | `#02302C` | Accent ΔL .06 from its ink — the very defect item #3 was about. C now has a real accent. |
+| J3   | `#E6ACF4` | `#0000A7` | `#1C3601` | Accent ΔL .03 from its ink while passing every contrast check. Ink chroma .228 glared.   |
+| J6   | `#E6ACF4` | `#0F005A` | `#1C3601` | Measured best of the three, but 22° from MD's surface with a near-identical violet ink.  |
 
 J3 is the one worth remembering: it is the case that produced gate 3. It
 cleared 7.43:1 on its surface and 7.34:1 for its accent — two comfortable
@@ -429,13 +429,13 @@ foregrounds to each other. **Set C is C and Set J is J.**
 
 A5 was reported as reading low-contrast next to A7. It measures the opposite:
 
-| | surface L | surface **C** | ink contrast | accent contrast | stimulation |
-| --- | --- | --- | --- | --- | --- |
-| A5 | .876 | **.076** | **8.86:1** | 4.75:1 | 0.492 |
-| A8 | .853 | .092 | 8.17:1 | 4.53:1 | 0.496 |
-| A7 | .830 | **.104** | 8.26:1 | 4.70:1 | 0.464 |
+|     | surface L | surface **C** | ink contrast | accent contrast | stimulation |
+| --- | --------- | ------------- | ------------ | --------------- | ----------- |
+| A5  | .876      | **.076**      | **8.86:1**   | 4.75:1          | 0.492       |
+| A8  | .853      | .092          | 8.17:1       | 4.53:1          | 0.496       |
+| A7  | .830      | **.104**      | 8.26:1       | 4.70:1          | 0.464       |
 
-A5's type is *more* legible than A7's on both counts. The difference is
+A5's type is _more_ legible than A7's on both counts. The difference is
 **surface chroma** — .076 against .104, the palest pink in the family. A weakly
 chromatic ground makes a card feel washed out regardless of how the type
 measures, and no accessibility tool reports it, because contrast is a
@@ -613,16 +613,16 @@ aqua as the page ground and `#FFFF88` banana/cream for tables, with `#000077`
 The extraction above lists aqua and blue separately but never measured them.
 Converted to OKLCH they are unambiguous, and they are **69° apart**:
 
-| Original colour | OKLCH hue |
-| --- | --- |
-| VGA Aqua `#00FFFF` | 195° |
-| VGA Teal `#008080` | 195° |
-| Gensler's help ground `#BBFFFF` | 196° |
-| VGA Blue `#0000FF` | **264°** |
-| VGA Navy `#000080` | **264°** |
-| Gensler's link `#000077` | **264°** |
-| VGA Fuscia `#FF00FF` | 328° |
-| Gensler's banana `#FFFF88` | 109° |
+| Original colour                 | OKLCH hue |
+| ------------------------------- | --------- |
+| VGA Aqua `#00FFFF`              | 195°      |
+| VGA Teal `#008080`              | 195°      |
+| Gensler's help ground `#BBFFFF` | 196°      |
+| VGA Blue `#0000FF`              | **264°**  |
+| VGA Navy `#000080`              | **264°**  |
+| Gensler's link `#000077`        | **264°**  |
+| VGA Fuscia `#FF00FF`            | 328°      |
+| Gensler's banana `#FFFF88`      | 109°      |
 
 Three independent sources land on 264 to the degree — two VGA names and a
 hand-picked link colour from the author's own HTML. The original's blue is not
@@ -631,7 +631,7 @@ approximately blue; it is a specific hue the system can be held to.
 Against those anchors the N family reads:
 
 - **N3 at 206°** — the aqua one, 10° off the anchor.
-- **N2 at 232°** — *neither*. It sits between the two anchors and matches no
+- **N2 at 232°** — _neither_. It sits between the two anchors and matches no
   ancestor. Set R was previously identified as the only set whose surface hue
   has no ancestor in the original; N2 is the second, and by the opposite
   mechanism — R's territory does not exist in the original at all, while N2's
@@ -669,18 +669,18 @@ N5 on its own confounds two decisions. N6 and N7 complete a 2×2 so they can be
 judged apart, and neither costs a new hex — both reuse A7's plum `#4A1040` and
 N5's magenta `#8D0381`.
 
-|            | aqua 195° | marine 264° |
-| ---------- | --------- | ----------- |
-| **forest ink** | — | N5 |
-| **plum ink** | N6 | N7 |
+|                | aqua 195° | marine 264° |
+| -------------- | --------- | ----------- |
+| **forest ink** | —         | N5          |
+| **plum ink**   | N6        | N7          |
 
-| | hues | surface C | ink | accent | ΔL | stim |
-| --- | --- | --- | --- | --- | --- | --- |
-| N2 | 232/284/273 | .096 | 7.91:1 | 7.25:1 | **.030** ✗ | 0.526 |
-| N3 | 206/201/29 | **.055** | 8.71:1 | 4.76:1 | .172 | **0.410** ✗ |
-| N5 | 264/133/333 | .101 | 7.07:1 | 4.53:1 | .145 | 0.503 |
-| **N6** | 195/336/333 | **.115** | **8.72:1** | **5.10:1** | .151 | **0.578** |
-| **N7** | 264/336/333 | .101 | 7.75:1 | 4.53:1 | .151 | 0.498 |
+|        | hues        | surface C | ink        | accent     | ΔL         | stim        |
+| ------ | ----------- | --------- | ---------- | ---------- | ---------- | ----------- |
+| N2     | 232/284/273 | .096      | 7.91:1     | 7.25:1     | **.030** ✗ | 0.526       |
+| N3     | 206/201/29  | **.055**  | 8.71:1     | 4.76:1     | .172       | **0.410** ✗ |
+| N5     | 264/133/333 | .101      | 7.07:1     | 4.53:1     | .145       | 0.503       |
+| **N6** | 195/336/333 | **.115**  | **8.72:1** | **5.10:1** | .151       | **0.578**   |
+| **N7** | 264/336/333 | .101      | 7.75:1     | 4.53:1     | .151       | 0.498       |
 
 **N6** `#56DBDB` / `#4A1040` / `#8D0381` — the aqua anchor at 195° exactly,
 using 82% of the chroma available there, under a rose ink. That is **scheme #1
@@ -712,11 +712,11 @@ low-contrast when contrast was fine and chroma was the deficit. Here, chroma
 is not a free parameter at all — lightness sets its ceiling — so the fix has
 to come through L.
 
-| | surface | ink | hue | surf C | ink cr | accent | stim | dist. L4 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| experiment | `#D1F6FE` | `#24450A` | 212° | **.040** | 9.49:1 | — | 0.490 | **.045** |
-| **N8** | `#85E9FD` | `#24450A` | 212° | .098 | 7.81:1 | 5.30:1 | **0.551** | .099 |
-| **N9** | `#79D9FC` | `#1C3601` | 224° | .103 | 8.33:1 | 5.34:1 | 0.541 | **.138** |
+|            | surface   | ink       | hue  | surf C   | ink cr | accent | stim      | dist. L4 |
+| ---------- | --------- | --------- | ---- | -------- | ------ | ------ | --------- | -------- |
+| experiment | `#D1F6FE` | `#24450A` | 212° | **.040** | 9.49:1 | —      | 0.490     | **.045** |
+| **N8**     | `#85E9FD` | `#24450A` | 212° | .098     | 7.81:1 | 5.30:1 | **0.551** | .099     |
+| **N9**     | `#79D9FC` | `#1C3601` | 224° | .103     | 8.33:1 | 5.34:1 | 0.541     | **.138** |
 
 **N8** is the experiment corrected: same hue, same ink, lightness lowered until
 the hue registers. Stimulation lands at 0.551 — C and J's own value.
@@ -749,15 +749,15 @@ and N10 and cut N2/N3/N8/N9. What the numbers said, and what they missed:
 
 **It removes both of the original's cool anchors.** N6 held aqua 195°, N5 and
 N7 held blue 264°. The survivors sit at **206 / 212 / 224 / 236** — the band
-*between* the anchors, which is exactly the territory N2 was criticised for.
+_between_ the anchors, which is exactly the territory N2 was criticised for.
 Set N now joins Set R as a family with no ancestral hue. The fidelity ranking
 was always one input among several, and N6 leading on paper (chroma .115,
 stimulation 0.578, scheme #1 Aqua/Rose) did not make it the right card to look
 at. Malik's eye has beaten the metric twice before in this document.
 
-**The survivors crowd each other, and that is not a fault.** N9~N10 .037,
-N8~N10 .045, N3~N8 .043 — but only one becomes Set N, so intra-family distance
-carries no information. Distance to *other sets* is what matters, and every
+**The survivors crowd each other, and that is not a fault.** N9~~N10 .037,
+N8~~N10 .045, N3~N8 .043 — but only one becomes Set N, so intra-family distance
+carries no information. Distance to _other sets_ is what matters, and every
 survivor clears its nearest non-N neighbour: N3 .075 (L4), N8 .099 (L4),
 N9 .110 (Q), N10 .076 (Q). This is worth stating because it is easy to read a
 crowded family as a problem when the family is a shortlist, not a shipped set.
