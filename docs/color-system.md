@@ -296,14 +296,64 @@ Family state: A [A5, A6, A7] · C [C, C2] · J [J, J3, J4] · L [L, L2] ·
 N [N2, N3] · R [R, R2, R3] · MD [MD, MD2] · free agents [S1, S2, G4] ·
 brand [Crm].
 
-**Family state 2026-08-02:** A [A5, A7] · C [C, C2] · J [J, J3, J6] ·
-L [L, L2] · N [N2, N3] · R [R, R2, R3] · MD [MD] · free agents [S1, S2, G4,
-G6] · held back [MD2, Crm]. Library is 21.
+**Family state 2026-08-02:** A [A7] · C [C] · J [J] · L [L4] · N [N10] ·
+R [R, R2, R3] · Q [Q] · free agents [S1, S2, G4, G6, G7] ·
+held back [Q2, Crm]. Library is 16 — C2, J3, J6, A5, L and L2 retired, see
+below; L4 and A8 added as in-between steps and both survived their parents,
+see "Pale is not low-contrast"; N5 added, see "Two cool anchors".
+
+Six of the seven sets are now single-palette: A, C, J, L, N and Q. Only
+Set R is still undecided, with three candidates.
+
+### Final state 2026-08-02
+
+| Set | Palette | Surface | Ink | Accent |
+| --- | ------- | ------- | --- | ------ |
+| A | A7 | `#FFABC6` | `#4A1040` | `#674900` |
+| C | C | `#E7F099` | `#02302C` | `#BD00AD` |
+| J | J | `#E6ACF4` | `#1C3601` | `#674900` |
+| L | L4 | `#CFF6DD` | `#3F0167` | `#BD00AD` |
+| N | N10 | `#9EDAFF` | `#4A1040` | `#8D0381` |
+| Q | Q | `#D9CCF9` | `#3E1060` | `#745400` |
+| R | open | R/R2/R3 | `#190B45` | `#1F0D92` |
+
+**The ink vocabulary is the quiet result.** No ink has more than two users —
+`#4A1040` (A7, N10), `#02302C` (C, S2), `#24450A` (G6, G7) — apart from
+`#190B45`, which is Set R's three candidates. That balance was the *argument*,
+not a side effect: **N10 beat N9 on ink concentration rather than on its own
+numbers.** N9 measured better on surface chroma (.103 vs .080) and cross-set
+distance (.110 from Q vs .076), but its `#1C3601` forest was already carried by
+J and A8, and a third user would have made forest the default ink and left the
+surfaces doing less of the work of telling sets apart. Retiring A8 the same day
+took forest back down to one user.
+
+**A8 retired** in favour of A7 — see the RETIRED block; A8 was correct about
+A5's chroma deficit and still lost, because Set A only needs one pink.
+**N3 retired** on the criterion it never met (ink 5° from its own surface,
+stimulation 0.410, 45% chroma utilisation).
+
+**N8 → G7**, into the free-agent pool alongside G6, with its surface committed
+on the way out: `#85E9FD` (L .88, C .098) → `#70E8FF` (L .87, C .112), 100% of
+the gamut ceiling for that lightness. Its floor is set by its own ink: at
+L .352 `#24450A` is light, so gate 3 demands an accent above L .452 and
+`#9D038F` is the only catalogue colour that also clears 4.5:1 there. L .86
+(C .120) and L .84 (C .142) are reachable but score 0.582 and 0.608, past the
+0.58 ceiling stated above — worth noting that **this document and the handoff
+disagree on that ceiling** (0.45–0.58 here, 0.45–0.65 there). Reconcile before
+the port.
+
+G7 is held for **Set B** or **Set H**, both of which exist in `content/sets/`
+and are commented out of `index.ts`.
+
+**Naming rule (2026-08-02): palettes are named for their SET.** `MD`/`MD2`
+became `Q`/`Q2`; every other family already followed the rule.
 
 - **A6 → G6.** Set A resolved into a pink-surface family, so its pale-leaf
   member no longer belongs to it. Renamed into the unparented G pool and kept
   for a future set rather than cut — the palette is fine, its parent was wrong.
-- **J6 added** — J3's lilac `#E6ACF4` over `#0F005A`, the ink C2 already uses.
+- **J6 added** — *superseded the same day; J6 was retired, see "Retired
+  2026-08-02" below. Kept here because the measurement stands.*
+  J3's lilac `#E6ACF4` over `#0F005A`, the ink C2 then used.
   Same blue hue family as J3 (273° vs 264°) at half the lightness (OKLCH L .22
   vs .33): 9.91:1 against the surface where J3 gives 7.43, stimulation 0.53,
   vibration 0. The reason to prefer it isn't the contrast headroom — it is the
@@ -313,6 +363,136 @@ G6] · held back [MD2, Crm]. Library is 21.
 - Borrowing an ink that already exists elsewhere in the system is deliberate.
   A new hex would widen the palette; reusing C2's violet keeps the catalogue's
   ink vocabulary small, which is what makes the surfaces do the distinguishing.
+
+## The accent tier (2026-08-02)
+
+The accent=ink defect in C, J, L and S2 was not four colour choices — it was
+one missing tier. The accents that function in this catalogue occupy a single
+band, **OKLCH L .41–.56 at 4.6–5.7:1** on their surface; every accent that
+failed sat at L .28–.32, i.e. ink depth. Surfaces live at L .82–.93 and inks
+at L .22–.35, and a working accent is a colour in the hole between them. The
+four defective palettes simply had nothing there and reused their ink.
+
+An accent must (1) clear 4.5:1 on the surface, (2) sit ≥ ~40° from the surface
+hue *or* separate from it strongly in value, and (3) sit ≥ ~.10 lighter than
+the ink. **Gate 3 is invisible to contrast tooling** — WCAG measures each
+foreground against the background and never against the other foreground —
+which is how J3 shipped an accent .03 from its own ink while "passing".
+Gate 2 bends: A5's magenta is 21° off its pink surface and works, because
+ΔL .19 substitutes for hue distance. Gate 3 does not bend.
+
+Assigned from hexes already in the system, so the vocabulary did not grow:
+C → `#BD00AD` (4.60:1, ΔL .27) · J → `#674900` (4.57:1, ΔL .13) ·
+L → `#BD00AD` (4.52:1, ΔL .28) · S2 → `#7400A7` (6.02:1, ΔL .15).
+
+J is the compromise. Its lilac surface sits at 320°, inside the magenta arc,
+so every magenta in the catalogue reads there as a darker surface rather than
+a third colour — the same trap S1 fell into. Ochre is the only existing hue
+far from both the surface and the forest ink, and it is outside the preferred
+pink/lilac/green register. Worth revisiting; the lime alternative `#405600`
+is in-register but only 8° from the ink, so it is a lighter forest.
+
+Not touched, though they fail gate 3: N2 (.03), S1 (−.10), G4 (.09).
+
+## Retired 2026-08-02 — A5
+
+`#FFC2DA` / `#1C3601` / `#A10094`, Set A's base until A8 replaced it the same
+day. **Not cut for a failure.** It passed every gate and its 8.86:1 ink was the
+highest in the family. It went because A8 is the same scheme on a committed
+surface, and keeping both would have left two pinks 353° apart separated only
+by chroma — a distinction users cannot act on. `#A10094` and `#FFC2DA` leave
+the live vocabulary with it.
+
+A8 is the base now. Note its chroma is at **100% of the sRGB ceiling** for hue
+353° at L .853, so Set A cannot get more committed without going darker.
+
+## Retired 2026-08-02 — C2, J3, J6
+
+The deep-violet-ink experiment is over. All three put `#0F005A`-class blue
+violet in the ink and demoted the family's original ink to the accent slot;
+all three are cut, and `#0F005A` leaves the live vocabulary with them. Hexes
+survive in a `RETIRED` comment block under `PALETTES` in `pattern-lab.html`,
+restorable by uncommenting into the relevant family.
+
+| Name | Surface   | Ink       | Accent    | Why it lost                                                                              |
+| ---- | --------- | --------- | --------- | ---------------------------------------------------------------------------------------- |
+| C2   | `#E7F099` | `#0F005A` | `#02302C` | Accent ΔL .06 from its ink — the very defect item #3 was about. C now has a real accent.   |
+| J3   | `#E6ACF4` | `#0000A7` | `#1C3601` | Accent ΔL .03 from its ink while passing every contrast check. Ink chroma .228 glared.     |
+| J6   | `#E6ACF4` | `#0F005A` | `#1C3601` | Measured best of the three, but 22° from MD's surface with a near-identical violet ink.    |
+
+J3 is the one worth remembering: it is the case that produced gate 3. It
+cleared 7.43:1 on its surface and 7.34:1 for its accent — two comfortable
+passes — and still failed, because nothing in the tooling compares the two
+foregrounds to each other. **Set C is C and Set J is J.**
+
+## Pale is not low-contrast (2026-08-02)
+
+A5 was reported as reading low-contrast next to A7. It measures the opposite:
+
+| | surface L | surface **C** | ink contrast | accent contrast | stimulation |
+| --- | --- | --- | --- | --- | --- |
+| A5 | .876 | **.076** | **8.86:1** | 4.75:1 | 0.492 |
+| A8 | .853 | .092 | 8.17:1 | 4.53:1 | 0.496 |
+| A7 | .830 | **.104** | 8.26:1 | 4.70:1 | 0.464 |
+
+A5's type is *more* legible than A7's on both counts. The difference is
+**surface chroma** — .076 against .104, the palest pink in the family. A weakly
+chromatic ground makes a card feel washed out regardless of how the type
+measures, and no accessibility tool reports it, because contrast is a
+lightness relationship and commitment is a chroma one.
+
+The fix therefore moves chroma, not lightness. **A8** `#FFB6D4` keeps A5's hue
+(353°) and its forest ink `#1C3601`, and takes A7's commitment: C .092, L .853.
+The cost is accent headroom — a darker ground leaves less room beneath it, so
+A5's `#A10094` drops to 4.38:1 and deepens to `#9D038F` (4.53:1). Hue exact,
+value only.
+
+**Generalisable:** when a palette is described as low-contrast, check chroma
+before touching value. Deepening an ink that already clears 8:1 buys no
+legibility and spends the accent's remaining room.
+
+**L4** `#CFF6DD` / `#3F0167` / `#BD00AD` is the unrelated half of the same
+request — the OKLCH midpoint of L and L2 on both surface and ink (hue 157°
+between 174° and 141°; ink 305° between 315° and 295°). Stimulation 0.583 sits
+between L's 0.551 and L2's 0.629, which is the evidence the interpolation is
+perceptual and not merely arithmetic. It reuses `#BD00AD`, so it costs no new
+hex; `L3` is a burned name from the first batch.
+
+### The same lens applied to L: L4 survives, L and L2 retired
+
+Running the chroma-utilisation check across the L family shows the whole set
+is under-committed — **L uses 39% of the chroma available at its own lightness
+and hue, L4 55%, L2 64%** — against a catalogue where L, L4 and L2 are the
+first, second and fourth palest surfaces live.
+
+**L4 is strongest** because it fails no axis: accent 4.75:1 (L's is a tight
+4.52), stimulation 0.583 dead centre of band, and it sits between its siblings
+on both commitment and distinctiveness.
+
+**L2 is weakest, and the reason is that its defect is structural rather than
+parametric.** Its surface is .029 from G6 in OKLab — closer to G6 than to its
+own sibling L at .044 — so adopting it partly forecloses G6, which is being
+held for a future set. Being the lightest surface in the catalogue (L .953)
+also gives it the lowest chroma ceiling of the three. Escaping G6 would mean
+moving its hue off 141°, at which point it becomes L4 or L; there is no tuning
+that fixes it in place.
+
+L's paleness, by contrast, was one number: .069 of chroma headroom at its
+existing hue and lightness. Same move as A5 → A8.
+
+**Both were retired 2026-08-02 and Set L is L4 alone.** The variant built as
+an interpolation outlived the two palettes it was interpolated from — the same
+outcome as A8 over A5, and for a related reason: a midpoint inherits neither
+parent's extreme. L4 keeps 55% chroma utilisation, so the commitment question
+remains open for it too; raising it toward the .096 ceiling is available and
+would cost accent headroom the same way A8's did.
+
+`L4` keeps its number rather than being promoted to `L`, because the original
+`L` is a different scheme in RETIRED and one label must not cover two. The
+catalogue has already been bitten once by a reused name (two different `A7`s).
+This is open item #2 — promote bases — and it now applies to A, L and N alike:
+every surviving base carries a variant number, and every rename costs the same
+collision.
 
 **MD2 and Crm held back 2026-08-02.** Neither is a candidate for a quiz
 window any more, and the lab now separates them from the set palette under a
@@ -427,6 +607,173 @@ White.
 **Gensler's own help HTML** (embedded in the 2008 exe) uses `#BBFFFF` pastel
 aqua as the page ground and `#FFFF88` banana/cream for tables, with `#000077`
 / `#007700` / `#770000` links. Two measured pastels, straight from the author.
+
+### Two cool anchors, not one (measured 2026-08-02)
+
+The extraction above lists aqua and blue separately but never measured them.
+Converted to OKLCH they are unambiguous, and they are **69° apart**:
+
+| Original colour | OKLCH hue |
+| --- | --- |
+| VGA Aqua `#00FFFF` | 195° |
+| VGA Teal `#008080` | 195° |
+| Gensler's help ground `#BBFFFF` | 196° |
+| VGA Blue `#0000FF` | **264°** |
+| VGA Navy `#000080` | **264°** |
+| Gensler's link `#000077` | **264°** |
+| VGA Fuscia `#FF00FF` | 328° |
+| Gensler's banana `#FFFF88` | 109° |
+
+Three independent sources land on 264 to the degree — two VGA names and a
+hand-picked link colour from the author's own HTML. The original's blue is not
+approximately blue; it is a specific hue the system can be held to.
+
+Against those anchors the N family reads:
+
+- **N3 at 206°** — the aqua one, 10° off the anchor.
+- **N2 at 232°** — *neither*. It sits between the two anchors and matches no
+  ancestor. Set R was previously identified as the only set whose surface hue
+  has no ancestor in the original; N2 is the second, and by the opposite
+  mechanism — R's territory does not exist in the original at all, while N2's
+  exists twice and N2 falls in the gap.
+- N2's hues are also **232 / 284 / 273**, all inside the blue-violet arc, with
+  the accent ΔL .029 from the ink. It fails gate 3: it is a monochrome with no
+  third colour, which is the structural half of why it reads oddly.
+
+**N5** `#9DBDFF` / `#1C3601` / `#8D0381` occupies 264° itself: surface L .799,
+C .101 (more committed than N2's .096), ink 7.07:1, accent 4.53:1 at ΔL .145
+and 69° off the surface, stimulation 0.503.
+
+Its lightness is the output of a sweep rather than a preference. **L .80 is
+where three constraints meet:** above ~.84 the blue pales into periwinkle and
+collapses onto Q (perceptual distance .038 at L .88 versus .093 at L .80 —
+and L2 was retired at .029 from G6); below ~.76 no accent can clear 4.5:1
+without dropping to ink depth. The window is roughly L .78–.82.
+
+Its chord is deliberately borrowed: hues **264 / 133 / 333** put A8 and J's
+forest in the ink and the catalogue's magenta in the accent, so N5 reproduces
+the original's **Lime/Magenta** pairing in its foregrounds while its surface
+supplies the original's **Blue**. One new hex — G4's `#7400A7` gets better
+contrast here (4.85 vs 4.53) but sits 46° off the surface and would read as a
+darker blue, the gate-2 trap that cost J its magenta.
+
+Also worth recording: **N3's accent `#B0241A` is a brick red at 29°, not a
+magenta**, and N3's surface and ink are only 5° apart (206 / 201) — it is a
+tonal aqua with a warm spark, not a three-hue chord. That 5° gap also drops its
+stimulation to **0.410, below the 0.45–0.65 band**: N3 is the flattest palette
+in the catalogue.
+
+### N6 and N7 — separating anchor from chord
+
+N5 on its own confounds two decisions. N6 and N7 complete a 2×2 so they can be
+judged apart, and neither costs a new hex — both reuse A7's plum `#4A1040` and
+N5's magenta `#8D0381`.
+
+|            | aqua 195° | marine 264° |
+| ---------- | --------- | ----------- |
+| **forest ink** | — | N5 |
+| **plum ink** | N6 | N7 |
+
+| | hues | surface C | ink | accent | ΔL | stim |
+| --- | --- | --- | --- | --- | --- | --- |
+| N2 | 232/284/273 | .096 | 7.91:1 | 7.25:1 | **.030** ✗ | 0.526 |
+| N3 | 206/201/29 | **.055** | 8.71:1 | 4.76:1 | .172 | **0.410** ✗ |
+| N5 | 264/133/333 | .101 | 7.07:1 | 4.53:1 | .145 | 0.503 |
+| **N6** | 195/336/333 | **.115** | **8.72:1** | **5.10:1** | .151 | **0.578** |
+| **N7** | 264/336/333 | .101 | 7.75:1 | 4.53:1 | .151 | 0.498 |
+
+**N6** `#56DBDB` / `#4A1040` / `#8D0381` — the aqua anchor at 195° exactly,
+using 82% of the chroma available there, under a rose ink. That is **scheme #1
+of the 2008 list, Aqua/Rose**, and it leads the family on every measured axis.
+
+**N7** `#9DBDFF` / `#4A1040` / `#8D0381` — N5's marine under N6's rose ink.
+
+### N8 and N9, and why a near-white surface cannot be distinguished by hue
+
+From Malik's studio experiment, `#D1F6FE` over `#24450A` (G6's olive-forest).
+Its contribution is the **chord**: a cool surface with a green ink, which the
+N family lacked. N3's ink sits 5° from its own surface and scores 0.410; the
+experiment scores 0.490 on a comparable ground.
+
+His own read — that it might be too close to L4 — is right, and the mechanism
+is worth generalising. The surface is **55° from L4 in hue** (212° vs 157°) and
+still only **.045** away perceptually. At **L .949 the sRGB gamut allows a
+maximum chroma of .042** at that hue, and the surface already uses **95%** of
+it.
+
+> Near the ceiling of lightness, every hue collapses toward white. Two
+> surfaces 55° apart become indistinguishable not because the hues are close
+> but because neither can carry enough chroma to be seen. **"Choose a different
+> colour" cannot fix it; "be less light" can.** Dropping to L .88 buys 2.5× the
+> chroma and takes the distance from .045 to .099.
+
+This is the counterpart to the A5 finding. There, a pale surface read as
+low-contrast when contrast was fine and chroma was the deficit. Here, chroma
+is not a free parameter at all — lightness sets its ceiling — so the fix has
+to come through L.
+
+| | surface | ink | hue | surf C | ink cr | accent | stim | dist. L4 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| experiment | `#D1F6FE` | `#24450A` | 212° | **.040** | 9.49:1 | — | 0.490 | **.045** |
+| **N8** | `#85E9FD` | `#24450A` | 212° | .098 | 7.81:1 | 5.30:1 | **0.551** | .099 |
+| **N9** | `#79D9FC` | `#1C3601` | 224° | .103 | 8.33:1 | 5.34:1 | 0.541 | **.138** |
+
+**N8** is the experiment corrected: same hue, same ink, lightness lowered until
+the hue registers. Stimulation lands at 0.551 — C and J's own value.
+
+**N9** takes the chord 12° bluer into the open 206→232 gap on the deeper forest
+`#1C3601`. A second-order effect worth noting: **the ink's lightness governs how
+much accent choice a palette has.** `#24450A` is a light ink at L .352, so gate
+3 demands an accent above L .452 and only one catalogue magenta qualifies for
+N8; `#1C3601` at L .30 opens that to three for N9.
+
+### N10 (Malik's S13) and the oversupply of Set N
+
+`#9EDAFF` under N6/N7's plum `#4A1040` and N5's magenta `#8D0381`; only the
+surface is new. It takes the family's best contrast pair — **ink 9.68:1 and
+accent 5.66:1**, both highs — clears all three gates, uses 95% of the chroma
+available at L .86, and scores 0.530.
+
+Its only deficit is ancestry: at **236°** it sits between the original's aqua
+195° and blue 264°, four degrees from N2 — the same "no ancestor" charge laid
+against N2. That is recorded, not treated as disqualifying. N2 fails on
+**gate 3**; N10 passes it. Ancestry is one input among several, and it does not
+outrank a measured pass.
+
+**Set N briefly had eight candidates against one apiece for C, J, L and Q.**
+
+### The cut: N2, N5, N6, N7 retired — Set N is N3, N8, N9, N10
+
+Chosen against the measured recommendation, which had been to keep N5/N6/N7
+and N10 and cut N2/N3/N8/N9. What the numbers said, and what they missed:
+
+**It removes both of the original's cool anchors.** N6 held aqua 195°, N5 and
+N7 held blue 264°. The survivors sit at **206 / 212 / 224 / 236** — the band
+*between* the anchors, which is exactly the territory N2 was criticised for.
+Set N now joins Set R as a family with no ancestral hue. The fidelity ranking
+was always one input among several, and N6 leading on paper (chroma .115,
+stimulation 0.578, scheme #1 Aqua/Rose) did not make it the right card to look
+at. Malik's eye has beaten the metric twice before in this document.
+
+**The survivors crowd each other, and that is not a fault.** N9~N10 .037,
+N8~N10 .045, N3~N8 .043 — but only one becomes Set N, so intra-family distance
+carries no information. Distance to *other sets* is what matters, and every
+survivor clears its nearest non-N neighbour: N3 .075 (L4), N8 .099 (L4),
+N9 .110 (Q), N10 .076 (Q). This is worth stating because it is easy to read a
+crowded family as a problem when the family is a shortlist, not a shipped set.
+
+**One survivor fails a stated criterion:** N3's stimulation is 0.410, under the
+0.45–0.65 band, because its ink sits 5° from its own surface.
+
+`#77C6EE`, `#2A0D73`, `#9DBDFF` and `#56DBDB` leave the live vocabulary.
+`#1F0D92` stays with the R family; `#1C3601`, `#4A1040` and `#8D0381` stay with
+the survivors.
+
+Caveat on N6 and N7: **ink 336° against accent 333°** is three degrees, separated by
+value alone (ΔL .151). It passes gate 3 and mirrors L4's structure at 18°, but
+it is the tightest hue pairing in the catalogue. N6's escape is A7's ochre
+`#674900` (4.96:1, spread 195/336/82); N7 has none, as ochre loses contrast on
+the marine.
 
 ### The hue families, and the one that is missing
 
