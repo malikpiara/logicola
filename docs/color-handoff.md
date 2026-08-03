@@ -15,7 +15,57 @@ live metrics, partner suggestions, "Save as set" persisted to localStorage).
 
 **Nothing has shipped to the app yet.** `getQuizScreenColors` in
 `components/quiz/index.tsx` is untouched. The decision was: refine the whole
-system in the lab, then port once.
+system in the lab, then port once. (A port was drafted in the app 2026-08-02
+and deliberately reverted the same evening — prototyping stays in the lab.
+When it is time, the port is mechanical: the Settled table above into
+`getQuizScreenColors`, accent as `countColor`; plus three on-brand touches
+that were verified working — selection border/badge in the accent, the
+question header in the eyebrow voice, and the progress label in accent mono.
+NB Tailwind: `border-[var(--x)]` is ambiguous and silently dropped — write
+`border-[color:var(--x)]`.)
+
+**The lab now has a Question screen view** (2026-08-02) — a `View` toggle at
+the top of the sidebar switches the card between the start screen and a fully
+interactive question screen: real sample questions per set (J's and A's are
+lifted from the app; the rest are illustrative mocks in genuine notation —
+never to be copied into `content/sets/*`), pick → check → ruled-out pill with
+its hint attached beneath → reveal, digits + Enter work, and the pixel
+patterns frame the card via a taller panel plate. Three experiment toggles,
+question view only:
+
+- **Answer shape** — Pill; **Cartridge** (the revealed answer takes the CTA's
+  notched corners, the logo rhyme appearing exactly once); or **Pixel**: every
+  pill's corners become a two-step staircase on the pattern's grid (8px unit,
+  4px on the badges, which trade their outline for a filled chip — closer to
+  the original's filled abbreviation box anyway). Two CSS traps live in the
+  implementation, both commented: a clipped border loses its stroke on the
+  stairs, and per spec **filter runs before clip-path**, so the selection
+  ring's drop-shadows must sit on an unclipped wrapper — on the pill itself
+  the same polygon that draws the stairs amputates the ring. Selection weight
+  is two layers: an accent-tinted opaque interior (14% onto the surface — a
+  lone ring hugging a pale slab read too light) and a 4px accent ring. The
+  ring is **footprint-neutral**: drop-shadows grow outward, so the clip
+  polygon carries an inset term (`--qi`) that shrinks the selected pill by
+  exactly the ring's width — selection changes an option's colour, never its
+  size. (An outer ink sprite-contour was tried and cut: it read as noise and
+  grew the silhouette.) Fills stay opaque — shadows behind a 9% glass read as
+  a solid slab — including on `:hover`, where the generic hover rule would
+  otherwise win on specificity and flip the fill back to glass.
+- **Answer shape — DECIDED 2026-08-02: Sprite is the default.** A true 24px
+  corner radius rasterised onto a 4px grid (midpoint-circle sampling, step
+  profile 16→8→4→0). Cartridge was removed; Pixel (8px, two chunky stairs)
+  stays for comparison. The full treatment contract — the
+  straight-edges-stay-straight rule, the four CSS traps, footprint
+  neutrality, iconography (pixeliconlibrary.com: lamp leads hints, ✕ marks
+  the learner's own wrong guesses), and the question screen's 112px
+  footer-only pattern band — is written up in **`docs/pixel-ui.md`**; port
+  from that, not from memory. (A random edge crenellation was tried between
+  the two pixel modes and reverted as jarring — the reverted lesson is in
+  the doc's "one rule".)
+- **Error tone** — **Rose mix** (what the app ships: `#f43f5e` mixed 55% to
+  the ink) or **Tier brick**: a per-set red derived at hue 29° through the
+  same gates as the accents (lightest value at C .18 clearing 4.5:1).
+- **Notation chips** — hint-text notation tinted with the ink or the accent.
 
 The card now shows **each set's real copy** (2026-08-02) — the `title` and
 `description` of its first subset, verbatim from `content/sets/*.ts`, split

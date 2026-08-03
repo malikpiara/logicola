@@ -350,6 +350,128 @@
     padding: 28px;
     min-width: 0;
   }
+  /* ---- NEW-badge specimen -------------------------------------------------
+     The nav badge in its real habitat: white menu surface, mono titles (the
+     app's nav voice). Four silhouettes, same fill and type throughout — the
+     silhouette is the only variable. */
+  .badge-spec {
+    margin: 18px auto 0;
+    max-width: 560px;
+    background: #fff;
+    color: #16181d;
+    border-radius: 14px;
+    padding: 18px 22px;
+  }
+  .badge-spec-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 0;
+  }
+  .badge-spec-title {
+    font-family: var(--mono, ui-monospace, monospace);
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .badge-spec-tag {
+    margin-left: auto;
+    font-family: var(--mono, ui-monospace, monospace);
+    font-size: 10px;
+    color: #8a8f9c;
+  }
+  .nbadge {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    padding: 0 11px;
+    background: #bd00ad;
+    color: #fff;
+    font-family: var(--mono, ui-monospace, monospace);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .nbadge-pill {
+    border-radius: 999px;
+  }
+  /* Gem: an elongated octagon whose corners are cut by two-step stair
+     chamfers — the puffy-diamond idea adapted to a shape that has to hold
+     text (a true diamond can't). */
+  .nbadge-gem {
+    padding: 0 14px;
+    clip-path: polygon(
+      8px 0,
+      calc(100% - 8px) 0,
+      calc(100% - 8px) 4px,
+      calc(100% - 4px) 4px,
+      calc(100% - 4px) 8px,
+      100% 8px,
+      100% calc(100% - 8px),
+      calc(100% - 4px) calc(100% - 8px),
+      calc(100% - 4px) calc(100% - 4px),
+      calc(100% - 8px) calc(100% - 4px),
+      calc(100% - 8px) 100%,
+      8px 100%,
+      8px calc(100% - 4px),
+      4px calc(100% - 4px),
+      4px calc(100% - 8px),
+      0 calc(100% - 8px),
+      0 8px,
+      4px 8px,
+      4px 4px,
+      8px 4px
+    );
+  }
+  /* Pixel pill: the shipped pill's semicircular caps (R = 12, the badge's
+     full half-height) rasterised. The badge grid is too coarse for a
+     readable cap at u=4 (profile collapses to one stair), so the caps
+     sample at u=2 — precedented: the icon library itself rasterises at
+     1 unit. Cap profile [8, 4, 2, 2, 0, 0]. (A "tag" variant — stepped
+     sale-tag point — was tried here and cut.) */
+  .nbadge-pillpx {
+    padding: 0 14px;
+    clip-path: polygon(
+      8px 0,
+      calc(100% - 8px) 0,
+      calc(100% - 8px) 2px,
+      calc(100% - 4px) 2px,
+      calc(100% - 4px) 4px,
+      calc(100% - 2px) 4px,
+      calc(100% - 2px) 8px,
+      100% 8px,
+      100% 16px,
+      calc(100% - 2px) 16px,
+      calc(100% - 2px) 20px,
+      calc(100% - 4px) 20px,
+      calc(100% - 4px) 22px,
+      calc(100% - 8px) 22px,
+      calc(100% - 8px) 24px,
+      8px 24px,
+      8px 22px,
+      4px 22px,
+      4px 20px,
+      2px 20px,
+      2px 16px,
+      0 16px,
+      0 8px,
+      2px 8px,
+      2px 4px,
+      4px 4px,
+      4px 2px,
+      8px 2px
+    );
+  }
+  /* Sprite iteration: the keycaps' bottom lip, in the catalogue's own
+     darker magenta (#8D0381 — N10's accent, #BD00AD's depth sibling), so
+     the badge gets the sticker/keycap materiality without leaving the
+     colour system. The lip rides the straight bottom edge and survives
+     the clip everywhere but the corner stairs. */
+  .nbadge-sprite {
+    border-bottom: 2px solid #8d0381;
+  }
+
   .card-caption {
     margin: 10px 0 0;
     text-align: center;
@@ -394,6 +516,23 @@
     width: min(760px, 88%);
     height: min(480px, 78%);
     border-radius: 28px;
+  }
+  /* The question view runs taller than the start view (prompt + four pills
+     + footer), so its panel grows to keep every line on the plate — the
+     pattern stays a frame, never underneath text. */
+  .card.qview {
+    padding-bottom: 48px;
+  }
+  /* Footer-band treatment: the card reserves the band's 112px plus a gap,
+     so the question content — footer controls included — always sits on
+     clean surface and the pattern reads as an underline, not an underlay. */
+  .card.qview.qband {
+    padding-bottom: 152px;
+  }
+  .card.qview .plate--panel {
+    top: 50%;
+    width: min(820px, 92%);
+    height: 92%;
   }
   /* Footer needs no plate: every remaining pattern clears whole cells. */
   .plate--footer {
@@ -515,6 +654,456 @@
     outline-offset: 2px;
   }
 
+  /* ---- Question view ------------------------------------------------------
+     Mirrors the app's immersive quiz card. All colour flows through four
+     custom properties set on the card by renderQuestion() — surface, ink,
+     accent, and the derived error tone — so one ruleset serves all 16
+     palettes, exactly like --quiz-* does in the app. */
+  [hidden] {
+    display: none !important;
+  }
+  /* Full-width wrapper reproducing the card's own flex column — when the
+     start content was direct children of the card, that column put each
+     element on its own row. As a plain block the CTA and the scored-run
+     link (both inline-blocks) flowed onto ONE line; this restores the
+     stack. The [hidden] rule still wins over display: flex. */
+  #startView {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #questionView {
+    width: 100%;
+    max-width: 46rem;
+    margin: 0 auto;
+    text-align: left;
+  }
+  /* Progress indicator, three modes (Progress control in the sidebar).
+     Line is what the app ships. Cells and Wave are M3-derived: Cells is the
+     segmented/stop-indicator idea made literal — the quiz HAS ten discrete
+     questions, so the bar is ten pixel blocks, not a continuum. Wave is M3
+     Expressive's wavy active indicator passed through the one rule: a wave
+     is a curve, so it rasterises to a square wave — regular, symmetric. */
+  .qprogress {
+    position: absolute;
+    inset: 0 0 auto 0;
+  }
+  .qprogress.mode-line {
+    height: 6px;
+    background: color-mix(in srgb, var(--qink) 12%, transparent);
+  }
+  .qprogress.mode-line .qprogress-fill {
+    height: 100%;
+    background: var(--qacc);
+  }
+  .qprogress.mode-cells {
+    display: flex;
+    gap: 4px;
+    height: 8px;
+  }
+  .qprogress.mode-cells i {
+    flex: 1;
+    background: color-mix(in srgb, var(--qink) 12%, transparent);
+  }
+  .qprogress.mode-cells i.done {
+    background: var(--qacc);
+  }
+  /* The question being answered right now: half-tone, like a cursor. */
+  .qprogress.mode-cells i.now {
+    background: color-mix(in srgb, var(--qacc) 40%, transparent);
+  }
+  /* ---- Guide button + reference panel ------------------------------------
+     The app's Guide toggle is a white chip with lucide panel icons — the one
+     piece of chrome still speaking another product's language. Redesigned in
+     the system's own voice: an ink-glass sprite chip (R=12 corner) with the
+     library's book, opening a flat surface-coloured reference panel. No
+     shadows, no white: the panel is the card's own surface with an ink rule
+     for an edge, matching the flat/duotone brand. */
+  .qguide-btn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    appearance: none;
+    border: 0;
+    font: inherit;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    cursor: pointer;
+    font-family: var(--mono, ui-monospace, monospace);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--qink);
+    background: color-mix(in srgb, var(--qink) 9%, transparent);
+  }
+  .qguide-btn:hover {
+    background: color-mix(in srgb, var(--qink) 15%, transparent);
+  }
+  .qguide-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  .qguide-btn {
+    z-index: 4;
+  }
+  .qguide-panel {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: min(300px, 46%);
+    /* Above the question content: the panel is an overlay sheet, and it
+       must be opaque surface — DOM order alone painted the pills over it. */
+    z-index: 5;
+    background: var(--qs);
+    border-left: 2px solid color-mix(in srgb, var(--qink) 18%, transparent);
+    padding: 24px;
+    text-align: left;
+    color: var(--qink);
+  }
+  .qguide-panel .qheader {
+    margin-bottom: 22px;
+  }
+  .qguide-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    appearance: none;
+    border: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--qink);
+    background: color-mix(in srgb, var(--qink) 9%, transparent);
+  }
+  .qguide-close:hover {
+    background: color-mix(in srgb, var(--qink) 15%, transparent);
+  }
+  .qguide-close svg {
+    width: 12px;
+    height: 12px;
+  }
+  .qguide-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 14px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .qguide-row code {
+    font-family: inherit;
+    flex: none;
+    min-width: 3.4em;
+    text-align: center;
+    padding: 2px 8px;
+    background: color-mix(in srgb, var(--qink) 9%, transparent);
+  }
+  .qprompt {
+    font-size: clamp(20px, 2.6vw, 26px);
+    font-weight: 400;
+    text-align: center;
+    margin: 0 0 34px;
+    text-wrap: balance;
+  }
+  /* Same voice as the start screen's eyebrow — the question screen reads as
+     a continuation of the start card, not a different app. */
+  .qheader {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    opacity: 0.8;
+    margin-bottom: 18px;
+  }
+  .qoptions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .qopt {
+    appearance: none;
+    font: inherit;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+    cursor: pointer;
+    padding: 13px 24px 13px 16px;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background: color-mix(in srgb, var(--qink) 9%, transparent);
+    color: var(--qink);
+    font-size: 19px;
+    transition:
+      background-color 0.12s,
+      border-color 0.12s,
+      color 0.12s;
+  }
+  .qopt:hover:not(.is-revealed):not(.is-ruled) {
+    background: color-mix(in srgb, var(--qink) 15%, transparent);
+  }
+  /* Selection completes the scheme in the ACCENT — the third colour already
+     paints the count line and the progress fill; now it marks the pick. */
+  .qopt.is-selected {
+    border-color: var(--qacc);
+  }
+  .qopt.is-selected .qbadge {
+    background: var(--qacc);
+    border-color: transparent;
+    color: var(--qs);
+  }
+  /* The revealed answer inverts, same adaptive ink as the CTA. */
+  .qopt.is-revealed {
+    background: var(--qink);
+    color: var(--qs);
+    cursor: default;
+  }
+  .qopt.is-revealed .qbadge {
+    border-color: color-mix(in srgb, var(--qs) 60%, transparent);
+    color: var(--qs);
+  }
+  .qopt.is-ruled {
+    background: color-mix(in srgb, var(--qink) 5%, transparent);
+    color: var(--qerr);
+    cursor: default;
+  }
+  .qopt.is-ruled .qbadge {
+    border-color: color-mix(in srgb, var(--qerr) 60%, transparent);
+    color: var(--qerr);
+  }
+  /* Pixel experiment: the pill's silhouette joins the pattern's own grid —
+     a two-step staircase corner (unit --pu) instead of geometry the bitmap
+     world can't draw. Same 20-point polygon serves pill (8px unit) and badge
+     (4px unit). A clipped BORDER loses its stroke on every step, so the
+     selection ring becomes four hard drop-shadows, which trace the clipped
+     silhouette instead of the border-box. */
+  /* The staircase polygon carries an inset term --qi (default 0). When the
+     selection ring appears, --qi grows by exactly the ring's width, so the
+     clipped pill shrinks and pill + ring together occupy the SAME silhouette
+     as an unselected pill — selection must never change an option's size,
+     only its colour. (Drop-shadow rings grow outward by nature; this is the
+     counterweight.) */
+  .qopt.pixelated,
+  .qopt.pixelated .qbadge {
+    border-radius: 0;
+    --qi: 0px;
+    clip-path: polygon(
+      var(--qi) calc(var(--qi) + var(--pu) * 2),
+      calc(var(--qi) + var(--pu)) calc(var(--qi) + var(--pu) * 2),
+      calc(var(--qi) + var(--pu)) calc(var(--qi) + var(--pu)),
+      calc(var(--qi) + var(--pu) * 2) calc(var(--qi) + var(--pu)),
+      calc(var(--qi) + var(--pu) * 2) var(--qi),
+      calc(100% - var(--qi) - var(--pu) * 2) var(--qi),
+      calc(100% - var(--qi) - var(--pu) * 2) calc(var(--qi) + var(--pu)),
+      calc(100% - var(--qi) - var(--pu)) calc(var(--qi) + var(--pu)),
+      calc(100% - var(--qi) - var(--pu)) calc(var(--qi) + var(--pu) * 2),
+      calc(100% - var(--qi)) calc(var(--qi) + var(--pu) * 2),
+      calc(100% - var(--qi)) calc(100% - var(--qi) - var(--pu) * 2),
+      calc(100% - var(--qi) - var(--pu)) calc(100% - var(--qi) - var(--pu) * 2),
+      calc(100% - var(--qi) - var(--pu)) calc(100% - var(--qi) - var(--pu)),
+      calc(100% - var(--qi) - var(--pu) * 2) calc(100% - var(--qi) - var(--pu)),
+      calc(100% - var(--qi) - var(--pu) * 2) calc(100% - var(--qi)),
+      calc(var(--qi) + var(--pu) * 2) calc(100% - var(--qi)),
+      calc(var(--qi) + var(--pu) * 2) calc(100% - var(--qi) - var(--pu)),
+      calc(var(--qi) + var(--pu)) calc(100% - var(--qi) - var(--pu)),
+      calc(var(--qi) + var(--pu)) calc(100% - var(--qi) - var(--pu) * 2),
+      var(--qi) calc(100% - var(--qi) - var(--pu) * 2)
+    );
+  }
+  .qopt.pixelated {
+    --pu: 8px;
+  }
+  /* The badge ring would also be clipped stepwise, so in pixel mode badges
+     trade their outline for a filled square chip — closer to the original
+     LogiCola's filled abbreviation box anyway. */
+  .qopt.pixelated .qbadge {
+    --pu: 4px;
+    border-color: transparent;
+    background: color-mix(in srgb, var(--qink) 12%, transparent);
+  }
+  /* Selection weight is two layers: an accent-TINTED interior (a ring alone
+     hugging a pale slab carries no interior signal) and the 4px accent ring.
+     --qi insets the clip by the ring's width, so the silhouette stays the
+     size of an unselected pill. The :hover variant is load-bearing: the
+     generic hover rule has higher specificity and would flip the fill back
+     to translucent glass, and drop-shadows behind glass read as a solid
+     slab. Opaque fill, same reason. */
+  .qopt.pixelated.is-selected,
+  .qopt.pixelated.is-selected:hover {
+    border-color: transparent;
+    --qi: 4px;
+    background: color-mix(in srgb, var(--qacc) 14%, var(--qs));
+  }
+  /* The ring lives on an UNCLIPPED wrapper: per spec, filter runs before
+     clip-path, so a drop-shadow on the clipped pill itself is amputated by
+     the same polygon that draws the stairs — the rim sits outside the
+     border-box and never survives. On the wrapper, the filter operates on
+     the already-clipped child and the shadows land free. */
+  .qopt-wrap.ring {
+    filter: drop-shadow(4px 0 0 var(--qacc)) drop-shadow(-4px 0 0 var(--qacc))
+      drop-shadow(0 4px 0 var(--qacc)) drop-shadow(0 -4px 0 var(--qacc));
+  }
+  .qopt.pixelated.is-selected .qbadge {
+    background: var(--qacc);
+    color: var(--qs);
+  }
+  .qopt.pixelated.is-revealed .qbadge {
+    background: color-mix(in srgb, var(--qs) 18%, transparent);
+    color: var(--qs);
+  }
+  .qopt.pixelated.is-ruled .qbadge {
+    background: color-mix(in srgb, var(--qerr) 15%, transparent);
+    color: var(--qerr);
+  }
+  /* Badge shape variants — two MaterialShapes rasterised onto the badge's
+     own 4px grid (the badge is a fixed 32px, so the polygons are literal).
+     Both override the default square-chip clip; fills and state colours are
+     untouched, the silhouette is the only variable. */
+  /* Puffy diamond: row widths 2·4·6·8·8·6·4·2 cells — the straight-edged
+     diamond fattened one row at the waist, which is what the puff is. */
+  .qopt.pixelated .qbadge.shape-diamond {
+    clip-path: polygon(
+      12px 0,
+      20px 0,
+      20px 4px,
+      24px 4px,
+      24px 8px,
+      28px 8px,
+      28px 12px,
+      32px 12px,
+      32px 20px,
+      28px 20px,
+      28px 24px,
+      24px 24px,
+      24px 28px,
+      20px 28px,
+      20px 32px,
+      12px 32px,
+      12px 28px,
+      8px 28px,
+      8px 24px,
+      4px 24px,
+      4px 20px,
+      0 20px,
+      0 12px,
+      4px 12px,
+      4px 8px,
+      8px 8px,
+      8px 4px,
+      12px 4px
+    );
+  }
+  .qbadge {
+    flex: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--qink) 45%, transparent);
+    color: color-mix(in srgb, var(--qink) 85%, transparent);
+    font-family: var(--mono, ui-monospace, monospace);
+    font-size: 12px;
+    text-transform: lowercase;
+    font-variant-numeric: tabular-nums;
+  }
+  /* Hint indents to the label's left edge (16px pad + 32px badge + 14px
+     gap), visibly a continuation of the pill that earned it. */
+  .qhint {
+    margin: 8px 24px 0 62px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--qerr);
+  }
+  .qhint svg {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: -3px;
+    margin-right: 9px;
+  }
+  .qbadge svg {
+    width: 12px;
+    height: 12px;
+    display: block;
+  }
+  .qhint code {
+    font-family: inherit;
+    padding: 1px 7px;
+    border-radius: 7px;
+    background: color-mix(in srgb, var(--qchipc) 12%, transparent);
+    color: var(--qchipc);
+  }
+  .qrule {
+    border: 0;
+    height: 1px;
+    margin: 26px 0 14px;
+    background: color-mix(in srgb, var(--qink) 16%, transparent);
+  }
+  .qfooter {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .qkeys {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    opacity: 0.7;
+    margin-right: auto;
+  }
+  /* Pixel keycap: sprite corners (R=8) + a half-unit darker bottom lip —
+     the 8-bit reading of key depth, still flat colour. The lip is a
+     border-bottom: the bottom edge is straight, so it survives the clip
+     everywhere except the corner stairs, which shortens it pleasingly. */
+  .qkey {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    font: inherit;
+    background: color-mix(in srgb, var(--qink) 9%, transparent);
+    border-bottom: 2px solid color-mix(in srgb, var(--qink) 35%, transparent);
+  }
+  .qkeys-sep {
+    margin: 0 -3px;
+  }
+  .qkey svg {
+    width: 10px;
+    height: 10px;
+    display: block;
+  }
+  .qkeys-label {
+    letter-spacing: 0.08em;
+  }
+  /* Same voice and colour as the start screen's "10 QUESTIONS" line — the
+     same information, one screen later. */
+  .qcount {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    color: var(--qacc);
+  }
+  .qcta {
+    width: auto;
+    min-width: 12rem;
+    padding: 13px 26px;
+  }
+  .qcta:disabled {
+    cursor: default;
+    opacity: 0.45;
+  }
+
   @media (max-width: 860px) {
     .app {
       flex-direction: column;
@@ -554,6 +1143,46 @@
         full-strength duotone, sets-verbatim accents.
       </p>
     </div>
+
+    <section>
+      <p class="label">View</p>
+      <div class="mode" role="group" aria-label="Card view" id="viewList">
+        <button type="button" data-view="start">Start</button>
+        <button type="button" data-view="question">Question</button>
+        <button type="button" data-view="components">Components</button>
+      </div>
+    </section>
+
+    <section id="qControls">
+      <p class="label">Question experiments</p>
+      <p class="label" style="margin: 8px 0 4px">Answer shape</p>
+      <div class="mode" role="group" aria-label="Answer shape" id="qShapeList">
+        <button type="button" data-qshape="pill">Pill</button>
+        <button type="button" data-qshape="pixel">Pixel</button>
+        <button type="button" data-qshape="sprite">Sprite</button>
+      </div>
+      <p class="label" style="margin: 8px 0 4px">Error tone</p>
+      <div class="mode" role="group" aria-label="Error tone" id="qErrList">
+        <button type="button" data-qerr="rose">Rose mix</button>
+        <button type="button" data-qerr="brick">Tier brick</button>
+      </div>
+      <p class="label" style="margin: 8px 0 4px">Notation chips</p>
+      <div class="mode" role="group" aria-label="Notation chips" id="qChipList">
+        <button type="button" data-qchip="ink">Ink tint</button>
+        <button type="button" data-qchip="acc">Accent tint</button>
+      </div>
+      <p class="label" style="margin: 8px 0 4px">Progress</p>
+      <div class="mode" role="group" aria-label="Progress style" id="qProgList">
+        <button type="button" data-qprog="line">Line</button>
+        <button type="button" data-qprog="cells">Cells</button>
+      </div>
+      <p class="label" style="margin: 8px 0 4px">Option chip</p>
+      <div class="mode" role="group" aria-label="Option chip shape" id="qBadgeList">
+        <button type="button" data-qbadge="square">Square</button>
+        <button type="button" data-qbadge="diamond">Diamond</button>
+      </div>
+      <p class="note" id="qNote"></p>
+    </section>
 
     <section>
       <p class="label">Colour studio</p>
@@ -679,20 +1308,71 @@
   </aside>
 
   <main>
-    <section class="card" id="card" aria-label="Quiz start screen preview">
+    <section class="card" id="card" aria-label="Quiz screen preview">
       <div class="pattern-layer" id="layer" aria-hidden="true"></div>
       <div class="plate" id="plate" aria-hidden="true"></div>
-      <div class="eyebrow mono" id="eyebrow">Set Q</div>
-      <h2 id="headline">Meanings and Definitions</h2>
-      <p class="desc" id="desc">
-        Spot what is wrong with a definition — too broad, too narrow, circular,
-        or worse.
-      </p>
-      <div class="count mono" id="count">10 questions</div>
-      <button class="cta" id="cta" type="button">Start Quiz</button>
-      <button class="scored" id="scoredLink" type="button">
-        Or take a scored run, the way the original worked →
-      </button>
+      <!-- Typeform-style progress line; question view only. -->
+      <div class="qprogress" id="qProgress" aria-hidden="true" hidden>
+        <div class="qprogress-fill"></div>
+      </div>
+      <div id="startView">
+        <div class="eyebrow mono" id="eyebrow">Set Q</div>
+        <h2 id="headline">Meanings and Definitions</h2>
+        <p class="desc" id="desc">
+          Spot what is wrong with a definition — too broad, too narrow,
+          circular, or worse.
+        </p>
+        <div class="count mono" id="count">10 questions</div>
+        <button class="cta" id="cta" type="button">Start Quiz</button>
+        <button class="scored" id="scoredLink" type="button">
+          Or take a scored run, the way the original worked →
+        </button>
+      </div>
+      <!--
+        The question screen, mirroring components/quiz/index.tsx's immersive
+        card: same surface, ink doing the type, accent marking the live
+        element (progress fill, count line, selection). Content is built by
+        renderQuestion().
+      -->
+      <div id="questionView" hidden>
+        <button
+          class="qguide-btn"
+          id="qGuideBtn"
+          type="button"
+          aria-expanded="false"
+          aria-controls="qGuidePanel"
+        >
+          <span id="qGuideIcon" aria-hidden="true"></span>Guide
+        </button>
+        <aside class="qguide-panel" id="qGuidePanel" hidden>
+          <button class="qguide-close" id="qGuideClose" type="button" aria-label="Close guide">
+            <span id="qGuideCloseIcon" aria-hidden="true"></span>
+          </button>
+          <div class="qheader mono">Reference</div>
+          <div class="qguide-row"><code>☐A</code><span>A is necessary — true in every world.</span></div>
+          <div class="qguide-row"><code>◇A</code><span>A is possible — true in at least one world.</span></div>
+          <div class="qguide-row"><code>∼◇A</code><span>A is impossible.</span></div>
+          <div class="qguide-row"><code>(A ⊃ B)</code><span>if A then B — box outside applies to the whole conditional.</span></div>
+        </aside>
+        <p class="qprompt" id="qPrompt"></p>
+        <div class="qheader mono" id="qHeader"></div>
+        <div class="qoptions" id="qOptions"></div>
+        <hr class="qrule" />
+        <div class="qfooter">
+          <span class="qkeys mono" aria-hidden="true">
+            <kbd class="qkey">1</kbd><span class="qkeys-sep">–</span
+            ><kbd class="qkey">4</kbd>
+            <span class="qkeys-label">picks</span>
+            <kbd class="qkey" id="qKeyLeft"></kbd
+            ><kbd class="qkey" id="qKeyRight"></kbd>
+            <span class="qkeys-label">moves</span>
+            <kbd class="qkey qkey-wide">enter</kbd>
+            <span class="qkeys-label">checks</span>
+          </span>
+          <span class="qcount mono" id="qCount">1 of 10</span>
+          <button class="cta qcta" id="qCta" type="button">Check Answer</button>
+        </div>
+      </div>
     </section>
     <!--
       Lab chrome, deliberately OUTSIDE the card: the card now carries the
@@ -700,6 +1380,37 @@
       frame without faking the content.
     -->
     <p class="card-caption mono" id="cardCaption">Q · Set Q</p>
+    <!--
+      NEW-badge specimen: the nav-menu badge component, shown in its real
+      context (white menu surface, mono nav titles) with four silhouettes.
+      The fill is the system's own magenta #BD00AD (C and L's accent, live
+      in the catalogue) rather than Tailwind's fuchsia.
+    -->
+    <section class="badge-spec" id="badgeSpec" aria-label="NEW badge specimen" hidden>
+      <p class="label" style="margin: 0 0 14px">
+        NEW badge · nav specimen · decided: gem (ported to components/newBadge.tsx)
+      </p>
+      <div class="badge-spec-row">
+        <span class="badge-spec-title">Syllogistic Translations: Hard</span>
+        <span class="nbadge nbadge-pill">NEW</span>
+        <span class="badge-spec-tag">pill · ships</span>
+      </div>
+      <div class="badge-spec-row">
+        <span class="badge-spec-title">Propositional Translations: Hard</span>
+        <span class="nbadge nbadge-pillpx">NEW</span>
+        <span class="badge-spec-tag">pixel pill</span>
+      </div>
+      <div class="badge-spec-row">
+        <span class="badge-spec-title">Modal Translations: Basic</span>
+        <span class="nbadge nbadge-sprite">NEW</span>
+        <span class="badge-spec-tag">sprite · lip</span>
+      </div>
+      <div class="badge-spec-row">
+        <span class="badge-spec-title">Deontic Translations: Imperative</span>
+        <span class="nbadge nbadge-gem">NEW</span>
+        <span class="badge-spec-tag">gem ★</span>
+      </div>
+    </section>
   </main>
 </div>
 
@@ -759,12 +1470,97 @@
     },
   };
 
-  // Palettes with no parent set (S1, S2, G4, G6, Crm) borrow Set A's copy: it is
-  // the longest title-and-description pair in the catalogue, so an unparented
-  // surface gets judged against the worst case rather than the kindest one.
+  // One sample question per set for the question-screen view. J's and A's are
+  // real (lifted from the running app); the rest are ILLUSTRATIVE mocks in
+  // each set's genuine notation — good enough to judge colour and hierarchy,
+  // NOT ports, and never to be copied into content/sets/* (ports are
+  // validated against the textbook + original program, per the repo's rule).
+  // `c` marks the correct option; `hint` attaches to the marked wrong pick.
+  // Backticked spans render as notation chips, like FeedbackText's.
+  const SET_QUESTIONS = {
+    A: {
+      header: 'Translates into logic as:',
+      prompt: 'No vicious diabetic is bitter.',
+      options: [
+        { t: 'D is not B', hint: 'The claim covers every case — quantify it: `no D is B` denies the whole overlap, not one instance.' },
+        { t: 'd is not B' },
+        { t: 'no D is B', c: true },
+        { t: 'all D is not B' },
+      ],
+    },
+    C: {
+      header: 'Translates into logic as:',
+      prompt: 'Either Ana stays or Bo leaves.',
+      options: [
+        { t: '(A · B)', hint: '“Either … or” is disjunction — use `∨`, not the conjunction `·`.' },
+        { t: '(A ∨ B)', c: true },
+        { t: '(A ⊃ B)' },
+        { t: '∼(A · B)' },
+      ],
+    },
+    J: {
+      header: 'Translates into logic as:',
+      prompt: 'If M, then D (by itself) is necessary.',
+      options: [
+        { t: '☐(M ⊃ D)' },
+        { t: '(☐M ⊃ ☐D)', hint: 'Here the necessity applies to the second part by itself — use the box-inside form. Your answer has too many boxes: `(M ⊃ ☐D)`.' },
+        { t: '(M ⊃ ☐D)', c: true },
+        { t: 'Ambiguous between (M ⊃ ☐D) and ☐(M ⊃ D)' },
+      ],
+    },
+    L: {
+      header: 'Translates into logic as:',
+      prompt: '“Close the door.”',
+      options: [
+        { t: 'C', hint: 'A plain letter asserts a fact. Commands underline: `C̲` is “do it”, C is “it is done”.' },
+        { t: 'C̲', c: true },
+        { t: '☐C' },
+        { t: '∼C' },
+      ],
+    },
+    N: {
+      header: 'Translates into logic as:',
+      prompt: 'You believe that A is false.',
+      options: [
+        { t: '∼u:A', hint: 'That denies the believing. Believing a falsehood puts the `∼` inside: `u:∼A`.' },
+        { t: 'u:∼A', c: true },
+        { t: 'u:A' },
+        { t: '☐∼A' },
+      ],
+    },
+    Q: {
+      header: 'What is wrong with this definition?',
+      prompt: '“A triangle is a plane figure.”',
+      options: [
+        { t: 'Too broad', c: true },
+        { t: 'Too narrow', hint: 'Every triangle IS a plane figure — nothing is excluded. The net is too wide, not too tight.' },
+        { t: 'Circular' },
+        { t: 'Adequate' },
+      ],
+    },
+    R: {
+      header: 'Which fallacy is this?',
+      prompt: '“You can’t trust his tax plan — the man has been divorced twice.”',
+      options: [
+        { t: 'Ad hominem', c: true },
+        { t: 'Post hoc', hint: 'No causal claim from mere sequence here — the attack is on the person, not the argument.' },
+        { t: 'Straw man' },
+        { t: 'Appeal to force' },
+      ],
+    },
+  };
+
+  // Palettes with no parent set (S1, S2, G4, G6, G7, Crm) borrow Set A's copy:
+  // it is the longest title-and-description pair in the catalogue, so an
+  // unparented surface gets judged against the worst case rather than the
+  // kindest one.
   function copyFor(palette) {
     const family = /^([ACJLNQR])\d*$/.exec(palette.name);
     return SET_COPY[family ? family[1] : 'A'];
+  }
+  function questionFor(palette) {
+    const family = /^([ACJLNQR])\d*$/.exec(palette.name);
+    return SET_QUESTIONS[family ? family[1] : 'A'];
   }
 
   // Real palettes from components/quiz/index.tsx (getQuizScreenColors),
@@ -1477,7 +2273,35 @@
     centre: 'panel', // 'panel' | 'band' | 'footer' | 'none'
     pool: 'sets', // key into POOLS — Sets verbatim is the working pool
     seed: 7,
+    view: 'start', // 'start' | 'question'
+    qShape: 'sprite', // 'pill' | 'pixel' | 'sprite' — sprite is the winner
+    // Progress indicator. 'line' is the DEFAULT — the scored run (the mode
+    // becoming the app's default) has set-dependent point values, levels,
+    // and a bar that must animate down as well as up, all of which want a
+    // continuum. 'cells' (one block per question) is ONLY for the
+    // 10-question count mode, where progress is genuinely discrete.
+    qProg: 'line',
+    // Option-chip silhouette in the pixel/sprite modes. 'square' is the
+    // shipped chip; 'diamond' rasterises MaterialShapes' puffy diamond onto
+    // the chip's 4px grid. (A clam-shell arch was tried and cut.)
+    qBadge: 'square',
+    qErr: 'rose', // 'rose' (app today) | 'brick' (derived via the accent gates)
+    qChip: 'ink', // notation chips tinted with ink or accent
+    // The two views keep separate centre treatments: the start screen shows
+    // off the full pattern (panel), the question screen banishes it to a
+    // footer band so it frames the work instead of competing with it.
+    centreQ: 'footer',
   };
+
+  // Per-question interaction state: which pill is picked, which are ruled
+  // out, and whether the answer is revealed. Reset on every palette/view
+  // change so each set starts at the same point in the flow.
+  const qState = { selected: null, ruled: new Set(), solved: false };
+  function resetQState() {
+    qState.selected = null;
+    qState.ruled.clear();
+    qState.solved = false;
+  }
 
   function mulberry32(a) {
     return function () {
@@ -1499,10 +2323,23 @@
    */
   let CLEAR = null;
 
+  // Each view has its own centre treatment (start shows the pattern off,
+  // the question screen banishes it to the footer). One accessor so every
+  // consumer — clearRect, the plate, the buttons — agrees on whose turn it is.
+  function activeCentre() {
+    return state.view === 'question' ? state.centreQ : state.centre;
+  }
+
   function clearRect(w, h) {
     // Footer: pattern lives only in a bottom strip — the subtle option.
-    if (state.centre === 'footer') {
-      const strip = Math.min(260, Math.max(150, h * 0.22));
+    if (activeCentre() === 'footer') {
+      // The question screen's band is shallower and fixed: it underlines the
+      // card's foot without ever reaching the footer controls (the card
+      // reserves matching padding — see .card.qview.qband).
+      const strip =
+        state.view === 'question'
+          ? 112
+          : Math.min(260, Math.max(150, h * 0.22));
       return { x: -1, y: -1, w: w + 2, h: h - strip + 1, r: 0 };
     }
     // Pixel patterns cannot be sliced — half a pixel breaks the illusion —
@@ -1510,7 +2347,7 @@
     // itself is a rounded rect, and the pixels stair-step around its arcs.
     // Smooth patterns keep the plate overlay (the plate's own radius shows).
     if (
-      state.centre === 'panel' &&
+      activeCentre() === 'panel' &&
       (state.pattern === 'quiltpix' || state.pattern.startsWith('px'))
     ) {
       const pw = Math.min(760, w * 0.88);
@@ -1985,22 +2822,346 @@
   const scoredLink = document.getElementById('scoredLink');
   const noteEl = document.getElementById('patternNote');
 
+  // WCAG relative luminance / contrast, for the brick error-tone derivation
+  // (the studio's own metrics are OKLCH-based, so the lab lacked these).
+  function relLum(hex) {
+    const [r, g, b] = hexTriple(hex).map((v) => srgbToLinear(v / 255));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  }
+  function contrast(a, b) {
+    const [hi, lo] = [relLum(a), relLum(b)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  }
+
+  /**
+   * Error tone, per experiment:
+   * - 'rose': what the app ships — #f43f5e mixed 55% toward the ink, so it
+   *   stays legible on any surface but is the same rose on every set.
+   * - 'brick': derived the way the accents were — hue fixed at 29° (N3's
+   *   retired coral, the one warm mark the system has had), then the
+   *   LIGHTEST value at C .18 that still clears 4.5:1 on this surface. It
+   *   obeys the accent tier's gates instead of being mixed to taste.
+   */
+  function errorToneFor(p) {
+    if (state.qErr === 'rose') {
+      return `color-mix(in srgb, #f43f5e 55%, ${p.fg})`;
+    }
+    for (let L = 0.58; L >= 0.25; L -= 0.005) {
+      const hex = oklchToHex({ L, C: 0.18, h: 29 });
+      if (contrast(p.surface, hex) >= 4.5) return hex;
+    }
+    return '#7f1d1d';
+  }
+
+  // Backticked spans in hints become notation chips, like FeedbackText's.
+  function hintHtml(text) {
+    return text.replace(/`([^`]+)`/g, '<code>$1</code>');
+  }
+
+  /**
+   * Sprite silhouette — the pixel-icon-library grammar (pixeliconlibrary
+   * .com): straight edges stay ruler-straight; ONLY curves are rasterized,
+   * as regular symmetric stairs. (A seeded random crenellation along the
+   * horizontals was tried first and reverted — irregular jitter on a
+   * straight edge reads as noise, not rasterization.)
+   *
+   * The corner is a quarter-circle of radius R quantized onto a u-grid by
+   * sampling each row at its middle — midpoint-circle rasterization, the
+   * same construction as the library's icons. R=24/u=4 yields the step
+   * profile [16, 8, 4, 4, 0, 0]: four distinct stairs, finer than Pixel
+   * mode's chunky two. `inset` bakes in the --qi footprint rule: a selected
+   * pill shrinks by the ring width so its silhouette keeps an unselected
+   * pill's size.
+   */
+  function spriteClip(inset, R = 24) {
+    const u = 4;
+    const n = R / u;
+    const prof = [];
+    for (let k = 0; k < n; k++) {
+      const dy = R - (k + 0.5) * u;
+      const hw = Math.sqrt(R * R - dy * dy);
+      prof.push(R - Math.min(R, Math.round(hw / u) * u));
+    }
+    const i0 = inset;
+    const L = (v) => `${v}px`;
+    const M = (v) => `calc(100% - ${v}px)`; // mirrored (right / bottom) axis
+    const pts = [];
+    // top-left: up the stairs from (i0, i0+R) to (i0+prof[0], i0)
+    pts.push(`${L(i0)} ${L(i0 + R)}`);
+    for (let k = n - 1; k >= 1; k--)
+      if (prof[k - 1] !== prof[k]) {
+        pts.push(`${L(i0 + prof[k])} ${L(i0 + k * u)}`);
+        pts.push(`${L(i0 + prof[k - 1])} ${L(i0 + k * u)}`);
+      }
+    pts.push(`${L(i0 + prof[0])} ${L(i0)}`);
+    // top-right: mirror, down the stairs
+    pts.push(`${M(i0 + prof[0])} ${L(i0)}`);
+    for (let k = 1; k <= n - 1; k++)
+      if (prof[k - 1] !== prof[k]) {
+        pts.push(`${M(i0 + prof[k - 1])} ${L(i0 + k * u)}`);
+        pts.push(`${M(i0 + prof[k])} ${L(i0 + k * u)}`);
+      }
+    pts.push(`${M(i0)} ${L(i0 + R)}`);
+    // bottom-right
+    pts.push(`${M(i0)} ${M(i0 + R)}`);
+    for (let k = n - 1; k >= 1; k--)
+      if (prof[k - 1] !== prof[k]) {
+        pts.push(`${M(i0 + prof[k])} ${M(i0 + k * u)}`);
+        pts.push(`${M(i0 + prof[k - 1])} ${M(i0 + k * u)}`);
+      }
+    pts.push(`${M(i0 + prof[0])} ${M(i0)}`);
+    // bottom-left
+    pts.push(`${L(i0 + prof[0])} ${M(i0)}`);
+    for (let k = 1; k <= n - 1; k++)
+      if (prof[k - 1] !== prof[k]) {
+        pts.push(`${L(i0 + prof[k - 1])} ${M(i0 + k * u)}`);
+        pts.push(`${L(i0 + prof[k])} ${M(i0 + k * u)}`);
+      }
+    pts.push(`${L(i0)} ${M(i0 + R)}`);
+    return `polygon(${pts.join(', ')})`;
+  }
+
+  // Pixel icons from pixeliconlibrary.com — same 24-unit grid grammar as the
+  // Sprite silhouettes. fill="currentColor" so each icon takes the tone of
+  // the text it sits in (hint icons go error-tone, badge marks go with the
+  // badge's own colour).
+  const ICONS = {
+    // 'minds' — the lamp. Marks a hint: guidance, not scolding.
+    lamp: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="15 18 15 22 14 22 14 23 10 23 10 22 9 22 9 18 15 18"/><polygon points="19 5 19 12 18 12 18 13 17 13 17 14 16 14 16 17 8 17 8 14 7 14 7 13 6 13 6 12 5 12 5 5 6 5 6 4 7 4 7 3 8 3 8 2 9 2 9 1 15 1 15 2 16 2 16 3 17 3 17 4 18 4 18 5 19 5"/></svg>',
+    // 'check' — the library's own, replacing a hand-drawn stand-in. Its
+    // ~2-unit stroke matches 'times', so the ✓/✕ badge marks read as one
+    // family. (The library's 'check-solid' is the heavier variant if the
+    // mark ever needs more weight at 12px.) Marks the revealed answer.
+    check:
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="22 4 22 6 21 6 21 7 20 7 20 8 19 8 19 9 18 9 18 10 17 10 17 11 16 11 16 12 15 12 15 13 14 13 14 14 13 14 13 15 12 15 12 16 11 16 11 17 10 17 10 18 8 18 8 17 7 17 7 16 6 16 6 15 5 15 5 14 4 14 4 13 3 13 3 12 2 12 2 10 4 10 4 11 5 11 5 12 6 12 6 13 7 13 7 14 8 14 8 15 10 15 10 14 11 14 11 13 12 13 12 12 13 12 13 11 14 11 14 10 15 10 15 9 16 9 16 8 17 8 17 7 18 7 18 6 19 6 19 5 20 5 20 4 22 4"/></svg>',
+    // 'book-heart' — the Guide toggle. The plain 'book' exists in the
+    // library too; the heart-on-cover variant is the more LogiCola of the
+    // two (the reference guide is the loving part of the product).
+    bookHeart:
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="18 6 18 9 17 9 17 10 16 10 16 11 15 11 15 12 14 12 14 13 13 13 13 14 12 14 12 13 11 13 11 12 10 12 10 11 9 11 9 10 8 10 8 9 7 9 7 6 8 6 8 5 11 5 11 6 12 6 12 7 13 7 13 6 14 6 14 5 17 5 17 6 18 6"/><path d="m20,17h1v-1h1V2h-1v-1H4v1h-1v1h-1v18h1v1h1v1h17v-1h1v-1h-1v-1h-1v-3Zm-2,4H5v-1h-1v-2h1v-1h13v4ZM4,3h16v12H4V3Z"/></svg>',
+    // Keycap arrows — the library's own chevrons ('angle-left-solid' /
+    // 'angle-right-solid'), which replaced an earlier reuse of the
+    // play-solid triangle.
+    arrowRight:
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7 19 7 17 8 17 8 16 9 16 9 15 10 15 10 14 11 14 11 13 12 13 12 11 11 11 11 10 10 10 10 9 9 9 9 8 8 8 8 7 7 7 7 5 8 5 8 4 10 4 10 5 11 5 11 6 12 6 12 7 13 7 13 8 14 8 14 9 15 9 15 10 16 10 16 11 17 11 17 13 16 13 16 14 15 14 15 15 14 15 14 16 13 16 13 17 12 17 12 18 11 18 11 19 10 19 10 20 8 20 8 19 7 19"/></svg>',
+    arrowLeft:
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="17 5 17 7 16 7 16 8 15 8 15 9 14 9 14 10 13 10 13 11 12 11 12 13 13 13 13 14 14 14 14 15 15 15 15 16 16 16 16 17 17 17 17 19 16 19 16 20 14 20 14 19 13 19 13 18 12 18 12 17 11 17 11 16 10 16 10 15 9 15 9 14 8 14 8 13 7 13 7 11 8 11 8 10 9 10 9 9 10 9 10 8 11 8 11 7 12 7 12 6 13 6 13 5 14 5 14 4 16 4 16 5 17 5"/></svg>',
+    // 'times' — replaces the index in the badge of a ruled-out guess.
+    times:
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="14 13 15 13 15 14 16 14 16 15 17 15 17 16 18 16 18 17 19 17 19 18 20 18 20 19 21 19 21 20 22 20 22 21 21 21 21 22 20 22 20 21 19 21 19 20 18 20 18 19 17 19 17 18 16 18 16 17 15 17 15 16 14 16 14 15 13 15 13 14 11 14 11 15 10 15 10 16 9 16 9 17 8 17 8 18 7 18 7 19 6 19 6 20 5 20 5 21 4 21 4 22 3 22 3 21 2 21 2 20 3 20 3 19 4 19 4 18 5 18 5 17 6 17 6 16 7 16 7 15 8 15 8 14 9 14 9 13 10 13 10 11 9 11 9 10 8 10 8 9 7 9 7 8 6 8 6 7 5 7 5 6 4 6 4 5 3 5 3 4 2 4 2 3 3 3 3 2 4 2 4 3 5 3 5 4 6 4 6 5 7 5 7 6 8 6 8 7 9 7 9 8 10 8 10 9 11 9 11 10 13 10 13 9 14 9 14 8 15 8 15 7 16 7 16 6 17 6 17 5 18 5 18 4 19 4 19 3 20 3 20 2 21 2 21 3 22 3 22 4 21 4 21 5 20 5 20 6 19 6 19 7 18 7 18 8 17 8 17 9 16 9 16 10 15 10 15 11 14 11 14 13"/></svg>',
+  };
+
+  const qProgress = document.getElementById('qProgress');
+  const qGuideBtn = document.getElementById('qGuideBtn');
+  const qGuidePanel = document.getElementById('qGuidePanel');
+  document.getElementById('qGuideIcon').innerHTML = ICONS.bookHeart;
+  document.getElementById('qGuideCloseIcon').innerHTML = ICONS.times;
+  document.getElementById('qKeyLeft').innerHTML = ICONS.arrowLeft;
+  document.getElementById('qKeyRight').innerHTML = ICONS.arrowRight;
+  // The sprite badge variant shares the chip generator with the Guide
+  // chrome and keycaps (R=8); the gem and tag are static polygons.
+  document.querySelectorAll('.nbadge-sprite').forEach((b) => {
+    b.style.clipPath = spriteClip(0, 8);
+  });
+  // Guide open/close persists across palette switches (unlike qState, which
+  // resets) so the panel can be compared across sets.
+  let qGuideOpen = false;
+  qGuideBtn.addEventListener('click', () => {
+    qGuideOpen = !qGuideOpen;
+    render();
+  });
+  document.getElementById('qGuideClose').addEventListener('click', () => {
+    qGuideOpen = false;
+    render();
+  });
+  const startView = document.getElementById('startView');
+  const questionView = document.getElementById('questionView');
+  const qPrompt = document.getElementById('qPrompt');
+  const qHeader = document.getElementById('qHeader');
+  const qOptions = document.getElementById('qOptions');
+  const qCount = document.getElementById('qCount');
+  const qCta = document.getElementById('qCta');
+
+  function renderQuestion(p) {
+    const q = questionFor(p);
+    card.style.setProperty('--qs', p.surface);
+    card.style.setProperty('--qink', p.fg);
+    card.style.setProperty('--qacc', p.accent);
+    card.style.setProperty('--qerr', errorToneFor(p));
+    card.style.setProperty(
+      '--qchipc',
+      state.qChip === 'acc' ? p.accent : p.fg
+    );
+    qPrompt.textContent = q.prompt;
+    qHeader.textContent = q.header;
+    // Demo progress state: far enough in that all three indicator states
+    // (done / current / remaining) are visible at once.
+    const QDEMO = { current: 4, total: 10 };
+    qCount.textContent = `${QDEMO.current} of ${QDEMO.total}`;
+    const doneFrac = (QDEMO.current - 1) / QDEMO.total;
+    qProgress.className = `qprogress mode-${state.qProg}`;
+    if (state.qProg === 'line') {
+      qProgress.innerHTML = `<div class="qprogress-fill" style="width:${doneFrac * 100}%"></div>`;
+    } else {
+      // Cells — for the 10-question COUNT MODE ONLY, where progress is
+      // genuinely discrete. Rejected for the scored run: point values vary
+      // by set, levels change costs, and the bar animates down on misses —
+      // all continuous phenomena. (A square-wave "Wave" translation of M3
+      // Expressive was also tried here and rejected.)
+      qProgress.innerHTML = Array.from({ length: QDEMO.total }, (_, k) => {
+        const cls =
+          k < QDEMO.current - 1 ? 'done' : k === QDEMO.current - 1 ? 'now' : '';
+        return `<i class="${cls}"></i>`;
+      }).join('');
+    }
+    qOptions.innerHTML = '';
+    q.options.forEach((opt, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      const revealed = qState.solved && opt.c;
+      const ruled = qState.ruled.has(i) || (qState.solved && !opt.c);
+      b.className = [
+        'qopt',
+        revealed && 'is-revealed',
+        // Pixel and Sprite reshape every pill — both ride the same
+        // .pixelated machinery (fill, badge, ring, --qi); Sprite just swaps
+        // in a finer generated silhouette.
+        (state.qShape === 'pixel' || state.qShape === 'sprite') && 'pixelated',
+        ruled && !revealed && 'is-ruled',
+        qState.selected === i && !qState.solved && 'is-selected',
+      ]
+        .filter(Boolean)
+        .join(' ');
+      b.setAttribute('aria-pressed', String(qState.selected === i));
+      // Sprite mode: the generated quantized-radius clip overrides the
+      // stylesheet polygon (inline wins). Pixel mode stays pure CSS.
+      if (state.qShape === 'sprite') {
+        const isSel = qState.selected === i && !qState.solved;
+        b.style.clipPath = spriteClip(isSel ? 4 : 0);
+      }
+      const badge = document.createElement('span');
+      // Shape variants only exist in the pixel modes; the pill reference
+      // keeps its circle.
+      badge.className =
+        'qbadge' +
+        (state.qShape !== 'pill' && state.qBadge !== 'square'
+          ? ` shape-${state.qBadge}`
+          : '');
+      // The revealed answer's badge carries the check; the ✕ marks only
+      // options the LEARNER guessed wrong — options merely receding at
+      // reveal keep their number, so both marks stay meaningful.
+      if (revealed) badge.innerHTML = ICONS.check;
+      else if (qState.ruled.has(i)) badge.innerHTML = ICONS.times;
+      else badge.textContent = i + 1;
+      const label = document.createElement('span');
+      label.textContent = opt.t;
+      b.append(badge, label);
+      if (!qState.solved && !ruled) {
+        b.addEventListener('click', () => {
+          qState.selected = qState.selected === i ? null : i;
+          render();
+        });
+      }
+      // Wrapper carries the pixel-mode selection ring (see .qopt-wrap.ring).
+      const wrap = document.createElement('div');
+      wrap.className =
+        'qopt-wrap' +
+        ((state.qShape === 'pixel' || state.qShape === 'sprite') &&
+        qState.selected === i &&
+        !qState.solved
+          ? ' ring'
+          : '');
+      wrap.appendChild(b);
+      qOptions.appendChild(wrap);
+      // A ruled-out pick carries its hint with it, indented to the label.
+      if (qState.ruled.has(i) && opt.hint && !qState.solved) {
+        const hint = document.createElement('p');
+        hint.className = 'qhint';
+        // The lamp leads: guidance iconography, not scolding — the ✕ on the
+        // badge already owns the "wrong" part.
+        hint.innerHTML = ICONS.lamp + hintHtml(opt.hint);
+        qOptions.appendChild(hint);
+      }
+    });
+    // Guide chrome: sprite corners at R=12 (profile [4,0,0] — one small
+    // stair), the chip scale of the 24px pill radius.
+    qGuideBtn.style.clipPath = spriteClip(0, 12);
+    qGuideBtn.setAttribute('aria-expanded', String(qGuideOpen));
+    qGuidePanel.hidden = !qGuideOpen;
+    document.getElementById('qGuideClose').style.clipPath = spriteClip(0, 8);
+    document.querySelectorAll('.qkey').forEach((k) => {
+      k.style.clipPath = spriteClip(0, 8);
+    });
+    qCta.textContent = qState.solved ? 'Next Question' : 'Check Answer';
+    qCta.disabled = !qState.solved && qState.selected == null;
+    qCta.style.backgroundColor = p.fg;
+    qCta.style.color = p.surface;
+  }
+
+  qCta.addEventListener('click', () => {
+    const p = state.custom || PALETTES[state.palette];
+    if (qState.solved) {
+      resetQState(); // 'Next Question' just restages the same sample
+    } else if (qState.selected != null) {
+      const q = questionFor(p);
+      if (q.options[qState.selected].c) qState.solved = true;
+      else qState.ruled.add(qState.selected);
+      qState.selected = null;
+    }
+    render();
+  });
+
+  const badgeSpec = document.getElementById('badgeSpec');
+
   function render() {
     const p = state.custom || PALETTES[state.palette];
+    // View routing FIRST — before the size guard: in the Components view the
+    // card is hidden entirely, so clientWidth reads 0 and the guard would
+    // otherwise return before the specimen ever became visible.
+    const isQ = state.view === 'question';
+    const isComp = state.view === 'components';
+    card.hidden = isComp;
+    cardCaption.hidden = isComp;
+    badgeSpec.hidden = !isComp;
+    startView.hidden = isQ || isComp;
+    questionView.hidden = !isQ;
+    qProgress.hidden = !isQ;
+    document.querySelectorAll('#viewList button').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.view === state.view));
+    });
+    document.getElementById('qControls').classList.toggle('dial', true);
+    document.getElementById('qControls').classList.toggle('off', !isQ);
     const w = card.clientWidth;
     const h = card.clientHeight;
     if (!w || !h) return;
 
+    card.classList.toggle('qview', isQ);
+    card.classList.toggle('qband', isQ && activeCentre() === 'footer');
+    if (isQ) renderQuestion(p);
+    ['qShapeList', 'qErrList', 'qChipList', 'qProgList', 'qBadgeList'].forEach(
+      (id, k) => {
+        const key = ['qShape', 'qErr', 'qChip', 'qProg', 'qBadge'][k];
+      document.querySelectorAll(`#${id} button`).forEach((b) => {
+        b.setAttribute(
+          'aria-pressed',
+          String(b.dataset[key.toLowerCase()] === state[key])
+        );
+      });
+    });
+
     card.style.backgroundColor = p.surface;
     card.style.color = p.fg;
     const plate = document.getElementById('plate');
-    plate.className = `plate plate--${state.centre}`;
+    plate.className = `plate plate--${activeCentre()}`;
     plate.style.backgroundColor = p.surface;
     countEl.style.color = p.accent;
     cta.style.backgroundColor = p.fg;
     cta.style.color = p.surface;
     document.querySelectorAll('#centreList button').forEach((b) => {
-      b.setAttribute('aria-pressed', String(b.dataset.centre === state.centre));
+      b.setAttribute(
+        'aria-pressed',
+        String(b.dataset.centre === activeCentre())
+      );
     });
 
     const rng = mulberry32(state.seed >>> 0);
@@ -2035,6 +3196,34 @@
   }
 
   // ---------- controls ----------
+  document.querySelectorAll('#viewList button').forEach((b) => {
+    b.addEventListener('click', () => {
+      state.view = b.dataset.view;
+      resetQState();
+      render();
+    });
+  });
+  [
+    ['qShapeList', 'qshape', 'qShape'],
+    ['qErrList', 'qerr', 'qErr'],
+    ['qChipList', 'qchip', 'qChip'],
+    ['qProgList', 'qprog', 'qProg'],
+    ['qBadgeList', 'qbadge', 'qBadge'],
+  ].forEach(([id, data, key]) => {
+    document.querySelectorAll(`#${id} button`).forEach((b) => {
+      b.addEventListener('click', () => {
+        state[key] = b.dataset[data];
+        render();
+      });
+    });
+  });
+  document.getElementById('qNote').innerHTML =
+    '<strong>Sprite is the decided default</strong> — a true 24px corner ' +
+    'radius rasterised onto a 4px grid; Pixel (8px, two chunky stairs) kept ' +
+    'for comparison. Rose mix is what the app ships (#f43f5e mixed to the ' +
+    'ink); Tier brick derives a per-set red at hue 29° through the same ' +
+    'gates as the accents. Full treatment reference: docs/pixel-ui.md.';
+
   const patternList = document.getElementById('patternList');
   PATTERNS.forEach((p) => {
     if (p.heading) {
@@ -2079,6 +3268,7 @@
   function selectPalette(i) {
     state.palette = i;
     state.custom = null;
+    resetQState(); // each set restages the question flow from the top
     const p = PALETTES[i];
     // Same split StartScreen does: 'Modal Translations: Basic' becomes the
     // headline 'Modal Translations' and the eyebrow variant '· BASIC'.
@@ -2301,7 +3491,10 @@
   });
   document.querySelectorAll('#centreList button').forEach((b) => {
     b.addEventListener('click', () => {
-      state.centre = b.dataset.centre;
+      // Writes to whichever view is showing, so tuning the question screen's
+      // treatment never clobbers the start screen's, and vice versa.
+      if (state.view === 'question') state.centreQ = b.dataset.centre;
+      else state.centre = b.dataset.centre;
       render();
     });
   });
@@ -2314,6 +3507,23 @@
 
   document.addEventListener('keydown', (e) => {
     if (e.target.matches('input, button')) return;
+    // Question view mirrors the app's keys: digits pick, Enter checks.
+    if (state.view === 'question') {
+      const q = questionFor(state.custom || PALETTES[state.palette]);
+      const digit = parseInt(e.key, 10);
+      if (digit >= 1 && digit <= q.options.length) {
+        const i = digit - 1;
+        if (!qState.solved && !qState.ruled.has(i)) {
+          qState.selected = qState.selected === i ? null : i;
+          render();
+        }
+        return;
+      }
+      if (e.key === 'Enter') {
+        qCta.click();
+        return;
+      }
+    }
     const idx = REAL_PATTERNS.findIndex((p) => p.id === state.pattern);
     if (e.key === 'ArrowRight') {
       state.pattern = REAL_PATTERNS[(idx + 1) % REAL_PATTERNS.length].id;
