@@ -1,9 +1,13 @@
 import Link from 'next/link';
 import { TrackedFooterLink } from './trackedFooterLink';
+import { NewBadge } from './newBadge';
+import { CurrentYear } from './currentYear';
 
 const GET_THE_BOOK_URL =
   'https://www.routledge.com/Introduction-to-Logic/Gensler/p/book/9781138910591';
 const REDDIT_URL = 'https://www.reddit.com/r/Logicola/';
+// Used by both the "Follow us" list and the icon row, like REDDIT_URL above.
+const X_URL = 'https://x.com/LogicolaThree';
 
 export function Footer() {
   return (
@@ -52,10 +56,7 @@ export function Footer() {
                     href='/keyboard'
                     className='motion-colors hover:underline flex gap-2'
                   >
-                    Keyboard{' '}
-                    <div className='bg-primaryColor text-white text-xs font-semibold me-5 px-2 py-1 rounded-full'>
-                      New
-                    </div>
+                    Keyboard <NewBadge />
                   </Link>
                 </li>
               </ul>
@@ -74,11 +75,8 @@ export function Footer() {
                   </Link>
                 </li>
                 <li className='mb-4'>
-                  <Link
-                    href='https://twitter.com/LogicolaThree'
-                    className='motion-colors hover:underline'
-                  >
-                    Twitter
+                  <Link href={X_URL} className='motion-colors hover:underline'>
+                    X
                   </Link>
                 </li>
                 <li className='mb-4'>
@@ -121,7 +119,7 @@ export function Footer() {
         <hr className='my-6 border-gray-200 sm:mx-auto lg:my-8' />
         <div className='sm:flex sm:items-center sm:justify-between'>
           <span className='text-sm text-gray-500 sm:text-center '>
-            © 2025{' '}
+            © <CurrentYear buildYear={new Date().getFullYear()} />{' '}
             <Link
               href='https://logicola.com'
               className='motion-colors hover:underline'
@@ -130,6 +128,9 @@ export function Footer() {
             </Link>
             . Some Rights Reserved.
           </span>
+          {/* Pixel icons from pixeliconlibrary.com (hackernoon/pixel-icon-
+              library, icons/SVG/brands) — the smooth vendor glyphs traded
+              for the brand's own bitmap grammar. See docs/pixel-ui.md. */}
           <div className='flex mt-4 space-x-6 sm:justify-center sm:mt-0'>
             <Link
               href={REDDIT_URL}
@@ -142,13 +143,18 @@ export function Footer() {
                 viewBox='0 0 24 24'
                 aria-hidden='true'
               >
-                <path d='M21.6 12.2c0-1.4-1.1-2.5-2.5-2.5-.7 0-1.3.3-1.8.8-1.3-.9-3-1.5-4.8-1.6l.8-3.7 2.6.6c.1 1 .9 1.7 1.9 1.7 1.1 0 1.9-.9 1.9-1.9s-.9-1.9-1.9-1.9c-.7 0-1.4.4-1.7 1l-3.2-.7c-.3-.1-.6.1-.7.4l-1 4.5c-1.9.1-3.6.6-4.9 1.6-.5-.5-1.1-.8-1.8-.8-1.4 0-2.5 1.1-2.5 2.5 0 .9.5 1.7 1.2 2.2v.7c0 3.4 4 6.1 8.8 6.1s8.8-2.7 8.8-6.1v-.7c.8-.5 1.3-1.3 1.3-2.2ZM7.8 14.1c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4-.6 1.4-1.4 1.4-1.4-.6-1.4-1.4Zm7.5 3.9c-.9.9-2.6 1-3.3 1s-2.4-.1-3.3-1c-.2-.2-.2-.5 0-.7s.5-.2.7 0c.5.5 1.6.7 2.6.7s2.1-.2 2.6-.7c.2-.2.5-.2.7 0s.2.5 0 .7Zm-.5-2.5c-.8 0-1.4-.6-1.4-1.4s.6-1.4 1.4-1.4 1.4.6 1.4 1.4-.6 1.4-1.4 1.4Z' />
+                <rect x='14' y='15' width='1' height='1' />
+                <rect x='13' y='12' width='2' height='2' />
+                <rect x='9' y='12' width='2' height='2' />
+                <rect x='9' y='15' width='1' height='1' />
+                <path d='m22,9v-2h-1v-2h-1v-1h-1v-1h-2v-1h-2v-1h-6v1h-2v1h-2v1h-1v1h-1v2h-1v2h-1v6h1v2h1v2h1v1h1v1h2v1h2v1h6v-1h2v-1h2v-1h1v-1h1v-2h1v-2h1v-6h-1Zm-3,5h-1v1h-1v2h-1v1h-2v1h-4v-1h-2v-1h-1v-3h-1v-1h-1v-2h1v-1h2v1h1v-1h3v-5h2v1h3v2h-2v-1h-2v3h2v1h1v-1h2v1h1v3Z' />
+                <rect x='10' y='16' width='4' height='1' />
               </svg>
             </Link>
             <Link
-              href='https://twitter.com/LogicolaThree'
+              href={X_URL}
               className='motion-colors text-gray-500 hover:text-gray-900'
-              aria-label='Logicola on Twitter'
+              aria-label='Logicola on X'
             >
               <svg
                 className='w-5 h-5'
@@ -156,7 +162,7 @@ export function Footer() {
                 viewBox='0 0 24 24'
                 aria-hidden='true'
               >
-                <path d='M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84' />
+                <path d='m15.5,10v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h-3v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1h-1v-2h-1v-1h-1v-1H1.5v1h1v1h1v1h1v2h1v1h1v2h1v1h1v2h1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h3v-1h1v-1h1v-1h1v-1h1v-1h1v-1h2v1h1v1h1v2h1v1h1v1h7v-1h-1v-1h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h1Zm0,4v1h1v2h1v1h1v2h-3v-2h-1v-1h-1v-1h-1v-2h-1v-1h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h-1v-2h3v1h1v2h1v1h1v2h1v1h1v1h1v2h1Z' />
               </svg>
             </Link>
             <a
@@ -170,13 +176,23 @@ export function Footer() {
                 viewBox='0 0 24 24'
                 aria-hidden='true'
               >
-                <path
-                  fillRule='evenodd'
-                  d='M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z'
-                  clipRule='evenodd'
-                />
+                <polygon points='23 9 23 15 22 15 22 17 21 17 21 19 20 19 20 20 19 20 19 21 18 21 18 22 16 22 16 23 15 23 15 18 14 18 14 17 15 17 15 16 17 16 17 15 18 15 18 14 19 14 19 9 18 9 18 6 16 6 16 7 15 7 15 8 14 8 14 7 10 7 10 8 9 8 9 7 8 7 8 6 6 6 6 9 5 9 5 14 6 14 6 15 7 15 7 16 9 16 9 18 7 18 7 17 6 17 6 16 4 16 4 17 5 17 5 19 6 19 6 20 9 20 9 23 8 23 8 22 6 22 6 21 5 21 5 20 4 20 4 19 3 19 3 17 2 17 2 15 1 15 1 9 2 9 2 7 3 7 3 5 4 5 4 4 5 4 5 3 7 3 7 2 9 2 9 1 15 1 15 2 17 2 17 3 19 3 19 4 20 4 20 5 21 5 21 7 22 7 22 9 23 9' />
               </svg>
             </a>
+            <Link
+              href='https://www.linkedin.com/company/logicola'
+              className='motion-colors text-gray-500 hover:text-gray-900'
+              aria-label='Logicola on LinkedIn'
+            >
+              <svg
+                className='w-5 h-5'
+                fill='currentColor'
+                viewBox='0 0 24 24'
+                aria-hidden='true'
+              >
+                <path d='m22,2v-1H2v1h-1v20h1v1h20v-1h1V2h-1Zm-9,10v8h-3v-11h3v1h1v-1h4v1h1v10h-3v-8h-3Zm-9-4v-3h3v3h-3Zm3,1v11h-3v-11h3Z' />
+              </svg>
+            </Link>
           </div>
         </div>
       </div>
