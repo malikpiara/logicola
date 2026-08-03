@@ -1177,7 +1177,12 @@
         <button type="button" data-qprog="cells">Cells</button>
       </div>
       <p class="label" style="margin: 8px 0 4px">Option chip</p>
-      <div class="mode" role="group" aria-label="Option chip shape" id="qBadgeList">
+      <div
+        class="mode"
+        role="group"
+        aria-label="Option chip shape"
+        id="qBadgeList"
+      >
         <button type="button" data-qbadge="square">Square</button>
         <button type="button" data-qbadge="diamond">Diamond</button>
       </div>
@@ -1345,14 +1350,31 @@
           <span id="qGuideIcon" aria-hidden="true"></span>Guide
         </button>
         <aside class="qguide-panel" id="qGuidePanel" hidden>
-          <button class="qguide-close" id="qGuideClose" type="button" aria-label="Close guide">
+          <button
+            class="qguide-close"
+            id="qGuideClose"
+            type="button"
+            aria-label="Close guide"
+          >
             <span id="qGuideCloseIcon" aria-hidden="true"></span>
           </button>
           <div class="qheader mono">Reference</div>
-          <div class="qguide-row"><code>☐A</code><span>A is necessary — true in every world.</span></div>
-          <div class="qguide-row"><code>◇A</code><span>A is possible — true in at least one world.</span></div>
-          <div class="qguide-row"><code>∼◇A</code><span>A is impossible.</span></div>
-          <div class="qguide-row"><code>(A ⊃ B)</code><span>if A then B — box outside applies to the whole conditional.</span></div>
+          <div class="qguide-row">
+            <code>☐A</code><span>A is necessary — true in every world.</span>
+          </div>
+          <div class="qguide-row">
+            <code>◇A</code
+            ><span>A is possible — true in at least one world.</span>
+          </div>
+          <div class="qguide-row">
+            <code>∼◇A</code><span>A is impossible.</span>
+          </div>
+          <div class="qguide-row">
+            <code>(A ⊃ B)</code
+            ><span
+              >if A then B — box outside applies to the whole conditional.</span
+            >
+          </div>
         </aside>
         <p class="qprompt" id="qPrompt"></p>
         <div class="qheader mono" id="qHeader"></div>
@@ -1386,9 +1408,15 @@
       The fill is the system's own magenta #BD00AD (C and L's accent, live
       in the catalogue) rather than Tailwind's fuchsia.
     -->
-    <section class="badge-spec" id="badgeSpec" aria-label="NEW badge specimen" hidden>
+    <section
+      class="badge-spec"
+      id="badgeSpec"
+      aria-label="NEW badge specimen"
+      hidden
+    >
       <p class="label" style="margin: 0 0 14px">
-        NEW badge · nav specimen · decided: gem (ported to components/newBadge.tsx)
+        NEW badge · nav specimen · decided: gem (ported to
+        components/newBadge.tsx)
       </p>
       <div class="badge-spec-row">
         <span class="badge-spec-title">Syllogistic Translations: Hard</span>
@@ -1482,7 +1510,10 @@
       header: 'Translates into logic as:',
       prompt: 'No vicious diabetic is bitter.',
       options: [
-        { t: 'D is not B', hint: 'The claim covers every case — quantify it: `no D is B` denies the whole overlap, not one instance.' },
+        {
+          t: 'D is not B',
+          hint: 'The claim covers every case — quantify it: `no D is B` denies the whole overlap, not one instance.',
+        },
         { t: 'd is not B' },
         { t: 'no D is B', c: true },
         { t: 'all D is not B' },
@@ -1492,7 +1523,10 @@
       header: 'Translates into logic as:',
       prompt: 'Either Ana stays or Bo leaves.',
       options: [
-        { t: '(A · B)', hint: '“Either … or” is disjunction — use `∨`, not the conjunction `·`.' },
+        {
+          t: '(A · B)',
+          hint: '“Either … or” is disjunction — use `∨`, not the conjunction `·`.',
+        },
         { t: '(A ∨ B)', c: true },
         { t: '(A ⊃ B)' },
         { t: '∼(A · B)' },
@@ -1503,7 +1537,10 @@
       prompt: 'If M, then D (by itself) is necessary.',
       options: [
         { t: '☐(M ⊃ D)' },
-        { t: '(☐M ⊃ ☐D)', hint: 'Here the necessity applies to the second part by itself — use the box-inside form. Your answer has too many boxes: `(M ⊃ ☐D)`.' },
+        {
+          t: '(☐M ⊃ ☐D)',
+          hint: 'Here the necessity applies to the second part by itself — use the box-inside form. Your answer has too many boxes: `(M ⊃ ☐D)`.',
+        },
         { t: '(M ⊃ ☐D)', c: true },
         { t: 'Ambiguous between (M ⊃ ☐D) and ☐(M ⊃ D)' },
       ],
@@ -1512,7 +1549,10 @@
       header: 'Translates into logic as:',
       prompt: '“Close the door.”',
       options: [
-        { t: 'C', hint: 'A plain letter asserts a fact. Commands underline: `C̲` is “do it”, C is “it is done”.' },
+        {
+          t: 'C',
+          hint: 'A plain letter asserts a fact. Commands underline: `C̲` is “do it”, C is “it is done”.',
+        },
         { t: 'C̲', c: true },
         { t: '☐C' },
         { t: '∼C' },
@@ -1522,7 +1562,10 @@
       header: 'Translates into logic as:',
       prompt: 'You believe that A is false.',
       options: [
-        { t: '∼u:A', hint: 'That denies the believing. Believing a falsehood puts the `∼` inside: `u:∼A`.' },
+        {
+          t: '∼u:A',
+          hint: 'That denies the believing. Believing a falsehood puts the `∼` inside: `u:∼A`.',
+        },
         { t: 'u:∼A', c: true },
         { t: 'u:A' },
         { t: '☐∼A' },
@@ -1533,17 +1576,24 @@
       prompt: '“A triangle is a plane figure.”',
       options: [
         { t: 'Too broad', c: true },
-        { t: 'Too narrow', hint: 'Every triangle IS a plane figure — nothing is excluded. The net is too wide, not too tight.' },
+        {
+          t: 'Too narrow',
+          hint: 'Every triangle IS a plane figure — nothing is excluded. The net is too wide, not too tight.',
+        },
         { t: 'Circular' },
         { t: 'Adequate' },
       ],
     },
     R: {
       header: 'Which fallacy is this?',
-      prompt: '“You can’t trust his tax plan — the man has been divorced twice.”',
+      prompt:
+        '“You can’t trust his tax plan — the man has been divorced twice.”',
       options: [
         { t: 'Ad hominem', c: true },
-        { t: 'Post hoc', hint: 'No causal claim from mere sequence here — the attack is on the person, not the argument.' },
+        {
+          t: 'Post hoc',
+          hint: 'No causal claim from mere sequence here — the attack is on the person, not the argument.',
+        },
         { t: 'Straw man' },
         { t: 'Appeal to force' },
       ],
@@ -2988,10 +3038,7 @@
     card.style.setProperty('--qink', p.fg);
     card.style.setProperty('--qacc', p.accent);
     card.style.setProperty('--qerr', errorToneFor(p));
-    card.style.setProperty(
-      '--qchipc',
-      state.qChip === 'acc' ? p.accent : p.fg
-    );
+    card.style.setProperty('--qchipc', state.qChip === 'acc' ? p.accent : p.fg);
     qPrompt.textContent = q.prompt;
     qHeader.textContent = q.header;
     // Demo progress state: far enough in that all three indicator states
@@ -3141,13 +3188,14 @@
     ['qShapeList', 'qErrList', 'qChipList', 'qProgList', 'qBadgeList'].forEach(
       (id, k) => {
         const key = ['qShape', 'qErr', 'qChip', 'qProg', 'qBadge'][k];
-      document.querySelectorAll(`#${id} button`).forEach((b) => {
-        b.setAttribute(
-          'aria-pressed',
-          String(b.dataset[key.toLowerCase()] === state[key])
-        );
-      });
-    });
+        document.querySelectorAll(`#${id} button`).forEach((b) => {
+          b.setAttribute(
+            'aria-pressed',
+            String(b.dataset[key.toLowerCase()] === state[key])
+          );
+        });
+      }
+    );
 
     card.style.backgroundColor = p.surface;
     card.style.color = p.fg;
