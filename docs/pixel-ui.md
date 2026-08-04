@@ -1,5 +1,8 @@
 # Pixel UI treatment — reference
 
+**Entry point for the redesign is `docs/redesign-handoff.md`;** this file is
+its shape-and-iconography half.
+
 Status: **question-screen treatment decided in the lab, not yet ported;
 first components ARE ported** — the NEW badge (`components/newBadge.tsx`),
 the footer's social icons, and the FAQ caret ship in the app as of
