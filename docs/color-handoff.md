@@ -1,7 +1,10 @@
 # Colour work — handoff
 
-**Next session: tweak colours and pick the final set palettes.**
-Read this first, then `docs/color-system.md` for the full reasoning.
+**Not the entry point any more — start at `docs/redesign-handoff.md`.**
+This file is the palette log: which palette each set got, the accent tier
+and its gates, and every retired candidate with the reason it lost. Read
+`docs/color-system.md` for the underlying reasoning, `docs/pixel-ui.md` for
+shape and iconography.
 
 ## Where things stand
 
@@ -491,25 +494,27 @@ colour systems under one label; see open item #2.
 - **Accent pool** is "Sets verbatim" — the real set surfaces plus Set A's
   magenta.
 
-## Open — this is tomorrow's work
+## Open — see `redesign-handoff.md` for the live list
 
-1. **Pick the final palette per set.** A (A8 vs A7) and R (R vs R2 vs R3).
-   The Q and Q2 questions are closed. **L is A8 vs A7 territory too** — see
-   the L verdict below.
-2. **Promote bases.** Set A has no palette named `A`; Set N has no `N`.
-   Decide whether to rename the winners.
+1. ~~**Pick the final palette per set.**~~ **Six of seven settled**:
+   A = A7, C = C, J = J, L = L4, N = N10, Q = Q. **Only Set R is open**
+   (R vs R2 vs R3) — the one family whose hue has no ancestor in the
+   original at all.
+2. **Promote bases.** Still open, and now one decision covering three
+   families: `A7`, `L4` and `N10` are all bases carrying variant numbers,
+   because the plain letters belong to retired schemes.
 3. ~~**The accent=ink defect.**~~ **Resolved 2026-08-02** — see "The accent
    tier" below. C, J, L and S2 all have real accents now, all borrowed from
    hexes already in the catalogue. Four palettes still fail the value gate
    and were deliberately left alone: **N2, S1, G4**.
-4. **`SET_SURFACES`** (in the lab) has drifted further — it now lists **two**
-   colours that are no longer any set's surface: the retired peach `#F2CDA6`
-   (should be R's `#FFD199`) and, since L was retired on 2026-08-02, the old
-   mint `#C8F0E3` (should be L4's `#CFF6DD`). It also still carries Set A's
-   forest `#1C3601`, which is an ink now, not a surface. Left alone on purpose
-   — rewriting the pool changes every quilt render, which is a separate
-   decision from curating the palettes.
-5. **Then port** to `getQuizScreenColors`.
+4. **`SET_SURFACES`** (in the lab) is now stale in **four of six** entries: the
+   retired peach `#F2CDA6` (should be R's `#FFD199`), the old mint `#C8F0E3`
+   (should be L4's `#CFF6DD`), Set A's forest `#1C3601` (an ink now, not a
+   surface), and Set N's old sky. Left alone on purpose — rewriting the pool
+   changes every quilt render, which is a separate decision from curating the
+   palettes.
+5. **Then port** to `getQuizScreenColors` — the ready-to-paste table is in
+   `redesign-handoff.md`.
 
 ## The accent tier
 
