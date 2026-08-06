@@ -776,6 +776,10 @@
     padding: 24px;
     text-align: left;
     color: var(--qink);
+    /* Real guides outgrow the card (R is an 18-row table). Scroll is a
+       mechanical necessity, not a density judgement — the judgement comes
+       AFTER the real material is in. */
+    overflow-y: auto;
   }
   .qguide-panel .qheader {
     margin-bottom: 22px;
@@ -826,6 +830,127 @@
     font-size: 18px;
     font-weight: 500;
     background: color-mix(in srgb, var(--qink) 9%, transparent);
+  }
+  /* ---- Per-set guide content --------------------------------------------
+     Real material, mirrored from components/quiz/wffGuide.tsx. The panel
+     used to show ONE hardcoded modal reference — Set J's guide wearing
+     every other set's palette — so nothing about its layout or density had
+     been judged against what it will actually hold. Chip rows (C, J) use
+     .qguide-row above; tables (A, Q, R) and rule lists (L) get a smaller
+     voice of their own. A .qguide-row here is a row of chips and a label,
+     never mixed running prose, so its flex is safe. */
+  .qguide-h {
+    margin: 0 0 10px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .qguide-group {
+    margin-top: 22px;
+  }
+  .qguide-p {
+    margin: 0 0 14px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--qink) 88%, transparent);
+  }
+  .qguide-cap {
+    flex: none;
+    font-family: var(--mono, ui-monospace, monospace);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--qink) 60%, transparent);
+  }
+  .qguide-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.5;
+    text-align: left;
+  }
+  .qguide-table th {
+    font-family: var(--mono, ui-monospace, monospace);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--qink) 60%, transparent);
+    padding: 0 10px 6px 0;
+    border-bottom: 2px solid color-mix(in srgb, var(--qink) 18%, transparent);
+  }
+  .qguide-table td {
+    vertical-align: top;
+    padding: 8px 10px 8px 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--qink) 12%, transparent);
+  }
+  .qguide-table tr:last-child td {
+    border-bottom: 0;
+  }
+  .qguide-mono {
+    font-family: var(--mono, ui-monospace, monospace);
+    font-size: 12px;
+    /* A wff form is one object; `some A is not B` must not break after
+       `not`. The eight forms are all shorter than the column, so this
+       never overflows. */
+    white-space: nowrap;
+  }
+  /* The typeable two-letter code — same voice as the cell badges. */
+  .qguide-code {
+    font-family: var(--mono, ui-monospace, monospace);
+    font-size: 12px;
+    color: color-mix(in srgb, var(--qink) 60%, transparent);
+  }
+  .qguide-name {
+    font-weight: 600;
+  }
+  .qguide-why {
+    margin-top: 2px;
+    font-size: 12px;
+    color: color-mix(in srgb, var(--qink) 65%, transparent);
+  }
+  /* Numbered rules (Set L). Hanging number via absolute positioning, NOT
+     flex — mixed inline content must stay in one inline formatting
+     context (the clause-list lesson, not re-learned). */
+  .qguide-rules {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: qgr;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .qguide-rules li {
+    counter-increment: qgr;
+    position: relative;
+    padding-left: 22px;
+    margin-top: 8px;
+  }
+  .qguide-rules li::before {
+    content: counter(qgr);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 14px;
+    text-align: right;
+    font-family: var(--mono, ui-monospace, monospace);
+    font-size: 11px;
+    line-height: 1.8;
+    color: color-mix(in srgb, var(--qink) 55%, transparent);
+  }
+  /* R's clause tails reuse the hint's own list treatment, at table scale. */
+  .qguide-table .qhint-clauses {
+    max-width: none;
+    font-size: 12px;
+  }
+  /* At the panel's measure a chip can wrap mid-chip, splitting its tint
+     box across lines — a rendering artifact, not a judgeable state. The
+     chips are short (`∴ A was caused by B` is the longest), so nowrap is
+     safe here where it wouldn't be in the 62ch hint. */
+  .qguide-p code,
+  .qguide-rules code,
+  .qguide-table code {
+    white-space: nowrap;
   }
   .qprompt {
     font-size: clamp(20px, 2.6vw, 26px);
@@ -1438,23 +1563,24 @@
   /* ---- Notation chips ---------------------------------------------------
      The two chips that hold LOGIC — the guide's `☐A` and the hint's
      `∴ A is true` — were the only things on the card with square or rounded
-     corners. Everything that is chrome (keycap, option badge, guide button)
-     already speaks the pixel grammar. Two objects doing the same job, a
-     tinted box around a symbol, in three different corner treatments.
-     The Notation chip dial puts them on one. ---- */
-  #questionView[data-chip='sprite'] code,
-  #questionView[data-chip='fine'] code {
-    border-radius: 0;
-  }
+     corners, while everything that is chrome (keycap, option badge, guide
+     button) already spoke the pixel grammar. DECIDED (Malik, 2026-08-06):
+     Sprite 4px — the keycaps' own clip — applied unconditionally in
+     renderQuestion(), so no border-radius anywhere on a chip. ---- */
   /* Weight only, no size. This chip sits INLINE in running prose, where a
      larger glyph would open the leading around its own line and ripple
-     through the paragraph. Weight buys presence for free. */
+     through the paragraph. Weight buys presence for free. The guide's
+     PROSE notation (L's rules, R's table glosses) is the same object as
+     the hint's, so it takes the same chip — the guide's big .qguide-row
+     specimens keep their own 18px rule and are deliberately absent here. */
   .qhint code,
-  .qfeed code {
+  .qfeed code,
+  .qguide-p code,
+  .qguide-rules code,
+  .qguide-table code {
     font-family: inherit;
     padding: 1px 7px;
     font-weight: 500;
-    border-radius: 7px;
     background: color-mix(in srgb, var(--qchipc) 12%, transparent);
     color: var(--qchipc);
   }
@@ -1711,22 +1837,13 @@
         Set R after ruling out “Appeal to authority”.
       </p>
       <p class="label" style="margin: 8px 0 4px">Notation chip</p>
-      <div
-        class="mode"
-        role="group"
-        aria-label="Notation chip"
-        id="qChipShapeList"
-      >
-        <button type="button" data-qchipshape="rect">Rectangle</button>
-        <button type="button" data-qchipshape="sprite">Sprite 4px</button>
-        <button type="button" data-qchipshape="fine">Sprite 2px</button>
-      </div>
-      <p class="note" style="margin: -6px 0 14px">
-        Applies to both notation chips at once — the guide’s <code>☐A</code> and
-        the hint’s <code>∴ A is true</code> — since they are the same object
-        doing the same job. Rectangle is today. Sprite 4px matches the keycaps
-        and option badges exactly; Sprite 2px quantises on a finer grid, for
-        boxes this small. Open the Guide to see both together.
+      <p class="note" style="margin: -2px 0 14px">
+        <strong>Sprite 4px — DECIDED</strong> (Malik, 2026-08-06): the keycaps’
+        own clip, on both notation chips — the guide’s <code>☐A</code> and the
+        hint’s <code>∴ A is true</code> are the same object doing the same job.
+        Rectangle (the app today), Sprite 2px and the Gem candidate are removed.
+        Flagged with the decision: the smaller instances — L4’s rule chips, R’s
+        ~20px table chips — need careful per-size tweaking before the port.
       </p>
       <p class="label" style="margin: 8px 0 4px">Keyboard marks</p>
       <div class="mode" role="group" aria-label="Keyboard marks" id="qKeysList">
@@ -1936,22 +2053,10 @@
             <span id="qGuideCloseIcon" aria-hidden="true"></span>
           </button>
           <div class="qheader mono">Reference</div>
-          <div class="qguide-row">
-            <code>☐A</code><span>A is necessary — true in every world.</span>
-          </div>
-          <div class="qguide-row">
-            <code>◇A</code
-            ><span>A is possible — true in at least one world.</span>
-          </div>
-          <div class="qguide-row">
-            <code>∼◇A</code><span>A is impossible.</span>
-          </div>
-          <div class="qguide-row">
-            <code>(A ⊃ B)</code
-            ><span
-              >if A then B — box outside applies to the whole conditional.</span
-            >
-          </div>
+          <!-- Per-set content, built by renderQuestion() from SET_GUIDES.
+               The old static rows here were Set J's modal reference shown
+               for every set — the wrong-material trap. -->
+          <div id="qGuideBody"></div>
         </aside>
         <p class="qprompt" id="qPrompt"></p>
         <div class="qheader mono" id="qHeader"></div>
@@ -2324,6 +2429,158 @@
   function questionFor(palette) {
     const family = /^([ACJLNQR])\d*$/.exec(palette.name);
     return SET_QUESTIONS[family ? family[1] : 'A'];
+  }
+
+  /* Per-set guide content, mirrored from components/quiz/wffGuide.tsx
+     (GUIDE_SUBSET_IDS): A ↔ subset 1, C ↔ 6, J ↔ 4, L ↔ 12, Q ↔ 3, R ↔ 18.
+     A, C, J, L and Q are transcribed from the app's real guides; R is
+     GENERATED from its own sample's options above, which carry the same
+     lead/clauses as the app's FALLACIES table — one source in the lab, so
+     the hint and the guide can never drift apart. (The clause "or" tails
+     the app's table keeps are dropped here, matching the lab's decided
+     hint treatment: hanging numerals make the disjunction structural.)
+     N has NO guide in the app — its subset id is not in GUIDE_SUBSET_IDS —
+     so N hides the button rather than wearing someone else's reference:
+     that is exactly the trap this replaces. */
+  const guideRow = (sym, cap, ex) =>
+    `<div class="qguide-row"><code>${sym}</code>` +
+    `<span class="qguide-cap">${cap}</span>` +
+    (ex ? `<code>${ex}</code>` : '') +
+    `</div>`;
+  const GUIDE_PAREN_GROUP =
+    `<h3 class="qguide-h">Use a pair of parentheses for each:</h3>` +
+    guideRow('·', 'and', '(P · Q)') +
+    guideRow('∨', 'or', '(P ∨ Q)') +
+    guideRow('⊃', 'if-then', '(P ⊃ Q)') +
+    guideRow('≡', 'iff', '(P ≡ Q)');
+  // Gensler's seven flaws-of-a-definition, one worked example each —
+  // wffGuide.tsx's SET_Q_FLAW_EXAMPLES, verbatim.
+  const Q_FLAWS = [
+    [
+      'Too broad',
+      '“Bachelor” means “man.”',
+      'There are men who aren’t bachelors.',
+    ],
+    [
+      'Too narrow',
+      '“Bachelor” means “unmarried male astronaut.”',
+      'There are bachelors who aren’t astronauts.',
+    ],
+    [
+      'Circular',
+      '“True” means “known to be true.”',
+      'This defines “true” using “true.”',
+    ],
+    [
+      'Uses poorly understood terms',
+      '“Good” means “having positive aretaic value.”',
+      'The latter is less clear than “good.”',
+    ],
+    [
+      'Poor match in vagueness',
+      '“Bachelor” means “unmarried male over 18 years old.”',
+      'The latter is much more precise than “bachelor.”',
+    ],
+    [
+      'Poor match in emotional tone',
+      '“Bachelor” means “fortunate man who hasn’t married.”',
+      'The latter has a different emotional tone.',
+    ],
+    [
+      'Has non-essential properties',
+      '“Bachelor” means “unmarried man living on earth.”',
+      'We could imagine a bachelor who lives on the moon.',
+    ],
+  ];
+  const SET_GUIDES = {
+    A: () =>
+      `<h3 class="qguide-h">What makes a well-formed formula (wff)?</h3>` +
+      `<p class="qguide-p">A wff must have one of these eight forms (where other capitals can replace “A” and “B” and other small letters “c” and “d”):</p>` +
+      `<table class="qguide-table"><thead><tr><th>Class statements</th><th>Individual statements</th></tr></thead><tbody>` +
+      [
+        ['all A is B', 'c is A'],
+        ['no A is B', 'c is not A'],
+        ['some A is B', 'c is d'],
+        ['some A is not B', 'c is not d'],
+      ]
+        .map(
+          ([cls, ind]) =>
+            `<tr><td class="qguide-mono">${cls}</td><td class="qguide-mono">${ind}</td></tr>`
+        )
+        .join('') +
+      `</tbody></table>`,
+    C: () =>
+      `<h3 class="qguide-h">What makes a well-formed formula (wff)?</h3>` +
+      `<div class="qguide-group">${GUIDE_PAREN_GROUP}</div>`,
+    J: () =>
+      GUIDE_PAREN_GROUP +
+      `<div class="qguide-group">` +
+      `<h3 class="qguide-h">Do not use additional grouping parentheses for:</h3>` +
+      guideRow('∼', 'not') +
+      guideRow('☐', 'necessary') +
+      guideRow('◇', 'possible') +
+      `</div>`,
+    // <i>, not <em>, for the presentational italics ("Example:") — the
+    // Emphasis dial styles every <em> under [data-em], and these are not
+    // the must/probably emphasis it exists for.
+    L: () =>
+      `<h3 class="qguide-h">How to form an imperative wff:</h3>` +
+      `<ol class="qguide-rules">` +
+      `<li>Any <u>underlined capital letter</u> is an imperative wff.</li>` +
+      `<li>A capital letter followed by one or more small letters (with exactly one small letter underlined) is also an imperative wff. <i>Example:</i> <code>A</code>, <code>A<u>x</u></code>, <code>A<u>x</u>y</code>, etc.</li>` +
+      `<li>If A is an imperative wff, then <code>∼A</code> (do not do A) is also an imperative wff.</li>` +
+      `<li>If A and B are imperative wffs, then <code>(A • B)</code> (“Do A and B”) is an imperative wff.</li>` +
+      `<li>Similarly, <code>(A ⊃ B)</code> can be imperative if both A and B are imperative parts (e.g., “If you do A, then do B”).</li>` +
+      `<li>We can also combine imperative forms with quantifiers. <code>(x)A</code> (“Let everyone do A”) or <code>(∃x)A</code> (“Let someone do A”) are imperative wffs if A is imperative (the underlined letter references the agent x).</li>` +
+      `</ol>` +
+      `<div class="qguide-group">` +
+      `<h3 class="qguide-h">Additional notes:</h3>` +
+      `<p class="qguide-p">Underline <i>only</i> the imperative part(s). For instance, if <code>A</code> is factual and <code>B</code> is imperative, you might underline <code>B</code> but <i>not</i> <code>A</code>.</p>` +
+      `<p class="qguide-p">Deontic logic adds “ought,” “permissible,” and “forbidden” — but at this imperative level, we focus on “Do A,” “Don’t do A,” etc. You can treat them similarly, using underlined letters to indicate what must or must not be done.</p>` +
+      `</div>`,
+    Q: () =>
+      `<h3 class="qguide-h">What is a definition?</h3>` +
+      `<p class="qguide-p">A definition is a rule of paraphrase designed to explain meaning. More precisely, a definition of a word or phrase is a rule saying how to eliminate this word or phrase in any sentence using it and produce a second sentence that means the same thing — the purpose of this being to explain or clarify the meaning of the word or phrase.</p>` +
+      `<p class="qguide-p">Definitions may be stipulative (specifying your own usage) or lexical (explaining current usage). A good lexical definition should allow us to “paraphrase out” a term — to produce a second sentence that means the same thing but doesn’t use the defined term.</p>` +
+      `<div class="qguide-group">` +
+      `<h3 class="qguide-h">Ways a definition can be flawed</h3>` +
+      `<p class="qguide-p">One worked example per flaw, from Gensler §3.2.</p>` +
+      `<table class="qguide-table"><tbody>` +
+      Q_FLAWS.map(
+        ([name, example, why], i) =>
+          `<tr><td class="qguide-code">${i + 1}</td>` +
+          `<td><span class="qguide-name">${name}</span>` +
+          `<div class="qguide-p" style="margin:2px 0 0">${example}</div>` +
+          `<div class="qguide-why">${why}</div></td></tr>`
+      ).join('') +
+      `</tbody></table>` +
+      `</div>`,
+    R: () =>
+      `<h3 class="qguide-h">The eighteen informal fallacies</h3>` +
+      `<p class="qguide-p">Some passages commit more than one fallacy and so have more than one correct answer.</p>` +
+      `<table class="qguide-table"><tbody>` +
+      SET_QUESTIONS.R.options
+        .map(
+          (o) =>
+            `<tr><td class="qguide-code">${o.a}</td>` +
+            `<td><span class="qguide-name">${o.term ?? o.t}</span>` +
+            `<div class="qguide-p" style="margin:2px 0 0">${hintHtml(o.lead)}</div>` +
+            (o.clauses
+              ? `<ol class="qhint-clauses">${o.clauses
+                  .map((c) => `<li>${hintHtml(c)}</li>`)
+                  .join('')}</ol>`
+              : '') +
+            `</td></tr>`
+        )
+        .join('') +
+      `</tbody></table>`,
+  };
+  function guideFamilyFor(palette) {
+    const family = /^([ACJLNQR])\d*$/.exec(palette.name);
+    return family ? family[1] : 'A';
+  }
+  function guideFor(palette) {
+    return SET_GUIDES[guideFamilyFor(palette)] ?? null;
   }
 
   // Real palettes from components/quiz/index.tsx (getQuizScreenColors),
@@ -3042,7 +3299,12 @@
     qFeed: 'inline', // where a hint / the answer lands — see FEEDBACK_NOTES
     qHint: 'runin', // how a hint names its fallacy: 'runin' | 'heading'
     qEm: 'rule', // DECIDED — see the Emphasis dial for the rejected four
-    qChipShape: 'rect', // corner treatment for the two notation chips
+    // Notation chip corner: Sprite 4px — DECIDED (Malik, 2026-08-06), so
+    // no state key. The dial offered Rectangle (the app today), Sprite 4px,
+    // Sprite 2px and, briefly, the NEW badge's Gem silhouette; the sprite
+    // at the keycap's own R=8/u=4 won. The clip is applied unconditionally
+    // in renderQuestion(). Small instances (L4's rule chips, R's ~20px
+    // table chips) are flagged for per-size tweaking before the port.
     qKeys: 'off', // preview the focus ring + multi-select cursor
     // Progress indicator. 'line' is the DEFAULT — the scored run (the mode
     // becoming the app's default) has set-dependent point values, levels,
@@ -4201,9 +4463,13 @@
   document.querySelectorAll('.nbadge-sprite').forEach((b) => {
     b.style.clipPath = spriteClip(0, 8);
   });
+  const qGuideBody = document.getElementById('qGuideBody');
   // Guide open/close persists across palette switches (unlike qState, which
-  // resets) so the panel can be compared across sets.
+  // resets) so the panel can be compared across sets. qGuideFamily tracks
+  // whose content the body currently holds, so renders that don't change
+  // the set skip the innerHTML rewrite (and keep the panel's scroll).
   let qGuideOpen = false;
+  let qGuideFamily = null;
   qGuideBtn.addEventListener('click', () => {
     qGuideOpen = !qGuideOpen;
     render();
@@ -4247,7 +4513,6 @@
     // Emphasis variants key off an attribute rather than a class per style,
     // so adding one is a CSS rule and nothing else.
     questionView.dataset.em = state.qEm;
-    questionView.dataset.chip = state.qChipShape;
     // Feedback routing. Exactly one of the three slots is fed; the other
     // two are emptied, so switching placement can't leave a stale copy
     // behind (the failure mode that would make two modes look like one).
@@ -4476,6 +4741,18 @@
     });
     // Guide chrome: sprite corners at R=12 (profile [4,0,0] — one small
     // stair), the chip scale of the 24px pill radius.
+    // Per-set content: N alone has no guide in the app, so N alone loses
+    // the button; unparented palettes borrow A's guide the way they borrow
+    // its sample. The body only rebuilds when the family changes, so the
+    // panel keeps its scroll position across dial flips.
+    const guide = guideFor(p);
+    qGuideBtn.hidden = !guide;
+    if (!guide) qGuideOpen = false;
+    const guideFamily = guide ? guideFamilyFor(p) : null;
+    if (guideFamily !== qGuideFamily) {
+      qGuideBody.innerHTML = guide ? guide() : '';
+      qGuideFamily = guideFamily;
+    }
     qGuideBtn.style.clipPath = spriteClip(0, 12);
     qGuideBtn.setAttribute('aria-expanded', String(qGuideOpen));
     qGuidePanel.hidden = !qGuideOpen;
@@ -4488,9 +4765,10 @@
     // same construction on a finer grid, which is the option worth having
     // for boxes this small: the step is a fixed fraction of the radius, so
     // halving the unit halves how much corner it eats.
-    const CHIP_CORNER = { sprite: [8, 4], fine: [4, 2] };
-    const corner = CHIP_CORNER[state.qChipShape];
-    const chipClip = corner ? spriteClip(0, corner[0], corner[1]) : 'none';
+    // DECIDED (Malik, 2026-08-06): Sprite 4px — spriteClip(0, 8), the
+    // keycaps' own clip, on every notation chip. Small instances (L4's
+    // rule chips, R's ~20px table chips) still owe a per-size tweak.
+    const chipClip = spriteClip(0, 8);
     questionView.querySelectorAll('code').forEach((c) => {
       c.style.clipPath = chipClip;
     });
@@ -4592,7 +4870,6 @@
       'qFeedList',
       'qHintList',
       'qEmList',
-      'qChipShapeList',
       'qKeysList',
       'qErrList',
       'qChipList',
@@ -4605,7 +4882,6 @@
         'qFeed',
         'qHint',
         'qEm',
-        'qChipShape',
         'qKeys',
         'qErr',
         'qChip',
@@ -4680,7 +4956,6 @@
     ['qFeedList', 'qfeed', 'qFeed'],
     ['qHintList', 'qhint', 'qHint'],
     ['qEmList', 'qem', 'qEm'],
-    ['qChipShapeList', 'qchipshape', 'qChipShape'],
     ['qKeysList', 'qkeys', 'qKeys'],
     ['qErrList', 'qerr', 'qErr'],
     ['qChipList', 'qchip', 'qChip'],

@@ -1,5 +1,8 @@
 # Handover — 2026-08-05
 
+> **Superseded by `session-handover-2026-08-06.md`** — kept for the
+> decision log and the two rules below.
+
 Written at the end of a long session on branch `color-system-exploration`.
 Entry point for the redesign as a whole is still **`redesign-handoff.md`** —
 read its new **Caveats** section first. This file is only "where we got to
@@ -7,7 +10,10 @@ and what to do next".
 
 ## Pick up here
 
-**1 · Wire the real per-set guides into the lab.** This is the blocker.
+**1 · Wire the real per-set guides into the lab.** ~~This is the blocker.~~
+**Done 2026-08-06** — `SET_GUIDES` in the lab, mirrored from
+`wffGuide.tsx`; N hides the button (no guide in the app); R's table is
+generated from the R sample's own options. Items 2 and 3 are unblocked.
 The guide panel currently shows the same modal-logic reference
 (`☐A ◇A ∼◇A (A ⊃ B)`) for every set — verified identical across J, Q, R, C
 and L4. It is Set J's guide wearing every other set's palette, so on Set R
@@ -43,7 +49,15 @@ trusting any of the typography work.
   is the only mode that holds the palette still, and it now costs 391px of
   permanent gap on Set R. Not chosen.
 - **Hint identifier**: Run-in vs Heading.
-- **Notation chip corner**: Rectangle vs Sprite 4px vs Sprite 2px.
+- ~~**Notation chip corner**~~ — **DECIDED 2026-08-06: Sprite 4px**, the
+  keycap clip, both chips; other options (Rectangle, Sprite 2px, and a
+  briefly-added Gem) removed from the lab. Still owed: a careful per-size
+  tweak for the smaller instances (L4's rule chips, R's ~20px table
+  chips) before the port.
+- **Does Set R keep its guide at all?** (new, 2026-08-06) — R's table is
+  the only guide with no 2008 ancestor, and there is a pedagogical case
+  for a recognition drill not offering all eighteen definitions one click
+  away. Raised by Malik, deliberately not decided.
 - **Answer treatment**: Tint / Accent / Invert / Weight — Tint recommended,
   not decided.
 - Finding 4 of the audit: the original's _"TO ANSWER: click a fallacy or
