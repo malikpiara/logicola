@@ -76,8 +76,9 @@ describe('setR generator — question shape (100+ draws per seed)', () => {
         expect(question.options.map((o) => o.id)).toEqual(
           FALLACIES.map((f) => f.id)
         );
+        // Grid cells carry the terse label, not the full term.
         expect(question.options.map((o) => o.label)).toEqual(
-          FALLACIES.map((f) => f.name)
+          FALLACIES.map((f) => f.label)
         );
         expect(question.options.map((o) => o.abbreviation)).toEqual(
           FALLACIES.map((f) => f.code)
@@ -184,8 +185,41 @@ describe('setR generator — multi-answer fidelity', () => {
     for (const question of draw(TEST_SEED, 36)) {
       const primary = FALLACIES.find((f) => f.id === question.correctId[0])!;
       expect(question.answer.toLowerCase()).toContain(
-        primary.name.toLowerCase()
+        primary.label.toLowerCase()
       );
     }
+  });
+
+  // The lead appends " fallacy" to the fallacy's TERSE label. Reading it off
+  // `name` instead shipped "the genetic fallacy fallacy" (ge) and "the post
+  // hoc ergo propter hoc fallacy" (ph) — the committed snapshot's ten
+  // questions include neither, so nothing caught either. Sweep every code.
+  it('never doubles the word "fallacy" in the answer lead', () => {
+    const seen = new Set<string>();
+    for (const seed of SEEDS) {
+      for (const question of draw(seed, 108)) {
+        seen.add(codeOf(question));
+        expect(question.answer).not.toMatch(/fallacy fallacy/i);
+      }
+    }
+    // Only meaningful if the sweep actually reached the offender.
+    expect(seen.has('ge')).toBe(true);
+    expect(seen.size).toBe(FALLACIES.length);
+  });
+
+  // The five codes whose terse label and full term diverge — the ones a
+  // single `name` field could not serve. Values are the 2008 grid block's.
+  it.each([
+    ['ge', 'the genetic fallacy'],
+    ['ph', 'the post hoc fallacy'],
+    ['op', 'the opposition fallacy'],
+    ['pc', 'the pro-con fallacy'],
+    ['ac', 'the appeal to crowd fallacy'],
+  ])('leads with the terse label for %s', (code, lead) => {
+    const q = draw(TEST_SEED, 108).find((x) => codeOf(x) === code);
+    expect(q).toBeTruthy();
+    expect(q!.answer.slice(0, `This passage illustrates ${lead}.`.length)).toBe(
+      `This passage illustrates ${lead}.`
+    );
   });
 });

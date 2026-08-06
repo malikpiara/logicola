@@ -564,6 +564,13 @@
     color: var(--text);
     font-weight: 600;
   }
+  /* Five-way dials wrap rather than squeezing five labels onto one line. */
+  .mode.wrap {
+    flex-wrap: wrap;
+  }
+  .mode.wrap button {
+    flex: 1 1 30%;
+  }
   .dial.off {
     opacity: 0.4;
     pointer-events: none;
@@ -571,7 +578,9 @@
   .eyebrow {
     font-size: 12px;
     text-transform: uppercase;
-    letter-spacing: 0.3em;
+    /* All caps need letterspacing, but 5–12% is the range that helps;
+       past that the word stops being a word. 0.12em is the top of it. */
+    letter-spacing: 0.12em;
     opacity: 0.8;
     margin-bottom: 20px;
   }
@@ -678,6 +687,12 @@
     max-width: 46rem;
     margin: 0 auto;
     text-align: left;
+    /* Anchors the grid's container query — see .qoptions.is-grid. */
+    container-type: inline-size;
+    /* Entrances decelerate: fast off the mark, settling in. Defined here
+       because the hint block and the option badges both use it and they
+       are in different subtrees. */
+    --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
   }
   /* Progress indicator, three modes (Progress control in the sidebar).
      Line is what the app ships. Cells and Wave are M3-derived: Cells is the
@@ -795,16 +810,28 @@
     font-size: 14px;
     line-height: 1.5;
   }
+  /* The chip was 14px/400 sitting beside prose at 14px/400 — typographically
+     identical to the sentence explaining it, with only the tint to separate
+     them. The notation is the SPECIMEN here; it should outrank its own
+     definition. 18px matches the app (`text-lg` in wffGuide.tsx), which the
+     lab had been under-rendering by 4px, and brings it nearer the 19px the
+     same notation gets on an option pill — a reference smaller than the
+     thing it references was the wrong way round. */
   .qguide-row code {
     font-family: inherit;
     flex: none;
     min-width: 3.4em;
     text-align: center;
     padding: 2px 8px;
+    font-size: 18px;
+    font-weight: 500;
     background: color-mix(in srgb, var(--qink) 9%, transparent);
   }
   .qprompt {
     font-size: clamp(20px, 2.6vw, 26px);
+    /* Display sizes want tight leading; 1.25 is the top of Butterick's
+       120–145% band, which suits a two-to-three line question. */
+    line-height: 1.25;
     font-weight: 400;
     text-align: center;
     margin: 0 0 34px;
@@ -815,15 +842,108 @@
   .qheader {
     font-size: 12px;
     text-transform: uppercase;
-    letter-spacing: 0.3em;
+    /* Matches .eyebrow — see the note there on the 5–12% caps range. */
+    letter-spacing: 0.12em;
     opacity: 0.8;
     margin-bottom: 18px;
+  }
+  /* Q and R accept several answers. Without saying so, the screen is a MODE
+     ERROR: the same click adds to a set here and replaces a pick elsewhere,
+     with nothing on screen to distinguish the two. Modes are the one thing
+     both Norman and Saffer say must be made loud.
+     Wording is deliberately not "select all that apply" — this quiz's subset
+     rule accepts ANY genuine answer, so demanding all of them would be a
+     promise the grader doesn't keep. */
+  .qmulti {
+    margin: -8px 0 18px;
+    font-size: 14px;
+    color: color-mix(in srgb, var(--qink) 72%, transparent);
   }
   .qoptions {
     display: flex;
     flex-direction: column;
     gap: 16px;
   }
+  /* ---- Grid sets (Q, R) -----------------------------------------------
+     COLUMN-major: the options read DOWN each column, not across. That is
+     the 2008 answer grid's order and it is the taxonomy the student
+     learns, so it is never shuffled — `grid-auto-flow: column` with an
+     explicit row count, matching the app's `grid-flow-col grid-rows-N`.
+
+     Everything a grid set does follows from one fact: the cells are a
+     fixed palette. An inline hint would have to expand a cell, which
+     breaks the row alignment and therefore the column reading order — so
+     grid sets have nowhere to put feedback except above or below the
+     grid. That is not a stylistic preference; it is why the original put
+     it above. ---- */
+  .qoptions.is-grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(var(--qcols), minmax(0, 1fr));
+    grid-template-rows: repeat(var(--qrows), auto);
+    gap: 10px 14px;
+  }
+  /* Narrow cards drop to two columns, as the app does (`grid-cols-2
+     lg:grid-cols-3`). Column-major flow means the ROW count has to change
+     with the column count or the grid spills into implicit columns, and CSS
+     can't divide, so JS supplies both pairs and the query picks one.
+
+     A CONTAINER query, not a media query: this grid lives in a card whose
+     width is set by the workbench around it, so viewport width says nothing
+     useful about how much room the cells actually have.
+
+     640px is a prototype threshold, not a researched one — the exhaustive
+     mobile pass is deliberately a separate exercise. */
+  @container (max-width: 640px) {
+    .qoptions.is-grid {
+      grid-template-columns: repeat(var(--qcols-sm), minmax(0, 1fr));
+      grid-template-rows: repeat(var(--qrows-sm), auto);
+    }
+  }
+  /* Compact cells: eighteen of these have to fit on one card, so the pill
+     loses the list set's generous padding and its 24px corner (the sprite
+     radius drops to 12 in JS to match the smaller box). */
+  .qoptions.is-grid .qopt {
+    font-size: 15px;
+    padding: 8px 14px 8px 8px;
+    gap: 10px;
+    /* 6 · A control should read as a control. The cells and the hint were
+       both 15px/400, and moving the hint body to ink took away the colour
+       that had been separating them — so the palette takes the weight. */
+    font-weight: 500;
+    /* A label long enough to wrap makes its row taller; without this the
+       shorter pills beside it keep their natural height and the row reads
+       as a hole. The grid item is the wrapper, so the pill has to be told
+       to fill it. The bands take their geometry from 100% of the box, so
+       they follow.
+       Set R no longer wraps at this width — "Post hoc ergo propter hoc"
+       became "Post hoc" once the terse grid labels were restored — but the
+       rule stays: cell width is a function of the card, and a narrower
+       card brings the wrap back. */
+    height: 100%;
+  }
+  .qoptions.is-grid .qopt-wrap {
+    display: flex;
+  }
+  .qoptions.is-grid .qbadge {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+  }
+  /* ---- The option colour ladder ---------------------------------------
+     Not one literal colour lives in these rules. Every value in the five
+     states reads a --qo-* token, and the OPTION_TREATMENTS table in JS
+     supplies one complete token set per treatment. So a treatment is a
+     whole colour philosophy, not a knob: shape, size, spacing and type are
+     bit-identical across all six, and only colour / opacity / contrast
+     move. Token grammar — no prefix = idle, h = hover, s = selected,
+     r = revealed, x = ruled; bg / fg / ring / bbg (badge fill) / bfg
+     (badge ink).
+
+     Ring widths are NOT tokens: they are numbers in the JS table, because
+     the same number has to draw the wrapper's ring band AND inset the
+     pill's own clip so the silhouette never changes size. One source, two
+     consumers — splitting it across tokens would let them drift. ---- */
   .qopt {
     appearance: none;
     font: inherit;
@@ -835,9 +955,12 @@
     cursor: pointer;
     padding: 13px 24px 13px 16px;
     border-radius: 999px;
-    border: 2px solid transparent;
-    background: color-mix(in srgb, var(--qink) 9%, transparent);
-    color: var(--qink);
+    /* Fallbacks matter on the shorthand: an undefined var() invalidates the
+       whole declaration at computed-value time, and `border` would fall
+       back to its initial `none` — a 4px layout jump, not a colour bug. */
+    border: 2px solid var(--qo-ring, transparent);
+    background: var(--qo-bg, transparent);
+    color: var(--qo-fg, var(--qink));
     font-size: 19px;
     transition:
       background-color 0.12s,
@@ -845,36 +968,41 @@
       color 0.12s;
   }
   .qopt:hover:not(.is-revealed):not(.is-ruled) {
-    background: color-mix(in srgb, var(--qink) 15%, transparent);
+    background: var(--qo-hbg);
   }
   /* Selection completes the scheme in the ACCENT — the third colour already
-     paints the count line and the progress fill; now it marks the pick. */
+     paints the count line and the progress fill; now it marks the pick.
+     (Which is exactly what the Weight treatment disputes: it spends no
+     accent on the options at all.) */
   .qopt.is-selected {
-    border-color: var(--qacc);
+    border-color: var(--qo-sring);
+    background: var(--qo-sbg);
+    color: var(--qo-sfg);
   }
   .qopt.is-selected .qbadge {
-    background: var(--qacc);
+    background: var(--qo-sbbg);
     border-color: transparent;
-    color: var(--qs);
+    color: var(--qo-sbfg);
   }
   /* The revealed answer inverts, same adaptive ink as the CTA. */
   .qopt.is-revealed {
-    background: var(--qink);
-    color: var(--qs);
+    background: var(--qo-rbg);
+    color: var(--qo-rfg);
     cursor: default;
   }
   .qopt.is-revealed .qbadge {
-    border-color: color-mix(in srgb, var(--qs) 60%, transparent);
-    color: var(--qs);
+    border-color: color-mix(in srgb, var(--qo-rfg) 60%, transparent);
+    color: var(--qo-rbfg);
   }
   .qopt.is-ruled {
-    background: color-mix(in srgb, var(--qink) 5%, transparent);
-    color: var(--qerr);
+    background: var(--qo-xbg);
+    border-color: var(--qo-xring);
+    color: var(--qo-xfg);
     cursor: default;
   }
   .qopt.is-ruled .qbadge {
-    border-color: color-mix(in srgb, var(--qerr) 60%, transparent);
-    color: var(--qerr);
+    border-color: color-mix(in srgb, var(--qo-xfg) 60%, transparent);
+    color: var(--qo-xbfg);
   }
   /* Pixel experiment: the pill's silhouette joins the pattern's own grid —
      a two-step staircase corner (unit --pu) instead of geometry the bitmap
@@ -924,41 +1052,147 @@
   .qopt.pixelated .qbadge {
     --pu: 4px;
     border-color: transparent;
-    background: color-mix(in srgb, var(--qink) 12%, transparent);
+    background: var(--qo-bbg);
   }
-  /* Selection weight is two layers: an accent-TINTED interior (a ring alone
-     hugging a pale slab carries no interior signal) and the 4px accent ring.
-     --qi insets the clip by the ring's width, so the silhouette stays the
-     size of an unselected pill. The :hover variant is load-bearing: the
-     generic hover rule has higher specificity and would flip the fill back
-     to translucent glass, and drop-shadows behind glass read as a solid
-     slab. Opaque fill, same reason. */
+  /* Clipped borders lose their stroke on every stair, so the pixel modes
+     never draw one — the ring is the wrapper's drop-shadow instead. Stated
+     explicitly rather than left to source order, now that the treatments
+     put a real colour in --qo-ring. */
+  .qopt.pixelated,
+  .qopt.pixelated.is-selected,
+  .qopt.pixelated.is-ruled {
+    border-color: transparent;
+  }
+  /* Selection weight is normally two layers: a tinted interior (a ring alone
+     hugging a pale slab carries no interior signal) plus the ring. Whether
+     the interior leans accent, ink or nothing is the treatment's business.
+     The :hover variant is load-bearing: the generic hover rule has higher
+     specificity and would otherwise repaint a selected option with the
+     IDLE hover tint the moment the pointer crossed it, throwing the
+     selection away under the cursor.
+     (Treatments still write --qo-sbg as an opaque mix into --qs. That used
+     to be forced — drop-shadow rings showed through a translucent fill and
+     read as a solid slab. The band doesn't overlap the interior at all, so
+     it is now a choice: a picked answer commits to a colour.) */
   .qopt.pixelated.is-selected,
   .qopt.pixelated.is-selected:hover {
-    border-color: transparent;
-    --qi: 4px;
-    background: color-mix(in srgb, var(--qacc) 14%, var(--qs));
+    background: var(--qo-sbg);
   }
-  /* The ring lives on an UNCLIPPED wrapper: per spec, filter runs before
-     clip-path, so a drop-shadow on the clipped pill itself is amputated by
-     the same polygon that draws the stairs — the rim sits outside the
-     border-box and never survives. On the wrapper, the filter operates on
-     the already-clipped child and the shadows land free. */
-  .qopt-wrap.ring {
-    filter: drop-shadow(4px 0 0 var(--qacc)) drop-shadow(-4px 0 0 var(--qacc))
-      drop-shadow(0 4px 0 var(--qacc)) drop-shadow(0 -4px 0 var(--qacc));
+  /* The ring is a BAND, not a shadow: a layer filled with the ring colour
+     and clipped to the outer silhouette minus the inner one (ringBand() in
+     JS supplies the evenodd polygon via --qo-band). The earlier drop-shadow
+     rim only worked while every pill had a fill — drop-shadow traces alpha,
+     so a fill-less option got its letterforms outlined instead.
+
+     It has to be a SIBLING layer. Putting the band clip on the wrapper
+     itself clips the wrapper's descendants too, so the polygon that carves
+     out the pill's interior also carves away the pill — label, badge and
+     all. A pseudo-element keeps the clip off the subtree. */
+  /* NB: --qo-focus is deliberately NOT defaulted here. A custom property
+     declared on an element beats the one it would inherit, so a default on
+     the wrapper would shadow the card's per-treatment value and Weight's
+     override would silently never apply. The default lives in
+     OPTION_DEFAULTS, on the same element the treatments write to. */
+  .qopt-wrap {
+    position: relative;
+  }
+  /* ---- Motion ----------------------------------------------------------
+     Frequency decides the budget. Picking an option happens dozens of times
+     a session, so it gets the cheapest possible acknowledgement and nothing
+     more. Being wrong, and the answer being revealed, happen once per
+     question — those are the moments worth a beat.
+
+     Only `opacity` and `transform` are animated. The band's geometry is a
+     clip-path and stays instant; animating it would be layout work every
+     frame for a change nobody can perceive mid-flight. ---- */
+  .qopt-wrap {
+    transition: transform 100ms ease;
+  }
+  /* The band used to appear with the class, so the fill faded over 120ms
+     while the ring popped — one event, two timings. It is now always
+     rendered and fades with the fill. --qo-band is set on every wrapper,
+     not just ringed ones, so a band fading OUT still has its silhouette
+     instead of collapsing to a rectangle for the length of the fade. */
+  .qopt-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--qo-rc, transparent);
+    clip-path: var(--qo-band);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 120ms ease;
+  }
+  .qopt-wrap.ring::before {
+    opacity: 1;
+  }
+  /* Buttons that give a little under the press read as pressable. 97% is
+     felt rather than seen. On the wrapper so the band travels with the
+     pill; on the pill alone the ring would stay behind. */
+  .qopt-wrap:has(.qopt:not(.is-ruled):not(.is-revealed):active) {
+    transform: scale(0.97);
+  }
+  /* One-shot, and only on the render where the state actually changed —
+     see `fresh` in the options loop. Without that gate the lab's re-render
+     on every dial change would replay it constantly. */
+  @keyframes qbadge-in {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+  }
+  .qbadge.is-fresh {
+    animation: qbadge-in 180ms var(--ease-out-quart) both;
+  }
+  @keyframes qfeed-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+  .qfeed-hint.is-fresh,
+  .qfeed-answer.is-fresh,
+  .qhint.is-fresh {
+    animation: qfeed-in 200ms var(--ease-out-quart) both;
+  }
+  /* The focus ring is a second band, OUTSIDE the silhouette with a 2px
+     surface gap. The gap is load-bearing, not decoration: ink and accent sit
+     only 1.60–2.67:1 apart across the six sets, so two marks in those
+     colours touching each other would fail WCAG 1.4.11's 3:1. Separated by
+     surface, each is measured against the surface instead — ink ≥ 7.34:1,
+     accent ≥ 4.57:1, both comfortable. Never close this gap. */
+  .qopt-wrap:not(.pill).focused::after,
+  .qopt-wrap:not(.pill):has(.qopt:focus-visible)::after {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * (var(--qo-fgap) + var(--qo-fw)));
+    background: var(--qo-focus);
+    clip-path: var(--qo-fband);
+    pointer-events: none;
+  }
+  /* Pill mode keeps a plain outline — same colour, same width, same offset,
+     so the comparison stays honest; only the corner geometry differs. */
+  .qopt-wrap.pill.focused .qopt,
+  .qopt-wrap.pill .qopt:focus-visible {
+    outline: var(--qo-fw) solid var(--qo-focus);
+    outline-offset: var(--qo-fgap);
+  }
+  /* The pill's own outline would trace the border-box, cutting straight
+     across the stairs. The band above replaces it. */
+  .qopt:focus-visible {
+    outline: none;
   }
   .qopt.pixelated.is-selected .qbadge {
-    background: var(--qacc);
-    color: var(--qs);
+    background: var(--qo-sbbg);
+    color: var(--qo-sbfg);
   }
   .qopt.pixelated.is-revealed .qbadge {
-    background: color-mix(in srgb, var(--qs) 18%, transparent);
-    color: var(--qs);
+    background: var(--qo-rbbg);
+    color: var(--qo-rbfg);
   }
   .qopt.pixelated.is-ruled .qbadge {
-    background: color-mix(in srgb, var(--qerr) 15%, transparent);
-    color: var(--qerr);
+    background: var(--qo-xbbg);
+    color: var(--qo-xbfg);
   }
   /* Badge shape variants — two MaterialShapes rasterised onto the badge's
      own 4px grid (the badge is a fixed 32px, so the polygons are literal).
@@ -1006,8 +1240,8 @@
     align-items: center;
     justify-content: center;
     border-radius: 999px;
-    border: 1px solid color-mix(in srgb, var(--qink) 45%, transparent);
-    color: color-mix(in srgb, var(--qink) 85%, transparent);
+    border: 1px solid color-mix(in srgb, var(--qo-bfg) 55%, transparent);
+    color: var(--qo-bfg);
     font-family: var(--mono, ui-monospace, monospace);
     font-size: 12px;
     text-transform: lowercase;
@@ -1021,24 +1255,270 @@
     line-height: 1.6;
     color: var(--qerr);
   }
-  .qhint svg {
+  /* ---- Hint block ------------------------------------------------------
+     TWO TONES, and only the lamp is the loud one. The lamp says a wrong
+     answer prompted this; everything else — the fallacy's name included —
+     is ink, because it is teaching material rather than a reprimand. A
+     block of rose reads as scolding.
+
+     NO FLEX anywhere in here. The head mixes an icon, a bolded name and
+     running prose in one line, and a flex container turns each of those
+     into its own unwrappable box — the same fault that scrambled the
+     clause list's word order. Mixed inline content stays in one inline
+     formatting context. ---- */
+  /* 3 · MEASURE. Unconstrained, these lines ran the card's full 46rem —
+     ~96 characters at 15px, well past the 45–90 that stays readable and
+     miles past the 45–75 a UI wants. This is the densest prose on the
+     screen, so it was the worst place to leave it. */
+  .qhint-head,
+  .qhint-lead,
+  .qhint-clauses,
+  .qfeed-answer {
+    max-width: 62ch;
+  }
+  .qhint-head {
+    margin: 0;
+    color: var(--qink);
+  }
+  .qhint-head svg {
+    color: var(--qerr);
+  }
+  /* The subject of the sentence, so it takes weight rather than colour. */
+  .qhint-term {
+    font-weight: 600;
+  }
+  /* Ink explicitly, not by inheritance: in Heading mode the lead is a
+     SIBLING of the head rather than a child, so it would otherwise pick up
+     the error tone from .qfeed-hint and the definition would read as an
+     error message. Every block in here that isn't the lamp states its own
+     colour for that reason. */
+  .qhint-lead {
+    margin: 2px 0 0;
+    color: var(--qink);
+  }
+  /* The clauses ARE a list — three separate conditions that fallacyGloss
+     flattens into one semicolon-separated run-on for want of anywhere to
+     put structure. Hanging numbers, one per line, as the 2008 original set
+     them. `ch` on the marker column keeps the text edge straight past 9. */
+  .qhint-clauses {
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: qclause;
+  }
+  /* Hanging number via absolute positioning, NOT flex. A flex `li` makes
+     every inline child its own flex item, so the moment a clause contained
+     an <em> the sentence broke into three gapped boxes and lost its word
+     order. Inline content must stay in one inline formatting context. */
+  .qhint-clauses li {
+    counter-increment: qclause;
+    position: relative;
+    padding-left: 28px;
+    margin-top: 3px;
+    color: var(--qink);
+  }
+  .qhint-clauses li::before {
+    content: counter(qclause);
+    position: absolute;
+    left: 0;
+    top: 0;
     width: 18px;
-    height: 18px;
-    display: inline-block;
-    vertical-align: -3px;
-    margin-right: 9px;
+    text-align: right;
+    font-family: var(--mono, ui-monospace, monospace);
+    font-size: 12px;
+    line-height: 1.9;
+    color: color-mix(in srgb, var(--qink) 55%, transparent);
+  }
+  /* The clauses complete the lead sentence ("… is fallacious if:"), which
+     is why the 2008 source sets them lowercase — grammatically they are one
+     sentence's tail. Set as a display list with hanging numerals they read
+     as separate items instead, and sentence case suits that. Done with
+     ::first-letter so it stays a PRESENTATION choice: the data keeps the
+     source's own casing. */
+  .qhint-clauses li::first-letter {
+    text-transform: uppercase;
+  }
+  /* ---- Emphasis ---------------------------------------------------------
+     The 2008 source letterspaces exactly two words — `must` and `probably`
+     in appeal-to-authority clause (3) — and that contrast IS what the
+     clause teaches, so it has to survive. How it survives is the variable;
+     see the Emphasis dial. Base is shared, each variant adds its own mark.
+     No variant relies on colour alone: every one carries weight or slope
+     as well, so the emphasis is never invisible to a reader who can't see
+     the accent. ---- */
+  .qhint-head em,
+  .qhint-clauses em {
+    font-style: normal;
+  }
+  /* Band — a stroke under the lower third of the word. The baseline, and
+     named for what it actually is now that a full-height marker exists. */
+  [data-em='band'] em {
+    font-weight: 650;
+    box-shadow: inset 0 -0.35em 0
+      color-mix(in srgb, var(--qacc) 22%, transparent);
+  }
+  /* Marker — the whole word covered, the way a highlighter pen or a text
+     selection covers it. An inline background paints only the font's
+     content box, which is shorter than the line box, so the padding makes
+     up the difference; `box-decoration-break: clone` keeps both halves
+     padded if the word ever wraps. */
+  [data-em='marker'] em {
+    font-weight: 600;
+    background: color-mix(in srgb, var(--qacc) 24%, transparent);
+    padding: 3px 6px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  /* Sprite — the highlight wears the same corner as everything else on the
+     card: a 4px square cut from each corner, one step, at text scale. The
+     argument is not decoration but CONSISTENCY — the marker band is a plain
+     rectangle in a system whose whole grammar is that rectangles get their
+     corners rasterised.
+     Drawn on a pseudo-element rather than by clipping the <em> itself: a
+     clip-path on the text box shaves the glyphs, and descenders go first.
+     `z-index: -1` stays inside the em's own stacking context (it has
+     `position: relative`), so it paints behind the word but above the
+     card. */
+  [data-em='sprite'] em {
+    position: relative;
+    z-index: 0;
+    font-weight: 600;
+  }
+  [data-em='sprite'] em::before {
+    content: '';
+    position: absolute;
+    /* Wider than it is tall. The corner cut is a fixed 4px, so on a ~20px
+       inline box it eats a fifth of the height per corner where on a 48px
+       pill it takes an eighth — the same device does not scale down. Extra
+       horizontal room is what keeps it reading as a corner rather than as
+       damage; vertical stays tight so the block can't collide with the
+       line above. */
+    inset: -2px -9px;
+    z-index: -1;
+    background: color-mix(in srgb, var(--qacc) 26%, transparent);
+    clip-path: polygon(
+      0 4px,
+      4px 4px,
+      4px 0,
+      calc(100% - 4px) 0,
+      calc(100% - 4px) 4px,
+      100% 4px,
+      100% calc(100% - 4px),
+      calc(100% - 4px) calc(100% - 4px),
+      calc(100% - 4px) 100%,
+      4px 100%,
+      4px calc(100% - 4px),
+      0 calc(100% - 4px)
+    );
+  }
+  /* Rule — DECIDED 2026-08-05. A hard 2px accent underline. The system is
+     flat and rectilinear; a soft band was the one soft-edged thing in it,
+     and a ruled line is what this grammar would actually draw. It also
+     survives at any text size, which the 4px-cornered Sprite does not. */
+  [data-em='rule'] em {
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--qacc);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    text-decoration-skip-ink: none;
+  }
+  /* Accent — the third colour doing what it does everywhere else: marking
+     the thing that matters. Weight carries it too, so it is not colour
+     alone. */
+  [data-em='accent'] em {
+    font-weight: 600;
+    color: var(--qacc);
   }
   .qbadge svg {
     width: 12px;
     height: 12px;
     display: block;
   }
-  .qhint code {
+  /* ---- Notation chips ---------------------------------------------------
+     The two chips that hold LOGIC — the guide's `☐A` and the hint's
+     `∴ A is true` — were the only things on the card with square or rounded
+     corners. Everything that is chrome (keycap, option badge, guide button)
+     already speaks the pixel grammar. Two objects doing the same job, a
+     tinted box around a symbol, in three different corner treatments.
+     The Notation chip dial puts them on one. ---- */
+  #questionView[data-chip='sprite'] code,
+  #questionView[data-chip='fine'] code {
+    border-radius: 0;
+  }
+  /* Weight only, no size. This chip sits INLINE in running prose, where a
+     larger glyph would open the leading around its own line and ripple
+     through the paragraph. Weight buys presence for free. */
+  .qhint code,
+  .qfeed code {
     font-family: inherit;
     padding: 1px 7px;
+    font-weight: 500;
     border-radius: 7px;
     background: color-mix(in srgb, var(--qchipc) 12%, transparent);
     color: var(--qchipc);
+  }
+  /* ---- The feedback slot ----------------------------------------------
+     The response to an attempt — a wrong pick's hint, or the explanation
+     once the answer is out. The original 2008 app bottom-anchors its
+     answer palette inside a fixed window and lets the discourse
+     (question → attempt → feedback) accumulate in the space ABOVE it, so
+     the options never move. Two things are bundled in that: the position,
+     and the constant height. `above` takes the position only; `reserved`
+     takes both. ---- */
+  .qfeed {
+    margin: 0 0 26px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .qfeed:empty {
+    display: none;
+  }
+  .qfeed p {
+    margin: 0;
+  }
+  .qfeed p + p {
+    margin-top: 10px;
+  }
+  .qfeed-hint {
+    color: var(--qerr);
+  }
+  .qfeed-answer {
+    color: var(--qink);
+  }
+  /* .qhint-head is in the list so the block carries its own icon sizing
+     rather than depending on an ancestor — lift the block anywhere else and
+     the lamp would otherwise render at its intrinsic size. */
+  .qhint svg,
+  .qfeed svg,
+  .qhint-head svg {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: -3px;
+    margin-right: 9px;
+  }
+  /* Constant height without a magic number: the tallest thing this slot
+     could ever hold is rendered invisibly and sets the box, and the live
+     content floats over it. A `min-height` guess would either waste space
+     or let the long case push the options down anyway — which is the one
+     case the whole idea exists to prevent. */
+  .qfeed.is-reserved {
+    position: relative;
+  }
+  .qfeed.is-reserved .qfeed-ghost {
+    visibility: hidden;
+  }
+  .qfeed.is-reserved .qfeed-live {
+    position: absolute;
+    inset: 0;
+  }
+  /* Below-the-options slot, for the placement the app uses today. */
+  .qfeed-below {
+    margin: 22px 0 0;
+  }
+  .qfeed-below:empty {
+    display: none;
   }
   .qrule {
     border: 0;
@@ -1090,7 +1570,7 @@
   .qcount {
     font-size: 13px;
     text-transform: uppercase;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.1em;
     font-weight: 600;
     color: var(--qacc);
   }
@@ -1126,9 +1606,25 @@
       display: none;
     }
   }
+  /* 10 · This block used to cover exactly one selector. Every option
+     transition was unguarded, which on a product with a hard accessibility
+     requirement is not a detail. No `!important`, no exceptions for opacity
+     or colour — reduced motion means reduced motion. */
   @media (prefers-reduced-motion: reduce) {
-    .cta {
+    .cta,
+    .qopt,
+    .qopt-wrap,
+    .qopt-wrap::before {
       transition: none;
+    }
+    .qbadge.is-fresh,
+    .qfeed-hint.is-fresh,
+    .qfeed-answer.is-fresh,
+    .qhint.is-fresh {
+      animation: none;
+    }
+    .qopt-wrap:has(.qopt:not(.is-ruled):not(.is-revealed):active) {
+      transform: none;
     }
   }
 </style>
@@ -1161,6 +1657,87 @@
         <button type="button" data-qshape="pixel">Pixel</button>
         <button type="button" data-qshape="sprite">Sprite</button>
       </div>
+      <p class="label" style="margin: 8px 0 4px">Answer treatment</p>
+      <div
+        class="mode"
+        role="group"
+        aria-label="Answer treatment"
+        id="qOptList"
+      >
+        <button type="button" data-qopt="tint">Tint</button>
+        <button type="button" data-qopt="accent">Accent</button>
+        <button type="button" data-qopt="invert">Invert</button>
+        <button type="button" data-qopt="weight">Weight</button>
+      </div>
+      <p class="note" id="qOptNote" style="margin: -6px 0 14px"></p>
+      <p class="label" style="margin: 8px 0 4px">Feedback placement</p>
+      <div
+        class="mode"
+        role="group"
+        aria-label="Feedback placement"
+        id="qFeedList"
+      >
+        <button type="button" data-qfeed="inline">Inline</button>
+        <button type="button" data-qfeed="above">Above</button>
+        <button type="button" data-qfeed="reserved">Reserved</button>
+      </div>
+      <p class="note" id="qFeedNote" style="margin: -6px 0 14px"></p>
+      <p class="label" style="margin: 8px 0 4px">Hint name</p>
+      <div class="mode" role="group" aria-label="Hint name" id="qHintList">
+        <button type="button" data-qhint="runin">Run-in</button>
+        <button type="button" data-qhint="heading">Heading</button>
+      </div>
+      <p class="note" style="margin: -6px 0 14px">
+        A hint names its fallacy in full, never by code — ruling an option
+        replaces its badge with ✕, so a two-letter chip points at something that
+        has just stopped existing. Run-in flows the name into the sentence, as
+        the 2008 source does; Heading gives it its own line. Only visible in the
+        Above and Reserved placements.
+      </p>
+      <p class="label" style="margin: 8px 0 4px">Emphasis</p>
+      <div class="mode wrap" role="group" aria-label="Emphasis" id="qEmList">
+        <button type="button" data-qem="band">Band</button>
+        <button type="button" data-qem="marker">Marker</button>
+        <button type="button" data-qem="sprite">Sprite</button>
+        <button type="button" data-qem="rule">Rule</button>
+        <button type="button" data-qem="accent">Accent</button>
+      </div>
+      <p class="note" style="margin: -6px 0 14px">
+        How the two words the 2008 source letterspaces — <em>must</em> and
+        <em>probably</em> in appeal-to-authority clause 3 — survive the port.
+        <b>Sprite</b> gives the highlight the card’s own rasterised corner;
+        <b>Spaced</b> is the device the original itself used. Every variant
+        pairs its mark with weight, so none depends on colour alone. Visible on
+        Set R after ruling out “Appeal to authority”.
+      </p>
+      <p class="label" style="margin: 8px 0 4px">Notation chip</p>
+      <div
+        class="mode"
+        role="group"
+        aria-label="Notation chip"
+        id="qChipShapeList"
+      >
+        <button type="button" data-qchipshape="rect">Rectangle</button>
+        <button type="button" data-qchipshape="sprite">Sprite 4px</button>
+        <button type="button" data-qchipshape="fine">Sprite 2px</button>
+      </div>
+      <p class="note" style="margin: -6px 0 14px">
+        Applies to both notation chips at once — the guide’s <code>☐A</code> and
+        the hint’s <code>∴ A is true</code> — since they are the same object
+        doing the same job. Rectangle is today. Sprite 4px matches the keycaps
+        and option badges exactly; Sprite 2px quantises on a finer grid, for
+        boxes this small. Open the Guide to see both together.
+      </p>
+      <p class="label" style="margin: 8px 0 4px">Keyboard marks</p>
+      <div class="mode" role="group" aria-label="Keyboard marks" id="qKeysList">
+        <button type="button" data-qkeys="off">Off</button>
+        <button type="button" data-qkeys="on">Show</button>
+      </div>
+      <p class="note" style="margin: -6px 0 14px">
+        Stacks the focus ring on the picked option — the worst case — and puts
+        the multi-select cursor on another, so all three marks are on screen at
+        once. Tabbing draws the same ring.
+      </p>
       <p class="label" style="margin: 8px 0 4px">Error tone</p>
       <div class="mode" role="group" aria-label="Error tone" id="qErrList">
         <button type="button" data-qerr="rose">Rose mix</button>
@@ -1378,12 +1955,16 @@
         </aside>
         <p class="qprompt" id="qPrompt"></p>
         <div class="qheader mono" id="qHeader"></div>
+        <p class="qmulti" id="qMulti" hidden></p>
+        <div class="qfeed" id="qFeed"></div>
         <div class="qoptions" id="qOptions"></div>
+        <div class="qfeed qfeed-below" id="qFeedBelow"></div>
         <hr class="qrule" />
         <div class="qfooter">
           <span class="qkeys mono" aria-hidden="true">
-            <kbd class="qkey">1</kbd><span class="qkeys-sep">–</span
-            ><kbd class="qkey">4</kbd>
+            <kbd class="qkey" id="qKeyFirst">1</kbd
+            ><span class="qkeys-sep">–</span
+            ><kbd class="qkey" id="qKeyLast">4</kbd>
             <span class="qkeys-label">picks</span>
             <kbd class="qkey" id="qKeyLeft"></kbd
             ><kbd class="qkey" id="qKeyRight"></kbd>
@@ -1498,8 +2079,8 @@
     },
   };
 
-  // One sample question per set for the question-screen view. J's and A's are
-  // real (lifted from the running app); the rest are ILLUSTRATIVE mocks in
+  // One sample question per set for the question-screen view. A, J, Q and R
+  // are real (lifted from the running app); the rest are ILLUSTRATIVE mocks in
   // each set's genuine notation — good enough to judge colour and hierarchy,
   // NOT ports, and never to be copied into content/sets/* (ports are
   // validated against the textbook + decoded DSL, per the repo's rule).
@@ -1571,31 +2152,163 @@
         { t: '☐∼A' },
       ],
     },
+    // Q and R are REAL, lifted verbatim from content/sets/setQ.ts (q 3.1)
+    // and content/sets/setR.data.ts (the `ge` Pontiac variant, with {d}
+    // resolved — the same passage as the 2008 screenshot). Both are grid +
+    // multi-select sets in the app, which the earlier four-option list
+    // samples flatly misrepresented: a grid can't absorb an inline hint at
+    // all, which is the whole reason the original puts feedback above the
+    // options.
     Q: {
       header: 'What is wrong with this definition?',
-      prompt: '“A triangle is a plane figure.”',
+      prompt: 'Science is that cold and empty worship of experiments.',
+      grid: 2,
+      multi: true,
+      // Set Q's options carry NO hints in the app — only this
+      // question-level note. So Q exercises the answer half of the
+      // feedback slot and nothing else; R is where hints get tested.
+      answer: 'This violates 4 and 6.',
       options: [
-        { t: 'Too broad', c: true },
-        {
-          t: 'Too narrow',
-          hint: 'Every triangle IS a plane figure — nothing is excluded. The net is too wide, not too tight.',
-        },
+        { t: 'Too broad' },
+        { t: 'Too narrow' },
         { t: 'Circular' },
-        { t: 'Adequate' },
+        { t: 'Uses poorly understood terms', c: true },
+        { t: 'Poor match in vagueness' },
+        { t: 'Poor match in emotional tone', c: true },
+        { t: 'Has non-essential properties' },
       ],
     },
     R: {
-      header: 'Which fallacy is this?',
+      header: 'What fallacy does this illustrate?',
       prompt:
-        '“You can’t trust his tax plan — the man has been divorced twice.”',
+        'The main reason you buy Pontiacs is that your family taught you that Pontiac makes the best cars. So your belief that Pontiacs are great cars is clearly wrong.',
+      grid: 3,
+      multi: true,
+      // Every question offers the whole 18-fallacy taxonomy, in the fixed
+      // order the student learns — never shuffled. Badges carry the
+      // typeable two-letter code, per the original's "click a fallacy or
+      // type its abbreviation".
+      answer:
+        'This passage illustrates the genetic fallacy. We can explain why you believe A. ∴ A is false.',
       options: [
-        { t: 'Ad hominem', c: true },
         {
-          t: 'Post hoc',
-          hint: 'No causal claim from mere sequence here — the attack is on the person, not the argument.',
+          a: 'aa',
+          t: 'Appeal to authority',
+          lead: 'This is fallacious if:',
+          clauses: [
+            'the person isn’t an authority on the subject',
+            'there’s no consensus of such authorities',
+            'the argument concludes that the authority *must* be right (and isn’t just probably right)',
+          ],
+          term: 'Appeal to authority',
         },
-        { t: 'Straw man' },
-        { t: 'Appeal to force' },
+        {
+          a: 'ac',
+          t: 'Appeal to crowd',
+          lead: 'Most people believe A. ∴ A is true.',
+          term: 'Appeal to the crowd',
+        },
+        {
+          a: 'ae',
+          t: 'Appeal to emotion',
+          lead: 'To stir up emotions instead of arguing in a logical manner.',
+          term: 'Appeal to emotion',
+        },
+        {
+          a: 'af',
+          t: 'Appeal to force',
+          lead: 'To use threats or intimidation to get a conclusion accepted.',
+          term: 'Appeal to force',
+        },
+        {
+          a: 'ah',
+          t: 'Ad hominem',
+          lead: '(“personal attack”). This is fallacious if:',
+          clauses: [
+            'the grounds of the attack are irrelevant to the person’s rational competence',
+            'the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held)',
+          ],
+          term: 'Ad hominem',
+        },
+        {
+          a: 'ai',
+          t: 'Appeal to ignorance',
+          lead: '“No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.',
+          term: 'Appeal to ignorance',
+        },
+        {
+          a: 'am',
+          t: 'Ambiguous',
+          lead: 'A term or phrase changes meaning within the argument.',
+          term: 'Ambiguous',
+        },
+        {
+          a: 'bp',
+          t: 'Beside the point',
+          lead: 'The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.',
+          term: 'Beside the point',
+        },
+        {
+          a: 'bw',
+          t: 'Black and white',
+          lead: 'Oversimplifying by assuming that one or another of two extremes must be true.',
+          term: 'Black and white',
+        },
+        {
+          a: 'ci',
+          t: 'Circular',
+          lead: 'An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.',
+          term: 'Circular',
+        },
+        {
+          a: 'cq',
+          t: 'Complex question',
+          lead: 'A question that assumes the truth of something false or doubtful.',
+          term: 'Complex question',
+        },
+        {
+          a: 'fs',
+          t: 'False stereotype',
+          lead: 'Assuming that members of a certain group are more alike than they actually are.',
+          term: 'False stereotype',
+        },
+        {
+          a: 'ge',
+          t: 'Genetic',
+          c: true,
+          lead: 'We can explain why you believe A. ∴ A is false.',
+          term: 'Genetic fallacy',
+        },
+        {
+          a: 'op',
+          t: 'Opposition',
+          lead: 'Our opponents believe A. ∴ A is false.',
+          term: 'Opposition fallacy',
+        },
+        {
+          a: 'pc',
+          t: 'Pro-con',
+          lead: 'This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.',
+          term: 'Pro-con fallacy',
+        },
+        {
+          a: 'ph',
+          t: 'Post hoc',
+          lead: '(“after this therefore because of this”) A happened after B. ∴ A was caused by B.',
+          term: 'Post hoc ergo propter hoc',
+        },
+        {
+          a: 'pw',
+          t: 'Part-whole',
+          lead: 'The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.',
+          term: 'Part-whole',
+        },
+        {
+          a: 'sm',
+          t: 'Straw man',
+          lead: 'Misrepresenting the views of an opponent.',
+          term: 'Straw man',
+        },
       ],
     },
   };
@@ -2325,6 +3038,12 @@
     seed: 7,
     view: 'start', // 'start' | 'question'
     qShape: 'sprite', // 'pill' | 'pixel' | 'sprite' — sprite is the winner
+    qOpt: 'tint', // answer colour ladder — see OPTION_TREATMENTS
+    qFeed: 'inline', // where a hint / the answer lands — see FEEDBACK_NOTES
+    qHint: 'runin', // how a hint names its fallacy: 'runin' | 'heading'
+    qEm: 'rule', // DECIDED — see the Emphasis dial for the rejected four
+    qChipShape: 'rect', // corner treatment for the two notation chips
+    qKeys: 'off', // preview the focus ring + multi-select cursor
     // Progress indicator. 'line' is the DEFAULT — the scored run (the mode
     // becoming the app's default) has set-dependent point values, levels,
     // and a bar that must animate down as well as up, all of which want a
@@ -2346,11 +3065,33 @@
   // Per-question interaction state: which pill is picked, which are ruled
   // out, and whether the answer is revealed. Reset on every palette/view
   // change so each set starts at the same point in the flow.
-  const qState = { selected: null, ruled: new Set(), solved: false };
+  // `selected` doubles as the cursor on multi-select sets, exactly as the
+  // app does it (`isCursor={multiSelect && index === selectedOptionIndex}`):
+  // `picked` is what you have claimed, `selected` is where you are. On
+  // single-select sets `picked` stays empty and `selected` IS the pick.
+  const qState = {
+    selected: null,
+    picked: new Set(),
+    ruled: new Set(),
+    solved: false,
+    // Which option indices changed state on the last CHECK, and whether the
+    // feedback slot is new. Consumed by the first render after the event and
+    // then cleared: the lab re-renders on every dial change, so an animation
+    // keyed to a class alone would replay every time you touched a control.
+    fresh: new Set(),
+    freshFeed: false,
+  };
+  // "Have I claimed this option?" — the Set on multi-select sets, the lone
+  // index on single-select ones.
+  const isPicked = (q, i) =>
+    q.multi ? qState.picked.has(i) : qState.selected === i;
   function resetQState() {
     qState.selected = null;
+    qState.picked.clear();
     qState.ruled.clear();
     qState.solved = false;
+    qState.fresh.clear();
+    qState.freshFeed = false;
   }
 
   function mulberry32(a) {
@@ -2903,10 +3644,358 @@
     return '#7f1d1d';
   }
 
-  // Backticked spans in hints become notation chips, like FeedbackText's.
+  /**
+   * Hint prose → HTML. Three markups, each restoring something the port
+   * flattened:
+   *
+   *   `x`   notation chip, as FeedbackText does in the app.
+   *   *x*   EMPHASIS. The 2008 source marks emphasis with a 0xBD byte after
+   *         each character, and there are exactly five runs in all of Set R:
+   *         `must` and `probably` in appeal-to-authority clause (3), plus
+   *         the book title in the set intro. Two words — but that clause is
+   *         *about* the must/probably distinction, so flattening them
+   *         removes the contrast the clause exists to teach.
+   *   ∴ …   an INFERENCE, chipped to the end of its sentence. The glosses
+   *         are half logic ("Most people believe A. ∴ A is true.") and the
+   *         app sets notation apart everywhere else; FeedbackText only
+   *         catches *quoted* tokens, and ∴ isn't in its glyph set, so Set R
+   *         was the one place logic stayed undifferentiated prose.
+   */
   function hintHtml(text) {
-    return text.replace(/`([^`]+)`/g, '<code>$1</code>');
+    return text
+      .replace(/∴\s*([^.]*)/g, (_, rest) => `<code>∴ ${rest.trim()}</code>`)
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\*([^*]+)\*/g, '<em>$1</em>');
   }
+
+  /**
+   * The hint block. `lead` + `clauses` render as an actual list, because
+   * that is what they are — three separate conditions, which fallacyGloss
+   * flattens into one semicolon-separated run-on for want of anywhere to
+   * put structure. The 2008 original set them on their own lines too.
+   *
+   * Two tones, not one: the marker is the error tone, the body is ink. Only
+   * the fact that you were wrong is an error; the rest is the definition of
+   * the thing you picked, and 240 characters of rose reads as scolding.
+   */
+  /**
+   * The hint block.
+   *
+   * The identifier is the fallacy's FULL NAME, never its two-letter code.
+   * The code was tried and is wrong twice over: it has to be decoded, and —
+   * decisively — ruling an option swaps its badge from `aa` to ✕, so at the
+   * exact moment the hint appears, the string it points at is nowhere on
+   * screen. A pointer whose referent is destroyed by the event that shows
+   * the pointer is not a pointer.
+   *
+   * Nor is the name redundant with the ruled cell. It is the SUBJECT of the
+   * explanation — "Appeal to authority is fallacious if …" — and the cell
+   * that repeats it has receded to a greyed-out row with its badge replaced.
+   *
+   * The lamp alone carries the error tone: it says a wrong answer prompted
+   * this. Everything else, name included, is ink, because it is teaching
+   * material rather than a reprimand.
+   */
+  function hintBlockHtml(opt, header) {
+    const term = opt.term ?? opt.t;
+    const lead = hintHtml(opt.lead ?? opt.hint ?? '');
+    const body = opt.clauses
+      ? `<ol class="qhint-clauses">${opt.clauses
+          .map((c) => `<li>${hintHtml(c)}</li>`)
+          .join('')}</ol>`
+      : '';
+    // Inline placement needs no name: the pill it hangs off is the subject.
+    if (header === 'none') {
+      return `<p class="qhint-head">${ICONS.lamp}${lead}</p>` + body;
+    }
+    if (header === 'runin') {
+      // The 2008 source's own form — `*aa i:Appeal to authority. This is
+      // fallacious if:`. A description that opens on a parenthetical
+      // ("(“personal attack”). This is …") runs straight on instead.
+      const joiner = /^\(/.test(opt.lead ?? '') ? ' ' : '. ';
+      return (
+        `<p class="qhint-head">${ICONS.lamp}<b class="qhint-term">${term}</b>${joiner}${lead}</p>` +
+        body
+      );
+    }
+    return (
+      `<p class="qhint-head">${ICONS.lamp}<b class="qhint-term">${term}</b></p>` +
+      `<p class="qhint-lead">${lead}</p>` +
+      body
+    );
+  }
+
+  /**
+   * FEEDBACK PLACEMENT — where a wrong pick's hint and the answer
+   * explanation land.
+   *
+   * Prompted by the 2008 original (screenshot, Set R): its answer palette
+   * is anchored to the bottom of a fixed window, and everything else —
+   * question, prompt, feedback — flows in the space above it. So feedback
+   * appears ABOVE the options, and the options never move.
+   *
+   * Those are two separable properties, which is why there are three modes
+   * and not two. `above` copies the position. `reserved` also copies the
+   * constant height, which is the part that actually does the work: a
+   * learner who has settled on "my answer is the third one down" doesn't
+   * have it slide out from under the cursor the moment a hint appears.
+   *
+   * What the app does today, for reference: list sets attach the hint
+   * inline under the pill that earned it (`inlineHintFor` in
+   * components/quiz/index.tsx); grid sets can't, because an expanding cell
+   * would break the column-major grid, so they use a block BELOW the
+   * options. The answer explanation is always below. So `inline` here is
+   * the app, and it is the one placement the original never used.
+   */
+  const FEEDBACK_NOTES = {
+    inline:
+      'What the app does for list sets — the hint hangs off the pill that earned it, indented to the label. Nothing is ever ambiguous about which option it belongs to, but every option below it slides down.',
+    above:
+      'The original’s position: feedback sits between the question and the options, so the reading order is question → attempt → response. The options still shift down when it appears.',
+    reserved:
+      'The original’s position AND its constant height — the slot is always there, sized to the tallest thing it could hold, so the options never move at all. Costs that space even on a first, correct answer.',
+  };
+
+  /**
+   * The two things the slot can carry, as HTML. A hint belongs to a wrong
+   * pick and shows while the question is live; the explanation belongs to
+   * the question and shows once it's out. They never coexist, which is
+   * what lets `reserved` size itself to the taller of the two rather than
+   * to their sum.
+   */
+  const hasHint = (o) => Boolean(o.lead ?? o.hint);
+
+  function feedbackParts(q) {
+    // The MOST RECENT wrong pick, not the first. A Set preserves insertion
+    // order, so the last entry is the guess just made — showing the first
+    // meant that with three guesses allowed, guesses two and three appeared
+    // to do nothing.
+    const ruled = [...qState.ruled].filter((i) => hasHint(q.options[i]));
+    const latest = ruled.length ? ruled[ruled.length - 1] : null;
+    const f = qState.freshFeed ? ' is-fresh' : '';
+    const hint =
+      !qState.solved && latest != null
+        ? `<div class="qfeed-hint${f}">${hintBlockHtml(q.options[latest], state.qHint)}</div>`
+        : '';
+    const answer =
+      qState.solved && q.answer
+        ? `<p class="qfeed-answer${f}">${hintHtml(q.answer)}</p>`
+        : '';
+    return { hint, answer, live: hint + answer };
+  }
+
+  /**
+   * The tallest thing the slot could hold for this question, for `reserved`
+   * to size itself against. Ranks by clause count first, then characters —
+   * a clause list is a line each, so a three-clause hint outgrows a longer
+   * single paragraph. Still an approximation of true measured height.
+   */
+  function feedbackGhost(q) {
+    const opts = q.options.filter(hasHint);
+    if (!opts.length) {
+      return q.answer
+        ? `<p class="qfeed-answer">${hintHtml(q.answer)}</p>`
+        : '';
+    }
+    const weigh = (o) =>
+      (o.clauses?.length ?? 0) * 1000 + (o.lead ?? o.hint ?? '').length;
+    const tallest = opts.reduce((a, b) => (weigh(b) > weigh(a) ? b : a));
+    const hint = `<div class="qfeed-hint">${hintBlockHtml(tallest, state.qHint)}</div>`;
+    // The answer can still be the taller of the two on sets with terse hints.
+    return q.answer && q.answer.length > weigh(tallest)
+      ? `<p class="qfeed-answer">${hintHtml(q.answer)}</p>`
+      : hint;
+  }
+
+  /**
+   * ANSWER TREATMENTS — four readings of the same five-state ladder.
+   *
+   * The shape argument is settled (Sprite). This dial is the colour one:
+   * every treatment spends ONLY the three colours a set already owns —
+   * surface (--qs), ink (--qink), accent (--qacc) — plus the error tone,
+   * and differs solely in opacity, mix ratio and which colour carries
+   * which state. Nothing here introduces a fourth value, so any winner
+   * ports to all seven sets without a new decision.
+   *
+   * The axis worth watching as you flip is WHO OWNS SELECTION: the accent
+   * (Tint, and Accent more loudly), the ink (Weight — which is what the app
+   * does today), or a full inversion (Invert). Invert is the one that leans
+   * on Gate 3: the accent sits ≥ .10 OKLCH-L above the ink, so a
+   * solid-accent selected pill and a solid-ink revealed pill are guaranteed
+   * to read apart — but only just, .13 on sets A and J.
+   *
+   * Whatever owns selection, --qo-focus takes the OTHER colour, because
+   * focus and cursor land on the same pill and no two marks may share a
+   * colour. See OPTION_DEFAULTS.
+   *
+   * Ring widths live outside `vars` as plain numbers: one value has to draw
+   * the wrapper's band AND inset the pill's clip, and splitting it across
+   * tokens would let them drift.
+   *
+   * RETIRED 2026-08-05, both cut by Malik when the shortlist came down to
+   * Tint / Invert / Weight:
+   *
+   *   Ghost — no fill at all, a 2px ink hairline and a chip-less badge.
+   *   Ghost is why the ring works: it was the first treatment with a
+   *   fill-less pill, and it exposed that the old drop-shadow rim traced the
+   *   alpha channel and so outlined the LETTERFORMS. That bought the band
+   *   mechanism (ringBand). Nothing left in the dial has a transparent
+   *   pill, so nothing here will catch a regression if someone "simplifies"
+   *   the band back into drop-shadows. Don't.
+   *
+   *   Plate — Tint's values made opaque (mixed into --qs rather than into
+   *   transparent), to occlude the pattern instead of letting it through.
+   *   Measured indistinguishable from Tint in every configuration the lab
+   *   offers, because the pattern is banished to a footer band and never
+   *   sits under the options. It was insurance against a rule that isn't
+   *   being relaxed. If that rule ever IS relaxed, this is the axis to
+   *   revisit: alpha vs mix is invisible on a flat surface and total on a
+   *   patterned one.
+   */
+  const OPTION_TREATMENTS = {
+    tint: {
+      note: 'What the lab shipped. A translucent ink wash at 9/15%; the accent arrives only on selection. Baseline for every comparison below.',
+      ringw: 0,
+      sringw: 4,
+      xringw: 0,
+      vars: {
+        '--qo-bg': 'color-mix(in srgb, var(--qink) 9%, transparent)',
+        '--qo-hbg': 'color-mix(in srgb, var(--qink) 15%, transparent)',
+        '--qo-fg': 'var(--qink)',
+        '--qo-ring': 'transparent',
+        '--qo-bbg': 'color-mix(in srgb, var(--qink) 12%, transparent)',
+        '--qo-bfg': 'color-mix(in srgb, var(--qink) 85%, transparent)',
+        '--qo-sbg': 'color-mix(in srgb, var(--qacc) 14%, var(--qs))',
+        '--qo-sfg': 'var(--qink)',
+        '--qo-sring': 'var(--qacc)',
+        '--qo-sbbg': 'var(--qacc)',
+        '--qo-sbfg': 'var(--qs)',
+        '--qo-rbg': 'var(--qink)',
+        '--qo-rfg': 'var(--qs)',
+        '--qo-rbbg': 'color-mix(in srgb, var(--qs) 18%, transparent)',
+        '--qo-rbfg': 'var(--qs)',
+        '--qo-xbg': 'color-mix(in srgb, var(--qink) 5%, transparent)',
+        '--qo-xfg': 'var(--qerr)',
+        '--qo-xring': 'transparent',
+        '--qo-xbbg': 'color-mix(in srgb, var(--qerr) 15%, transparent)',
+        '--qo-xbfg': 'var(--qerr)',
+      },
+    },
+    accent: {
+      note: 'The accent stops being reserved. It tints the idle wash and owns the badge from the start, then escalates to 32% on selection — so picking is a change of degree, not of colour.',
+      ringw: 0,
+      sringw: 4,
+      xringw: 0,
+      vars: {
+        '--qo-bg': 'color-mix(in srgb, var(--qacc) 10%, transparent)',
+        '--qo-hbg': 'color-mix(in srgb, var(--qacc) 18%, transparent)',
+        '--qo-fg': 'var(--qink)',
+        '--qo-ring': 'transparent',
+        '--qo-bbg': 'color-mix(in srgb, var(--qacc) 22%, transparent)',
+        '--qo-bfg': 'var(--qacc)',
+        '--qo-sbg': 'color-mix(in srgb, var(--qacc) 32%, var(--qs))',
+        '--qo-sfg': 'var(--qink)',
+        '--qo-sring': 'var(--qacc)',
+        '--qo-sbbg': 'var(--qacc)',
+        '--qo-sbfg': 'var(--qs)',
+        '--qo-rbg': 'var(--qink)',
+        '--qo-rfg': 'var(--qs)',
+        '--qo-rbbg': 'color-mix(in srgb, var(--qs) 18%, transparent)',
+        '--qo-rbfg': 'var(--qs)',
+        '--qo-xbg': 'color-mix(in srgb, var(--qink) 4%, transparent)',
+        '--qo-xfg': 'var(--qerr)',
+        '--qo-xring': 'transparent',
+        '--qo-xbbg': 'color-mix(in srgb, var(--qerr) 15%, transparent)',
+        '--qo-xbfg': 'var(--qerr)',
+      },
+    },
+    invert: {
+      note: 'Selection flips to a SOLID accent, no ring — the same move the reveal makes in ink. Leans directly on Gate 3: accent sits ≥ .10 OKLCH-L above ink, so the two solids can never be confused.',
+      ringw: 0,
+      sringw: 0,
+      xringw: 0,
+      vars: {
+        '--qo-bg': 'color-mix(in srgb, var(--qink) 9%, transparent)',
+        '--qo-hbg': 'color-mix(in srgb, var(--qink) 15%, transparent)',
+        '--qo-fg': 'var(--qink)',
+        '--qo-ring': 'transparent',
+        '--qo-bbg': 'color-mix(in srgb, var(--qink) 12%, transparent)',
+        '--qo-bfg': 'color-mix(in srgb, var(--qink) 85%, transparent)',
+        '--qo-sbg': 'var(--qacc)',
+        '--qo-sfg': 'var(--qs)',
+        '--qo-sring': 'transparent',
+        '--qo-sbbg': 'color-mix(in srgb, var(--qs) 24%, transparent)',
+        '--qo-sbfg': 'var(--qs)',
+        '--qo-rbg': 'var(--qink)',
+        '--qo-rfg': 'var(--qs)',
+        '--qo-rbbg': 'color-mix(in srgb, var(--qs) 18%, transparent)',
+        '--qo-rbfg': 'var(--qs)',
+        '--qo-xbg': 'color-mix(in srgb, var(--qink) 5%, transparent)',
+        '--qo-xfg': 'var(--qerr)',
+        '--qo-xring': 'transparent',
+        '--qo-xbbg': 'color-mix(in srgb, var(--qerr) 15%, transparent)',
+        '--qo-xbfg': 'var(--qerr)',
+      },
+    },
+    weight: {
+      note: 'No accent anywhere in the list — the ladder is pure ink, escalating 8 → 14 → 20% to a solid ink ring. Effectively the status quo (the app marks selection with an ink border and an ink tint today), at heavier values. Because selection takes the ink, focus and cursor move to the accent.',
+      ringw: 0,
+      sringw: 4,
+      xringw: 0,
+      vars: {
+        '--qo-bg': 'color-mix(in srgb, var(--qink) 8%, transparent)',
+        '--qo-hbg': 'color-mix(in srgb, var(--qink) 14%, transparent)',
+        '--qo-fg': 'var(--qink)',
+        '--qo-ring': 'transparent',
+        '--qo-bbg': 'color-mix(in srgb, var(--qink) 14%, transparent)',
+        '--qo-bfg': 'color-mix(in srgb, var(--qink) 85%, transparent)',
+        '--qo-sbg': 'color-mix(in srgb, var(--qink) 20%, var(--qs))',
+        '--qo-sfg': 'var(--qink)',
+        '--qo-sring': 'var(--qink)',
+        // The one treatment that has to move focus off the ink, because
+        // selection took it. Frees the accent for "where I am" — which is
+        // what open item 7 proposes, and Weight is the only treatment that
+        // makes it available.
+        '--qo-focus': 'var(--qacc)',
+        '--qo-sbbg': 'var(--qink)',
+        '--qo-sbfg': 'var(--qs)',
+        '--qo-rbg': 'var(--qink)',
+        '--qo-rfg': 'var(--qs)',
+        '--qo-rbbg': 'color-mix(in srgb, var(--qs) 18%, transparent)',
+        '--qo-rbfg': 'var(--qs)',
+        '--qo-xbg': 'color-mix(in srgb, var(--qink) 4%, transparent)',
+        '--qo-xfg': 'var(--qerr)',
+        '--qo-xring': 'transparent',
+        '--qo-xbbg': 'color-mix(in srgb, var(--qerr) 15%, transparent)',
+        '--qo-xbfg': 'var(--qerr)',
+      },
+    },
+  };
+
+  /**
+   * Tokens every treatment gets unless it says otherwise. These are applied
+   * UNDER the treatment's own vars on each render, which also fixes a trap:
+   * setting properties on the card never removes the ones a previous
+   * treatment set, so a token only some treatments declare would survive the
+   * switch away from them. Weight's accent focus ring would have stuck to
+   * Tint. Anything optional belongs here, not in one treatment alone.
+   *
+   * Focus and cursor share this colour — they mean the same thing, "where I
+   * am", and differ by position. It is the ink for every treatment that
+   * leaves the ink unspent, and the accent for the one that doesn't.
+   */
+  const OPTION_DEFAULTS = {
+    '--qo-focus': 'var(--qink)',
+  };
+
+  // Which ring a given option state wears. The revealed pill never rings —
+  // a solid fill is already the loudest thing on the card.
+  const RING_BY_STATE = {
+    idle: ['--qo-ring', 'ringw'],
+    selected: ['--qo-sring', 'sringw'],
+    ruled: ['--qo-xring', 'xringw'],
+    revealed: [null, null],
+  };
 
   /**
    * Sprite silhouette — the pixel-icon-library grammar (pixeliconlibrary
@@ -2922,9 +4011,11 @@
    * mode's chunky two. `inset` bakes in the --qi footprint rule: a selected
    * pill shrinks by the ring width so its silhouette keeps an unselected
    * pill's size.
+   *
+   * Emitted starting at the LEFT edge, mid-run, and ending on the same
+   * edge — ringBand() relies on that to splice a hole in without a wedge.
    */
-  function spriteClip(inset, R = 24) {
-    const u = 4;
+  function spritePts(inset, R = 24, u = 4) {
     const n = R / u;
     const prof = [];
     for (let k = 0; k < n; k++) {
@@ -2968,7 +4059,102 @@
         pts.push(`${L(i0 + prof[k])} ${M(i0 + k * u)}`);
       }
     pts.push(`${L(i0)} ${M(i0 + R)}`);
-    return `polygon(${pts.join(', ')})`;
+    return pts;
+  }
+  function spriteClip(inset, R = 24, u = 4) {
+    return `polygon(${spritePts(inset, R, u).join(', ')})`;
+  }
+
+  /**
+   * Pixel mode's chunky two-stair corner, as points rather than the CSS
+   * calc() polygon in the stylesheet. Same vertex order and same start/end
+   * edge as spritePts, so ringBand() serves both shape modes.
+   */
+  function pixelPts(inset, pu = 8) {
+    const i0 = inset;
+    const L = (v) => `${v}px`;
+    const M = (v) => `calc(100% - ${v}px)`;
+    return [
+      `${L(i0)} ${L(i0 + pu * 2)}`,
+      `${L(i0 + pu)} ${L(i0 + pu * 2)}`,
+      `${L(i0 + pu)} ${L(i0 + pu)}`,
+      `${L(i0 + pu * 2)} ${L(i0 + pu)}`,
+      `${L(i0 + pu * 2)} ${L(i0)}`,
+      `${M(i0 + pu * 2)} ${L(i0)}`,
+      `${M(i0 + pu * 2)} ${L(i0 + pu)}`,
+      `${M(i0 + pu)} ${L(i0 + pu)}`,
+      `${M(i0 + pu)} ${L(i0 + pu * 2)}`,
+      `${M(i0)} ${L(i0 + pu * 2)}`,
+      `${M(i0)} ${M(i0 + pu * 2)}`,
+      `${M(i0 + pu)} ${M(i0 + pu * 2)}`,
+      `${M(i0 + pu)} ${M(i0 + pu)}`,
+      `${M(i0 + pu * 2)} ${M(i0 + pu)}`,
+      `${M(i0 + pu * 2)} ${M(i0)}`,
+      `${L(i0 + pu * 2)} ${M(i0)}`,
+      `${L(i0 + pu * 2)} ${M(i0 + pu)}`,
+      `${L(i0 + pu)} ${M(i0 + pu)}`,
+      `${L(i0 + pu)} ${M(i0 + pu * 2)}`,
+      `${L(i0)} ${M(i0 + pu * 2)}`,
+    ];
+  }
+
+  // The pill's silhouette for whichever shape mode is live. R (sprite) and
+  // pu (pixel) both shrink on grid sets, whose cells are half the height of
+  // a list set's pill — a 24px corner on a 40px box is nearly a stadium.
+  const optPts = (mode, inset, R = 24, pu = 8) =>
+    mode === 'pixel' ? pixelPts(inset, pu) : spritePts(inset, R);
+
+  /**
+   * Focus geometry. 2px of surface between the pill and its focus ring, and
+   * a 2px ring — against selection's 4px band, so the two marks differ in
+   * WIDTH as well as colour. That second difference is what keeps the pair
+   * legible under WCAG 1.4.1 (Use of Color): "focused" and "picked" must not
+   * be distinguishable by hue alone.
+   *
+   * The outer band's radius grows by the same 4px it stands off, so it stays
+   * concentric with the pill instead of tightening at the corners. 28/4 = 7
+   * rows, still an exact quantisation.
+   */
+  const FOCUS_W = 2;
+  const FOCUS_GAP = 2;
+  const focusR = (optR) => optR + FOCUS_GAP + FOCUS_W;
+  // The cursor mark ("where I am", multi-select) shares focus's colour but
+  // sits ON the silhouette rather than outside it — same meaning, different
+  // position. Full strength, not a tint: the app's ink @ 45% cursor scores
+  // 1.96–2.39:1 against the option's own fill and fails 1.4.11 on every set.
+  const CURSOR_W = 2;
+
+  /**
+   * THE RING, drawn as an actual band rather than a shadow.
+   *
+   * The first attempt rimmed the pill with four drop-shadows on an unclipped
+   * wrapper. That works only because a filled pill's alpha channel IS its
+   * silhouette — drop-shadow traces alpha, not the border-box. Give an
+   * option no fill (Ghost) and the "ring" obediently outlines the letter-
+   * forms instead of the pill. Same family as the documented `filter` runs
+   * before `clip-path` trap: both are the shadow being generated from the
+   * wrong thing.
+   *
+   * So the ring is now a real band: the wrapper is filled with the ring
+   * colour and clipped to the outer silhouette with the inner silhouette
+   * punched out, evenodd. Exact at every stair, no corner notch, and
+   * indifferent to what the pill's own fill is doing.
+   *
+   * The hole is spliced in at 50% on the LEFT edge, where both silhouettes
+   * run straight: the outgoing connector (0,50%)→(w,50%) and the implicit
+   * closing edge (w,50%)→(0,50%) are then the same segment traversed twice,
+   * which has no area. Splice anywhere else and you get a visible wedge.
+   */
+  function ringBand(mode, w, R = 24, pu = 8) {
+    const pts = [
+      `0px 50%`,
+      ...optPts(mode, 0, R, pu),
+      `0px 50%`,
+      `${w}px 50%`,
+      ...optPts(mode, w, R, pu),
+      `${w}px 50%`,
+    ];
+    return `polygon(evenodd, ${pts.join(', ')})`;
   }
 
   // Pixel icons from pixeliconlibrary.com — same 24-unit grid grammar as the
@@ -3006,6 +4192,8 @@
   const qGuidePanel = document.getElementById('qGuidePanel');
   document.getElementById('qGuideIcon').innerHTML = ICONS.bookHeart;
   document.getElementById('qGuideCloseIcon').innerHTML = ICONS.times;
+  // Two-letter abbreviations are typed, so keystrokes buffer.
+  let qAbbrBuf = '';
   document.getElementById('qKeyLeft').innerHTML = ICONS.arrowLeft;
   document.getElementById('qKeyRight').innerHTML = ICONS.arrowRight;
   // The sprite badge variant shares the chip generator with the Guide
@@ -3028,6 +4216,8 @@
   const questionView = document.getElementById('questionView');
   const qPrompt = document.getElementById('qPrompt');
   const qHeader = document.getElementById('qHeader');
+  const qFeed = document.getElementById('qFeed');
+  const qFeedBelow = document.getElementById('qFeedBelow');
   const qOptions = document.getElementById('qOptions');
   const qCount = document.getElementById('qCount');
   const qCta = document.getElementById('qCta');
@@ -3039,6 +4229,47 @@
     card.style.setProperty('--qacc', p.accent);
     card.style.setProperty('--qerr', errorToneFor(p));
     card.style.setProperty('--qchipc', state.qChip === 'acc' ? p.accent : p.fg);
+    // The whole option ladder in one write. Tokens cascade to every pill,
+    // so switching treatment is a single re-set of ~20 custom properties.
+    const treat = OPTION_TREATMENTS[state.qOpt];
+    for (const [k, v] of Object.entries({
+      ...OPTION_DEFAULTS,
+      ...treat.vars,
+    })) {
+      card.style.setProperty(k, v);
+    }
+    document.getElementById('qOptNote').textContent = treat.note;
+    // 1 · Multi-select is a MODE, and an unannounced mode is where users
+    // make errors they can't diagnose. Q and R both accept several answers.
+    const qMulti = document.getElementById('qMulti');
+    qMulti.hidden = !q.multi;
+    qMulti.textContent = 'More than one answer can be right.';
+    // Emphasis variants key off an attribute rather than a class per style,
+    // so adding one is a CSS rule and nothing else.
+    questionView.dataset.em = state.qEm;
+    questionView.dataset.chip = state.qChipShape;
+    // Feedback routing. Exactly one of the three slots is fed; the other
+    // two are emptied, so switching placement can't leave a stale copy
+    // behind (the failure mode that would make two modes look like one).
+    const fb = feedbackParts(q);
+    const reserved = state.qFeed === 'reserved';
+    qFeed.className = 'qfeed' + (reserved ? ' is-reserved' : '');
+    if (reserved) {
+      qFeed.innerHTML =
+        `<div class="qfeed-ghost" aria-hidden="true">${feedbackGhost(q)}</div>` +
+        `<div class="qfeed-live">${fb.live}</div>`;
+    } else {
+      qFeed.innerHTML = state.qFeed === 'above' ? fb.live : '';
+    }
+    // Inline mode keeps the app's split exactly: on a LIST set the hint
+    // hangs off its pill (in the options loop below) and only the
+    // question-level explanation goes under the list; on a GRID set there
+    // is no inline to fall back to, so both land in the block below. That
+    // is `inlineHintFor`'s early return, rendered.
+    qFeedBelow.innerHTML =
+      state.qFeed === 'inline' ? (q.grid ? fb.live : fb.answer) : '';
+    document.getElementById('qFeedNote').textContent =
+      FEEDBACK_NOTES[state.qFeed];
     qPrompt.textContent = q.prompt;
     qHeader.textContent = q.header;
     // Demo progress state: far enough in that all three indicator states
@@ -3062,6 +4293,50 @@
       }).join('');
     }
     qOptions.innerHTML = '';
+    // Grid sets lay out column-major over an explicit row count; the pill
+    // also shrinks its corner to suit the smaller cell.
+    qOptions.className = 'qoptions' + (q.grid ? ' is-grid' : '');
+    if (q.grid) {
+      // Both column counts and both row counts, because column-major flow
+      // needs them to move together and CSS can't do the division.
+      const cols = q.grid;
+      const colsSm = Math.min(2, cols);
+      qOptions.style.setProperty('--qcols', cols);
+      qOptions.style.setProperty('--qrows', Math.ceil(q.options.length / cols));
+      qOptions.style.setProperty('--qcols-sm', colsSm);
+      qOptions.style.setProperty(
+        '--qrows-sm',
+        Math.ceil(q.options.length / colsSm)
+      );
+    }
+    const optR = q.grid ? 12 : 24;
+    const optPu = q.grid ? 4 : 8;
+    // Keyboard marks demo. Focus deliberately lands on the SELECTED option —
+    // that is the worst case and the whole point of the toggle: "focused"
+    // and "picked" stacked on one pill. The cursor goes on a different one so
+    // all three marks are on screen together.
+    const live = q.options
+      .map((o, i) => i)
+      .filter(
+        (i) => !qState.ruled.has(i) && !(qState.solved && !q.options[i].c)
+      );
+    const pickedLive = [...qState.picked].filter((i) => live.includes(i));
+    const focusIdx =
+      state.qKeys === 'on'
+        ? q.multi
+          ? (pickedLive[0] ?? live[0] ?? null)
+          : qState.selected != null && !qState.solved
+            ? qState.selected
+            : (live[0] ?? null)
+        : null;
+    // The cursor only ever lands on an UNCLAIMED option. When it sits on
+    // one you've already picked, the selection band owns the silhouette and
+    // the focus ring outside does the "where I am" job — which is exactly
+    // the arrangement the app needs, since focus follows the cursor.
+    const cursorIdx =
+      state.qKeys === 'on'
+        ? (live.find((i) => i !== focusIdx && !qState.picked.has(i)) ?? null)
+        : null;
     q.options.forEach((opt, i) => {
       const b = document.createElement('button');
       b.type = 'button';
@@ -3075,16 +4350,38 @@
         // in a finer generated silhouette.
         (state.qShape === 'pixel' || state.qShape === 'sprite') && 'pixelated',
         ruled && !revealed && 'is-ruled',
-        qState.selected === i && !qState.solved && 'is-selected',
+        isPicked(q, i) && !qState.solved && 'is-selected',
       ]
         .filter(Boolean)
         .join(' ');
-      b.setAttribute('aria-pressed', String(qState.selected === i));
-      // Sprite mode: the generated quantized-radius clip overrides the
-      // stylesheet polygon (inline wins). Pixel mode stays pure CSS.
-      if (state.qShape === 'sprite') {
-        const isSel = qState.selected === i && !qState.solved;
-        b.style.clipPath = spriteClip(isSel ? 4 : 0);
+      b.setAttribute('aria-pressed', String(isPicked(q, i)));
+      // One ring width, two consumers — the wrapper's band and the pill's
+      // own inset. Whatever the treatment rings and however thick, the pill
+      // shrinks by exactly that much, so ringed and unringed options occupy
+      // identical silhouettes: selection changes colour, never size.
+      const selected = isPicked(q, i) && !qState.solved;
+      const st = revealed
+        ? 'revealed'
+        : ruled
+          ? 'ruled'
+          : selected
+            ? 'selected'
+            : 'idle';
+      let [ringVar, ringKey] = RING_BY_STATE[st];
+      let ringW = ringVar ? treat[ringKey] : 0;
+      // Cursor takes over the idle ring: same band, focus's colour, 2px.
+      // It only ever modifies an untouched option — once a pill is picked,
+      // ruled or revealed, that state owns the silhouette.
+      if (i === cursorIdx && st === 'idle') {
+        ringVar = '--qo-focus';
+        ringW = CURSOR_W;
+      }
+      const pixelated = state.qShape === 'pixel' || state.qShape === 'sprite';
+      // Both pixel modes now take their pill clip from JS (inline beats the
+      // stylesheet polygon, which stays on for the badge). One generator
+      // means the band and the pill can never disagree about the stairs.
+      if (pixelated) {
+        b.style.clipPath = `polygon(${optPts(state.qShape, ringW, optR, optPu).join(', ')})`;
       }
       const badge = document.createElement('span');
       // Shape variants only exist in the pixel modes; the pill reference
@@ -3093,40 +4390,87 @@
         'qbadge' +
         (state.qShape !== 'pill' && state.qBadge !== 'square'
           ? ` shape-${state.qBadge}`
-          : '');
+          : '') +
+        // The number → ✕/✓ swap is the clearest state signal the component
+        // has, and it was instant and unremarked. Only on the render that
+        // follows the change; see qState.fresh.
+        (qState.fresh.has(i) ? ' is-fresh' : '');
       // The revealed answer's badge carries the check; the ✕ marks only
       // options the LEARNER guessed wrong — options merely receding at
       // reveal keep their number, so both marks stay meaningful.
       if (revealed) badge.innerHTML = ICONS.check;
       else if (qState.ruled.has(i)) badge.innerHTML = ICONS.times;
-      else badge.textContent = i + 1;
+      // Set R's badge carries the typeable two-letter code rather than a
+      // position — "click a fallacy or type its abbreviation", and with
+      // eighteen options a position is no use as a shortcut anyway.
+      else badge.textContent = opt.a ?? i + 1;
       const label = document.createElement('span');
       label.textContent = opt.t;
       b.append(badge, label);
       if (!qState.solved && !ruled) {
         b.addEventListener('click', () => {
-          qState.selected = qState.selected === i ? null : i;
+          if (q.multi) {
+            if (qState.picked.has(i)) qState.picked.delete(i);
+            else qState.picked.add(i);
+          } else {
+            qState.selected = qState.selected === i ? null : i;
+          }
           render();
         });
       }
-      // Wrapper carries the pixel-mode selection ring (see .qopt-wrap.ring).
+      // Wrapper carries the pixel-mode ring (see .qopt-wrap.ring) — for
+      // whichever state this treatment chose to ring, not selection alone.
       const wrap = document.createElement('div');
-      wrap.className =
-        'qopt-wrap' +
-        ((state.qShape === 'pixel' || state.qShape === 'sprite') &&
-        qState.selected === i &&
-        !qState.solved
-          ? ' ring'
-          : '');
+      const wrapCls = ['qopt-wrap'];
+      if (pixelated) {
+        if (ringW > 0) wrapCls.push('ring');
+      } else {
+        // Pill mode has no silhouette to trace, so its focus mark stays a
+        // plain outline; the band is a pixel-mode device.
+        wrapCls.push('pill');
+      }
+      if (i === focusIdx) wrapCls.push('focused');
+      wrap.className = wrapCls.join(' ');
+      if (pixelated) {
+        // Set on EVERY wrapper, ringed or not. The band fades rather than
+        // popping, so it has to keep a silhouette on the way out too — with
+        // --qo-band unset the clip resolves to none and the fade-out would
+        // flash a full rectangle.
+        wrap.style.setProperty('--qo-rc', `var(${ringVar ?? '--qo-sring'})`);
+        wrap.style.setProperty(
+          '--qo-band',
+          ringBand(state.qShape, ringW || treat.sringw || 4, optR, optPu)
+        );
+      }
+      // Set on every wrapper, not just the demo one, so real keyboard focus
+      // (:focus-visible) draws the same mark as the toggle previews.
+      wrap.style.setProperty('--qo-fw', `${FOCUS_W}px`);
+      wrap.style.setProperty('--qo-fgap', `${FOCUS_GAP}px`);
+      if (pixelated) {
+        wrap.style.setProperty(
+          '--qo-fband',
+          ringBand(state.qShape, FOCUS_W, focusR(optR), optPu)
+        );
+      }
       wrap.appendChild(b);
       qOptions.appendChild(wrap);
-      // A ruled-out pick carries its hint with it, indented to the label.
-      if (qState.ruled.has(i) && opt.hint && !qState.solved) {
-        const hint = document.createElement('p');
-        hint.className = 'qhint';
-        // The lamp leads: guidance iconography, not scolding — the ✕ on the
-        // badge already owns the "wrong" part.
-        hint.innerHTML = ICONS.lamp + hintHtml(opt.hint);
+      // A ruled-out pick carries its hint with it, indented to the label —
+      // in the inline placement only, and never on a grid set: an expanding
+      // cell would break the row alignment the column-major order depends
+      // on. That constraint is the app's (`inlineHintFor` bails on grids)
+      // and it is the reason the original had to put feedback elsewhere.
+      if (
+        state.qFeed === 'inline' &&
+        !q.grid &&
+        qState.ruled.has(i) &&
+        hasHint(opt) &&
+        !qState.solved
+      ) {
+        const hint = document.createElement('div');
+        hint.className = 'qhint' + (qState.fresh.has(i) ? ' is-fresh' : '');
+        // Inline needs no identifier — the pill it hangs off IS the
+        // identifier, which is exactly what the other two placements lose.
+        hint.innerHTML = hintBlockHtml(opt, 'none');
         qOptions.appendChild(hint);
       }
     });
@@ -3139,22 +4483,79 @@
     document.querySelectorAll('.qkey').forEach((k) => {
       k.style.clipPath = spriteClip(0, 8);
     });
+    // Both notation chips take the same corner — the guide's and the hint's.
+    // `Sprite 4px` is literally the keycaps' own clip; `Sprite 2px` puts the
+    // same construction on a finer grid, which is the option worth having
+    // for boxes this small: the step is a fixed fraction of the radius, so
+    // halving the unit halves how much corner it eats.
+    const CHIP_CORNER = { sprite: [8, 4], fine: [4, 2] };
+    const corner = CHIP_CORNER[state.qChipShape];
+    const chipClip = corner ? spriteClip(0, corner[0], corner[1]) : 'none';
+    questionView.querySelectorAll('code').forEach((c) => {
+      c.style.clipPath = chipClip;
+    });
+    // The keyboard hint has to tell the truth about the set it's under:
+    // "1 – 4" beside an eighteen-cell grid keyed by letter code is worse
+    // than no hint.
+    const abbrSet = q.options.some((o) => o.a);
+    document.getElementById('qKeyFirst').textContent = abbrSet
+      ? q.options[0].a
+      : '1';
+    document.getElementById('qKeyLast').textContent = abbrSet
+      ? q.options[q.options.length - 1].a
+      : String(q.options.length);
     qCta.textContent = qState.solved ? 'Next Question' : 'Check Answer';
-    qCta.disabled = !qState.solved && qState.selected == null;
+    qCta.disabled =
+      !qState.solved &&
+      (q.multi ? qState.picked.size === 0 : qState.selected == null);
     qCta.style.backgroundColor = p.fg;
     qCta.style.color = p.surface;
+    // Consumed. Every later render — a dial flip, a palette change — draws
+    // the same states with no animation, which is the whole point of the
+    // gate: motion marks a change, not a redraw.
+    qState.fresh.clear();
+    qState.freshFeed = false;
   }
 
   qCta.addEventListener('click', () => {
     const p = state.custom || PALETTES[state.palette];
+    const q = questionFor(p);
+    // Everything the CHECK is about to change counts as fresh, so only the
+    // options that actually moved animate.
+    qState.fresh.clear();
+    qState.freshFeed = false;
+    const before = { ruled: new Set(qState.ruled), solved: qState.solved };
     if (qState.solved) {
       resetQState(); // 'Next Question' just restages the same sample
+    } else if (q.multi) {
+      // The SUBSET rule, as the app states it: a passage may commit more
+      // than one fallacy, so any set of genuine ones counts — you don't
+      // have to name them all. Naming something that isn't one rules that
+      // option out, and the rest of your picks are released to try again.
+      const picks = [...qState.picked];
+      if (picks.length && picks.every((i) => q.options[i].c)) {
+        qState.solved = true;
+      } else {
+        picks
+          .filter((i) => !q.options[i].c)
+          .forEach((i) => qState.ruled.add(i));
+      }
+      qState.picked.clear();
+      qState.selected = null;
     } else if (qState.selected != null) {
-      const q = questionFor(p);
       if (q.options[qState.selected].c) qState.solved = true;
       else qState.ruled.add(qState.selected);
       qState.selected = null;
     }
+    // Diff against the snapshot: newly ruled options, and every option the
+    // reveal just resolved. Those are the ones that earned a moment.
+    for (const i of qState.ruled) if (!before.ruled.has(i)) qState.fresh.add(i);
+    if (qState.solved && !before.solved) {
+      q.options.forEach((o, i) => {
+        if (o.c) qState.fresh.add(i);
+      });
+    }
+    qState.freshFeed = qState.fresh.size > 0;
     render();
   });
 
@@ -3185,17 +4586,39 @@
     card.classList.toggle('qview', isQ);
     card.classList.toggle('qband', isQ && activeCentre() === 'footer');
     if (isQ) renderQuestion(p);
-    ['qShapeList', 'qErrList', 'qChipList', 'qProgList', 'qBadgeList'].forEach(
-      (id, k) => {
-        const key = ['qShape', 'qErr', 'qChip', 'qProg', 'qBadge'][k];
-        document.querySelectorAll(`#${id} button`).forEach((b) => {
-          b.setAttribute(
-            'aria-pressed',
-            String(b.dataset[key.toLowerCase()] === state[key])
-          );
-        });
-      }
-    );
+    [
+      'qShapeList',
+      'qOptList',
+      'qFeedList',
+      'qHintList',
+      'qEmList',
+      'qChipShapeList',
+      'qKeysList',
+      'qErrList',
+      'qChipList',
+      'qProgList',
+      'qBadgeList',
+    ].forEach((id, k) => {
+      const key = [
+        'qShape',
+        'qOpt',
+        'qFeed',
+        'qHint',
+        'qEm',
+        'qChipShape',
+        'qKeys',
+        'qErr',
+        'qChip',
+        'qProg',
+        'qBadge',
+      ][k];
+      document.querySelectorAll(`#${id} button`).forEach((b) => {
+        b.setAttribute(
+          'aria-pressed',
+          String(b.dataset[key.toLowerCase()] === state[key])
+        );
+      });
+    });
 
     card.style.backgroundColor = p.surface;
     card.style.color = p.fg;
@@ -3253,6 +4676,12 @@
   });
   [
     ['qShapeList', 'qshape', 'qShape'],
+    ['qOptList', 'qopt', 'qOpt'],
+    ['qFeedList', 'qfeed', 'qFeed'],
+    ['qHintList', 'qhint', 'qHint'],
+    ['qEmList', 'qem', 'qEm'],
+    ['qChipShapeList', 'qchipshape', 'qChipShape'],
+    ['qKeysList', 'qkeys', 'qKeys'],
     ['qErrList', 'qerr', 'qErr'],
     ['qChipList', 'qchip', 'qChip'],
     ['qProgList', 'qprog', 'qProg'],
@@ -3268,7 +4697,8 @@
   document.getElementById('qNote').innerHTML =
     '<strong>Sprite is the decided default</strong> — a true 24px corner ' +
     'radius rasterised onto a 4px grid; Pixel (8px, two chunky stairs) kept ' +
-    'for comparison. Rose mix is what the app ships (#f43f5e mixed to the ' +
+    'for comparison; treatment is the colour axis riding on top of it. ' +
+    'Rose mix is what the app ships (#f43f5e mixed to the ' +
     'ink); Tier brick derives a per-set red at hue 29° through the same ' +
     'gates as the accents. Full treatment reference: docs/pixel-ui.md.';
 
@@ -3558,11 +4988,37 @@
     // Question view mirrors the app's keys: digits pick, Enter checks.
     if (state.view === 'question') {
       const q = questionFor(state.custom || PALETTES[state.palette]);
+      // Sets with abbreviations are typed by code, not by position — with
+      // eighteen options a digit is no shortcut at all. Buffer two letters
+      // and match, the way the original's "type its abbreviation" works.
+      if (q.options.some((o) => o.a)) {
+        if (/^[a-z]$/i.test(e.key)) {
+          qAbbrBuf = (qAbbrBuf + e.key.toLowerCase()).slice(-2);
+          const i = q.options.findIndex((o) => o.a === qAbbrBuf);
+          if (i >= 0 && !qState.solved && !qState.ruled.has(i)) {
+            if (q.multi) {
+              if (qState.picked.has(i)) qState.picked.delete(i);
+              else qState.picked.add(i);
+            } else {
+              qState.selected = qState.selected === i ? null : i;
+            }
+            qAbbrBuf = '';
+            render();
+          }
+          return;
+        }
+        qAbbrBuf = '';
+      }
       const digit = parseInt(e.key, 10);
       if (digit >= 1 && digit <= q.options.length) {
         const i = digit - 1;
         if (!qState.solved && !qState.ruled.has(i)) {
-          qState.selected = qState.selected === i ? null : i;
+          if (q.multi) {
+            if (qState.picked.has(i)) qState.picked.delete(i);
+            else qState.picked.add(i);
+          } else {
+            qState.selected = qState.selected === i ? null : i;
+          }
           render();
         }
         return;
