@@ -216,6 +216,17 @@ accent. Redoing it is ~30 lines.
    The cursor's fix is independent of which treatment wins: **full-strength
    at 2px, not a 45% tint.** That alone clears 1.4.11.
 
+10. **Does Set R keep its guide at all?** Raised by Malik 2026-08-06, NOT
+    decided. R's 18-fallacy table is the only guide with no 2008 ancestor
+    of any kind (no `*H` Info block, no feedback text to lift — see the
+    provenance note in Caveats). The original never offered the full
+    reference during the drill, and there is a pedagogical argument that
+    a recognition exercise shouldn't hand the student all eighteen
+    definitions one click away. Removing it would also dissolve this
+    guide's hardest layout case (the 18-row table in a narrow panel) —
+    which is a reason to decide it BEFORE polishing that layout, and not
+    a reason to decide it either way.
+
 **Housekeeping:**
 
 10. **`SET_SURFACES`** in the lab is stale in four of six entries (it feeds the
@@ -258,9 +269,26 @@ renders differently for anyone not on a Mac. **Re-judge every type decision
 once the lab is on Roboto Flex.** Ratios and hierarchy should survive; exact
 values will not.
 
-**The guide panel shows the wrong content for six of seven sets** — see the
-open item below. Nothing about its layout or density has been judged against
-real material.
+~~**The guide panel shows the wrong content for six of seven sets**~~ —
+**fixed 2026-08-06.** `SET_GUIDES` in the lab now mirrors the app's real
+guides from `wffGuide.tsx` (A ↔ subset 1, C ↔ 6, J ↔ 4, L ↔ 12, Q ↔ 3,
+R ↔ 18); R's 18-fallacy table is generated from the R sample's own options
+so hint and guide share one source. Set N has no guide in the app, so N
+now hides the Guide button instead of wearing Set J's reference — and the
+2008 original agrees: the original program's Info-button block (`*H`) exists in
+B, D, E, F, G, I, K, M, O and Q, but not in N (its lowercase `*h` is a
+display-control block, not text). Provenance of the others, corrected by
+Malik 2026-08-06: only Q's guide descends from a `*H` Info block; A, C and
+J's guides were assembled by Malik from the sets' OWN 2008 feedback
+messages — the original program contains the guide sentences verbatim ("wff must have
+one of these eight forms…", "parentheses for each · (AND), ∨ (OR)…") as
+answer feedback, not as Info text. R's table is from the textbook's
+Fallacies chapter. So every guide but R's has a 2008 ancestor — the
+ancestors just live in different blocks. The panel
+scrolls, and guide notation runs through the same chip/emphasis machinery
+as the hints, so the Notation chip and Emphasis dials apply to it. Layout
+and density are now JUDGEABLE, not judged — the panel is still the
+lab's own 300px overlay, not the app's container-queried sheet/rail.
 
 **Notation chips are plain text in the lab, KaTeX in the app.** The size and
 weight decisions carry; the optical result needs re-checking on real KaTeX.
@@ -341,7 +369,20 @@ system is flat and rectilinear; the soft band it replaces was the one
 soft-edged thing in it, and a ruled line is what this grammar would draw. It
 also survives at any text size, which the 4px-cornered Sprite does not.
 
-**Notation chips are a dial** (`Rectangle` · `Sprite 4px` · `Sprite 2px`).
+**Notation chips: `Sprite 4px` DECIDED** (Malik, 2026-08-06) — the
+keycaps' own clip (`spriteClip(0, 8)`), on both notation chips. The dial
+ran `Rectangle` (the app today) · `Sprite 4px` · `Sprite 2px` · briefly
+`Gem` (the NEW badge's silhouette via `pixelPts(0, 4)`, from the
+MaterialShapes exploration); all but the winner are removed from the lab.
+**Carried with the decision: the smaller instances need careful per-size
+tweaking before the port** — L4's rule chips and R's table chips run
+~20px tall, where the R=8 corner leaves only ~4px of straight edge and
+1px of vertical padding puts the step against the letterforms; the
+keycap survives the same clip at 22px because it is a padded box. Tweak
+candidates when this is picked up: room (padding, where the inline line
+box allows it) or a smaller radius on the same 4px grid, per the scaling
+law. Note the app renders these chips in KaTeX, so the tweak must be
+re-judged there.
 The card carried five small chips in three corner treatments: keycap, option
 badge and guide button all spoke the pixel grammar, while the two chips
 holding actual LOGIC — the guide's `☐A` and the hint's `∴ A is true` — were
@@ -394,15 +435,11 @@ cells are clickable. Not declined, just not selected.
 depth chapter would want it; the system is flat by rule and the pixel
 silhouette is the signature moment. Shadows would fight it.
 
-**Next, and known to be blocking judgement:** the lab's guide panel shows
-the SAME modal-logic reference (`☐A ◇A ∼◇A (A ⊃ B)`) for every set —
-verified identical across J, Q, R, C and L4. It is Set J's guide wearing
-every set's palette. The app already keys per-set guides off
-`GUIDE_SUBSET_IDS` in `components/quiz/wffGuide.tsx`, including the
-18-fallacy table for Set R. Until the lab pulls the real content, any
-judgement about the guide panel's layout or density is being made against
-the wrong material — same caution as the sample questions before Q and R
-were made real.
+~~**Next, and known to be blocking judgement:** the lab's guide panel shows
+the SAME modal-logic reference for every set~~ — **done 2026-08-06**, see
+the Caveats entry above. The guide-panel judgements (density, the notation
+chip corner on real material, run-in vs heading beside a real reference)
+are now unblocked.
 
 **Explicitly deferred by Malik:** the mobile bottom sheet / guide pane
 surfaces, the end screen's treatment pass, and both display modes in

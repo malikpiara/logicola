@@ -237,6 +237,25 @@ lucide icons). Redesigned in-system:
   the lab mocks the overlay only — the push behaviour and surface colour
   question for the real `WffGuide` content is decided at port time.
 
+## Notation chips — DECIDED: Sprite 4px, with a small-size caveat
+
+The tinted boxes holding logic — the guide's `☐A`, the hint's `∴ A is
+true`, and every inline `code` chip in guide prose. **Decided (Malik,
+2026-08-06): the keycaps' own clip, `spriteClip(0, 8)` (R=8/u=4, one 4px
+stair), on all of them** — they are one object doing one job, and they now
+speak the same grammar as the chrome. Rejected on the way: Rectangle (the
+app's 7px radius, the status quo), Sprite 2px (finer grid), and a Gem
+candidate (the NEW badge silhouette, `pixelPts(0, 4)`).
+
+**Not yet solved, and owed before the port: the small instances.** L4's
+rule chips and R's table chips run ~20px tall with 1px vertical padding,
+so the 4px step sits against the letterforms — the keycap survives the
+identical clip at 22px only because it is a padded box (the step eats
+padding, never glyph). Tweak levers, per the scaling law: room (padding,
+where the inline line box allows), or a smaller radius on the same 4px
+grid. And the app sets these chips in KaTeX, not the body face — re-judge
+there.
+
 ## Keyboard hints
 
 Pixel keycaps instead of prose. `[1] – [4] picks · [◀][▶] moves · [enter]
