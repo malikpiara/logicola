@@ -8,6 +8,21 @@
 // table with their textbook citation, and are applied there, not here:
 //   - 'woman’s lib sponsors' -> 'feminist sponsors'  [Introduction to Logic 3rd ed. (2017) §4.2a #4 (ah x=9)]
 //   - 'the other woman’s libbers' -> 'the other feminists'  [Introduction to Logic 3rd ed. (2017) §4.2a #26 (sm x=3)]
+//
+// TWO INLINE MARKUP BYTES IN THE SOURCE, both flattened by this port.
+// Each marks the PRECEDING character, so 'must' is stored m<BD>u<BD>s<BD>t<BD>:
+//   0xBD  emphasis — exactly 5 runs in the whole file: 'must' and 'probably'
+//         in aa clause (3), and the book title 'Introduction to Logic' in the
+//         set intro. Small, but that clause is *about* the must/probably
+//         distinction, so the emphasis is carrying its meaning.
+//   0xBE  a reference to another fallacy by code — 47 runs across all 18.
+//         This port resolved them to prose names ('This violates appeal to
+//         emotion, false stereotype, and both clauses of ad hominem'), which
+//         keeps the meaning but loses the marking: they now read as ordinary
+//         prose where the original set them apart.
+// Neither is representable in the current `description` / `clauses` strings.
+// Restoring them needs a markup convention in the content (see the hint
+// prototype in docs/pattern-lab.html, which uses *emphasis* and `notation`).
 
 export type FallacyCode =
   | 'aa'
@@ -33,7 +48,26 @@ export interface Fallacy {
   code: FallacyCode;
   /** Option id, 0-17, in the original answer grid's order. */
   id: number;
+  /**
+   * The FULL term, as the 2008 reference entries give it (`e:*XX i:` blocks
+   * in set_R.txt). Used where the fallacy is being named as a concept: the
+   * guide. Note `op` and `pc` carry the word "fallacy" here and nowhere
+   * else, exactly as the original does.
+   */
   name: string;
+  /**
+   * The TERSE grid label, from the original's answer-grid block (`d:16 t:`
+   * in set_R.txt). Two jobs: the cell in the 18-option palette, and the
+   * subject of the answer sentence, which appends the word "fallacy" —
+   * "the genetic fallacy", "the post hoc fallacy".
+   *
+   * Keeping this apart from `name` is load-bearing. Collapsing the two is
+   * how "This passage illustrates the genetic fallacy fallacy" shipped, and
+   * why "Post hoc ergo propter hoc" wrapped to two lines in a grid cell
+   * built for "post hoc". Thirteen of the eighteen are the same string in
+   * both registers; five are not.
+   */
+  label: string;
   description: string;
   /** Numbered clauses referenced by answer notes ('This violates (1) and (2).'). */
   clauses?: string[];
@@ -62,6 +96,7 @@ export const FALLACIES: Fallacy[] = [
     code: 'aa',
     id: 0,
     name: 'Appeal to authority',
+    label: 'Appeal to authority',
     description: 'This is fallacious if:',
     clauses: [
       'the person isn’t an authority on the subject, or',
@@ -73,24 +108,28 @@ export const FALLACIES: Fallacy[] = [
     code: 'ac',
     id: 1,
     name: 'Appeal to the crowd',
+    label: 'Appeal to crowd',
     description: 'Most people believe A. ∴ A is true.',
   },
   {
     code: 'ae',
     id: 2,
     name: 'Appeal to emotion',
+    label: 'Appeal to emotion',
     description: 'To stir up emotions instead of arguing in a logical manner.',
   },
   {
     code: 'af',
     id: 3,
     name: 'Appeal to force',
+    label: 'Appeal to force',
     description: 'To use threats or intimidation to get a conclusion accepted.',
   },
   {
     code: 'ah',
     id: 4,
     name: 'Ad hominem',
+    label: 'Ad hominem',
     description: '(“personal attack”). This is fallacious if:',
     clauses: [
       'the grounds of the attack are irrelevant to the person’s rational competence, or',
@@ -101,6 +140,7 @@ export const FALLACIES: Fallacy[] = [
     code: 'ai',
     id: 5,
     name: 'Appeal to ignorance',
+    label: 'Appeal to ignorance',
     description:
       '“No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.',
   },
@@ -108,12 +148,14 @@ export const FALLACIES: Fallacy[] = [
     code: 'am',
     id: 6,
     name: 'Ambiguous',
+    label: 'Ambiguous',
     description: 'A term or phrase changes meaning within the argument.',
   },
   {
     code: 'bp',
     id: 7,
     name: 'Beside the point',
+    label: 'Beside the point',
     description:
       'The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.',
   },
@@ -121,6 +163,7 @@ export const FALLACIES: Fallacy[] = [
     code: 'bw',
     id: 8,
     name: 'Black and white',
+    label: 'Black and white',
     description:
       'Oversimplifying by assuming that one or another of two extremes must be true.',
   },
@@ -128,6 +171,7 @@ export const FALLACIES: Fallacy[] = [
     code: 'ci',
     id: 9,
     name: 'Circular',
+    label: 'Circular',
     description:
       'An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.',
   },
@@ -135,6 +179,7 @@ export const FALLACIES: Fallacy[] = [
     code: 'cq',
     id: 10,
     name: 'Complex question',
+    label: 'Complex question',
     description:
       'A question that assumes the truth of something false or doubtful.',
   },
@@ -142,6 +187,7 @@ export const FALLACIES: Fallacy[] = [
     code: 'fs',
     id: 11,
     name: 'False stereotype',
+    label: 'False stereotype',
     description:
       'Assuming that members of a certain group are more alike than they actually are.',
   },
@@ -149,18 +195,21 @@ export const FALLACIES: Fallacy[] = [
     code: 'ge',
     id: 12,
     name: 'Genetic fallacy',
+    label: 'Genetic',
     description: 'We can explain why you believe A. ∴ A is false.',
   },
   {
     code: 'op',
     id: 13,
-    name: 'Opposition',
+    name: 'Opposition fallacy',
+    label: 'Opposition',
     description: 'Our opponents believe A. ∴ A is false.',
   },
   {
     code: 'pc',
     id: 14,
-    name: 'Pro-con',
+    name: 'Pro-con fallacy',
+    label: 'Pro-con',
     description:
       'This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.',
   },
@@ -168,6 +217,7 @@ export const FALLACIES: Fallacy[] = [
     code: 'ph',
     id: 15,
     name: 'Post hoc ergo propter hoc',
+    label: 'Post hoc',
     description:
       '(“after this therefore because of this”) A happened after B. ∴ A was caused by B.',
   },
@@ -175,6 +225,7 @@ export const FALLACIES: Fallacy[] = [
     code: 'pw',
     id: 16,
     name: 'Part-whole',
+    label: 'Part-whole',
     description:
       'The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.',
   },
@@ -182,6 +233,7 @@ export const FALLACIES: Fallacy[] = [
     code: 'sm',
     id: 17,
     name: 'Straw man',
+    label: 'Straw man',
     description: 'Misrepresenting the views of an opponent.',
   },
 ];

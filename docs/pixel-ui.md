@@ -34,47 +34,104 @@ inset(k) = R − round( √(R² − (R − (k+½)u)²) / u ) · u
 → profile [16, 8, 4, 4, 0, 0]   (four distinct stairs per corner)
 ```
 
-Generator: `spriteClip(inset)` in `pattern-lab.html`. It emits one 32-point
-`polygon()` — px units on the leading edges, `calc(100% − Npx)` mirrored on
-the trailing ones, so one path serves any pill width. **Pixel mode** (kept
-for comparison only) is the same idea at u = 8px with a fixed 2-step corner,
-implemented as a static stylesheet polygon; **Cartridge was removed** —
-Sprite is the default.
+Generator: `spritePts(inset)` / `spriteClip(inset)` in `pattern-lab.html`.
+It emits one 32-point `polygon()` — px units on the leading edges,
+`calc(100% − Npx)` mirrored on the trailing ones, so one path serves any
+pill width. Points start and end on the **left edge**, which is what lets
+`ringBand()` splice a hole into them. **Pixel mode** (kept for comparison
+only) is the same idea at u = 8px with a fixed 2-step corner; its pill now
+comes from `pixelPts()` so that one generator feeds both the silhouette and
+its ring band, and the stylesheet polygon it used to rely on survives only
+for the badge. **Cartridge was removed** — Sprite is the default.
 
 The **badges** stay on the stylesheet polygon at u = 4px: filled square
 chips (no outline ring — a clipped border loses its stroke on the stairs),
 echoing the original LogiCola's filled abbreviation box.
 
-## Selection mechanics — and the four CSS traps
+## Ringing a clipped shape — and the CSS traps
 
-Selected state = **accent-tinted opaque interior** (14% accent composited
-onto the surface) + **4px accent ring**. The ring is the set's accent, per
-the colour system: the third colour marks the live element (progress fill,
-count line, the pick).
+A ring on a staircase silhouette is the single hardest thing in this
+treatment. Three mechanisms were tried, in this order; only the third is
+correct.
 
-The traps, each of which will bite any reimplementation:
+1. **`border`** — a clipped border loses its stroke on every step. `border`
+   paints along the border-box rectangle and `clip-path` then cuts the
+   corners off it. An outline on a clipped shape has to follow the
+   _silhouette_, which a border cannot.
+2. **`drop-shadow` on the element** — amputated by its own polygon, because
+   **filter runs before clip-path** (spec order). Moving the filter to an
+   **unclipped wrapper** fixes that: it then operates on the already-clipped
+   child, and the shadows land free.
+3. **A clipped band** — what the lab now does, and the only mechanism that
+   survives every treatment. The wrapper's `::before` is filled with the
+   ring colour and clipped to the outer silhouette **minus** the inner one,
+   `evenodd`.
 
-1. **A clipped border loses its stroke on every step.** `border` paints
-   along the border-box rectangle; `clip-path` cuts the corners off it.
-   Outlines on clipped shapes must follow the _silhouette_ — drop-shadows do.
-2. **Filter runs before clip-path** (spec order). A drop-shadow ring on the
-   clipped element is amputated by its own polygon. The ring lives on an
-   **unclipped wrapper** (`.qopt-wrap.ring`), whose filter operates on the
-   already-clipped child.
-3. **Drop-shadows behind translucent fills read as a solid slab.** The rest
-   state's 9% tint is glass; the shadow silhouette shows straight through
-   it. Any state that carries shadows must use an **opaque** fill
-   (pre-composite the tint onto the surface colour with `color-mix`).
-4. **Hover specificity.** The generic `:hover` tint rule outranks the
-   selected rule and would flip the fill back to glass (re-triggering trap
-   3). The selected rule must also claim its own `:hover`.
+The drop-shadow version (2) failed the moment a treatment had no fill:
+**`drop-shadow` traces the alpha channel, not the border-box**, so a pill
+whose background is `transparent` gets its _letterforms_ outlined instead
+of its silhouette. It only ever looked right because every state happened
+to be filled. Two corollaries died with it — corner notches (four
+orthogonal shadows dilate a rectilinear shape into a plus, leaving the
+convex corners short) and the rule that any ringed state needed an
+**opaque** fill (the shadow silhouette showed through glass as a slab).
+The band overlaps no interior, so a ringed state's fill may now be as
+translucent as it likes.
 
-**Footprint neutrality:** drop-shadow rings grow outward, so a selected
-pill would read taller than its neighbours. The generated path takes an
-`inset` argument (4px = ring width): the selected pill's silhouette shrinks
-by exactly what the ring adds back. **Selection changes an option's colour,
-never its size.** (An additional outer dark "sprite contour" was tried for
-weight and cut: it read as unexplained noise and grew the silhouette.)
+Two things carry over unchanged:
+
+- **Hover specificity.** The generic `:hover` tint rule outranks the
+  selected rule, and would repaint a selected option with the idle hover
+  tint under the cursor. The selected rule must claim its own `:hover`.
+- **Footprint neutrality.** Rings grow outward, so a selected pill would
+  read taller than its neighbours. The generated path takes an `inset`
+  argument equal to the ring width, and the pill shrinks by exactly what
+  the ring adds back. **Selection changes an option's colour, never its
+  size.** (An outer dark "sprite contour" was tried for weight and cut: it
+  read as unexplained noise and grew the silhouette.)
+
+  The `reserved` feedback placement is the same principle one level up — an
+  option never moves under the cursor either, because the slot that carries
+  a hint is always there rather than appearing between pills. Neutrality at
+  the pill is worth little if the whole list jumps 48px the moment you get
+  one wrong. See open decision 4 in `redesign-handoff.md`.
+
+Splice the hole at **50% on the left edge**, where both silhouettes run
+straight: the outgoing connector and the polygon's implicit closing edge
+are then the same segment traversed twice, which has no area. Splice it
+anywhere else and a wedge appears.
+
+Which state wears a ring, in what colour and at what width, is a **colour**
+decision, not a shape one — see the answer-treatment dial in the lab and
+`color-handoff.md`. What ships today: selected = **accent-tinted opaque
+interior** (14% accent composited onto the surface) + **4px accent ring**,
+the third colour marking the live element as it does for the progress fill
+and count line.
+
+### Three marks, one option
+
+An option can be focused, the multi-select cursor, and selected at the same
+time. The band generator serves all three, and they are kept apart on three
+axes at once — position, width and hue — because hue alone would fail WCAG
+1.4.1:
+
+| mark     | position                                    | width | colour          |
+| -------- | ------------------------------------------- | ----- | --------------- |
+| focused  | **outside** the silhouette, 2px surface gap | 2px   | `--qo-focus`    |
+| cursor   | **on** the silhouette                       | 2px   | `--qo-focus`    |
+| selected | **on** the silhouette                       | 4px   | treatment's own |
+
+Focus and cursor share a colour deliberately: they mean the same thing
+("where I am") and separate by position. `--qo-focus` is the **ink** for any
+treatment that leaves the ink unspent, and the **accent** for one that
+doesn't (Weight).
+
+The focus band's radius grows by exactly the 4px it stands off (R = 28), so
+it stays concentric instead of tightening at the corners. **The gap is not
+decoration** — ink and accent are only 1.60–2.67:1 apart, below 1.4.11's
+3:1, so the two marks may never touch; with surface between them each is
+measured against the surface instead. Pill mode falls back to a plain
+`outline` at the same width, colour and offset.
 
 ## Iconography
 
@@ -207,9 +264,13 @@ question screen's default.
   `--quiz-fg` / `--quiz-accent`; this treatment adds no new colour inputs
   (the error tone comes from the colour system's rose-mix or tier-brick
   decision, still open in `color-handoff.md`).
-- `spriteClip` is framework-free string generation — in React, compute once
-  per (selected) state and set via `style.clipPath`. Don't express it as a
-  Tailwind arbitrary value; it's far past the readable length.
+- `spriteClip` / `ringBand` are framework-free string generation — in React,
+  compute once per state and set via `style.clipPath`. Don't express either
+  as a Tailwind arbitrary value; both are far past the readable length.
+- The ring needs a **sibling** layer, not an ancestor: a `clip-path` on a
+  wrapper clips its whole subtree, so putting the band there deletes the
+  label and badge along with the pill's interior. In the lab it's the
+  wrapper's `::before`.
 - Tailwind: `border-[var(--x)]` is ambiguous (width vs colour) and is
   silently dropped — always `border-[color:var(--x)]`.
 - The lab's option markup is a faithful mirror of `components/option.tsx`'s

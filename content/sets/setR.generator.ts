@@ -67,7 +67,9 @@ function trimClause(clause: string): string {
 function buildOptions(): Option[] {
   return FALLACIES.map((fallacy) => ({
     id: fallacy.id,
-    label: fallacy.name,
+    // The grid cell takes the terse label the original's palette used;
+    // the hint, which is the reference gloss, names the full term.
+    label: fallacy.label,
     hint: `${fallacy.name}: ${fallacyGloss(fallacy)}`,
     // Badge label + typeable shortcut, matching the original's
     // "click a fallacy or type its abbreviation".
@@ -134,13 +136,25 @@ function expandClauseRefs(note: string, fallacy: Fallacy): string {
   return `${note} Here, ${expansion}.`;
 }
 
+/**
+ * The lead sentence takes the TERSE label, not the full term — that is what
+ * the original's own sentence does (`The passage illustrates the $H
+ * fallacy:`), and it is the only reading under which every one of the
+ * eighteen comes out grammatical: "the genetic fallacy", "the post hoc
+ * fallacy", "the opposition fallacy". Using `name` here gave "the genetic
+ * fallacy fallacy" and "the post hoc ergo propter hoc fallacy".
+ */
+function answerLead(fallacy: Fallacy): string {
+  return `This passage illustrates the ${fallacy.label.toLowerCase()} fallacy.`;
+}
+
 function buildAnswer(
   section: FallacySection,
   note: string | undefined,
   subs: Record<string, string>
 ): string {
   const fallacy = FALLACY_BY_CODE.get(section.code)!;
-  const lead = `This passage illustrates the ${fallacy.name.toLowerCase()} fallacy.`;
+  const lead = answerLead(fallacy);
   if (!note) return `${lead} ${fallacyGloss(fallacy)}`;
   return `${lead} ${resolve(expandClauseRefs(note, fallacy), subs)}`;
 }
