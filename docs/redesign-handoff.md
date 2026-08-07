@@ -100,6 +100,12 @@ accent. Redoing it is ~30 lines.
    **above** the options and **the options never move**. Those are two
    separable properties, hence three modes rather than two.
 
+   **`reserved` is the WORKING default since 2026-08-06** (Malik, "for
+   now") — mobile raised the stakes: the pick-to-hint gulf measures 514px
+   on Set R at 390px wide, and reserved is the only mode that never moves
+   the options. Not decided; the gap's cost must be re-judged at phone
+   width (and the numbers below are quirks-mode — see Caveats).
+
    Displacement of the option palette inside the card, measured on the real
    Q and R samples (positive = pushed down, negative = pulled up):
 
@@ -227,6 +233,19 @@ accent. Redoing it is ~30 lines.
     which is a reason to decide it BEFORE polishing that layout, and not
     a reason to decide it either way.
 
+11. **Primary CTA silhouette** — `Logo` (ships) · `Gem` (working default
+    since 2026-08-06) · `Sprite`; a chunky Pixel reading was cut. Judge on
+    Start and the question footer; the full-width mobile CTA flatters the
+    gem (fixed 4/8px chamfers read finer as the box grows).
+
+**Settled scope, affecting every screen:** the **scored run replaces
+quiz (count) mode for the upcoming release** (Malik, 2026-08-06) — no
+"n of 10", no mode-choice link, no Cells progress anywhere; count-mode
+code stays dormant for a later reform. And the **mobile prototype now
+exists** in the lab (`Start · M` / `Question · M` views) with its own
+chrome spec — see `pixel-ui.md` § Mobile chrome and the 2026-08-06
+handover for what is decided vs judgeable there.
+
 **Housekeeping:**
 
 10. **`SET_SURFACES`** in the lab is stale in four of six entries (it feeds the
@@ -258,16 +277,19 @@ accent. Redoing it is ~30 lines.
 
 ## Caveats — read before trusting anything below
 
-**The lab is not in the app's typeface.** `pattern-lab.html` sets
-`'Avenir Next', Futura, system-ui`; the app ships **Roboto Flex** (variable,
-width axis) via `next/font/google`, applied on `<body>` in `app/layout.tsx`.
-They share no metrics. Every typographic decision recorded here — the 62ch
-measure, 18px/500 notation chips, 0.12em caps tracking, 1.25 prompt leading,
-weight 500 on grid cells — was judged in the wrong face, and Avenir Next is
-a macOS system font that is never loaded as a webfont, so the lab already
-renders differently for anyone not on a Mac. **Re-judge every type decision
-once the lab is on Roboto Flex.** Ratios and hierarchy should survive; exact
-values will not.
+~~**The lab is not in the app's typeface.**~~ — **resolved 2026-08-06**:
+the lab loads **Roboto Flex** (same variable axes as `next/font` requests)
+with the old Avenir stack kept only as the offline fallback. Type
+decisions recorded before that date were judged in the wrong face —
+re-judge any that matter before porting.
+
+**The lab also spent its whole life in QUIRKS MODE** — no doctype until
+2026-08-06, while the app (Next.js) always renders standards. Exposed by
+dark mode: quirks blocks colour inheritance into `<table>`, so the guide
+tables took the lab chrome's `--text`. **Any pixel measurement recorded
+before 2026-08-06 (including decision 4's displacement table and the
+391px reserved gap) is a quirks-mode number — re-measure before it
+decides anything.**
 
 ~~**The guide panel shows the wrong content for six of seven sets**~~ —
 **fixed 2026-08-06.** `SET_GUIDES` in the lab now mirrors the app's real

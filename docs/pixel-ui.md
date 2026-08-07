@@ -199,13 +199,24 @@ Variants, silhouette the only variable:
 Cut: a **tag** variant (square body, stair-stepped sale-tag point) — didn't
 work in context.
 
-## Progress indicator — DECIDED: Line by mode
+## Progress indicator — DECIDED: Line (and only Line, this release)
 
-**Line (continuous) is the default**, because the scored run is becoming the
-app's default mode and its progress is genuinely continuous: point values
-differ per set (+5/+7/+8), levels change what a miss costs, and the bar must
-animate **down** as well as up when points are lost. Cells were considered
-for it (10 points per cell) and rejected on those grounds.
+**Line (continuous)**, because the scored run's progress genuinely is:
+point values differ per set (+5/+7/+8), levels change what a miss costs,
+and the bar must animate **down** as well as up when points are lost.
+Cells were considered (10 points per cell) and rejected on those grounds —
+and since **the scored run replaced count mode for the release**
+(2026-08-06), Cells has no surfaced home at all; its renderer sits
+dormant in the lab for the future quiz-mode reform.
+
+**Mobile pixelisation (decided with the mobile chrome):** in the header
+row the bar has free ends, and those are its only curve-analog — they
+take sprite caps at **R=4 on the 2px grid**. The fill advances in whole
+**4px steps** (`width: round(down, P%, 4px)`, plain `%` first as the
+fallback), so progress ticks like a loading bar drawn in pixels and the
+leading edge never antialiases. The long edges stay ruler-straight — no
+crenellation. Desktop's 6px hairline bleeds off the card edges (no free
+ends): unclipped, unquantised.
 
 **Cells are for the 10-question count mode only**, where progress really is
 discrete: ten blocks, 8px tall with 4px gaps, full-bleed at the card's top —
@@ -276,6 +287,57 @@ content — footer controls included — sits on clean surface. The pattern
 frames the work; it never sits under text. In the lab each view keeps its
 own centre treatment (`state.centre` vs `state.centreQ`), footer being the
 question screen's default.
+
+## Mobile chrome — the phone frame's spec (built 2026-08-06)
+
+The lab's `Question · M` / `Start · M` views. Anatomy, top to bottom:
+
+- **Header row, sticky as a unit** (Duolingo/Brilliant anatomy): bare
+  pixel **✕** left (18px glyph, ink@60%, NO plate — but a full 44×44 tap
+  box) · **progress bar** filling the middle (10px tall, sprite caps,
+  quantised fill — see Progress) · **icon-only Guide chip** right (44×44
+  sprite chip, book-heart at 18px, label dropped, `aria-label` kept).
+  Row runs 8px from the card edges; the bar takes a **−13px optical
+  margin** against the ✕ — (44−18)/2 of invisible whitespace in the bare
+  glyph's box — so the perceived gaps match, and +13px right margin when
+  the Guide chip is absent (Set N) so the endpoints mirror.
+- **Content**: the question screen unchanged; the card's own narrowing
+  fires `#questionView`'s container query (640px threshold still a
+  placeholder). Prompt sizes in **cqw, not vw** (3.6cqw, 20px floor).
+- **Footer, sticky**: count hidden (scored run reads on the bar), the
+  CTA full-width. Models the app's collapsed vaul sheet. One divider
+  only — the footer's own border-top; the in-flow hr is desktop's.
+- **No pattern on question screens** (`Clean` treatment — actually skips
+  generation). The pattern's phone home is the start screen, at **0.6
+  scale**. The centre dial's "Off" is now labelled **"Full bleed"** —
+  its old name caused a real regression.
+- **Exit lives in the card** (the ✕), replacing `ExerciseNavbar`'s white
+  bar — adopting this reclaims a full navbar of phone height.
+- **Not modelled yet**: the expandable guide bottom sheet (the app's
+  180/460/full snaps) — the lab fakes a full-bleed overlay; and the
+  scored run's level dial on the start screen.
+
+## Porting traps — learned in the lab, will bite in the app
+
+- **`overflow: hidden` is a sticky containing block.** The app's quiz
+  card uses `overflow-hidden` to clip the progress bar to its rounded
+  corners — any sticky chrome inside it will silently never pin. Use
+  `overflow: clip` (clips without creating a scroll container).
+- **`container-type: inline-size` captures absolute descendants** (layout
+  containment makes it their containing block). Moving the app's
+  absolutely-positioned progress line inside a size container re-anchors
+  it. The lab reparents the header-row elements per view for this reason;
+  the app needs either the same split or a header row at all breakpoints.
+- **`vw` lies inside a narrow card** — the lab's prompt clamp read the
+  workbench viewport and rendered a size no phone shows. Any `vw`-sized
+  type in the quiz should become container-relative (`cqw`) at port.
+- **Gate every `:hover` behind `@media (hover: hover)`** or Tailwind's
+  default v4 gating — un-gated hover tints stick after taps on touch and
+  read as selection state.
+- **Rendering mode is part of the material**: the lab was in quirks mode
+  its whole life (no doctype) and standards mode changed real things
+  (table colour inheritance). Prototype and app must share the mode —
+  and pre-2026-08-06 lab measurements are quirks numbers.
 
 ## Porting notes
 
