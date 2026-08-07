@@ -1,4 +1,29 @@
+<!doctype html>
+<!--
+  The doctype is LOAD-BEARING, added 2026-08-06. Without it the lab spent
+  its whole life in quirks mode ("BackCompat") while the app (Next.js)
+  always renders standards mode — the same wrong-material trap as judging
+  type in Avenir Next. The quirk that exposed it: quirks mode blocks color
+  inheritance into <table>, so the guide tables took the LAB CHROME's
+  --text instead of the card's ink — invisible in light mode (both are
+  near-black), glaring in dark. Any pixel measurement recorded before this
+  date was taken in quirks mode; re-measure before leaning on one.
+-->
 <title>LogiCola · Start-screen pattern lab</title>
+<!--
+  The APP's typeface (Roboto Flex, variable, wdth axis — see app/layout.tsx),
+  loaded here so the lab stops judging type in Avenir Next, a face the app
+  never ships. Same axes as next/font requests. The lab opens over file://,
+  so this needs network once; offline it falls back to the old stack below —
+  if the type suddenly looks "different today", check that the webfont
+  actually loaded before trusting any judgement.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap"
+  rel="stylesheet"
+/>
 <style>
   :root {
     --bg: #f3f1ec;
@@ -50,7 +75,9 @@
     margin: 0;
     background: var(--bg);
     color: var(--text);
-    font-family: 'Avenir Next', Futura, system-ui, sans-serif;
+    /* Roboto Flex FIRST — app parity (see the <link> note above). The old
+       Avenir stack stays only as the offline fallback. */
+    font-family: 'Roboto Flex', 'Avenir Next', Futura, system-ui, sans-serif;
   }
   .mono {
     font-family: ui-monospace, 'SF Mono', Menlo, monospace;
@@ -480,6 +507,209 @@
     letter-spacing: 0.14em;
     color: var(--muted);
   }
+  /* ---- Mobile view -----------------------------------------------------
+     The question screen at 390px — iPhone 14/15's logical width. Not an
+     emulator: same DOM, same dials, and the card's own narrowing fires
+     #questionView's container query (640px threshold, still a placeholder
+     — judging that number is what this view exists for). Two differences
+     that are mobile UX rather than simulation shortcuts:
+     · keycaps hidden — no physical keyboard on touch, and the app already
+       gates its keyboard hint the same way;
+     · the guide overlay runs full-width — the 300px side panel is a
+       desktop shape; the app's mobile guide is a bottom sheet, so a
+       full-bleed sheet is the nearer honest stand-in until that surface
+       is modelled properly. ---- */
+  .card.qmobile {
+    flex: none;
+    width: 390px;
+    margin-inline: auto;
+    min-height: 780px;
+    /* clip, not hidden: an overflow:hidden ancestor is a sticky containing
+       block, so the sticky progress/footer below could never pin to the
+       viewport. clip keeps the rounded-corner clipping without creating a
+       scroll container. PORT NOTE: the app's card is overflow-hidden for
+       the same clipping reason — sticky chrome inside it needs this same
+       change there. */
+    overflow: clip;
+    /* 76px top: the Guide chip floats at top 24px and stands ~36px tall;
+       at 390px the prompt walks straight into it without this clearance.
+       (First finding the view produced, minutes after existing.)
+       24px bottom, NOT the desktop's 120: that reserve existed for the
+       pattern band, which mobile defaults off — with it, ~230px of
+       decoration trailed the CTA at end-of-scroll. */
+    padding: 76px 16px 24px;
+  }
+  /* .card.qview (later in the file) sets 48px at equal specificity, so
+     the tie goes against mobile — the extra class makes 24px stick. If
+     the band is dialled back on, .card.qview.qband's 152px reserve wins
+     (later at equal specificity), which is exactly right. */
+  .card.qview.qmobile {
+    padding-bottom: 24px;
+  }
+  .card.qmobile .qkeys {
+    display: none;
+  }
+  .card.qmobile .qguide-panel {
+    width: 100%;
+    border-left: 0;
+  }
+  /* The mobile header row (Malik, 2026-08-06, from the Duolingo/Brilliant
+     pattern): ONE sticky row at the screen top — exit ✕ left, the progress
+     bar filling the middle, the Guide chip right. The three elements are
+     REPARENTED into #qTopBar by render() in the mobile view only; on
+     desktop they return to their original homes (the bar can't live in
+     the DOM row permanently because #questionView is a size container,
+     whose layout containment would re-anchor the desktop's absolute
+     line). The bar stays a flat rectangle: Duolingo rounds its bar, but
+     straight edges stay ruler-straight in this grammar. */
+  .card.qmobile .qtopbar {
+    position: sticky;
+    top: 0;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    align-self: stretch;
+    margin: -76px -16px 20px;
+    /* 8px inline, not the card's 16 (Malik, 2026-08-06): the ✕ and Guide
+       hug the edges the way the reference apps' do — their 44px boxes
+       already carry ~13px of internal whitespace around the glyph, so the
+       visual inset stays comfortable. */
+    padding: 12px 8px;
+    background: var(--qs);
+  }
+  .card.qmobile .qtopbar .qexit,
+  .card.qmobile .qtopbar .qguide-btn {
+    position: static;
+  }
+  /* A bare glyph, not a chip (Malik, 2026-08-06 — the plate made the exit
+     compete with the Guide chip; Duolingo and Brilliant both run a naked
+     quiet ✕). The 44px box stays — only the paint shrinks, never the
+     target. Ink at 60% keeps it present but subordinate to the bar. */
+  .card.qmobile .qtopbar .qexit {
+    background: transparent;
+    color: color-mix(in srgb, var(--qink) 60%, transparent);
+  }
+  .card.qmobile .qtopbar .qexit:hover {
+    background: transparent;
+    color: var(--qink);
+  }
+  /* 18px, up from the chip's 14px: as a bare glyph the pixel ✕ IS the
+     affordance, and at 14px its stair-steps blur into a generic cross.
+     18px is where the library's rasterisation reads as drawn-in-pixels. */
+  .card.qmobile .qtopbar .qexit svg {
+    width: 18px;
+    height: 18px;
+  }
+  /* Icon-only Guide on mobile (Malik, 2026-08-06): the word cost ~50px of
+     a 390px row that the progress bar wants, and the book icon carries
+     the meaning — the aria-label keeps the name. Going square also lifts
+     this instance to the 44px floor (audit finding 5; the desktop chip is
+     still 37px and still pending). */
+  .card.qmobile .qtopbar .qguide-btn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+  .card.qmobile .qtopbar .qguide-btn .qguide-label {
+    display: none;
+  }
+  .card.qmobile .qtopbar .qguide-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+  .card.qmobile .qtopbar .qprogress {
+    position: static;
+    flex: 1;
+    width: auto;
+    /* Optical correction (Malik, 2026-08-06): the ✕ is an 18px glyph
+       centered in its 44px tap box, so (44−18)/2 = 13px of invisible
+       whitespace pads its side of the row — the bar sat 27px from the
+       glyph but 14px from the Guide chip's PLATE, which reads
+       edge-to-edge. −13px re-centres the perceived gaps at 14px each.
+       The tap target is untouched. */
+    margin: 0 0 0 -13px;
+  }
+  /* Set N has no Guide chip. Without a terminator the bar ran to 8px of
+     the right edge while the ✕ glyph sat 21px inside the left — 13px of
+     right margin lands both endpoints at 21px, symmetric. */
+  .card.qmobile .qtopbar .qprogress:has(+ .qguide-btn[hidden]) {
+    margin-right: 13px;
+  }
+  /* 10px in the row — the 6px desktop hairline vanishes beside 44px
+     chips. A dial-able value, not a decision. */
+  .card.qmobile .qtopbar .qprogress.mode-line {
+    height: 10px;
+  }
+  /* Exit affordance, mobile view. What SHIPS is an ✕ link in a white
+     ExerciseNavbar ABOVE the immersive card (components/mobile/
+     exerciseNavbar.tsx) — it spends a whole navbar of phone height and
+     breaks the coloured surface. This chip is the redesign proposal:
+     exit lives IN the card, top-left, mirroring the Guide chip top-right,
+     in the system's own ink-glass sprite grammar. Born at the 44px HIG
+     floor (the Guide chip's 37px is audit finding 5, still pending). */
+  .qexit {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 44px;
+    height: 44px;
+    appearance: none;
+    border: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--qink);
+    background: color-mix(in srgb, var(--qink) 9%, transparent);
+    z-index: 4;
+  }
+  .qexit:hover {
+    background: color-mix(in srgb, var(--qink) 15%, transparent);
+  }
+  .qexit svg {
+    width: 14px;
+    height: 14px;
+  }
+  /* The footer as the collapsed bottom sheet's stand-in. The APP's mobile
+     controls do not sit in the card flow at all — a permanently-open vaul
+     sheet (180px collapsed snap) fixes the CTA and the numeric progress to
+     the screen bottom, and the guide expands from the same sheet. Sticky
+     here models the part that matters for judgement: count + primary
+     action always in reach. Below the guide overlay (z 5) on purpose —
+     the app's expanded sheet covers its own header too. */
+  /* The in-flow hr above the footer is desktop's separator (the app draws
+     the same one). The sticky footer's border-top took that job on
+     mobile, so the hr was a second divider — and the scrolling one of
+     the two, which is the wrong one to keep. */
+  .card.qmobile .qrule {
+    display: none;
+  }
+  .card.qmobile .qfooter {
+    position: sticky;
+    bottom: 0;
+    z-index: 4;
+    background: var(--qs);
+    padding: 12px 16px;
+    margin: 0 -16px;
+    border-top: 2px solid color-mix(in srgb, var(--qink) 12%, transparent);
+    gap: 16px;
+  }
+  /* The primary action fills the row (Malik, 2026-08-06) — Duolingo's
+     CHECK and Brilliant's Continue both run edge to edge, and ours now
+     does too: the "4 of 10" count is hidden here because the scored run
+     is becoming the app's default mode and its progress reading is the
+     bar above, not a question count. (The count-mode footer label still
+     exists on desktop; the mode itself may survive — it just isn't what
+     this prototype models.) */
+  .card.qmobile .qfooter .qcount {
+    display: none;
+  }
+  .card.qmobile .qfooter .qcta {
+    flex: 1;
+    max-width: none;
+  }
   .card {
     position: relative;
     flex: 1;
@@ -534,11 +764,24 @@
     width: min(820px, 92%);
     height: 92%;
   }
+  /* The desktop plate lifts to 44% and caps at 480px — proportions for a
+     wide card. The mobile start centers its column at 50% of a 780px
+     card, so that plate's bottom edge ran straight through the
+     scored-run link (pattern under text, the one thing the plate
+     exists to prevent). Recentred and taller for the phone frame. */
+  .card.qmobile .plate--panel {
+    top: 50%;
+    height: min(560px, 74%);
+  }
   /* Footer needs no plate: every remaining pattern clears whole cells. */
   .plate--footer {
     display: none;
   }
   .plate--none {
+    display: none;
+  }
+  /* Clean draws no pattern at all, so there is nothing to plate over. */
+  .plate--clean {
     display: none;
   }
   .mode {
@@ -642,22 +885,6 @@
   .cta:active {
     transform: scale(0.97);
   }
-  .scored {
-    appearance: none;
-    border: 0;
-    background: transparent;
-    font: inherit;
-    font-size: 14px;
-    margin-top: 20px;
-    cursor: pointer;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    opacity: 0.7;
-  }
-  .scored:hover {
-    opacity: 1;
-  }
-
   :focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
@@ -953,7 +1180,13 @@
     white-space: nowrap;
   }
   .qprompt {
-    font-size: clamp(20px, 2.6vw, 26px);
+    /* cqw, not vw — the second finding the Mobile view produced. The old
+       2.6vw read the WORKBENCH viewport, so a 390px card still rendered
+       the prompt at ~26px, a size no phone would ever show; on a real
+       phone 2.6vw ≈ 10px and the app sits at the 20px floor. 3.6cqw of
+       #questionView's width gives the same desktop result (736px → 26px,
+       clamped) and an honest mobile one (358px → 13px → the 20px floor). */
+    font-size: clamp(20px, 3.6cqw, 26px);
     /* Display sizes want tight leading; 1.25 is the top of Butterick's
        120–145% band, which suits a two-to-three line question. */
     line-height: 1.25;
@@ -1770,9 +2003,38 @@
       <p class="label">View</p>
       <div class="mode" role="group" aria-label="Card view" id="viewList">
         <button type="button" data-view="start">Start</button>
+        <button type="button" data-view="mstart">Start · M</button>
         <button type="button" data-view="question">Question</button>
+        <button type="button" data-view="mobile">Question · M</button>
         <button type="button" data-view="components">Components</button>
       </div>
+    </section>
+
+    <!--
+      Global, not a question experiment: the primary CTA lives on the start
+      screen ("Start Quiz") AND the question footer ("Check Answer"), and
+      the dial must be judgeable on both.
+    -->
+    <section>
+      <p class="label" style="margin: 8px 0 4px">Primary button</p>
+      <div class="mode" role="group" aria-label="Primary button" id="ctaList">
+        <button type="button" data-cta="logo">Logo</button>
+        <button type="button" data-cta="gem">Gem</button>
+        <button type="button" data-cta="sprite">Sprite</button>
+      </div>
+      <p class="note" style="margin: -6px 0 14px">
+        The CTA today is the logo’s own silhouette — an octagon with 9px 45°
+        chamfers — in solid ink, the only solid-ink object on the card, and that
+        colour role is not on this dial. The shape rule cuts both ways:
+        “straight edges stay ruler-straight” says the chamfer is already legal
+        pixel grammar, but the icon library rasterises its diagonals anyway
+        (every stroke of the ✕ is stairs). <b>Gem</b> reads the chamfer the way
+        the NEW badge does (4/8px two-step stairs); <b>Sprite</b> abandons the
+        logo shape for the option pill’s rasterised round — which makes the CTA
+        rhyme with the answers instead of the brand. (A chunky u=8
+        <b>Pixel</b> reading was cut 2026-08-06 without a decision on the rest.)
+        Judge on Start and on the question footer. Undecided.
+      </p>
     </section>
 
     <section id="qControls">
@@ -1866,10 +2128,12 @@
         <button type="button" data-qchip="acc">Accent tint</button>
       </div>
       <p class="label" style="margin: 8px 0 4px">Progress</p>
-      <div class="mode" role="group" aria-label="Progress style" id="qProgList">
-        <button type="button" data-qprog="line">Line</button>
-        <button type="button" data-qprog="cells">Cells</button>
-      </div>
+      <p class="note" style="margin: -2px 0 14px">
+        <strong>Line only for this release.</strong> The scored run replaced
+        quiz (count) mode on every surface (Malik, 2026-08-06), and Cells
+        existed solely for count mode's genuinely discrete progress. The cells
+        renderer stays dormant in the code for the quiz-mode reform.
+      </p>
       <p class="label" style="margin: 8px 0 4px">Option chip</p>
       <div
         class="mode"
@@ -1987,9 +2251,14 @@
         aria-label="Centre treatment"
         id="centreList"
       >
+        <!-- "Full bleed" was labelled "Off" until 2026-08-06 — that read
+             as "pattern off", which is what Clean now actually does, and
+             the ambiguity caused a real bug (the mobile default). The
+             data values are unchanged: none = no centre CLEARING. -->
         <button type="button" data-centre="panel">Panel</button>
         <button type="button" data-centre="footer">Footer</button>
-        <button type="button" data-centre="none">Off</button>
+        <button type="button" data-centre="clean">Clean</button>
+        <button type="button" data-centre="none">Full bleed</button>
       </div>
       <div class="row" style="margin-top: 12px">
         <button class="reshuffle" id="reshuffle" type="button">
@@ -2021,11 +2290,14 @@
           Spot what is wrong with a definition — too broad, too narrow,
           circular, or worse.
         </p>
-        <div class="count mono" id="count">10 questions</div>
+        <!-- The scored run IS the quiz for the upcoming release (Malik,
+             2026-08-06): the mode blurb replaces "10 questions", and the
+             "or take a scored run" escape hatch is gone — there is no
+             other mode to escape to. Count mode will be reformed and may
+             return; it just isn't surfaced. The level dial the app's
+             scored start carries is NOT modelled yet — see the handover. -->
+        <div class="count mono" id="count">To 100 points · Level 7</div>
         <button class="cta" id="cta" type="button">Start Quiz</button>
-        <button class="scored" id="scoredLink" type="button">
-          Or take a scored run, the way the original worked →
-        </button>
       </div>
       <!--
         The question screen, mirroring components/quiz/index.tsx's immersive
@@ -2034,14 +2306,34 @@
         renderQuestion().
       -->
       <div id="questionView" hidden>
+        <!-- Mobile header row — render() moves the exit chip, progress bar
+             and Guide chip in here in the mobile view, and back out on
+             desktop. See .qtopbar for why the DOM can't hold them here
+             permanently. -->
+        <div class="qtopbar" id="qTopBar" hidden></div>
+        <!-- Mobile-only exit chip — see .qexit for why this proposes moving
+             the shipped navbar ✕ into the card. -->
+        <button
+          class="qexit"
+          id="qExit"
+          type="button"
+          aria-label="Exit quiz"
+          hidden
+        >
+          <span id="qExitIcon" aria-hidden="true"></span>
+        </button>
         <button
           class="qguide-btn"
           id="qGuideBtn"
           type="button"
           aria-expanded="false"
           aria-controls="qGuidePanel"
+          aria-label="Guide"
         >
-          <span id="qGuideIcon" aria-hidden="true"></span>Guide
+          <!-- Label in a span so mobile can go icon-only; the aria-label
+               keeps the name when the text is display:none. -->
+          <span id="qGuideIcon" aria-hidden="true"></span
+          ><span class="qguide-label">Guide</span>
         </button>
         <aside class="qguide-panel" id="qGuidePanel" hidden>
           <button
@@ -3294,9 +3586,22 @@
     pool: 'sets', // key into POOLS — Sets verbatim is the working pool
     seed: 7,
     view: 'start', // 'start' | 'question'
+    // Primary CTA silhouette — 'logo' (the shipped 9px 45° chamfer) |
+    // 'gem' (4/8px two-stair chamfer, the NEW badge's reading) |
+    // 'sprite' (the pill's round, R clamped to the button's height).
+    // A chunky u=8 'pixel' reading was cut 2026-08-06. 'gem' is the
+    // WORKING default (Malik, 2026-08-06 — "for now"), not a decision:
+    // the dial stays live. Applied to BOTH CTAs in render().
+    cta: 'gem',
     qShape: 'sprite', // 'pill' | 'pixel' | 'sprite' — sprite is the winner
     qOpt: 'tint', // answer colour ladder — see OPTION_TREATMENTS
-    qFeed: 'inline', // where a hint / the answer lands — see FEEDBACK_NOTES
+    // Where a hint / the answer lands — see FEEDBACK_NOTES. 'reserved' is
+    // the WORKING default (Malik, 2026-08-06, "for now"), not a decision:
+    // it is the only mode that never moves the options, and mobile made
+    // that property matter more (the 514px pick-to-hint gulf). Its cost —
+    // the permanent gap — was measured on DESKTOP (391px on R); re-judge
+    // the price at 390px wide before calling it.
+    qFeed: 'reserved',
     qHint: 'runin', // how a hint names its fallacy: 'runin' | 'heading'
     qEm: 'rule', // DECIDED — see the Emphasis dial for the rejected four
     // Notation chip corner: Sprite 4px — DECIDED (Malik, 2026-08-06), so
@@ -3306,11 +3611,11 @@
     // in renderQuestion(). Small instances (L4's rule chips, R's ~20px
     // table chips) are flagged for per-size tweaking before the port.
     qKeys: 'off', // preview the focus ring + multi-select cursor
-    // Progress indicator. 'line' is the DEFAULT — the scored run (the mode
-    // becoming the app's default) has set-dependent point values, levels,
-    // and a bar that must animate down as well as up, all of which want a
-    // continuum. 'cells' (one block per question) is ONLY for the
-    // 10-question count mode, where progress is genuinely discrete.
+    // Progress indicator. 'line' is the ONLY surfaced option since the
+    // scored run replaced quiz (count) mode for the release (Malik,
+    // 2026-08-06) — its dial was removed with Cells, which existed solely
+    // for count mode's discrete progress. The cells renderer stays
+    // dormant below for the quiz-mode reform; nothing can select it.
     qProg: 'line',
     // Option-chip silhouette in the pixel/sprite modes. 'square' is the
     // shipped chip; 'diamond' rasterises MaterialShapes' puffy diamond onto
@@ -3318,10 +3623,19 @@
     qBadge: 'square',
     qErr: 'rose', // 'rose' (app today) | 'brick' (derived via the accent gates)
     qChip: 'ink', // notation chips tinted with ink or accent
-    // The two views keep separate centre treatments: the start screen shows
+    // The views keep separate centre treatments: the start screen shows
     // off the full pattern (panel), the question screen banishes it to a
     // footer band so it frames the work instead of competing with it.
     centreQ: 'footer',
+    // Mobile question defaults to CLEAN — genuinely no pattern, a new
+    // treatment added after 'none' turned out to mean the OPPOSITE
+    // ('none' = no centre CLEARING = full bleed, and defaulting to it
+    // painted the quilt behind the prompt and options — Malik, rightly:
+    // "you totally ruined the mobile view"). On mobile the question card
+    // is working chrome edge to edge; the pattern's phone home is the
+    // start screen. Flip the dial to judge alternatives (footer brings
+    // its 152px reserve back automatically).
+    centreM: 'clean',
   };
 
   // Per-question interaction state: which pill is picked, which are ruled
@@ -3380,6 +3694,10 @@
   // the question screen banishes it to the footer). One accessor so every
   // consumer — clearRect, the plate, the buttons — agrees on whose turn it is.
   function activeCentre() {
+    // Each view owns its treatment. Mobile is the question screen for
+    // content, but NOT for pattern: its default is 'none' — the phone's
+    // foot belongs to the pinned chrome, not a band (see state.centreM).
+    if (state.view === 'mobile') return state.centreM;
     return state.view === 'question' ? state.centreQ : state.centre;
   }
 
@@ -3390,7 +3708,7 @@
       // card's foot without ever reaching the footer controls (the card
       // reserves matching padding — see .card.qview.qband).
       const strip =
-        state.view === 'question'
+        state.view === 'question' || state.view === 'mobile'
           ? 112
           : Math.min(260, Math.max(150, h * 0.22));
       return { x: -1, y: -1, w: w + 2, h: h - strip + 1, r: 0 };
@@ -3872,7 +4190,6 @@
   const cardCaption = document.getElementById('cardCaption');
   const countEl = document.getElementById('count');
   const cta = document.getElementById('cta');
-  const scoredLink = document.getElementById('scoredLink');
   const noteEl = document.getElementById('patternNote');
 
   // WCAG relative luminance / contrast, for the brick error-tone derivation
@@ -4328,6 +4645,24 @@
   }
 
   /**
+   * Primary CTA silhouette, per the Primary button dial. '' for logo lets
+   * the stylesheet's own 9px-chamfer polygon apply — one source for the
+   * shipped shape. Sprite clamps R to the button's real height (R=24 needs
+   * ≥48px; the CTA runs ~45px), stepping down in u=4 increments so the
+   * profile stays on the grid; hidden buttons measure 0 and take the
+   * 48px fallback, which is fine because they are invisible.
+   */
+  function ctaClip(el) {
+    if (state.cta === 'gem') return `polygon(${pixelPts(0, 4).join(', ')})`;
+    if (state.cta === 'sprite') {
+      const h = el.offsetHeight || 48;
+      const R = Math.max(8, Math.min(24, Math.floor(h / 8) * 4));
+      return spriteClip(0, R);
+    }
+    return '';
+  }
+
+  /**
    * Pixel mode's chunky two-stair corner, as points rather than the CSS
    * calc() polygon in the stylesheet. Same vertex order and same start/end
    * edge as spritePts, so ringBand() serves both shape modes.
@@ -4454,6 +4789,18 @@
   const qGuidePanel = document.getElementById('qGuidePanel');
   document.getElementById('qGuideIcon').innerHTML = ICONS.bookHeart;
   document.getElementById('qGuideCloseIcon').innerHTML = ICONS.times;
+  // Exit chip: mobile view only. In the lab, exiting the quiz means
+  // returning to the Start view — the nearest honest model of the app's
+  // "back to the home page".
+  document.getElementById('qExitIcon').innerHTML = ICONS.times;
+  // Exiting the mobile quiz lands on the MOBILE start — the round trip
+  // (Start · M → Start Quiz → ✕ → Start · M) stays inside the phone
+  // frame, as it would in the app.
+  document.getElementById('qExit').addEventListener('click', () => {
+    state.view = 'mstart';
+    resetQState();
+    render();
+  });
   // Two-letter abbreviations are typed, so keystrokes buffer.
   let qAbbrBuf = '';
   document.getElementById('qKeyLeft').innerHTML = ICONS.arrowLeft;
@@ -4537,14 +4884,31 @@
       FEEDBACK_NOTES[state.qFeed];
     qPrompt.textContent = q.prompt;
     qHeader.textContent = q.header;
-    // Demo progress state: far enough in that all three indicator states
-    // (done / current / remaining) are visible at once.
-    const QDEMO = { current: 4, total: 10 };
-    qCount.textContent = `${QDEMO.current} of ${QDEMO.total}`;
-    const doneFrac = (QDEMO.current - 1) / QDEMO.total;
+    // Demo progress state, in the SCORED RUN's own units — the release's
+    // only surfaced mode (Malik, 2026-08-06). The footer label matches the
+    // app's progressLabel() score form. The count fields stay only to
+    // feed the dormant Cells branch below, awaiting the quiz-mode reform.
+    const QDEMO = { score: 30, target: 100, current: 4, total: 10 };
+    qCount.textContent = `${QDEMO.score} / ${QDEMO.target} points`;
+    const doneFrac = QDEMO.score / QDEMO.target;
     qProgress.className = `qprogress mode-${state.qProg}`;
+    // Pixelised bar in the mobile row (Malik, 2026-08-06). Two moves, both
+    // inside the grammar: the row bar's FREE ENDS are its only
+    // curve-analog (Duolingo rounds them; the pixel reading of a round cap
+    // is a sprite corner, R=4 on the 2px grid), and the FILL advances in
+    // whole 4px steps via CSS round() — a loading bar drawn in pixels —
+    // with the plain % width first as the fallback for engines without
+    // round(). The bar's long edges stay ruler-straight, per the rule.
+    // Desktop's 6px hairline bleeds off the card edges: no free ends,
+    // nothing to cap, so it keeps its unclipped form.
+    const mobileBar = state.view === 'mobile' && state.qProg === 'line';
+    qProgress.style.clipPath = mobileBar ? spriteClip(0, 4, 2) : '';
     if (state.qProg === 'line') {
-      qProgress.innerHTML = `<div class="qprogress-fill" style="width:${doneFrac * 100}%"></div>`;
+      const pct = doneFrac * 100;
+      const w = mobileBar
+        ? `width:${pct}%;width:round(down, ${pct}%, 4px)`
+        : `width:${pct}%`;
+      qProgress.innerHTML = `<div class="qprogress-fill" style="${w}"></div>`;
     } else {
       // Cells — for the 10-question COUNT MODE ONLY, where progress is
       // genuinely discrete. Rejected for the scored run: point values vary
@@ -4756,6 +5120,10 @@
     qGuideBtn.style.clipPath = spriteClip(0, 12);
     qGuideBtn.setAttribute('aria-expanded', String(qGuideOpen));
     qGuidePanel.hidden = !qGuideOpen;
+    // Exit: mobile only — desktop's exit is the site navbar outside the
+    // card, which the lab doesn't model. No sprite clip: it's a bare
+    // glyph now, not a chip, so there is no silhouette to cut.
+    document.getElementById('qExit').hidden = state.view !== 'mobile';
     document.getElementById('qGuideClose').style.clipPath = spriteClip(0, 8);
     document.querySelectorAll('.qkey').forEach((k) => {
       k.style.clipPath = spriteClip(0, 8);
@@ -4844,8 +5212,29 @@
     // View routing FIRST — before the size guard: in the Components view the
     // card is hidden entirely, so clientWidth reads 0 and the guard would
     // otherwise return before the specimen ever became visible.
-    const isQ = state.view === 'question';
+    // Mobile IS the question screen at phone width — same DOM, same dials;
+    // the card narrows and #questionView's container query does the rest,
+    // exactly as the app's would. 'mstart' is the same trade for the
+    // start screen: the desktop start's DOM in the 390px card.
+    const isQ = state.view === 'question' || state.view === 'mobile';
     const isComp = state.view === 'components';
+    const isMobileFrame = state.view === 'mobile' || state.view === 'mstart';
+    card.classList.toggle('qmobile', isMobileFrame);
+    // Header-row reparenting (idempotent): the mobile view borrows the
+    // exit chip, progress bar and Guide chip into #qTopBar; every other
+    // view puts them back where the desktop layout expects them.
+    const topBar = document.getElementById('qTopBar');
+    const qExitEl = document.getElementById('qExit');
+    topBar.hidden = state.view !== 'mobile';
+    if (state.view === 'mobile') {
+      if (qProgress.parentElement !== topBar) {
+        topBar.append(qExitEl, qProgress, qGuideBtn);
+      }
+    } else if (qProgress.parentElement === topBar) {
+      card.insertBefore(qProgress, startView);
+      questionView.insertBefore(qExitEl, topBar.nextSibling);
+      questionView.insertBefore(qGuideBtn, qGuidePanel);
+    }
     card.hidden = isComp;
     cardCaption.hidden = isComp;
     badgeSpec.hidden = !isComp;
@@ -4873,7 +5262,6 @@
       'qKeysList',
       'qErrList',
       'qChipList',
-      'qProgList',
       'qBadgeList',
     ].forEach((id, k) => {
       const key = [
@@ -4885,7 +5273,6 @@
         'qKeys',
         'qErr',
         'qChip',
-        'qProg',
         'qBadge',
       ][k];
       document.querySelectorAll(`#${id} button`).forEach((b) => {
@@ -4904,6 +5291,15 @@
     countEl.style.color = p.accent;
     cta.style.backgroundColor = p.fg;
     cta.style.color = p.surface;
+    // Primary button dial — both CTAs at once (start + question footer):
+    // one object, one silhouette. After renderQuestion() so the question
+    // CTA's height is real when sprite clamps its radius.
+    document.querySelectorAll('.cta').forEach((b) => {
+      b.style.clipPath = ctaClip(b);
+    });
+    document.querySelectorAll('#ctaList button').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.cta === state.cta));
+    });
     document.querySelectorAll('#centreList button').forEach((b) => {
       b.setAttribute(
         'aria-pressed',
@@ -4915,8 +5311,22 @@
     CLEAR = clearRect(w, h);
     // Pixel fields run 1.7× more macro than their tuned bases; quilts are
     // already cell-scaled, so only the slider moves them.
-    const sEff = (state.pattern.startsWith('px') ? 1.7 : 1) * state.scale;
-    const body = GEN[state.pattern](w, h, p, sEff, 1, rng);
+    // The phone frames scale the pattern to ~0.6 (Malik, 2026-08-06:
+    // "patterns should be reviewed and adapted to better fit mobile") —
+    // pieces tuned for the ~860px desktop card read boulder-sized at
+    // 390px. 0.6, not the literal 0.45 width ratio, because fully literal
+    // scaling makes the pixel grain dusty. A first pass for the eye; the
+    // Scale slider still compounds on top.
+    const mobileScale = card.classList.contains('qmobile') ? 0.6 : 1;
+    const sEff =
+      (state.pattern.startsWith('px') ? 1.7 : 1) * state.scale * mobileScale;
+    // Clean: no pattern AT ALL — not even a generator run. The keep-out
+    // machinery can't do this: smooth (non-pixel) patterns ignore CLEAR
+    // and rely on the plate, so only skipping generation is total.
+    const body =
+      activeCentre() === 'clean'
+        ? ''
+        : GEN[state.pattern](w, h, p, sEff, 1, rng);
     layer.innerHTML = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block">${body}</svg>`;
 
     noteEl.innerHTML = PATTERNS.find((x) => x.id === state.pattern).note;
@@ -4951,6 +5361,7 @@
     });
   });
   [
+    ['ctaList', 'cta', 'cta'],
     ['qShapeList', 'qshape', 'qShape'],
     ['qOptList', 'qopt', 'qOpt'],
     ['qFeedList', 'qfeed', 'qFeed'],
@@ -4959,7 +5370,6 @@
     ['qKeysList', 'qkeys', 'qKeys'],
     ['qErrList', 'qerr', 'qErr'],
     ['qChipList', 'qchip', 'qChip'],
-    ['qProgList', 'qprog', 'qProg'],
     ['qBadgeList', 'qbadge', 'qBadge'],
   ].forEach(([id, data, key]) => {
     document.querySelectorAll(`#${id} button`).forEach((b) => {
@@ -5247,6 +5657,7 @@
       // Writes to whichever view is showing, so tuning the question screen's
       // treatment never clobbers the start screen's, and vice versa.
       if (state.view === 'question') state.centreQ = b.dataset.centre;
+      else if (state.view === 'mobile') state.centreM = b.dataset.centre;
       else state.centre = b.dataset.centre;
       render();
     });
@@ -5255,8 +5666,16 @@
     state.seed = Math.floor(Math.random() * 1e9);
     render();
   });
-  scoredLink.addEventListener('click', () => {});
-  cta.addEventListener('click', () => {});
+  // Start Quiz flows into the matching question view — desktop start to
+  // desktop question, mobile start to mobile question — so the prototype
+  // models the real start → quiz transition on both frames.
+  cta.addEventListener('click', () => {
+    if (state.view === 'start') state.view = 'question';
+    else if (state.view === 'mstart') state.view = 'mobile';
+    else return;
+    resetQState();
+    render();
+  });
 
   document.addEventListener('keydown', (e) => {
     if (e.target.matches('input, button')) return;

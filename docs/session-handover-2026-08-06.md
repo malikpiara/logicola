@@ -1,87 +1,107 @@
-# Handover — 2026-08-06
+# Handover — 2026-08-06 (two sessions)
 
-Written at the end of the session on branch `color-system-exploration`.
-Entry point for the redesign as a whole is still **`redesign-handoff.md`**
-(read its Caveats first); `pixel-ui.md` is the port contract. This file is
-only "where we got to and what to do next". Supersedes the pick-up list in
-`session-handover-2026-08-05.md`.
+Written on branch `color-system-exploration`, covering both of today's
+sessions. Entry point for the redesign as a whole is still
+**`redesign-handoff.md`**; `pixel-ui.md` is the port contract, and it now
+carries a **Porting traps** list — read it before writing app code.
+Supersedes `session-handover-2026-08-05.md`.
 
-## Pick up here (Malik's queue, in his order)
+## The next session builds
 
-**1 · The primary button.** Redesign/rethink the primary CTA ("Start
-Quiz" / "Check Answer" / "Next Question") — potentially pixelise/sprite
-it. Everything it needs is in `pixel-ui.md`: the sprite construction
-(R=24 is pill scale), the ring-band machinery if it ever needs a focus
-treatment, and the scaling law. Note the CTA today is ink-filled with
-surface text, the one solid-ink object on the card — whatever the shape
-becomes, that colour role is load-bearing (it is the only thing that
-outranks the options).
+Malik's call at close: **the next session starts actually
+building/implementing the new LogiCola** — moving from the lab to the
+app. What that means concretely:
 
-**2 · The mobile view.** Redesign + UX pass + add a progress bar. Known
-inputs: Set R's 3×6 → 2×9 container query is in but 640px is a
-placeholder ("desktop judgement" caveat in `redesign-handoff.md`); the
-guide's mobile surface is a bottom sheet in the app and was explicitly
-deferred; the progress indicator decision is already made (**Line,
-continuous** — never cells — see `pixel-ui.md`, driven by the scored run
-becoming the default mode). The exhaustive mobile pass was deliberately
-parked as its own exercise — this is it.
-
-**3 · Still cheap, still unblocking: Roboto Flex in the lab.** Carried
-from yesterday, still not done. Every type judgement — including how the
-decided chip corner sits against letterforms — is being made in Avenir
-Next, which the app does not ship.
+1. **Port from the contracts, not from memory**: `pixel-ui.md` (shapes,
+   chrome, mobile spec, porting traps) and the palette table in
+   `redesign-handoff.md` (`getQuizScreenColors` swap is still the ~30-line
+   core, drafted once and deliberately reverted).
+2. **The release scope is the scored run.** Count mode is not surfaced
+   anywhere (decided today — see table below). The app currently ships
+   count-as-default with scored as opt-in: that inverts.
+3. **Mobile ships the lab's chrome**: header row (bare pixel ✕ ·
+   sprite-capped quantised progress bar · icon-only Guide chip), sticky
+   full-width gem CTA footer, clean surface (no pattern on question
+   screens), in-card exit replacing `ExerciseNavbar`'s white bar.
+4. **Still genuinely open** (decisions, not tasks): CTA silhouette (gem is
+   a WORKING default; logo/sprite alive on the dial), feedback placement
+   (reserved is a WORKING default; re-judge its gap at 390px), the R-guide
+   pedagogy question (decision 13), Set R's colour, hint identifier
+   Run-in vs Heading, answer treatment (Tint recommended).
 
 ## Decided today
 
-|                      | Decision                                                                                                                                       |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| Notation chip corner | **Sprite 4px** — the keycaps' own clip, `spriteClip(0, 8)`, both chips. Dial removed (Rectangle / Sprite 2px / a brief Gem candidate all cut). |
-| Set N guide          | **No guide button** — N has no guide in the app and none in the 2008 original (no `*H` Info block; its `*h` is display control, not text).     |
+|                      | Decision                                                                                                                                                                                                                      |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Notation chip corner | **Sprite 4px** — the keycaps' clip, both chips. Dial removed. Small instances (~20px chips) still owe a per-size tweak; re-judge in KaTeX.                                                                                    |
+| Set N guide          | **No guide button** — no guide in the app, none in the 2008 original (no `*H` block; its `*h` is display control).                                                                                                            |
+| Scored run only      | **Replaces quiz (count) mode for the release.** No "n of 10", no escape link, no Cells progress. Count code dormant for a future reform. Start blurb "To 100 points · Level 7"; footer "30 / 100 points"; progress Line only. |
+| CTA Pixel variant    | Cut from the Primary button dial (the rest is undecided; **gem** is the working default).                                                                                                                                     |
+| Mobile chrome        | Header row ✕ · bar · Guide (Duolingo/Brilliant anatomy), sticky footer with full-width CTA, no pattern on question screens, in-card exit. Details in `pixel-ui.md` § Mobile chrome.                                           |
 
-Carried WITH the chip decision, not yet done: **the small instances need
-a per-size tweak** — L4's rule chips and R's table chips run ~20px with
-1px vertical padding, so the 4px step sits against the letterforms. The
-keycap survives the identical clip at 22px because it is padded. Levers:
-room, or a smaller radius on the same grid. Re-judge in KaTeX at port
-time. Full note in `pixel-ui.md` § Notation chips.
+## Done today (second session)
 
-## Done today
+- **Roboto Flex in the lab** (app-parity axes; offline falls back to
+  Avenir with a warning comment). Every type judgement is finally in the
+  app's face.
+- **`<!doctype html>` added — the lab had spent its whole life in quirks
+  mode** while the app renders standards. Exposed by dark mode (quirks
+  blocks colour inheritance into tables). All pixel measurements recorded
+  before 2026-08-06 were quirks-mode numbers; re-measure before leaning
+  on one.
+- **Primary button dial** (Logo · Gem · Sprite), applied to both CTAs;
+  gem working default at Malik's call.
+- **Mobile views built**: `Question · M` and `Start · M` (390px frames;
+  the container query does the reflow). Full round trip: Start · M →
+  Start Quiz → Question · M → ✕ → Start · M.
+- **Four-lens audit** (Refactoring UI / HIG / Norman / Saffer) of the
+  mobile view, then the fixes Malik picked: sticky header row with the
+  progress bar at the screen top, sticky full-width CTA footer, bare
+  18px pixel ✕, icon-only 44×44 Guide chip, optical spacing correction
+  (13px whitespace discount), pixelised bar (sprite caps R=4/u=2 + fill
+  quantised to the 4px grid via CSS `round()`), redundant divider hidden.
+- **Shipped-mobile inventory** (from `components/quiz/index.tsx`): the
+  app's permanent vaul bottom sheet carries CTA + numeric progress +
+  keycaps below `lg`; the guide expands from the same sheet (180/460/full
+  snaps); no top-right Guide button on mobile. The lab models the
+  collapsed sheet's job with its sticky footer; **the expandable guide
+  sheet remains unmodelled** (still a full-bleed overlay stand-in).
+- **Pattern on mobile**: new `Clean` centre treatment (genuinely no
+  pattern — skips generation); "Off" relabelled **"Full bleed"** after
+  its old name caused a real regression; phone frames render patterns at
+  0.6 scale (first pass, judge by eye).
+- **Scored-run-only sweep** across all lab screens (see Decided).
 
-- **The per-set guides are real** (yesterday's blocker 1). `SET_GUIDES`
-  in the lab mirrors `wffGuide.tsx` for A, C, J, L, Q; R's 18-fallacy
-  table is GENERATED from the R sample's own options so guide and hint
-  share one source. Panel scrolls; guide notation runs through the same
-  chip/emphasis machinery as hints. Guide-panel judgements are unblocked.
-- **Provenance settled** (and corrected by Malik): Q's guide descends
-  from the 2008 `*H` Info block; A, C and J's guides are Malik's lift of
-  the sets' OWN 2008 feedback text (verbatim in the decoded DSL); R's
-  table is the only guide with no 2008 ancestor at all. `*H` exists in
-  B, D, E, F, G, I, K, M, O, Q — not N, not R.
+## Audit findings still open (mobile)
 
-## New open item
+- **Feedback placement is THE unsolved mobile question**: a wrong pick's
+  hint lands 514px from the picked cell (ships today in the app too).
+  `reserved` is the working default because it never moves the options;
+  its gap was measured on desktop (391px on R) — re-judge at 390px. The
+  fixed sheet suggests a candidate: feedback surfacing at the sheet edge.
+- **Answer-method signifier**: touch has none (keycaps hidden, finding 4's
+  "TO ANSWER: click a fallacy" still not restored — mobile is the
+  strongest argument yet).
+- Desktop Guide chip is 37px tall (mobile instance now 44px); the
+  short-set vertical centering (finding 6) not yet changed.
+- App-side quick wins found during the audit: the multi-select wording
+  decided 2026-08-05 never shipped ("Select all that apply…" still live);
+  keycaps render in the mobile sheet on devices with no keyboard.
 
-**Does Set R keep its guide at all?** (decision 13 in
-`redesign-handoff.md`.) Pure textbook addition, and a pedagogical case
-against handing a recognition drill all eighteen definitions one click
-away. Raised by Malik, deliberately not decided. Decide it before
-polishing the 18-row-table layout, since removal would dissolve that
-problem.
+## Open questions for the build
 
-## Still open (inherited)
+- **CTA copy**: app WIP says "Start Scored Run"; with one mode, plain
+  "Start Quiz" (the lab's label) may read better.
+- **The level dial isn't modelled in the lab** — with scored the only
+  mode, it is the start screen's main control. Model before finalising
+  the mobile start, or design it directly in the app.
+- **Where the pattern lives on phones**: current answer "start screen
+  only, at 0.6 scale". Judged once, not settled.
 
-- **Feedback placement** (decision 4) — `reserved` is the only mode that
-  holds the palette still; costs 391px of permanent gap on Set R.
-- **Hint identifier**: Run-in vs Heading.
-- **Answer treatment**: Tint / Accent / Invert / Weight — Tint
-  recommended, not decided.
-- **Set R's colour** (the only unsettled palette) and the
-  base-promotion question (A7/L4/N10 naming).
-- Finding 4 of the audit: the original's "TO ANSWER: click a fallacy or
-  type its abbreviation", still not restored.
-- Everything in `accessibility-modes.md`.
+## Tooling note (carried, still true)
 
-## Tooling note (carried)
-
-The preview pane serves stale frames after file edits; only a changed URL
-(`?v=N`) reliably forces a fresh document. Trust measurements over
-pictures.
+The preview pane serves stale frames after edits; only a changed `?v=N`
+URL forces a fresh document — and it auto-reloads mid-edit-sequence, so
+console errors can be stale artifacts of intermediate states. Trust
+measurements over pictures; verify errors against the current load
+before chasing them.
