@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   DEFAULT_QUIZ_MODE,
+  SHIPPED_LEVEL,
   defaultModeForSet,
   modeBlurb,
   progressLabel,
@@ -9,12 +10,19 @@ import {
 import { DEFAULT_LEVEL } from '@/lib/scoring';
 
 describe('defaultModeForSet — the scored run is the release mode', () => {
+  it('ships at level 5, deliberately below Gensler’s own default of 7', () => {
+    // The two are allowed to differ; DEFAULT_LEVEL records the original,
+    // SHIPPED_LEVEL is our product choice while the dial is hidden.
+    expect(SHIPPED_LEVEL).toBe(5);
+    expect(DEFAULT_LEVEL).toBe(7);
+  });
+
   it.each(['Set A', 'Set C', 'Set J', 'Set L', 'Set N', 'Set Q', 'Set R'])(
-    '%s opens scored at the default level',
+    '%s opens scored at the shipped level',
     (name) => {
       expect(defaultModeForSet(name)).toEqual({
         kind: 'score',
-        level: DEFAULT_LEVEL,
+        level: SHIPPED_LEVEL,
       });
     }
   );
