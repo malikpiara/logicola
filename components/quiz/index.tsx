@@ -27,6 +27,7 @@ import { FeedbackSlot } from './feedbackSlot';
 import { hintPartsOf } from './hintBlock';
 import { getQuizScreenColors } from './quizColors';
 import { PatternLayer, patternKindForSubSet } from './patternLayer';
+import { useSafeAreaBottom } from './useSafeAreaBottom';
 import { useThemeColor } from './useThemeColor';
 import { hasWffGuide, WffGuide } from './wffGuide';
 
@@ -101,30 +102,34 @@ type SnapValue = string | number;
 // Sized to what the collapsed sheet actually holds — grabber (~24px) +
 // the CTA row with the header's padding (~84px) + a little slack for
 // the home indicator. The old 180px carried ~70px of dead surface below
-// the CTA, all stolen from the quiz (Malik, 2026-08-08).
-const COLLAPSED_SNAP_POINT = '128px';
-const GUIDE_SNAP_POINTS: readonly SnapValue[] = [
-  COLLAPSED_SNAP_POINT,
-  '460px',
-  1,
-];
-const NO_GUIDE_SNAP_POINTS: readonly SnapValue[] = [COLLAPSED_SNAP_POINT];
-const DRAWER_INITIAL_TRANSFORM = `calc(100dvh - ${COLLAPSED_SNAP_POINT})`;
+// the CTA, all stolen from the quiz (Malik, 2026-08-08). The bottom
+// safe-area inset is ADDED to this at runtime: the page now draws under
+// the navigation bar (that is how the bar takes the set's colour), so
+// without the extra the CTA would sit beneath the gesture pill.
+const COLLAPSED_SNAP_BASE_PX = 128;
 
 /**
- * Cycle the drawer's snap forward (collapsed → medium → full → …).
- * Used by the grabber's `onGrabberClick` handler so users can tap
- * the grabber to progressively expand the drawer.
+ * What the sheet is showing, independent of the pixel height that
+ * expresses it — see `snapKind` for why the distinction earns its keep.
  */
-function nextSnapPoint(
-  current: SnapValue | null,
-  points: readonly SnapValue[]
-): SnapValue {
-  if (points.length === 0) return COLLAPSED_SNAP_POINT;
-  if (points.length === 1) return points[0]!;
-  const idx = current == null ? -1 : points.indexOf(current);
-  const nextIdx = idx >= points.length - 1 || idx === -1 ? 0 : idx + 1;
-  return points[nextIdx]!;
+type SnapKind = 'collapsed' | 'guide' | 'full';
+
+/** Read a vaul snap value back as its kind. */
+function snapKindOf(value: SnapValue | null): SnapKind {
+  if (value === 1) return 'full';
+  if (value === '460px') return 'guide';
+  return 'collapsed';
+}
+
+/**
+ * Cycle the drawer forward (collapsed → guide → full → …). Used by the
+ * grabber's `onGrabberClick` so users can tap it to progressively
+ * expand the sheet.
+ */
+function nextSnapKind(current: SnapKind): SnapKind {
+  if (current === 'collapsed') return 'guide';
+  if (current === 'guide') return 'full';
+  return 'collapsed';
 }
 
 /**
@@ -201,14 +206,6 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
   // mid-run.
   useThemeColor(quizSurface);
 
-  /**
-   * 1) Keep track of the drawer snap state.
-   *    Default to "180px" or whichever is your "collapsed" height.
-   */
-  const [snap, setSnap] = useState<string | number | null>(
-    COLLAPSED_SNAP_POINT
-  );
-  const isGuideExpanded = hasGuide && snap !== COLLAPSED_SNAP_POINT;
   // Top progress bar. Count mode fills a tenth per completed question (a
   // question counts once its solution is shown); scored mode tracks distance
   // to the 100-point target, which is the honest reading of a run with no
@@ -258,6 +255,35 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
    */
   const [lastInput, setLastInput] = useState<'keyboard' | 'pointer'>('pointer');
 
+  // The page draws under the navigation bar now (that is how the bar
+  // takes the set's colour), so the collapsed sheet grows by the bar's
+  // height to keep the CTA clear of the gesture pill. Zero wherever
+  // there are no insets, which is why nothing else moves.
+  const safeAreaBottom = useSafeAreaBottom();
+  const collapsedSnapPoint = `${COLLAPSED_SNAP_BASE_PX + safeAreaBottom}px`;
+  const guideSnapPoints: readonly SnapValue[] = [
+    collapsedSnapPoint,
+    '460px',
+    1,
+  ];
+  const noGuideSnapPoints: readonly SnapValue[] = [collapsedSnapPoint];
+  const drawerInitialTransform = `calc(100dvh - ${collapsedSnapPoint})`;
+
+  /**
+   * The drawer's snap, held SEMANTICALLY rather than as the px string
+   * vaul wants. The collapsed height is only known once the safe-area
+   * inset has been measured, so a stored string would go stale the
+   * moment it changed — and vaul matches `activeSnapPoint` against its
+   * points by value, so a stale string matches none of them. Deriving
+   * the pixels from the kind each render keeps the two in step with no
+   * effect and no cascading render.
+   */
+  const [snapKind, setSnapKind] = useState<SnapKind>('collapsed');
+  const snapValueOf = (kind: SnapKind): SnapValue =>
+    kind === 'collapsed' ? collapsedSnapPoint : kind === 'guide' ? '460px' : 1;
+  const snap = snapValueOf(snapKind);
+  const isGuideExpanded = hasGuide && snapKind !== 'collapsed';
+
   useKeyboardNavigation({
     currentQuestion,
     showStartScreen,
@@ -273,7 +299,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
     handleCheckAnswer,
     handleNextQuestion: handleNextQuestionTransition,
     collapseDrawer: () => {
-      setSnap(COLLAPSED_SNAP_POINT);
+      setSnapKind('collapsed');
       setIsGuideOpen(false);
     },
     multiSelect,
@@ -332,7 +358,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
     if (hasExpandedGuideAfterMissRef.current) return;
 
     hasExpandedGuideAfterMissRef.current = true;
-    setSnap('460px');
+    setSnapKind('guide');
   }
 
   function handleCheckAnswer() {
@@ -481,7 +507,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
       ) {
         // If the drawer is currently snapped open beyond 180px, snap back
         // (Or you can just always set to 180px unconditionally.)
-        setSnap(COLLAPSED_SNAP_POINT);
+        setSnapKind('collapsed');
       }
     }
 
@@ -508,7 +534,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
 
     const timeout = setTimeout(() => {
       hasExpandedGuideAfterMissRef.current = true;
-      setSnap('460px');
+      setSnapKind('guide');
     }, 0);
 
     return () => clearTimeout(timeout);
@@ -620,7 +646,9 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                 progress bar filling the middle (sprite caps, fill
                 quantised to the 4px grid) · icon-only 44×44 Guide chip
                 right, expanding the bottom sheet's guide snap. */}
-            <div className='sticky top-0 z-20 -mx-2 -mt-2 mb-3 flex items-center gap-3.5 bg-[var(--quiz-surface)] px-2 py-3 md:-mx-8 md:-mt-8 lg:hidden'>
+            {/* pt clears the status bar: the page draws under it now, so
+                the row supplies its own inset (0 where there is none). */}
+            <div className='sticky top-0 z-20 -mx-2 -mt-2 mb-3 flex items-center gap-3.5 bg-[var(--quiz-surface)] px-2 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] md:-mx-8 md:-mt-8 lg:hidden'>
               <Link
                 href='/'
                 aria-label='Exit quiz and return to the home page'
@@ -654,7 +682,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
               {hasGuide && (
                 <button
                   type='button'
-                  onClick={() => setSnap('460px')}
+                  onClick={() => setSnapKind('guide')}
                   aria-label='Open the reference guide'
                   className='qguide-btn h-11 w-11 shrink-0 justify-center !p-0'
                   style={{ clipPath: GUIDE_CHIP_CLIP }}
@@ -985,12 +1013,10 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
           onOpenChange={() => {}} // No action needed since it's always open
           dismissible={false}
           modal={false}
-          snapPoints={[
-            ...(hasGuide ? GUIDE_SNAP_POINTS : NO_GUIDE_SNAP_POINTS),
-          ]}
-          activeSnapPoint={hasGuide ? snap : COLLAPSED_SNAP_POINT}
+          snapPoints={[...(hasGuide ? guideSnapPoints : noGuideSnapPoints)]}
+          activeSnapPoint={hasGuide ? snap : collapsedSnapPoint}
           setActiveSnapPoint={(value) =>
-            setSnap(hasGuide ? value : COLLAPSED_SNAP_POINT)
+            setSnapKind(hasGuide ? snapKindOf(value) : 'collapsed')
           }
         >
           <DrawerContent
@@ -999,7 +1025,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
             className='quiz-controls-drawer fixed flex flex-col overflow-hidden border-0 rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px] lg:hidden'
             style={
               {
-                '--initial-transform': DRAWER_INITIAL_TRANSFORM,
+                '--initial-transform': drawerInitialTransform,
                 // The controls sheet follows the set's colour scheme
                 // (Malik, 2026-08-08) — the lab's mobile footer spec:
                 // surface fill, ink-tint top rule, adaptive-ink CTA. All
@@ -1016,9 +1042,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
               } as React.CSSProperties
             }
             onGrabberClick={
-              hasGuide
-                ? () => setSnap(nextSnapPoint(snap, GUIDE_SNAP_POINTS))
-                : undefined
+              hasGuide ? () => setSnapKind(nextSnapKind(snapKind)) : undefined
             }
           >
             <DrawerHeader>
@@ -1030,8 +1054,10 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                 well-formed formula guide.
               </DrawerDescription>
               {/* Content-sized, not h-24: a fixed row height was half the
-                  collapsed sheet's dead space. */}
-              <div className='left-0 z-50 w-full flex items-center justify-center md:justify-between'>
+                  collapsed sheet's dead space. The bottom inset keeps the
+                  CTA off the gesture pill — the sheet's surface still
+                  runs under it, which is what colours the bar. */}
+              <div className='left-0 z-50 w-full flex items-center justify-center pb-[env(safe-area-inset-bottom)] md:justify-between'>
                 <div className='ml-0 md:ml-5'>
                   {!showStartScreen && !showEndScreen && (
                     <KeyboardKeys

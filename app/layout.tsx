@@ -60,6 +60,23 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: '#ffffff',
+  /**
+   * Draw edge to edge, under the system bars.
+   *
+   * This is the only mechanism that colours the INSTALLED app's bars
+   * per set. An installed PWA is a WebAPK: Android baked the manifest's
+   * theme_color / background_color (#ffffff) into the package at
+   * install time and paints the status and navigation bars from those,
+   * so a runtime `theme-color` swap — which the browser does honour —
+   * never reaches the installed shell. With `cover` the bars turn
+   * transparent and whatever the page paints beneath them is what the
+   * user sees, so the quiz's own surface shows through.
+   *
+   * Everything that must stay clear of the bars pads itself with
+   * `env(safe-area-inset-*)`, which resolves to 0 where there are no
+   * insets — so this is inert on desktop and in the browser pane.
+   */
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
