@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { PanelRightClose, PanelRightOpen, X } from 'lucide-react';
-import Button from '../button';
+import Link from 'next/link';
+import { GemButton } from './gemButton';
+import { BookHeartIcon, TimesIcon } from './pixelIcons';
+import { sheetLeftClip, spriteClip } from '@/lib/pixel';
 import Option from '../option';
 import Prompt from '../prompt';
 import { EndScreen } from './endScreen';
@@ -10,7 +12,7 @@ import { KeyboardKeys } from './keyboardKeys';
 import { StartScreen } from './startScreen';
 import useQuizState, { getRevealThreshold } from './useQuizState';
 import { progressLabel } from './quizMode';
-import { canScore, TARGET_SCORE } from '@/lib/scoring';
+import { canScore, progress } from '@/lib/scoring';
 import classNames from 'classnames';
 import { SubSet } from '@/content/types';
 import {
@@ -21,7 +23,10 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import useKeyboardNavigation from './useKeyboardNavigation';
-import { FeedbackText } from './feedbackText';
+import { FeedbackSlot } from './feedbackSlot';
+import { hintPartsOf } from './hintBlock';
+import { getQuizScreenColors } from './quizColors';
+import { PatternLayer, patternKindForSubSet } from './patternLayer';
 import { hasWffGuide, WffGuide } from './wffGuide';
 
 export interface QuizProps {
@@ -33,34 +38,52 @@ export default function Quiz({ subSet }: QuizProps) {
 }
 
 const QUESTION_EXIT_MS = 90;
-const MEANINGS_AND_DEFINITIONS_SUBSET_ID = 3;
 
-// Sets with more options than this earn a third column on desktop
+// Sprite corners at chip scale: R=24 is pill scale, R=12 chip scale.
+const GUIDE_CHIP_CLIP = spriteClip(0, 12);
+
+// The mobile bar's free ends are its only curve-analog — they take sprite
+// caps at R=4 on the 2px grid. (Desktop's hairline bleeds off the card
+// edges: no free ends, nothing to cap, so it stays unclipped.)
+const MOBILE_BAR_CLIP = spriteClip(0, 4, 2);
+
+// The reference panel's ✕ chip: R=8 is the 32px chip scale (pixel-ui.md).
+const CLOSE_CHIP_CLIP = spriteClip(0, 8);
+
+// The reference sheet's silhouette: stair-stepped left corners at chip
+// scale (R=12 — the drawer's old 10px curve, rasterised), square against
+// the viewport edge. The 2px edge rule is the gap between the two clips:
+// the sheet's box paints the rule colour under the OUTER silhouette, and
+// the white content layer is clipped to the INNER one — a border would
+// lose its stroke on every stair.
+const SHEET_EDGE_RULE_PX = 2;
+const SHEET_OUTER_CLIP = sheetLeftClip(0, 12);
+const SHEET_INNER_CLIP = sheetLeftClip(SHEET_EDGE_RULE_PX, 12);
+
+// The resize grip as a pixel handle: sprite caps on the 2px grid, the
+// same reading as the mobile progress bar's free ends.
+const GRIP_CLIP = spriteClip(0, 4, 2);
+
+// Sets with more options than this earn a third column on wide cards
 // (Set R's 18); smaller multi-option sets (Set Q's 7) stay at two.
 const GRID_THIRD_COLUMN_MIN = 13;
 
-// Static row-count classes so Tailwind's scanner can see them — the grid
-// is column-major, so rows = ceil(count / columns).
-const GRID_ROW_CLASS: Record<number, string> = {
-  1: 'grid-rows-1',
-  2: 'grid-rows-2',
-  3: 'grid-rows-3',
-  4: 'grid-rows-4',
-  5: 'grid-rows-5',
-  6: 'grid-rows-6',
-};
-
 /**
- * Column-major answer-grid classes sized to the option count. Large
- * taxonomies (Set R) get a third desktop column; smaller sets (Set Q)
- * stay two columns at every width.
+ * Column-major grid geometry, fed to the `.qoptions-grid` CSS as custom
+ * properties. A CONTAINER query (not a media query) picks between the
+ * two tiers: the card's width is what the guide pane resizes, so
+ * viewport width says nothing useful about how much room the cells have.
+ * Column-major flow needs rows and columns to move together and CSS
+ * can't divide, so both pairs are supplied here.
  */
-function optionGridColumnClasses(optionCount: number): string {
-  if (optionCount >= GRID_THIRD_COLUMN_MIN) {
-    return 'grid grid-flow-col grid-cols-2 grid-rows-9 lg:grid-cols-3 lg:grid-rows-6';
-  }
-  const rows = GRID_ROW_CLASS[Math.ceil(optionCount / 2)] ?? 'grid-rows-6';
-  return `grid grid-flow-col grid-cols-2 ${rows}`;
+function optionGridVars(optionCount: number): React.CSSProperties {
+  const cols = optionCount >= GRID_THIRD_COLUMN_MIN ? 3 : 2;
+  return {
+    '--qcols': cols,
+    '--qrows': Math.ceil(optionCount / cols),
+    '--qcols-sm': 2,
+    '--qrows-sm': Math.ceil(optionCount / 2),
+  } as React.CSSProperties;
 }
 
 /**
@@ -70,11 +93,15 @@ function optionGridColumnClasses(optionCount: number): string {
  * container so `overflow-y-auto` engages when the visible drawer
  * height (per active snap point) can't fit the guide content.
  */
-const DRAWER_HEADER_OFFSET_PX = 144;
+const DRAWER_HEADER_OFFSET_PX = 112;
 
 type SnapValue = string | number;
 
-const COLLAPSED_SNAP_POINT = '180px';
+// Sized to what the collapsed sheet actually holds — grabber (~24px) +
+// the CTA row with the header's padding (~84px) + a little slack for
+// the home indicator. The old 180px carried ~70px of dead surface below
+// the CTA, all stolen from the quiz (Malik, 2026-08-08).
+const COLLAPSED_SNAP_POINT = '128px';
 const GUIDE_SNAP_POINTS: readonly SnapValue[] = [
   COLLAPSED_SNAP_POINT,
   '460px',
@@ -92,7 +119,7 @@ function nextSnapPoint(
   current: SnapValue | null,
   points: readonly SnapValue[]
 ): SnapValue {
-  if (points.length === 0) return '180px';
+  if (points.length === 0) return COLLAPSED_SNAP_POINT;
   if (points.length === 1) return points[0]!;
   const idx = current == null ? -1 : points.indexOf(current);
   const nextIdx = idx >= points.length - 1 || idx === -1 ? 0 : idx + 1;
@@ -119,76 +146,6 @@ function guideContentMaxHeight(snap: string | number | null): string {
   }
   return `calc(97vh - ${DRAWER_HEADER_OFFSET_PX}px)`;
 }
-const SET_A_NAME = 'Set A';
-const SET_C_NAME = 'Set C';
-const SET_J_NAME = 'Set J';
-const SET_L_NAME = 'Set L';
-const SET_N_NAME = 'Set N';
-const SET_R_NAME = 'Set R';
-
-function getQuizScreenColors(subSet: SubSet) {
-  if (subSet.name === SET_A_NAME) {
-    return {
-      surfaceColor: '#1C3601',
-      countColor: '#F233DF',
-    };
-  }
-
-  if (subSet.name === SET_C_NAME) {
-    return {
-      surfaceColor: '#E7F099',
-      countColor: '#02302C',
-      foregroundColor: '#02302C',
-    };
-  }
-
-  if (subSet.name === SET_J_NAME) {
-    return {
-      surfaceColor: '#E6ACF4',
-      countColor: '#1C3601',
-      foregroundColor: '#1C3601',
-    };
-  }
-
-  if (subSet.name === SET_L_NAME) {
-    return {
-      surfaceColor: '#C8F0E3',
-      countColor: '#3C034F',
-      foregroundColor: '#3C034F',
-    };
-  }
-
-  if (subSet.name === SET_N_NAME) {
-    return {
-      surfaceColor: '#ADE2E9',
-      countColor: '#1F0D92',
-      foregroundColor: '#2A0D73',
-    };
-  }
-
-  if (subSet.name === SET_R_NAME) {
-    // Orange surface in the same pastel register as Sets C/J: the default
-    // screen's #FDBA74 accent rebalanced to their chroma and lightness
-    // (HSL 31° 75% 80%). Text is an ink-dark indigo: saturated blue on
-    // saturated orange vibrates (complementary hues), so the blue is pushed
-    // near-black; the brighter Set N indigo survives as the small accent.
-    return {
-      surfaceColor: '#F2CDA6',
-      countColor: '#1F0D92',
-      foregroundColor: '#190B45',
-    };
-  }
-
-  if (subSet.id === MEANINGS_AND_DEFINITIONS_SUBSET_ID) {
-    return {
-      surfaceColor: '#6C2E99',
-      countColor: '#C2E5B6',
-    };
-  }
-
-  return {};
-}
-
 const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
   const {
     showStartScreen,
@@ -227,6 +184,9 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
   const gridMaxWidth =
     optionCount >= GRID_THIRD_COLUMN_MIN ? 'max-w-4xl' : 'max-w-2xl';
   const quizScreenColors = getQuizScreenColors(subSet);
+  // Camo classic dresses the easy sets, camo giant the hard ones — one
+  // resolution for all three screens so start, question and end match.
+  const patternKind = patternKindForSubSet(subSet);
   // The question screen inherits the set's start-screen palette (same
   // fallbacks as StartScreen's prop defaults), so start screen → quiz reads
   // as one continuous colored surface instead of a colored cover page
@@ -246,11 +206,14 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
   // Top progress bar. Count mode fills a tenth per completed question (a
   // question counts once its solution is shown); scored mode tracks distance
   // to the 100-point target, which is the honest reading of a run with no
-  // fixed length.
+  // fixed length. `progress()` clamps BOTH ends: the score goes negative by
+  // design (no floor in the 2008 economy), and a negative percentage is an
+  // invalid width — the browser drops the declaration and the fill div
+  // falls back to auto/100%, which read as the bar being stuck or full.
   const progressFraction =
     mode.kind === 'count'
       ? Math.min((questionCounter - (showSolution ? 0 : 1)) / mode.total, 1)
-      : Math.min(scoreState.score / TARGET_SCORE, 1);
+      : progress(scoreState);
   // Desktop-only: the reference guide is the same vaul sheet as on mobile,
   // repositioned to the right edge (direction='right'), toggleable and closed
   // by default. On mobile the guide still lives in the bottom sheet's snap
@@ -306,65 +269,41 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
       : undefined,
   });
 
-  const selectedHint =
-    selectedOptionIndex != null && currentQuestion
-      ? currentQuestion.options[selectedOptionIndex]?.hint
-      : undefined;
-
-  // After a wrong "Check Answer" submission, `useQuizState` clears
-  // `selectedOptionIndex` (so the user can pick another option). We
-  // still want to surface that wrong option's hint immediately —
-  // hence we look up the most-recent wrong guess from
-  // `previousGuesses`. The hint we display depends on the phase:
+  // What the reserved feedback slot shows. The hint we display depends on
+  // the phase:
   //
-  //   1. Mid-attempt (showSolution=false): show the hint for the
-  //      most recent wrong submission.
-  //   2. Review mode after a correct answer (showSolution=true,
-  //      selectedOptionIndex points at an option): show that
-  //      option's hint so the user can click around wrong options
-  //      to see each explanation.
-  //   3. Solution reached via exhausted attempts (showSolution=
-  //      true, selectedOptionIndex=null because the 3rd wrong
-  //      submission nulled it): fall back to the last wrong
-  //      submission's hint — otherwise the hint for the user's
-  //      final guess would disappear at exactly the moment the
-  //      correct answer is revealed.
+  //   1. Mid-attempt (showSolution=false): the MOST RECENT wrong
+  //      submission's hint (`useQuizState` clears `selectedOptionIndex`
+  //      after a wrong check so the user can pick again, so the guess is
+  //      looked up from `previousGuesses`).
+  //   2. Solved: the answer explanation — the hint and the answer never
+  //      coexist, which is what lets the reserved slot size itself to the
+  //      taller of the two rather than to their sum.
+  //   3. Review (solved, and the user clicks a ruled-out option): that
+  //      option's hint replaces the answer while it's under review, so
+  //      wrong options remain explorable after the reveal.
   const lastWrongGuessId =
     previousGuesses.length > 0
       ? previousGuesses[previousGuesses.length - 1]
       : undefined;
-  const lastWrongHint =
+  const lastWrongOption =
     lastWrongGuessId !== undefined && currentQuestion
-      ? currentQuestion.options.find((o) => o.id === lastWrongGuessId)?.hint
+      ? currentQuestion.options.find((o) => o.id === lastWrongGuessId)
       : undefined;
-  const displayedHint = !showSolution
-    ? lastWrongHint
-    : selectedOptionIndex != null
-      ? selectedHint
-      : lastWrongHint;
-  const hasRevealedAnswer = showSolution && !!currentQuestion?.answer;
-
-  /**
-   * Which option (if any) carries `displayedHint` inline, attached under
-   * its own pill — same phase logic as `displayedHint`, resolved to an
-   * option instead of a detached block at the bottom of the card. Grid
-   * sets return undefined for every option: an expanding cell would break
-   * the column-major grid, so they keep the bottom placement (their hints
-   * also self-identify by fallacy name, which softens the distance).
-   */
-  function inlineHintFor(
-    option: { id: number; hint?: string },
-    index: number
-  ): string | undefined {
-    if (isGridLayout || !option.hint) return undefined;
-    if (!showSolution) {
-      return option.id === lastWrongGuessId ? option.hint : undefined;
-    }
-    if (selectedOptionIndex != null) {
-      return index === selectedOptionIndex ? option.hint : undefined;
-    }
-    return option.id === lastWrongGuessId ? option.hint : undefined;
-  }
+  const selectedOption =
+    selectedOptionIndex != null && currentQuestion
+      ? currentQuestion.options[selectedOptionIndex]
+      : undefined;
+  const reviewedOption =
+    showSolution &&
+    selectedOption &&
+    !currentQuestion!.correctId.includes(selectedOption.id)
+      ? selectedOption
+      : undefined;
+  const liveHintOption = showSolution ? reviewedOption : lastWrongOption;
+  const liveHint = liveHintOption ? hintPartsOf(liveHintOption) : undefined;
+  const liveAnswer =
+    showSolution && !liveHintOption ? currentQuestion?.answer : undefined;
 
   function expandGuideForFirstMiss() {
     if (!hasGuide) return;
@@ -550,6 +489,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
           surfaceColor={quizScreenColors.surfaceColor}
           countColor={quizScreenColors.countColor}
           foregroundColor={quizScreenColors.foregroundColor}
+          patternKind={patternKind}
         />
       ) : showEndScreen ? (
         <EndScreen
@@ -562,6 +502,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
           surfaceColor={quizScreenColors.surfaceColor}
           countColor={quizScreenColors.countColor}
           foregroundColor={quizScreenColors.foregroundColor}
+          patternKind={patternKind}
         />
       ) : (
         <div
@@ -576,14 +517,26 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
             className={classNames(
               // `quiz-immersive` scopes the recolor rules in globals.css.
               // Same rounded canvas geometry as the start screen, filled
-              // with the set's surface color; `overflow-hidden` clips the
-              // progress bar to the rounded corners.
-              'quiz-immersive relative overflow-hidden flex flex-col motion-enter w-full max-w-7xl p-2 md:p-8 rounded-xl m-auto min-h-[70vh] lg:min-h-[calc(100dvh-9rem)]',
-              // Below `lg` the fixed vaul sheet reserves its 180px collapsed
-              // snap, so grid subsets need extra clearance. On `lg` the
-              // controls sit inside the card (no fixed chrome), so none is
-              // needed.
-              isGridLayout ? 'mb-52 lg:mb-6' : 'mb-6'
+              // with the set's surface color. `overflow-clip`, NOT
+              // `overflow-hidden`: both clip the progress bar to the
+              // rounded corners, but hidden creates a scroll container,
+              // which is a sticky containing block — the mobile header
+              // row would silently never pin (porting trap, pixel-ui.md).
+              // `isolate` so the quilt layer's -z-10 stays inside the card
+              // (above its background, below its content). lg:pb-[152px]
+              // reserves the footer band's 112px plus a gap, so every
+              // control sits on clean surface and the pattern underlines
+              // the card instead of running under the footer.
+              // Full-bleed below lg: no rounding, full viewport height —
+              // the card IS the screen on phones (white margins were the
+              // page frame showing through).
+              'quiz-immersive relative isolate overflow-clip flex flex-col motion-enter w-full max-w-7xl p-2 md:p-8 lg:pb-[152px] rounded-none lg:rounded-xl m-auto min-h-dvh lg:min-h-[calc(100dvh-9rem)]',
+              // Below `lg` the fixed vaul sheet reserves its collapsed
+              // snap (128px), so grid subsets need extra clearance — as
+              // PADDING, not margin: margin exposed a white strip of page
+              // between the full-bleed card and the sheet. On `lg` the
+              // controls sit inside the card, so none is needed.
+              isGridLayout ? 'pb-40 mb-0 lg:mb-6' : 'mb-0 lg:mb-6'
             )}
             style={
               {
@@ -595,11 +548,24 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
               } as React.CSSProperties
             }
           >
-            {/* Typeform-style progress line. aria-hidden: the footer's
-                numeric "n of 10" / points label is the accessible reading. */}
+            {/* The pattern's footer band (desktop only — mobile question
+                screens are CLEAN; the pattern's phone home is the start
+                screen). A fixed 112px strip at the card's foot: the
+                pattern frames the work, it never sits under text. */}
+            <PatternLayer
+              kind={patternKind}
+              surface={quizSurface}
+              ink={quizForeground}
+
+              treatment='footer'
+              className='pointer-events-none absolute inset-0 -z-10 hidden lg:block'
+            />
+            {/* Typeform-style progress line, desktop only (the mobile
+                header row below carries its own bar). aria-hidden: the
+                footer's numeric points label is the accessible reading. */}
             <div
               aria-hidden
-              className='absolute inset-x-0 top-0 h-1.5 bg-[color-mix(in_srgb,var(--quiz-fg)_12%,transparent)]'
+              className='absolute inset-x-0 top-0 hidden h-1.5 bg-[color-mix(in_srgb,var(--quiz-fg)_12%,transparent)] lg:block'
             >
               <div
                 className='h-full transition-[width] duration-500 ease-[var(--ease-out-quart)]'
@@ -609,30 +575,85 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                 }}
               />
             </div>
+            {/* Mobile header row, sticky as a unit (Duolingo/Brilliant
+                anatomy; docs/pixel-ui.md § Mobile chrome): bare pixel ✕
+                left (18px glyph in a full 44px tap box — exit lives IN
+                the card, replacing the old white ExerciseNavbar bar) ·
+                progress bar filling the middle (sprite caps, fill
+                quantised to the 4px grid) · icon-only 44×44 Guide chip
+                right, expanding the bottom sheet's guide snap. */}
+            <div className='sticky top-0 z-20 -mx-2 -mt-2 mb-3 flex items-center gap-3.5 bg-[var(--quiz-surface)] px-2 py-3 md:-mx-8 md:-mt-8 lg:hidden'>
+              <Link
+                href='/'
+                aria-label='Exit quiz and return to the home page'
+                className='qexit flex h-11 w-11 shrink-0 items-center justify-center'
+              >
+                <TimesIcon className='h-[18px] w-[18px]' />
+              </Link>
+              {/* −13px optical margin: the ✕ is an 18px glyph centered in
+                  a 44px box, so (44−18)/2 of invisible whitespace pads its
+                  side — without this the gaps read unequal. The +13px
+                  right margin mirrors the endpoints when the Guide chip
+                  is absent (Set N). */}
+              <div
+                aria-hidden
+                className={classNames(
+                  'qbar relative h-2.5 min-w-0 flex-1 -ml-[13px]',
+                  !hasGuide && 'mr-[13px]'
+                )}
+                style={{ clipPath: MOBILE_BAR_CLIP }}
+              >
+                <div
+                  className='qbar-fill h-full transition-[width] duration-500 ease-[var(--ease-out-quart)]'
+                  style={
+                    {
+                      '--qp': `${progressFraction * 100}%`,
+                      backgroundColor: 'var(--quiz-accent)',
+                    } as React.CSSProperties
+                  }
+                />
+              </div>
+              {hasGuide && (
+                <button
+                  type='button'
+                  onClick={() => setSnap('460px')}
+                  aria-label='Open the reference guide'
+                  className='qguide-btn h-11 w-11 shrink-0 justify-center !p-0'
+                  style={{ clipPath: GUIDE_CHIP_CLIP }}
+                >
+                  <BookHeartIcon className='h-[18px] w-[18px]' />
+                </button>
+              )}
+            </div>
             {/* In flow (not absolute) so it can never occlude the prompt when
                 the open sheet narrows the card. Top-right placement maps the
                 control to where the sheet appears (spatial correspondence). */}
             {hasGuide && (
               <div className='hidden justify-end lg:flex'>
+                {/* Ink-glass sprite chip (R=12), book-heart, mono GUIDE —
+                    the chrome piece that used to speak another product's
+                    language (white chip, lucide icons), redesigned in the
+                    system's own voice (docs/pixel-ui.md § Guide button). */}
                 <button
                   type='button'
                   onClick={() => setIsGuideOpen((open) => !open)}
                   aria-expanded={isGuideOpen}
                   aria-controls='quiz-reference-pane'
-                  className='inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400'
+                  className='qguide-btn'
+                  style={{ clipPath: GUIDE_CHIP_CLIP }}
                 >
-                  {isGuideOpen ? (
-                    <PanelRightClose className='h-4 w-4' aria-hidden='true' />
-                  ) : (
-                    <PanelRightOpen className='h-4 w-4' aria-hidden='true' />
-                  )}
+                  <BookHeartIcon className='h-4 w-4' />
                   {isGuideOpen ? 'Hide guide' : 'Guide'}
                 </button>
               </div>
             )}
             <div
               className={classNames(
-                'mx-auto w-full p-4 flex-1 flex flex-col justify-center',
+                // `qcontainer` makes this the size container the prompt's
+                // cqw type and the option grid's container query read —
+                // the card narrows under the guide pane and on phones,
+                // and viewport units would lie there.
+                'qcontainer mx-auto w-full p-4 flex-1 flex flex-col justify-center',
                 // Grid sets need the full canvas; list sets read as a
                 // centered column at a comfortable measure, Typeform-style.
                 isGridLayout ? 'max-w-screen-xl' : 'max-w-3xl'
@@ -653,13 +674,32 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                         : ''
                     }
                   >
-                    <h2 className='text-xl font-bold text-gray-800'>
-                      {subSet.header}
-                    </h2>
+                    {/* The set's drill question, in the start screen's mono
+                        eyebrow voice — the question screen reads as a
+                        continuation of the start card, not a different app. */}
+                    <h2 className='qheader'>{subSet.header}</h2>
+                    {/* Multi-select is a MODE, and an unannounced mode is
+                        where users make errors they can't diagnose. NOT
+                        "select all that apply": the subset rule accepts ANY
+                        genuine answer, so demanding all of them would
+                        promise something the grader doesn't do. */}
                     {multiSelect && (
-                      <p className='mt-1 text-sm font-normal text-gray-500'>
-                        Select all that apply — more than one may be correct.
+                      <p className='qmulti'>
+                        More than one answer can be right.
                       </p>
+                    )}
+                    {/* Reading order: question → attempt → response →
+                        palette. The slot is always present and never moves
+                        the options — see FeedbackSlot. */}
+                    {currentQuestion && (
+                      <FeedbackSlot
+                        question={currentQuestion}
+                        liveHint={liveHint}
+                        liveAnswer={liveAnswer}
+                        motionKey={`${currentQuestion.id}-${previousGuesses.length}-${
+                          showSolution ? 'sol' : 'try'
+                        }-${liveHintOption?.id ?? 'answer'}`}
+                      />
                     )}
                   </div>
 
@@ -671,11 +711,13 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                           // matching the original 2008 answer grid. Capped
                           // width + centered so the options aren't full-bleed.
                           classNames(
-                            optionGridColumnClasses(optionCount),
-                            'gap-3 w-full self-center',
+                            'qoptions-grid gap-3 w-full self-center',
                             gridMaxWidth
                           )
-                        : 'flex flex-col gap-5'
+                        : 'flex flex-col gap-4'
+                    }
+                    style={
+                      isGridLayout ? optionGridVars(optionCount) : undefined
                     }
                   >
                     {currentQuestion.options.map((option, index) => (
@@ -684,7 +726,6 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                         index={index + 1}
                         showIndex
                         immersive
-                        hint={inlineHintFor(option, index)}
                         compact={isGridLayout}
                         abbreviation={option.abbreviation}
                         isSelected={
@@ -716,29 +757,6 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
               )}
             </div>
             <hr className='h-px my-4 bg-gray-200 border-0' />
-            {/* Question-level feedback. The answer explanation belongs to
-                the question, so it stays here; option hints only appear
-                here on grid sets — list sets attach them to the pill that
-                earned them (see `inlineHintFor`). */}
-            {(hasRevealedAnswer || (isGridLayout && displayedHint)) && (
-              <div
-                key={`${currentQuestion?.id}-${previousGuesses.length}-${
-                  showSolution ? 'sol' : 'try'
-                }`}
-                className='motion-answer-reveal p-2 mb-3 text-base leading-6 text-gray-800'
-              >
-                {hasRevealedAnswer && (
-                  <p>
-                    <FeedbackText text={currentQuestion!.answer} />
-                  </p>
-                )}
-                {isGridLayout && displayedHint && (
-                  <p className='mt-2 whitespace-pre-line text-base leading-7 text-gray-700'>
-                    <FeedbackText text={displayedHint} />
-                  </p>
-                )}
-              </div>
-            )}
             {/* Desktop controls, in the flow of the card itself: the primary
                 action lives with the content it acts on, so no fixed bottom
                 chrome is needed at this breakpoint. Below `lg` the vaul
@@ -750,59 +768,68 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                   hasAbbreviations={currentQuestion?.options.some(
                     (option) => option.abbreviation
                   )}
+                  firstAbbreviation={currentQuestion?.options[0]?.abbreviation}
+                  lastAbbreviation={
+                    currentQuestion?.options[currentQuestion.options.length - 1]
+                      ?.abbreviation
+                  }
                   twoDimensional={isGridLayout}
                   multiSelect={multiSelect}
                 />
               </div>
               <div className='flex shrink-0 items-center gap-5'>
-                <span className='font-medium tabular-nums text-gray-800'>
+                {/* Same voice and colour as the start screen's points
+                    line — the same information, one screen later. */}
+                <span className='qcount tabular-nums'>
                   {progressLabel(mode, questionCounter, scoreState.score)}
                 </span>
-                <div className='w-44'>
-                  {/* Adaptive ink, matching the start screen CTA: the
-                      button borrows the set's foreground as its fill and
-                      the surface as its label, so it clears contrast on
-                      every palette (inline style outranks the Button's
-                      own primaryColor/gray classes). */}
-                  {showSolution ? (
-                    <Button
-                      label='Next Question'
-                      disabled={isQuestionLeaving}
-                      onClick={handleNextQuestionTransition}
-                      style={{
-                        backgroundColor: 'var(--quiz-fg)',
-                        color: 'var(--quiz-surface)',
-                      }}
-                    />
-                  ) : (
-                    <Button
-                      label='Check Answer'
-                      disabled={
+                {/* Adaptive ink, matching the start screen CTA: the
+                    button borrows the set's foreground as its fill and
+                    the surface as its label, so it clears contrast on
+                    every palette. Gem silhouette per the Primary button
+                    dial's working default. */}
+                {showSolution ? (
+                  <GemButton
+                    containerClassName='w-52'
+                    disabled={isQuestionLeaving}
+                    onClick={handleNextQuestionTransition}
+                    style={{
+                      backgroundColor: 'var(--quiz-fg)',
+                      color: 'var(--quiz-surface)',
+                    }}
+                  >
+                    Next Question
+                  </GemButton>
+                ) : (
+                  <GemButton
+                    containerClassName='w-52'
+                    disabled={
+                      multiSelect
+                        ? selectedOptionIds.length === 0
+                        : selectedOptionIndex == null
+                    }
+                    onClick={handleCheckAnswer}
+                    style={
+                      (
                         multiSelect
                           ? selectedOptionIds.length === 0
                           : selectedOptionIndex == null
-                      }
-                      onClick={handleCheckAnswer}
-                      style={
-                        (
-                          multiSelect
-                            ? selectedOptionIds.length === 0
-                            : selectedOptionIndex == null
-                        )
-                          ? {
-                              backgroundColor:
-                                'color-mix(in srgb, var(--quiz-fg) 18%, transparent)',
-                              color:
-                                'color-mix(in srgb, var(--quiz-fg) 55%, transparent)',
-                            }
-                          : {
-                              backgroundColor: 'var(--quiz-fg)',
-                              color: 'var(--quiz-surface)',
-                            }
-                      }
-                    />
-                  )}
-                </div>
+                      )
+                        ? {
+                            backgroundColor:
+                              'color-mix(in srgb, var(--quiz-fg) 18%, transparent)',
+                            color:
+                              'color-mix(in srgb, var(--quiz-fg) 55%, transparent)',
+                          }
+                        : {
+                            backgroundColor: 'var(--quiz-fg)',
+                            color: 'var(--quiz-surface)',
+                          }
+                    }
+                  >
+                    Check Answer
+                  </GemButton>
+                )}
               </div>
             </div>
           </div>
@@ -823,44 +850,72 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
               dismissible={false}
               shouldScaleBackground={false}
             >
+              {/* The branded white sheet (the lab's panel grammar without
+                  its surface colour — REJECTED by Malik 2026-08-08: an
+                  inked panel moved the focus from the quiz): stair-
+                  stepped left corners, a 2px edge rule that follows the
+                  stairs (two stacked clips — see SHEET_OUTER_CLIP), the
+                  sprite ✕ chip, the REFERENCE mono eyebrow, and a pixel
+                  resize grip. */}
               <DrawerContent
                 side='right'
                 id='quiz-reference-pane'
-                className='hidden lg:flex'
-                style={{ width: paneWidth }}
+                className='hidden rounded-none border-0 bg-gray-200 lg:flex'
+                style={
+                  {
+                    width: paneWidth,
+                    clipPath: SHEET_OUTER_CLIP,
+                    // The accent ALONE rides in (never the surface — the
+                    // sheet stays white, decided 2026-08-08): the guide's
+                    // chips, code column and emphasis mark read it for
+                    // hierarchy.
+                    '--quiz-accent': quizAccent,
+                  } as React.CSSProperties
+                }
               >
                 <div
-                  role='separator'
-                  aria-orientation='vertical'
-                  aria-label='Resize the reference guide'
-                  onPointerDown={startPaneResize}
-                  className='group absolute inset-y-0 left-0 z-10 flex w-4 cursor-col-resize items-center justify-center'
+                  className='flex h-full w-full flex-col bg-background'
+                  style={{ clipPath: SHEET_INNER_CLIP }}
                 >
-                  <div className='h-24 w-1.5 rounded-full bg-muted transition-colors group-hover:bg-gray-300' />
-                </div>
-                <div className='flex h-14 shrink-0 items-center justify-between border-b border-gray-100 pl-7 pr-4'>
-                  <DrawerTitle className='text-sm font-semibold text-gray-800'>
-                    Reference guide
-                  </DrawerTitle>
-                  <DrawerDescription className='sr-only'>
-                    The well-formed formula guide for this exercise set. Drag
-                    the left edge to resize.
-                  </DrawerDescription>
-                  <button
-                    type='button'
-                    onClick={() => setIsGuideOpen(false)}
-                    aria-label='Close reference guide'
-                    className='inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400'
+                  <div
+                    role='separator'
+                    aria-orientation='vertical'
+                    aria-label='Resize the reference guide'
+                    onPointerDown={startPaneResize}
+                    className='group absolute inset-y-0 left-0 z-10 flex w-4 cursor-col-resize items-center justify-center'
                   >
-                    <X className='h-4 w-4' aria-hidden='true' />
-                  </button>
-                </div>
-                {/* Container-queried so the guide's columns and heading sizes
-                    follow the sheet's current width (it's resizable), not the
-                    viewport — single-column when narrow, opening up as the
-                    user drags it wider. */}
-                <div className='@container min-h-0 flex-1 overflow-y-auto pl-7 pr-6 py-6 flex flex-col gap-10 text-base leading-7 text-gray-600 select-text'>
-                  <WffGuide subSet={subSet} />
+                    <div
+                      className='h-24 w-2 bg-muted transition-colors group-hover:bg-gray-300'
+                      style={{ clipPath: GRIP_CLIP }}
+                    />
+                  </div>
+                  <div className='flex h-14 shrink-0 items-center justify-between border-b border-gray-100 pl-7 pr-4'>
+                    {/* Same eyebrow voice as the card's header — the panel
+                        answers the GUIDE chip in kind. */}
+                    <DrawerTitle className='font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-gray-600'>
+                      Reference
+                    </DrawerTitle>
+                    <DrawerDescription className='sr-only'>
+                      The well-formed formula guide for this exercise set. Drag
+                      the left edge to resize.
+                    </DrawerDescription>
+                    <button
+                      type='button'
+                      onClick={() => setIsGuideOpen(false)}
+                      aria-label='Close reference guide'
+                      className='qguide-close inline-flex h-8 w-8 shrink-0 items-center justify-center'
+                      style={{ clipPath: CLOSE_CHIP_CLIP }}
+                    >
+                      <TimesIcon className='h-3 w-3' />
+                    </button>
+                  </div>
+                  {/* Container-queried so the guide's columns and heading
+                      sizes follow the sheet's current width (it's
+                      resizable), not the viewport — single-column when
+                      narrow, opening up as the user drags it wider. */}
+                  <div className='@container min-h-0 flex-1 overflow-y-auto pl-7 pr-6 py-6 flex flex-col gap-10 select-text'>
+                    <WffGuide subSet={subSet} />
+                  </div>
                 </div>
               </DrawerContent>
             </Drawer>
@@ -891,10 +946,23 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
           <DrawerContent
             ref={drawerRef}
             disableOpenAnimation
-            className='quiz-controls-drawer fixed flex flex-col overflow-hidden bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px] lg:hidden'
+            className='quiz-controls-drawer fixed flex flex-col overflow-hidden border-0 rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px] lg:hidden'
             style={
               {
                 '--initial-transform': DRAWER_INITIAL_TRANSFORM,
+                // The controls sheet follows the set's colour scheme
+                // (Malik, 2026-08-08) — the lab's mobile footer spec:
+                // surface fill, ink-tint top rule, adaptive-ink CTA. All
+                // three vars ride in, so the guide inside the expanded
+                // sheet inks itself too (this is the CONTROLS surface —
+                // the desktop REFERENCE pane stays white by decision).
+                backgroundColor: quizSurface,
+                color: quizForeground,
+                borderTop:
+                  '2px solid color-mix(in srgb, var(--quiz-fg) 12%, transparent)',
+                '--quiz-surface': quizSurface,
+                '--quiz-fg': quizForeground,
+                '--quiz-accent': quizAccent,
               } as React.CSSProperties
             }
             onGrabberClick={
@@ -911,7 +979,9 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                 Keyboard shortcuts, quiz progress, answer actions, and the
                 well-formed formula guide.
               </DrawerDescription>
-              <div className='left-0 z-50 w-full h-24 bg-white flex items-center justify-center md:justify-between'>
+              {/* Content-sized, not h-24: a fixed row height was half the
+                  collapsed sheet's dead space. */}
+              <div className='left-0 z-50 w-full flex items-center justify-center md:justify-between'>
                 <div className='ml-0 md:ml-5'>
                   {!showStartScreen && !showEndScreen && (
                     <KeyboardKeys
@@ -924,30 +994,66 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                     />
                   )}
                 </div>
-                <div className='flex justify-between gap-5 items-center h-full align-bottom text-gray-800 font-medium flex-col md:flex-row w-full md:w-fit'>
+                <div className='flex justify-between gap-5 items-center h-full align-bottom font-medium flex-col md:flex-row w-full md:w-fit'>
                   {!showStartScreen && !showEndScreen && (
-                    <div className='flex tabular-nums'>
+                    // On phones the sticky header row's bar is the progress
+                    // reading, so the number would crowd the full-width
+                    // CTA — but it stays in the accessibility tree as the
+                    // bar's accessible reading.
+                    <div className='sr-only tabular-nums md:not-sr-only md:flex'>
                       {progressLabel(mode, questionCounter, scoreState.score)}
                     </div>
                   )}
                   <div className='flex h-max w-full md:w-fit'>
+                    {/* Full-width gem CTA — the collapsed sheet models the
+                        mobile footer, and the primary action fills the row
+                        (Duolingo's CHECK, Brilliant's Continue). */}
+                    {/* Adaptive ink on the set-coloured sheet, same as
+                        the desktop footer CTAs. */}
                     {!showSolution && !showStartScreen && !showEndScreen && (
-                      <Button
-                        label='Check Answer'
+                      <GemButton
+                        containerClassName='w-full md:w-52'
+                        className='hover:opacity-90'
                         disabled={
                           multiSelect
                             ? selectedOptionIds.length === 0
                             : selectedOptionIndex == null
                         }
                         onClick={handleCheckAnswer}
-                      />
+                        style={
+                          (
+                            multiSelect
+                              ? selectedOptionIds.length === 0
+                              : selectedOptionIndex == null
+                          )
+                            ? {
+                                backgroundColor:
+                                  'color-mix(in srgb, var(--quiz-fg) 18%, transparent)',
+                                color:
+                                  'color-mix(in srgb, var(--quiz-fg) 55%, transparent)',
+                              }
+                            : {
+                                backgroundColor: 'var(--quiz-fg)',
+                                color: 'var(--quiz-surface)',
+                              }
+                        }
+                      >
+                        Check Answer
+                      </GemButton>
                     )}
                     {showSolution && (
-                      <Button
-                        label='Next Question'
+                      <GemButton
+                        containerClassName='w-full md:w-52'
+                        className='hover:opacity-90'
                         disabled={isQuestionLeaving}
                         onClick={handleNextQuestionTransition}
-                      />
+                        style={{
+                          backgroundColor: 'var(--quiz-fg)',
+                          color: 'var(--quiz-surface)',
+                        }}
+                      >
+                        Next Question
+                      </GemButton>
                     )}
                   </div>
                 </div>

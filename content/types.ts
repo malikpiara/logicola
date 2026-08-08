@@ -2,10 +2,37 @@
 // TODO: Create a program that generates easy translations, four options and the solution.
 // TODO: Create a program that gives hints based on the mistaken option (There's always a pattern!)
 
+/**
+ * Structured wrong-pick feedback. The 2008 source carries this structure
+ * (a lead sentence completed by numbered clauses, set on their own lines);
+ * the flat `hint` string flattens it into a semicolon run-on. Prose may
+ * mark emphasis as `*word*` (the source's 0xBD byte) and notation as
+ * `` `x` `` — see components/quiz/hintBlock.tsx for the renderer.
+ */
+export interface OptionHint {
+  /**
+   * The full term being defined (e.g. 'Appeal to authority') — the
+   * SUBJECT of the explanation, named in full because ruling an option
+   * replaces its badge with ✕, so a code would point at a string that is
+   * no longer on screen.
+   */
+  term?: string;
+  /** Lead sentence ('This is fallacious if:'), or the whole gloss. */
+  lead: string;
+  /** Numbered conditions completing the lead, one line each. */
+  clauses?: string[];
+}
+
 export interface Option {
   id: number;
   label: string;
   hint?: string; // Gensler hints
+  /**
+   * Structured version of `hint`, where the content has structure to
+   * keep (Set R's fallacy glosses). Renderers prefer this; `hint` is
+   * the flat fallback.
+   */
+  hintParts?: OptionHint;
   /**
    * Short typeable code for this option (Set R's fallacy abbreviations,
    * e.g. 'ah'). When present it replaces the numeric badge and the digit

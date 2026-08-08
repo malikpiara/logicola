@@ -104,6 +104,67 @@ describe('useQuizState', () => {
     expect(result.current.showEndScreen).toBe(false);
     expect(result.current.correctQuestions).toStrictEqual([]);
   });
+
+  it('opens in the dormant count mode for a set with no derived economy', async () => {
+    const { result } = renderHook(() => useQuizState(mockQuiz));
+
+    await waitFor(() => {
+      expect(result.current.currentQuestion).toBeDefined();
+    });
+
+    expect(result.current.mode).toEqual({ kind: 'count', total: 10 });
+  });
+
+  it('opens scored for a scoreable set — the release mode', async () => {
+    const { result } = renderHook(() =>
+      useQuizState({ ...mockQuiz, name: 'Set R' })
+    );
+
+    await waitFor(() => {
+      expect(result.current.currentQuestion).toBeDefined();
+    });
+
+    expect(result.current.mode).toEqual({ kind: 'score', level: 7 });
+    expect(result.current.scoreState.level).toBe(7);
+  });
+
+  it('Set R charges ONCE per problem — the second wrong pick is free (2008 law)', async () => {
+    const { result } = renderHook(() =>
+      useQuizState({ ...mockQuiz, name: 'Set R', shuffleOptions: false })
+    );
+
+    await waitFor(() => {
+      expect(result.current.currentQuestion).toBeDefined();
+    });
+
+    act(() => result.current.onShowStartScreen());
+    // correctId is [0]; pick wrong option 1, check: −14 at level 7.
+    act(() => result.current.selectOption(1));
+    act(() => result.current.onCheckAnswer());
+    expect(result.current.scoreState.score).toBe(-14);
+    // Second wrong pick on the SAME problem: charged once, then free.
+    act(() => result.current.selectOption(2));
+    act(() => result.current.onCheckAnswer());
+    expect(result.current.scoreState.score).toBe(-14);
+  });
+
+  it('Set A halves the charge per miss: −14 then −21 (2008 law)', async () => {
+    const { result } = renderHook(() =>
+      useQuizState({ ...mockQuiz, name: 'Set A', shuffleOptions: false })
+    );
+
+    await waitFor(() => {
+      expect(result.current.currentQuestion).toBeDefined();
+    });
+
+    act(() => result.current.onShowStartScreen());
+    act(() => result.current.selectOption(1));
+    act(() => result.current.onCheckAnswer());
+    expect(result.current.scoreState.score).toBe(-14);
+    act(() => result.current.selectOption(2));
+    act(() => result.current.onCheckAnswer());
+    expect(result.current.scoreState.score).toBe(-21);
+  });
 });
 
 describe('Navigation between questions', () => {
@@ -362,6 +423,8 @@ describe('useQuizState — multi-select (subset rule)', () => {
   });
 
   it('captures quiz_started only once', async () => {
+    // Scope the counter to THIS test — earlier describes also start runs.
+    vi.mocked(captureAnalyticsEvent).mockClear();
     const { result } = renderHook(() => useQuizState(mockQuiz));
 
     await waitFor(() => {

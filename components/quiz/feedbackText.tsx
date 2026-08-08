@@ -1,5 +1,13 @@
 import React from 'react';
 import KatexSpan from '../katexSpan';
+import { spriteClip } from '@/lib/pixel';
+
+/**
+ * Notation chips wear the keycaps' own clip — Sprite 4px (R=8/u=4),
+ * decided 2026-08-06. Computed once; a clip-path string is far past the
+ * readable length for a Tailwind arbitrary value.
+ */
+const CHIP_CLIP = spriteClip(0, 8);
 
 /**
  * Glyphs that mark a quoted token as logical notation rather than an
@@ -61,7 +69,8 @@ export function FeedbackText({ text }: FeedbackTextProps) {
         // Start margin only: following punctuation (‘∼(’; → chip + ;)
         // should hug the chip, and a following word already brings its
         // own space from the source text.
-        className='ms-0.5 rounded-md bg-[color-mix(in_srgb,var(--quiz-fg)_10%,transparent)] px-1.5 py-0.5 whitespace-nowrap'
+        className='qchip ms-0.5'
+        style={{ clipPath: CHIP_CLIP }}
       >
         {/* Backticks route through KatexSpan's glyph→macro rewriter.
             ASCII ~ would be KaTeX's non-breaking space, so normalize

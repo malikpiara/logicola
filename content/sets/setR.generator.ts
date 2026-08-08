@@ -59,8 +59,13 @@ function fallacyGloss(fallacy: Fallacy): string {
   return `${fallacy.description} ${clauses}.`;
 }
 
-/** Strip the list-connective tail ("…, or") and final period off a clause. */
-function trimClause(clause: string): string {
+/**
+ * Strip the list-connective tail ("…, or") and final period off a clause.
+ * Exported for the reference guide, which sets the clauses as the same
+ * hanging-numeral list as the hints — the numerals make the disjunction
+ * structural, so the prose tails would just stutter.
+ */
+export function trimClause(clause: string): string {
   return clause.replace(/,? or$/, '').replace(/\.$/, '');
 }
 
@@ -71,6 +76,14 @@ function buildOptions(): Option[] {
     // the hint, which is the reference gloss, names the full term.
     label: fallacy.label,
     hint: `${fallacy.name}: ${fallacyGloss(fallacy)}`,
+    // The same gloss with its structure kept: the renderer sets the
+    // clauses as the numbered list they are in the source, instead of
+    // the flat semicolon run-on above (which stays as the fallback).
+    hintParts: {
+      term: fallacy.name,
+      lead: fallacy.description,
+      clauses: fallacy.clauses?.map(trimClause),
+    },
     // Badge label + typeable shortcut, matching the original's
     // "click a fallacy or type its abbreviation".
     abbreviation: fallacy.code,

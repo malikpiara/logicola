@@ -1,59 +1,61 @@
+import { spriteClip } from '@/lib/pixel';
+import { ArrowLeftIcon, ArrowRightIcon } from './pixelIcons';
+
+/**
+ * Pixel keycaps instead of prose (docs/pixel-ui.md § Keyboard hints).
+ * Each cap is a 22px sprite chip (R=8 corners) in ink-glass with a 2px
+ * darker bottom lip — the 8-bit reading of key depth while staying flat
+ * colour. Verb labels ("picks", "checks") replace the old full sentence:
+ * the caps carry the what, the verbs carry the so-what.
+ *
+ * The row is aria-hidden, as in the lab: it is a signifier for sighted
+ * keyboard users; the controls themselves are the accessible surface.
+ */
+
+const KEYCAP_CLIP = spriteClip(0, 8);
+
 interface KeyboardKeysProps {
   /**
-   * Number of options in the current question. Drives the upper
-   * bound shown in the "use keys 1 to N" hint. Defaults to 4 (the
-   * common case across most sets); Set Q's "Meanings & Definitions"
-   * subset has 7 options.
+   * Number of options in the current question. Drives the upper bound of
+   * the "[1] – [N]" caps. Defaults to 4 (the common case across most
+   * sets); Set Q's "Meanings & Definitions" subset has 7 options.
    */
   optionCount?: number;
   /**
-   * Options carry typeable abbreviation codes (Set R). The hint then
-   * advertises "type its abbreviation" instead of digit keys.
+   * Options carry typeable abbreviation codes (Set R). The caps then show
+   * the first and last codes — the truthful reading of "type its
+   * abbreviation" — instead of digits that would lie beside an
+   * eighteen-cell grid.
    */
   hasAbbreviations?: boolean;
+  /** First and last typeable codes, for abbreviation sets. */
+  firstAbbreviation?: string;
+  lastAbbreviation?: string;
   /**
-   * Options are laid out as a 2D grid (Set R), so Left/Right move
-   * between columns. The hint then shows all four arrow keys — the
-   * signifier for the horizontal navigation.
+   * Options are laid out as a 2D grid (Set R), so Left/Right move between
+   * columns — the caps show all four arrows.
    */
   twoDimensional?: boolean;
   /**
-   * Multiple options can be picked (Set R). Arrows move the cursor,
-   * Space toggles the option under it, and Enter checks — so the hint
-   * spells that out instead of "arrows + Enter to navigate".
+   * Multiple options can be picked (Set R): Space toggles the option
+   * under the cursor, and the caps say so.
    */
   multiSelect?: boolean;
 }
 
-const arrowKeyClassName =
-  'inline-flex items-center px-2 py-1.5 text-gray-800 bg-gray-100 border border-gray-200 rounded-lg';
-const keyCapClassName =
-  'px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg';
-
-/** A single arrow-key glyph: one triangle rotated to face `direction`. */
-function ArrowKey({
-  direction,
+function Key({
+  children,
+  wide = false,
 }: {
-  direction: 'up' | 'down' | 'left' | 'right';
+  children: React.ReactNode;
+  wide?: boolean;
 }) {
-  const rotation = {
-    down: '',
-    up: 'rotate-180',
-    left: 'rotate-90',
-    right: '-rotate-90',
-  }[direction];
   return (
-    <kbd className={arrowKeyClassName}>
-      <svg
-        className={`w-2.5 h-2.5 ${rotation}`}
-        aria-hidden='true'
-        xmlns='http://www.w3.org/2000/svg'
-        fill='currentColor'
-        viewBox='0 0 16 10'
-      >
-        <path d='M15.434 1.235A2 2 0 0 0 13.586 0H2.414A2 2 0 0 0 1 3.414L6.586 9a2 2 0 0 0 2.828 0L15 3.414a2 2 0 0 0 .434-2.179Z' />
-      </svg>
-      <span className='sr-only'>Arrow key {direction}</span>
+    <kbd
+      className={wide ? 'qkey qkey-wide' : 'qkey'}
+      style={{ clipPath: KEYCAP_CLIP }}
+    >
+      {children}
     </kbd>
   );
 }
@@ -61,49 +63,54 @@ function ArrowKey({
 export function KeyboardKeys({
   optionCount = 4,
   hasAbbreviations = false,
+  firstAbbreviation,
+  lastAbbreviation,
   twoDimensional = false,
   multiSelect = false,
 }: KeyboardKeysProps) {
-  // Clamp to the digit range the keyboard handler supports. On
-  // abbreviation subsets digits are disabled, and past 9 options digit
-  // keys can't reach everything — either way the digit hint would lie.
+  // Digits only reach nine options, and abbreviation sets type codes
+  // instead — either way a digit cap past that range would lie.
   const showDigitKeys = !hasAbbreviations && optionCount <= 9;
   const upperKey = Math.max(2, Math.min(optionCount, 9));
+  const showPickCaps =
+    showDigitKeys ||
+    (hasAbbreviations && firstAbbreviation && lastAbbreviation);
+
   return (
-    <p className='text-gray-500 hidden lg:block'>
-      You can{' '}
-      {hasAbbreviations && (
+    <span className='qkeys hidden lg:inline-flex' aria-hidden='true'>
+      {showPickCaps && (
         <>
-          type a fallacy’s abbreviation (e.g.{' '}
-          <kbd className={keyCapClassName}>ah</kbd>) or{' '}
-        </>
-      )}
-      use{' '}
-      {showDigitKeys && (
-        <>
-          keys <kbd className={keyCapClassName}>1</kbd> to{' '}
-          <kbd className={keyCapClassName}>{upperKey}</kbd>
-          {' or '}
+          <Key>{hasAbbreviations ? firstAbbreviation : 1}</Key>
+          <span className='qkeys-sep'>–</span>
+          <Key>{hasAbbreviations ? lastAbbreviation : upperKey}</Key>
+          <span className='qkeys-label'>picks</span>
         </>
       )}
       {twoDimensional && (
         <>
-          <ArrowKey direction='left' /> <ArrowKey direction='right' />{' '}
+          <Key>
+            <ArrowLeftIcon />
+          </Key>
+          <Key>
+            <ArrowRightIcon />
+          </Key>
         </>
       )}
-      <ArrowKey direction='up' /> <ArrowKey direction='down' />
-      {multiSelect ? (
+      <Key>
+        <ArrowLeftIcon className='rotate-90' />
+      </Key>
+      <Key>
+        <ArrowRightIcon className='rotate-90' />
+      </Key>
+      <span className='qkeys-label'>moves</span>
+      {multiSelect && (
         <>
-          {' to move, '}
-          <kbd className={keyCapClassName}>Space</kbd> to select, and{' '}
-          <kbd className={keyCapClassName}>Enter</kbd> to check.
-        </>
-      ) : (
-        <>
-          {' + '}
-          <kbd className={keyCapClassName}>Enter</kbd> to navigate the quiz.
+          <Key wide>space</Key>
+          <span className='qkeys-label'>toggles</span>
         </>
       )}
-    </p>
+      <Key wide>enter</Key>
+      <span className='qkeys-label'>checks</span>
+    </span>
   );
 }

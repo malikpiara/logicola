@@ -1,6 +1,6 @@
 import Quiz from '@/components/quiz';
 import QuizClient from '@/components/quiz/QuizClient';
-import ExerciseNavbar from '@/components/mobile/exerciseNavbar';
+import Navbar from '@/components/navbar';
 import { findQuizCatalogEntry, quizRouteSlugs } from '@/lib/quizCatalog';
 import { loadPublishedQuizSubSet } from '@/lib/publishedQuizLookup';
 import { Metadata } from 'next';
@@ -26,8 +26,13 @@ export default async function QuizPage({ params }: QuizPageProps) {
 
   return (
     <>
-      <ExerciseNavbar />
-      <div className='flex w-full min-h-[calc(100vh-4rem)]'>
+      {/* Below lg the quiz is FULL-BLEED: no site navbar (the in-card ✕
+          is the exit — a full navbar of phone height reclaimed), no page
+          padding, no white margins. The desktop keeps its framed card. */}
+      <div className='hidden lg:block'>
+        <Navbar />
+      </div>
+      <div className='flex w-full min-h-dvh lg:min-h-[calc(100vh-4rem)]'>
         {/* <ExerciseSidebar
             chapter={3}
             path={params.slugs.slice(0, -1)}
@@ -36,7 +41,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
             }}
             initialQuestionIdx={0}
           /> */}
-        <main className='p-4 w-full'>
+        <main className='w-full p-0 lg:p-4'>
           {loaded.runtime === 'static' ? (
             <Quiz subSet={loaded.subSet} />
           ) : (

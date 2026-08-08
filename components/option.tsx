@@ -1,7 +1,57 @@
 import classNames from 'classnames';
 import React from 'react';
 import KatexSpan from './katexSpan';
-import { FeedbackText } from './quiz/feedbackText';
+import { CheckIcon, TimesIcon } from './quiz/pixelIcons';
+import { CURSOR_W, FOCUS_W, focusR, ringBand, spriteClip } from '@/lib/pixel';
+
+/** Selection band width (the Tint treatment's `sringw`). */
+const SELECT_W = 4;
+
+/**
+ * Silhouettes per corner radius, computed once at module scope — R=24 for
+ * list pills, R=12 for the grid's compact cells (a 24px corner on a 40px
+ * box is nearly a stadium). Ring width and clip inset come from ONE
+ * number so pill + band always occupy the same silhouette as an unringed
+ * pill: selection changes an option's colour, never its size.
+ */
+function geometryFor(R: number) {
+  return {
+    clip: {
+      0: spriteClip(0, R),
+      [CURSOR_W]: spriteClip(CURSOR_W, R),
+      [SELECT_W]: spriteClip(SELECT_W, R),
+    } as Record<number, string>,
+    band: {
+      [CURSOR_W]: ringBand('sprite', CURSOR_W, R),
+      [SELECT_W]: ringBand('sprite', SELECT_W, R),
+    } as Record<number, string>,
+    // Focus stands 2px off the silhouette; its radius grows by the same
+    // 4px so it stays concentric instead of tightening at the corners.
+    focusBand: ringBand('sprite', FOCUS_W, focusR(R)),
+  };
+}
+
+const SPRITE_LIST = geometryFor(24);
+const SPRITE_GRID = geometryFor(12);
+
+/**
+ * The badge silhouette — open decision 8, working value DIAMOND (Malik,
+ * 2026-08-08): MaterialShapes' puffy diamond rasterised onto the badge's
+ * 4px grid — row widths 2·4·6·8·8·6·4·2 cells, the straight-edged pixel
+ * diamond fattened one row at the waist. It happens to echo the ◇ of the
+ * modal-logic content. Expressed in percentages of the lab's literal
+ * 32px polygon (all points land on clean eighths), so one clip serves
+ * both badge sizes — with a caveat CARRIED FOR REVIEW on Sets Q and R:
+ * their compact badges run 28px, where the eighths land on 3.5px steps,
+ * off the 4px grid. The square chip (`gemClip()` from lib/pixel) stays
+ * the dormant alternative.
+ */
+const BADGE_CLIP =
+  'polygon(37.5% 0%, 62.5% 0%, 62.5% 12.5%, 75% 12.5%, 75% 25%, 87.5% 25%, ' +
+  '87.5% 37.5%, 100% 37.5%, 100% 62.5%, 87.5% 62.5%, 87.5% 75%, 75% 75%, ' +
+  '75% 87.5%, 62.5% 87.5%, 62.5% 100%, 37.5% 100%, 37.5% 87.5%, 25% 87.5%, ' +
+  '25% 75%, 12.5% 75%, 12.5% 62.5%, 0% 62.5%, 0% 37.5%, 12.5% 37.5%, ' +
+  '12.5% 25%, 25% 25%, 25% 12.5%, 37.5% 12.5%)';
 
 export interface OptionProps {
   ref?: React.Ref<HTMLButtonElement>;
@@ -19,34 +69,34 @@ export interface OptionProps {
   abbreviation?: string;
   /**
    * Keyboard cursor is on this option (multi-select, where the cursor is
-   * distinct from the committed selection). Renders a lighter highlight
-   * than `isSelected` so "where I am" reads apart from "what I've picked".
+   * distinct from the committed selection). Renders as a 2px full-strength
+   * band in the focus colour ON the silhouette — "where I am" apart from
+   * "what I've picked" by position and width, not hue alone (WCAG 1.4.1).
    */
   isCursor?: boolean;
   /**
-   * Render for the immersive (set-colored) quiz surface: large translucent
-   * pills tinted with `--quiz-fg` against `--quiz-surface`, an outline when
-   * selected, and the mono prefix inside a circled badge. The badge doubles
-   * as an homage to the original LogiCola, which highlighted the typed
-   * abbreviation in a filled box.
+   * Render for the immersive (set-colored) quiz surface: sprite-clipped
+   * pills in the Tint treatment (ink washes at rest, the accent arriving
+   * on selection), the mono prefix in a filled square chip — an homage to
+   * the original LogiCola, which highlighted the typed abbreviation in a
+   * filled box.
    */
   immersive?: boolean;
-  /**
-   * Feedback text rendered attached beneath this pill (immersive list
-   * layout only), indented to the label's left edge — so a wrong pick's
-   * explanation sits WITH the pick instead of at the far bottom of the
-   * card. Rose-toned for wrong options, foreground ink when this option
-   * is the correct one (review mode).
-   */
-  hint?: string;
 }
 
 /**
  * One answer option. A single visual language across every set — a quiet
  * mono prefix (the option's number, or its typeable code on abbreviation
- * sets) before a regular-weight label, with a magenta tint marking the
- * selection — in two sizes: `compact` for the 18-option grids, roomy for
- * the classic four-option lists.
+ * sets) in a chip before a regular-weight label, with the set's accent
+ * marking the selection — in two sizes: `compact` for the 18-option grids,
+ * roomy for the classic four-option lists.
+ *
+ * State ladder (the lab's Tint treatment, docs/pattern-lab.html
+ * OPTION_TREATMENTS): idle = 9% ink wash → hover 15% → selected = 14%
+ * accent composited on the surface + 4px accent band → revealed = solid
+ * ink (inverts, like the CTA) → ruled = 5% ink recede in the error tone.
+ * The colour tokens live in globals.css (`--qo-*`), fed by the set's own
+ * three colours.
  */
 const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
   (
@@ -63,7 +113,6 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
       abbreviation,
       isCursor = false,
       immersive = false,
-      hint,
     },
     ref
   ) => {
@@ -71,153 +120,150 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
     const isRuledOut =
       (showSolution && !isCorrect) || hasBeenIncorrectlyGuessed;
 
-    const optionClasses = immersive
-      ? classNames(
-          // Typeform-style pill on the set-colored surface. All color comes
-          // from --quiz-fg/--quiz-surface so one ruleset works on both dark
-          // (Set A) and pastel (Sets C/J/L/N/R) surfaces. border-2 always,
-          // transparent at rest, so selection never shifts layout.
-          'motion-option w-full cursor-pointer text-left flex border-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--quiz-fg)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--quiz-surface)]',
-          compact
-            ? 'rounded-xl ps-3 pe-3 items-start'
-            : 'rounded-full ps-4 pe-6 items-center',
-          {
-            'border-transparent bg-[color-mix(in_srgb,var(--quiz-fg)_9%,transparent)] text-[var(--quiz-fg)]':
-              !isRevealedCorrect && !isRuledOut && !isSelected,
-            // The revealed answer inverts — the strongest thing on the
-            // surface, in the same "adaptive ink" as the start screen CTA.
-            'border-transparent bg-[var(--quiz-fg)] text-[var(--quiz-surface)]':
-              isRevealedCorrect,
-            // Ruled out: receded fill, rose mixed toward the foreground so
-            // it stays legible on dark and light surfaces alike.
-            'border-transparent bg-[color-mix(in_srgb,var(--quiz-fg)_5%,transparent)] text-[color-mix(in_srgb,#f43f5e_55%,var(--quiz-fg))]':
-              isRuledOut && !isRevealedCorrect,
-            'border-[var(--quiz-fg)] bg-[color-mix(in_srgb,var(--quiz-fg)_15%,transparent)] text-[var(--quiz-fg)]':
-              !showSolution && isSelected,
-            'border-[color-mix(in_srgb,var(--quiz-fg)_45%,transparent)]':
-              !showSolution && !isSelected && isCursor,
-            'hover:bg-[color-mix(in_srgb,var(--quiz-fg)_15%,transparent)]':
-              !showSolution,
-          }
-        )
-      : classNames(
-          'motion-option w-full cursor-pointer ps-4 pe-4 text-left text-base leading-6 text-gray-900 flex items-start border rounded-xl focus:outline-fuchsia-500',
-          {
-            'border-gray-200': !isSelected && !showSolution,
-            'bg-[#1ad85f]': showSolution && isCorrect,
-            'border-rose-200 text-red-500': isRuledOut,
-            // The selection tint stays legible even with several options
-            // picked at once (multi-select grids).
-            'border-fuchsia-500 bg-fuchsia-50': !showSolution && isSelected,
-            // Cursor-only (multi-select keyboard focus): lighter than a pick.
-            'border-fuchsia-300': !showSolution && !isSelected && isCursor,
-            'hover:border-fuchsia-300 focus:border-fuchsia-400': !showSolution,
-          }
-        );
+    if (!immersive) {
+      return (
+        <button
+          type='button'
+          ref={ref}
+          onClick={onClick}
+          aria-pressed={isSelected}
+          data-solution={showSolution ? 'shown' : 'hidden'}
+          className={classNames(
+            'motion-option w-full cursor-pointer ps-4 pe-4 text-left text-base leading-6 text-gray-900 flex items-start border rounded-xl focus:outline-fuchsia-500',
+            {
+              'border-gray-200': !isSelected && !showSolution,
+              'bg-[#1ad85f]': showSolution && isCorrect,
+              'border-rose-200 text-red-500': isRuledOut,
+              'border-fuchsia-500 bg-fuchsia-50': !showSolution && isSelected,
+              'border-fuchsia-300': !showSolution && !isSelected && isCursor,
+              'hover:border-fuchsia-300 focus:border-fuchsia-400':
+                !showSolution,
+            }
+          )}
+        >
+          <div
+            className={classNames(
+              'flex items-baseline',
+              compact ? 'gap-2.5' : 'gap-3'
+            )}
+          >
+            {showIndex && (
+              <span
+                className={classNames(
+                  'shrink-0 font-mono lowercase tabular-nums',
+                  compact ? 'text-xs' : 'text-sm',
+                  showSolution
+                    ? isCorrect
+                      ? 'text-gray-800'
+                      : 'text-red-400'
+                    : isSelected
+                      ? 'text-fuchsia-700'
+                      : 'text-gray-400'
+                )}
+              >
+                {abbreviation ?? index}
+              </span>
+            )}
+            <div
+              className={
+                compact
+                  ? 'py-3.5 text-sm leading-5 font-normal'
+                  : 'py-4 font-normal'
+              }
+            >
+              <KatexSpan text={label} />
+            </div>
+          </div>
+        </button>
+      );
+    }
 
-    // The mono prefix turns magenta when picked, red when ruled out.
-    const prefixColor = showSolution
-      ? isCorrect
-        ? 'text-gray-800'
-        : 'text-red-400'
-      : isSelected
-        ? 'text-fuchsia-700'
-        : 'text-gray-400';
+    const isSelectedLive = isSelected && !showSolution;
+    // The cursor mark only ever modifies an untouched option — once a pill
+    // is picked, ruled or revealed, that state owns the silhouette (when
+    // the cursor sits on a picked option, the focus band outside does the
+    // "where I am" job).
+    const showCursorBand =
+      isCursor && !isSelectedLive && !isRuledOut && !isRevealedCorrect;
 
-    // Immersive prefix: a circled badge, filled when picked (and repainted
-    // in surface ink on the inverted revealed-answer pill).
-    const badgeClasses = classNames(
-      'flex shrink-0 items-center justify-center rounded-full border font-mono lowercase tabular-nums',
-      compact ? 'mt-2 h-6 w-6 text-[10px]' : 'h-8 w-8 text-xs',
-      isRevealedCorrect
-        ? 'border-[color-mix(in_srgb,var(--quiz-surface)_60%,transparent)] text-[var(--quiz-surface)]'
-        : isSelected && !showSolution
-          ? 'border-transparent bg-[var(--quiz-fg)] text-[var(--quiz-surface)]'
-          : 'border-[color-mix(in_srgb,var(--quiz-fg)_45%,transparent)] text-[color-mix(in_srgb,var(--quiz-fg)_85%,transparent)]'
-    );
+    const geo = compact ? SPRITE_GRID : SPRITE_LIST;
+    const ringW = isRevealedCorrect
+      ? 0
+      : isSelectedLive
+        ? SELECT_W
+        : showCursorBand
+          ? CURSOR_W
+          : 0;
+    const ringColor = showCursorBand ? 'var(--qo-focus)' : 'var(--qo-sring)';
+
+    const wrapStyle = {
+      // Set on EVERY wrapper, ringed or not: the band fades rather than
+      // popping, so it needs a silhouette on the way out too — with the
+      // clip unset the fade-out would flash a full rectangle.
+      '--qo-rc': ringColor,
+      '--qo-band': geo.band[ringW || SELECT_W],
+      '--qo-fband': geo.focusBand,
+    } as React.CSSProperties;
 
     const pill = (
       <button
         type='button'
         ref={ref}
         onClick={onClick}
-        className={optionClasses}
         aria-pressed={isSelected}
         data-solution={showSolution ? 'shown' : 'hidden'}
+        style={{ clipPath: geo.clip[ringW] }}
+        className={classNames('qopt', {
+          'is-compact': compact,
+          'is-selected': isSelectedLive,
+          'is-revealed': isRevealedCorrect,
+          'is-ruled': isRuledOut && !isRevealedCorrect,
+        })}
       >
-        <div
-          className={classNames(
-            'flex',
-            immersive
-              ? compact
-                ? 'items-start gap-2.5'
-                : 'items-center gap-3.5'
-              : 'items-baseline',
-            !immersive && (compact ? 'gap-2.5' : 'gap-3')
-          )}
-        >
-          {showIndex &&
-            (immersive ? (
-              <span className={badgeClasses}>{abbreviation ?? index}</span>
-            ) : (
-              <span
-                className={classNames(
-                  'shrink-0 font-mono lowercase tabular-nums',
-                  compact ? 'text-xs' : 'text-sm',
-                  prefixColor
-                )}
-              >
-                {abbreviation ?? index}
+        {showIndex && (
+          <span className='qbadge' style={{ clipPath: BADGE_CLIP }}>
+            {/* The ✕ marks only options the learner actually guessed, so
+                the mark stays personal; options merely receding at reveal
+                keep their number. The ✓ belongs to the revealed answer. */}
+            {isRevealedCorrect ? (
+              <span className='qbadge-mark'>
+                <CheckIcon />
+                <span className='sr-only'>Correct answer</span>
               </span>
-            ))}
-          <div
-            className={
-              immersive
-                ? compact
-                  ? 'py-2.5 text-sm leading-5 font-normal'
-                  : 'py-3.5 text-lg md:text-xl font-normal'
-                : compact
-                  ? 'py-3.5 text-sm leading-5 font-normal'
-                  : 'py-4 font-normal'
-            }
-          >
-            <KatexSpan text={label} />
-          </div>
-        </div>
+            ) : hasBeenIncorrectlyGuessed ? (
+              <span className='qbadge-mark'>
+                <TimesIcon />
+                <span className='sr-only'>Ruled out</span>
+              </span>
+            ) : (
+              (abbreviation ?? index)
+            )}
+          </span>
+        )}
+        <span className='qopt-label'>
+          <KatexSpan text={label} />
+        </span>
       </button>
     );
 
-    // Immersive list pills carry their own feedback slot. The wrapper div
-    // renders unconditionally (not only when a hint exists) so the button's
-    // tree position — and its focus — survives the hint appearing after a
-    // wrong check. The aria-live region is likewise always present so the
-    // hint's arrival is announced.
-    if (immersive && !compact) {
-      return (
-        <div className='w-full'>
-          {pill}
-          <div aria-live='polite'>
-            {hint && (
-              // ps matches the pill's internal geometry (ps-4 + badge w-8 +
-              // gap-3.5 = 62px) so the hint indents to the label's own left
-              // edge — visibly a continuation of that pill, not a sibling.
-              <div
-                className='motion-answer-reveal mt-2 whitespace-pre-line ps-[62px] pe-6 text-base leading-7'
-                style={{
-                  color: isCorrect
-                    ? 'color-mix(in srgb, var(--quiz-fg) 82%, transparent)'
-                    : 'color-mix(in srgb, #f43f5e 45%, var(--quiz-fg))',
-                }}
-              >
-                <FeedbackText text={hint} />
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    }
-
-    return pill;
+    // Wrong-pick feedback lives in the reserved slot above the options
+    // (components/quiz/feedbackSlot.tsx), never attached to the pill — so
+    // the palette holds still whatever happens.
+    //
+    // `is-ringed`, NOT the lab's `ring`: in the app that word is Tailwind
+    // v4's ring utility (a 1px currentColor box-shadow), and the collision
+    // drew a stray rectangle around every ringed pill.
+    return (
+      <div
+        className={classNames('qopt-wrap', {
+          'is-compact': compact,
+          'is-ringed': ringW > 0,
+        })}
+        style={wrapStyle}
+      >
+        {pill}
+      </div>
+    );
   }
 );
 
