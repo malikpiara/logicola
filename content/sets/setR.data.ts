@@ -20,9 +20,11 @@
 //         emotion, false stereotype, and both clauses of ad hominem'), which
 //         keeps the meaning but loses the marking: they now read as ordinary
 //         prose where the original set them apart.
-// Neither is representable in the current `description` / `clauses` strings.
-// Restoring them needs a markup convention in the content (see the hint
-// prototype in docs/pattern-lab.html, which uses *emphasis* and `notation`).
+// The markup convention from the pattern-lab hint prototype (*emphasis*,
+// `notation`) is now live in the app's hint renderer
+// (components/quiz/hintBlock.tsx). 0xBD is restored for `must` in aa
+// clause (3) — deliberately not `probably`; see the note at that clause.
+// The 0xBE fallacy-code references (47 runs) remain flattened to prose.
 
 export type FallacyCode =
   | 'aa'
@@ -101,7 +103,11 @@ export const FALLACIES: Fallacy[] = [
     clauses: [
       'the person isn’t an authority on the subject, or',
       'there’s no consensus of such authorities, or',
-      'the argument concludes that the authority must be right (and isn’t just probably right).',
+      // `*must*` restores the source's 0xBD emphasis on this word (see the
+      // header note). The source marks `probably` too, but two marks in one
+      // clause fragment it, and `must` is the operative word: asserting
+      // necessity IS the fallacy (decided 2026-08-05, redesign-handoff.md).
+      'the argument concludes that the authority *must* be right (and isn’t just probably right).',
     ],
   },
   {

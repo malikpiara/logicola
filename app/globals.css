@@ -155,6 +155,26 @@
   }
 }
 
+/* Gem CTA focus mark (components/quiz/gemButton.tsx). A clipped button
+   paints no outline and no ring — clip-path removes both — so the focus
+   indicator is a 2px band in the gem's own geometry on the UNCLIPPED
+   wrapper, standing 2px off the silhouette. `currentColor` resolves to
+   the set's ink on both quiz screens. No transition: focus marks appear
+   instantly. */
+.gem-button-wrap::after {
+  content: '';
+  position: absolute;
+  inset: var(--gem-finset);
+  background: currentColor;
+  clip-path: var(--gem-fband);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.gem-button-wrap:has(button:focus-visible)::after {
+  opacity: 1;
+}
+
 /* Immersive quiz surface. The quiz screen is painted with the set's own
    palette (--quiz-surface/--quiz-fg/--quiz-accent, set inline by the Quiz
    component). These scoped rules repaint the shared chrome — keyboard hints,
@@ -181,14 +201,803 @@
   color: var(--quiz-fg);
 }
 
-.quiz-immersive [aria-controls='quiz-reference-pane'] {
-  background-color: transparent;
-  border-color: color-mix(in srgb, var(--quiz-fg) 30%, transparent);
+/* ---- Option pills: sprite silhouette + the Tint colour ladder ----------
+   Port of the pattern lab's decided answer treatment (docs/pixel-ui.md,
+   OPTION_TREATMENTS.tint in docs/pattern-lab.html). Not one literal colour
+   lives in these rules: every state reads a --qo-* token fed by the set's
+   own three colours, so the ladder ports to all seven sets without a new
+   decision. Token grammar — no prefix = idle, h = hover, s = selected,
+   r = revealed, x = ruled; bg / fg / bbg (badge fill) / bfg (badge ink).
+
+   The error tone is the shipped rose-mix (open decision 6 in
+   docs/redesign-handoff.md; `Tier brick` remains the alternative). */
+.quiz-immersive {
+  --quiz-error: color-mix(in srgb, #f43f5e 55%, var(--quiz-fg));
+
+  --qo-bg: color-mix(in srgb, var(--quiz-fg) 9%, transparent);
+  --qo-hbg: color-mix(in srgb, var(--quiz-fg) 15%, transparent);
+  --qo-fg: var(--quiz-fg);
+  --qo-bbg: color-mix(in srgb, var(--quiz-fg) 12%, transparent);
+  --qo-bfg: color-mix(in srgb, var(--quiz-fg) 85%, transparent);
+  --qo-sbg: color-mix(in srgb, var(--quiz-accent) 14%, var(--quiz-surface));
+  --qo-sfg: var(--quiz-fg);
+  --qo-sring: var(--quiz-accent);
+  --qo-sbbg: var(--quiz-accent);
+  --qo-sbfg: var(--quiz-surface);
+  --qo-rbg: var(--quiz-fg);
+  --qo-rfg: var(--quiz-surface);
+  --qo-rbbg: color-mix(in srgb, var(--quiz-surface) 18%, transparent);
+  --qo-rbfg: var(--quiz-surface);
+  --qo-xbg: color-mix(in srgb, var(--quiz-fg) 5%, transparent);
+  --qo-xfg: var(--quiz-error);
+  --qo-xbbg: color-mix(in srgb, var(--quiz-error) 15%, transparent);
+  --qo-xbfg: var(--quiz-error);
+  /* Focus and the multi-select cursor share this colour — they mean the
+     same thing ("where I am") and separate by position. The ink, because
+     Tint leaves the ink unspent on selection (the accent owns it). */
+  --qo-focus: var(--quiz-fg);
+}
+
+/* The wrapper carries both marks as pseudo-element bands, so they must be
+   siblings of the clipped pill, never ancestors — a clip on the wrapper
+   would delete the label along with the pill's interior. */
+.quiz-immersive .qopt-wrap {
+  position: relative;
+  transition: transform 100ms ease;
+}
+
+.quiz-immersive .qopt-wrap.is-compact {
+  display: flex;
+}
+
+/* The ring, drawn as an actual BAND (ringBand() in lib/pixel.ts): the
+   wrapper's ::before is filled with the ring colour and clipped to the
+   outer silhouette minus the inner one, evenodd. Never a drop-shadow —
+   drop-shadow traces the alpha channel, not the silhouette. Always
+   rendered and faded with the fill so band and interior share one timing;
+   --qo-band is set on every wrapper so a band fading OUT keeps its
+   silhouette instead of collapsing to a rectangle mid-fade. */
+.quiz-immersive .qopt-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--qo-rc, transparent);
+  clip-path: var(--qo-band);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+/* `is-ringed`, not `ring` — that name is Tailwind's ring utility in the
+   app, and the collision painted a 1px currentColor rectangle around
+   every ringed wrapper. */
+.quiz-immersive .qopt-wrap.is-ringed::before {
+  opacity: 1;
+}
+
+/* The focus mark is a second band OUTSIDE the silhouette with a 2px
+   surface gap. The gap is load-bearing, not decoration: ink and accent
+   sit only 1.60–2.67:1 apart across the sets, so two marks in those
+   colours touching each other would fail WCAG 1.4.11's 3:1. Separated by
+   surface, each is measured against the surface instead. Never close it. */
+.quiz-immersive .qopt-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  background: var(--qo-focus);
+  clip-path: var(--qo-fband);
+  pointer-events: none;
+  display: none;
+}
+
+.quiz-immersive .qopt-wrap:has(.qopt:focus-visible)::after {
+  display: block;
+}
+
+/* Buttons that give a little under the press read as pressable; 97% is
+   felt rather than seen. On the wrapper so the band travels with the
+   pill — on the pill alone the ring would stay behind. */
+.quiz-immersive .qopt-wrap:has(.qopt:not(.is-ruled):not(.is-revealed):active) {
+  transform: scale(0.97);
+}
+
+.quiz-immersive .qopt {
+  appearance: none;
+  border: 0;
+  font: inherit;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  cursor: pointer;
+  padding: 15px 26px 15px 18px;
+  font-size: 19px;
+  line-height: 1.35;
+  background: var(--qo-bg, transparent);
+  color: var(--qo-fg, var(--quiz-fg));
+  transition:
+    background-color 0.12s,
+    color 0.12s;
+}
+
+/* The pill's own outline would trace the border-box, cutting straight
+   across the stairs. The wrapper's band replaces it. */
+.quiz-immersive .qopt:focus-visible {
+  outline: none;
+}
+
+/* Compact cells: eighteen have to fit on one card. Weight 500, because a
+   control should read as a control — the cells and the hint body are both
+   15px and the hint moved to ink, so weight is the separating lever. */
+.quiz-immersive .qopt.is-compact {
+  font-size: 15px;
+  font-weight: 500;
+  gap: 10px;
+  padding: 10px 16px 10px 10px;
+  height: 100%;
+}
+
+/* Selection completes the scheme in the ACCENT — the third colour already
+   paints the count label and the progress fill; now it marks the pick.
+   The :not(.is-selected) on the hover rule is load-bearing: without it
+   the hover tint outranks the selected rule by specificity and repaints a
+   selected option with the idle hover wash under the cursor. */
+.quiz-immersive .qopt.is-selected {
+  background: var(--qo-sbg);
+  color: var(--qo-sfg);
+}
+
+/* The revealed answer inverts, same adaptive ink as the CTA. */
+.quiz-immersive .qopt.is-revealed {
+  background: var(--qo-rbg);
+  color: var(--qo-rfg);
+  cursor: default;
+}
+
+.quiz-immersive .qopt.is-ruled {
+  background: var(--qo-xbg);
+  color: var(--qo-xfg);
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .quiz-immersive
+    .qopt:hover:not(.is-revealed):not(.is-ruled):not(.is-selected) {
+    background: var(--qo-hbg);
+  }
+}
+
+/* The badge: a filled square chip on the 4px stair grid (clip set inline),
+   echoing the original LogiCola's filled abbreviation box. No outline —
+   a clipped border loses its stroke on the stairs. */
+.quiz-immersive .qbadge {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--qo-bbg);
+  color: var(--qo-bfg);
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: lowercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.quiz-immersive .qopt.is-compact .qbadge {
+  width: 28px;
+  height: 28px;
+  font-size: 11px;
+}
+
+.quiz-immersive .qopt.is-selected .qbadge {
+  background: var(--qo-sbbg);
+  color: var(--qo-sbfg);
+}
+
+.quiz-immersive .qopt.is-revealed .qbadge {
+  background: var(--qo-rbbg);
+  color: var(--qo-rbfg);
+}
+
+.quiz-immersive .qopt.is-ruled .qbadge {
+  background: var(--qo-xbbg);
+  color: var(--qo-xbfg);
+}
+
+.quiz-immersive .qbadge svg {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+
+.quiz-immersive .qopt-label {
+  min-width: 0;
+}
+
+/* The number → ✕/✓ swap is the clearest state signal the component has.
+   The mark animates when it MOUNTS (one-shot by construction: React only
+   mounts it on the render where the state changed), never on re-renders. */
+@keyframes qbadge-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+.quiz-immersive .qbadge-mark {
+  display: block;
+  animation: qbadge-in 180ms var(--ease-out-quart) both;
+}
+
+/* ---- Question chrome ----------------------------------------------------
+   Same voice as the start screen's eyebrow — the question screen reads as
+   a continuation of the start card, not a different app. 0.12em tracking:
+   caps want 5–12%, and this is the top of the range (0.3em let the words
+   disassemble — audit finding 5). */
+.quiz-immersive .qheader {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.8;
+  margin-bottom: 18px;
   color: var(--quiz-fg);
 }
 
-.quiz-immersive [aria-controls='quiz-reference-pane']:hover {
-  background-color: color-mix(in srgb, var(--quiz-fg) 10%, transparent);
+.quiz-immersive .qmulti {
+  margin: -10px 0 18px;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--quiz-fg) 72%, transparent);
+}
+
+/* The size container for the prompt's cqw type and the option grid's
+   container query. inline-size only: the card's height must stay
+   content-driven. NB layout containment makes this the containing block
+   for absolute descendants — keep absolutely-positioned chrome (the
+   progress line) OUTSIDE it. */
+.quiz-immersive .qcontainer {
+  container-type: inline-size;
+}
+
+/* Display sizes want tight leading; 1.25 is the top of Butterick's
+   120–145% band, which suits a two-to-three line question. cqw, not vw:
+   736px of container → 26px (clamped); 358px → the 20px floor. */
+.quiz-immersive .qprompt {
+  font-size: clamp(20px, 3.6cqw, 26px);
+  line-height: 1.25;
+  font-weight: 400;
+  text-align: center;
+  margin: 0 0 34px;
+  text-wrap: balance;
+}
+
+/* ---- Grid sets (Q, R) --------------------------------------------------
+   COLUMN-major: the options read DOWN each column — the 2008 answer
+   grid's order and the taxonomy the student learns, so it is never
+   shuffled. The row count has to change with the column count or the
+   grid spills into implicit columns; JS supplies both pairs
+   (optionGridVars) and the container query picks one. 640px is a
+   prototype threshold pending the mobile pass. */
+.quiz-immersive .qoptions-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(var(--qcols-sm), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--qrows-sm), auto);
+}
+
+@container (min-width: 640px) {
+  .quiz-immersive .qoptions-grid {
+    grid-template-columns: repeat(var(--qcols), minmax(0, 1fr));
+    grid-template-rows: repeat(var(--qrows), auto);
+  }
+}
+
+/* Same voice and colour as the start screen's points line — the same
+   information, one screen later. */
+.quiz-immersive .qcount {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: var(--quiz-accent);
+}
+
+/* ---- Keyboard hints -----------------------------------------------------
+   Pixel keycaps (22px sprite chips, R=8) in ink-glass with a 2px darker
+   bottom lip — the 8-bit reading of key depth in flat colour. The bottom
+   edge is straight, so the lip survives the clip everywhere except the
+   corner stairs, which shortens it pleasingly. */
+.quiz-immersive .qkeys {
+  align-items: center;
+  gap: 7px;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 11px;
+  opacity: 0.7;
+  color: var(--quiz-fg);
+}
+
+.quiz-immersive .qkey {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  font: inherit;
+  background: color-mix(in srgb, var(--quiz-fg) 9%, transparent);
+  border-bottom: 2px solid color-mix(in srgb, var(--quiz-fg) 35%, transparent);
+}
+
+.quiz-immersive .qkey svg {
+  width: 10px;
+  height: 10px;
+  display: block;
+}
+
+.quiz-immersive .qkeys-sep {
+  margin: 0 -3px;
+}
+
+.quiz-immersive .qkeys-label {
+  letter-spacing: 0.08em;
+}
+
+/* ---- Mobile header row ---------------------------------------------------
+   The bare exit glyph: no plate (it competed with the Guide chip; the
+   reference apps run a naked quiet ✕). The 44px tap box stays — only the
+   paint shrinks, never the target. Ink at 60% keeps it present but
+   subordinate to the bar. */
+.quiz-immersive .qexit {
+  color: color-mix(in srgb, var(--quiz-fg) 60%, transparent);
+}
+
+@media (hover: hover) {
+  .quiz-immersive .qexit:hover {
+    color: var(--quiz-fg);
+  }
+}
+
+.quiz-immersive .qexit:focus-visible {
+  outline: 2px solid var(--quiz-fg);
+  outline-offset: 2px;
+  color: var(--quiz-fg);
+}
+
+.quiz-immersive .qbar {
+  background: color-mix(in srgb, var(--quiz-fg) 12%, transparent);
+}
+
+/* The fill advances in whole 4px steps — a loading bar drawn in pixels,
+   so the leading edge never antialiases. Plain var() width first as the
+   fallback for engines without round(). */
+.quiz-immersive .qbar-fill {
+  width: var(--qp, 0%);
+  width: round(down, var(--qp, 0%), 4px);
+}
+
+/* ---- Guide button --------------------------------------------------------
+   Ink-glass sprite chip (R=12), book-heart at 16px, mono eyebrow voice. */
+.quiz-immersive .qguide-btn {
+  appearance: none;
+  border: 0;
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  cursor: pointer;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--quiz-fg);
+  background: color-mix(in srgb, var(--quiz-fg) 9%, transparent);
+}
+
+.quiz-immersive .qguide-btn:hover {
+  background: color-mix(in srgb, var(--quiz-fg) 15%, transparent);
+}
+
+/* A clipped chip paints no outline (clip-path clips it), so focus is a
+   full state flip to the adaptive ink — unmissable, and in-system. */
+.quiz-immersive .qguide-btn:focus-visible {
+  outline: none;
+  background: var(--quiz-fg);
+  color: var(--quiz-surface);
+}
+
+/* ---- Notation chips -----------------------------------------------------
+   The tinted boxes holding logic — `∴ A is true`, `∼(A · B)`. DECIDED
+   (Malik, 2026-08-06): the keycaps' own clip, Sprite 4px, on all of them
+   (clip set inline from lib/pixel). Weight only, no size: these sit
+   INLINE in running prose, where a larger glyph would open the leading
+   around its own line. Ink tint — accent tint is open decision 7.
+   Scoped to the immersive card AND the reference guide: the guide's
+   notation is the same object as the hint's, so it takes the same chip
+   (on the white sheet the guide supplies neutral tokens — see
+   .wff-guide below). */
+:is(.quiz-immersive, .wff-guide) .qchip {
+  font-family: inherit;
+  padding: 1px 7px;
+  font-weight: 500;
+  white-space: nowrap;
+  background: color-mix(in srgb, var(--quiz-fg, #1f2937) 12%, transparent);
+  color: var(--quiz-fg, #1f2937);
+}
+
+/* The mobile controls sheet follows the set's colour scheme — its
+   grabber reads the ink the sheet carries instead of the drawer's
+   stock grays. */
+.quiz-controls-drawer .cursor-grab {
+  background: color-mix(in srgb, var(--quiz-fg, #1f2937) 18%, transparent);
+}
+
+@media (hover: hover) {
+  .quiz-controls-drawer .cursor-grab:hover {
+    background: color-mix(in srgb, var(--quiz-fg, #1f2937) 30%, transparent);
+  }
+}
+
+/* ---- Reference guide (the lab panel's hierarchy) ------------------------
+   Port of the lab guide panel's information hierarchy (docs/pattern-lab
+   SET_GUIDES + .qguide-* styles): 15px/600 headings, 13px body, chip
+   rows, dense tables with mono small-caps headers, hanging-numeral rule
+   lists. The sheet is still white (the surface-colour question is
+   deferred), so the guide supplies NEUTRAL tokens for the shared chip /
+   clause-list / emphasis machinery it borrows from the hints. */
+/* Ink-driven with neutral fallbacks: on the branded desktop sheet the
+   set's tokens ride in on the DrawerContent, so everything recolours;
+   on the white mobile sheet (surface pass still deferred) the fallbacks
+   keep today's grays. NB the fallbacks live in var() — declaring
+   --quiz-fg HERE would shadow the inherited ink (the documented
+   custom-property trap). */
+.wff-guide {
+  font-size: 13px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 88%, transparent);
+}
+
+.wff-guide .qguide-h {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--quiz-fg, #111827);
+}
+
+.wff-guide .qguide-group {
+  margin-top: 22px;
+}
+
+.wff-guide .qguide-p {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 88%, transparent);
+}
+
+/* A row of chips and a label, never mixed running prose — the one place
+   flex is safe in guide content. */
+.wff-guide .qguide-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+/* The notation is the SPECIMEN here; it outranks its own definition.
+   18px matches the option pills' 19px — a reference smaller than the
+   thing it references is the wrong way round. */
+.wff-guide .qguide-chip {
+  font-family: inherit;
+  flex: none;
+  min-width: 3.4em;
+  text-align: center;
+  padding: 2px 8px;
+  font-size: 18px;
+  font-weight: 500;
+  background: color-mix(in srgb, var(--quiz-fg, #1f2937) 9%, transparent);
+  color: var(--quiz-fg, #111827);
+}
+
+.wff-guide .qguide-cap {
+  flex: none;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 60%, transparent);
+}
+
+.wff-guide .qguide-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.wff-guide .qguide-table th {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 60%, transparent);
+  padding: 0 10px 6px 0;
+  border-bottom: 2px solid
+    color-mix(in srgb, var(--quiz-fg, #1f2937) 18%, transparent);
+}
+
+.wff-guide .qguide-table td {
+  vertical-align: top;
+  padding: 8px 10px 8px 0;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--quiz-fg, #1f2937) 12%, transparent);
+}
+
+.wff-guide .qguide-table tr:last-child td {
+  border-bottom: 0;
+}
+
+/* A wff form is one object; `some A is not B` must not break after
+   `not`. */
+.wff-guide .qguide-mono {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 12px;
+  white-space: nowrap;
+  color: var(--quiz-fg, #1f2937);
+}
+
+/* The typeable two-letter code — same voice as the cell badges. */
+.wff-guide .qguide-code {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 60%, transparent);
+}
+
+.wff-guide .qguide-name {
+  font-weight: 600;
+  color: var(--quiz-fg, #111827);
+}
+
+.wff-guide .qguide-why {
+  margin-top: 2px;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 65%, transparent);
+}
+
+/* Numbered rules (Set L). Hanging number via absolute positioning, NOT
+   flex — mixed inline content must stay in one inline formatting
+   context (the clause-list lesson, not re-learned). */
+.wff-guide .qguide-rules {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: qgr;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.wff-guide .qguide-rules li {
+  counter-increment: qgr;
+  position: relative;
+  padding-left: 22px;
+  margin-top: 8px;
+}
+
+.wff-guide .qguide-rules li::before {
+  content: counter(qgr);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 14px;
+  text-align: right;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1.8;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 55%, transparent);
+}
+
+/* R's clause tails reuse the hint's own list treatment, at table scale. */
+.wff-guide .qguide-table .qhint-clauses {
+  max-width: none;
+  font-size: 12px;
+}
+
+/* Colour for hierarchy, not background (decision 7, resolved by Malik +
+   arithmetic 2026-08-08): in the REFERENCE the notation is the thing you
+   scan for, so chips take the set's ACCENT — text in the accent, plate
+   at accent-10% (every accent clears 4.5:1 over that plate on white;
+   the card's chips STAY INK, because on the set surfaces the accents
+   have no AA headroom over any darkened plate — measured 3.72–4.02:1).
+   Same object, adaptive ink per ground, like the CTA. */
+.wff-guide .qchip {
+  background: color-mix(in srgb, var(--quiz-accent, #4b5563) 10%, transparent);
+  color: var(--quiz-accent, #374151);
+}
+
+.wff-guide .qguide-chip {
+  background: color-mix(in srgb, var(--quiz-accent, #4b5563) 10%, transparent);
+  color: var(--quiz-accent, #111827);
+}
+
+/* The typeable codes (R's `aa`…`sm`, Q's flaw numbers) — the pointer
+   tier, bound to the accent the way the badges and keycaps bind to the
+   chrome. Full strength: every accent clears 4.5:1 on plain white. */
+.wff-guide .qguide-code {
+  color: var(--quiz-accent, #6b7280);
+}
+
+/* Emphasis inside guide prose (`*must*` through HintProse) — the decided
+   Rule mark, in the set's accent once the sheet carries the var (neutral
+   fallback otherwise). Presentational italics use <i>, which this
+   deliberately does not touch. */
+.wff-guide em {
+  font-style: normal;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--quiz-accent, #4b5563);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  text-decoration-skip-ink: none;
+}
+
+/* The reference panel's close control — the sprite-cornered ✕ chip from
+   the lab (32px scale, R=8 clip set inline). Reads the sheet's ink; a
+   clipped chip paints no outline, so focus is the fill flip. */
+.qguide-close {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--quiz-fg, #374151);
+  background: color-mix(in srgb, var(--quiz-fg, #1f2937) 9%, transparent);
+}
+
+@media (hover: hover) {
+  .qguide-close:hover {
+    background: color-mix(in srgb, var(--quiz-fg, #1f2937) 15%, transparent);
+  }
+}
+
+.qguide-close:focus-visible {
+  outline: none;
+  background: var(--quiz-fg, #1f2937);
+  color: var(--quiz-surface, #ffffff);
+}
+
+/* ---- The feedback slot (reserved placement) ----------------------------
+   See components/quiz/feedbackSlot.tsx. The ghost sets the height and is
+   invisible; the live content floats over it, so the options below never
+   move. Measure capped at 62ch (~70 characters) — this is the densest
+   prose on the screen. */
+.quiz-immersive .qfeed {
+  position: relative;
+  margin: 0 0 26px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.quiz-immersive .qfeed-ghost {
+  visibility: hidden;
+}
+
+.quiz-immersive .qfeed-live {
+  position: absolute;
+  inset: 0;
+}
+
+/* TWO TONES: the container is the error tone, but every structured block
+   inside states its own ink — so only the lamp (and any unstructured
+   flat hint) reads as "wrong", while the teaching material reads as
+   reference. */
+.quiz-immersive .qfeed-hint {
+  color: var(--quiz-error);
+}
+
+.quiz-immersive .qfeed-answer {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--quiz-fg);
+}
+
+/* NO FLEX in the head: it mixes an icon, a bolded name and running prose
+   in one line, and a flex container would turn each into its own
+   unwrappable box. Mixed inline content stays in one inline formatting
+   context. */
+.quiz-immersive .qhint-head {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--quiz-fg);
+}
+
+.quiz-immersive .qhint-lamp {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  vertical-align: -3px;
+  margin-right: 9px;
+  color: var(--quiz-error);
+}
+
+/* The subject of the sentence, so it takes weight rather than colour. */
+.quiz-immersive .qhint-term {
+  font-weight: 600;
+}
+
+/* The clauses ARE a list — separate conditions the flat string flattens
+   into a semicolon run-on. Hanging numbers, one per line, as the 2008
+   original set them. */
+:is(.quiz-immersive, .wff-guide) .qhint-clauses {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: qclause;
+  max-width: 62ch;
+}
+
+/* Hanging number via absolute positioning, NOT flex: a flex `li` makes
+   every inline child its own flex item, so a clause containing an <em>
+   breaks into gapped boxes and loses its word order. */
+:is(.quiz-immersive, .wff-guide) .qhint-clauses li {
+  counter-increment: qclause;
+  position: relative;
+  padding-left: 28px;
+  margin-top: 3px;
+  color: var(--quiz-fg, #1f2937);
+}
+
+:is(.quiz-immersive, .wff-guide) .qhint-clauses li::before {
+  content: counter(qclause);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 18px;
+  text-align: right;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.9;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 55%, transparent);
+}
+
+/* The clauses complete the lead sentence, which is why the source sets
+   them lowercase. As display list items they read as separate lines, and
+   sentence case suits that — done with ::first-letter so it stays a
+   PRESENTATION choice and the data keeps the source's own casing. */
+:is(.quiz-immersive, .wff-guide) .qhint-clauses li::first-letter {
+  text-transform: uppercase;
+}
+
+/* Emphasis: `Rule`, DECIDED 2026-08-05 — a hard 2px accent underline plus
+   weight, so it is never conveyed by colour alone. The system is flat and
+   rectilinear; a ruled line is what this grammar would draw, and it
+   survives at any text size. */
+.quiz-immersive .qfeed em {
+  font-style: normal;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--quiz-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  text-decoration-skip-ink: none;
 }
 
 @keyframes animateIn {
@@ -224,34 +1033,6 @@
   }
 }
 
-/* Ambient drift for the watercolor wash layers (quiz start/end screens).
-   Slow GPU-composited transforms — the blooms glide against the static
-   colour fields, which is what makes the wash feel alive without
-   repainting the (expensive, blurred) canvases. Amplitudes stay within
-   the layers' 6% overscan so canvas edges never enter the frame. */
-@keyframes washDriftA {
-  from {
-    transform: translate3d(-1.2%, 0.8%, 0) rotate(-1deg) scale(1.02);
-  }
-  to {
-    transform: translate3d(1.4%, -1%, 0) rotate(1.1deg) scale(1.07);
-  }
-}
-
-@keyframes washDriftB {
-  from {
-    transform: translate3d(1.2%, -0.7%, 0) rotate(0.9deg) scale(1.06);
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.8;
-  }
-  to {
-    transform: translate3d(-1%, 0.9%, 0) rotate(-0.8deg) scale(1.01);
-    opacity: 1;
-  }
-}
-
 /* The "new" pill in the quiz menu. An organic, off-round outline rather
    than a symmetric pill, to sit in the same hand-painted register as the
    watercolor blooms on the quiz start screens. The lists either side of
@@ -261,16 +1042,6 @@
    at any label width. */
 .flower-tag {
   border-radius: 60% 40% 50% 50% / 50% 60% 40% 50%;
-}
-
-.wash-drift-a {
-  animation: washDriftA 22s ease-in-out infinite alternate;
-  will-change: transform;
-}
-
-.wash-drift-b {
-  animation: washDriftB 15s ease-in-out infinite alternate;
-  will-change: transform, opacity;
 }
 
 @layer base {
@@ -354,11 +1125,18 @@
   .motion-answer-reveal,
   .motion-chevron,
   .motion-progress,
-  .wash-drift-a,
-  .wash-drift-b,
+  .quiz-immersive .qopt,
+  .quiz-immersive .qopt-wrap,
+  .quiz-immersive .qopt-wrap::before,
+  .quiz-immersive .qbadge-mark,
   .mobile-menu {
     animation: none;
     transition: none;
+  }
+
+  .quiz-immersive
+    .qopt-wrap:has(.qopt:not(.is-ruled):not(.is-revealed):active) {
+    transform: none;
   }
 
   .animate-in,

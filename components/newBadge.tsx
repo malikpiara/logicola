@@ -1,3 +1,5 @@
+import { gemClip } from '@/lib/pixel';
+
 /**
  * The "NEW" tag in the pixel treatment's gem silhouette — an elongated
  * octagon whose corners are cut by two-step stair chamfers. Decided in the
@@ -8,8 +10,7 @@
  * rather than a Tailwind palette colour, so the badge is a citizen of the
  * catalogue. The clip's px values assume the fixed 24px height (h-6).
  */
-const GEM_CLIP =
-  'polygon(8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px), 0 8px, 4px 8px, 4px 4px, 8px 4px)';
+const GEM_CLIP = gemClip();
 
 export function NewBadge({ label = 'NEW' }: { label?: string }) {
   return (

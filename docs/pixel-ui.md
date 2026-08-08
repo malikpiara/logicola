@@ -3,12 +3,13 @@
 **Entry point for the redesign is `docs/redesign-handoff.md`;** this file is
 its shape-and-iconography half.
 
-Status: **question-screen treatment decided in the lab, not yet ported;
-first components ARE ported** — the NEW badge (`components/newBadge.tsx`),
-the footer's social icons, and the FAQ caret ship in the app as of
-2026-08-03. The working lab is `docs/pattern-lab.html` (View → Question /
-Components); this document is the treatment's contract, so it can be reused
-and ported without re-discovering its rules. Colour decisions live in
+Status: **PORTED — the question-screen treatment ships in the app as of
+2026-08-07** (see "PORTED TO THE APP" in `redesign-handoff.md` for the
+file map; generators live in `lib/pixel.ts` with byte-parity tests
+against this lab's own output). The working lab is
+`docs/pattern-lab.html` (View → Question / Components); this document
+remains the treatment's contract — consult it before changing shipped
+shapes, not after. Colour decisions live in
 `color-handoff.md` / `color-system.md`; this file is about **shape,
 iconography and pattern placement**.
 

@@ -1,4 +1,7 @@
 import { TARGET_SCORE } from '@/lib/scoring';
+import { GemButton } from './gemButton';
+import { PatternLayer } from './patternLayer';
+import type { QuizPatternKind } from '@/lib/patterns';
 import { DEFAULT_QUIZ_MODE, scoreMode, type QuizMode } from './quizMode';
 
 export function EndScreen({
@@ -11,10 +14,11 @@ export function EndScreen({
   surfaceColor = '#431407',
   countColor = '#fdba74',
   foregroundColor = '#ffffff',
+  patternKind = 'camo',
 }: {
   numOfCorrectQuestions: number;
   onTryAgain: (mode?: QuizMode) => void;
-  /** PROTOTYPE — see ./quizMode. `count` has a denominator; `score` doesn't. */
+  /** See ./quizMode. `count` has a denominator; `score` doesn't. */
   mode?: QuizMode;
   score?: number;
   questionsTaken?: number;
@@ -22,6 +26,8 @@ export function EndScreen({
   surfaceColor?: string;
   countColor?: string;
   foregroundColor?: string;
+  /** Which pattern dresses the card — camo classic (easy) or giant (hard). */
+  patternKind?: QuizPatternKind;
 }) {
   const reachedTarget = score >= TARGET_SCORE;
 
@@ -40,9 +46,19 @@ export function EndScreen({
   return (
     <>
       <section
-        className='motion-enter max-w-7xl rounded-xl w-full h-screen text-center m-auto p-0 flex-col flex justify-center'
+        className='motion-enter max-w-7xl rounded-none lg:rounded-xl w-full h-screen text-center m-auto p-0 flex-col flex justify-center relative isolate overflow-hidden'
         style={{ backgroundColor: surfaceColor, color: foregroundColor }}
       >
+        {/* Same panel treatment as the start screen; the scatter
+            reshuffles per visit. The end screen's fuller treatment pass
+            remains deferred (redesign-handoff.md). */}
+        <PatternLayer
+          kind={patternKind}
+          surface={surfaceColor}
+          ink={foregroundColor}
+          treatment='panel'
+          className='pointer-events-none absolute inset-0 -z-10'
+        />
         <h1 className='mb-3 text-4xl font-bold font-stretch'>{message}</h1>
 
         {mode.kind === 'score' ? (
@@ -64,20 +80,20 @@ export function EndScreen({
         )}
 
         {/*
-          Matches the start screen's CTA: shallow `corner-shape` notch
-          (rounded-[9px] sets the depth) rhyming with the Logicola
-          cartridge corner, plus the adaptive "ink" fill — the set's own
-          foreground as the background, its surface as the label — so it
-          inverts and clears contrast on every set's screen.
+          Matches the start screen's CTA: the gem silhouette with the
+          adaptive "ink" fill — the set's own foreground as the background,
+          its surface as the label — so it inverts and clears contrast on
+          every set's screen. Focus is the wrapper's band, not a ring: a
+          clipped button paints no ring.
         */}
-        <button
-          type='button'
-          onClick={() => onTryAgain(mode)}
+        <GemButton
+          containerClassName='mx-auto mt-8 w-full max-w-[15rem]'
+          className='hover:opacity-90'
           style={{ backgroundColor: foregroundColor, color: surfaceColor }}
-          className='corner-notch motion-button mx-auto mt-8 w-full max-w-[15rem] rounded-[9px] px-7 py-2.5 text-base font-semibold font-stretch hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900'
+          onClick={() => onTryAgain(mode)}
         >
           Try Again
-        </button>
+        </GemButton>
 
         {/* Graduation: offered where someone has just proved they can do it. */}
         {offerScoredRun && mode.kind === 'count' && (
@@ -89,11 +105,6 @@ export function EndScreen({
             Ready for a scored run to {TARGET_SCORE}? →
           </button>
         )}
-
-        {
-          // Temporary filler to make the content be displayed a couple of pixels above.
-          <div className='h-40' />
-        }
       </section>
     </>
   );

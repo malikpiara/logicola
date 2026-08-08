@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { SubSet, Question } from '@/content/types';
 import { AnalyticsProperties, captureAnalyticsEvent } from '@/lib/analytics';
-import { DEFAULT_QUIZ_MODE, type QuizMode } from './quizMode';
+import { defaultModeForSet, type QuizMode } from './quizMode';
 import {
   SCORING_PROFILES,
   beginProblem,
@@ -77,8 +77,11 @@ function buildQuizAnalyticsProperties(
 
 export default function useQuizState(subSet: SubSet) {
   // The run's end condition. Chosen on the start screen, so it's state rather
-  // than a prop — see ./quizMode.
-  const [mode, setMode] = useState<QuizMode>(DEFAULT_QUIZ_MODE);
+  // than a prop — see ./quizMode. Scored wherever the set can score (the
+  // release's only surfaced mode); count survives as the fallback.
+  const [mode, setMode] = useState<QuizMode>(() =>
+    defaultModeForSet(subSet.name)
+  );
 
   // In `count` mode this is the denominator ("3 of 10"). In `score` mode there
   // ISN'T one — the run ends at 100 points, whenever that happens — so this
@@ -317,7 +320,9 @@ export default function useQuizState(subSet: SubSet) {
   /**
    * Transition from "start screen" to first question
    */
-  function onShowStartScreen(chosen: QuizMode = DEFAULT_QUIZ_MODE) {
+  function onShowStartScreen(
+    chosen: QuizMode = defaultModeForSet(subSet.name)
+  ) {
     if (hasStartedRef.current) {
       return;
     }

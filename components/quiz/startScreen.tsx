@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '../ui/button';
-import { DEFAULT_WASH_PARAMS, WatercolorWash } from './watercolorWash';
-import { WatercolorTuner } from './watercolorTuner';
+import { GemButton } from './gemButton';
+import { PatternLayer } from './patternLayer';
+import type { QuizPatternKind } from '@/lib/patterns';
 import { DEFAULT_QUIZ_MODE, scoreMode, type QuizMode } from './quizMode';
 import {
   DEFAULT_LEVEL,
@@ -28,17 +28,13 @@ const THUMB_PX = 16;
  */
 const READOUT_CH = 22;
 
-// Temporary: the wash tuner is a dev-only aid for dialling in
-// DEFAULT_WASH_PARAMS; it never renders in production builds.
-const SHOW_WASH_TUNER = process.env.NODE_ENV === 'development';
-
 interface StartScreenProps {
   onStartQuiz: (mode?: QuizMode) => void;
   /**
-   * PROTOTYPE. Opt a set into the restored 2008 scoring run. Off by default:
-   * a cold visitor from search can't meaningfully choose between "10
-   * questions" and "100 points at level 7", so the scored run is a
-   * step-up rather than a peer option.
+   * The set runs the restored 2008 scoring run — the release's only
+   * surfaced mode (Malik, 2026-08-06). True for every set whose original
+   * economy has been derived (`canScore`); the rare set without one falls
+   * back to the dormant 10-question run.
    */
   offerScoredRun?: boolean;
   /**
@@ -52,6 +48,8 @@ interface StartScreenProps {
   foregroundColor?: string;
   /** Set identity, e.g. 'Set J' — becomes the mono eyebrow. */
   setName?: string;
+  /** Which pattern dresses the card — camo classic (easy) or giant (hard). */
+  patternKind?: QuizPatternKind;
   /**
    * Subset title, e.g. 'Modal Translations: Quantified'. The part before
    * ':' is the headline; the part after joins the eyebrow as the variant.
@@ -69,13 +67,14 @@ export function StartScreen({
   countColor = '#fdba74',
   foregroundColor = '#ffffff',
   setName,
+  patternKind = 'camo',
   title,
   description = 'Test your knowledge on this chapter and see how much you already know!',
 }: StartScreenProps) {
-  // The level dial only appears once the scored run is chosen — it needs a
-  // sentence of explanation, and that sentence would dominate the screen for
-  // the majority who just want to try a few questions.
-  const [showLevel, setShowLevel] = useState(false);
+  // With the scored run as the only surfaced mode, the level dial is the
+  // start screen's main control — always visible on scoreable sets rather
+  // than gated behind a mode choice that no longer exists.
+  const showLevel = offerScoredRun;
   const [level, setLevel] = useState(DEFAULT_LEVEL);
 
   // Where the thumb's centre actually sits, so the readout can track it.
@@ -91,13 +90,6 @@ export function StartScreen({
   const thumbOffset = `clamp(${READOUT_CH / 2}ch, ${thumbCentre}, calc(100% - ${
     READOUT_CH / 2
   }ch))`;
-  // Fresh composition every visit: DEFAULT_WASH_PARAMS carries a fixed seed
-  // (so the tuner's sliders don't reshuffle the layout mid-tuning), but each
-  // mount rolls its own.
-  const [washParams, setWashParams] = useState(() => ({
-    ...DEFAULT_WASH_PARAMS,
-    seed: Math.floor(Math.random() * 1e9),
-  }));
   // 'Modal Translations: Quantified' → headline + variant. The eyebrow
   // (SET J · QUANTIFIED) carries the set letter and variant in the same
   // mono voice as the quiz's own codes; the headline is the drill itself.
@@ -105,20 +97,24 @@ export function StartScreen({
   const eyebrow = [setName, variant].filter(Boolean).join(' · ');
   return (
     <>
-      {SHOW_WASH_TUNER && (
-        <WatercolorTuner params={washParams} onChange={setWashParams} />
-      )}
       <section
-        className='motion-enter max-w-7xl rounded-xl w-full h-screen text-center p-0 text-white flex-col flex justify-center m-auto relative isolate overflow-hidden'
+        className='motion-enter max-w-7xl rounded-none lg:rounded-xl w-full h-screen text-center p-0 text-white flex-col flex justify-center m-auto relative isolate overflow-hidden'
         style={{ backgroundColor: surfaceColor, color: foregroundColor }}
       >
-        <WatercolorWash
-          color={surfaceColor}
-          params={washParams}
+        {/* The pattern frames a clean panel — it never sits under text
+            (docs/pixel-ui.md § Pattern placement). The scatter
+            reshuffles every visit. */}
+        <PatternLayer
+          kind={patternKind}
+          surface={surfaceColor}
+          ink={foregroundColor}
+          treatment='panel'
           className='pointer-events-none absolute inset-0 -z-10'
         />
+        {/* 0.12em, the top of the 5–12% range caps want — 0.3em let the
+            words disassemble (design audit finding 5). */}
         {eyebrow && (
-          <div className='mb-5 font-mono text-xs uppercase tracking-[0.3em] opacity-80'>
+          <div className='mb-5 font-mono text-xs uppercase tracking-[0.12em] opacity-80'>
             {eyebrow}
           </div>
         )}
@@ -135,7 +131,7 @@ export function StartScreen({
           {description}
         </p>
         <div
-          className='font-mono text-sm uppercase tracking-[0.2em] font-semibold'
+          className='font-mono text-sm uppercase tracking-[0.1em] font-semibold'
           style={{ color: countColor }}
         >
           {/*
@@ -254,41 +250,27 @@ export function StartScreen({
              it inverts. A fixed white pill nearly vanishes on the pale
              sets (C/J/L/N/R); this clears contrast on every surface.
         */}
-        <Button
-          size={'lg'}
-          className='corner-notch w-full max-w-[15rem] cursor-pointer self-center mt-5 rounded-[9px] font-stretch hover:opacity-90 active:scale-[0.97]'
+        {/*
+          Gem silhouette (working default from the Primary button dial),
+          adaptive-ink fill: the set's own foreground as the background,
+          its surface as the label, so it inverts and clears contrast on
+          every set's screen.
+
+          With one mode there is one label. "Start Scored Run" earned its
+          name when it stood against a peer option; alone, plain "Start
+          Quiz" reads better (open question resolved toward the lab's own
+          CTA copy).
+        */}
+        <GemButton
+          containerClassName='mt-5 w-full max-w-[15rem] self-center'
+          className='h-11 hover:opacity-90'
           style={{ backgroundColor: foregroundColor, color: surfaceColor }}
           onClick={() =>
             onStartQuiz(showLevel ? scoreMode(level) : DEFAULT_QUIZ_MODE)
           }
         >
-          {showLevel ? 'Start Scored Run' : 'Start Quiz'}
-        </Button>
-
-        {offerScoredRun && !showLevel && (
-          <button
-            type='button'
-            onClick={() => setShowLevel(true)}
-            className='mx-auto mt-5 cursor-pointer text-sm underline underline-offset-4 opacity-70 hover:opacity-100'
-          >
-            Or take a scored run, the way the original worked →
-          </button>
-        )}
-
-        {showLevel && (
-          <button
-            type='button'
-            onClick={() => setShowLevel(false)}
-            className='mx-auto mt-4 cursor-pointer text-sm underline underline-offset-4 opacity-60 hover:opacity-100'
-          >
-            ← Back to the 10-question quiz
-          </button>
-        )}
-
-        {
-          // Temporary filler to make the text content be displayed a couple of pixels above.
-          <div className='h-40' />
-        }
+          Start Quiz
+        </GemButton>
       </section>
     </>
   );
