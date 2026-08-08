@@ -46,7 +46,7 @@ export function EndScreen({
   return (
     <>
       <section
-        className='motion-enter max-w-7xl rounded-none lg:rounded-xl w-full h-screen text-center m-auto p-0 flex-col flex justify-center relative isolate overflow-hidden'
+        className='motion-enter max-w-7xl rounded-none lg:rounded-xl w-full h-dvh text-center m-auto p-0 flex-col flex justify-center relative isolate overflow-hidden'
         style={{ backgroundColor: surfaceColor, color: foregroundColor }}
       >
         {/* Same panel treatment as the start screen; the scatter

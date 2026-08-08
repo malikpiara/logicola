@@ -3,8 +3,10 @@
 import { useEffect } from 'react';
 
 /**
- * Paint the OS chrome with the quiz's own surface while a quiz is on
- * screen (Malik, on Android, 2026-08-08: the strips top and bottom
+ * Hold the document-level chrome for the duration of a quiz: paint it
+ * in the set's surface, and stop an overscroll from reloading the run.
+ *
+ * COLOUR (Malik, on Android, 2026-08-08: the strips top and bottom
  * stayed white against a lilac card).
  *
  * The two bars are coloured by DIFFERENT mechanisms, which is why this
@@ -25,8 +27,14 @@ import { useEffect } from 'react';
  * Deliberately client-side rather than a per-route `generateViewport`:
  * generated sets (everything but Set Q) resolve their subset — and so
  * their palette — only at mount, so the server has no colour to render.
+ *
+ * OVERSCROLL. `overscroll-behavior-y: contain` disables the browser's
+ * pull-to-refresh for the quiz only. A run holds its whole state in
+ * memory — questions drawn, score, guesses — so an accidental
+ * over-drag at the top of the card silently destroys it. Nothing about
+ * a drill wants a refresh gesture, and everywhere else keeps it.
  */
-export function useThemeColor(color: string | undefined) {
+export function useQuizChrome(color: string | undefined) {
   useEffect(() => {
     if (!color) return;
 
@@ -48,12 +56,15 @@ export function useThemeColor(color: string | undefined) {
     const { body } = document;
     const previousRootBg = root.style.backgroundColor;
     const previousBodyBg = body.style.backgroundColor;
+    const previousOverscroll = root.style.overscrollBehaviorY;
     root.style.backgroundColor = color;
     body.style.backgroundColor = color;
+    root.style.overscrollBehaviorY = 'contain';
 
     return () => {
       root.style.backgroundColor = previousRootBg;
       body.style.backgroundColor = previousBodyBg;
+      root.style.overscrollBehaviorY = previousOverscroll;
       if (ownsTag) {
         meta.remove();
         return;

@@ -301,6 +301,16 @@
   transform: scale(0.97);
 }
 
+/* A control is not a passage: a long-press on an option should feel
+   like pressing a button, not start selecting its label (the guide and
+   the prompt stay selectable — they're the readable content). */
+.quiz-immersive .qopt,
+.quiz-immersive .qkeys,
+.quiz-immersive .qcount {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 .quiz-immersive .qopt {
   appearance: none;
   border: 0;
@@ -639,12 +649,15 @@
 /* The mobile controls sheet follows the set's colour scheme — its
    grabber reads the ink the sheet carries instead of the drawer's
    stock grays. */
-.quiz-controls-drawer .cursor-grab {
+/* The BAR, not the button: the grabber's button is now a 44px tap
+   target (HIG floor) wrapping an 8px bar, so painting the button would
+   put a plate behind the handle. */
+.quiz-controls-drawer .cursor-grab > span {
   background: color-mix(in srgb, var(--quiz-fg, #1f2937) 18%, transparent);
 }
 
 @media (hover: hover) {
-  .quiz-controls-drawer .cursor-grab:hover {
+  .quiz-controls-drawer .cursor-grab:hover > span {
     background: color-mix(in srgb, var(--quiz-fg, #1f2937) 30%, transparent);
   }
 }

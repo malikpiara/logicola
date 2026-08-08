@@ -28,7 +28,7 @@ import { hintPartsOf } from './hintBlock';
 import { getQuizScreenColors } from './quizColors';
 import { PatternLayer, patternKindForSubSet } from './patternLayer';
 import { useSafeAreaBottom } from './useSafeAreaBottom';
-import { useThemeColor } from './useThemeColor';
+import { useQuizChrome } from './useQuizChrome';
 import { hasWffGuide, WffGuide } from './wffGuide';
 
 export interface QuizProps {
@@ -204,7 +204,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
   // The OS chrome takes the set's surface for the whole session — start,
   // question and end screens all wear it, so it never has to change
   // mid-run.
-  useThemeColor(quizSurface);
+  useQuizChrome(quizSurface);
 
   // Top progress bar. Count mode fills a tenth per completed question (a
   // question counts once its solution is shown); scored mode tracks distance
