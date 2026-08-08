@@ -27,6 +27,7 @@ import { FeedbackSlot } from './feedbackSlot';
 import { hintPartsOf } from './hintBlock';
 import { getQuizScreenColors } from './quizColors';
 import { PatternLayer, patternKindForSubSet } from './patternLayer';
+import { useThemeColor } from './useThemeColor';
 import { hasWffGuide, WffGuide } from './wffGuide';
 
 export interface QuizProps {
@@ -195,6 +196,11 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
   const quizForeground = quizScreenColors.foregroundColor ?? '#ffffff';
   const quizAccent = quizScreenColors.countColor ?? '#fdba74';
 
+  // The OS chrome takes the set's surface for the whole session — start,
+  // question and end screens all wear it, so it never has to change
+  // mid-run.
+  useThemeColor(quizSurface);
+
   /**
    * 1) Keep track of the drawer snap state.
    *    Default to "180px" or whichever is your "collapsed" height.
@@ -238,6 +244,19 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
    */
   const drawerRef = useRef<HTMLDivElement>(null);
   const optionsGridRef = useRef<HTMLDivElement>(null);
+  /**
+   * Which input last moved the cursor. Both keyboard-only marks read
+   * off this: the focus band and the multi-select CURSOR band. On touch
+   * neither belongs — pointing IS the cursor — and leaving them on
+   * meant a deselected option kept a 2px ink ring, which at a glance is
+   * indistinguishable from the accent selection band (Malik, on
+   * Android, 2026-08-08: "I unselect it and it still looks selected").
+   *
+   * State, not a ref: it is read during render, and the setter batches
+   * with the selection update that caused the render, so the mark and
+   * the modality can never disagree.
+   */
+  const [lastInput, setLastInput] = useState<'keyboard' | 'pointer'>('pointer');
 
   useKeyboardNavigation({
     currentQuestion,
@@ -245,10 +264,12 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
     showSolution,
     selectedOptionIndex,
     onShowStartScreen,
-    selectNextOption,
-    selectPreviousOption,
-    selectOption,
-    moveCursor,
+    // Only these four move the cursor, and only from the keyboard —
+    // which is the one case where focus should follow it.
+    selectNextOption: fromKeyboard(selectNextOption),
+    selectPreviousOption: fromKeyboard(selectPreviousOption),
+    selectOption: fromKeyboard(selectOption),
+    moveCursor: fromKeyboard(moveCursor),
     handleCheckAnswer,
     handleNextQuestion: handleNextQuestionTransition,
     collapseDrawer: () => {
@@ -349,8 +370,25 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
     }, QUESTION_EXIT_MS);
   }
 
+  /**
+   * Move focus to the cursor option — but ONLY when the keyboard moved
+   * it. Chrome matches `:focus-visible` for PROGRAMMATIC `.focus()`
+   * (it can't attribute the focus to a pointer, so it assumes intent),
+   * which meant every tap left the 2px focus band on the last-tapped
+   * option. Deselecting then read as still-selected on touch — the ink
+   * band and the accent band are both just "a ring" at a glance
+   * (Malik, on Android, 2026-08-08). A genuine tap still focuses the
+   * button natively; that correctly does NOT match :focus-visible.
+   */
+  function fromKeyboard<Args extends unknown[]>(fn: (...args: Args) => void) {
+    return (...args: Args) => {
+      setLastInput('keyboard');
+      fn(...args);
+    };
+  }
+
   function focusSelectedOption(node: HTMLButtonElement | null) {
-    node?.focus();
+    if (lastInput === 'keyboard') node?.focus();
   }
 
   /**
@@ -733,7 +771,13 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                             ? selectedOptionIds.includes(option.id)
                             : index === selectedOptionIndex
                         }
-                        isCursor={multiSelect && index === selectedOptionIndex}
+                        // Keyboard-only: the cursor answers "where the
+                        // arrow keys are", which a finger doesn't ask.
+                        isCursor={
+                          multiSelect &&
+                          index === selectedOptionIndex &&
+                          lastInput === 'keyboard'
+                        }
                         isCorrect={currentQuestion.correctId.includes(
                           option.id
                         )}
@@ -748,6 +792,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                         )}
                         label={option.label}
                         onClick={() => {
+                          setLastInput('pointer');
                           selectOption(index);
                         }}
                       />
@@ -756,7 +801,12 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
                 </div>
               )}
             </div>
-            <hr className='h-px my-4 bg-gray-200 border-0' />
+            {/* Desktop's separator between the content and the in-card
+                controls. Below `lg` the controls live in the sheet,
+                whose own 2px top rule already divides them — this was a
+                second divider, and the scrolling one of the two (Malik,
+                2026-08-08; the lab found the same on its phone frame). */}
+            <hr className='hidden lg:block h-px my-4 bg-gray-200 border-0' />
             {/* Desktop controls, in the flow of the card itself: the primary
                 action lives with the content it acts on, so no fixed bottom
                 chrome is needed at this breakpoint. Below `lg` the vaul
