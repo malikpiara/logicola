@@ -92,12 +92,19 @@ const DrawerContent = React.forwardRef<
       >
         {side === 'bottom' &&
           (onGrabberClick ? (
+            // The BAR is 8px; the TARGET is 44 (HIG floor). The padding
+            // does the work and the negative margin gives the reclaimed
+            // space back, so the sheet's spacing is unchanged — a grab
+            // handle you have to aim at is the one control here that
+            // most needs to be forgiving.
             <button
               type='button'
               onClick={onGrabberClick}
               aria-label='Cycle drawer snap point'
-              className='block mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted cursor-grab transition-colors hover:bg-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400'
-            />
+              className='group mx-auto -mb-[18px] mt-0 flex h-11 w-[100px] cursor-grab items-center justify-center focus-visible:outline-none'
+            >
+              <span className='block h-2 w-full rounded-full bg-muted transition-colors group-hover:bg-gray-300 group-focus-visible:bg-gray-400' />
+            </button>
           ) : (
             <div className='mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted cursor-grab' />
           ))}

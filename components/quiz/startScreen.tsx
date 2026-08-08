@@ -98,7 +98,7 @@ export function StartScreen({
   return (
     <>
       <section
-        className='motion-enter max-w-7xl rounded-none lg:rounded-xl w-full h-screen text-center p-0 text-white flex-col flex justify-center m-auto relative isolate overflow-hidden'
+        className='motion-enter max-w-7xl rounded-none lg:rounded-xl w-full h-dvh text-center p-0 text-white flex-col flex justify-center m-auto relative isolate overflow-hidden'
         style={{ backgroundColor: surfaceColor, color: foregroundColor }}
       >
         {/* The pattern frames a clean panel — it never sits under text
