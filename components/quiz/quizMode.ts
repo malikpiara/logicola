@@ -21,12 +21,7 @@
  * lied — "3 of 10" on question 17.
  */
 
-import {
-  DEFAULT_LEVEL,
-  TARGET_SCORE,
-  canScore,
-  clampLevel,
-} from '@/lib/scoring';
+import { TARGET_SCORE, canScore, clampLevel } from '@/lib/scoring';
 
 export type QuizMode =
   | { readonly kind: 'count'; readonly total: number }
@@ -38,7 +33,17 @@ export type QuizMode =
  */
 export const DEFAULT_QUIZ_MODE: QuizMode = { kind: 'count', total: 10 };
 
-export function scoreMode(level: number = DEFAULT_LEVEL): QuizMode {
+/**
+ * The level the app ships at (Malik, 2026-08-09). Deliberately NOT
+ * `DEFAULT_LEVEL`: that constant records Gensler's own default of 7
+ * ("try to do the exercises at an average level of 7 or higher"), which
+ * is a fact about the original and shouldn't move. This is our product
+ * choice — a gentler starting cost while the level dial is hidden, so
+ * a first run isn't quietly punishing.
+ */
+export const SHIPPED_LEVEL = 5;
+
+export function scoreMode(level: number = SHIPPED_LEVEL): QuizMode {
   return { kind: 'score', level: clampLevel(level) };
 }
 

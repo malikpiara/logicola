@@ -4,9 +4,13 @@ import { useState } from 'react';
 import { GemButton } from './gemButton';
 import { PatternLayer } from './patternLayer';
 import type { QuizPatternKind } from '@/lib/patterns';
-import { DEFAULT_QUIZ_MODE, scoreMode, type QuizMode } from './quizMode';
 import {
-  DEFAULT_LEVEL,
+  DEFAULT_QUIZ_MODE,
+  SHIPPED_LEVEL,
+  scoreMode,
+  type QuizMode,
+} from './quizMode';
+import {
   MAX_LEVEL,
   MIN_LEVEL,
   SCORING_PROFILES,
@@ -71,11 +75,16 @@ export function StartScreen({
   title,
   description = 'Test your knowledge on this chapter and see how much you already know!',
 }: StartScreenProps) {
-  // With the scored run as the only surfaced mode, the level dial is the
-  // start screen's main control — always visible on scoreable sets rather
-  // than gated behind a mode choice that no longer exists.
-  const showLevel = offerScoredRun;
-  const [level, setLevel] = useState(DEFAULT_LEVEL);
+  // The dial and its explanation are HIDDEN for now (Malik, 2026-08-09):
+  // the level system stays — every run still scores at SHIPPED_LEVEL —
+  // but the start screen drops to title, promise and one button. The
+  // dial was the densest thing on the screen and it asked a question
+  // before anyone had played a single problem. Flip this to
+  // `offerScoredRun` to bring the control back exactly as it was.
+  // Typed, so the dial's JSX below stays live code rather than being
+  // narrowed to unreachable — it is meant to come back.
+  const showLevel: boolean = false;
+  const [level, setLevel] = useState(SHIPPED_LEVEL);
 
   // Where the thumb's centre actually sits, so the readout can track it.
   const levelFraction = (level - MIN_LEVEL) / (MAX_LEVEL - MIN_LEVEL);
@@ -139,7 +148,9 @@ export function StartScreen({
             live. Repeating it here made "level 7" appear three times on one
             screen while appearing zero times at the thumb, where the eye is.
           */}
-          {showLevel ? 'To 100 points' : '10 questions'}
+          {/* Keyed to the MODE, not to the dial's visibility: hiding the
+              control must not make the promise lie. */}
+          {offerScoredRun ? 'To 100 points' : '10 questions'}
         </div>
         {/*
           Phase 1 (3): configure BEFORE committing. The dial precedes the CTA
@@ -265,8 +276,10 @@ export function StartScreen({
           containerClassName='mt-5 w-full max-w-[15rem] self-center'
           className='h-11 hover:opacity-90'
           style={{ backgroundColor: foregroundColor, color: surfaceColor }}
+          // Also the mode, not the dial: with the control hidden the run
+          // still starts scored, at whatever `level` holds.
           onClick={() =>
-            onStartQuiz(showLevel ? scoreMode(level) : DEFAULT_QUIZ_MODE)
+            onStartQuiz(offerScoredRun ? scoreMode(level) : DEFAULT_QUIZ_MODE)
           }
         >
           Start Quiz

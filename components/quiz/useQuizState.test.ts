@@ -124,8 +124,8 @@ describe('useQuizState', () => {
       expect(result.current.currentQuestion).toBeDefined();
     });
 
-    expect(result.current.mode).toEqual({ kind: 'score', level: 7 });
-    expect(result.current.scoreState.level).toBe(7);
+    expect(result.current.mode).toEqual({ kind: 'score', level: 5 });
+    expect(result.current.scoreState.level).toBe(5);
   });
 
   it('Set R charges ONCE per problem — the second wrong pick is free (2008 law)', async () => {
@@ -138,17 +138,17 @@ describe('useQuizState', () => {
     });
 
     act(() => result.current.onShowStartScreen());
-    // correctId is [0]; pick wrong option 1, check: −14 at level 7.
+    // correctId is [0]; pick wrong option 1, check: −10 at level 5.
     act(() => result.current.selectOption(1));
     act(() => result.current.onCheckAnswer());
-    expect(result.current.scoreState.score).toBe(-14);
+    expect(result.current.scoreState.score).toBe(-10);
     // Second wrong pick on the SAME problem: charged once, then free.
     act(() => result.current.selectOption(2));
     act(() => result.current.onCheckAnswer());
-    expect(result.current.scoreState.score).toBe(-14);
+    expect(result.current.scoreState.score).toBe(-10);
   });
 
-  it('Set A halves the charge per miss: −14 then −21 (2008 law)', async () => {
+  it('Set A halves the charge per miss: −10 then −15 (2008 law)', async () => {
     const { result } = renderHook(() =>
       useQuizState({ ...mockQuiz, name: 'Set A', shuffleOptions: false })
     );
@@ -160,10 +160,10 @@ describe('useQuizState', () => {
     act(() => result.current.onShowStartScreen());
     act(() => result.current.selectOption(1));
     act(() => result.current.onCheckAnswer());
-    expect(result.current.scoreState.score).toBe(-14);
+    expect(result.current.scoreState.score).toBe(-10);
     act(() => result.current.selectOption(2));
     act(() => result.current.onCheckAnswer());
-    expect(result.current.scoreState.score).toBe(-21);
+    expect(result.current.scoreState.score).toBe(-15);
   });
 });
 
