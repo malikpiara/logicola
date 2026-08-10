@@ -75,12 +75,19 @@ function buildQuizAnalyticsProperties(
   };
 }
 
-export default function useQuizState(subSet: SubSet) {
+/**
+ * @param initialMode Present on a RETRY mount: the session skips the start
+ *   screen and begins immediately in this mode. A retry is a remount, not a
+ *   reset — the shell bumps the session's key and passes the chosen mode
+ *   here, so every piece of state below re-initializes through its own
+ *   initializer and none can be forgotten by an enumerated reset.
+ */
+export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
   // The run's end condition. Chosen on the start screen, so it's state rather
   // than a prop — see ./quizMode. Scored wherever the set can score (the
   // release's only surfaced mode); count survives as the fallback.
-  const [mode, setMode] = useState<QuizMode>(() =>
-    defaultModeForSet(subSet.name)
+  const [mode, setMode] = useState<QuizMode>(
+    () => initialMode ?? defaultModeForSet(subSet.name)
   );
 
   // In `count` mode this is the denominator ("3 of 10"). In `score` mode there
@@ -105,7 +112,9 @@ export default function useQuizState(subSet: SubSet) {
   );
 
   const isMulti = !!subSet.multiSelect;
-  const hasStartedRef = useRef(false);
+  // A retry mount is already "started": quiz_started belongs to the first
+  // run only (the retry fired quiz_retried instead).
+  const hasStartedRef = useRef(initialMode != null);
   const hasCompletedRef = useRef(false);
 
   // Index of the current question in the shuffled order
@@ -128,8 +137,8 @@ export default function useQuizState(subSet: SubSet) {
   // Do we show the correct answer?
   const [showSolution, setShowSolution] = useState(false);
 
-  // Has the user seen the quiz start screen yet?
-  const [showStartScreen, setShowStartScreen] = useState(true);
+  // Has the user seen the quiz start screen yet? Retry mounts skip it.
+  const [showStartScreen, setShowStartScreen] = useState(initialMode == null);
 
   // Has the user finished all questions (end screen)?
   const [showEndScreen, setShowEndScreen] = useState(false);
@@ -143,13 +152,14 @@ export default function useQuizState(subSet: SubSet) {
   // Track any incorrect guesses (option IDs) for the current question.
   const [previousGuesses, setPreviousGuesses] = useState<number[]>([]);
 
-  // Keep the random order in state, initialized once
-  const [questionOrder, setQuestionOrder] = useState<number[]>(() =>
+  // Keep the random order in state, initialized once per mount — a retry
+  // remounts, which is what re-rolls it.
+  const [questionOrder] = useState<number[]>(() =>
     generateQuestionOrder(subSet.questions.length)
   );
 
   // We'll also keep a separate copy of our questions (with possibly shuffled options)
-  const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>(() =>
+  const [shuffledQuestions] = useState<Question[]>(() =>
     buildShuffledQuestions(subSet)
   );
 
@@ -164,7 +174,7 @@ export default function useQuizState(subSet: SubSet) {
     // The end condition is the whole difference between the two modes.
     // `count`: stop at the Nth question. `score`: stop at 100 points, however
     // many questions that takes — so we only run out when the drawn pool is
-    // exhausted (a prototype limit; see QuizClient).
+    // exhausted (a prototype limit; see components/quiz/generated/).
     const finished =
       mode.kind === 'count'
         ? questionCounter >= totalQuestionCount
@@ -241,13 +251,6 @@ export default function useQuizState(subSet: SubSet) {
   }
 
   /**
-   * Reveal the correct answer
-   */
-  function onShowSolution() {
-    setShowSolution(true);
-  }
-
-  /**
    * Check if the selected option is correct
    */
   function isAnswerCorrect(optionId: number, correctId: number[]) {
@@ -269,13 +272,17 @@ export default function useQuizState(subSet: SubSet) {
    * Multi-select uses the subset rule: correct when at least one option is
    * picked and every pick is one of `correctId` (i.e. only wrong for adding
    * a fallacy the passage doesn't commit). Single-select is unchanged.
+   *
+   * Returns the graded outcome so the shell can react to it (the first-miss
+   * guide expansion) WITHOUT re-implementing these rules — this function is
+   * the only grader. `undefined` means nothing was graded (no selection).
    */
-  function onCheckAnswer() {
-    if (!currentQuestion) return;
+  function onCheckAnswer(): 'correct' | 'miss' | undefined {
+    if (!currentQuestion) return undefined;
     const { correctId } = currentQuestion;
 
     if (isMulti) {
-      if (selectedOptionIds.length === 0) return;
+      if (selectedOptionIds.length === 0) return undefined;
       const wrongPicks = selectedOptionIds.filter(
         (id) => !correctId.includes(id)
       );
@@ -287,21 +294,21 @@ export default function useQuizState(subSet: SubSet) {
         // missed (r having been zeroed by registerMiss).
         setScoreState(registerCorrect);
         setShowSolution(true);
-      } else {
-        // Flag the wrong picks, keep the genuine ones for another try.
-        setPreviousGuesses((prev) => [...prev, ...wrongPicks]);
-        setSelectedOptionIds((prev) =>
-          prev.filter((id) => correctId.includes(id))
-        );
-        // DSL `*a k0<y:-2*$q` then `c0<y:q0`/`r0` — charges 2*level once, then
-        // disarms. Safe to call on every miss; only the first one costs.
-        setScoreState(registerMiss);
-        registerWrongAttempt(currentQuestion);
+        return 'correct';
       }
-      return;
+      // Flag the wrong picks, keep the genuine ones for another try.
+      setPreviousGuesses((prev) => [...prev, ...wrongPicks]);
+      setSelectedOptionIds((prev) =>
+        prev.filter((id) => correctId.includes(id))
+      );
+      // DSL `*a k0<y:-2*$q` then `c0<y:q0`/`r0` — charges 2*level once, then
+      // disarms. Safe to call on every miss; only the first one costs.
+      setScoreState(registerMiss);
+      registerWrongAttempt(currentQuestion);
+      return 'miss';
     }
 
-    if (selectedOptionIndex == null) return;
+    if (selectedOptionIndex == null) return undefined;
     const chosenOption = currentQuestion.options[selectedOptionIndex];
     if (isAnswerCorrect(chosenOption.id, correctId)) {
       if (wrongAttempts === 0) {
@@ -309,12 +316,13 @@ export default function useQuizState(subSet: SubSet) {
       }
       setScoreState(registerCorrect);
       setShowSolution(true);
-    } else {
-      setPreviousGuesses((prev) => [...prev, chosenOption.id]);
-      setSelectedOptionIndex(null);
-      setScoreState(registerMiss);
-      registerWrongAttempt(currentQuestion);
+      return 'correct';
     }
+    setPreviousGuesses((prev) => [...prev, chosenOption.id]);
+    setSelectedOptionIndex(null);
+    setScoreState(registerMiss);
+    registerWrongAttempt(currentQuestion);
+    return 'miss';
   }
 
   /**
@@ -333,7 +341,6 @@ export default function useQuizState(subSet: SubSet) {
       createScoreState(profile, chosen.kind === 'score' ? chosen.level : 0)
     );
     void captureAnalyticsEvent('quiz_started', {
-      title: subSet.title,
       ...buildQuizAnalyticsProperties(subSet, totalQuestionCount),
       // The graduation-rate measurement: what fraction of runs are scored,
       // and of those, what fraction reach 100.
@@ -352,19 +359,25 @@ export default function useQuizState(subSet: SubSet) {
     }
 
     hasCompletedRef.current = true;
+    // snake_case only, matching every other event's properties. The old
+    // camelCase duplicates (totalQuestions, correctQuestionsCount,
+    // scorePercentage, subSet) were dropped 2026-08 — any PostHog
+    // insight still reading those names needs re-pointing.
     void captureAnalyticsEvent('quiz_completed', {
-      subSet: subSet.title,
       ...buildQuizAnalyticsProperties(subSet, totalQuestionCount),
-      totalQuestions: totalQuestionCount,
-      correctQuestionsCount: correctQuestions.length,
-      scorePercentage: (correctQuestions.length / totalQuestionCount) * 100,
       correct_questions_count: correctQuestions.length,
       score_percentage: (correctQuestions.length / totalQuestionCount) * 100,
     });
     setShowEndScreen(true);
   }
 
-  function onTryAgain(nextMode: QuizMode = mode) {
+  /**
+   * Record the retry. ONLY the analytics live here — the ending run's stats
+   * are still in scope. The actual reset is the shell's job: it bumps the
+   * session key and remounts with `initialMode = nextMode`, so the fresh
+   * shuffle, score state and flags all come from the initializers above.
+   */
+  function captureRetry(nextMode: QuizMode = mode) {
     void captureAnalyticsEvent('quiz_retried', {
       ...buildQuizAnalyticsProperties(subSet, totalQuestionCount),
       correct_questions_count: correctQuestions.length,
@@ -372,25 +385,6 @@ export default function useQuizState(subSet: SubSet) {
       source: 'quiz_end_screen',
       quiz_mode: nextMode.kind,
     });
-
-    setMode(nextMode);
-    setScoreState(
-      createScoreState(profile, nextMode.kind === 'score' ? nextMode.level : 0)
-    );
-    hasStartedRef.current = true;
-    hasCompletedRef.current = false;
-    setQuestionIdx(0);
-    setSelectedOptionIndex(null);
-    setSelectedOptionIds([]);
-    setWrongAttempts(0);
-    setShowSolution(false);
-    setShowStartScreen(false);
-    setShowEndScreen(false);
-    setQuestionCounter(1);
-    setCorrectQuestions([]);
-    setPreviousGuesses([]);
-    setQuestionOrder(generateQuestionOrder(subSet.questions.length));
-    setShuffledQuestions(buildShuffledQuestions(subSet));
   }
 
   return {
@@ -399,10 +393,8 @@ export default function useQuizState(subSet: SubSet) {
     showEndScreen,
     showSolution,
 
-    // Indices & counters
-    questionIdx,
+    // Counter
     questionCounter,
-    totalQuestionCount,
 
     // Run shape + scoring
     mode,
@@ -418,19 +410,14 @@ export default function useQuizState(subSet: SubSet) {
     correctQuestions,
     previousGuesses,
 
-    // Shuffle order for debugging if you like
-    questionOrder,
-
     // Methods
     handleNextQuestion,
     selectNextOption,
     selectPreviousOption,
     selectOption,
     moveCursor,
-    onShowSolution,
     onCheckAnswer,
     onShowStartScreen,
-    onShowEndScreen,
-    onTryAgain,
+    captureRetry,
   };
 }

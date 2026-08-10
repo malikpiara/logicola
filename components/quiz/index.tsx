@@ -11,7 +11,7 @@ import { EndScreen } from './endScreen';
 import { KeyboardKeys } from './keyboardKeys';
 import { StartScreen } from './startScreen';
 import useQuizState, { getRevealThreshold } from './useQuizState';
-import { progressLabel } from './quizMode';
+import { progressLabel, type QuizMode } from './quizMode';
 import { canScore, progress } from '@/lib/scoring';
 import classNames from 'classnames';
 import { SubSet } from '@/content/types';
@@ -35,8 +35,31 @@ export interface QuizProps {
   subSet: SubSet;
 }
 
+interface QuizRun {
+  attempt: number;
+  /** Set on retry mounts: skip the start screen, begin in this mode. */
+  initialMode?: QuizMode;
+}
+
 export default function Quiz({ subSet }: QuizProps) {
-  return <QuizSession key={subSet.id} subSet={subSet} />;
+  // "Try again" is a REMOUNT, not a reset: bumping the attempt in the key
+  // rebuilds QuizSession — and every atom in useQuizState — through the
+  // initializers, so a newly added piece of state can never be forgotten
+  // by an enumerated reset. The chosen mode rides along as initialMode.
+  const [run, setRun] = useState<QuizRun>({ attempt: 0 });
+  return (
+    <QuizSession
+      key={`${subSet.id}:${run.attempt}`}
+      subSet={subSet}
+      initialMode={run.initialMode}
+      onRetry={(mode) =>
+        setRun((previous) => ({
+          attempt: previous.attempt + 1,
+          initialMode: mode,
+        }))
+      }
+    />
+  );
 }
 
 const QUESTION_EXIT_MS = 90;
@@ -152,7 +175,16 @@ function guideContentMaxHeight(snap: string | number | null): string {
   }
   return `calc(97vh - ${DRAWER_HEADER_OFFSET_PX}px)`;
 }
-const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
+interface QuizSessionProps extends QuizProps {
+  initialMode?: QuizMode;
+  onRetry: (mode: QuizMode) => void;
+}
+
+const QuizSession: React.FC<QuizSessionProps> = ({
+  subSet,
+  initialMode,
+  onRetry,
+}) => {
   const {
     showStartScreen,
     showEndScreen,
@@ -171,10 +203,17 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
     moveCursor,
     onShowStartScreen,
     previousGuesses,
-    onTryAgain,
+    captureRetry,
     mode,
     scoreState,
-  } = useQuizState(subSet);
+  } = useQuizState(subSet, initialMode);
+
+  // The hook logs the retry (the ending run's stats live there); the
+  // parent's key bump performs the actual reset by remounting.
+  function handleTryAgain(nextMode: QuizMode = mode) {
+    captureRetry(nextMode);
+    onRetry(nextMode);
+  }
   // Offered wherever the original's scoring has actually been derived from
   // that set's own DSL — today A/C/J/L/N (+5, halving penalty), Q (+7, flat)
   // and R (+8, charged once, forfeits). Every published set is covered. The
@@ -362,20 +401,22 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
   }
 
   function handleCheckAnswer() {
-    if (currentQuestion && previousGuesses.length === 0) {
-      const { correctId } = currentQuestion;
-      const willMiss = multiSelect
-        ? selectedOptionIds.length > 0 &&
-          selectedOptionIds.some((id) => !correctId.includes(id))
-        : selectedOptionIndex != null &&
-          !correctId.includes(currentQuestion.options[selectedOptionIndex].id);
+    // First attempt = no wrong guesses yet, read BEFORE grading commits.
+    const wasFirstAttempt = previousGuesses.length === 0;
+    // The hook is the only grader; the shell just reacts to its verdict.
+    const outcome = onCheckAnswer();
 
-      if (willMiss && 1 < getRevealThreshold(subSet, currentQuestion)) {
-        expandGuideForFirstMiss();
-      }
+    // A missed first attempt opens the guide — unless the miss exhausted
+    // the reveal budget (threshold 1), where the answer is showing and the
+    // guide would arrive a beat too late to help.
+    if (
+      outcome === 'miss' &&
+      wasFirstAttempt &&
+      currentQuestion &&
+      1 < getRevealThreshold(subSet, currentQuestion)
+    ) {
+      expandGuideForFirstMiss();
     }
-
-    onCheckAnswer();
   }
 
   function handleNextQuestionTransition() {
@@ -526,20 +567,6 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (!hasGuide || !currentQuestion || previousGuesses.length === 0) return;
-    if (showSolution || hasExpandedGuideAfterMissRef.current) {
-      return;
-    }
-
-    const timeout = setTimeout(() => {
-      hasExpandedGuideAfterMissRef.current = true;
-      setSnapKind('guide');
-    }, 0);
-
-    return () => clearTimeout(timeout);
-  }, [currentQuestion, hasGuide, previousGuesses.length, showSolution]);
-
   return (
     <>
       {showStartScreen ? (
@@ -558,7 +585,7 @@ const QuizSession: React.FC<QuizProps> = ({ subSet }) => {
       ) : showEndScreen ? (
         <EndScreen
           numOfCorrectQuestions={correctQuestions.length}
-          onTryAgain={onTryAgain}
+          onTryAgain={handleTryAgain}
           mode={mode}
           score={scoreState.score}
           questionsTaken={questionCounter}

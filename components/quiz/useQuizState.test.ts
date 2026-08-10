@@ -97,7 +97,7 @@ describe('useQuizState', () => {
       expect(result.current.currentQuestion).toBeDefined();
     });
 
-    expect(result.current.questionIdx).toBe(0);
+    expect(result.current.questionCounter).toBe(1);
     expect(result.current.selectedOptionIndex).toBeNull();
     expect(result.current.showSolution).toBe(false);
     expect(result.current.showStartScreen).toBe(true);
@@ -179,7 +179,7 @@ describe('Navigation between questions', () => {
       result.current.handleNextQuestion();
     });
 
-    expect(result.current.questionIdx).toBe(1);
+    expect(result.current.questionCounter).toBe(2);
   });
 });
 
@@ -440,7 +440,6 @@ describe('useQuizState — multi-select (subset rule)', () => {
     expect(captureAnalyticsEvent).toHaveBeenCalledWith(
       'quiz_started',
       expect.objectContaining({
-        title: mockQuiz.title,
         quiz_id: mockQuiz.id,
         quiz_title: mockQuiz.title,
         quiz_name: mockQuiz.name,
@@ -488,10 +487,6 @@ describe('useQuizState — multi-select (subset rule)', () => {
     expect(captureAnalyticsEvent).toHaveBeenCalledWith(
       'quiz_completed',
       expect.objectContaining({
-        subSet: longQuiz.title,
-        totalQuestions: 10,
-        correctQuestionsCount: 10,
-        scorePercentage: 100,
         quiz_id: longQuiz.id,
         quiz_title: longQuiz.title,
         quiz_name: longQuiz.name,
@@ -538,9 +533,11 @@ describe('useQuizState — multi-select (subset rule)', () => {
     });
 
     act(() => {
-      result.current.onTryAgain();
+      result.current.captureRetry();
     });
 
+    // captureRetry only logs the ending run's stats — the actual reset is
+    // the shell's key-remount, which rebuilds the hook from initializers.
     expect(captureAnalyticsEvent).toHaveBeenCalledWith(
       'quiz_retried',
       expect.objectContaining({
@@ -555,10 +552,60 @@ describe('useQuizState — multi-select (subset rule)', () => {
         source: 'quiz_end_screen',
       })
     );
+  });
+
+  it('starts immediately in the given mode on a retry mount', async () => {
+    vi.mocked(captureAnalyticsEvent).mockClear();
+    const { result } = renderHook(() =>
+      useQuizState(mockQuiz, { kind: 'count', total: 10 })
+    );
+
+    await waitFor(() => {
+      expect(result.current.currentQuestion).toBeDefined();
+    });
+
+    // A retry mount skips the start screen and begins as a fresh run…
     expect(result.current.showStartScreen).toBe(false);
     expect(result.current.showEndScreen).toBe(false);
-    expect(result.current.showSolution).toBe(false);
+    expect(result.current.mode).toStrictEqual({ kind: 'count', total: 10 });
     expect(result.current.questionCounter).toBe(1);
     expect(result.current.correctQuestions).toStrictEqual([]);
+    // …and never re-fires quiz_started (the retry already fired
+    // quiz_retried from the ending session).
+    expect(captureAnalyticsEvent).not.toHaveBeenCalled();
+  });
+
+  it('onCheckAnswer reports the graded outcome', async () => {
+    const { result } = renderHook(() => useQuizState(mockQuiz));
+
+    await waitFor(() => {
+      expect(result.current.currentQuestion).toBeDefined();
+    });
+
+    // Nothing selected → nothing graded.
+    let outcome: 'correct' | 'miss' | undefined;
+    act(() => {
+      outcome = result.current.onCheckAnswer();
+    });
+    expect(outcome).toBeUndefined();
+
+    const { correctId, options } = result.current.currentQuestion!;
+    const wrongIndex = options.findIndex((o) => !correctId.includes(o.id));
+    act(() => {
+      result.current.selectOption(wrongIndex);
+    });
+    act(() => {
+      outcome = result.current.onCheckAnswer();
+    });
+    expect(outcome).toBe('miss');
+
+    const correctIndex = options.findIndex((o) => correctId.includes(o.id));
+    act(() => {
+      result.current.selectOption(correctIndex);
+    });
+    act(() => {
+      outcome = result.current.onCheckAnswer();
+    });
+    expect(outcome).toBe('correct');
   });
 });
