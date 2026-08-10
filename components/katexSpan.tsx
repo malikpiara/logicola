@@ -202,8 +202,10 @@ function renderKatex(text: React.ReactNode): React.ReactNode {
   });
 }
 
-export interface KatexSpanProps
-  extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
+export interface KatexSpanProps extends Omit<
+  React.HTMLAttributes<HTMLElement>,
+  'children'
+> {
   /** Element (or component) to render as. Defaults to `span`. */
   as?: React.ElementType;
   /** The text to render; non-string nodes pass through untouched. */
