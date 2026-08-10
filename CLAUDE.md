@@ -24,7 +24,7 @@ trade-off.
   dispatched behind a **client-side `next/dynamic` map** — that exact
   placement is load-bearing: a static import of any generator from
   shared code re-fuses all of them into every quiz page, and so does
-  `dynamic()` called from a *server* module (both variants were built
+  `dynamic()` called from a _server_ module (both variants were built
   and measured before landing here; the fused chunk was ~204 KB). Never
   import `content/sets/*.generator` or `content/sets/setR.data` from
   shared client modules; `content/generators.ts` is a test-only

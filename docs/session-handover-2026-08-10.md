@@ -18,7 +18,7 @@ live there, not here.
   its own generator; Set Q carries none. `QuizClient` deleted.
   - The lesson, proven by two failed intermediate attempts (bundles
     were re-measured after each): within one route, statically imported
-    `'use client'` entries do NOT split, and `dynamic()` in a *server*
+    `'use client'` entries do NOT split, and `dynamic()` in a _server_
     module doesn't either. Only `import()` inside a client module is a
     real boundary.
 - **`katexSpan.jsx` → typed `.tsx`** with a module-level KaTeX render
