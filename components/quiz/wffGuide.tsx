@@ -1,10 +1,12 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import KatexSpan from '../katexSpan';
 import { SubSet } from '@/content/types';
 import { spriteClip } from '@/lib/pixel';
-import { FALLACIES } from '@/content/sets/setR.data';
-import { trimClause } from '@/content/sets/setR.generator';
-import { HintProse } from './hintBlock';
+
+// Loaded on demand: the fallacy table drags the whole Set R corpus with
+// it (see setRGuide.tsx). Only mounts on Set R, so only Set R pays.
+const SetRGuide = dynamic(() => import('./setRGuide'));
 
 /**
  * The reference guide, in the lab panel's information hierarchy
@@ -318,44 +320,7 @@ export const WffGuide: React.FC<WffGuideProps> = ({ subSet }) => {
         </div>
       )}
 
-      {subSet.id === SET_R_SUBSET_ID && (
-        <div>
-          <h3 className='qguide-h'>The eighteen informal fallacies</h3>
-          <p className='qguide-p'>
-            From Gensler’s “Fallacies and Argumentation” chapter. Some passages
-            commit more than one fallacy and so have more than one correct
-            answer.
-          </p>
-          {/* The same hierarchy as a hint — code chip, weighted name, ink
-              gloss, hanging-numeral clauses — so the reference and the
-              feedback read as one system. The clause "or" tails are
-              dropped: the numerals make the disjunction structural. */}
-          <table className='qguide-table'>
-            <tbody>
-              {FALLACIES.map((fallacy) => (
-                <tr key={fallacy.code}>
-                  <td className='qguide-code'>{fallacy.code}</td>
-                  <td>
-                    <span className='qguide-name'>{fallacy.name}</span>
-                    <div className='qguide-p' style={{ margin: '2px 0 0' }}>
-                      <HintProse text={fallacy.description} />
-                    </div>
-                    {fallacy.clauses && (
-                      <ol className='qhint-clauses'>
-                        {fallacy.clauses.map((clause, i) => (
-                          <li key={i}>
-                            <HintProse text={trimClause(clause)} />
-                          </li>
-                        ))}
-                      </ol>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      {subSet.id === SET_R_SUBSET_ID && <SetRGuide />}
     </div>
   );
 };

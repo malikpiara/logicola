@@ -7,9 +7,11 @@
  *
  *   - Each set's generator lives in `content/sets/setX.generator.ts`
  *     and exports `generateSetX(seed?: number, perSubset = 10): Set`.
- *   - `<QuizClient>` (a client component) receives a setKey as a prop
- *     and resolves the generator here, then calls it on mount with
- *     no seed to get live-random questions per page refresh.
+ *   - The app itself does NOT resolve generators here: each set has
+ *     its own client wrapper in components/quiz/generated/ importing
+ *     its one generator, so no quiz page bundles the other five. This
+ *     dispatcher stays for tests and as the canonical registry —
+ *     never import it from client code.
  *   - Tests import generators directly and pass a fixed seed for
  *     deterministic snapshots — they don't go through this dispatcher.
  *
