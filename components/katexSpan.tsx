@@ -1,5 +1,6 @@
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
+import React from 'react';
 import { formatTextTypography } from '@/lib/typography';
 
 const DELIMITERS = [
@@ -26,15 +27,29 @@ const INLINE_MATH_OPS = [
   ['⊃', '\\supset '],
   ['≡', '\\equiv '],
   ['∃', '\\exists '],
-];
+] as const;
+
+interface TextSegment {
+  type: 'text';
+  data: string;
+}
+
+interface MathSegment {
+  type: 'math';
+  data: string;
+  display: boolean;
+  raw: string;
+}
+
+type Segment = TextSegment | MathSegment;
 
 /**
  * Rewrite backtick-delimited regions to inline KaTeX with operator
  * glyphs replaced by macros and `{X}` expanded to `\underline{X}`.
  * Idempotent on text without backticks.
  */
-function rewriteBacktickedMath(text) {
-  return text.replace(/`([^`]+)`/g, (_, raw) => {
+function rewriteBacktickedMath(text: string): string {
+  return text.replace(/`([^`]+)`/g, (_, raw: string) => {
     let math = raw;
     for (const [glyph, latex] of INLINE_MATH_OPS) {
       math = math.split(glyph).join(latex);
@@ -44,11 +59,15 @@ function rewriteBacktickedMath(text) {
   });
 }
 
-function escapeRegex(value) {
+function escapeRegex(value: string): string {
   return value.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
 
-function findEndOfMath(delimiter, text, startIndex) {
+function findEndOfMath(
+  delimiter: string,
+  text: string,
+  startIndex: number
+): number {
   let index = startIndex;
   let braceLevel = 0;
   const delimiterLength = delimiter.length;
@@ -77,8 +96,8 @@ function findEndOfMath(delimiter, text, startIndex) {
   return -1;
 }
 
-function splitAtDelimiters(text) {
-  const segments = [];
+function splitAtDelimiters(text: string): Segment[] {
+  const segments: Segment[] = [];
   const leftDelimiterRegex = new RegExp(
     `(${DELIMITERS.map((delimiter) => escapeRegex(delimiter.left)).join('|')})`
   );
@@ -134,7 +153,29 @@ function splitAtDelimiters(text) {
   return segments;
 }
 
-function renderKatex(text) {
+/**
+ * Rendered-HTML cache. The quiz re-renders every option on each
+ * selection or arrow-key move, and KaTeX parsing is the expensive part
+ * of that render — but the label strings themselves are a small, fixed
+ * pool per session, so each formula only ever needs to be parsed once.
+ */
+const katexHtmlCache = new Map<string, string>();
+
+function katexToHtml(data: string, display: boolean): string {
+  const key = `${display ? 'D' : 'I'}:${data}`;
+  const cached = katexHtmlCache.get(key);
+  if (cached !== undefined) {
+    return cached;
+  }
+  const html = katex.renderToString(data, {
+    displayMode: display,
+    throwOnError: false,
+  });
+  katexHtmlCache.set(key, html);
+  return html;
+}
+
+function renderKatex(text: React.ReactNode): React.ReactNode {
   if (typeof text !== 'string') {
     return text;
   }
@@ -147,10 +188,7 @@ function renderKatex(text) {
     }
 
     try {
-      const html = katex.renderToString(segment.data, {
-        displayMode: segment.display,
-        throwOnError: false,
-      });
+      const html = katexToHtml(segment.data, segment.display);
 
       return (
         <span
@@ -164,10 +202,18 @@ function renderKatex(text) {
   });
 }
 
+export interface KatexSpanProps
+  extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
+  /** Element (or component) to render as. Defaults to `span`. */
+  as?: React.ElementType;
+  /** The text to render; non-string nodes pass through untouched. */
+  text: React.ReactNode;
+}
+
 export default function KatexSpan({
   as: Component = 'span',
   text,
   ...delegated
-}) {
+}: KatexSpanProps) {
   return <Component {...delegated}>{renderKatex(text)}</Component>;
 }
