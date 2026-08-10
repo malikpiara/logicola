@@ -1,5 +1,5 @@
 import Quiz from '@/components/quiz';
-import QuizClient from '@/components/quiz/QuizClient';
+import GeneratedQuizDispatcher from '@/components/quiz/generated';
 import Navbar from '@/components/navbar';
 import { findQuizCatalogEntry, quizRouteSlugs } from '@/lib/quizCatalog';
 import { loadPublishedQuizSubSet } from '@/lib/publishedQuizLookup';
@@ -24,6 +24,18 @@ export default async function QuizPage({ params }: QuizPageProps) {
     notFound();
   }
 
+  // The dispatcher keys each set to its own dynamically-imported chunk —
+  // the why lives in components/quiz/generated/index.tsx.
+  const quiz =
+    loaded.runtime === 'static' ? (
+      <Quiz subSet={loaded.subSet} />
+    ) : (
+      <GeneratedQuizDispatcher
+        setKey={loaded.setKey}
+        subsetIndex={loaded.subsetIndex}
+      />
+    );
+
   return (
     <>
       {/* Below lg the quiz is FULL-BLEED: no site navbar (the in-card ✕
@@ -41,16 +53,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
             }}
             initialQuestionIdx={0}
           /> */}
-        <main className='w-full p-0 lg:p-4'>
-          {loaded.runtime === 'static' ? (
-            <Quiz subSet={loaded.subSet} />
-          ) : (
-            <QuizClient
-              setKey={loaded.setKey}
-              subsetIndex={loaded.subsetIndex}
-            />
-          )}
-        </main>
+        <main className='w-full p-0 lg:p-4'>{quiz}</main>
       </div>
     </>
   );
