@@ -19,6 +19,15 @@ const setQ: Set = {
       // have more than one flaw, and the subset rule accepts any genuine
       // flaw(s) the user names. `answer` still references the badge
       // numbers, so options stay unshuffled.
+      //
+      // BOTH of these diverge from the 2008 program, which was one pick
+      // from seven (`c:^1234567`) graded ONCE — no retry loop exists in
+      // set_Q.txt. The divergence is deliberate (a definition really can
+      // have several flaws), but it is why Q's scoring decay had to be
+      // reconstructed rather than read off the DSL: Gensler's penalty was
+      // a once-per-item price, and charging it three times made this — the
+      // one set needing no notation, and so the likeliest entry point for
+      // a casual user — the harshest in the app. See SCORING_PROFILES.Q.
       optionLayout: 'grid',
       multiSelect: true,
       maxWrongGuesses: 3,

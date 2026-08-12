@@ -1,6 +1,7 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import useQuizState, { getRevealThreshold } from './useQuizState';
+import { SHIPPED_FLOOR, scoreMode } from './quizMode';
 import { captureAnalyticsEvent } from '@/lib/analytics';
 
 vi.mock('@/lib/analytics', () => ({
@@ -124,8 +125,13 @@ describe('useQuizState', () => {
       expect(result.current.currentQuestion).toBeDefined();
     });
 
-    expect(result.current.mode).toEqual({ kind: 'score', level: 5 });
+    expect(result.current.mode).toEqual({
+      kind: 'score',
+      level: 5,
+      floor: SHIPPED_FLOOR,
+    });
     expect(result.current.scoreState.level).toBe(5);
+    expect(result.current.scoreState.floor).toBe(SHIPPED_FLOOR);
   });
 
   it('Set R charges ONCE per problem — the second wrong pick is free (2008 law)', async () => {
@@ -148,7 +154,7 @@ describe('useQuizState', () => {
     expect(result.current.scoreState.score).toBe(-10);
   });
 
-  it('Set A halves the charge per miss: −10 then −15 (2008 law)', async () => {
+  it('Set A stops charging once the run is in the red (shipped floor)', async () => {
     const { result } = renderHook(() =>
       useQuizState({ ...mockQuiz, name: 'Set A', shuffleOptions: false })
     );
@@ -158,6 +164,30 @@ describe('useQuizState', () => {
     });
 
     act(() => result.current.onShowStartScreen());
+    act(() => result.current.selectOption(1));
+    act(() => result.current.onCheckAnswer());
+    expect(result.current.scoreState.score).toBe(-10);
+    // The 2008 engine would halve and charge 5 more here. The shipped floor
+    // charges nothing: the run is already in deficit.
+    act(() => result.current.selectOption(2));
+    act(() => result.current.onCheckAnswer());
+    expect(result.current.scoreState.score).toBe(-10);
+    // Still a miss in every other respect — the register decayed underneath.
+    expect(result.current.scoreState.penaltyDue).toBe(2);
+  });
+
+  it('Set A halves the charge per miss: −10 then −15 (2008 law, floor off)', async () => {
+    // The reversibility seam, exercised through the real hook: a run opened
+    // with floor 'none' is the restored economy, unchanged by the default.
+    const { result } = renderHook(() =>
+      useQuizState({ ...mockQuiz, name: 'Set A', shuffleOptions: false })
+    );
+
+    await waitFor(() => {
+      expect(result.current.currentQuestion).toBeDefined();
+    });
+
+    act(() => result.current.onShowStartScreen(scoreMode(5, 'none')));
     act(() => result.current.selectOption(1));
     act(() => result.current.onCheckAnswer());
     expect(result.current.scoreState.score).toBe(-10);

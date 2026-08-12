@@ -12,7 +12,7 @@ import { KeyboardKeys } from './keyboardKeys';
 import { StartScreen } from './startScreen';
 import useQuizState, { getRevealThreshold } from './useQuizState';
 import { progressLabel, type QuizMode } from './quizMode';
-import { canScore, progress } from '@/lib/scoring';
+import { canScore, chargeFor, progress } from '@/lib/scoring';
 import classNames from 'classnames';
 import { SubSet } from '@/content/types';
 import {
@@ -420,6 +420,13 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   // the window extends the flag instead of restarting the animation.
   function flashBarDamage() {
     if (mode.kind !== 'score') return;
+    // ...and only when the miss actually costs something. `scoreState` here
+    // is the pre-miss snapshot (this runs in the render that graded it), so
+    // it answers for the miss just taken. Two cases pay nothing: a run in
+    // the red under the 'no-deeper' floor, and a penalty register the set's
+    // own DSL has already decayed to 0 — Set R's second miss on a problem,
+    // Set A's fifth. Flashing either reports damage that never happened.
+    if (chargeFor(scoreState) === 0) return;
     if (missFlashTimeoutRef.current) clearTimeout(missFlashTimeoutRef.current);
     setIsMissFlashing(true);
     missFlashTimeoutRef.current = setTimeout(() => {
