@@ -3,6 +3,7 @@ import { SubSet, Question } from '@/content/types';
 import { AnalyticsProperties, captureAnalyticsEvent } from '@/lib/analytics';
 import { defaultModeForSet, type QuizMode } from './quizMode';
 import {
+  SCORING_OFF,
   SCORING_PROFILES,
   beginProblem,
   createScoreState,
@@ -10,7 +11,20 @@ import {
   profileForSet,
   registerCorrect,
   registerMiss,
+  type ScoreState,
+  type ScoringProfile,
 } from '@/lib/scoring';
+
+/**
+ * Open a score state for a run. `count` mode has no economy to run, so it
+ * takes the original program's own "scoring off" level rather than a bare 0 — and with
+ * no scoring there is no deficit to floor either.
+ */
+function openScoreState(profile: ScoringProfile, mode: QuizMode): ScoreState {
+  return mode.kind === 'score'
+    ? createScoreState(profile, mode.level, mode.floor)
+    : createScoreState(profile, SCORING_OFF);
+}
 
 /** Helper to shuffle array in-place using Fisher-Yates */
 function shuffleArray<T>(array: T[]): void {
@@ -108,7 +122,7 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
   const profile = profileForSet(subSet.name) ?? SCORING_PROFILES.R!;
 
   const [scoreState, setScoreState] = useState(() =>
-    createScoreState(profile, mode.kind === 'score' ? mode.level : 0)
+    openScoreState(profile, mode)
   );
 
   const isMulti = !!subSet.multiSelect;
@@ -337,15 +351,18 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
 
     hasStartedRef.current = true;
     setMode(chosen);
-    setScoreState(
-      createScoreState(profile, chosen.kind === 'score' ? chosen.level : 0)
-    );
+    setScoreState(openScoreState(profile, chosen));
     void captureAnalyticsEvent('quiz_started', {
       ...buildQuizAnalyticsProperties(subSet, totalQuestionCount),
       // The graduation-rate measurement: what fraction of runs are scored,
       // and of those, what fraction reach 100.
       quiz_mode: chosen.kind,
       scoring_level: chosen.kind === 'score' ? chosen.level : null,
+      // The floor's own measurement: completion rate under 'no-deeper' vs
+      // the faithful 'none'. Runs recorded before 2026-08-12 have no such
+      // property and were all 'none' — read them with
+      // coalesce(properties.scoring_floor, 'none').
+      scoring_floor: chosen.kind === 'score' ? chosen.floor : null,
     });
     setShowStartScreen(false);
   }

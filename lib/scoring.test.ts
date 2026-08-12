@@ -5,6 +5,7 @@ import {
   TARGET_SCORE,
   beginProblem,
   canScore,
+  chargeFor,
   clampLevel,
   createScoreState,
   isComplete,
@@ -14,13 +15,14 @@ import {
   progress,
   registerCorrect,
   registerMiss,
+  type ScoreFloor,
   type ScoreState,
   type ScoringProfile,
 } from './scoring';
 
 const R = SCORING_PROFILES.R!; // +8, penalty zeroes after one miss, forfeits
 const A = SCORING_PROFILES.A!; // +5, penalty halves, no forfeit
-const Q = SCORING_PROFILES.Q!; // +7, penalty flat, no forfeit
+const Q = SCORING_PROFILES.Q!; // +7, penalty halves (reconstructed), no forfeit
 
 /** Solve a problem cleanly: arm, then answer right. */
 function clean(s: ScoreState): ScoreState {
@@ -136,17 +138,41 @@ describe('Set A — +5, penalty halves, no forfeit', () => {
   });
 });
 
-describe('Set Q — +7, flat penalty, no forfeit', () => {
-  it('charges the full 2*level on every miss, without decay', () => {
-    let s = beginProblem(createScoreState(Q, 7));
-    s = registerMiss(s);
-    s = registerMiss(s);
-    s = registerMiss(s);
-    expect(s.score).toBe(-42); // 3 x -14, no mercy
+describe('Set Q — +7, decay reconstructed for LC3’s retries', () => {
+  it('charges the first miss at the full 2*level, as the DSL does', () => {
+    // The one charge Gensler's single-shot program ever made.
+    expect(registerMiss(beginProblem(createScoreState(Q, 7))).score).toBe(-14);
   });
 
-  it('still awards 7 afterwards', () => {
-    expect(missThenSolve(createScoreState(Q, 7), 2).score).toBe(-28 + 7);
+  it('tapers after that, rather than charging a one-shot price three times', () => {
+    let s = beginProblem(createScoreState(Q, 7));
+    const charged: number[] = [];
+    let prev = s.score;
+    for (let i = 0; i < 3; i++) {
+      s = registerMiss(s);
+      charged.push(prev - s.score);
+      prev = s.score;
+    }
+    expect(charged).toEqual([14, 7, 3]);
+  });
+
+  it('lands a botched item on Gensler’s own net at the shipped level', () => {
+    // He charged -2*level once and awarded nothing on a missed item: -10.
+    // LC3 charges 10+5+2 across three attempts and still pays the 7, which
+    // nets the same -10. The old 'none' reading — his one-shot price billed
+    // three times, then +7 — was -23.
+    expect(missThenSolve(createScoreState(Q, 5), 3).score).toBe(-10);
+  });
+
+  it('costs the same as ’zero’ would on a second-attempt solve', () => {
+    // The case the reconstruction is for: the first miss is charged in full
+    // under either decay, so 'halve' buys the retry nothing extra. The two
+    // only diverge from the third attempt on.
+    expect(missThenSolve(createScoreState(Q, 5), 1).score).toBe(-10 + 7);
+  });
+
+  it('still awards 7 afterwards — Q never forfeits', () => {
+    expect(missThenSolve(createScoreState(Q, 7), 2).score).toBe(-21 + 7);
   });
 });
 
@@ -165,11 +191,136 @@ describe('the level scales the penalty and never the reward', () => {
   });
 });
 
+describe('the no-deeper floor — LC3’s one departure from the 2008 engine', () => {
+  /** Every set opens under the shipped floor for these. */
+  const floored = (p: ScoringProfile, level = 5) =>
+    createScoreState(p, level, 'no-deeper');
+
+  it('still charges the first miss in full — the deficit is entered, not skipped', () => {
+    // The floor is not "no penalties". Being at 0 is not being in the red.
+    expect(registerMiss(beginProblem(floored(Q))).score).toBe(-10);
+  });
+
+  it('charges in full from a positive score, even past zero', () => {
+    // At 3 points a 10-point penalty still lands whole: you were not in the
+    // red when you answered. This is the case a clamp-at-zero floor would
+    // have softened to 0 and this one deliberately does not.
+    const s = registerMiss({ ...beginProblem(floored(Q)), score: 3 });
+    expect(s.score).toBe(-7);
+  });
+
+  it('charges nothing once the run is already in the red', () => {
+    let s = beginProblem(floored(Q));
+    s = registerMiss(s); // -10, the run's one paid miss
+    for (let i = 0; i < 5; i++) s = registerMiss(beginProblem(s));
+    expect(s.score).toBe(-10); // and never deeper, across problems
+  });
+
+  it('re-arms the charge as soon as the learner climbs back out', () => {
+    let s = registerMiss(beginProblem(floored(Q))); // -10
+    s = registerCorrect(s); // +7 -> -3, still in the red
+    expect(registerMiss(beginProblem(s)).score).toBe(-3); // free
+    s = registerCorrect(beginProblem(s)); // +7 -> 4, out
+    expect(registerMiss(beginProblem(s)).score).toBe(-6); // charged in full
+  });
+
+  it('caps the deficit at one penalty, where ’none’ compounds without limit', () => {
+    let free = beginProblem(floored(R, 9));
+    let faithful = beginProblem(createScoreState(R, 9)); // floor 'none'
+    for (let i = 0; i < 3; i++) {
+      free = registerMiss(beginProblem(free));
+      faithful = registerMiss(beginProblem(faithful));
+    }
+    expect(free.score).toBe(-18);
+    expect(faithful.score).toBe(-54);
+  });
+
+  it('buys mercy on points, never credit for the answer', () => {
+    // A free miss is still a miss: Set R forfeits its +8, the penalty
+    // register still decays, and the problem still counts as missed.
+    let s = registerMiss(beginProblem(floored(R))); // -10, in the red
+    s = beginProblem(s);
+    const before = s.missed;
+    s = registerMiss(s); // free
+    expect(s.score).toBe(-10);
+    expect(s.missed).toBe(before + 1);
+    expect(s.pointsAvailable).toBe(0); // forfeited anyway
+    expect(registerCorrect(s).score).toBe(-10); // so solving pays nothing
+  });
+
+  it('leaves every set’s economy alone — the floor is a run policy', () => {
+    // Rewards and penalty shapes are untouched; only the accumulator is
+    // fenced. A clean run is bit-identical under either floor.
+    for (const p of [R, A, Q] as ScoringProfile[]) {
+      let free = floored(p, 9);
+      let faithful = createScoreState(p, 9);
+      for (let i = 0; i < 13; i++) {
+        free = clean(free);
+        faithful = clean(faithful);
+      }
+      expect(free.score).toBe(faithful.score);
+    }
+  });
+
+  it('chargeFor answers for the UI exactly what registerMiss will do', () => {
+    for (const floor of ['none', 'no-deeper'] as const) {
+      for (const p of [R, A, Q] as ScoringProfile[]) {
+        let s = beginProblem(createScoreState(p, 7, floor));
+        for (let i = 0; i < 4; i++) {
+          const quoted = chargeFor(s);
+          const after = registerMiss(s);
+          expect(s.score - after.score).toBe(quoted);
+          s = beginProblem(after);
+        }
+      }
+    }
+  });
+
+  /** A full 60-question pool at the shipped level, half the problems botched. */
+  const halfRight = (floor: ScoreFloor) => {
+    let s = createScoreState(Q, 5, floor);
+    let low = 0;
+    for (let i = 0; i < 60 && !isComplete(s); i++) {
+      s = beginProblem(s);
+      if (i % 2) for (let k = 0; k < 3; k++) s = registerMiss(s); // botched
+      s = registerCorrect(s);
+      low = Math.min(low, s.score);
+    }
+    return { ...s, low };
+  };
+
+  it('turns an unpayable debt into a visible setback', () => {
+    // The outcome the change is actually for. Same learner, same answers:
+    // without the floor they finish the pool deep under water, having
+    // watched an empty bar for an hour; under the floor they end level,
+    // and were never more than a few points down.
+    expect(halfRight('none').score).toBeLessThan(-50);
+    expect(halfRight('no-deeper').score).toBeGreaterThanOrEqual(0);
+    expect(halfRight('no-deeper').low).toBeGreaterThan(-2 * 5); // one penalty
+  });
+
+  it('does NOT make a sub-break-even run winnable — that is a separate lever', () => {
+    // Worth pinning, because it is the tempting thing to assume. The floor
+    // only forgives charges taken BELOW zero, and reaching 100 is spent
+    // almost entirely above zero, where the economy is untouched. Measured
+    // over 200 problems at 1% steps, the minimum first-try accuracy that
+    // reaches 100 is identical under both floors: 74% for the translation
+    // sets, 62% for Q, 58% for R at level 5. Closing that gap means a
+    // per-problem charge cap or a lower SHIPPED_LEVEL, not this.
+    expect(isComplete(halfRight('no-deeper'))).toBe(false);
+    expect(isComplete(halfRight('none'))).toBe(false);
+  });
+});
+
 describe('faithful edge cases', () => {
   it('lets the score go negative — the original never clamps', () => {
     let s = createScoreState(R, 9);
     for (let i = 0; i < 3; i++) s = registerMiss(beginProblem(s));
     expect(s.score).toBe(-54);
+  });
+
+  it('defaults to the faithful floor, so the restoration is what you get', () => {
+    expect(createScoreState(R, 9).floor).toBe('none');
   });
 
   it('level 0 turns scoring off: no penalty', () => {

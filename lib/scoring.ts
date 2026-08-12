@@ -13,7 +13,7 @@
  *   Set        reward          penalty on a miss              forfeit?
  *   ---------  --------------  -----------------------------  --------
  *   A C J L N  k:+5+q+q        k:-t, t := 2*level, C:tt/2     no
- *   Q          ky:+7           kn:-2*$s (flat, every miss)    no
+ *   Q          ky:+7           kn:-2*$s (ONE shot — see below) no
  *   R          ky:+$r  (r=8)   ky:-2*$q once, then q := 0      YES (r := 0)
  *
  * What's shared: everyone starts at 0, targets 100, and the level only ever
@@ -35,6 +35,22 @@
  *     8 out, so a level-9 miss is an 18-point charge PLUS 8 never earned: a
  *     26-point swing on a 100-point target. In Set A you still collect the
  *     full +5 after any number of misses.
+ *   - SET Q HAS NO DECAY DIRECTIVE BECAUSE IT HAS NO SECOND ATTEMPT (traced
+ *     2026-08-12). Its program is one shot per item: every problem ends
+ *     `j:a` into the single present/accept/grade routine at `*a`, and there
+ *     is no jump back to the accept anywhere in the file. Set A by contrast
+ *     has an accept label `*d` and two wrong-answer routines (`*e` wrong
+ *     translation, `*w` malformed wff) that both end `j:d` — back to re-ask.
+ *     The wording tracks the structure: R says "Please try again", Q says
+ *     only "Sorry, #x is wrong" and shows the violated rule. So Q was never
+ *     "the full penalty every miss" — it was +7 or -2*level, once, and then
+ *     the next item.
+ *
+ *     Reading the silence as `decay: 'none'` was faithful to the directive
+ *     and wrong about the intent, and it cost real money: LC3 gives Q three
+ *     attempts (`maxWrongGuesses`), so a botched item charged 3 x 2*level
+ *     where Gensler charged one. At the shipped level that is -23 against
+ *     his -10. `'halve'` is the honest reconstruction — see the profile.
  *
  * Unpublished sets are deliberately absent. B/D/E/F/P are bespoke (five
  * different reward values in B alone), and the proofs sets (G/I/K/M/O) have
@@ -43,7 +59,9 @@
  *
  * Deliberately faithful details that look like bugs:
  *   - No floor. The score can go negative; the original never clamps, and
- *     clamping would silently defuse high levels.
+ *     clamping would silently defuse high levels. See `ScoreFloor` — the
+ *     shipped default now departs from this on purpose, and the departure
+ *     is a run policy, not a change to any set's economy.
  *   - Completion is a threshold, not a length. There is no problem count.
  *   - Nothing is recorded on failure or abandonment ("no fault" scoring).
  */
@@ -100,7 +118,32 @@ export const SCORING_PROFILES: Readonly<Record<string, ScoringProfile>> = {
   J: TRANSLATION_PROFILE,
   L: TRANSLATION_PROFILE,
   N: TRANSLATION_PROFILE,
-  Q: { pointsPerCorrect: 7, decay: 'none', forfeitOnMiss: false },
+  /**
+   * Q's decay is LC3's, not Gensler's — the one reconstructed constant here,
+   * and it is reconstructed because LC3 changed the interaction first.
+   *
+   * The original was one pick from seven (`c:^1234567`), graded once. LC3
+   * made Q multi-select with the subset rule, deliberately, because a
+   * definition can have more than one flaw — so the single-shot economy no
+   * longer has the interaction it was calibrated to. Grafting Gensler's
+   * one-charge penalty onto a three-attempt item is not fidelity; it just
+   * charges his once-per-item price up to three times per item.
+   *
+   * `'halve'` over `'zero'` for three reasons (Malik, 2026-08-12):
+   *   - Both cost the same on a second-attempt solve (the FIRST miss is
+   *     charged in full under either), so the case this change is for —
+   *     someone who gets it on the retry — is served identically.
+   *   - They differ only from the third attempt on, and Q is the only
+   *     scored set with no per-option hints: a wrong pick is flagged and
+   *     stripped, but nothing explains it. Free late attempts on the set
+   *     that teaches least between attempts is elimination-guessing.
+   *   - It lands on Gensler's own magnitude. A fully botched item costs
+   *     -(10+5+2)+7 = -10 at the shipped level — exactly his -10 for a
+   *     missed item — where `'zero'` would charge -3.
+   *
+   * Flip to `'zero'` for a gentler run; nothing else has to move.
+   */
+  Q: { pointsPerCorrect: 7, decay: 'halve', forfeitOnMiss: false },
   R: { pointsPerCorrect: 8, decay: 'zero', forfeitOnMiss: true },
 };
 
@@ -120,15 +163,71 @@ export function canScore(setName: string | undefined): boolean {
   return profileForSet(setName) !== undefined;
 }
 
+/**
+ * How far a run is allowed to fall into deficit (Malik, 2026-08-12, from
+ * playtest feedback: "users can keep getting negative points after their
+ * points are already negative").
+ *
+ * This is the one place LC3 knowingly diverges from the original program, so it
+ * is modelled as a property of the RUN, not of a set: `ScoringProfile` stays
+ * a pure record of what Gensler's original program does, and every set keeps its own
+ * reward, decay and forfeit untouched under either floor.
+ *
+ * Why a floor at all. Under the 2008 economy the deficit compounds without
+ * limit, and `progress()` clamps at 0 — so a learner in the red watches an
+ * empty bar that does not move when they get one RIGHT. They are paying off
+ * invisible debt. Measured at the shipped level 5, a Set Q learner who
+ * botches half the problems finishes the 60-question pool around -90 (it
+ * was -300 before Q's decay was reconstructed). Under this floor the same
+ * learner, giving the same answers, ends level and is never more than one
+ * penalty down.
+ *
+ * What it does NOT do, deliberately recorded so nobody assumes otherwise:
+ * it does not make a weak run winnable. The minimum first-try accuracy that
+ * can reach 100 is unchanged by the floor — 74% for the translation sets,
+ * 62% for Q, 58% for R at level 5 — because forgiveness only applies BELOW
+ * zero and the climb to 100 happens almost entirely above it. Closing that
+ * gap is a different lever (a per-problem charge cap, or a lower
+ * SHIPPED_LEVEL) and has not been pulled.
+ *
+ * Note those thresholds are NOT a property of the floor and move when an
+ * economy is corrected: Q's was 78% until its decay was fixed.
+ */
+export type ScoreFloor =
+  /**
+   * The 2008 engine: no floor, the deficit compounds without limit. Kept
+   * live (and tested) because it is the restoration — this is the value a
+   * future "Gensler" mode would select.
+   */
+  | 'none'
+  /**
+   * Shipped default. A miss charges in full while the score is at or above
+   * zero, so the first one still bites and can push the run into deficit —
+   * but once there, further misses cost nothing until the learner climbs
+   * back out. The deficit is therefore at most one penalty deep instead of
+   * unbounded, and a couple of correct answers always restores the bar.
+   *
+   * Only the CHARGE is suppressed. A free miss still forfeits (Set R), still
+   * decays the penalty register, and still counts toward `missed` and the
+   * reveal budget — being in the red buys mercy on points, not credit for
+   * answers the learner did not get right.
+   */
+  | 'no-deeper';
+
 export interface ScoreState {
   /** Running total. Starts at 0, may go negative — see module docstring. */
   readonly score: number;
   /** 1–9, or 0 for scoring off. Constant for a run. */
   readonly level: number;
   readonly profile: ScoringProfile;
+  /** Deficit policy for the run. Constant for a run, like `level`. */
+  readonly floor: ScoreFloor;
   /** Points the current problem can still award. */
   readonly pointsAvailable: number;
-  /** What the next miss on this problem costs, after decay. */
+  /**
+   * What the next miss on this problem costs BEFORE the floor is consulted.
+   * This is the original program's penalty register; `chargeFor()` is what actually lands.
+   */
   readonly penaltyDue: number;
   /** Problems solved first try — for the end screen. */
   readonly solvedClean: number;
@@ -148,15 +247,23 @@ export function clampLevel(level: number): number {
   return Math.min(MAX_LEVEL, Math.max(MIN_LEVEL, n));
 }
 
+/**
+ * `floor` defaults to the faithful `'none'` on purpose: this module is the
+ * restoration, so the harsh behaviour is what you get if nobody chooses.
+ * The product default lives with the other product choices, next to
+ * `SHIPPED_LEVEL` in components/quiz/quizMode.ts.
+ */
 export function createScoreState(
   profile: ScoringProfile,
-  level: number = DEFAULT_LEVEL
+  level: number = DEFAULT_LEVEL,
+  floor: ScoreFloor = 'none'
 ): ScoreState {
   const lvl = clampLevel(level);
   return {
     score: 0,
     level: lvl,
     profile,
+    floor,
     pointsAvailable: profile.pointsPerCorrect,
     penaltyDue: openingPenalty(lvl),
     solvedClean: 0,
@@ -186,12 +293,26 @@ function decayed(due: number, decay: PenaltyDecay): number {
   }
 }
 
+/**
+ * What a miss would actually cost right now — `penaltyDue` after the run's
+ * floor has had its say. Exported because the UI needs the same answer the
+ * engine will give: the progress bar's damage flash is a lie when nothing
+ * is taken (a run in the red under `'no-deeper'`, or a penalty register the
+ * original program has already decayed to 0).
+ */
+export function chargeFor(state: ScoreState): number {
+  if (state.floor === 'no-deeper' && state.score < 0) return 0;
+  return state.penaltyDue;
+}
+
 /** Record a miss: charge what's due, forfeit if this set forfeits, then decay. */
 export function registerMiss(state: ScoreState): ScoreState {
   const firstMiss = state.pointsAvailable === state.profile.pointsPerCorrect;
   return {
     ...state,
-    score: state.score - state.penaltyDue,
+    // Everything below the score is deliberately floor-blind: a free miss is
+    // still a miss. See `ScoreFloor`.
+    score: state.score - chargeFor(state),
     pointsAvailable: state.profile.forfeitOnMiss ? 0 : state.pointsAvailable,
     penaltyDue: decayed(state.penaltyDue, state.profile.decay),
     missed: firstMiss ? state.missed + 1 : state.missed,

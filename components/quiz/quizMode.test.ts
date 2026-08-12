@@ -1,13 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import {
   DEFAULT_QUIZ_MODE,
+  SHIPPED_FLOOR,
   SHIPPED_LEVEL,
   defaultModeForSet,
   modeBlurb,
   progressLabel,
   scoreMode,
 } from './quizMode';
-import { DEFAULT_LEVEL } from '@/lib/scoring';
+import {
+  DEFAULT_LEVEL,
+  SCORING_PROFILES,
+  createScoreState,
+} from '@/lib/scoring';
 
 describe('defaultModeForSet — the scored run is the release mode', () => {
   it('ships at level 5, deliberately below Gensler’s own default of 7', () => {
@@ -17,12 +22,20 @@ describe('defaultModeForSet — the scored run is the release mode', () => {
     expect(DEFAULT_LEVEL).toBe(7);
   });
 
+  it('ships the forgiving floor, while lib/scoring stays faithful by default', () => {
+    // Same split as the levels: the engine restores Gensler, the product
+    // chooses. Flipping SHIPPED_FLOOR to 'none' restores the 2008 economy.
+    expect(SHIPPED_FLOOR).toBe('no-deeper');
+    expect(createScoreState(SCORING_PROFILES.A!).floor).toBe('none');
+  });
+
   it.each(['Set A', 'Set C', 'Set J', 'Set L', 'Set N', 'Set Q', 'Set R'])(
-    '%s opens scored at the shipped level',
+    '%s opens scored at the shipped level and floor',
     (name) => {
       expect(defaultModeForSet(name)).toEqual({
         kind: 'score',
         level: SHIPPED_LEVEL,
+        floor: SHIPPED_FLOOR,
       });
     }
   );
@@ -48,7 +61,23 @@ describe('labels', () => {
   });
 
   it('scoreMode clamps out-of-range levels', () => {
-    expect(scoreMode(99)).toEqual({ kind: 'score', level: 9 });
-    expect(scoreMode(-3)).toEqual({ kind: 'score', level: 0 });
+    expect(scoreMode(99)).toEqual({
+      kind: 'score',
+      level: 9,
+      floor: SHIPPED_FLOOR,
+    });
+    expect(scoreMode(-3)).toEqual({
+      kind: 'score',
+      level: 0,
+      floor: SHIPPED_FLOOR,
+    });
+  });
+
+  it('takes an explicit floor — the seam a future “Gensler” mode uses', () => {
+    expect(scoreMode(DEFAULT_LEVEL, 'none')).toEqual({
+      kind: 'score',
+      level: 7,
+      floor: 'none',
+    });
   });
 });

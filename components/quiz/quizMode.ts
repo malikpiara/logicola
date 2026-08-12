@@ -21,11 +21,21 @@
  * lied — "3 of 10" on question 17.
  */
 
-import { TARGET_SCORE, canScore, clampLevel } from '@/lib/scoring';
+import {
+  TARGET_SCORE,
+  canScore,
+  clampLevel,
+  type ScoreFloor,
+} from '@/lib/scoring';
 
 export type QuizMode =
   | { readonly kind: 'count'; readonly total: number }
-  | { readonly kind: 'score'; readonly level: number };
+  | {
+      readonly kind: 'score';
+      readonly level: number;
+      /** See `ScoreFloor`. Carried on the mode so a retry keeps it. */
+      readonly floor: ScoreFloor;
+    };
 
 /**
  * The dormant fixed-length run — the fallback for sets with no derived
@@ -43,8 +53,26 @@ export const DEFAULT_QUIZ_MODE: QuizMode = { kind: 'count', total: 10 };
  */
 export const SHIPPED_LEVEL = 5;
 
-export function scoreMode(level: number = SHIPPED_LEVEL): QuizMode {
-  return { kind: 'score', level: clampLevel(level) };
+/**
+ * The deficit policy the app ships at (Malik, 2026-08-12). Same split as
+ * `SHIPPED_LEVEL` above: `lib/scoring.ts` defaults to `'none'` because it is
+ * the restoration of Gensler's engine, and this is the product's departure
+ * from it. Flipping this constant to `'none'` is the whole of "give me the
+ * original economy back" — and a future "Gensler" mode is a second
+ * `scoreMode(DEFAULT_LEVEL, 'none')` on the start screen, not a rewrite.
+ *
+ * Rationale in `ScoreFloor`; the short version is that under `'none'` a
+ * struggling learner accumulates unpayable debt behind a progress bar
+ * clamped at 0, so nothing they get right registers. This bounds the debt.
+ * It does not change who can reach 100 — see the note there.
+ */
+export const SHIPPED_FLOOR: ScoreFloor = 'no-deeper';
+
+export function scoreMode(
+  level: number = SHIPPED_LEVEL,
+  floor: ScoreFloor = SHIPPED_FLOOR
+): QuizMode {
+  return { kind: 'score', level: clampLevel(level), floor };
 }
 
 /**
