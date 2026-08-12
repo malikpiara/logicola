@@ -64,6 +64,15 @@ export default function Quiz({ subSet }: QuizProps) {
 
 const QUESTION_EXIT_MS = 90;
 
+// Direction A — "hit flicker" — locked from the damage lab
+// (docs/damage-bar-lab.html; Malik, 2026-08-12): on a scored miss the
+// bar's fill blinks off twice in hard cuts, and only then does the
+// bar pay the penalty. The CSS owns the choreography (340ms flicker,
+// then a transition-delay of the same length holds back each bar's own
+// 500ms advance — width on desktop, --qp on mobile); this constant is
+// only how long the `.qbar-miss` class stays on, with headroom.
+const MISS_FLASH_MS = 900;
+
 // Sprite corners at chip scale: R=24 is pill scale, R=12 chip scale.
 const GUIDE_CHIP_CLIP = spriteClip(0, 12);
 
@@ -269,6 +278,10 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   const [isPaneResizing, setIsPaneResizing] = useState(false);
   const [isQuestionLeaving, setIsQuestionLeaving] = useState(false);
   const isQuestionLeavingRef = useRef(false);
+  const [isMissFlashing, setIsMissFlashing] = useState(false);
+  const missFlashTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
   const hasExpandedGuideAfterMissRef = useRef(false);
   const questionExitTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
@@ -400,22 +413,40 @@ const QuizSession: React.FC<QuizSessionProps> = ({
     setSnapKind('guide');
   }
 
+  // The bar flashes only where it is health: scored mode, where the
+  // penalty genuinely shrinks it. Count mode keeps its completion
+  // reading — blinking it would threaten progress a miss doesn't
+  // actually take. Level-triggered on purpose: a second miss inside
+  // the window extends the flag instead of restarting the animation.
+  function flashBarDamage() {
+    if (mode.kind !== 'score') return;
+    if (missFlashTimeoutRef.current) clearTimeout(missFlashTimeoutRef.current);
+    setIsMissFlashing(true);
+    missFlashTimeoutRef.current = setTimeout(() => {
+      setIsMissFlashing(false);
+      missFlashTimeoutRef.current = null;
+    }, MISS_FLASH_MS);
+  }
+
   function handleCheckAnswer() {
     // First attempt = no wrong guesses yet, read BEFORE grading commits.
     const wasFirstAttempt = previousGuesses.length === 0;
     // The hook is the only grader; the shell just reacts to its verdict.
     const outcome = onCheckAnswer();
 
-    // A missed first attempt opens the guide — unless the miss exhausted
-    // the reveal budget (threshold 1), where the answer is showing and the
-    // guide would arrive a beat too late to help.
-    if (
-      outcome === 'miss' &&
-      wasFirstAttempt &&
-      currentQuestion &&
-      1 < getRevealThreshold(subSet, currentQuestion)
-    ) {
-      expandGuideForFirstMiss();
+    if (outcome === 'miss') {
+      flashBarDamage();
+
+      // A missed first attempt opens the guide — unless the miss exhausted
+      // the reveal budget (threshold 1), where the answer is showing and the
+      // guide would arrive a beat too late to help.
+      if (
+        wasFirstAttempt &&
+        currentQuestion &&
+        1 < getRevealThreshold(subSet, currentQuestion)
+      ) {
+        expandGuideForFirstMiss();
+      }
     }
   }
 
@@ -564,6 +595,9 @@ const QuizSession: React.FC<QuizSessionProps> = ({
         clearTimeout(questionExitTimeoutRef.current);
         isQuestionLeavingRef.current = false;
       }
+      if (missFlashTimeoutRef.current) {
+        clearTimeout(missFlashTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -659,7 +693,10 @@ const QuizSession: React.FC<QuizSessionProps> = ({
               className='absolute inset-x-0 top-0 hidden h-1.5 bg-[color-mix(in_srgb,var(--quiz-fg)_12%,transparent)] lg:block'
             >
               <div
-                className='h-full transition-[width] duration-500 ease-[var(--ease-out-quart)]'
+                className={classNames(
+                  'h-full transition-[width] duration-500 ease-[var(--ease-out-quart)]',
+                  isMissFlashing && 'qbar-miss'
+                )}
                 style={{
                   width: `${progressFraction * 100}%`,
                   backgroundColor: 'var(--quiz-accent)',
@@ -696,8 +733,16 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                 )}
                 style={{ clipPath: MOBILE_BAR_CLIP }}
               >
+                {/* The 500ms advance lives in `.qbar-fill` (globals.css)
+                    as a --qp transition, not a width utility here: width
+                    transitions between round() endpoints don't
+                    interpolate — the property is what animates, and
+                    round() re-quantizes it every frame. */}
                 <div
-                  className='qbar-fill h-full transition-[width] duration-500 ease-[var(--ease-out-quart)]'
+                  className={classNames(
+                    'qbar-fill h-full',
+                    isMissFlashing && 'qbar-miss'
+                  )}
                   style={
                     {
                       '--qp': `${progressFraction * 100}%`,

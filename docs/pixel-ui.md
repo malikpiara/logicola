@@ -219,6 +219,22 @@ leading edge never antialiases. The long edges stay ruler-straight — no
 crenellation. Desktop's 6px hairline bleeds off the card edges (no free
 ends): unclipped, unquantised.
 
+**Animate the property, not the width** (2026-08-12, ported). The
+quantised bar's 500ms advance transitions **`--qp`**, registered with
+`@property { syntax: '<percentage>' }` — never `width`. A `width`
+transition whose two endpoints are `round()` expressions has no
+interpolation available, so the engine falls back to a single discrete
+flip partway through the window: the bar looked like it snapped, not
+advanced. Registering the custom property gives the interpolation a home,
+and `round()` re-quantises it every frame — so the fill genuinely _steps
+across the 4px grid_ over the half second (measured: 21 distinct widths,
+all multiples of 4, decelerating 48 → 4px as `ease-out-quart` demands).
+The general rule, worth carrying past this bar: **when a computed value
+won't animate, animate its input.** Degrades cleanly both ways — no
+`@property` loses the motion but keeps the quantisation; no `round()`
+falls back to the plain `%` width. The desktop hairline is a plain
+percentage and still transitions `width` directly.
+
 **Cells are for the 10-question count mode only**, where progress really is
 discrete: ten blocks, 8px tall with 4px gaps, full-bleed at the card's top —
 **done** = accent, **current** = accent at 40% (a half-tone cursor),
@@ -227,8 +243,46 @@ literally.
 
 Also rejected: a square-wave rasterisation of M3 Expressive's wavy indicator
 (regular and grammar-legal, but read as ornament where the others read as
-information). Possible motion once ported: count mode's current cell blinking
-gently, cursor-style; the scored line animating width both directions.
+information). Still unported: count mode's current cell blinking gently,
+cursor-style.
+
+## Damage on a miss — DECIDED: Hit flicker (Direction A)
+
+Judged in **`docs/damage-bar-lab.html`** (2026-08-12), six directions
+side by side in all seven set palettes. Locked: **Direction A, "hit
+flicker"** — on a scored miss the fill blinks **off** twice in hard cuts
+(`opacity` 1 → 0 → 1 → 0 over 340ms, `linear`, no fades), and only then
+does the bar pay the penalty. The held-back advance is a
+`transition-delay: 340ms` on the fill, so the flicker reads as the hit
+and the retreat reads as the cost — two beats, not one blur. The
+reference is sprite invulnerability frames (Mega Man, Zelda,
+Castlevania); hard cuts are the whole point, since a fade reads as a
+render glitch rather than a hit.
+
+Rejected, with the reason worth keeping: **Ghost drain** (SF II) and
+**Ember tip** (Halo shield break) both animate the _lost segment
+specifically_, which states the cost more literally — reconsider them if
+the points economy ever needs teaching rather than just signalling.
+**Knockback** (screen-shake juice) moves the bar off its own baseline,
+which the pixel grammar can't spend. **Track pulse** is the quietest and
+the only one legible at the desktop hairline's 6px. **Pixel crumble**
+was cut in judging: too literal, and it breaks the continuous-line rule.
+
+Three constraints the port must keep:
+
+- **Two flashes, never three.** WCAG 2.3.1 caps at three per second; two
+  hard off-pulses in 340ms sits inside it with margin, and the flashing
+  area is a 10px strip — far below the harmful-area threshold. Any
+  future variation is bounded by that, not by taste.
+- **Scored mode only.** In count mode the bar means _completion_, and a
+  miss doesn't take completion away — flashing it would signal a loss
+  that didn't happen. `flashBarDamage()` returns early on
+  `mode.kind !== 'score'`.
+- **The bar is never the only signal.** It stays `aria-hidden`; the
+  numeric points label is the accessible reading, and the option's own
+  miss treatment carries the verdict. Under `prefers-reduced-motion` the
+  flicker and the held-back delay both drop and the fill simply _is_ at
+  its new length.
 
 ## Guide button and reference panel
 

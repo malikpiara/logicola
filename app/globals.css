@@ -589,10 +589,78 @@
 
 /* The fill advances in whole 4px steps — a loading bar drawn in pixels,
    so the leading edge never antialiases. Plain var() width first as the
-   fallback for engines without round(). */
+   fallback for engines without round().
+
+   The 500ms transition animates --qp, NOT width (2026-08-12): a width
+   transition between two round() endpoints has no smooth interpolation,
+   so the engine falls back to a discrete flip and the bar snapped once
+   mid-window instead of advancing. Registering --qp gives the
+   interpolation a home — width then re-quantizes every frame, and the
+   animated fill steps across the 4px grid, which is the motion this
+   bar always wanted. Engines without @property lose only the motion
+   (instant set), never the quantization. */
+@property --qp {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
 .quiz-immersive .qbar-fill {
   width: var(--qp, 0%);
   width: round(down, var(--qp, 0%), 4px);
+  transition: --qp 500ms var(--ease-out-quart);
+}
+
+/* Direction A — "hit flicker" — locked from the damage lab
+   (docs/damage-bar-lab.html; Malik, 2026-08-12). On a scored miss the
+   fill blinks OFF twice in hard cuts (paired keyframes, no fades — the
+   sprite-i-frames read: Mega Man, Zelda), and only then does the bar
+   pay the penalty: transition-delay holds back each bar's own 500ms
+   advance — `width` on the desktop hairline, `--qp` on the mobile bar
+   (see above) — until the flicker has finished. Two off-pulses stay under
+   WCAG 2.3.1's three-flashes-per-second line, and the strip's area is
+   far below the harmful-flash threshold. The shell applies the class to
+   BOTH bars (desktop hairline, mobile sprite bar) off the grader's
+   verdict; it never re-derives correctness. */
+@keyframes qbar-flicker {
+  0%,
+  24% {
+    opacity: 1;
+  }
+  25%,
+  49% {
+    opacity: 0;
+  }
+  50%,
+  74% {
+    opacity: 1;
+  }
+  75%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.quiz-immersive .qbar-miss {
+  animation: qbar-flicker 340ms linear;
+  transition-delay: 340ms;
+}
+
+/* Reduced motion: the bar still MOVES (it has to — the width is the
+   score), it just stops being animated. No staircase, no blink, no
+   held-back transition — the fill is simply at its new length. The
+   quiz's other reduced-motion rules live in the block at the foot of
+   this file; these two sit here because they're the pair the damage
+   grammar is built from, and splitting them hid the relationship. */
+@media (prefers-reduced-motion: reduce) {
+  .quiz-immersive .qbar-fill {
+    transition: none;
+  }
+
+  .quiz-immersive .qbar-miss {
+    animation: none;
+    transition-delay: 0ms;
+  }
 }
 
 /* ---- Guide button --------------------------------------------------------

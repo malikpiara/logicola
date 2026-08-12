@@ -182,6 +182,14 @@ sheet/rail redesign).
 The workbench is **`docs/pattern-lab.html`** — open it directly in a browser,
 no build step. Three views: **Start**, **Question**, **Components**.
 
+A second, single-purpose lab sits beside it: **`docs/damage-bar-lab.html`**
+(2026-08-12) — six miss-feedback directions for the scored progress bar,
+each switchable across all seven set palettes and both bar sizes, with a
+reduced-motion preview. Direction A shipped; the rejected five are kept
+live in the file because the judgement was made by watching them run,
+and a screenshot wouldn't let anyone re-make it. Same conventions as the
+pattern lab: framework-free, opens from disk.
+
 ## What has actually shipped
 
 Committed in `37a038f` / `2c90ece` and live in the app:
