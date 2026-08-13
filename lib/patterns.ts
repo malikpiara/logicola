@@ -183,6 +183,18 @@ export interface QuiltPixOptions {
   scale: number;
   seed: number;
   clear: ClearRect | null;
+  /**
+   * Probability a cell TRIES to be an accent. Defaults to 0.28, which is
+   * what every quiz screen runs and what the fixtures are locked to —
+   * omit it and nothing about the app's output changes.
+   *
+   * It exists for the brand covers (Malik, 2026-08-12), which want a far
+   * denser field than a quiz card does. Note the number is not the share
+   * you get: cells whose left or upper neighbour is already an accent are
+   * rejected, so 0.28 measures ~21% of the artwork and the rule's own
+   * ceiling is ~52%, not 100%.
+   */
+  rate?: number;
 }
 
 /**
@@ -196,7 +208,7 @@ export interface QuiltPixOptions {
  * stays put when the centre treatment changes.
  */
 export function quiltPixBody(opts: QuiltPixOptions): string {
-  const { w, h, ink, pool, scale, seed, clear } = opts;
+  const { w, h, ink, pool, scale, seed, clear, rate = 0.28 } = opts;
   const rng = mulberry32(seed >>> 0);
   const t = 62 * scale;
   const pad = t * 0.09;
@@ -213,7 +225,7 @@ export function quiltPixBody(opts: QuiltPixOptions): string {
       const left = j > 0 && accent[i][j - 1];
       const up = i > 0 && accent[i - 1][j];
       let fillCol = ink;
-      if (pool.length && !left && !up && rng() < 0.28) {
+      if (pool.length && !left && !up && rng() < rate) {
         fillCol = pool[Math.floor(rng() * pool.length)];
         accent[i][j] = true;
       }
