@@ -17,6 +17,7 @@
     "format": "prettier --check --ignore-path .gitignore .",
     "format:fix": "prettier --write --ignore-path .gitignore .",
     "offline:manifest": "node scripts/generate-offline-manifest.mjs",
+    "brand:assets": "node --no-warnings scripts/brand-assets.mjs",
     "visual:baseline": "node scripts/visual-snapshots.mjs baseline",
     "visual:capture": "node scripts/visual-snapshots.mjs current",
     "visual:compare": "node scripts/compare-visual-snapshots.mjs"
@@ -46,6 +47,11 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
+    "@content-collections/cli": "^0.1.9",
+    "@content-collections/core": "^0.15.2",
+    "@content-collections/markdown": "^0.1.4",
+    "@content-collections/mdx": "^0.2.2",
+    "@content-collections/next": "^0.2.11",
     "@playwright/test": "^1.61.1",
     "@tailwindcss/postcss": "^4.3.2",
     "@tailwindcss/typography": "^0.5.20",
@@ -67,7 +73,8 @@
     "tailwindcss": "^4.3.2",
     "typescript": "^6.0.3",
     "vite": "^8.1.4",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "zod": "^4.4.3"
   },
   "pnpm": {
     "overrides": {

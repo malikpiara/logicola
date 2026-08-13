@@ -28,6 +28,19 @@ export function Footer() {
               </h2>
               <ul className='text-gray-500'>
                 <li className='mb-4'>
+                  <Link href='/blog' className='motion-colors hover:underline'>
+                    Blog
+                  </Link>
+                </li>
+                <li className='mb-4'>
+                  <Link
+                    href='/release-notes'
+                    className='motion-colors hover:underline'
+                  >
+                    Release Notes
+                  </Link>
+                </li>
+                <li className='mb-4'>
                   <Link
                     href='https://harrycola.com/lc/index.htm'
                     className='motion-colors hover:underline'

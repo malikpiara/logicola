@@ -1246,3 +1246,55 @@
     transform: none;
   }
 }
+
+/* == Marketing surfaces (blog + release notes) ==============================
+   Ported from docs/marketing-lab.html, 2026-08-14. Colour arrives via three
+   variables set inline by app/(marketing)/layout.tsx from
+   lib/marketingTheme.ts — the scheme decision is deferred, so nothing below
+   names a colour. Chips are the square "abbreviation box" (pixel-ui.md);
+   the gem/NewBadge stays app-only. No new motion classes are introduced,
+   so the reduced-motion block above needs no additions. */
+@layer components {
+  .mk-chip {
+    display: inline-flex;
+    height: 24px;
+    align-items: center;
+    padding: 0 10px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: color-mix(in srgb, var(--mk-ink) 14%, var(--mk-surface));
+    color: var(--mk-type);
+  }
+  .mk-chip--solid {
+    background: var(--mk-ink);
+    color: var(--mk-surface);
+  }
+  .mk-dash-top {
+    background-image: repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--mk-ink) 30%, transparent) 0 10px,
+      transparent 10px 20px
+    );
+    background-size: 100% 2px;
+    background-repeat: no-repeat;
+  }
+  .mk-ring {
+    position: relative;
+  }
+  .mk-ring::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+    pointer-events: none;
+    z-index: 2;
+    clip-path: var(--mk-ring-clip);
+  }
+  .mk-ring > * {
+    position: relative;
+    z-index: 1;
+  }
+}

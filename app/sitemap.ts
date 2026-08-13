@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { quizCatalog } from '@/lib/quizCatalog';
+import { publishedPosts } from '@/lib/marketingContent';
 import { SITE_URL } from '@/lib/site';
 
 /**
@@ -11,11 +12,23 @@ import { SITE_URL } from '@/lib/site';
  * build time would churn on every deploy and tell crawlers the content
  * changed when it didn't.
  */
-const staticRoutes = ['/', '/syllogistic', '/keyboard'];
+const staticRoutes = [
+  '/',
+  '/syllogistic',
+  '/keyboard',
+  '/blog',
+  '/release-notes',
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...staticRoutes.map((path) => ({ url: `${SITE_URL}${path}` })),
     ...quizCatalog.map(({ quizPath }) => ({ url: `${SITE_URL}${quizPath}` })),
+    // Posts do carry lastModified: unlike the build-stamp churn above,
+    // a post's frontmatter date is real content metadata.
+    ...publishedPosts.map((post) => ({
+      url: `${SITE_URL}${post.url}`,
+      lastModified: post.date,
+    })),
   ];
 }
