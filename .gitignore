@@ -15,6 +15,9 @@
 /out/
 /public/offline-manifest.json
 
+# content-collections (generated; also keeps it out of prettier --ignore-path .gitignore)
+/.content-collections/
+
 # production
 /build
 

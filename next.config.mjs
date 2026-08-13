@@ -1,3 +1,5 @@
+import { withContentCollections } from '@content-collections/next';
+
 /**
  * @type {import('next').NextConfig}
  */
@@ -9,4 +11,8 @@ const nextConfig = {
   reactStrictMode: true,
 };
 
-export default nextConfig;
+// Bundler-agnostic: the plugin runs the content builder (and, in dev, a
+// file watcher) when Next loads this config — it never hooks webpack, so
+// Turbopack is unaffected. Keep it outermost if other wrappers ever land
+// here (it returns a Promise; other plugins may not expect one as input).
+export default withContentCollections(nextConfig);
