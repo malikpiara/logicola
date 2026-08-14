@@ -2,136 +2,292 @@ import Link from 'next/link';
 import { TrackedFooterLink } from './trackedFooterLink';
 import { NewBadge } from './newBadge';
 import { CurrentYear } from './currentYear';
+import { NewsletterForm } from '@/components/marketing/newsletterForm';
+import {
+  markSvg,
+  themeButton,
+  SPRITE_CLIP,
+  RING_BAND,
+} from '@/lib/marketingTheme';
+import { camoBody } from '@/lib/patterns';
+import { gemClip } from '@/lib/pixel';
+
+/**
+ * The site footer — the footer lab's judged state (docs/footer-lab.html,
+ * Malik's favourite structure, 2026-08-14) on the PROVISIONAL Brand ·
+ * cream scheme: subscribe-first banner → brand block (the can + the
+ * mission line) + three link columns → bottom bar with the pixel social
+ * icons in white gem chips → the fine camo band closing the page.
+ *
+ * COLOUR IS NOT DECIDED (Malik, 2026-08-14: "I have a feeling we'll
+ * switch to Set L or Brand original — but let's keep the cream for now").
+ * Every scheme-dependent value below is a named token so the switch is a
+ * constant swap; the derived tiers came from the lab's ensure-contrast
+ * loop and each carries its measured ratio. The green can is a logotype
+ * (2.8:1 on cream — exempt from 1.4.11, judged "legal but faint" in the
+ * nav lab).
+ *
+ * The subscribe control reuses the shipped NewsletterForm — the decided
+ * "answer pill" — posting to /api/newsletter with source 'footer'. The
+ * band is lib/patterns' own camoBody (fine kind), green + magenta on
+ * cream per the footer lab's recipe: deep-register colour only, never a
+ * pale surface on a pale ground (the brand lab's forced inversion).
+ */
+const GROUND = '#EDEDE3';
+const TYPE = '#02302C';
+const GREEN = '#05A24B';
+/** column heads — 5.0:1 on cream */
+const HEAD = '#4A6A64';
+/** links + mission — 6.9:1 on cream */
+const LINK = '#315651';
+/** copyright / fine print — 5.1:1 on cream */
+const FINE = '#486963';
+/** hairline: cream mixed 14% toward the type ink */
+const HAIR = '#CCD3C9';
+
+const GEM = gemClip();
 
 const GET_THE_BOOK_URL =
   'https://www.routledge.com/Introduction-to-Logic/Gensler/p/book/9781138910591';
 const REDDIT_URL = 'https://www.reddit.com/r/Logicola/';
 // Used by both the "Follow us" list and the icon row, like REDDIT_URL above.
 const X_URL = 'https://x.com/LogicolaThree';
+const GITHUB_URL = 'https://github.com/malikpiara/logicola';
+const LINKEDIN_URL = 'https://www.linkedin.com/company/logicola';
+
+/** The band: 1600×56 once, `slice`-cropped at any viewport so the camo
+ *  features keep their proportion instead of squeezing (the LinkedIn
+ *  cover's lesson). Fine kind + seed 11 = the footer lab's recipe. */
+function bandSvg() {
+  const body = camoBody('camo', {
+    w: 1600,
+    h: 56,
+    ink: GREEN,
+    pool: ['#BD00AD'],
+    scale: 0.35,
+    seed: 11,
+    clear: null,
+    rate: 0.28,
+  });
+  return (
+    `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="56" viewBox="0 0 1600 56" preserveAspectRatio="xMidYMid slice" style="display:block;width:100%;height:56px">` +
+    `<rect width="1600" height="56" fill="${GROUND}"/>` +
+    body +
+    '</svg>'
+  );
+}
+
+function SocialChip({
+  href,
+  label,
+  children,
+}: {
+  href: string;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-label={label}
+      className='motion-colors -m-[7px] inline-flex h-11 w-11 items-center justify-center'
+      style={{ color: TYPE }}
+    >
+      {/* 30px white gem chip inside a 44px tap box: the figure move that
+          keeps the icons off the band's colour (footer lab, Malik's
+          catch), and the HIG tap floor. */}
+      <span
+        className='inline-flex h-[30px] w-[30px] items-center justify-center bg-white'
+        style={{ clipPath: GEM }}
+      >
+        {children}
+      </span>
+    </Link>
+  );
+}
 
 export function Footer() {
   return (
-    <footer className='p-4 mt-4 bg-white sm:p-6'>
-      <div className='mx-auto max-w-screen-xl'>
-        <div className='md:flex md:justify-between'>
-          <div className='mb-6 md:mb-0'>
-            <Link href='https://logicola.org' className='flex items-center'>
-              <span className='self-center text-2xl font-bold whitespace-nowrap font-stretch'>
-                LogiCola 3
-              </span>
+    <footer
+      className='mt-4'
+      style={{ background: GROUND, '--mk-type': TYPE } as React.CSSProperties}
+    >
+      {/* subscribe-first: the newsletter opens the footer */}
+      <div className='mx-auto max-w-screen-xl px-4 pb-2 pt-12 sm:px-6'>
+        <h2
+          className='font-stretch text-2xl font-extrabold uppercase leading-tight'
+          style={{ color: TYPE }}
+        >
+          Follow the releases
+        </h2>
+        <p
+          className='mt-1.5 max-w-[60ch] text-[15px] leading-normal'
+          style={{ color: LINK }}
+        >
+          New exercise sets, new features, the occasional essay — straight to
+          your inbox when they ship.
+        </p>
+        <NewsletterForm
+          source='footer'
+          theme={{
+            ink: TYPE,
+            buttonBg: themeButton().bg,
+            buttonFg: themeButton().fg,
+            spriteClip: SPRITE_CLIP,
+            ringClip: RING_BAND,
+          }}
+        />
+      </div>
+
+      <div className='mx-auto max-w-screen-xl px-4 pb-10 pt-10 sm:px-6'>
+        <div className='grid grid-cols-2 gap-x-5 gap-y-9 md:grid-cols-[1.3fr_1fr_1fr_1fr] md:gap-10'>
+          <div className='col-span-2 md:col-span-1'>
+            <Link href='https://logicola.org' className='inline-flex'>
+              <span
+                aria-label='LogiCola'
+                role='img'
+                dangerouslySetInnerHTML={{
+                  __html: markSvg(44, GREEN, GROUND),
+                }}
+              />
             </Link>
+            <p
+              className='mt-3 max-w-[36ch] text-[14.5px] leading-normal'
+              style={{ color: LINK }}
+            >
+              Free logic practice in your browser — a remake of Harry Gensler’s
+              LogiCola, kept alive to honour his legacy.
+            </p>
           </div>
-          <div className='grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3'>
-            <div>
-              <h2 className='mb-6 font-stretch text-sm font-semibold text-gray-900 uppercase'>
-                Resources
-              </h2>
-              <ul className='text-gray-500'>
-                <li className='mb-4'>
-                  <Link href='/blog' className='motion-colors hover:underline'>
-                    Blog
-                  </Link>
-                </li>
-                <li className='mb-4'>
-                  <Link
-                    href='/release-notes'
-                    className='motion-colors hover:underline'
-                  >
-                    Release Notes
-                  </Link>
-                </li>
-                <li className='mb-4'>
-                  <Link
-                    href='https://harrycola.com/lc/index.htm'
-                    className='motion-colors hover:underline'
-                  >
-                    Classic Logicola
-                  </Link>
-                </li>
-                <li className='mb-4'>
-                  <TrackedFooterLink
-                    href={GET_THE_BOOK_URL}
-                    eventName='book_cta_clicked'
-                    properties={{
-                      link_text: 'Get the Book',
-                      link_url: GET_THE_BOOK_URL,
-                      link_location: 'footer_resources',
-                      destination_domain: 'routledge.com',
-                      resource_type: 'book',
-                    }}
-                    className='motion-colors hover:underline'
-                  >
-                    Get the Book
-                  </TrackedFooterLink>
-                </li>
-                <li>
-                  <Link
-                    href='/keyboard'
-                    className='motion-colors hover:underline flex gap-2'
-                  >
-                    Keyboard <NewBadge />
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h2 className='mb-6 font-stretch text-sm font-semibold text-gray-900 uppercase'>
-                Follow us
-              </h2>
-              <ul className='text-gray-500'>
-                <li className='mb-4'>
-                  <Link
-                    href='https://github.com/malikpiara/logicola'
-                    className='motion-colors hover:underline'
-                  >
-                    GitHub
-                  </Link>
-                </li>
-                <li className='mb-4'>
-                  <Link href={X_URL} className='motion-colors hover:underline'>
-                    X
-                  </Link>
-                </li>
-                <li className='mb-4'>
-                  <Link
-                    href={REDDIT_URL}
-                    className='motion-colors hover:underline'
-                  >
-                    Reddit
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href='https://www.linkedin.com/company/logicola'
-                    className='motion-colors hover:underline'
-                  >
-                    LinkedIn
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h2 className='mb-6 text-sm font-semibold text-gray-900 uppercase font-stretch'>
-                Legal
-              </h2>
-              <ul className='text-gray-500'>
-                <li className='mb-4'>
-                  <Link href='#' className='motion-colors hover:underline'>
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link href='#' className='motion-colors hover:underline'>
-                    Terms &amp; Conditions
-                  </Link>
-                </li>
-              </ul>
-            </div>
+          <div>
+            <h2
+              className='mb-5 font-mono text-[11px] font-bold uppercase tracking-[0.08em]'
+              style={{ color: HEAD }}
+            >
+              Resources
+            </h2>
+            <ul
+              className='space-y-3.5 text-[14.5px] font-medium'
+              style={{ color: TYPE }}
+            >
+              <li>
+                <Link href='/blog' className='motion-colors hover:underline'>
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href='/release-notes'
+                  className='motion-colors hover:underline'
+                >
+                  Release Notes
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href='https://harrycola.com/lc/index.htm'
+                  className='motion-colors hover:underline'
+                >
+                  Classic Logicola
+                </Link>
+              </li>
+              <li>
+                <TrackedFooterLink
+                  href={GET_THE_BOOK_URL}
+                  eventName='book_cta_clicked'
+                  properties={{
+                    link_text: 'Get the Book',
+                    link_url: GET_THE_BOOK_URL,
+                    link_location: 'footer_resources',
+                    destination_domain: 'routledge.com',
+                    resource_type: 'book',
+                  }}
+                  className='motion-colors hover:underline'
+                >
+                  Get the Book
+                </TrackedFooterLink>
+              </li>
+              <li>
+                <Link
+                  href='/keyboard'
+                  className='motion-colors flex items-center gap-2 hover:underline'
+                >
+                  Keyboard <NewBadge />
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2
+              className='mb-5 font-mono text-[11px] font-bold uppercase tracking-[0.08em]'
+              style={{ color: HEAD }}
+            >
+              Follow us
+            </h2>
+            <ul
+              className='space-y-3.5 text-[14.5px] font-medium'
+              style={{ color: TYPE }}
+            >
+              <li>
+                <Link
+                  href={GITHUB_URL}
+                  className='motion-colors hover:underline'
+                >
+                  GitHub
+                </Link>
+              </li>
+              <li>
+                <Link href={X_URL} className='motion-colors hover:underline'>
+                  X
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={REDDIT_URL}
+                  className='motion-colors hover:underline'
+                >
+                  Reddit
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={LINKEDIN_URL}
+                  className='motion-colors hover:underline'
+                >
+                  LinkedIn
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2
+              className='mb-5 font-mono text-[11px] font-bold uppercase tracking-[0.08em]'
+              style={{ color: HEAD }}
+            >
+              Legal
+            </h2>
+            <ul
+              className='space-y-3.5 text-[14.5px] font-medium'
+              style={{ color: TYPE }}
+            >
+              <li>
+                <Link href='#' className='motion-colors hover:underline'>
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href='#' className='motion-colors hover:underline'>
+                  Terms &amp; Conditions
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
-        <hr className='my-6 border-gray-200 sm:mx-auto lg:my-8' />
-        <div className='sm:flex sm:items-center sm:justify-between'>
-          <span className='text-sm text-gray-500 sm:text-center '>
+      </div>
+
+      <div style={{ borderTop: `1px solid ${HAIR}` }}>
+        <div className='mx-auto flex max-w-screen-xl flex-wrap items-center gap-x-5 gap-y-3 px-4 pb-8 pt-4 sm:px-6'>
+          <span className='text-sm' style={{ color: FINE }}>
             © <CurrentYear buildYear={new Date().getFullYear()} />{' '}
             <Link
               href='https://logicola.com'
@@ -144,14 +300,10 @@ export function Footer() {
           {/* Pixel icons from pixeliconlibrary.com (hackernoon/pixel-icon-
               library, icons/SVG/brands) — the smooth vendor glyphs traded
               for the brand's own bitmap grammar. See docs/pixel-ui.md. */}
-          <div className='flex mt-4 space-x-6 sm:justify-center sm:mt-0'>
-            <Link
-              href={REDDIT_URL}
-              className='motion-colors text-gray-500 hover:text-gray-900'
-              aria-label='Logicola on Reddit'
-            >
+          <div className='ml-auto flex gap-3'>
+            <SocialChip href={REDDIT_URL} label='Logicola on Reddit'>
               <svg
-                className='w-5 h-5'
+                className='h-[18px] w-[18px]'
                 fill='currentColor'
                 viewBox='0 0 24 24'
                 aria-hidden='true'
@@ -163,52 +315,42 @@ export function Footer() {
                 <path d='m22,9v-2h-1v-2h-1v-1h-1v-1h-2v-1h-2v-1h-6v1h-2v1h-2v1h-1v1h-1v2h-1v2h-1v6h1v2h1v2h1v1h1v1h2v1h2v1h6v-1h2v-1h2v-1h1v-1h1v-2h1v-2h1v-6h-1Zm-3,5h-1v1h-1v2h-1v1h-2v1h-4v-1h-2v-1h-1v-3h-1v-1h-1v-2h1v-1h2v1h1v-1h3v-5h2v1h3v2h-2v-1h-2v3h2v1h1v-1h2v1h1v3Z' />
                 <rect x='10' y='16' width='4' height='1' />
               </svg>
-            </Link>
-            <Link
-              href={X_URL}
-              className='motion-colors text-gray-500 hover:text-gray-900'
-              aria-label='Logicola on X'
-            >
+            </SocialChip>
+            <SocialChip href={X_URL} label='Logicola on X'>
               <svg
-                className='w-5 h-5'
+                className='h-[18px] w-[18px]'
                 fill='currentColor'
                 viewBox='0 0 24 24'
                 aria-hidden='true'
               >
                 <path d='m15.5,10v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h-3v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1h-1v-2h-1v-1h-1v-1H1.5v1h1v1h1v1h1v2h1v1h1v2h1v1h1v2h1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h3v-1h1v-1h1v-1h1v-1h1v-1h1v-1h2v1h1v1h1v2h1v1h1v1h7v-1h-1v-1h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h1Zm0,4v1h1v2h1v1h1v2h-3v-2h-1v-1h-1v-1h-1v-2h-1v-1h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h-1v-2h3v1h1v2h1v1h1v2h1v1h1v1h1v2h1Z' />
               </svg>
-            </Link>
-            <a
-              href='https://github.com/malikpiara/logicola'
-              className='motion-colors text-gray-500 hover:text-gray-900'
-              aria-label='Logicola on GitHub'
-            >
+            </SocialChip>
+            <SocialChip href={GITHUB_URL} label='Logicola on GitHub'>
               <svg
-                className='w-5 h-5'
+                className='h-[18px] w-[18px]'
                 fill='currentColor'
                 viewBox='0 0 24 24'
                 aria-hidden='true'
               >
                 <polygon points='23 9 23 15 22 15 22 17 21 17 21 19 20 19 20 20 19 20 19 21 18 21 18 22 16 22 16 23 15 23 15 18 14 18 14 17 15 17 15 16 17 16 17 15 18 15 18 14 19 14 19 9 18 9 18 6 16 6 16 7 15 7 15 8 14 8 14 7 10 7 10 8 9 8 9 7 8 7 8 6 6 6 6 9 5 9 5 14 6 14 6 15 7 15 7 16 9 16 9 18 7 18 7 17 6 17 6 16 4 16 4 17 5 17 5 19 6 19 6 20 9 20 9 23 8 23 8 22 6 22 6 21 5 21 5 20 4 20 4 19 3 19 3 17 2 17 2 15 1 15 1 9 2 9 2 7 3 7 3 5 4 5 4 4 5 4 5 3 7 3 7 2 9 2 9 1 15 1 15 2 17 2 17 3 19 3 19 4 20 4 20 5 21 5 21 7 22 7 22 9 23 9' />
               </svg>
-            </a>
-            <Link
-              href='https://www.linkedin.com/company/logicola'
-              className='motion-colors text-gray-500 hover:text-gray-900'
-              aria-label='Logicola on LinkedIn'
-            >
+            </SocialChip>
+            <SocialChip href={LINKEDIN_URL} label='Logicola on LinkedIn'>
               <svg
-                className='w-5 h-5'
+                className='h-[18px] w-[18px]'
                 fill='currentColor'
                 viewBox='0 0 24 24'
                 aria-hidden='true'
               >
                 <path d='m22,2v-1H2v1h-1v20h1v1h20v-1h1V2h-1Zm-9,10v8h-3v-11h3v1h1v-1h4v1h1v10h-3v-8h-3Zm-9-4v-3h3v3h-3Zm3,1v11h-3v-11h3Z' />
               </svg>
-            </Link>
+            </SocialChip>
           </div>
         </div>
       </div>
+
+      <div aria-hidden='true' dangerouslySetInnerHTML={{ __html: bandSvg() }} />
     </footer>
   );
 }
