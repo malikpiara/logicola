@@ -1,0 +1,4045 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Navigation lab — exercises menu (PROPOSED 2026-08-14)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Roboto+Mono:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #111;
+        --ink-90: #111827;
+        --gray-700: #374151;
+        --gray-600: #4b5563;
+        --gray-500: #6b7280;
+        --gray-200: #e5e7eb;
+        --gray-100: #f3f4f6;
+        --gray-50: #f9fafb;
+        --green: #17a34a;
+        --magenta: #bd00ad;
+        --hair: #ececec;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html {
+        font-feature-settings: 'kern' 1;
+        text-rendering: optimizeLegibility;
+      }
+      body {
+        background: #d9d9d2;
+        font-family: 'Roboto Flex', system-ui, sans-serif;
+        color: var(--ink);
+        padding: 48px 24px 96px;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        background: none;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+        text-align: left;
+      }
+      :focus-visible {
+        outline: 2px solid var(--green);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+
+      .mono {
+        font-family: 'Roboto Mono', monospace;
+      }
+      .display {
+        font-stretch: 151%;
+        font-weight: 800;
+        letter-spacing: 0.01em;
+      }
+
+      .lab-head {
+        max-width: 1200px;
+        margin: 0 auto 12px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        line-height: 1.7;
+        color: #555;
+      }
+      .lab-head strong {
+        color: #111;
+      }
+      .screen-label {
+        max-width: 1200px;
+        margin: 64px auto 10px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #555;
+      }
+      .note {
+        max-width: 1200px;
+        margin: 10px auto 0;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        line-height: 1.7;
+        color: #555;
+      }
+      .note strong {
+        color: #111;
+      }
+      .frame {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: #fff;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+        overflow: hidden;
+      }
+
+      /* ————— lab chrome: order toggle ————— */
+      .lab-controls {
+        max-width: 1200px;
+        margin: 0 auto 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        color: #555;
+      }
+      .lab-controls .seg {
+        display: inline-flex;
+        border: 1px solid #b9b9b0;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .lab-controls .seg button {
+        padding: 6px 12px;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        color: #555;
+        background: transparent;
+      }
+      .lab-controls .seg button[aria-pressed='true'] {
+        background: #111;
+        color: #fff;
+      }
+
+      /* ————— shared navbar mock ————— */
+      .navmock {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        padding: 16px 24px;
+      }
+      .navmock .wordmark {
+        font-size: 24px;
+        font-weight: 800;
+        font-stretch: 151%;
+        color: var(--ink-90);
+        white-space: nowrap;
+      }
+      .navmock .links {
+        justify-self: end;
+        display: flex;
+        gap: 4px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--gray-500);
+      }
+      .navmock .links a {
+        padding: 8px 12px;
+        border-radius: 6px;
+      }
+      .navmock .links a:hover {
+        background: var(--gray-200);
+        color: var(--green);
+      }
+      .trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--green);
+        padding: 8px 12px;
+        border-radius: 6px;
+      }
+      .trigger:hover {
+        background: var(--gray-200);
+      }
+      .trigger .caret {
+        display: inline-flex;
+        transition: transform 160ms ease-out;
+      }
+      .trigger .caret svg {
+        display: block;
+      }
+      .trigger[aria-expanded='true'] .caret {
+        transform: rotate(180deg);
+      }
+
+      .new-gem {
+        /* slimmed 24 → 20px (Malik, 2026-08-14 — "a little bit smaller
+           everywhere"); port note: newBadge.tsx ships h-6/24px and
+           pixel-ui.md's clip note assumes it — update both when porting */
+        display: inline-flex;
+        height: 20px;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        background: var(--magenta);
+        padding: 0 10px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #fff;
+      }
+      .new-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background: var(--magenta);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .set-tag {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: var(--gray-500);
+        white-space: nowrap;
+      }
+
+      /* ————— variant A: master–detail ————— */
+      .md-panel {
+        border-top: 1px solid var(--hair);
+        display: grid;
+        grid-template-columns: 300px 1fr;
+      }
+      .md-rail {
+        padding: 16px;
+        border-right: 1px solid var(--hair);
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .md-topic {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--gray-700);
+      }
+      .md-topic:hover {
+        background: var(--gray-100);
+        color: var(--ink-90);
+      }
+      .md-topic[aria-current='true'] {
+        background: var(--gray-200);
+        color: var(--ink-90);
+      }
+      .md-topic .grow {
+        flex: 1;
+      }
+      .md-topic .chev {
+        color: var(--gray-500);
+        font-size: 13px;
+        opacity: 0;
+        transition: opacity 120ms ease-out;
+      }
+      .md-topic:hover .chev,
+      .md-topic[aria-current='true'] .chev {
+        opacity: 1;
+      }
+      .md-detail {
+        padding: 32px;
+        min-height: 440px;
+      }
+      .md-meta {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--gray-500);
+        margin-bottom: 6px;
+      }
+      .md-title {
+        font-size: 24px;
+        line-height: 1.2;
+        margin-bottom: 4px;
+        color: var(--ink-90);
+      }
+      .md-blurb {
+        font-size: 15px;
+        color: var(--gray-600);
+        max-width: 60ch;
+        line-height: 1.5;
+        margin-bottom: 24px;
+      }
+      .md-drills {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        max-width: 640px;
+      }
+      .md-drill {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 8px;
+      }
+      .md-drill:hover {
+        background: var(--gray-100);
+      }
+      .md-drill .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .md-drill .name {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--ink-90);
+      }
+      .md-drill .row .set-tag {
+        margin-left: auto;
+      }
+      .md-drill .desc {
+        margin-top: 3px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--gray-600);
+        max-width: 58ch;
+      }
+      .md-drill.pulse {
+        animation: pulse 380ms ease-out;
+      }
+      @keyframes pulse {
+        0% {
+          background: var(--gray-200);
+        }
+        100% {
+          background: transparent;
+        }
+      }
+
+      /* ————— variant B: grouped mega-menu ————— */
+      .mega-panel {
+        border-top: 1px solid var(--hair);
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px 40px;
+        padding: 26px 32px 30px;
+      }
+      .mega-group {
+        padding: 4px 0 12px;
+      }
+      .mega-head {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--gray-500);
+        padding: 8px 10px 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .mega-group ul {
+        list-style: none;
+        padding: 0;
+      }
+      .mega-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 10px;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--ink-90);
+      }
+      .mega-item:hover {
+        background: var(--gray-100);
+      }
+      .mega-item .set-tag {
+        margin-left: auto;
+      }
+
+      /* ————— mobile shells ————— */
+      .phones {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        align-items: flex-start;
+      }
+      .phone-slot {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .phone-caption {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #555;
+      }
+      .phone {
+        position: relative;
+        width: 390px;
+        height: 720px;
+        background: #fff;
+        border: 1px solid #b5b5ac;
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+        display: flex;
+        flex-direction: column;
+      }
+      .m-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        flex-shrink: 0;
+      }
+      .m-nav .wordmark {
+        font-size: 22px;
+        font-weight: 800;
+        font-stretch: 151%;
+        color: var(--ink-90);
+      }
+      .m-burger {
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        color: var(--gray-500);
+        font-size: 17px;
+      }
+      .m-burger:hover {
+        background: var(--gray-200);
+      }
+      .m-sheet {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        border-top: 1px solid var(--hair);
+        background: var(--gray-50);
+        display: flex;
+        flex-direction: column;
+      }
+      .m-footer {
+        margin-top: auto;
+        display: flex;
+        gap: 22px;
+        padding: 18px 20px 26px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--gray-500);
+        border-top: 1px solid var(--hair);
+      }
+
+      /* mobile A: drill-in */
+      .di-viewport {
+        overflow: hidden;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .di-track {
+        display: flex;
+        width: 200%;
+        flex: 1;
+        transition: transform 220ms ease-out;
+      }
+      .di-pane {
+        width: 50%;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+      }
+      .di-track.pushed {
+        transform: translateX(-50%);
+      }
+      .m-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--hair);
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--ink-90);
+        background: #fff;
+      }
+      .m-row:active,
+      .m-row:hover {
+        background: var(--gray-100);
+      }
+      .m-row .grow {
+        flex: 1;
+      }
+      .m-row .chev {
+        color: var(--gray-500);
+        font-size: 14px;
+      }
+      .di-back {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gray-500);
+        background: var(--gray-50);
+        border-bottom: 1px solid var(--hair);
+        padding: 13px 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+      }
+      .di-head {
+        padding: 20px 20px 14px;
+        background: #fff;
+        border-bottom: 1px solid var(--hair);
+      }
+      .di-head .md-meta {
+        margin-bottom: 4px;
+      }
+      .di-head .t {
+        font-size: 20px;
+        color: var(--ink-90);
+      }
+      .di-head .b {
+        margin-top: 4px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--gray-600);
+      }
+      .m-drill {
+        display: block;
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--hair);
+        background: #fff;
+      }
+      .m-drill:hover,
+      .m-drill:active {
+        background: var(--gray-100);
+      }
+      .m-drill .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .m-drill .name {
+        font-size: 15.5px;
+        font-weight: 600;
+        color: var(--ink-90);
+      }
+      .m-drill .row .set-tag {
+        margin-left: auto;
+      }
+      .m-drill .desc {
+        margin-top: 3px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--gray-600);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      /* mobile B: accordion */
+      .ac-topic .chev {
+        transition: transform 160ms ease-out;
+      }
+      .ac-topic[aria-expanded='true'] .chev {
+        transform: rotate(90deg);
+      }
+      .ac-children {
+        display: none;
+      }
+      .ac-children.open {
+        display: block;
+      }
+      .ac-children .m-drill {
+        padding-left: 32px;
+        background: var(--gray-50);
+      }
+      .ac-children .m-drill:hover,
+      .ac-children .m-drill:active {
+        background: var(--gray-100);
+      }
+
+      /* ————— IA table ————— */
+      .ia-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      .ia-table th {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--gray-500);
+        text-align: left;
+        padding: 12px 16px;
+        border-bottom: 1px solid #ccc;
+      }
+      .ia-table td {
+        padding: 12px 16px;
+        vertical-align: top;
+        border-bottom: 1px solid var(--hair);
+      }
+      .ia-table tr:last-child td {
+        border-bottom: 0;
+      }
+      .ia-table .t {
+        font-weight: 600;
+        color: var(--ink-90);
+        white-space: nowrap;
+      }
+      .ia-table .mono {
+        font-size: 12.5px;
+        color: var(--gray-700);
+        white-space: nowrap;
+      }
+      .ia-wrap {
+        padding: 8px 16px;
+        overflow-x: auto;
+      }
+
+      /* ————— decisions ————— */
+      .decisions {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        gap: 16px;
+      }
+      .dcard {
+        background: #fff;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+        padding: 18px 20px;
+      }
+      .dcard .id {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--gray-500);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+      }
+      .dcard .rec {
+        background: var(--green);
+        color: #fff;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+      }
+      .dcard .judge {
+        background: var(--magenta);
+        color: #fff;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+      }
+      .dcard .done {
+        background: var(--ink-90);
+        color: #fff;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+      }
+      .dcard h3 {
+        font-size: 15.5px;
+        margin-bottom: 6px;
+        color: var(--ink-90);
+      }
+      .dcard p {
+        font-size: 13.5px;
+        line-height: 1.55;
+        color: var(--gray-700);
+      }
+      .dcard p + p {
+        margin-top: 6px;
+      }
+
+      /* ————— a11y / port boxes ————— */
+      .infobox {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: #fff;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+        padding: 22px 26px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--gray-700);
+      }
+      .infobox h3 {
+        font-size: 15px;
+        color: var(--ink-90);
+        margin-bottom: 8px;
+      }
+      .infobox ul {
+        padding-left: 20px;
+      }
+      .infobox li + li {
+        margin-top: 4px;
+      }
+      .infobox .keys {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12.5px;
+        background: var(--gray-100);
+        padding: 1px 7px;
+        border-radius: 4px;
+        color: var(--ink-90);
+        white-space: nowrap;
+      }
+      .infobox + .infobox {
+        margin-top: 16px;
+      }
+
+      /* ————— mobile C: bottom sheet ————— */
+      .bs-page {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .bs-skel {
+        margin: 14px 20px 0;
+        height: 12px;
+        border-radius: 6px;
+        background: var(--gray-200);
+      }
+      .bs-skel.hero {
+        height: 88px;
+        border-radius: 12px;
+        background: var(--gray-100);
+      }
+      .bs-scrim {
+        position: absolute;
+        inset: 0;
+        background: rgba(17, 24, 39, 0.42);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 200ms ease-out;
+      }
+      .bs-open .bs-scrim {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .bs-sheet {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 84%;
+        background: var(--gray-50);
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.18);
+        transform: translateY(106%);
+        transition: transform 260ms ease-out;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .bs-open .bs-sheet {
+        transform: none;
+      }
+      .bs-grab {
+        display: block;
+        width: 100%;
+        padding: 10px 0 6px;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+      .bs-grab::before {
+        content: '';
+        display: block;
+        width: 36px;
+        height: 4px;
+        border-radius: 2px;
+        background: var(--grab, #d1d5db);
+        margin: 0 auto;
+      }
+      .bs-body {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ————— § 4 brand pass ————— */
+      .b-sublabel {
+        max-width: 1200px;
+        margin: 28px auto 10px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #555;
+      }
+      .b-frame .navmock {
+        background: var(--b-ground);
+      }
+      .b-frame .b-mark svg {
+        display: block;
+        margin: 0 auto;
+      }
+      .b-frame .trigger {
+        color: var(--b-type);
+        border-radius: 0;
+        box-shadow: 0 2px 0 var(--b-ink);
+      }
+      .b-frame .trigger:hover {
+        background: var(--b-navhover);
+      }
+      .b-frame .navmock .links a {
+        color: var(--b-type);
+        opacity: 0.75;
+      }
+      .b-frame .navmock .links a:hover {
+        background: var(--b-navhover);
+        color: var(--b-type);
+        opacity: 1;
+      }
+      .b-frame .navmock .links .cta-gem {
+        font-weight: 700;
+        padding: 10px 22px;
+        border-radius: 0;
+        background: var(--b-type);
+        color: var(--b-ground);
+        opacity: 1;
+      }
+      .b-frame .navmock .links .cta-gem:hover {
+        background: var(--b-type);
+        color: var(--b-ground);
+      }
+      .b-frame .md-panel {
+        background: var(--b-panel);
+        border-top-color: var(--b-hair);
+      }
+      .b-frame .md-rail {
+        border-right-color: var(--b-hair);
+      }
+      .b-frame .md-topic,
+      .b-frame .md-drill {
+        /* the gem silhouette on interaction fills (Malik, 2026-08-14):
+           clip is always on; it only shows when a fill paints */
+        border-radius: 0;
+      }
+      .b-frame .md-topic {
+        color: var(--b-muted);
+      }
+      .b-frame .md-topic:hover {
+        background: var(--b-hover);
+        color: var(--b-type);
+      }
+      .b-frame .md-topic[aria-current='true'] {
+        background: var(--b-active);
+        color: var(--b-type);
+      }
+      .b-frame .md-topic .chev {
+        color: var(--b-tag);
+      }
+      .b-frame .md-meta {
+        color: var(--b-meta);
+      }
+      .b-frame .md-title,
+      .b-frame .md-drill .name {
+        color: var(--b-type);
+      }
+      .b-frame .md-blurb,
+      .b-frame .md-drill .desc {
+        color: var(--b-body);
+      }
+      .b-frame .set-tag {
+        color: var(--b-tag);
+      }
+      .b-frame .md-drill:hover {
+        background: var(--b-hover);
+      }
+      .b-frame :focus-visible {
+        outline-color: var(--b-ink);
+      }
+      .b-page {
+        background: #fff;
+        padding: 12px 24px 36px;
+      }
+      .b-cardwrap {
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+      /* the drop-shadow lives on the WRAPPER: put it on the clipped card
+         itself and the clip cuts the shadow off with the corners — the
+         same sibling-layer rule as ringing a clipped shape (pixel-ui.md).
+         Fixed 2026-08-14 after Malik caught the invisible card. */
+      .b-cardwrap.b-pixelwrap {
+        /* lightened 2026-08-14 with the pixel default — the silhouette
+           carries the separation; the shadow just settles the card */
+        filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.1))
+          drop-shadow(0 8px 18px rgba(0, 0, 0, 0.1));
+      }
+      .b-card {
+        border: 1px solid var(--b-hair);
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
+      .b-card.b-pixel {
+        border-radius: 0;
+        border: 0;
+        box-shadow: none;
+      }
+      .b-card .md-panel {
+        border-top: 0;
+      }
+      .b-faq {
+        max-width: 1120px;
+        margin: 32px auto 0;
+      }
+      .b-faq .t {
+        font-stretch: 151%;
+        font-weight: 800;
+        font-size: 22px;
+        color: var(--ink-90);
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .b-faq .row {
+        display: flex;
+        justify-content: space-between;
+        padding: 14px 4px;
+        border-bottom: 1px solid var(--hair);
+        font-size: 14.5px;
+        color: var(--gray-700);
+      }
+      .b-faq .row span:last-child {
+        color: var(--gray-500);
+      }
+
+      .bs-half .bs-sheet {
+        height: 58%;
+      }
+      .bs-tilegrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 12px;
+      }
+      .bs-tile {
+        background: #fff;
+        border: 1px solid var(--hair);
+        border-radius: 12px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--ink-90);
+        min-height: 84px;
+        cursor: pointer;
+      }
+      .bs-tile:hover {
+        background: var(--gray-100);
+      }
+      .bs-tile .set-tag {
+        margin-top: auto;
+      }
+      .bs-tile .trow {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .bs-tile .icon {
+        display: block;
+      }
+      .bs-chip {
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .bs-tile.branded {
+        position: relative;
+        overflow: hidden;
+        border: 0;
+        min-height: 104px;
+      }
+      .bs-head {
+        padding: 2px 20px 12px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--bs-head-ink, #02302c);
+        flex-shrink: 0;
+      }
+      .bs-quilt {
+        display: flex;
+        height: 12px;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .bs-quilt span {
+        width: 12px;
+        height: 12px;
+        flex-shrink: 0;
+      }
+      .m-footer .gem-cta {
+        margin-left: auto;
+        background: #02302c;
+        color: #edede3;
+        padding: 8px 16px;
+        font-size: 12px;
+        letter-spacing: 0.04em;
+      }
+      .bs-chiprow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+      }
+
+      /* ————— § 4p pattern applications ————— */
+      .p-frame .navmock {
+        position: relative;
+      }
+      .p-frame .navmock > * {
+        position: relative;
+        z-index: 1;
+      }
+      .p-frame .navmock svg.field {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .p-frame .md-detail {
+        position: relative;
+      }
+      .p-frame .md-detail svg.voidfield {
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 0;
+      }
+      .p-frame .md-detail > * {
+        position: relative;
+        z-index: 1;
+      }
+      .p-band {
+        display: block;
+      }
+      .chip-tag {
+        display: inline-flex;
+        align-items: center;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 3px 9px;
+        border: 1px solid currentColor;
+        white-space: nowrap;
+      }
+
+      .b-audit {
+        max-width: 1200px;
+        margin: 6px auto 0;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        line-height: 1.7;
+        color: #555;
+        letter-spacing: 0.02em;
+      }
+      .b-audit .fail {
+        color: #b00020;
+        font-weight: 700;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .di-track,
+        .bs-sheet,
+        .bs-scrim,
+        .trigger .caret,
+        .ac-topic .chev,
+        .md-topic .chev {
+          transition: none;
+        }
+        .md-drill.pulse {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="lab-head">
+      <strong>Navigation lab — exercises menu.</strong> PROPOSED 2026-08-14 ·
+      branch <strong>color-system-exploration</strong><br />
+      The judgement bench for the two-level exercises menu: topic on the left,
+      drills on the right (the Khan Academy master–detail pattern), against an
+      honest flat alternative, on desktop and mobile.
+      <strong>UX pass only</strong>
+      — everything wears today&rsquo;s neutral navbar clothes on purpose; the
+      brand pass restyles the winner after sign-off. Data is the real catalog:
+      13 drills, 7 sets, grouped into 6 topics. Drill links are inert here —
+      clicking flashes the row instead of navigating.
+      <strong>Decided 2026-08-14:</strong> master–detail on desktop (B
+      rejected), set-letter order, chapter meta hidden — D3 · D5 · D8 · D10.
+      Mobile direction still open. Later the same day: the bottom sheet arrived
+      at Malik&rsquo;s ask and became the likely mobile winner — §&nbsp;3c fans
+      it into four variants. The brand pass opened in §&nbsp;4: three schemes
+      (Brand · mint killed on sight, here and in the marketing lab) × a Shell
+      toggle (contained card as shipped vs full-bleed) × a Corners toggle
+      (rounded vs sprite silhouette; its invisible-card bug — shadow clipped off
+      with the corners — fixed by moving the drop-shadow to a wrapper). Evening:
+      mobile narrowed to C3 · C4 and §&nbsp;3d brands them — set colours, pixel
+      logic-symbol icons. Round two the same evening: scatter retired for gem
+      tiles, whole-sheet world painting, three chrome-branded variants
+      (3d-f/g/h), and gem-silhouette hover fills in §&nbsp;4. Night pass:
+      3d-f&rsquo;s three-ground dissonance fixed (level 2 stays in the cream
+      world), and §&nbsp;4p ports the labs&rsquo; pattern machinery — field bar
+      with clearings, quilt in the void, band edge, outline chips. Morning
+      after: 4p-1 · 2 · 4 and 3d-h killed (the labs-insight variants were for
+      mobile; the band survives on desktop), pixel silhouette made the §&nbsp;4
+      default with lightened shadows, the NEW gem slimmed to 20&nbsp;px
+      everywhere, and D13 narrowed to <strong>3d-d · 3d-f</strong> on
+      information hierarchy. D7 · D11 · D13 open; D12 corners and D14 decided.
+    </div>
+
+    <!-- ———————————————————— IA ———————————————————— -->
+    <div class="screen-label">0 · The information architecture</div>
+    <div class="frame">
+      <div class="ia-wrap">
+        <table class="ia-table">
+          <thead>
+            <tr>
+              <th>Topic (left rail)</th>
+              <th>Sets</th>
+              <th>Drills (right panel)</th>
+              <th>Route stem</th>
+            </tr>
+          </thead>
+          <tbody id="ia-body"></tbody>
+        </table>
+      </div>
+    </div>
+    <p class="note">
+      The grouping isn&rsquo;t invented — it&rsquo;s already the first URL
+      segment of every quiz route and the chapter structure of Gensler&rsquo;s
+      <em>Introduction to Logic</em>. The nav finally shows the hierarchy the
+      routes always had. &ldquo;Informal Logic&rdquo; merges Sets
+      Q&nbsp;+&nbsp;R (both live under <span class="mono">/informal/</span>);
+      every other topic is one set. The chapter mapping stays in the docs as the
+      grouping&rsquo;s justification — never in the UI (D10).
+    </p>
+
+    <!-- ———————————————————— Desktop A ———————————————————— -->
+    <div class="screen-label">
+      1 · Desktop A — master–detail (DECIDED 2026-08-14)
+    </div>
+    <div class="lab-controls">
+      <span>Topic order:</span>
+      <span class="seg" role="group" aria-label="Topic order">
+        <button id="order-letter" aria-pressed="true">Set letter</button>
+        <button id="order-course" aria-pressed="false">
+          Course (textbook)
+        </button>
+      </span>
+      <span
+        >— DECIDED 2026-08-14: set letter. Toggle kept for the record; applies
+        to every variant below.</span
+      >
+    </div>
+    <div class="frame" id="frame-a">
+      <div class="navmock">
+        <div>
+          <button class="trigger" id="trigger-a" aria-expanded="true">
+            Exercises
+            <span class="caret" aria-hidden="true"
+              ><svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+                <path
+                  d="M1 1l4 4 4-4"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                /></svg
+            ></span>
+          </button>
+        </div>
+        <div class="wordmark">LogiCola</div>
+        <div class="links">
+          <a href="#" onclick="return false;">Blog</a
+          ><a href="#" onclick="return false;">Donate</a>
+        </div>
+      </div>
+      <div class="md-panel" id="md-panel">
+        <div
+          class="md-rail"
+          id="md-rail"
+          role="list"
+          aria-label="Logic topics"
+        ></div>
+        <div class="md-detail" id="md-detail"></div>
+      </div>
+    </div>
+    <p class="note">
+      <strong>Pointer model:</strong> hovering a topic switches the panel after
+      a 90&nbsp;ms intent delay (a twitch across the rail doesn&rsquo;t thrash
+      the panel); click and keyboard switch instantly.
+      <strong>Keyboard:</strong> <span class="mono">↑ ↓</span> move through
+      topics, <span class="mono">→</span> enters the drill list,
+      <span class="mono">←</span> returns to the rail,
+      <span class="mono">Esc</span> closes (the trigger reopens it). The panel
+      is pinned open for judging; open/close on the trigger itself stays
+      Radix&rsquo;s behaviour in the port. The magenta dot on a topic row is the
+      NEW scent bubbling up from a drill inside it.
+    </p>
+
+    <!-- ———————————————————— Desktop B ———————————————————— -->
+    <div class="screen-label">
+      2 · Desktop B — grouped mega-menu (REJECTED 2026-08-14 — kept live)
+    </div>
+    <div class="frame" id="frame-b">
+      <div class="navmock">
+        <div>
+          <button class="trigger" id="trigger-b" aria-expanded="true">
+            Exercises
+            <span class="caret" aria-hidden="true"
+              ><svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+                <path
+                  d="M1 1l4 4 4-4"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                /></svg
+            ></span>
+          </button>
+        </div>
+        <div class="wordmark">LogiCola</div>
+        <div class="links">
+          <a href="#" onclick="return false;">Blog</a
+          ><a href="#" onclick="return false;">Donate</a>
+        </div>
+      </div>
+      <div class="mega-panel" id="mega-panel"></div>
+    </div>
+    <p class="note">
+      <strong>Rejected 2026-08-14</strong> — Malik&rsquo;s call: interesting,
+      but thirteen bold links in three columns risks cognitive overload;
+      A&rsquo;s first scan is six topics. Kept interactive because the judgement
+      was made against the living thing. Same IA, zero hidden state: all 13
+      drills visible the moment the menu opens, grouped under mono topic
+      headers. No hover choreography to get wrong, nothing to discover. What it
+      gives up: room for descriptions (A&rsquo;s stage), and headroom — at ~20+
+      drills the grid starts to crowd, exactly where A gets comfortable.
+    </p>
+
+    <!-- ———————————————————— Mobile ———————————————————— -->
+    <div class="screen-label">
+      3 · Mobile — drill-in vs accordion vs bottom sheet
+    </div>
+    <div class="phones">
+      <div class="phone-slot">
+        <div class="phone-caption">A · Drill-in sheet (two levels)</div>
+        <div class="phone">
+          <div class="m-nav">
+            <span class="wordmark">LogiCola</span>
+            <button
+              class="m-burger"
+              aria-expanded="true"
+              aria-label="Close main menu"
+            >
+              ✕
+            </button>
+          </div>
+          <div class="m-sheet">
+            <div class="di-viewport">
+              <div class="di-track" id="di-track">
+                <div class="di-pane" id="di-topics"></div>
+                <div class="di-pane" id="di-drills"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-slot">
+        <div class="phone-caption">B · Accordion sheet (one level)</div>
+        <div class="phone">
+          <div class="m-nav">
+            <span class="wordmark">LogiCola</span>
+            <button
+              class="m-burger"
+              aria-expanded="true"
+              aria-label="Close main menu"
+            >
+              ✕
+            </button>
+          </div>
+          <div class="m-sheet" id="ac-sheet"></div>
+        </div>
+      </div>
+    </div>
+    <p class="note">
+      Both replace today&rsquo;s flat 13-row dump. Drill-in gives each topic a
+      header with its blurb — a small teaching moment — at the cost of a second
+      navigation level and a back button. The accordion is pure disclosure:
+      topics expand in place (several may stay open, same as the FAQ accordion
+      the site already ships), first topic pre-opened so the pattern is
+      self-evident. Both sheets also pick up <strong>Blog and Donate</strong>
+      in a footer — on phones today those links simply don&rsquo;t exist.
+      <strong
+        >C (added 2026-08-14, Malik&rsquo;s ask, and the likely winner):</strong
+      >
+      the bottom sheet — it rises to meet the thumb instead of asking the thumb
+      to climb, and the page stays visible behind the scrim. Four variants of it
+      below.
+    </p>
+
+    <div class="b-sublabel">
+      3c · Bottom sheet — narrowed 2026-08-14 to C3 · C4 (C1 · C2 kept live)
+    </div>
+    <div class="phones">
+      <div class="phone-slot">
+        <div class="phone-caption">
+          C1 · Accordion contents — grabber closes
+        </div>
+        <div class="phone" id="bs1">
+          <div class="bs-page">
+            <div class="m-nav">
+              <span class="wordmark">LogiCola</span>
+              <button
+                class="m-burger"
+                aria-expanded="true"
+                aria-label="Toggle main menu"
+              >
+                ☰
+              </button>
+            </div>
+            <div class="bs-skel hero"></div>
+            <div class="bs-skel" style="width: 60%"></div>
+            <div class="bs-skel" style="width: 80%"></div>
+            <div class="bs-skel" style="width: 72%"></div>
+            <div class="bs-skel" style="width: 66%"></div>
+          </div>
+          <div class="bs-scrim"></div>
+          <div class="bs-sheet" role="dialog" aria-label="Exercises menu">
+            <button class="bs-grab" aria-label="Close menu"></button>
+            <div class="bs-body" id="bs1-content"></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-slot">
+        <div class="phone-caption">
+          C2 · Half detent — opens at 58%, grows on expand
+        </div>
+        <div class="phone bs-half" id="bs2">
+          <div class="bs-page">
+            <div class="m-nav">
+              <span class="wordmark">LogiCola</span>
+              <button
+                class="m-burger"
+                aria-expanded="true"
+                aria-label="Toggle main menu"
+              >
+                ☰
+              </button>
+            </div>
+            <div class="bs-skel hero"></div>
+            <div class="bs-skel" style="width: 60%"></div>
+            <div class="bs-skel" style="width: 80%"></div>
+            <div class="bs-skel" style="width: 72%"></div>
+            <div class="bs-skel" style="width: 66%"></div>
+          </div>
+          <div class="bs-scrim"></div>
+          <div class="bs-sheet" role="dialog" aria-label="Exercises menu">
+            <button class="bs-grab" aria-label="Close menu"></button>
+            <div class="bs-body" id="bs2-content"></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-slot">
+        <div class="phone-caption">
+          C3 · Drill-in contents — master–detail&rsquo;s echo
+        </div>
+        <div class="phone" id="bs3">
+          <div class="bs-page">
+            <div class="m-nav">
+              <span class="wordmark">LogiCola</span>
+              <button
+                class="m-burger"
+                aria-expanded="true"
+                aria-label="Toggle main menu"
+              >
+                ☰
+              </button>
+            </div>
+            <div class="bs-skel hero"></div>
+            <div class="bs-skel" style="width: 60%"></div>
+            <div class="bs-skel" style="width: 80%"></div>
+            <div class="bs-skel" style="width: 72%"></div>
+            <div class="bs-skel" style="width: 66%"></div>
+          </div>
+          <div class="bs-scrim"></div>
+          <div class="bs-sheet" role="dialog" aria-label="Exercises menu">
+            <button class="bs-grab" aria-label="Close menu"></button>
+            <div class="bs-body" id="bs3-content"></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-slot">
+        <div class="phone-caption">C4 · Topic tiles — launcher grammar</div>
+        <div class="phone" id="bs4">
+          <div class="bs-page">
+            <div class="m-nav">
+              <span class="wordmark">LogiCola</span>
+              <button
+                class="m-burger"
+                aria-expanded="true"
+                aria-label="Toggle main menu"
+              >
+                ☰
+              </button>
+            </div>
+            <div class="bs-skel hero"></div>
+            <div class="bs-skel" style="width: 60%"></div>
+            <div class="bs-skel" style="width: 80%"></div>
+            <div class="bs-skel" style="width: 72%"></div>
+            <div class="bs-skel" style="width: 66%"></div>
+          </div>
+          <div class="bs-scrim"></div>
+          <div class="bs-sheet" role="dialog" aria-label="Exercises menu">
+            <button class="bs-grab" aria-label="Close menu"></button>
+            <div class="bs-body" id="bs4-content"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="note">
+      Same container, four ideas inside it. Malik&rsquo;s call (2026-08-14):
+      <strong>C3 and C4 go forward</strong> — the drill-in (the decided desktop
+      master–detail&rsquo;s echo) and the launcher tiles. C1 and C2 stay
+      rendered as the judged-and-passed-over pair. §&nbsp;3d below takes C3 and
+      C4 into brand territory. In the port, every variant gets real
+      swipe-to-dismiss free from a sheet component; the grabber and scrim taps
+      here stand in for it.
+    </p>
+
+    <div class="b-sublabel">
+      3d · Branded sheets — C3 / C4 in the sets&rsquo; own colours (PROPOSED
+      2026-08-14)
+    </div>
+    <div class="phones">
+      <div class="phone-slot">
+        <div class="phone-caption">
+          3d-a · Set tiles — every topic wears its set
+        </div>
+        <div class="phone" id="bd1">
+          <div class="bs-page">
+            <div class="m-nav">
+              <span class="wordmark">LogiCola</span>
+              <button
+                class="m-burger"
+                aria-expanded="true"
+                aria-label="Toggle main menu"
+              >
+                ☰
+              </button>
+            </div>
+            <div class="bs-skel hero"></div>
+            <div class="bs-skel" style="width: 60%"></div>
+            <div class="bs-skel" style="width: 80%"></div>
+            <div class="bs-skel" style="width: 72%"></div>
+          </div>
+          <div class="bs-scrim"></div>
+          <div class="bs-sheet" role="dialog" aria-label="Exercises menu">
+            <button class="bs-grab" aria-label="Close menu"></button>
+            <div class="bs-body" id="bd1-content"></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-slot">
+        <div class="phone-caption">
+          3d-b · Icon chips — set colour in the chip only
+        </div>
+        <div class="phone" id="bd2">
+          <div class="bs-page">
+            <div class="m-nav">
+              <span class="wordmark">LogiCola</span>
+              <button
+                class="m-burger"
+                aria-expanded="true"
+                aria-label="Toggle main menu"
+              >
+                ☰
+              </button>
+            </div>
+            <div class="bs-skel hero"></div>
+            <div class="bs-skel" style="width: 60%"></div>
+            <div class="bs-skel" style="width: 80%"></div>
+            <div class="bs-skel" style="width: 72%"></div>
+          </div>
+          <div class="bs-scrim"></div>
+          <div class="bs-sheet" role="dialog" aria-label="Exercises menu">
+            <button class="bs-grab" aria-label="Close menu"></button>
+            <div class="bs-body" id="bd2-content"></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-slot">
+        <div class="phone-caption">
+          3d-c · Gem tiles — silhouette as pattern (v2; scatter judged weird)
+        </div>
+        <div class="phone" id="bd3">
+          <div class="bs-page">
+            <div class="m-nav">
+              <span class="wordmark">LogiCola</span>
+              <button
+                class="m-burger"
+                aria-expanded="true"
+                aria-label="Toggle main menu"
+              >
+                ☰
+              </button>
+            </div>
+            <div class="bs-skel hero"></div>
+            <div class="bs-skel" style="width: 60%"></div>
+            <div class="bs-skel" style="width: 80%"></div>
+            <div class="bs-skel" style="width: 72%"></div>
+          </div>
+          <div class="bs-scrim"></div>
+          <div class="bs-sheet" role="dialog" aria-label="Exercises menu">
+            <button class="bs-grab" aria-label="Close menu"></button>
+            <div class="bs-body" id="bd3-content"></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-slot">
+        <div class="phone-caption">
+          3d-d · Set world — level 2 becomes the set&rsquo;s screen
+        </div>
+        <div class="phone" id="bd4">
+          <div class="bs-page">
+            <div class="m-nav">
+              <span class="wordmark">LogiCola</span>
+              <button
+                class="m-burger"
+                aria-expanded="true"
+                aria-label="Toggle main menu"
+              >
+                ☰
+              </button>
+            </div>
+            <div class="bs-skel hero"></div>
+            <div class="bs-skel" style="width: 60%"></div>
+            <div class="bs-skel" style="width: 80%"></div>
+            <div class="bs-skel" style="width: 72%"></div>
+          </div>
+          <div class="bs-scrim"></div>
+          <div class="bs-sheet" role="dialog" aria-label="Exercises menu">
+            <button class="bs-grab" aria-label="Close menu"></button>
+            <div class="bs-body" id="bd4-content"></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-slot">
+        <div class="phone-caption">
+          3d-e · Rainbow rows — C3 with painted topics
+        </div>
+        <div class="phone" id="bd5">
+          <div class="bs-page">
+            <div class="m-nav">
+              <span class="wordmark">LogiCola</span>
+              <button
+                class="m-burger"
+                aria-expanded="true"
+                aria-label="Toggle main menu"
+              >
+                ☰
+              </button>
+            </div>
+            <div class="bs-skel hero"></div>
+            <div class="bs-skel" style="width: 60%"></div>
+            <div class="bs-skel" style="width: 80%"></div>
+            <div class="bs-skel" style="width: 72%"></div>
+          </div>
+          <div class="bs-scrim"></div>
+          <div class="bs-sheet" role="dialog" aria-label="Exercises menu">
+            <button class="bs-grab" aria-label="Close menu"></button>
+            <div class="bs-body" id="bd5-content"></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-slot">
+        <div class="phone-caption">
+          3d-f · Chips, completed — cream chrome, eyebrow, gem Donate
+        </div>
+        <div class="phone" id="bd6">
+          <div class="bs-page">
+            <div class="m-nav">
+              <span class="wordmark">LogiCola</span>
+              <button
+                class="m-burger"
+                aria-expanded="true"
+                aria-label="Toggle main menu"
+              >
+                ☰
+              </button>
+            </div>
+            <div class="bs-skel hero"></div>
+            <div class="bs-skel" style="width: 60%"></div>
+            <div class="bs-skel" style="width: 80%"></div>
+            <div class="bs-skel" style="width: 72%"></div>
+          </div>
+          <div class="bs-scrim"></div>
+          <div class="bs-sheet" role="dialog" aria-label="Exercises menu">
+            <button class="bs-grab" aria-label="Close menu"></button>
+            <div class="bs-body" id="bd6-content"></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-slot">
+        <div class="phone-caption">
+          3d-g · Set world, full commitment — chrome + painted sheet
+        </div>
+        <div class="phone" id="bd7">
+          <div class="bs-page">
+            <div class="m-nav">
+              <span class="wordmark">LogiCola</span>
+              <button
+                class="m-burger"
+                aria-expanded="true"
+                aria-label="Toggle main menu"
+              >
+                ☰
+              </button>
+            </div>
+            <div class="bs-skel hero"></div>
+            <div class="bs-skel" style="width: 60%"></div>
+            <div class="bs-skel" style="width: 80%"></div>
+            <div class="bs-skel" style="width: 72%"></div>
+          </div>
+          <div class="bs-scrim"></div>
+          <div class="bs-sheet" role="dialog" aria-label="Exercises menu">
+            <button class="bs-grab" aria-label="Close menu"></button>
+            <div class="bs-body" id="bd7-content"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="note">
+      Round two (2026-08-14, after Malik&rsquo;s verdicts). Kept from round one:
+      <strong>3d-a</strong>, <strong>3d-b</strong> (liked, but judged half-baked
+      while the sheet&rsquo;s own chrome stayed grey),
+      <strong>3d-d</strong> (liked; its white grabber strip over a painted pane
+      was jarring — the <em>whole sheet</em> now paints, grabber included),
+      <strong>3d-e</strong>. Replaced: 3d-c&rsquo;s pixel scatter (&ldquo;just
+      weird&rdquo;) — v2 makes the <strong>silhouette</strong> the pattern: set
+      tiles clipped to the gem. New: <strong>3d-f</strong> completes 3d-b —
+      cream sheet ground, mono &ldquo;Exercises&rdquo; eyebrow, brand-green
+      grabber, Blog + a gem-clipped Donate in the footer;
+      <strong>3d-g</strong> is 3d-d on that same chrome, so level 2 paints a
+      fully branded sheet; <strong>3d-h</strong> (the quilt band) answered what
+      the scatter was reaching for — killed 2026-08-14 with the desktop pattern
+      frames. Icons unchanged: logic symbols on the 4-px grid (∴ ⊃ ◇ O-ring,
+      bubble, ?), still sketches. Informal still wears Set Q&rsquo;s triad; the
+      split question stands.
+      <strong>Fixed after Malik&rsquo;s catch:</strong> 3d-f&rsquo;s level 2
+      used to stack three grounds (cream → cool grey → white → cream); it now
+      stays in the cream world — drills as white cards on cream, the same figure
+      move as its level-1 tiles, no grey anywhere.
+    </p>
+
+    <!-- ———————————————————— Brand pass ———————————————————— -->
+    <div class="screen-label">
+      4 · Brand pass — three schemes × shell toggles (PROPOSED 2026-08-14)
+    </div>
+    <p class="note" style="margin-bottom: 12px">
+      The decided master–detail shell, re-dressed in the schemes the marketing
+      lab already established — same roles (<strong>ground / ink / type</strong
+      >), same mark (<span class="mono">public/logicola-wordmark.svg</span>,
+      body ink, knockout ground), same CTA silhouette. The role split is the
+      1.4.3 fix:
+      <strong
+        >type carries every small run of text; the coloured ink is display,
+        underline and CTA ground only.</strong
+      >
+      Under each frame, a live WCAG audit — every muted tier is derived by
+      walking the colour toward type until it clears 4.5:1, so what you judge is
+      already legal. The one element allowed under 3:1 is the mark — logotypes
+      are exempt from 1.4.11 — so on cream the green can reads
+      <em>legal but faint</em>, and whether that quietness is a feature or a
+      flaw is part of the D11 judgement. (Brand · mint was the fourth frame here
+      for a few hours; killed 2026-08-14, retired from the marketing lab&rsquo;s
+      dial too.) Hover and active fills wear the
+      <strong>gem silhouette</strong> instead of rounded corners (Malik&rsquo;s
+      ask, same day) — the pixel grammar reaching interaction states, not just
+      badges and CTAs. Rails are clickable; interaction niceties live in
+      §&nbsp;1 and aren&rsquo;t re-judged here. (Porting note:
+      production&rsquo;s green <span class="mono">#17a34a</span> is drift — the
+      system green is <span class="mono">#05A24B</span>, used here.)
+    </p>
+    <div class="lab-controls">
+      <span>Panel ground:</span>
+      <span class="seg" role="group" aria-label="Panel ground">
+        <button id="panel-white" aria-pressed="true">
+          White (floating menu)
+        </button>
+        <button id="panel-scheme" aria-pressed="false">
+          Scheme (figure inversion)
+        </button>
+      </span>
+      <span
+        >— white keeps the dropdown a menu; scheme makes it a branded surface.
+        Active-row fill inverts with it.</span
+      >
+    </div>
+    <div class="lab-controls">
+      <span>Shell:</span>
+      <span class="seg" role="group" aria-label="Nav shell">
+        <button id="shell-contained" aria-pressed="true">
+          Contained card (as shipped)
+        </button>
+        <button id="shell-full" aria-pressed="false">Full-bleed (Khan)</button>
+      </span>
+      <span>Corners:</span>
+      <span class="seg" role="group" aria-label="Card corners">
+        <button id="corner-pixel" aria-pressed="true">Pixel silhouette</button>
+        <button id="corner-round" aria-pressed="false">Rounded</button>
+      </span>
+      <span
+        >— DECIDED 2026-08-14: pixel, shadows lightened. Applies to the
+        contained card only.</span
+      >
+    </div>
+    <div id="brand-frames"></div>
+
+    <!-- ———————————————————— Pattern applications ———————————————————— -->
+    <div class="screen-label">
+      4p · Pattern applications — the band survives (4p-1 · 2 · 4 killed
+      2026-08-14)
+    </div>
+    <p class="note" style="margin-bottom: 12px">
+      One frame stands where four stood. Malik&rsquo;s call (2026-08-14): the
+      field bar, the void quilt and the outline chips are killed — the
+      labs-insight variants were meant for <strong>mobile</strong>, and the
+      desktop menu doesn&rsquo;t earn that much texture. The band edge survives:
+      the marketing pages&rsquo; field strip as the menu&rsquo;s closing edge,
+      nav and marketing sharing one signature. The generators (quilt, camo,
+      clearing — ported verbatim) stay in this file&rsquo;s script for the
+      mobile round; every colour they spend is deep-register per the brand
+      lab&rsquo;s forced inversion.
+    </p>
+    <div id="pattern-frames"></div>
+
+    <!-- ———————————————————— Decisions ———————————————————— -->
+    <div class="screen-label">5 · Decisions to take</div>
+    <div class="decisions">
+      <div class="dcard">
+        <div class="id">D1 <span class="rec">Rec: adopt</span></div>
+        <h3>Two-level IA: topic → drill</h3>
+        <p>
+          The left rail mirrors the routes&rsquo; first segment and the
+          textbook&rsquo;s chapters, kills the repeated set titles, and is the
+          only structure that survives the catalog growing past translations
+          (proofs, quantificational, inductive sets are all still to come).
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">D2 <span class="rec">Rec: adopt</span></div>
+        <h3>Sets Q + R merge under “Informal Logic”</h3>
+        <p>
+          Both already live under <span class="mono">/informal/</span>. Two
+          top-level single-drill topics would make the rail lie about depth; one
+          topic with two honest drills doesn&rsquo;t.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">D3 <span class="done">Decided 2026-08-14</span></div>
+        <h3>Topic order: set letter</h3>
+        <p>
+          Malik&rsquo;s call, reversing the lab&rsquo;s initial lean. Set
+          letters are the one reference everyone shares — syllabi assign
+          &ldquo;LogiCola Set&nbsp;N&rdquo;, and the 2008 software taught the
+          letters. Course order presumed the reader owns Gensler&rsquo;s book;
+          many users don&rsquo;t. The toggle above frame&nbsp;1 stays for the
+          record.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          D4 <span class="rec">Rec: keep the kind prefix</span>
+        </div>
+        <h3>Drill names: “Translations: Easy”, not bare “Easy”</h3>
+        <p>
+          Khan can label a row “3rd grade” because the row is the whole story.
+          Our drills are links, and link text has to carry its purpose out of
+          context (WCAG&nbsp;2.4.4) — a screen reader&rsquo;s link list full of
+          “Easy / Hard / Basic” is noise. The prefix also matches the quiz page
+          titles the click lands on.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">D5 <span class="done">Decided 2026-08-14</span></div>
+        <h3>Descriptions ship in the panel</h3>
+        <p>
+          Follows from D8. Master–detail has the room, and the catalog&rsquo;s
+          one-liners are the scent a first-week student needs —
+          &ldquo;syllogistic&rdquo; means nothing on day one.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">D6 <span class="rec">Rec: keep visible</span></div>
+        <h3>Set letters stay in the UI</h3>
+        <p>
+          Syllabi and Gensler&rsquo;s own course materials assign work by set
+          letter (“do LogiCola Set&nbsp;N”). The mono set tags in panel headers
+          — and on drills only where a topic spans two sets — keep that lookup
+          alive without letting letters lead the hierarchy. The rail stays clean
+          — topics only.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">D7 <span class="judge">Narrowed: C3 · C4</span></div>
+        <h3>Mobile: bottom sheet; drill-in or tiles inside</h3>
+        <p>
+          Malik (2026-08-14): the bottom sheet &ldquo;might be the
+          winner&rdquo;, and of its contents &ldquo;I like C3 and C4&rdquo; — so
+          accordion and half-detent fall away (kept live above), and the
+          remaining call is drill-in vs launcher tiles, now judged in their
+          branded forms in §&nbsp;3d.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">D8 <span class="done">Decided 2026-08-14</span></div>
+        <h3>Desktop: master–detail (A); B rejected</h3>
+        <p>
+          Malik&rsquo;s call: B shows everything, but thirteen bold links in
+          three columns risks cognitive overload. A&rsquo;s first scan is six
+          topics; depth arrives only on demand — and it&rsquo;s the structure
+          that scales when proofs and quantificational sets land.
+        </p>
+        <p>
+          B stays interactive above (relabelled), because the judgement was made
+          against the living thing and should be re-makeable.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">D9 <span class="rec">Rec: adopt</span></div>
+        <h3>Mobile menu carries Blog + Donate</h3>
+        <p>
+          A gap this lab surfaced rather than a redesign goal: the phone navbar
+          has no route to Blog or Donate at all. Both mobile variants add them
+          as a sheet footer. Cheap, and Donate is the project&rsquo;s oxygen.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">D10 <span class="done">Decided 2026-08-14</span></div>
+        <h3>Chapter numbers stay out of the UI</h3>
+        <p>
+          The chapter mapping justified the grouping, but as visible meta it
+          assumed the reader owns the textbook — many users don&rsquo;t, and for
+          them &ldquo;Chapter&nbsp;12&rdquo; is noise. Set + topic name carry
+          orientation on their own. The mapping survives in the docs, not the
+          menu.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">D11 <span class="judge">Judge in § 4</span></div>
+        <h3>Brand direction for the nav</h3>
+        <p>
+          Three candidates ride the decided shell: Brand · cream (the
+          provisional green-on-cream), Set L (mint under plum, magenta accent),
+          and Brand · original (the 2008 aqua + navy, extracted from
+          Gensler&rsquo;s own binaries). Brand · mint was the fourth for a few
+          hours — killed 2026-08-14 (&ldquo;I don&rsquo;t like it&rdquo;), here
+          and in the marketing lab&rsquo;s dial.
+        </p>
+        <p>
+          Riding along in the same judgement: the canonical mark replaces the
+          text wordmark (the marketing nav&rsquo;s precedent), Donate wears the
+          pixel CTA, and small text always comes from the scheme&rsquo;s type
+          colour — green never carries 14&nbsp;px text again.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          D12 <span class="judge">Shell open; corners decided</span>
+        </div>
+        <h3>Desktop shell: contained card vs full-bleed — and its corners</h3>
+        <p>
+          Production&rsquo;s menu is a floating card capped near the content
+          width; the Khan-style panel I led with is full-bleed. Malik pulled
+          that assumption back for judgement (2026-08-14) — the Shell toggle
+          renders both, contained now the default. Corners tries the card in CSS
+          rounding vs the sprite silhouette: the pixel grammar arriving in the
+          nav itself.
+        </p>
+        <p>
+          <strong
+            >Corners decided 2026-08-14: the pixel silhouette is the
+            default</strong
+          >, with the shadows lightened — the silhouette carries the separation.
+          Port note: a clipped card&rsquo;s shadow must be
+          <span class="mono">filter: drop-shadow</span> on a wrapper — a
+          <span class="mono">box-shadow</span> gets cut off with the corners
+          (pixel-ui.md, &ldquo;Ringing a clipped shape&rdquo;).
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          D13 <span class="judge">Narrowed: 3d-d · 3d-f</span>
+        </div>
+        <h3>Branded sheets: round two</h3>
+        <p>
+          Round-one verdicts (Malik, 2026-08-14):
+          <strong>3d-b and 3d-d lead</strong>, but b felt half-baked with the
+          sheet chrome left grey, and d&rsquo;s unpainted grabber strip jarred —
+          fixed by painting the whole sheet. The scatter (old 3d-c) was
+          &ldquo;just weird&rdquo;: retired, replaced by gem-clipped set tiles —
+          the silhouette as the pattern.
+        </p>
+        <p>
+          The chrome pair that survived: 3d-f (b completed — cream ground,
+          eyebrow, green grabber, gem Donate; level 2 re-fixed after Malik
+          caught it stacking three grounds — a menu commits to ONE world per
+          screen) and 3d-g (d on full chrome); 3d-h&rsquo;s quilt band was
+          killed 2026-08-14.
+          <strong
+            >Leaders on information hierarchy (Malik, same day): 3d-d and
+            3d-f.</strong
+          >
+          Riders stand: icon redraw, and Informal&rsquo;s one-tile-two-sets
+          question.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">D14 <span class="done">Decided 2026-08-14</span></div>
+        <h3>Pattern on desktop: the band, at most</h3>
+        <p>
+          Of the four labs-insight frames, Malik killed the field bar, the void
+          quilt and the outline chips the day they were built — the exploration
+          was meant for <strong>mobile</strong>, and a desktop utility menu
+          doesn&rsquo;t earn that much texture. The band edge (4p-3) survives as
+          the one candidate, still to be confirmed.
+        </p>
+        <p>
+          The generators stay in the lab&rsquo;s script for the mobile round,
+          and the inversion rule travels with them: the brand spends inks and
+          accents, never pale surfaces on pale grounds.
+        </p>
+      </div>
+    </div>
+
+    <!-- ———————————————————— A11y ———————————————————— -->
+    <div class="screen-label">
+      6 · Accessibility model (release blocker, not garnish)
+    </div>
+    <div class="infobox">
+      <h3>Keyboard map — desktop A</h3>
+      <ul>
+        <li>
+          <span class="keys">Tab</span> reaches the trigger, then the active
+          topic in the rail; <span class="keys">↑ ↓</span> move across topics
+          (panel follows focus instantly — the 90&nbsp;ms delay is
+          pointer-only).
+        </li>
+        <li>
+          <span class="keys">→</span> or <span class="keys">Tab</span> enters
+          the drill list; <span class="keys">↑ ↓</span> move between drills;
+          <span class="keys">←</span> returns to the owning topic.
+        </li>
+        <li>
+          <span class="keys">Esc</span> closes the panel and returns focus to
+          the trigger. B needs none of this — it&rsquo;s a plain link grid,
+          which is itself an accessibility argument for it.
+        </li>
+      </ul>
+    </div>
+    <div class="infobox">
+      <h3>Flags for the port</h3>
+      <ul>
+        <li>
+          The production menu keeps <strong>Radix NavigationMenu</strong> — this
+          lab fakes its open/close and pointer grace; don&rsquo;t hand-roll
+          those in the app.
+        </li>
+        <li>
+          The trigger&rsquo;s green <span class="mono">#17a34a</span> on white
+          is ≈3.3:1 — it already fails 1.4.3 for 14&nbsp;px text
+          <em>in production today</em>. The brand pass must resolve it (darker
+          green, or ink text with green reserved for larger weights).
+          <strong>Resolved in the §&nbsp;4 frames</strong>: the scheme&rsquo;s
+          type colour carries every small run of text; the coloured ink is
+          display, underline and CTA ground only.
+        </li>
+        <li>
+          NEW gem and dot: the gem carries literal “NEW” text; the topic-row dot
+          needs <span class="mono">sr-only</span> “new exercises inside” so the
+          scent isn&rsquo;t pointer-only. Colour is never the sole signal
+          (1.4.1).
+        </li>
+        <li>
+          Grays used here (<span class="mono">#6b7280</span> on white ≈4.8:1)
+          pass AA for the sizes used; re-check every pairing after the brand
+          pass recolours surfaces.
+        </li>
+        <li>
+          Reduced motion: the drill-in slide and caret spins collapse to cuts
+          under <span class="mono">prefers-reduced-motion</span> — same rule the
+          quiz bar follows.
+        </li>
+      </ul>
+    </div>
+
+    <!-- ———————————————————— Port notes ———————————————————— -->
+    <div class="screen-label">7 · Port notes (after sign-off, not before)</div>
+    <div class="infobox">
+      <ul>
+        <li>
+          Topics derive from <span class="mono">slugs[0]</span> of
+          <span class="mono">content/quiz-catalog.json</span> — no second source
+          of truth. Topic display metadata (name, blurb, order) is one new small
+          content file.
+        </li>
+        <li>
+          Desktop stays inside the existing shadcn
+          <span class="mono">NavigationMenu</span>; mobile accordion reuses
+          <span class="mono">ui/accordion</span> (the FAQ&rsquo;s
+          <span class="mono">type=&quot;multiple&quot;</span> precedent).
+        </li>
+        <li>
+          NEW badge propagation is derived: a topic is new while any drill in it
+          has <span class="mono">isNew</span>.
+        </li>
+        <li>
+          The quiz route&rsquo;s desktop navbar and the homepage share the same
+          component — one port serves both. The gem badge ports via
+          <span class="mono">gemClip()</span> from
+          <span class="mono">lib/pixel.ts</span>, exactly as this lab renders
+          it.
+        </li>
+        <li>
+          The §&nbsp;4 brand frames spend only marketing-lab tokens — scheme
+          roles (ground / ink / type),
+          <span class="mono">markSvg</span> mirrored from
+          <span class="mono">public/logicola-wordmark.svg</span>, the marketing
+          CTA silhouette — and derive every muted tier through an
+          ensure-contrast loop at render time. Port them as computed tokens, not
+          baked hexes.
+        </li>
+      </ul>
+    </div>
+
+    <script>
+      // ————— data: the real catalog, grouped. Descriptions verbatim from
+      // content/quiz-catalog.json. Chapter meta was cut from the UI (D10);
+      // the set→textbook mapping lives on in lib/publishedQuizLookup.ts.
+      const TOPICS = [
+        {
+          id: 'syllogistic',
+          name: 'Syllogistic Logic',
+          sets: 'Set A',
+          blurb: 'All, no, some — the logic of categories.',
+          course: 0,
+          letter: 0,
+          drills: [
+            {
+              title: 'Translations: Easy',
+              set: 'Set A',
+              path: '/syllogistic/translations/basic/quiz',
+              desc: 'Translate everyday English — all, no, some — into syllogistic logic without losing the structure of the claim.',
+            },
+            {
+              title: 'Translations: Hard',
+              set: 'Set A',
+              path: '/syllogistic/translations/hard/quiz',
+              desc: 'Tackle the trickier idioms — only, every, and sentences that reorder subject and predicate.',
+            },
+          ],
+        },
+        {
+          id: 'informal',
+          name: 'Informal Logic',
+          sets: 'Sets Q · R',
+          blurb: 'Definitions, meaning, and the classic fallacies.',
+          course: 1,
+          letter: 5,
+          drills: [
+            {
+              title: 'Meanings and Definitions',
+              set: 'Set Q',
+              path: '/informal/definitions/quiz',
+              desc: 'Spot what is wrong with a definition — too broad, too narrow, circular, or worse.',
+            },
+            {
+              title: 'Informal Fallacies',
+              set: 'Set R',
+              isNew: true,
+              path: '/informal/fallacies/quiz',
+              desc: 'Read a short passage and name the fallacy it commits — from ad hominem to post hoc.',
+            },
+          ],
+        },
+        {
+          id: 'propositional',
+          name: 'Propositional Logic',
+          sets: 'Set C',
+          blurb: 'And, or, if-then — the logic of statements.',
+          course: 2,
+          letter: 1,
+          drills: [
+            {
+              title: 'Translations: Easy',
+              set: 'Set C',
+              path: '/propositional/translations/quiz',
+              desc: 'Translate ordinary language into symbols — and, or, if-then — without losing the structure of the argument.',
+            },
+            {
+              title: 'Translations: Hard',
+              set: 'Set C',
+              path: '/propositional/translations/hard/quiz',
+              desc: 'Handle the connectives that trip people up — unless, only if, and necessary versus sufficient conditions.',
+            },
+          ],
+        },
+        {
+          id: 'modal',
+          name: 'Modal Logic',
+          sets: 'Set J',
+          blurb: 'Necessity and possibility — box and diamond.',
+          course: 3,
+          letter: 2,
+          drills: [
+            {
+              title: 'Translations: Basic',
+              set: 'Set J',
+              path: '/modal/translations/basic/quiz',
+              desc: 'Translate claims about what is necessary, possible, and contingent into the box and diamond of modal logic.',
+            },
+            {
+              title: 'Translations: Quantified',
+              set: 'Set J',
+              path: '/modal/translations/quantified/quiz',
+              desc: 'Mix modality with quantifiers, where the order of box, diamond, and “all” changes what a claim says.',
+            },
+          ],
+        },
+        {
+          id: 'deontic',
+          name: 'Deontic Logic',
+          sets: 'Set L',
+          blurb: 'Ought, permissible, forbidden — and commands.',
+          course: 4,
+          letter: 3,
+          drills: [
+            {
+              title: 'Translations: Imperative',
+              set: 'Set L',
+              path: '/deontic/translations/imperative/quiz',
+              desc: 'Translate commands and requests into imperative logic, underlining what is to be done.',
+            },
+            {
+              title: 'Translations: Deontic',
+              set: 'Set L',
+              path: '/deontic/translations/deontic/quiz',
+              desc: 'Translate ought, permissible, and forbidden into deontic logic.',
+            },
+          ],
+        },
+        {
+          id: 'belief',
+          name: 'Belief Logic',
+          sets: 'Set N',
+          blurb: 'Believing, willing, and what it is rational to believe.',
+          course: 5,
+          letter: 4,
+          drills: [
+            {
+              title: 'Translations: Believing',
+              set: 'Set N',
+              path: '/belief/translations/basic/quiz',
+              desc: 'Translate claims about believing, not believing, and withholding belief into belief logic.',
+            },
+            {
+              title: 'Translations: Willing',
+              set: 'Set N',
+              path: '/belief/translations/willing/quiz',
+              desc: 'Translate wanting, resolving, and acting — the willing side of belief logic — into formulas.',
+            },
+            {
+              title: 'Translations: Rationality',
+              set: 'Set N',
+              path: '/belief/translations/rationality/quiz',
+              desc: 'Translate what is evident, reasonable, and rational to believe into belief-logic formulas.',
+            },
+          ],
+        },
+      ];
+
+      // gemClip() ported verbatim from lib/pixel.ts (pixelPts(0, 4)) — what
+      // is judged is what ships.
+      function gemClip(pu = 4) {
+        const L = (v) => `${v}px`;
+        const M = (v) => `calc(100% - ${v}px)`;
+        const pts = [
+          [L(0), L(pu * 2)],
+          [L(pu), L(pu * 2)],
+          [L(pu), L(pu)],
+          [L(pu * 2), L(pu)],
+          [L(pu * 2), L(0)],
+          [M(pu * 2), L(0)],
+          [M(pu * 2), L(pu)],
+          [M(pu), L(pu)],
+          [M(pu), L(pu * 2)],
+          [M(0), L(pu * 2)],
+          [M(0), M(pu * 2)],
+          [M(pu), M(pu * 2)],
+          [M(pu), M(pu)],
+          [M(pu * 2), M(pu)],
+          [M(pu * 2), M(0)],
+          [L(pu * 2), M(0)],
+          [L(pu * 2), M(pu)],
+          [L(pu), M(pu)],
+          [L(pu), M(pu * 2)],
+          [L(0), M(pu * 2)],
+        ];
+        return `polygon(${pts.map((p) => p.join(' ')).join(', ')})`;
+      }
+      const GEM = gemClip();
+
+      let order = 'letter'; // decided 2026-08-14 (D3); 'course' kept for the record
+      let activeTopicId = null;
+
+      const byOrder = () => [...TOPICS].sort((a, b) => a[order] - b[order]);
+      const topicIsNew = (t) => t.drills.some((d) => d.isNew);
+      // per-item set tags only where the header can't carry the set
+      // (a topic spanning several sets — today just Informal, Q + R)
+      const topicMultiSet = (t) =>
+        t.drills.some((d) => d.set !== t.drills[0].set);
+      const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+      function gem() {
+        const s = document.createElement('span');
+        s.className = 'new-gem';
+        s.style.clipPath = GEM;
+        s.textContent = 'NEW';
+        return s;
+      }
+
+      // inert drill links: flash instead of navigating
+      function wireDrill(a) {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          a.classList.remove('pulse');
+          void a.offsetWidth;
+          a.classList.add('pulse');
+        });
+      }
+
+      // ————— IA table —————
+      function renderIA() {
+        const tbody = document.getElementById('ia-body');
+        tbody.innerHTML = '';
+        byOrder().forEach((t) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML =
+            `<td class="t">${esc(t.name)}</td>` +
+            `<td class="mono">${esc(t.sets)}</td>` +
+            `<td>${t.drills
+              .map(
+                (d) =>
+                  esc(d.title) +
+                  (d.isNew
+                    ? ' <span class="mono" style="color:var(--magenta);font-weight:700">NEW</span>'
+                    : '')
+              )
+              .join(' · ')}</td>` +
+            `<td class="mono">/${esc(t.id)}/</td>`;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // ————— desktop A: master–detail —————
+      let hoverTimer = null;
+
+      function renderRail() {
+        const rail = document.getElementById('md-rail');
+        rail.innerHTML = '';
+        byOrder().forEach((t) => {
+          const b = document.createElement('button');
+          b.className = 'md-topic';
+          b.setAttribute('role', 'listitem');
+          b.dataset.topic = t.id;
+          b.setAttribute(
+            'aria-current',
+            t.id === activeTopicId ? 'true' : 'false'
+          );
+          const name = document.createElement('span');
+          name.textContent = t.name;
+          b.appendChild(name);
+          if (topicIsNew(t)) {
+            const dot = document.createElement('span');
+            dot.className = 'new-dot';
+            dot.setAttribute('title', 'New exercises inside');
+            b.appendChild(dot);
+          }
+          const grow = document.createElement('span');
+          grow.className = 'grow';
+          b.appendChild(grow);
+          const chev = document.createElement('span');
+          chev.className = 'chev';
+          chev.textContent = '›';
+          b.appendChild(chev);
+
+          b.addEventListener('mouseenter', () => {
+            clearTimeout(hoverTimer);
+            hoverTimer = setTimeout(() => selectTopic(t.id), 90);
+          });
+          b.addEventListener('mouseleave', () => clearTimeout(hoverTimer));
+          b.addEventListener('click', () => selectTopic(t.id));
+          b.addEventListener('focus', () => selectTopic(t.id));
+          b.addEventListener('keydown', (e) => {
+            const items = [...rail.querySelectorAll('.md-topic')];
+            const i = items.indexOf(b);
+            if (e.key === 'ArrowDown') {
+              e.preventDefault();
+              items[(i + 1) % items.length].focus();
+            } else if (e.key === 'ArrowUp') {
+              e.preventDefault();
+              items[(i - 1 + items.length) % items.length].focus();
+            } else if (e.key === 'ArrowRight') {
+              e.preventDefault();
+              document.querySelector('#md-detail .md-drill')?.focus();
+            } else if (e.key === 'Home') {
+              e.preventDefault();
+              items[0].focus();
+            } else if (e.key === 'End') {
+              e.preventDefault();
+              items[items.length - 1].focus();
+            }
+          });
+          rail.appendChild(b);
+        });
+      }
+
+      function renderDetail() {
+        const t = TOPICS.find((x) => x.id === activeTopicId);
+        const d = document.getElementById('md-detail');
+        d.innerHTML = '';
+        if (!t) return;
+        const meta = document.createElement('div');
+        meta.className = 'md-meta';
+        meta.textContent = t.sets;
+        const h = document.createElement('h3');
+        h.className = 'md-title display';
+        h.textContent = t.name;
+        const blurb = document.createElement('p');
+        blurb.className = 'md-blurb';
+        blurb.textContent = t.blurb;
+        d.append(meta, h, blurb);
+        const ul = document.createElement('ul');
+        ul.className = 'md-drills';
+        t.drills.forEach((drill) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.className = 'md-drill';
+          a.href = drill.path;
+          const row = document.createElement('div');
+          row.className = 'row';
+          const name = document.createElement('span');
+          name.className = 'name';
+          name.textContent = drill.title;
+          row.appendChild(name);
+          if (drill.isNew) row.appendChild(gem());
+          if (topicMultiSet(t)) {
+            const tag = document.createElement('span');
+            tag.className = 'set-tag';
+            tag.textContent = drill.set;
+            row.appendChild(tag);
+          }
+          const desc = document.createElement('p');
+          desc.className = 'desc';
+          desc.textContent = drill.desc;
+          a.append(row, desc);
+          a.addEventListener('keydown', (e) => {
+            const links = [...d.querySelectorAll('.md-drill')];
+            const i = links.indexOf(a);
+            if (e.key === 'ArrowDown') {
+              e.preventDefault();
+              links[Math.min(i + 1, links.length - 1)].focus();
+            } else if (e.key === 'ArrowUp') {
+              e.preventDefault();
+              links[Math.max(i - 1, 0)].focus();
+            } else if (e.key === 'ArrowLeft') {
+              e.preventDefault();
+              document
+                .querySelector(`.md-topic[data-topic="${t.id}"]`)
+                ?.focus();
+            }
+          });
+          wireDrill(a);
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+        d.appendChild(ul);
+      }
+
+      function selectTopic(id) {
+        if (id === activeTopicId) return;
+        activeTopicId = id;
+        document.querySelectorAll('#md-rail .md-topic').forEach((b) => {
+          b.setAttribute(
+            'aria-current',
+            b.dataset.topic === id ? 'true' : 'false'
+          );
+        });
+        renderDetail();
+      }
+
+      // trigger open/close (pinned open initially; Esc closes, trigger reopens)
+      function wireTrigger(triggerId, panelId) {
+        const trigger = document.getElementById(triggerId);
+        const panel = document.getElementById(panelId);
+        const setOpen = (open) => {
+          trigger.setAttribute('aria-expanded', String(open));
+          panel.style.display = open ? '' : 'none';
+        };
+        trigger.addEventListener('click', () =>
+          setOpen(trigger.getAttribute('aria-expanded') !== 'true')
+        );
+        trigger.addEventListener('mouseenter', () => setOpen(true));
+        trigger.closest('.frame').addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            setOpen(false);
+            trigger.focus();
+          }
+        });
+      }
+
+      // ————— desktop B: grouped mega-menu —————
+      function renderMega() {
+        const panel = document.getElementById('mega-panel');
+        panel.innerHTML = '';
+        byOrder().forEach((t) => {
+          const g = document.createElement('div');
+          g.className = 'mega-group';
+          const head = document.createElement('div');
+          head.className = 'mega-head';
+          head.textContent = `${t.name} — ${t.sets}`;
+          g.appendChild(head);
+          const ul = document.createElement('ul');
+          t.drills.forEach((drill) => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.className = 'mega-item md-drill';
+            a.href = drill.path;
+            const name = document.createElement('span');
+            name.textContent = drill.title;
+            a.appendChild(name);
+            if (drill.isNew) a.appendChild(gem());
+            if (topicMultiSet(t)) {
+              const tag = document.createElement('span');
+              tag.className = 'set-tag';
+              tag.textContent = drill.set;
+              a.appendChild(tag);
+            }
+            wireDrill(a);
+            li.appendChild(a);
+            ul.appendChild(li);
+          });
+          g.appendChild(ul);
+          panel.appendChild(g);
+        });
+      }
+
+      // ————— mobile A: drill-in —————
+      function renderDrillIn() {
+        const topics = document.getElementById('di-topics');
+        const track = document.getElementById('di-track');
+        topics.innerHTML = '';
+        byOrder().forEach((t) => {
+          const b = document.createElement('button');
+          b.className = 'm-row';
+          const name = document.createElement('span');
+          name.textContent = t.name;
+          b.appendChild(name);
+          if (topicIsNew(t)) {
+            const dot = document.createElement('span');
+            dot.className = 'new-dot';
+            b.appendChild(dot);
+          }
+          const grow = document.createElement('span');
+          grow.className = 'grow';
+          b.appendChild(grow);
+          const sets = document.createElement('span');
+          sets.className = 'set-tag';
+          sets.textContent = t.sets;
+          b.appendChild(sets);
+          const chev = document.createElement('span');
+          chev.className = 'chev';
+          chev.textContent = '›';
+          b.appendChild(chev);
+          b.addEventListener('click', () => {
+            renderDrillPane(t);
+            track.classList.add('pushed');
+          });
+          topics.appendChild(b);
+        });
+        const foot = document.createElement('div');
+        foot.className = 'm-footer';
+        foot.innerHTML =
+          '<a href="#" onclick="return false">Blog</a><a href="#" onclick="return false">Donate</a>';
+        topics.appendChild(foot);
+      }
+
+      function renderDrillPane(t) {
+        const pane = document.getElementById('di-drills');
+        const track = document.getElementById('di-track');
+        pane.innerHTML = '';
+        const back = document.createElement('button');
+        back.className = 'di-back';
+        back.textContent = '‹ All topics';
+        back.addEventListener('click', () => track.classList.remove('pushed'));
+        pane.appendChild(back);
+        const head = document.createElement('div');
+        head.className = 'di-head';
+        head.innerHTML =
+          `<div class="md-meta">${esc(t.sets)}</div>` +
+          `<div class="t display">${esc(t.name)}</div>` +
+          `<div class="b">${esc(t.blurb)}</div>`;
+        pane.appendChild(head);
+        t.drills.forEach((drill) => {
+          pane.appendChild(mobileDrill(drill, t, true));
+        });
+      }
+
+      function mobileDrill(drill, topic, withDesc) {
+        const a = document.createElement('a');
+        a.className = 'm-drill';
+        a.href = drill.path;
+        const row = document.createElement('div');
+        row.className = 'row';
+        const name = document.createElement('span');
+        name.className = 'name';
+        name.textContent = drill.title;
+        row.appendChild(name);
+        if (drill.isNew) row.appendChild(gem());
+        if (topicMultiSet(topic)) {
+          const tag = document.createElement('span');
+          tag.className = 'set-tag';
+          tag.textContent = drill.set;
+          row.appendChild(tag);
+        }
+        a.appendChild(row);
+        if (withDesc) {
+          const desc = document.createElement('p');
+          desc.className = 'desc';
+          desc.textContent = drill.desc;
+          a.appendChild(desc);
+        }
+        wireDrill(a);
+        return a;
+      }
+
+      // ————— mobile B: accordion —————
+      function buildAccordionInto(sheet) {
+        sheet.innerHTML = '';
+        byOrder().forEach((t, idx) => {
+          const b = document.createElement('button');
+          b.className = 'm-row ac-topic';
+          b.setAttribute('aria-expanded', idx === 0 ? 'true' : 'false');
+          const name = document.createElement('span');
+          name.textContent = t.name;
+          b.appendChild(name);
+          if (topicIsNew(t)) {
+            const dot = document.createElement('span');
+            dot.className = 'new-dot';
+            b.appendChild(dot);
+          }
+          const grow = document.createElement('span');
+          grow.className = 'grow';
+          b.appendChild(grow);
+          const sets = document.createElement('span');
+          sets.className = 'set-tag';
+          sets.textContent = t.sets;
+          b.appendChild(sets);
+          const chev = document.createElement('span');
+          chev.className = 'chev';
+          chev.textContent = '›';
+          b.appendChild(chev);
+
+          const kids = document.createElement('div');
+          kids.className = 'ac-children' + (idx === 0 ? ' open' : '');
+          t.drills.forEach((drill) =>
+            kids.appendChild(mobileDrill(drill, t, false))
+          );
+
+          b.addEventListener('click', () => {
+            const open = b.getAttribute('aria-expanded') === 'true';
+            b.setAttribute('aria-expanded', String(!open));
+            kids.classList.toggle('open', !open);
+          });
+
+          sheet.append(b, kids);
+        });
+        const foot = document.createElement('div');
+        foot.className = 'm-footer';
+        foot.innerHTML =
+          '<a href="#" onclick="return false">Blog</a><a href="#" onclick="return false">Donate</a>';
+        sheet.appendChild(foot);
+      }
+
+      function renderAccordion() {
+        buildAccordionInto(document.getElementById('ac-sheet'));
+      }
+      // ————— the C family: one container, four contents —————
+      function sheetFooter(pane) {
+        const foot = document.createElement('div');
+        foot.className = 'm-footer';
+        foot.innerHTML =
+          '<a href="#" onclick="return false">Blog</a><a href="#" onclick="return false">Donate</a>';
+        pane.appendChild(foot);
+      }
+
+      function renderSheetDrills(t, pane, track) {
+        pane.innerHTML = '';
+        const back = document.createElement('button');
+        back.className = 'di-back';
+        back.textContent = '‹ All topics';
+        back.addEventListener('click', () => track.classList.remove('pushed'));
+        pane.appendChild(back);
+        const head = document.createElement('div');
+        head.className = 'di-head';
+        head.innerHTML =
+          `<div class="md-meta">${esc(t.sets)}</div>` +
+          `<div class="t display">${esc(t.name)}</div>` +
+          `<div class="b">${esc(t.blurb)}</div>`;
+        pane.appendChild(head);
+        t.drills.forEach((d) => pane.appendChild(mobileDrill(d, t, true)));
+      }
+
+      function buildSheetDrillIn(mount, tiles) {
+        mount.innerHTML = '';
+        const track = document.createElement('div');
+        track.className = 'di-track';
+        const p1 = document.createElement('div');
+        p1.className = 'di-pane';
+        const p2 = document.createElement('div');
+        p2.className = 'di-pane';
+        track.append(p1, p2);
+        mount.appendChild(track);
+        const openTopic = (t) => {
+          renderSheetDrills(t, p2, track);
+          track.classList.add('pushed');
+        };
+        if (tiles) {
+          const grid = document.createElement('div');
+          grid.className = 'bs-tilegrid';
+          byOrder().forEach((t) => {
+            const tile = document.createElement('button');
+            tile.className = 'bs-tile';
+            const row = document.createElement('span');
+            row.className = 'trow';
+            const name = document.createElement('span');
+            name.textContent = t.name;
+            row.appendChild(name);
+            if (topicIsNew(t)) {
+              const dot = document.createElement('span');
+              dot.className = 'new-dot';
+              row.appendChild(dot);
+            }
+            tile.appendChild(row);
+            const sets = document.createElement('span');
+            sets.className = 'set-tag';
+            sets.textContent = t.sets;
+            tile.appendChild(sets);
+            tile.addEventListener('click', () => openTopic(t));
+            grid.appendChild(tile);
+          });
+          p1.appendChild(grid);
+        } else {
+          byOrder().forEach((t) => {
+            const b = document.createElement('button');
+            b.className = 'm-row';
+            const name = document.createElement('span');
+            name.textContent = t.name;
+            b.appendChild(name);
+            if (topicIsNew(t)) {
+              const dot = document.createElement('span');
+              dot.className = 'new-dot';
+              b.appendChild(dot);
+            }
+            const grow = document.createElement('span');
+            grow.className = 'grow';
+            b.appendChild(grow);
+            const sets = document.createElement('span');
+            sets.className = 'set-tag';
+            sets.textContent = t.sets;
+            b.appendChild(sets);
+            const chev = document.createElement('span');
+            chev.className = 'chev';
+            chev.textContent = '›';
+            b.appendChild(chev);
+            b.addEventListener('click', () => openTopic(t));
+            p1.appendChild(b);
+          });
+        }
+        sheetFooter(p1);
+      }
+
+      // The quiz screens' own triads, verbatim from
+      // components/quiz/quizColors.ts (A=A7, L=L4, N=N10; Q is the
+      // by-id special case). Informal wears Q here — R stays present
+      // through the NEW gem and dot; a split treatment is D13's call.
+      const TOPIC_SETS = {
+        syllogistic: { surface: '#FFABC6', ink: '#4A1040', accent: '#674900' },
+        propositional: {
+          surface: '#E7F099',
+          ink: '#02302C',
+          accent: '#BD00AD',
+        },
+        modal: { surface: '#E6ACF4', ink: '#1C3601', accent: '#674900' },
+        deontic: { surface: '#CFF6DD', ink: '#3F0167', accent: '#BD00AD' },
+        belief: { surface: '#9EDAFF', ink: '#4A1040', accent: '#8D0381' },
+        informal: { surface: '#D9CCF9', ink: '#3E1060', accent: '#745400' },
+      };
+
+      // Logic symbols on the 4px pixel grid — ∴ ⊃ ◇ O-ring, thought
+      // bubble, ? — lab sketches for the icon pass, [x, y, w, h] rects.
+      const TOPIC_ICONS = {
+        syllogistic: [
+          [10, 4, 4, 4],
+          [4, 14, 4, 4],
+          [16, 14, 4, 4],
+        ],
+        propositional: [
+          [6, 5, 12, 4],
+          [14, 9, 4, 6],
+          [6, 15, 12, 4],
+        ],
+        modal: [
+          [10, 2, 4, 4],
+          [6, 6, 12, 4],
+          [2, 10, 20, 4],
+          [6, 14, 12, 4],
+          [10, 18, 4, 4],
+        ],
+        deontic: [
+          [8, 4, 8, 4],
+          [16, 8, 4, 8],
+          [8, 16, 8, 4],
+          [4, 8, 4, 8],
+        ],
+        belief: [
+          [4, 4, 16, 12],
+          [8, 16, 4, 4],
+        ],
+        informal: [
+          [6, 4, 12, 4],
+          [14, 8, 4, 4],
+          [10, 12, 4, 4],
+          [10, 20, 4, 4],
+        ],
+      };
+      function topicIcon(id, color, size = 24) {
+        const rects = TOPIC_ICONS[id] || [];
+        return (
+          '<svg class="icon" width="' +
+          size +
+          '" height="' +
+          size +
+          '" viewBox="0 0 24 24" aria-hidden="true">' +
+          rects
+            .map(
+              (r) =>
+                '<rect x="' +
+                r[0] +
+                '" y="' +
+                r[1] +
+                '" width="' +
+                r[2] +
+                '" height="' +
+                r[3] +
+                '" fill="' +
+                color +
+                '"/>'
+            )
+            .join('') +
+          '</svg>'
+        );
+      }
+
+      // (A seeded accent-pixel scatter lived here for one round —
+      // judged "just weird" 2026-08-14 and retired. The pattern instinct
+      // moved to the gem-tile silhouette and the quilt band.)
+
+      function brandedTile(t, style, openTopic) {
+        const c = TOPIC_SETS[t.id];
+        const tile = document.createElement('button');
+        tile.className = 'bs-tile';
+        if (style === 'chip') {
+          const row = document.createElement('span');
+          row.className = 'bs-chiprow';
+          const chip = document.createElement('span');
+          chip.className = 'bs-chip';
+          chip.style.background = c.surface;
+          chip.style.clipPath = GEM;
+          chip.innerHTML = topicIcon(t.id, c.ink, 20);
+          row.appendChild(chip);
+          const name = document.createElement('span');
+          name.textContent = t.name;
+          row.appendChild(name);
+          if (topicIsNew(t)) {
+            const dot = document.createElement('span');
+            dot.className = 'new-dot';
+            row.appendChild(dot);
+          }
+          tile.appendChild(row);
+          const sets = document.createElement('span');
+          sets.className = 'set-tag';
+          sets.textContent = t.sets;
+          tile.appendChild(sets);
+        } else {
+          tile.classList.add('branded');
+          tile.style.background = c.surface;
+          tile.style.color = c.ink;
+          tile.innerHTML = topicIcon(t.id, c.ink, 24);
+          const row = document.createElement('span');
+          row.className = 'trow';
+          const name = document.createElement('span');
+          name.textContent = t.name;
+          row.appendChild(name);
+          if (topicIsNew(t)) {
+            const dot = document.createElement('span');
+            dot.className = 'new-dot';
+            row.appendChild(dot);
+          }
+          tile.appendChild(row);
+          const sets = document.createElement('span');
+          sets.className = 'set-tag';
+          sets.style.color = c.ink;
+          sets.style.opacity = '0.75';
+          sets.textContent = t.sets;
+          tile.appendChild(sets);
+          if (style === 'gem') {
+            tile.style.borderRadius = '0';
+            tile.style.clipPath = GEM;
+          }
+        }
+        tile.addEventListener('click', () => openTopic(t));
+        return tile;
+      }
+
+      // whole-sheet world painting: the grabber strip and any chrome
+      // adopt the set too — a white sheet band over a painted pane was
+      // the jarring bit Malik flagged (2026-08-14)
+      function paintSheetWorld(sheet, c) {
+        if (!('baseBg' in sheet.dataset)) {
+          sheet.dataset.baseBg = sheet.style.background || '';
+          sheet.dataset.baseGrab = sheet.style.getPropertyValue('--grab') || '';
+          sheet.dataset.baseHead =
+            sheet.style.getPropertyValue('--bs-head-ink') || '';
+        }
+        if (c) {
+          sheet.style.background = c.surface;
+          sheet.style.setProperty('--grab', mixHex(c.surface, c.ink, 0.35));
+          sheet.style.setProperty('--bs-head-ink', c.ink);
+        } else {
+          sheet.style.background = sheet.dataset.baseBg;
+          sheet.style.setProperty('--grab', sheet.dataset.baseGrab);
+          sheet.style.setProperty('--bs-head-ink', sheet.dataset.baseHead);
+        }
+      }
+
+      // level 2 painted as the set's screen — the menu previews the
+      // world the drill opens into
+      function renderSetWorldDrills(t, pane, track) {
+        const c = TOPIC_SETS[t.id];
+        const sheet = pane.closest('.bs-sheet');
+        paintSheetWorld(sheet, c);
+        pane.innerHTML = '';
+        pane.style.background = c.surface;
+        const hair = mixHex(c.surface, c.ink, 0.16);
+        const back = document.createElement('button');
+        back.className = 'di-back';
+        back.textContent = '‹ All topics';
+        back.style.background = 'transparent';
+        back.style.color = c.ink;
+        back.style.borderBottomColor = hair;
+        back.addEventListener('click', () => {
+          paintSheetWorld(sheet, null);
+          track.classList.remove('pushed');
+        });
+        pane.appendChild(back);
+        const head = document.createElement('div');
+        head.className = 'di-head';
+        head.style.background = 'transparent';
+        head.style.borderBottomColor = hair;
+        head.innerHTML =
+          `<div class="md-meta" style="color:${ensureContrast(c.accent, c.surface, c.ink, 4.5)}">${esc(t.sets)}</div>` +
+          `<div class="t display" style="color:${c.ink}">${esc(t.name)}</div>` +
+          `<div class="b" style="color:${c.ink}">${esc(t.blurb)}</div>`;
+        pane.appendChild(head);
+        t.drills.forEach((drill) => {
+          const a = mobileDrill(drill, t, true);
+          a.style.background = 'transparent';
+          a.style.borderBottomColor = hair;
+          a.querySelector('.name').style.color = c.ink;
+          a.querySelector('.desc').style.color = ensureContrast(
+            mixHex(c.ink, c.surface, 0.2),
+            c.surface,
+            c.ink,
+            4.5
+          );
+          const tag = a.querySelector('.set-tag');
+          if (tag) tag.style.color = c.ink;
+          pane.appendChild(a);
+        });
+      }
+
+      function sheetFooterBranded(pane) {
+        const foot = document.createElement('div');
+        foot.className = 'm-footer';
+        foot.style.color = '#02302C';
+        foot.innerHTML =
+          '<a href="#" onclick="return false">Blog</a>' +
+          '<a href="#" onclick="return false" class="gem-cta">Donate</a>';
+        foot.querySelector('.gem-cta').style.clipPath = GEM;
+        pane.appendChild(foot);
+      }
+
+      // one-time sheet chrome (ground, grabber colour, eyebrow header,
+      // quilt band) — lives OUTSIDE bs-body so order re-renders keep it
+      function applySheetChrome(pid, opts) {
+        const phone = document.getElementById(pid);
+        const sheet = phone.querySelector('.bs-sheet');
+        const body = phone.querySelector('.bs-body');
+        if (opts.ground) sheet.style.background = opts.ground;
+        if (opts.grab) sheet.style.setProperty('--grab', opts.grab);
+        if (opts.header) {
+          const hd = document.createElement('div');
+          hd.className = 'bs-head';
+          hd.textContent = 'Exercises';
+          sheet.insertBefore(hd, body);
+        }
+        if (opts.quilt) {
+          const q = document.createElement('div');
+          q.className = 'bs-quilt';
+          const surfs = byOrder().map((t) => TOPIC_SETS[t.id].surface);
+          for (let i = 0; i < 40; i++) {
+            const sq = document.createElement('span');
+            sq.style.background = surfs[i % surfs.length];
+            q.appendChild(sq);
+          }
+          sheet.insertBefore(q, body);
+        }
+      }
+
+      // brand-chrome level 2 — stays in the cream world. Malik caught
+      // the dissonance (2026-08-14): the old handoff stacked THREE
+      // grounds (cream chrome → cool-grey back row → white pane → cream
+      // again), and the grey was the wrong temperature for cream. Same
+      // family of bug as 3d-d's unpainted grabber, inverted.
+      function renderCreamDrills(t, pane, track) {
+        const CREAM = '#EDEDE3';
+        const TYPE = '#02302C';
+        const hair = mixHex(CREAM, TYPE, 0.14);
+        pane.innerHTML = '';
+        pane.style.background = CREAM;
+        const back = document.createElement('button');
+        back.className = 'di-back';
+        back.textContent = '‹ All topics';
+        back.style.background = 'transparent';
+        back.style.color = TYPE;
+        back.style.borderBottomColor = hair;
+        back.addEventListener('click', () => track.classList.remove('pushed'));
+        pane.appendChild(back);
+        const head = document.createElement('div');
+        head.className = 'di-head';
+        head.style.background = 'transparent';
+        head.style.borderBottomColor = hair;
+        head.innerHTML =
+          `<div class="md-meta" style="color:${ensureContrast('#05A24B', CREAM, TYPE, 4.5)}">${esc(t.sets)}</div>` +
+          `<div class="t display" style="color:${TYPE}">${esc(t.name)}</div>` +
+          `<div class="b" style="color:${ensureContrast(mixHex(TYPE, CREAM, 0.2), CREAM, TYPE, 4.5)}">${esc(t.blurb)}</div>`;
+        pane.appendChild(head);
+        t.drills.forEach((drill) => {
+          const a = mobileDrill(drill, t, true);
+          // white cards on cream — the same figure move as level 1's tiles
+          a.style.background = '#fff';
+          a.style.border = '1px solid ' + hair;
+          a.style.borderRadius = '12px';
+          a.style.margin = '10px 12px 0';
+          a.querySelector('.name').style.color = TYPE;
+          a.querySelector('.desc').style.color = ensureContrast(
+            mixHex(TYPE, '#ffffff', 0.25),
+            '#ffffff',
+            TYPE,
+            4.5
+          );
+          const tag = a.querySelector('.set-tag');
+          if (tag)
+            tag.style.color = ensureContrast(
+              mixHex(TYPE, '#ffffff', 0.35),
+              '#ffffff',
+              TYPE,
+              4.5
+            );
+          pane.appendChild(a);
+        });
+      }
+
+      function buildBrandedSheet(mount, variant) {
+        mount.innerHTML = '';
+        const track = document.createElement('div');
+        track.className = 'di-track';
+        const p1 = document.createElement('div');
+        p1.className = 'di-pane';
+        const p2 = document.createElement('div');
+        p2.className = 'di-pane';
+        track.append(p1, p2);
+        mount.appendChild(track);
+        const worldly = variant === 'world' || variant === 'worldchrome';
+        const chrome =
+          variant === 'chipchrome' ||
+          variant === 'worldchrome' ||
+          variant === 'quiltchrome';
+        const openTopic = (t) => {
+          p2.style.background = '';
+          if (worldly) renderSetWorldDrills(t, p2, track);
+          else if (variant === 'chipchrome') renderCreamDrills(t, p2, track);
+          else renderSheetDrills(t, p2, track);
+          track.classList.add('pushed');
+        };
+        const tileStyle = variant === 'chipchrome' ? 'chip' : variant;
+        if (['set', 'chip', 'gem', 'chipchrome'].includes(variant)) {
+          const grid = document.createElement('div');
+          grid.className = 'bs-tilegrid';
+          byOrder().forEach((t) =>
+            grid.appendChild(brandedTile(t, tileStyle, openTopic))
+          );
+          p1.appendChild(grid);
+        } else {
+          byOrder().forEach((t) => {
+            const c = TOPIC_SETS[t.id];
+            const b = document.createElement('button');
+            b.className = 'm-row';
+            if (variant === 'rainbow') {
+              b.style.background = c.surface;
+              b.style.color = c.ink;
+              b.style.borderBottomColor = mixHex(c.surface, c.ink, 0.16);
+            }
+            const chip = document.createElement('span');
+            chip.className = 'bs-chip';
+            if (variant === 'rainbow') {
+              chip.innerHTML = topicIcon(t.id, c.ink, 22);
+            } else {
+              chip.style.background = c.surface;
+              chip.style.clipPath = GEM;
+              chip.innerHTML = topicIcon(t.id, c.ink, 20);
+            }
+            b.appendChild(chip);
+            const name = document.createElement('span');
+            name.textContent = t.name;
+            b.appendChild(name);
+            if (topicIsNew(t)) {
+              const dot = document.createElement('span');
+              dot.className = 'new-dot';
+              b.appendChild(dot);
+            }
+            const grow = document.createElement('span');
+            grow.className = 'grow';
+            b.appendChild(grow);
+            const sets = document.createElement('span');
+            sets.className = 'set-tag';
+            if (variant === 'rainbow') {
+              sets.style.color = c.ink;
+              sets.style.opacity = '0.75';
+            }
+            b.appendChild(sets);
+            sets.textContent = t.sets;
+            const chev = document.createElement('span');
+            chev.className = 'chev';
+            if (variant === 'rainbow') chev.style.color = c.ink;
+            chev.textContent = '›';
+            b.appendChild(chev);
+            b.addEventListener('click', () => openTopic(t));
+            p1.appendChild(b);
+          });
+        }
+        if (chrome) sheetFooterBranded(p1);
+        else sheetFooter(p1);
+      }
+
+      function renderBottomSheet() {
+        buildAccordionInto(document.getElementById('bs1-content'));
+        const c2 = document.getElementById('bs2-content');
+        buildAccordionInto(c2);
+        // C2: no topic pre-expanded at half height; expanding grows the sheet
+        c2.querySelectorAll('.ac-topic[aria-expanded="true"]').forEach((b) =>
+          b.click()
+        );
+        buildSheetDrillIn(document.getElementById('bs3-content'), false);
+        buildSheetDrillIn(document.getElementById('bs4-content'), true);
+        buildBrandedSheet(document.getElementById('bd1-content'), 'set');
+        buildBrandedSheet(document.getElementById('bd2-content'), 'chip');
+        buildBrandedSheet(document.getElementById('bd3-content'), 'gem');
+        buildBrandedSheet(document.getElementById('bd4-content'), 'world');
+        buildBrandedSheet(document.getElementById('bd5-content'), 'rainbow');
+        buildBrandedSheet(document.getElementById('bd6-content'), 'chipchrome');
+        buildBrandedSheet(
+          document.getElementById('bd7-content'),
+          'worldchrome'
+        );
+        // bd8 (3d-h, quilt band) killed 2026-08-14 — Malik's call
+      }
+
+      function wireSheets() {
+        for (const [pid, grabberMode] of [
+          ['bs1', 'close'],
+          ['bs2', 'detent'],
+          ['bs3', 'close'],
+          ['bs4', 'close'],
+          ['bd1', 'close'],
+          ['bd2', 'close'],
+          ['bd3', 'close'],
+          ['bd4', 'close'],
+          ['bd5', 'close'],
+          ['bd6', 'close'],
+          ['bd7', 'close'],
+        ]) {
+          const phone = document.getElementById(pid);
+          const burger = phone.querySelector('.m-burger');
+          const setOpen = (open) => {
+            phone.classList.toggle('bs-open', open);
+            burger.setAttribute('aria-expanded', String(open));
+            burger.textContent = open ? '✕' : '☰';
+          };
+          burger.addEventListener('click', () =>
+            setOpen(!phone.classList.contains('bs-open'))
+          );
+          phone
+            .querySelector('.bs-scrim')
+            .addEventListener('click', () => setOpen(false));
+          const grab = phone.querySelector('.bs-grab');
+          if (grabberMode === 'detent') {
+            grab.setAttribute('aria-label', 'Toggle sheet height');
+            grab.addEventListener('click', () =>
+              phone.classList.toggle('bs-half')
+            );
+            // expanding any topic needs the room — grow to full
+            phone.querySelector('.bs-body').addEventListener('click', (e) => {
+              if (e.target.closest('.ac-topic'))
+                phone.classList.remove('bs-half');
+            });
+          } else {
+            grab.addEventListener('click', () => setOpen(false));
+          }
+          setOpen(true);
+        }
+        applySheetChrome('bd6', {
+          ground: '#EDEDE3',
+          grab: '#05A24B',
+          header: true,
+        });
+        applySheetChrome('bd7', {
+          ground: '#EDEDE3',
+          grab: '#05A24B',
+          header: true,
+        });
+        // bd8's quilt chrome retired with 3d-h (2026-08-14)
+      }
+
+      // ————— order toggle —————
+      function setOrder(next) {
+        order = next;
+        document
+          .getElementById('order-course')
+          .setAttribute('aria-pressed', String(next === 'course'));
+        document
+          .getElementById('order-letter')
+          .setAttribute('aria-pressed', String(next === 'letter'));
+        renderIA();
+        renderRail();
+        renderMega();
+        renderDrillIn();
+        renderAccordion();
+        renderBottomSheet();
+        renderBrand();
+        renderPatternFrames();
+        document.getElementById('di-track').classList.remove('pushed');
+      }
+      document
+        .getElementById('order-course')
+        .addEventListener('click', () => setOrder('course'));
+      document
+        .getElementById('order-letter')
+        .addEventListener('click', () => setOrder('letter'));
+
+      // ————— § 4 brand pass —————
+      // Mark + CTA silhouette mirrored from docs/marketing-lab.html, which
+      // mirrors public/logicola-wordmark.svg (the canonical vector). Edit
+      // the SVG, then the labs — never the other way round.
+      const MARK_PATHS = [
+        [
+          'g',
+          'M46.6906 0.161408C57.5696 -0.164592 69.8788 0.103905 80.8853 0.104905L145.294 0.10991L192.186 0.108155C200.231 0.100405 208.401 0.0321546 216.451 0.137155C218.204 0.270405 220.751 0.609405 222.174 1.69116C226.361 4.87591 227.769 10.3359 224.689 14.7544C220.814 20.3117 216.991 18.2564 211.504 19.1112C204.589 20.1887 209.389 29.6969 205.761 33.7537C201.566 39.2404 198.519 37.1454 192.506 38.0452C191.284 38.2282 189.881 39.0922 189.256 40.1539C188.736 41.0349 188.631 43.5687 188.626 44.6802C188.594 52.5904 188.609 60.5202 188.609 68.4294L188.611 114.841L188.614 134.917C188.614 137.911 188.371 146.292 189.076 148.737L189.159 149.017C193.646 153.624 198.336 149.464 203.441 152.992C208.864 156.742 206.811 161.377 207.611 166.374C208.636 172.747 218.451 168.447 222.776 172.184C224.721 173.652 225.894 175.814 226.186 178.334C226.899 184.494 222.846 188.212 217.351 189.009C206.251 189.334 193.744 189.074 182.521 189.074L116.799 189.072L71.4336 189.079C63.6621 189.084 55.7211 189.154 47.9509 189.002C45.5939 188.954 43.1891 188.597 41.3261 187.147C36.8748 183.684 38.2761 178.894 37.6849 174.449C36.7366 167.319 27.4126 172.272 22.6956 168.369C17.7779 164.304 19.5241 160.712 18.8344 155.482C17.9114 148.484 8.23885 153.309 3.8656 149.467C1.8811 147.724 0.786605 146.782 0.448855 144.019C-0.208145 138.644 0.0503474 132.631 0.0490974 127.197L0.0421012 97.6994L0.0411018 63.6024C0.0418518 57.9299 -0.0501491 51.9744 0.174601 46.3057C0.235601 44.7617 1.2201 42.6354 2.1361 41.4264C5.31935 37.2247 9.88285 38.1274 14.4496 37.7237C21.9781 37.0579 16.7711 27.5629 20.7049 22.7587C24.6149 17.9834 28.3966 19.5624 33.3896 18.8894C40.8469 17.8844 35.6621 8.19541 39.7899 3.59566C41.9451 1.19391 43.5926 0.589908 46.6906 0.161408Z',
+        ],
+        [
+          'w',
+          'M145.744 54.0306C146.758 55.2444 146.463 57.0889 146.435 58.7701C143.725 58.6669 140.75 58.6934 138.019 58.6611C138.487 59.2931 138.903 59.9616 139.264 60.6606C145.296 72.2979 132.957 80.5394 122.517 78.4749C120.139 78.0046 118.923 77.8404 116.529 77.0431C116.476 83.3004 118.338 81.9321 123.33 83.1549C130.034 84.7974 145.484 84.8806 145.71 94.3509C145.981 105.723 134.142 108.63 125.053 109.083C125.049 114.704 124.456 145.962 125.585 148.892C125.988 149.937 127.528 150.469 128.464 150.937C128.68 151.099 128.574 150.979 128.661 151.377C127.513 151.804 112.349 151.622 109.903 151.644C111.559 150.549 114.077 149.589 114.196 147.394C114.424 143.184 114.33 138.918 114.326 134.695L114.294 107.601C105.002 103.166 107.952 95.5761 114.722 90.5934C106.606 86.4044 111.697 81.3381 115.578 76.4239C115.174 76.1754 114.766 75.9181 114.385 75.6366C112.102 73.9294 110.592 71.3846 110.188 68.5631C108.005 53.8986 127.686 50.7429 137.076 57.8364C141.077 56.8839 142.418 56.2011 145.744 54.0306Z',
+        ],
+        [
+          'g',
+          'M116.2 90.9899C117.76 91.4281 125.745 93.0781 127.29 93.0854C134.454 93.1184 143.813 98.9991 134.189 105.38C131.007 106.663 129.096 106.925 125.708 106.967C114.389 107.107 111.708 100.459 116.2 90.9899Z',
+        ],
+        [
+          'g',
+          'M124.002 55.8879C126.728 55.6792 129.194 56.3715 130.092 59.2965C131.55 64.0427 132.368 74.7399 126.688 76.9602C123.915 77.2542 121.597 76.6607 120.652 73.6412C119.244 69.1447 118.58 57.9889 124.002 55.8879Z',
+        ],
+        [
+          'w',
+          'M140.172 115.412C145.164 115.247 155.574 115.091 160.711 115.706C162.084 115.87 161.2 119.758 161.802 120.813C162.856 122.661 164.985 121.263 167.269 122.022C169.348 124.061 167.935 135.088 168.293 138.626C168.771 143.353 172.399 139.828 174.66 141.949C175.312 143.214 175.178 149.047 174.815 150.549C174.408 152.239 167.216 151.692 165.814 151.059C165.363 150.274 165.337 147.229 165.26 146.127C164.65 145.472 163.731 144.969 162.818 145.054C160.89 146.567 162.08 149.549 160.942 151.264C158.999 151.872 140.817 151.867 139.036 150.969C138.25 149.589 138.762 148.244 138.576 146.814C138.168 143.674 134.345 146.182 132.325 144.439C131.585 142.553 131.773 125.048 132.294 122.753C133.434 121.153 135.784 122.244 137.229 121.692C140.493 120.446 136.649 116.482 140.172 115.412Z',
+        ],
+        [
+          'g',
+          'M142.506 125.635C145.611 125.602 155.83 125.052 158.28 126.328C158.459 126.422 159.553 139.914 157.558 141.1C155.594 141.236 144.039 141.646 142.271 140.718C140.939 140.019 141.843 131.344 141.496 129.501C141.341 128.679 141.513 126.619 142.506 125.635Z',
+        ],
+        [
+          'w',
+          'M87.6493 114.222C98.2266 113.581 107.334 121.608 108.026 132.182C108.719 142.756 100.736 151.902 90.1656 152.647C79.5221 153.394 70.2993 145.347 69.6021 134.699C68.9048 124.052 76.9991 114.868 87.6493 114.222Z',
+        ],
+        [
+          'g',
+          'M87.6051 115.64C91.1858 115.462 93.8158 116.562 94.7626 120.329C96.4458 127.174 96.2288 134.775 95.6913 141.775C95.3798 145.832 94.4108 149.812 90.1056 151.072C87.9213 151.192 87.3593 151.082 85.3786 150.434C79.9796 144.937 81.2411 128.751 82.5146 121.417C83.0191 118.51 84.7506 116.547 87.6051 115.64Z',
+        ],
+        [
+          'w',
+          'M75.8353 55.5972C78.9531 55.4877 95.3841 55.1692 97.5043 55.8047C98.8873 57.1187 98.2178 58.7364 98.5258 60.5869C99.0198 63.5562 104.929 60.2897 104.932 63.7062C104.933 66.6654 105.625 83.3189 104.473 84.8199C103.471 85.2347 101.471 85.2812 100.272 85.3294C96.9941 85.4612 99.5154 89.1574 97.6356 91.5839C92.3839 91.8154 81.8616 91.9892 76.3201 91.3737C74.2291 91.1417 75.9893 87.9757 75.4893 86.5982C73.9578 85.0627 71.0589 85.1319 68.9384 84.9812C68.4756 82.2734 68.2748 65.0279 69.1058 62.8107C70.3718 61.3494 72.5066 62.4344 74.5611 61.5692C75.9576 60.4284 75.1283 57.9317 75.8353 55.5972Z',
+        ],
+        [
+          'g',
+          'M84.0741 65.704C86.6533 65.6705 92.7401 65.3034 94.7213 66.2237C95.7778 66.7144 95.7958 79.7117 94.7141 81.0284C93.5113 81.4519 91.8713 81.3484 90.5583 81.3467C88.2821 81.3339 80.2711 81.7977 78.8403 80.8132C78.0558 78.5265 78.0593 68.7002 78.6658 66.4334C79.6966 65.4397 82.5573 65.7017 84.0741 65.704Z',
+        ],
+        [
+          'w',
+          'M35.2156 102.184C40.8311 101.961 51.2843 101.577 56.6978 102.301C56.9878 104.036 56.9636 106.521 57.4668 107.82C59.9296 110.206 64.3493 105.662 63.8101 112.891C63.6133 115.529 64.1823 118.987 63.4916 121.682C63.2008 122.816 61.3743 122.535 60.4598 122.611C50.7743 123.274 55.0988 120.03 53.8518 113.517C53.5156 111.762 39.5586 112.472 37.7178 112.865C37.1446 112.988 37.0081 115.849 37.0596 116.376C37.4293 120.175 36.2961 138.243 37.6076 140.462C39.0141 141.256 51.2343 140.992 53.1746 140.708C53.9201 140.117 53.6828 140.345 53.9793 139.237C54.1758 133.566 52.1806 129.905 59.5968 130.539C60.9728 130.656 62.1843 130.347 63.3946 131.243C64.2068 133.198 63.8471 141.553 63.5173 144.053C63.3881 145.032 60.1221 144.722 59.3011 144.809C55.7763 145.182 57.0651 147.452 57.2978 149.609C57.0711 150.092 56.8761 150.504 56.3116 150.692C53.5161 151.614 36.7548 151.474 34.9288 150.892C33.7008 149.732 34.2196 147.734 33.7726 145.702C32.3471 143.968 30.1578 145.434 28.0303 144.362C27.1073 143.052 27.1433 112.791 27.6721 109.513C29.1261 107.826 31.6963 109.122 33.2783 108.291C35.1963 107.284 32.7873 103.305 35.2156 102.184Z',
+        ],
+        [
+          'w',
+          'M32.4663 41.9565C37.4778 41.8842 42.4901 41.916 47.5003 42.0517C45.5081 43.014 43.0056 43.8975 42.8923 46.4532C42.6823 51.2012 42.7793 55.985 42.7838 60.7425L42.7778 90.1955C47.0976 90.0672 53.9226 90.69 57.7653 89.4465C61.2078 86.1707 62.7786 79.663 64.1363 78.8775C64.8828 79.894 64.4173 84.0862 64.3298 85.5195C64.3056 87.529 64.1301 89.7645 64.0153 91.7872C60.2676 91.5422 55.5498 91.7435 51.7171 91.7407L26.5046 91.7437C28.0041 90.843 29.5531 89.9987 31.0823 89.0742C31.7453 85.8925 31.8086 46.5325 30.9683 44.6485C30.4396 43.4622 27.3481 42.6005 26.1658 42.15C28.1213 42.026 30.4836 42.0125 32.4663 41.9565Z',
+        ],
+        [
+          'w',
+          'M162.849 54.3854C164.46 55.3896 162.388 84.5729 163.607 88.6314C164.016 89.9934 166.297 91.0834 167.323 91.6921C161.724 91.7954 156.099 91.5649 150.476 91.7954C149.865 91.8529 149.69 91.9461 149.175 91.6351C149.771 90.4146 152.473 90.1571 152.543 87.8731C152.75 81.1159 152.589 74.3401 152.629 67.5779C152.641 65.5701 152.702 63.4151 152.422 61.4319C151.491 59.9329 149.912 59.7176 148.173 59.1636C153.025 57.4494 157.918 55.8561 162.849 54.3854Z',
+        ],
+        [
+          'w',
+          'M156.748 38.7834C159.938 38.1649 163.035 40.2194 163.705 43.3992C164.375 46.5789 162.371 49.7087 159.203 50.4304C157.107 50.9082 154.916 50.2184 153.472 48.6264C152.028 47.0342 151.554 44.7869 152.233 42.7474C152.912 40.7077 154.637 39.1924 156.748 38.7834Z',
+        ],
+        [
+          'g',
+          'M233.936 19.1349C251.789 17.7166 239.851 38.6129 250.379 37.8346C267.404 36.5761 264.041 50.1224 264.046 63.0414L264.051 91.2104V123.837C264.049 129.63 264.106 135.52 263.974 141.304C263.931 143.147 263.674 144.957 262.804 146.477C259.254 152.682 253.379 150.532 248.174 151.717C243.501 152.779 246.099 161.659 244.166 165.054C242.509 167.967 240.816 168.917 237.641 170.012C226.571 171.454 226.324 162.029 226.091 154.637C225.946 149.949 216.029 152.164 212.229 150.007C205.604 146.244 207.446 135.128 207.446 128.24V102.3L207.444 67.1759C207.439 60.8564 207.389 54.5269 207.509 48.1979C207.614 45.4284 207.969 43.0269 209.869 40.9321C213.554 36.8134 218.556 38.5514 223.106 37.5271C228.366 36.3426 225.146 27.3919 227.489 23.8069C229.366 20.9306 230.886 20.0861 233.936 19.1349Z',
+        ],
+        [
+          'w',
+          'M230.619 75.6939C234.654 75.6299 240.499 75.0077 243.824 76.8724C244.229 77.5092 244.676 78.1877 244.959 78.8882C245.599 80.4622 245.586 122.861 245.269 127.459C245.211 128.269 244.994 129.059 244.631 129.784C243.881 131.315 242.804 131.842 241.301 132.338C237.424 132.36 233.494 132.421 229.621 132.286C227.249 130.973 226.464 129.947 226.366 127.275C226.249 124.048 226.296 120.832 226.296 117.604L226.291 99.8182C226.291 95.8469 226.046 81.4009 226.661 78.2817C228.146 76.6649 228.519 76.2857 230.619 75.6939Z',
+        ],
+      ];
+      function markSvg(height, body, knock) {
+        const k = height / 190;
+        const w = Math.round(265 * k);
+        let out =
+          '<svg xmlns="http://www.w3.org/2000/svg" width="' +
+          w +
+          '" height="' +
+          height +
+          '" viewBox="0 0 265 190" style="display:block" role="img" aria-label="LogiCola">';
+        for (const p of MARK_PATHS) {
+          out +=
+            '<path d="' +
+            p[1] +
+            '" fill="' +
+            (p[0] === 'g' ? body : knock) +
+            '"/>';
+        }
+        return out + '</svg>';
+      }
+      const CTA_CLIP =
+        'polygon(0px 24px, 0px 16px, 4px 16px, 4px 8px, 8px 8px, 8px 4px, 16px 4px, 16px 0px, calc(100% - 16px) 0px, calc(100% - 16px) 4px, calc(100% - 8px) 4px, calc(100% - 8px) 8px, calc(100% - 4px) 8px, calc(100% - 4px) 16px, calc(100% - 0px) 16px, calc(100% - 0px) 24px, calc(100% - 0px) calc(100% - 24px), calc(100% - 0px) calc(100% - 16px), calc(100% - 4px) calc(100% - 16px), calc(100% - 4px) calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) calc(100% - 4px), calc(100% - 16px) calc(100% - 4px), calc(100% - 16px) calc(100% - 0px), 16px calc(100% - 0px), 16px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 16px), 0px calc(100% - 16px), 0px calc(100% - 24px))';
+
+      // WCAG relative-luminance contrast + hex mixing, same math as
+      // lib/contrast.ts spends (re-derived here so the lab runs from disk).
+      const hexRgb = (h) => {
+        const n = parseInt(h.slice(1), 16);
+        return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+      };
+      const chan = (v) => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+      };
+      const lum = (h) => {
+        const [r, g, b] = hexRgb(h).map(chan);
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      };
+      const contrastOf = (a, b) => {
+        const x = lum(a),
+          y = lum(b);
+        return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+      };
+      const mixHex = (a, b, t) => {
+        const A = hexRgb(a),
+          B = hexRgb(b);
+        return (
+          '#' +
+          A.map((v, i) =>
+            Math.round(v + (B[i] - v) * t)
+              .toString(16)
+              .padStart(2, '0')
+          ).join('')
+        );
+      };
+      // walk fg toward `deep` until it clears `target` on bg — the reason
+      // every muted tier in these frames is legal by construction
+      const ensureContrast = (fg, bg, deep, target) => {
+        let c = fg;
+        for (let i = 0; i < 24 && contrastOf(c, bg) < target; i++)
+          c = mixHex(c, deep, 0.12);
+        return c;
+      };
+
+      const NAV_SCHEMES = [
+        {
+          id: 'cream',
+          letter: 'a',
+          label: 'Brand · cream',
+          hint: 'green on cream — the provisional',
+          ground: '#EDEDE3',
+          ink: '#05A24B',
+          type: '#02302C',
+        },
+        /* KILLED 2026-08-14 — Malik: "We can kill this one here and
+           everywhere else. I don't like it." Green-on-mint is dead as a
+           scheme (also retired from the marketing lab's dial the same
+           day). Set L below is a different animal: same mint, plum ink.
+             { ground: '#CFF6DD', ink: '#05A24B', type: '#02302C' } */
+        {
+          id: 'setL',
+          letter: 'b',
+          label: 'Set L — mint / plum',
+          hint: 'the set’s own three',
+          ground: '#CFF6DD',
+          ink: '#3F0167',
+          type: '#3F0167',
+          accent: '#BD00AD',
+        },
+        {
+          id: 'original',
+          letter: 'c',
+          label: 'Brand · original',
+          hint: 'Gensler’s own two, straight from the 2008 binaries',
+          ground: '#BBFFFF',
+          ink: '#000077',
+          type: '#000077',
+        },
+      ];
+
+      let panelMode = 'white';
+      let shellMode = 'contained'; // Malik 2026-08-14: match production's structure first
+      let cornerMode = 'pixel'; // decided 2026-08-14; 'round' kept for the record
+
+      function brandVars(sch) {
+        const panel = panelMode === 'white' ? '#ffffff' : sch.ground;
+        const active = panelMode === 'white' ? sch.ground : '#ffffff';
+        const deep = sch.type;
+        return {
+          ground: sch.ground,
+          ink: sch.ink,
+          type: sch.type,
+          panel,
+          active,
+          hover: mixHex(panel, active, 0.5),
+          hair: mixHex(panel, deep, 0.12),
+          navhover: mixHex(sch.ground, deep, 0.08),
+          muted: ensureContrast(mixHex(deep, panel, 0.35), panel, deep, 4.5),
+          body: ensureContrast(mixHex(deep, panel, 0.25), panel, deep, 4.5),
+          meta: ensureContrast(sch.accent || sch.ink, panel, deep, 4.5),
+          tag: ensureContrast(mixHex(deep, panel, 0.4), panel, deep, 4.5),
+        };
+      }
+
+      function brandDetail(topic, mount) {
+        mount.innerHTML = '';
+        const meta = document.createElement('div');
+        meta.className = 'md-meta';
+        meta.textContent = topic.sets;
+        const h = document.createElement('h3');
+        h.className = 'md-title display';
+        h.textContent = topic.name;
+        const blurb = document.createElement('p');
+        blurb.className = 'md-blurb';
+        blurb.textContent = topic.blurb;
+        mount.append(meta, h, blurb);
+        const ul = document.createElement('ul');
+        ul.className = 'md-drills';
+        topic.drills.forEach((drill) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.className = 'md-drill';
+          a.href = drill.path;
+          const row = document.createElement('div');
+          row.className = 'row';
+          const name = document.createElement('span');
+          name.className = 'name';
+          name.textContent = drill.title;
+          row.appendChild(name);
+          if (drill.isNew) row.appendChild(gem());
+          if (topicMultiSet(topic)) {
+            const tag = document.createElement('span');
+            tag.className = 'set-tag';
+            tag.textContent = drill.set;
+            row.appendChild(tag);
+          }
+          const desc = document.createElement('p');
+          desc.className = 'desc';
+          desc.textContent = drill.desc;
+          a.append(row, desc);
+          a.style.clipPath = GEM;
+          wireDrill(a);
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+        mount.appendChild(ul);
+      }
+
+      function buildBrandFrame(sch, mount) {
+        const v = brandVars(sch);
+        let active = byOrder()[0];
+
+        const sub = document.createElement('div');
+        sub.className = 'b-sublabel';
+        sub.textContent =
+          '4' + sch.letter + ' · ' + sch.label + ' — ' + sch.hint;
+        mount.appendChild(sub);
+
+        const frame = document.createElement('div');
+        frame.className = 'frame b-frame';
+        for (const [k, val] of Object.entries(v))
+          frame.style.setProperty('--b-' + k, val);
+
+        const navHtml =
+          '<div class="navmock">' +
+          '<div><button class="trigger" aria-expanded="true">Exercises ' +
+          '<span class="caret" aria-hidden="true"><svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+          '</button></div>' +
+          '<div class="b-mark">' +
+          markSvg(34, v.ink, v.ground) +
+          '</div>' +
+          '<div class="links"><a href="#" onclick="return false">Blog</a>' +
+          '<a href="#" onclick="return false" class="cta-gem">Donate</a></div>' +
+          '</div>';
+        const panelHtml =
+          '<div class="md-panel"><div class="md-rail" role="list" aria-label="Logic topics"></div><div class="md-detail"></div></div>';
+        if (shellMode === 'full') {
+          frame.innerHTML = navHtml + panelHtml;
+        } else {
+          // production structure: the bar spans, the menu floats as a
+          // card capped near the content width, page content behind
+          frame.innerHTML =
+            navHtml +
+            '<div class="b-page">' +
+            '<div class="b-cardwrap' +
+            (cornerMode === 'pixel' ? ' b-pixelwrap' : '') +
+            '"><div class="b-card' +
+            (cornerMode === 'pixel' ? ' b-pixel' : '') +
+            '">' +
+            panelHtml +
+            '</div></div>' +
+            '<div class="b-faq"><div class="t">Frequently Asked Questions</div>' +
+            '<div class="row"><span>What is LogiCola?</span><span>⌄</span></div>' +
+            '<div class="row"><span>Do I have to pay anything to use it?</span><span>⌄</span></div>' +
+            '</div></div>';
+          if (cornerMode === 'pixel')
+            frame.querySelector('.b-card').style.clipPath = CTA_CLIP;
+        }
+        frame.querySelector('.cta-gem').style.clipPath = CTA_CLIP;
+
+        const rail = frame.querySelector('.md-rail');
+        const detail = frame.querySelector('.md-detail');
+        byOrder().forEach((t) => {
+          const b = document.createElement('button');
+          b.className = 'md-topic';
+          b.dataset.topic = t.id;
+          b.setAttribute('role', 'listitem');
+          b.setAttribute('aria-current', t.id === active.id ? 'true' : 'false');
+          const name = document.createElement('span');
+          name.textContent = t.name;
+          b.appendChild(name);
+          if (topicIsNew(t)) {
+            const dot = document.createElement('span');
+            dot.className = 'new-dot';
+            dot.setAttribute('title', 'New exercises inside');
+            b.appendChild(dot);
+          }
+          const grow = document.createElement('span');
+          grow.className = 'grow';
+          b.appendChild(grow);
+          const chev = document.createElement('span');
+          chev.className = 'chev';
+          chev.textContent = '›';
+          b.appendChild(chev);
+          b.style.clipPath = GEM;
+          b.addEventListener('click', () => {
+            active = t;
+            rail
+              .querySelectorAll('.md-topic')
+              .forEach((x) =>
+                x.setAttribute(
+                  'aria-current',
+                  x.dataset.topic === t.id ? 'true' : 'false'
+                )
+              );
+            brandDetail(t, detail);
+          });
+          rail.appendChild(b);
+        });
+        brandDetail(active, detail);
+        mount.appendChild(frame);
+
+        const fmt = (r) => r.toFixed(1) + ':1';
+        const cell = (label, r, floor) =>
+          r >= floor
+            ? label + ' ' + fmt(r) + ' ✓'
+            : '<span class="fail">' + label + ' ' + fmt(r) + ' ✗</span>';
+        const audit = document.createElement('div');
+        audit.className = 'b-audit';
+        audit.innerHTML =
+          [
+            cell('nav text', contrastOf(v.type, v.ground), 4.5),
+            cell('CTA', contrastOf(v.ground, v.type), 4.5),
+            // the mark is a logotype — exempt from 1.4.11/1.4.3, so it gets
+            // an honest number and a word, never a fail glyph
+            contrastOf(v.ink, v.ground) >= 3
+              ? 'mark ' + fmt(contrastOf(v.ink, v.ground)) + ' ✓'
+              : 'mark ' +
+                fmt(contrastOf(v.ink, v.ground)) +
+                ' (logotype — exempt, but faint)',
+            cell('title', contrastOf(v.type, v.panel), 4.5),
+            cell('body', contrastOf(v.body, v.panel), 4.5),
+            cell('meta', contrastOf(v.meta, v.panel), 4.5),
+            cell('tag', contrastOf(v.tag, v.panel), 4.5),
+            cell('active row', contrastOf(v.type, v.active), 4.5),
+          ].join(' · ') +
+          ' — ink on ground ' +
+          fmt(contrastOf(v.ink, v.ground)) +
+          ' (display / underline only, never body text)';
+        mount.appendChild(audit);
+      }
+
+      function renderBrand() {
+        const c = document.getElementById('brand-frames');
+        c.innerHTML = '';
+        NAV_SCHEMES.forEach((sch) => buildBrandFrame(sch, c));
+      }
+      function wirePanelToggle() {
+        const w = document.getElementById('panel-white');
+        const g = document.getElementById('panel-scheme');
+        const set = (mode) => {
+          panelMode = mode;
+          w.setAttribute('aria-pressed', String(mode === 'white'));
+          g.setAttribute('aria-pressed', String(mode === 'scheme'));
+          renderBrand();
+        };
+        w.addEventListener('click', () => set('white'));
+        g.addEventListener('click', () => set('scheme'));
+        const pairs = [
+          [
+            'shell-contained',
+            'shell-full',
+            (m) => (shellMode = m),
+            ['contained', 'full'],
+          ],
+          [
+            'corner-round',
+            'corner-pixel',
+            (m) => (cornerMode = m),
+            ['round', 'pixel'],
+          ],
+        ];
+        for (const [aId, bId, apply, modes] of pairs) {
+          const A = document.getElementById(aId);
+          const B = document.getElementById(bId);
+          const pick = (m) => {
+            apply(m);
+            A.setAttribute('aria-pressed', String(m === modes[0]));
+            B.setAttribute('aria-pressed', String(m === modes[1]));
+            renderBrand();
+          };
+          A.addEventListener('click', () => pick(modes[0]));
+          B.addEventListener('click', () => pick(modes[1]));
+        }
+      }
+
+      // ————— § 4p: the labs' pattern machinery, ported verbatim —————
+      // (mulberry32, hidden, pixHash/valueNoise/pixelLattice, quiltPixBody,
+      // camoBody — from docs/marketing-lab.html, which inherited the quilt
+      // rules from docs/brand-lab.html: 70/30, no orthogonal adjacency,
+      // one shape per cell, straight edges stay straight.)
+      function mulberry32(seed) {
+        let a = seed;
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      // extended over the original: `clear` may be one rect or an array
+      function hiddenOne(c, x, y, ww, hh) {
+        if (x >= c.x + c.w || x + ww <= c.x || y >= c.y + c.h || y + hh <= c.y)
+          return false;
+        if (!c.r) return true;
+        if (x + ww > c.x + c.r && x < c.x + c.w - c.r) return true;
+        if (y + hh > c.y + c.r && y < c.y + c.h - c.r) return true;
+        const ccx = x + ww <= c.x + c.r + 0.01 ? c.x + c.r : c.x + c.w - c.r;
+        const ccy = y + hh <= c.y + c.r + 0.01 ? c.y + c.r : c.y + c.h - c.r;
+        const nx = Math.max(x, Math.min(ccx, x + ww));
+        const ny = Math.max(y, Math.min(ccy, y + hh));
+        return (nx - ccx) ** 2 + (ny - ccy) ** 2 <= c.r * c.r;
+      }
+      function hidden(clear, x, y, ww, hh) {
+        if (!clear) return false;
+        const list = Array.isArray(clear) ? clear : [clear];
+        return list.some((c) => hiddenOne(c, x, y, ww, hh));
+      }
+      function quiltPixBody(opts) {
+        const { w, h, ink, pool, scale, seed, clear, rate = 0.28 } = opts;
+        const rng = mulberry32(seed >>> 0);
+        const t = 62 * scale;
+        const pad = t * 0.09;
+        const cell = t - pad * 2;
+        const cols = Math.ceil(w / t) + 1;
+        const rows = Math.ceil(h / t) + 1;
+        const accent = Array.from({ length: rows }, () =>
+          Array(cols).fill(false)
+        );
+        const P = 7;
+        let out = '';
+        for (let i = 0; i < rows; i++) {
+          for (let j = 0; j < cols; j++) {
+            const left = j > 0 && accent[i][j - 1];
+            const up = i > 0 && accent[i - 1][j];
+            let fillCol = ink;
+            if (pool.length && !left && !up && rng() < rate) {
+              fillCol = pool[Math.floor(rng() * pool.length)];
+              accent[i][j] = true;
+            }
+            const x = j * t + pad;
+            const y = i * t + pad;
+            const q = cell / P;
+            const roll = rng();
+            const fill = new Array(P * P);
+            if (roll < 0.4) {
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++)
+                  fill[jj * P + ii] = !(
+                    (ii === 0 || ii === P - 1) &&
+                    (jj === 0 || jj === P - 1)
+                  );
+            } else if (roll < 0.7) {
+              const R = P / 2;
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++) {
+                  const dx = ii + 0.5 - P / 2;
+                  const dy = jj + 0.5 - P / 2;
+                  fill[jj * P + ii] = dx * dx + dy * dy <= R * R;
+                }
+            } else {
+              const o = Math.floor(rng() * 4);
+              const cx = o === 0 || o === 3 ? 0 : P;
+              const cy = o === 0 || o === 1 ? 0 : P;
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++) {
+                  const dx = ii + 0.5 - cx;
+                  const dy = jj + 0.5 - cy;
+                  fill[jj * P + ii] = dx * dx + dy * dy <= P * P;
+                }
+            }
+            let piece =
+              '<g fill="' + fillCol + '" shape-rendering="crispEdges">';
+            for (let jj = 0; jj < P; jj++) {
+              let ii = 0;
+              while (ii < P) {
+                if (!fill[jj * P + ii]) {
+                  ii++;
+                  continue;
+                }
+                let len = 0;
+                while (ii + len < P && fill[jj * P + ii + len]) len++;
+                piece +=
+                  '<rect x="' +
+                  (x + ii * q) +
+                  '" y="' +
+                  (y + jj * q) +
+                  '" width="' +
+                  len * q +
+                  '" height="' +
+                  (q + 0.4) +
+                  '"/>';
+                ii += len;
+              }
+            }
+            piece += '</g>';
+            if (!hidden(clear, x, y, cell, cell)) out += piece;
+          }
+        }
+        return out;
+      }
+      function pixHash(u, v, seed) {
+        let x = (u * 374761393 + v * 668265263 + (seed | 0) * 971) | 0;
+        x = Math.imul(x ^ (x >>> 13), 1274126177);
+        return ((x ^ (x >>> 16)) >>> 0) / 4294967296;
+      }
+      function valueNoise(u, v, seed, cell) {
+        const gx = Math.floor(u / cell);
+        const gy = Math.floor(v / cell);
+        const sm = (t) => t * t * (3 - 2 * t);
+        const fx = sm((((u % cell) + cell) % cell) / cell);
+        const fy = sm((((v % cell) + cell) % cell) / cell);
+        const n00 = pixHash(gx, gy, seed);
+        const n10 = pixHash(gx + 1, gy, seed);
+        const n01 = pixHash(gx, gy + 1, seed);
+        const n11 = pixHash(gx + 1, gy + 1, seed);
+        return (
+          n00 * (1 - fx) * (1 - fy) +
+          n10 * fx * (1 - fy) +
+          n01 * (1 - fx) * fy +
+          n11 * fx * fy
+        );
+      }
+      function pixelLattice(w, h, q, clear, colorAt) {
+        const cols = Math.ceil(w / q);
+        const rows = Math.ceil(h / q);
+        let out = '<g shape-rendering="crispEdges">';
+        for (let v = 0; v < rows; v++) {
+          let u = 0;
+          while (u < cols) {
+            const c = colorAt(u, v);
+            if (!c || hidden(clear, u * q, v * q, q, q)) {
+              u++;
+              continue;
+            }
+            let len = 1;
+            while (
+              u + len < cols &&
+              colorAt(u + len, v) === c &&
+              !hidden(clear, (u + len) * q, v * q, q, q)
+            )
+              len++;
+            out +=
+              '<rect x="' +
+              u * q +
+              '" y="' +
+              v * q +
+              '" width="' +
+              len * q +
+              '" height="' +
+              (q + 0.4) +
+              '" fill="' +
+              c +
+              '"/>';
+            u += len;
+          }
+        }
+        return out + '</g>';
+      }
+      const PIXEL_FIELD_MACRO = 1.7;
+      function camoBody(kind, opts) {
+        const { w, h, ink, pool, scale, seed, clear } = opts;
+        const sc = PIXEL_FIELD_MACRO * scale;
+        const c1 = pool[0] || ink;
+        if (kind === 'camo') {
+          const q = 10 * sc;
+          return pixelLattice(w, h, q, clear, (u, v) => {
+            if (valueNoise(u, v, seed, 6) > 0.58) return ink;
+            if (valueNoise(u, v, seed + 31, 6) > 0.62) return c1;
+            return null;
+          });
+        }
+        const q = 12 * sc;
+        return pixelLattice(w, h, q, clear, (u, v) => {
+          const n = valueNoise(u, v, seed, 9);
+          if (n > 0.63) return ink;
+          if (n < 0.37) return c1;
+          return null;
+        });
+      }
+      function navField(w, h, opts) {
+        const body =
+          opts.kind === 'quilt'
+            ? quiltPixBody({ ...opts, w, h })
+            : camoBody(opts.kind, { ...opts, w, h });
+        return (
+          '<svg xmlns="http://www.w3.org/2000/svg" class="' +
+          (opts.cls || 'field') +
+          '" width="' +
+          w +
+          '" height="' +
+          h +
+          '" viewBox="0 0 ' +
+          w +
+          ' ' +
+          h +
+          '" preserveAspectRatio="xMidYMid slice" style="display:block">' +
+          (opts.ground
+            ? '<rect width="' +
+              w +
+              '" height="' +
+              h +
+              '" fill="' +
+              opts.ground +
+              '"/>'
+            : '') +
+          body +
+          '</svg>'
+        );
+      }
+
+      // the deep register — the brand lab's forced inversion: on pale
+      // grounds the pale surfaces fail the quilt's own gate, so the brand
+      // spends inks and accents ("the quiz screens spend surfaces; the
+      // brand spends inks", brand-lab.html, 2026-08-12)
+      const DEEP_POOL = [
+        '#674900',
+        '#BD00AD',
+        '#8D0381',
+        '#745400',
+        '#824616',
+        '#4A1040',
+        '#1C3601',
+        '#3F0167',
+        '#3E1060',
+        '#751100',
+      ];
+
+      function patternFrameShell(sub, extraNote) {
+        const c = document.getElementById('pattern-frames');
+        const label = document.createElement('div');
+        label.className = 'b-sublabel';
+        label.textContent = sub;
+        c.appendChild(label);
+        const frame = document.createElement('div');
+        frame.className = 'frame b-frame p-frame';
+        const v = brandVars(NAV_SCHEMES[0]); // cream — the provisional
+        for (const [k, val] of Object.entries(v))
+          frame.style.setProperty('--b-' + k, val);
+        c.appendChild(frame);
+        if (extraNote) {
+          const n = document.createElement('p');
+          n.className = 'b-audit';
+          n.innerHTML = extraNote;
+          c.appendChild(n);
+        }
+        return { frame, v };
+      }
+      function patternNav(v, fieldHtml) {
+        return (
+          '<div class="navmock" style="background:' +
+          v.ground +
+          '">' +
+          (fieldHtml || '') +
+          '<div><button class="trigger" aria-expanded="true">Exercises ' +
+          '<span class="caret" aria-hidden="true"><svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+          '</button></div>' +
+          '<div class="b-mark">' +
+          markSvg(34, v.ink, v.ground) +
+          '</div>' +
+          '<div class="links"><a href="#" onclick="return false">Blog</a>' +
+          '<a href="#" onclick="return false" class="cta-gem" style="clip-path:' +
+          CTA_CLIP +
+          '">Donate</a></div>' +
+          '</div>'
+        );
+      }
+      function patternPanel(v, opts) {
+        opts = opts || {};
+        const topic = byOrder()[0];
+        const railEl = document.createElement('div');
+        railEl.className = 'md-rail';
+        railEl.setAttribute('role', 'list');
+        byOrder().forEach((t) => {
+          const b = document.createElement('button');
+          b.className = 'md-topic';
+          b.setAttribute('aria-current', t.id === topic.id ? 'true' : 'false');
+          b.style.clipPath = GEM;
+          const name = document.createElement('span');
+          name.textContent = t.name;
+          b.appendChild(name);
+          if (topicIsNew(t)) {
+            const d = document.createElement('span');
+            d.className = 'new-dot';
+            b.appendChild(d);
+          }
+          const g = document.createElement('span');
+          g.className = 'grow';
+          b.appendChild(g);
+          const ch = document.createElement('span');
+          ch.className = 'chev';
+          ch.textContent = '›';
+          b.appendChild(ch);
+          railEl.appendChild(b);
+        });
+        const det = document.createElement('div');
+        det.className = 'md-detail';
+        const meta = document.createElement('div');
+        meta.className = 'md-meta';
+        if (opts.chipTags) {
+          meta.innerHTML =
+            '<span class="chip-tag">' + esc(topic.sets) + '</span>';
+        } else {
+          meta.textContent = topic.sets;
+        }
+        const h = document.createElement('h3');
+        h.className = 'md-title display';
+        h.textContent = topic.name;
+        const blurb = document.createElement('p');
+        blurb.className = 'md-blurb';
+        blurb.textContent = topic.blurb;
+        det.append(meta, h, blurb);
+        const ul = document.createElement('ul');
+        ul.className = 'md-drills';
+        topic.drills.forEach((drill) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.className = 'md-drill';
+          a.href = drill.path;
+          a.style.clipPath = GEM;
+          const row = document.createElement('div');
+          row.className = 'row';
+          const nm = document.createElement('span');
+          nm.className = 'name';
+          nm.textContent = drill.title;
+          row.appendChild(nm);
+          if (drill.isNew) row.appendChild(gem());
+          if (opts.chipTags) {
+            const tg = document.createElement('span');
+            tg.className = 'chip-tag';
+            tg.style.marginLeft = 'auto';
+            tg.style.color = v.tag;
+            tg.textContent = drill.set;
+            row.appendChild(tg);
+          }
+          const desc = document.createElement('p');
+          desc.className = 'desc';
+          desc.textContent = drill.desc;
+          a.append(row, desc);
+          wireDrill(a);
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+        det.appendChild(ul);
+        const panel = document.createElement('div');
+        panel.className = 'md-panel';
+        panel.append(railEl, det);
+        return panel;
+      }
+
+      function renderPatternFrames() {
+        const c = document.getElementById('pattern-frames');
+        c.innerHTML = '';
+        // 4p-1 (field bar) and 4p-2 (field in the void) KILLED
+        // 2026-08-14, with 4p-4 below — Malik: the labs-insight variants
+        // were meant for mobile only. The band survives as the one
+        // desktop-legitimate application.
+        // 4p-3 — the newsletter band seals the menu
+        {
+          const { frame, v } = patternFrameShell(
+            '4p-3 · Band edge — the survivor (the rest were for mobile)',
+            'the marketing pages’ field strip (camo, green + plum on cream) sealing the panel bottom — nav and marketing share a signature'
+          );
+          frame.innerHTML = patternNav(v);
+          frame.appendChild(patternPanel(v));
+          const band = document.createElement('div');
+          band.className = 'p-band';
+          band.innerHTML = navField(1200, 64, {
+            kind: 'camo-giant',
+            ink: '#05A24B',
+            pool: ['#3F0167'],
+            scale: 0.45,
+            seed: 11,
+            ground: '#EDEDE3',
+            cls: 'bandfield',
+          });
+          frame.appendChild(band);
+        }
+        // 4p-4 (outline chips) killed with 4p-1/2 — see above.
+      }
+      // ————— boot —————
+      activeTopicId = byOrder()[0].id;
+      renderIA();
+      renderRail();
+      renderDetail();
+      renderMega();
+      renderDrillIn();
+      renderAccordion();
+      wireTrigger('trigger-a', 'md-panel');
+      wireTrigger('trigger-b', 'mega-panel');
+      renderBottomSheet();
+      wireSheets();
+      renderBrand();
+      renderPatternFrames();
+      wirePanelToggle();
+    </script>
+  </body>
+</html>

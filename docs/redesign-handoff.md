@@ -190,6 +190,54 @@ live in the file because the judgement was made by watching them run,
 and a screenshot wouldn't let anyone re-make it. Same conventions as the
 pattern lab: framework-free, opens from disk.
 
+A third: **`docs/nav-lab.html`** (2026-08-14, **UX stage — desktop
+decided, nothing ported**) — the exercises menu regrouped as topic →
+drill (the IA is the routes' first slug segment, which is also Gensler's
+chapter structure). Decision cards D1–D10; decided same day, Malik's
+calls: **master–detail wins** (the mega-menu rejected for cognitive
+load, kept live in the file), **set-letter topic order** (course order
+presumed textbook ownership), **chapter meta hidden**, descriptions ship
+in the panel. Still open: **mobile** (drill-in vs accordion vs the
+bottom sheet Malik called the likely winner — § 3c fans it into four
+variants: accordion, half-detent, drill-in, launcher tiles; D7),
+**brand** (D11: § 4 re-dresses the decided shell in three schemes —
+cream, Set L mint/plum, the 2008 aqua/navy; **Brand · mint was killed
+on sight 2026-08-14**, here and in the marketing lab's dial — with a
+live WCAG audit strip under each; the type-vs-ink role split resolves
+the green 1.4.3 flag, and muted tiers are derived by an ensure-contrast
+loop, to be ported as computed tokens), and **shell** (D12: contained
+floating card matching production's structure — now the default — vs
+full-bleed, plus rounded vs sprite-silhouette corners; a clipped card's
+shadow must be `filter: drop-shadow` **on a wrapper** — on the clipped
+element itself the clip cuts the shadow off, the bug Malik caught as
+"the pixel silhouette is not working"). Mobile then narrowed to
+C3 · C4 (Malik) and § 3d brands them, two rounds in one day: round one's
+scatter tiles were judged "just weird" and retired; round two runs eight
+phones — set tiles, icon chips, gem tiles (silhouette as pattern),
+set-world level 2 (now painting the whole sheet, grabber included),
+rainbow rows, plus a chrome trio (cream ground + "Exercises" eyebrow +
+green grabber + gem Donate; the same chrome under a full set-world; a
+quilt band) — spending `quizColors.ts` verbatim, with logic-symbol
+icons (∴ ⊃ ◇ O-ring, bubble, ?) sketched on the 4px pixel grid (D13).
+Same day: § 4's hover/active fills wear the gem silhouette (clip always
+on, visible only when a fill paints). Night pass: 3d-f's level 2 fixed
+after Malik caught it stacking three grounds (cream → cool grey →
+white — it now stays in the cream world; a menu commits to one world
+per screen), and § 4p ports the labs' actual pattern machinery
+(quiltPixBody, camoBody, the clearing, mulberry32 — verbatim) into four
+nav applications: field bar with clearings, quilt in the detail's void
+column, the newsletter band as the menu's closing edge, and
+release-notes outline chips for set tags (D14). All of § 4p honours the
+brand lab's forced inversion: the brand spends inks and accents, never
+pale surfaces on pale grounds. Morning after (2026-08-14): Malik killed
+4p-1/2/4 and 3d-h — the labs-insight variants were meant for mobile;
+only the band edge survives on desktop (D14 decided). Corners decided
+too: **pixel silhouette is the § 4 default**, shadows lightened. The
+NEW gem slimmed 24 → 20px lab-wide (port must update newBadge.tsx's
+h-6 and pixel-ui.md's 24px clip note). D13 narrowed to **3d-d · 3d-f**
+on information hierarchy. Open: D7 (C3 vs C4), D11 (scheme), D12
+(shell), D13 (d vs f).
+
 ## What has actually shipped
 
 Committed in `37a038f` / `2c90ece` and live in the app:

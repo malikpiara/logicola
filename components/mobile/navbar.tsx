@@ -1,27 +1,31 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
-import NavTopic from '../navTopic';
 import { usePathname } from 'next/navigation';
-import { quizCatalog } from '@/lib/quizCatalog';
+import {
+  ExercisesSheet,
+  type SheetVariant,
+} from '@/components/mobile/exercisesSheet';
 
+/**
+ * Mobile nav: the bar stays as it was (white, text wordmark — Malik,
+ * 2026-08-14: header untouched for now); the burger opens the exercises
+ * BOTTOM SHEET from the nav lab instead of the old flat 13-row dropdown.
+ *
+ * Two lab variants ride two routes for the Vercel preview:
+ *   '/'            → 3d-f (chip tiles, cream world throughout)
+ *   '/nav-preview' → 3d-g (chip rows, level 2 paints the whole sheet)
+ * Collapse to one variant once D13 is judged on-device.
+ */
 const Navbar = () => {
-  const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [open, setOpen] = useState(false);
   const pathname = usePathname();
-
-  const toggleMenu = () => {
-    setDropdownVisible((isVisible) => !isVisible);
-  };
-
-  const closeMenu = () => {
-    setDropdownVisible(false);
-  };
-
-  const splitIndex = Math.ceil(quizCatalog.length / 2);
 
   if (pathname.includes('quiz')) {
     return null;
   }
+
+  const variant: SheetVariant = pathname === '/nav-preview' ? 'g' : 'f';
 
   return (
     <nav className='bg-white border-gray-200 md:hidden'>
@@ -37,12 +41,12 @@ const Navbar = () => {
 
         <button
           type='button'
-          className='motion-button inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-stone-200'
-          onClick={toggleMenu}
-          aria-expanded={isDropdownVisible}
-          aria-controls='mega-menu-full-dropdown'
+          className='motion-button inline-flex items-center p-2 w-11 h-11 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-stone-200'
+          onClick={() => setOpen(true)}
+          aria-expanded={open}
+          aria-haspopup='dialog'
         >
-          <span className='sr-only'>Open main menu</span>
+          <span className='sr-only'>Open exercises menu</span>
           <svg
             className='w-5 h-5'
             aria-hidden='true'
@@ -60,37 +64,7 @@ const Navbar = () => {
           </svg>
         </button>
       </div>
-      <div
-        id='mega-menu-full-dropdown'
-        onMouseLeave={closeMenu}
-        data-state={isDropdownVisible ? 'open' : 'closed'}
-        className='mobile-menu border-gray-200 shadow-sm bg-gray-50 md:bg-white absolute w-full z-50'
-      >
-        <div className='grid max-w-screen-xl px-4 py-5 mx-auto text-gray-900 sm:grid-cols-2 md:px-6 shadow-sm'>
-          <ul>
-            {quizCatalog.slice(0, splitIndex).map((subSet) => (
-              <NavTopic
-                key={subSet.quizPath}
-                chapter={subSet.chapter}
-                title={subSet.title}
-                path={subSet.quizPath}
-                newLabel={subSet.isNew || false}
-              />
-            ))}
-          </ul>
-          <ul>
-            {quizCatalog.slice(splitIndex).map((subSet) => (
-              <NavTopic
-                key={subSet.quizPath}
-                chapter={subSet.chapter}
-                title={subSet.title}
-                path={subSet.quizPath}
-                newLabel={subSet.isNew || false}
-              />
-            ))}
-          </ul>
-        </div>
-      </div>
+      <ExercisesSheet variant={variant} open={open} onOpenChange={setOpen} />
     </nav>
   );
 };

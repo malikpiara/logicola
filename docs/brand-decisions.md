@@ -337,6 +337,18 @@ that genuinely wants a headline on it. Bundling it in was what kept the
 type machinery alive in a lab about pattern and colour.
 `public/thumbnail.jpg` is still the live link card and is untouched.
 
+**Brand · mint is dead as a scheme** (Malik, 2026-08-14, nav lab
+session): "we can kill this one here and everywhere else. I don't like
+it." Said on seeing green-on-mint carry the exercises nav in
+`docs/nav-lab.html` § 4. Removed there; retired from the marketing
+lab's scheme dial the same day (kept as a comment beside `brandField`,
+the same burial). The provenance argument (mint ≈ Gensler's help-page
+ground, 7° from the brand green) was real — provenance is not a
+verdict. Scope: this kills the mint-ground-with-green-ink _scheme_;
+Set L's palette (plum ink on the same mint) remains a live primary
+candidate, and the mint plates baked into `app/icon.svg` /
+`public/icon-512.png` are separate objects untouched by this call.
+
 ## Regenerating
 
 ```bash

@@ -195,7 +195,9 @@ Variants, silhouette the only variable:
   `navTopic.tsx` (replacing the fuchsia `flower-tag`) and the footer's
   Keyboard link (replacing the green `rounded-full` pill). Elongated octagon
   with two-step stair chamfers: the puffy-diamond idea adapted to a shape
-  that must hold text.
+  that must hold text. **Slimmed 24px → 20px** in the nav lab (Malik,
+  2026-08-14): h-5, 10px side padding, mono bold 9px — the 4px stairs
+  still read at 20px (8px of chamfer per corner against the height).
 
 Cut: a **tag** variant (square body, stair-stepped sale-tag point) — didn't
 work in context.
