@@ -1399,13 +1399,15 @@
        green are one hue family at two lightnesses, so this is a
        near-monochrome — the most conservative cover here, and the one
        with the strongest claim to the original's colour world. */
-        brandMint: {
-          label: 'Brand · mint',
-          hint: 'Gensler’s ground',
-          ground: '#CFF6DD',
-          ink: BRAND.green,
-          type: '#02302C',
-        },
+        /* KILLED 2026-08-14 (nav lab session) — Malik, on seeing it carry
+       the exercises nav: "We can kill this one here and everywhere else.
+       I don't like it." The provenance argument above was real and is
+       kept for the record, but provenance is not a verdict. Note the
+       scope: this kills green-on-mint as a SCHEME; Set L's own palette
+       (plum on the same mint) stays a live candidate, and the mint
+       plates baked into the shipped icons are separate objects.
+         brandMint: { ground: '#CFF6DD', ink: BRAND.green, type: '#02302C' }
+       */
       };
       for (const [k, v] of Object.entries(SETS)) {
         SCHEMES['set' + k] = {
@@ -1727,7 +1729,6 @@
       const SCHEME_ORDER = [
         'brand',
         'brandInk',
-        'brandMint',
         'brandOriginal',
         'setL',
         'setN',

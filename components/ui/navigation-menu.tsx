@@ -7,8 +7,17 @@ import { cn } from '@/lib/utils';
 
 const NavigationMenu = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root> & {
+    /**
+     * Restyles the shared Viewport for one menu instance — the exercises
+     * panel needs the chrome on its own clipped card, not on the
+     * Viewport (a clip-path would cut off the Viewport's box-shadow;
+     * the drop-shadow filter must sit on an ancestor of the clipped
+     * element).
+     */
+    viewportClassName?: string;
+  }
+>(({ className, children, viewportClassName, ...props }, ref) => (
   <NavigationMenuPrimitive.Root
     ref={ref}
     className={cn(
@@ -18,7 +27,7 @@ const NavigationMenu = React.forwardRef<
     {...props}
   >
     {children}
-    <NavigationMenuViewport />
+    <NavigationMenuViewport className={viewportClassName} />
   </NavigationMenuPrimitive.Root>
 ));
 NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;
