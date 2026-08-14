@@ -190,6 +190,31 @@ live in the file because the judgement was made by watching them run,
 and a screenshot wouldn't let anyone re-make it. Same conventions as the
 pattern lab: framework-free, opens from disk.
 
+A fourth: **`docs/footer-lab.html`** (2026-08-14, **PROPOSED — nothing
+decided**) — the site footer as a single live configurator with seven
+dials: scheme (the D11 candidates + today's white; Brand · mint stays
+dead), layout (columns / subscribe-first banner / compact), subscribe
+treatment (row / inverted card per the figure rule / none — copy is the
+marketing lab's, verbatim), pattern (camo band fine/giant — the § 4p
+survivor — or full field-with-clearing), band position (bottom =
+news-band precedent, top = page seam), mark (text wordmark / can /
+lockup), and mission line (the one Khan Academy steal). Live WCAG audit
+strip under the frame; every muted tier ensure-contrast derived;
+patterns spend the deep register only. Email form is inert (port posts
+to the Supabase capture stub; provider undecided). Decision cards
+F1–F6. Same day: the subscribe form became the release-notes DECIDED
+pill (white sprite capsule, gem button inside, `btnColors` with a
+type-fallback guard for green-ink schemes), the socials dial carries
+the shipped pixel icons, and **Malik's favourite state is the lab
+default**: Set L · subscribe-first · row · fine band at bottom · pixel
+icons · the can · mission on. The icons live in white gem chips with
+extra air above the band — bare plum icons collided with the
+plum-dominant band (Malik's catch). A 390px phone frame renders the
+SAME dial state beside the desktop one: banner → brand → two-up link
+groups → bar → band (F7), full-width pill, 44px tap boxes around the
+30px chips, band regenerated at phone width so the camo features stay
+in proportion.
+
 A third: **`docs/nav-lab.html`** (2026-08-14, **UX stage — desktop
 decided, nothing ported**) — the exercises menu regrouped as topic →
 drill (the IA is the routes' first slug segment, which is also Gensler's
