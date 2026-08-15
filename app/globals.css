@@ -1298,3 +1298,144 @@
     z-index: 1;
   }
 }
+
+/* == Homepage FAQ ============================================================
+   Ported from docs/faq-lab.html, 2026-08-15 (Malik's two feedback rounds are
+   the FQ-cards in that file). Colour arrives via --faq-* variables set inline
+   by components/faqSection.tsx — the D11 scheme switch edits that file's
+   token block, nothing below names a colour. The items are OPEN-FILL: every
+   item carries the sprite clip permanently (set via style.clipPath from
+   lib/pixel.ts), and only the open item paints the plate — which is why the
+   hairlines are ::before elements, not borders (a border loses its stroke on
+   the clip's corner stairs), and why two adjacent OPEN plates get a gap of
+   ground (figures never touch — the option marks' surface-gap rule at
+   section scale). */
+@layer components {
+  .faq {
+    /* the open plate bleeds by exactly the wrap gutter, never past it */
+    --faq-bleed: 16px;
+  }
+  .faq-wrap {
+    max-width: 1128px;
+    margin-inline: auto;
+    padding: 46px 16px 56px;
+  }
+  @media (min-width: 1024px) {
+    .faq {
+      --faq-bleed: 24px;
+    }
+    .faq-wrap {
+      padding: 76px 24px 88px;
+      display: grid;
+      grid-template-columns: 0.85fr 1.35fr;
+      column-gap: 76px;
+      align-items: start;
+    }
+  }
+  .faq-display {
+    font-stretch: 151%;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 1.04;
+    /* section register, not hero (56px was judged HUGE — lab FQ4) */
+    font-size: clamp(26px, 3.1vw, 42px);
+    color: var(--faq-type);
+    text-wrap: balance;
+  }
+  .faq-sub {
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--faq-body);
+    max-width: 44ch;
+  }
+  .faq-still {
+    margin: 28px 0 30px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--faq-body);
+    max-width: 36ch;
+  }
+  .faq-still a {
+    color: var(--faq-type);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  @media (min-width: 1024px) {
+    .faq-still {
+      margin-bottom: 0;
+    }
+  }
+  .faq-item {
+    position: relative;
+    margin-inline: calc(var(--faq-bleed) * -1);
+    padding-inline: var(--faq-bleed);
+    background-color: transparent;
+    transition:
+      background-color 180ms var(--ease-out-quart),
+      margin-top 240ms var(--ease-out-quart);
+  }
+  .faq-item[data-state='open'] {
+    background-color: var(--faq-plate);
+  }
+  .faq-item[data-state='open'] + .faq-item[data-state='open'] {
+    margin-top: 10px;
+  }
+  .faq-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: var(--faq-bleed);
+    right: var(--faq-bleed);
+    height: 1px;
+    background: var(--faq-hair);
+  }
+  .faq-item:first-child::before,
+  .faq-item[data-state='open']::before,
+  .faq-item[data-state='open'] + .faq-item::before {
+    display: none;
+  }
+  .faq-item:last-child:not([data-state='open'])::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: var(--faq-bleed);
+    right: var(--faq-bleed);
+    height: 1px;
+    background: var(--faq-hair);
+  }
+  .faq-trigger {
+    color: var(--faq-type);
+  }
+  .faq-idx {
+    display: inline-flex; /* atomic box — escapes the trigger's hover underline */
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--faq-index);
+    min-width: 2ch;
+    flex-shrink: 0;
+  }
+  .faq-answer {
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--faq-body-plate);
+    max-width: 62ch;
+  }
+  @media (min-width: 1024px) {
+    /* align answers under the question text; released below lg — 30px
+       is a fifth of a phone measure, too expensive there */
+    .faq-answer {
+      margin-left: 30px;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item {
+    transition: none;
+  }
+}
