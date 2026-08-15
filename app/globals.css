@@ -1316,14 +1316,23 @@
     --faq-bleed: 16px;
   }
   .faq-wrap {
-    max-width: 1128px;
+    /* screen-xl + px-4/sm:px-6 — the footer's (and header's) container,
+       so the rail's left edge lines up with FOLLOW THE RELEASES below
+       (Malik's catch, 2026-08-15: the lab judged at 1128, but the app's
+       de-facto container is screen-xl — the FAQ follows the app) */
+    max-width: 1280px;
     margin-inline: auto;
     padding: 46px 16px 56px;
   }
-  @media (min-width: 1024px) {
+  @media (min-width: 640px) {
     .faq {
       --faq-bleed: 24px;
     }
+    .faq-wrap {
+      padding-inline: 24px;
+    }
+  }
+  @media (min-width: 1024px) {
     .faq-wrap {
       padding: 76px 24px 88px;
       display: grid;

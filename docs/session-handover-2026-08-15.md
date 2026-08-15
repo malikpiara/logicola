@@ -217,3 +217,15 @@ branch for the Vercel preview (same flow as nav and footer):
 2. Still open from 08-14: D13 (3d-f vs 3d-g on `/nav-preview`), D11
    (scheme), D14's nav band edge, the hero — the remaining big surface
    after FAQ.
+
+## Addendum (sixth pass — alignment)
+
+Malik's catch on the preview: the FAQ's left edge didn't meet the
+footer's. Cause: the labs draw both surfaces at an 1128px wrap, but
+the PORTS live in the app's de-facto container — footer and header
+ship on `max-w-screen-xl` (1280) + `px-4 sm:px-6`. The FAQ now follows
+the app (`.faq-wrap` 1280, gutters 16/24 at `sm`, and `--faq-bleed`
+tracks them). Carried rule: **a section port aligns to the app's
+container, not to its lab's frame** — the labs' 1128 is a drawing
+surface, not a layout decision. Also hit the Turbopack stale-CSS trap
+confirming it (globals.css edits served stale — `rm -rf .next`).
