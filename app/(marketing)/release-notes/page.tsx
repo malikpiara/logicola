@@ -6,7 +6,6 @@ import {
 } from '@/lib/marketingContent';
 import { MarketingNav } from '@/components/marketing/marketingNav';
 import { Chip } from '@/components/marketing/chip';
-import { NewsletterCard } from '@/components/marketing/newsletterCard';
 import { NewsletterForm } from '@/components/marketing/newsletterForm';
 import {
   MARKETING_THEME,
@@ -163,8 +162,6 @@ export default function ReleaseNotesPage() {
             />
           </section>
         ))}
-
-        <NewsletterCard source='release_notes' />
       </main>
     </>
   );

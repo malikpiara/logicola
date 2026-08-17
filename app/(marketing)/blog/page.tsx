@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { publishedPosts, formatDate, type Post } from '@/lib/marketingContent';
 import { MarketingNav } from '@/components/marketing/marketingNav';
 import { Chip } from '@/components/marketing/chip';
-import { NewsletterCard } from '@/components/marketing/newsletterCard';
 import {
   MARKETING_THEME,
   fieldSvg,
@@ -177,8 +176,6 @@ export default function BlogIndexPage() {
             </article>
           ))}
         </section>
-
-        <NewsletterCard source='blog_index' />
       </main>
     </>
   );

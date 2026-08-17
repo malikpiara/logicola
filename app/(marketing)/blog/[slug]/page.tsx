@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import { publishedPosts, formatDate } from '@/lib/marketingContent';
 import { MarketingNav } from '@/components/marketing/marketingNav';
 import { Chip } from '@/components/marketing/chip';
-import { NewsletterCard } from '@/components/marketing/newsletterCard';
 import {
   MARKETING_THEME,
   fieldSvg,
@@ -155,8 +154,6 @@ export default async function BlogPostPage({ params }: PostPageProps) {
           }
           dangerouslySetInnerHTML={{ __html: post.html }}
         />
-
-        <NewsletterCard source='blog_post' />
       </article>
     </>
   );
