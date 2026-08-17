@@ -13,6 +13,7 @@ import { StartScreen } from './startScreen';
 import useQuizState, { getRevealThreshold } from './useQuizState';
 import { progressLabel, type QuizMode } from './quizMode';
 import { canScore, chargeFor, progress } from '@/lib/scoring';
+import { writeLastDrill } from '@/lib/lastDrill';
 import classNames from 'classnames';
 import { SubSet } from '@/content/types';
 import {
@@ -253,6 +254,19 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   // question and end screens all wear it, so it never has to change
   // mid-run.
   useQuizChrome(quizSurface);
+
+  // Remember the drill for the landing page's resume banner (lab LP7,
+  // Malik 2026-08-17) — an OBSERVATION of the run, never a second
+  // source of truth: the score stays the hook's. Start screen excluded
+  // — arriving at a drill you never started isn't "leaving off".
+  useEffect(() => {
+    if (showStartScreen) return;
+    writeLastDrill({
+      title: subSet.title,
+      path: window.location.pathname,
+      points: mode.kind === 'score' ? scoreState.score : null,
+    });
+  }, [showStartScreen, subSet.title, mode.kind, scoreState.score]);
 
   // Top progress bar. Count mode fills a tenth per completed question (a
   // question counts once its solution is shown); scored mode tracks distance

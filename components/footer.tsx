@@ -3,47 +3,50 @@ import { TrackedFooterLink } from './trackedFooterLink';
 import { NewBadge } from './newBadge';
 import { CurrentYear } from './currentYear';
 import { NewsletterForm } from '@/components/marketing/newsletterForm';
-import {
-  markSvg,
-  themeButton,
-  SPRITE_CLIP,
-  RING_BAND,
-} from '@/lib/marketingTheme';
+import { markSvg, SPRITE_CLIP, RING_BAND } from '@/lib/marketingTheme';
 import { camoBody } from '@/lib/patterns';
 import { gemClip } from '@/lib/pixel';
 
 /**
  * The site footer — the footer lab's judged state (docs/footer-lab.html,
- * Malik's favourite structure, 2026-08-14) on the PROVISIONAL Brand ·
- * cream scheme: subscribe-first banner → brand block (the can + the
- * mission line) + three link columns → bottom bar with the pixel social
- * icons in white gem chips → the fine camo band closing the page.
+ * Malik's favourite structure, 2026-08-14) on SET L mint/plum — which
+ * was also the lab's favourite GROUND, shipped provisionally on cream
+ * until the scheme call. Malik took that call for the homepage on
+ * 2026-08-17 (docs/landing-lab.html LP11: the landing grounds in
+ * Set L, and the other sections follow), so the provisional cream is
+ * retired here. Structure unchanged: subscribe-first banner → brand
+ * block (the can + the mission line) + three link columns → bottom bar
+ * with the pixel social icons in white gem chips → the fine camo band
+ * closing the page.
  *
- * COLOUR IS NOT DECIDED (Malik, 2026-08-14: "I have a feeling we'll
- * switch to Set L or Brand original — but let's keep the cream for now").
- * Every scheme-dependent value below is a named token so the switch is a
- * constant swap; the derived tiers came from the lab's ensure-contrast
- * loop and each carries its measured ratio. The green can is a logotype
- * (2.8:1 on cream — exempt from 1.4.11, judged "legal but faint" in the
- * nav lab).
+ * Every scheme-dependent value below is a named token so any later
+ * swap stays a constant swap; the derived tiers come from the labs'
+ * ensure-contrast loop and each carries its measured ratio. The can is
+ * now the scheme's plum on mint (12.67:1) — the cream footer's "legal
+ * but faint" green-can caveat retires with the cream.
  *
  * The subscribe control reuses the shipped NewsletterForm — the decided
  * "answer pill" — posting to /api/newsletter with source 'footer'. The
- * band is lib/patterns' own camoBody (fine kind), green + magenta on
- * cream per the footer lab's recipe: deep-register colour only, never a
- * pale surface on a pale ground (the brand lab's forced inversion).
+ * band is lib/patterns' own camoBody (fine kind), plum + magenta on
+ * mint per the footer lab's Set L recipe: deep-register colour only,
+ * never a pale surface on a pale ground (the brand lab's forced
+ * inversion).
  */
-const GROUND = '#EDEDE3';
-const TYPE = '#02302C';
-const GREEN = '#05A24B';
-/** column heads — 5.0:1 on cream */
-const HEAD = '#4A6A64';
-/** links + mission — 6.9:1 on cream */
-const LINK = '#315651';
-/** copyright / fine print — 5.1:1 on cream */
-const FINE = '#486963';
-/** hairline: cream mixed 14% toward the type ink */
-const HAIR = '#CCD3C9';
+const GROUND = '#CFF6DD'; // Set L mint (quizColors L surface, verbatim)
+const TYPE = '#3F0167'; // Set L plum · 12.67:1 on the mint
+/** column heads — 5.16:1 on mint */
+const HEAD = '#715790';
+/** links + mission — 8.06:1 on mint */
+const LINK = '#5C327F';
+/** copyright / fine print — 5.99:1 on mint */
+const FINE = '#6A4B8A';
+/** hairline: mint mixed 14% toward the type ink */
+const HAIR = '#BBD4CC';
+/** the answer pill's button: ink fill, ground text (btnColors' rule —
+ *  type equals ink in this scheme, so the ground carries the label;
+ *  mint on plum 12.67:1). Local on purpose: marketingTheme's button
+ *  still speaks the blog's cream scheme. */
+const BUTTON = { bg: TYPE, fg: GROUND };
 
 const GEM = gemClip();
 
@@ -62,7 +65,7 @@ function bandSvg() {
   const body = camoBody('camo', {
     w: 1600,
     h: 56,
-    ink: GREEN,
+    ink: TYPE,
     pool: ['#BD00AD'],
     scale: 0.35,
     seed: 11,
@@ -114,8 +117,10 @@ export function Footer() {
     >
       {/* subscribe-first: the newsletter opens the footer */}
       <div className='mx-auto max-w-screen-xl px-4 pb-2 pt-12 sm:px-6'>
+        {/* mixed case, not caps (Malik, 2026-08-17 — one rule for every
+            display title on the page) */}
         <h2
-          className='font-stretch text-2xl font-extrabold uppercase leading-tight'
+          className='font-stretch text-2xl font-extrabold leading-tight'
           style={{ color: TYPE }}
         >
           Follow the releases
@@ -131,8 +136,8 @@ export function Footer() {
           source='footer'
           theme={{
             ink: TYPE,
-            buttonBg: themeButton().bg,
-            buttonFg: themeButton().fg,
+            buttonBg: BUTTON.bg,
+            buttonFg: BUTTON.fg,
             spriteClip: SPRITE_CLIP,
             ringClip: RING_BAND,
           }}
@@ -147,7 +152,7 @@ export function Footer() {
                 aria-label='LogiCola'
                 role='img'
                 dangerouslySetInnerHTML={{
-                  __html: markSvg(44, GREEN, GROUND),
+                  __html: markSvg(44, TYPE, GROUND),
                 }}
               />
             </Link>

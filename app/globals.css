@@ -1344,8 +1344,9 @@
   .faq-display {
     font-stretch: 151%;
     font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.01em;
+    /* mixed case, not caps (Malik, 2026-08-17 — one rule for every
+       display title on the page) */
+    letter-spacing: -0.01em;
     line-height: 1.04;
     /* section register, not hero (56px was judged HUGE — lab FQ4) */
     font-size: clamp(26px, 3.1vw, 42px);
@@ -1418,6 +1419,14 @@
   .faq-trigger {
     color: var(--faq-type);
   }
+  /* the trigger can sit on white OR on the open plate — the derived
+     focus token clears 3:1 on both (the system green does not; see the
+     token block in faqSection.tsx) */
+  .faq-trigger:focus-visible {
+    outline: 2px solid var(--faq-focus);
+    outline-offset: 2px;
+    border-radius: 0;
+  }
   .faq-idx {
     display: inline-flex; /* atomic box — escapes the trigger's hover underline */
     font-size: 12px;
@@ -1445,6 +1454,243 @@
 
 @media (prefers-reduced-motion: reduce) {
   .faq-item {
+    transition: none;
+  }
+}
+
+/* == Landing exercises =======================================================
+   Ported from docs/landing-lab.html, 2026-08-17 (Malik's decided composition,
+   two passes — the LP-cards in that file): Set L mint ground · compact
+   display masthead · topic cards at BOTH widths · neutral white cards with
+   the set colour in gem icon-chips and tags · drill rows · resume banner.
+   Colour arrives via --lx-* variables set inline by
+   components/landing/exercisesCatalog.tsx — the D11 scheme switch edits that
+   file's token block; nothing below names a colour. The drill rows' hover
+   fill wears the gem silhouette on a ::before layer (clip always on, visible
+   only when the fill paints — the nav lab's hover construction); the row
+   itself stays UNCLIPPED so :focus-visible draws a complete rectangle (a
+   clipped element paints no outline — the pixel-ui ring rule). Card shadows
+   ride the wrapper as filter: drop-shadow for the same reason. */
+@layer components {
+  .lx {
+    background: var(--lx-ground);
+  }
+  .lx-wrap {
+    /* screen-xl + px-4/sm:px-6 — the app's de-facto container (header,
+       footer, FAQ); a section port aligns to the app, not to its lab's
+       1128px drawing surface (the 08-15 carried rule) */
+    max-width: 1280px;
+    margin-inline: auto;
+    padding: 36px 16px 56px;
+  }
+  @media (min-width: 640px) {
+    .lx-wrap {
+      padding-inline: 24px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .lx-wrap {
+      padding: 56px 24px 96px;
+    }
+  }
+  .lx-display {
+    font-stretch: 151%;
+    font-weight: 800;
+    /* mixed case, not caps (Malik, 2026-08-17) — the stretch alone is
+       the display voice; caps tracking (+0.01em) traded for a title
+       setting */
+    letter-spacing: -0.01em;
+    line-height: 1.02;
+    /* hero register — one step above the FAQ's 42px section cap */
+    font-size: clamp(30px, 4.2vw, 50px);
+    color: var(--lx-type);
+    text-wrap: balance;
+  }
+  .lx-oneliner {
+    margin-top: 14px;
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--lx-body);
+    max-width: 52ch;
+  }
+  .lx-eyebrow {
+    margin: 34px 0 16px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--lx-head);
+  }
+  .lx-count {
+    margin-left: 8px;
+    opacity: 0.75;
+  }
+  .lx-grid {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 1024px) {
+    .lx-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+  }
+  /* a clipped card's shadow lives on the wrapper (clip-path crops the
+     element's own shadow); values are the labs' lightened pair */
+  .lx-cardw,
+  .lx-resumew {
+    filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.05))
+      drop-shadow(0 3px 8px rgb(0 0 0 / 0.07));
+  }
+  .lx-card {
+    height: 100%;
+    background: #fff;
+    padding: 18px 20px 10px;
+  }
+  @media (min-width: 640px) {
+    .lx-card {
+      padding: 20px 24px 12px;
+    }
+  }
+  .lx-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .lx-chip {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .lx-card-name {
+    font-size: 17.5px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--lx-type);
+  }
+  .lx-card-set {
+    margin-left: auto;
+    flex-shrink: 0;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .lx-blurb {
+    margin: 8px 0 10px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--lx-blurb);
+    max-width: 44ch;
+  }
+  .lx-drillw {
+    border-top: 1px solid var(--lx-hair);
+  }
+  .lx-drill {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 46px;
+    padding: 5px 12px;
+    margin-inline: -12px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--lx-type);
+  }
+  .lx-drill::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    clip-path: var(--lx-gem);
+    background: transparent;
+    transition: background-color 120ms var(--ease-out-quart);
+  }
+  .lx-drill:hover::before {
+    background: var(--lx-hover);
+  }
+  .lx-drill:hover .lx-drill-t {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .lx-drill:focus-visible {
+    outline: 2px solid var(--lx-focus);
+    outline-offset: 0;
+    border-radius: 0;
+  }
+  .lx-dset {
+    flex-shrink: 0;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .lx-chev {
+    width: 14px;
+    height: 14px;
+    margin-left: auto;
+    flex-shrink: 0;
+    transform: rotate(-90deg);
+  }
+  .lx-resumew {
+    margin-bottom: 20px;
+  }
+  .lx-resume {
+    display: block;
+  }
+  .lx-resume-in {
+    display: block;
+    background: #fff;
+    padding: 14px 20px 16px;
+  }
+  .lx-resume-eyebrow {
+    display: block;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--lx-head);
+    margin-bottom: 6px;
+  }
+  .lx-resume-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    color: var(--lx-type);
+  }
+  .lx-resume-title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .lx-resume-pts {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 12px;
+    color: var(--lx-blurb);
+  }
+  .lx-resume:hover .lx-resume-title {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .lx-resume:focus-visible {
+    outline: 2px solid var(--lx-focus);
+    outline-offset: 2px;
+    border-radius: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lx-drill::before {
     transition: none;
   }
 }
