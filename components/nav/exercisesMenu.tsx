@@ -20,22 +20,24 @@ import {
  * the rail doesn't thrash the panel; click, focus and arrow keys switch
  * instantly.
  *
- * Colour roles from the lab's § 4 white-panel mode: the scheme's TYPE
- * (#02302C) carries every small run of text — green never carries small
- * text (the 1.4.3 fix) — and the active fill is the brand cream, so
- * selection previews the scheme ground. Derived tiers (BODY/MUTED/META)
- * come from the lab's ensure-contrast loop; all pass 4.5:1 on white.
- * Hover and active fills wear the gem silhouette — the pixel grammar on
+ * Colour roles from the lab's § 4, RE-GROUNDED TO SET L (Malik,
+ * 2026-08-17 — the landing decision extends to the chrome): the
+ * scheme's TYPE (plum) carries every small run of text — the coloured
+ * accent never carries small text (the 1.4.3 fix) — and the active
+ * fill is the Set L mint, so selection previews the scheme ground
+ * exactly as the cream fill previewed the cream. Derived tiers
+ * (BODY/MUTED/META) re-derived on white with measured ratios. Hover
+ * and active fills wear the gem silhouette — the pixel grammar on
  * interaction states, not just badges (Malik, 2026-08-14).
  */
-const TYPE = '#02302C';
-const CREAM = '#EDEDE3';
-const HOVER = '#F6F6F1';
-const HAIR = '#E1E6E6';
-const BODY = '#416461';
-const MUTED = '#5B7876';
-const TAG = '#5B7976';
-const META = '#058844';
+const TYPE = '#3F0167'; // Set L plum · 14.88:1 on white, 12.67:1 on the fill
+const ACTIVE = '#CFF6DD'; // the active fill = the scheme ground (mint)
+const HOVER = '#F3F0F6'; // white mixed 6% toward plum
+const HAIR = '#E4DBEA'; // white mixed 14% toward plum — decorative
+const BODY = '#693988'; // 8.26:1 on white
+const MUTED = '#715790'; // 6.06:1 on white
+const TAG = '#715790'; // 6.06:1 on white
+const META = '#BD00AD'; // Set L's own accent · 5.57:1 on white
 
 const GEM = gemClip();
 
@@ -71,17 +73,17 @@ export function ExercisesMenu() {
               className='flex w-full items-center gap-2 px-4 py-3 text-left text-[15px] font-semibold'
               style={{
                 clipPath: GEM,
-                background: isActive ? CREAM : undefined,
+                background: isActive ? ACTIVE : undefined,
                 color: isActive ? TYPE : MUTED,
               }}
               onMouseEnter={(e) => {
                 armHover(topic.id);
-                e.currentTarget.style.background = isActive ? CREAM : HOVER;
+                e.currentTarget.style.background = isActive ? ACTIVE : HOVER;
                 e.currentTarget.style.color = TYPE;
               }}
               onMouseLeave={(e) => {
                 disarmHover();
-                e.currentTarget.style.background = isActive ? CREAM : '';
+                e.currentTarget.style.background = isActive ? ACTIVE : '';
                 e.currentTarget.style.color = isActive ? TYPE : MUTED;
               }}
               onFocus={() => setActiveId(topic.id)}
@@ -152,7 +154,7 @@ export function ExercisesMenu() {
               <NavigationMenuLink asChild>
                 <Link
                   href={drill.quizPath}
-                  className='motion-button block px-3.5 py-3 hover:bg-[#F6F6F1]'
+                  className='motion-button block px-3.5 py-3 hover:bg-[#F3F0F6]'
                   style={{ clipPath: GEM }}
                 >
                   <span className='flex items-center gap-2.5'>
