@@ -23,17 +23,23 @@ import { spriteClip } from '@/lib/pixel';
  */
 
 // Scheme tokens, measured (WCAG ratios against the ground each sits
-// on). The display ink deliberately does NOT echo a footer scheme:
-// FQ9 (echo) and D11 (scheme) are open, and echoing the unshipped
-// Set L over today's provisional cream footer would tie the heading
-// to a decision that hasn't been made. When D11 lands, this block is
-// the swap. — Malik's lab, 2026-08-15
-const FAQ_TYPE = '#02302C'; // 14.37:1 on white · 12.19:1 on the plate
-const FAQ_BODY = '#3A5E5A'; // 7.17:1 on white — intro + rail
-const FAQ_BODY_PLATE = '#365A54'; // 6.49:1 on the open plate
-const FAQ_PLATE = '#EDEDE3'; // the figure ground — a card inverts (cream on white)
-const FAQ_HAIRLINE = '#D7DEDD'; // decorative, no contrast floor
-const FAQ_INDEX = '#BD00AD'; // 5.57:1 on white; re-derive on any scheme ground
+// on). RE-GROUNDED TO SET L (Malik, 2026-08-17 — the landing decision
+// extends to every homepage section): the section stays white, its
+// inks are Set L's plum, and the open plate paints the scheme's mint —
+// the faq lab's echo=both state, except it is no longer an echo: the
+// landing above and the footer below wear the same scheme. This block
+// remains the swap point if D11 ever lands elsewhere.
+const FAQ_TYPE = '#3F0167'; // Set L plum · 14.88:1 on white, 12.67:1 on the plate
+const FAQ_BODY = '#693988'; // 8.26:1 on white — intro + rail
+const FAQ_BODY_PLATE = '#5F3781'; // 7.61:1 on the mint plate
+const FAQ_PLATE = '#CFF6DD'; // the figure ground — Set L mint (quizColors L surface)
+const FAQ_HAIRLINE = '#E0D6E7'; // white mixed 16% toward plum — decorative
+const FAQ_INDEX = '#BD00AD'; // Set L's own accent · 5.57:1 on white
+// Focus: the system green fails 1.4.11 on the mint plate (2.85:1) —
+// and already scraped the old cream plate (2.84:1, the 08-15 finding).
+// One derived value clears both grounds: green walked toward the plum
+// until ≥3:1 on mint — 3.54:1 there, 4.15:1 on white.
+const FAQ_FOCUS = '#0C8F4E';
 
 // TODO(Malik): confirm the public contact address before this leaves
 // the preview branch — the old copy promised "email me" with no link.
@@ -96,6 +102,7 @@ const FAQ_VARS = {
   '--faq-plate': FAQ_PLATE,
   '--faq-hair': FAQ_HAIRLINE,
   '--faq-index': FAQ_INDEX,
+  '--faq-focus': FAQ_FOCUS,
 } as CSSProperties;
 
 export function FaqSection() {

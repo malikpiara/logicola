@@ -1,0 +1,3315 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Landing lab (PROPOSED 2026-08-17)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Roboto+Mono:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink-90: #111827;
+        --gray-500: #6b7280;
+        --gray-100: #f3f4f6;
+        --magenta: #bd00ad;
+        --quart: cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html {
+        font-feature-settings: 'kern' 1;
+        text-rendering: optimizeLegibility;
+      }
+      body {
+        background: #d9d9d2;
+        font-family: 'Roboto Flex', system-ui, sans-serif;
+        color: #111;
+        padding: 48px 24px 96px;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        background: none;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+        text-align: left;
+      }
+      :focus-visible {
+        outline: 2px solid #05a24b;
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+      .mono {
+        font-family: 'Roboto Mono', monospace;
+      }
+      .display {
+        font-stretch: 151%;
+        font-weight: 800;
+        letter-spacing: 0.01em;
+      }
+      .lab-head {
+        max-width: 1200px;
+        margin: 0 auto 12px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        line-height: 1.7;
+        color: #555;
+      }
+      .lab-head strong {
+        color: #111;
+      }
+      .screen-label {
+        max-width: 1200px;
+        margin: 56px auto 10px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #555;
+      }
+      .note {
+        max-width: 1200px;
+        margin: 10px auto 0;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        line-height: 1.7;
+        color: #555;
+      }
+      .note strong {
+        color: #111;
+      }
+      .frame {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: #fff;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+        overflow: hidden;
+      }
+      .controls {
+        max-width: 1200px;
+        margin: 0 auto 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .ctl-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        color: #555;
+      }
+      .ctl-row > span:first-child {
+        width: 84px;
+        flex-shrink: 0;
+      }
+      .seg {
+        display: inline-flex;
+        border: 1px solid #b9b9b0;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .seg button {
+        padding: 6px 12px;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        color: #555;
+      }
+      .seg button[aria-pressed='true'] {
+        background: #111;
+        color: #fff;
+      }
+      .phoneframe {
+        width: 390px;
+        margin: 0 auto;
+        background: #fff;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+        overflow: hidden;
+        position: relative;
+      }
+      .foldline {
+        position: absolute;
+        left: 0;
+        right: 0;
+        border-top: 2px dashed rgba(189, 0, 173, 0.55);
+        pointer-events: none;
+        z-index: 30;
+      }
+      .foldline span {
+        position: absolute;
+        right: 6px;
+        top: 2px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #bd00ad;
+        background: rgba(255, 255, 255, 0.85);
+        padding: 1px 5px;
+      }
+      .b-audit {
+        max-width: 1200px;
+        margin: 8px auto 0;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        line-height: 1.7;
+        color: #555;
+        letter-spacing: 0.02em;
+      }
+      .b-audit .fail {
+        color: #b00020;
+        font-weight: 700;
+      }
+      .b-audit .good {
+        color: #05743e;
+        font-weight: 700;
+      }
+      .dcards {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        gap: 16px;
+      }
+      .dcard {
+        background: #fff;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+        padding: 18px 20px;
+      }
+      .dcard .id {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--gray-500);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+      }
+      .dcard .judge {
+        background: var(--magenta);
+        color: #fff;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+      }
+      .dcard .rec {
+        background: #05a24b;
+        color: #fff;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+      }
+      .dcard h3 {
+        font-size: 15.5px;
+        margin-bottom: 6px;
+        color: var(--ink-90);
+      }
+      .dcard p {
+        font-size: 13.5px;
+        line-height: 1.55;
+        color: #374151;
+      }
+      .dcard p + p {
+        margin-top: 6px;
+      }
+      .infobox {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: #fff;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+        padding: 22px 26px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #374151;
+      }
+      .infobox h3 {
+        font-size: 15px;
+        color: var(--ink-90);
+        margin-bottom: 8px;
+      }
+      .infobox ul {
+        padding-left: 20px;
+      }
+      .infobox li + li {
+        margin-top: 4px;
+      }
+      .infobox code {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        background: var(--gray-100);
+        padding: 1px 5px;
+        border-radius: 3px;
+      }
+
+      /* ————— context bar (shipped nav, NOT judged here) ————— */
+      .lp-bar {
+        background: #fff;
+        position: relative;
+      }
+      .lp-bar-inner {
+        max-width: 1128px;
+        margin: 0 auto;
+        padding: 0 24px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        gap: 26px;
+      }
+      .lp-bar.m .lp-bar-inner {
+        padding: 0 20px;
+        height: 58px;
+      }
+      .lp-bar-logo {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-weight: 800;
+        font-size: 16px;
+        color: #02302c;
+        margin-right: auto;
+      }
+      .lp-bar-link {
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .lp-bar-link .lp-chev {
+        width: 12px;
+        height: 12px;
+      }
+      .lp-donate {
+        display: inline-flex;
+        align-items: center;
+        height: 34px;
+        padding: 0 16px;
+        font-size: 13.5px;
+        font-weight: 700;
+      }
+      .lp-cap {
+        /* centred — the bar's middle is empty at both widths; the right
+           edge belongs to Donate / the burger */
+        position: absolute;
+        top: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        opacity: 0.5;
+        color: #374151;
+        z-index: 5;
+      }
+      .lp-burger {
+        margin-left: auto;
+        display: inline-flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .lp-burger i {
+        display: block;
+        width: 18px;
+        height: 3px;
+        background: #02302c;
+      }
+
+      /* ————— the landing region ————— */
+      .lp {
+        background: var(--g);
+      }
+      .lp-wrap {
+        max-width: 1128px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .lp.m .lp-wrap {
+        padding: 0 20px;
+      }
+
+      /* hero · today — the shipped block, honest to the app (drift green
+         #17a34a on the H1, gray-500 body; the mascot at its real scale) */
+      .lp-hero-today {
+        padding: 44px 0 26px;
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+      }
+      .lp.m .lp-hero-today {
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 26px 0 16px;
+        text-align: center;
+      }
+      .lp-hero-today img {
+        width: min(320px, 34%);
+        height: auto;
+        flex-shrink: 0;
+      }
+      .lp.m .lp-hero-today img {
+        width: 205px;
+      }
+      .lp-hero-today .txt {
+        padding-top: 44px;
+      }
+      .lp.m .lp-hero-today .txt {
+        padding-top: 0;
+      }
+      .lp-h1-today {
+        font-size: 44px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.02;
+        color: #17a34a;
+        margin-bottom: 14px;
+      }
+      .lp.m .lp-h1-today {
+        font-size: 34px;
+      }
+      .lp-desc-today {
+        font-size: 19px;
+        line-height: 1.5;
+        color: var(--gray-500);
+        max-width: 46ch;
+      }
+      .lp.m .lp-desc-today {
+        font-size: 16.5px;
+      }
+
+      /* hero · masthead — the compact register: display H1 in the type
+         ink (the role split keeps coloured ink off small text; the
+         colour moment belongs to the catalog below) */
+      .lp-masthead {
+        padding: 52px 0 8px;
+        display: flex;
+        gap: 36px;
+        align-items: flex-end;
+        justify-content: space-between;
+      }
+      .lp.m .lp-masthead {
+        padding: 32px 0 4px;
+      }
+      .lp-h1-display {
+        font-stretch: 151%;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+        line-height: 1.02;
+        font-size: clamp(34px, 4.2vw, 50px);
+        color: var(--type);
+        text-wrap: balance;
+        hyphens: none;
+      }
+      .lp.m .lp-h1-display {
+        font-size: 30px;
+      }
+      .lp-oneliner {
+        margin-top: 14px;
+        font-size: 16px;
+        line-height: 1.55;
+        color: var(--body);
+        max-width: 52ch;
+      }
+      .lp.m .lp-oneliner {
+        font-size: 15px;
+      }
+      .lp-masthead img {
+        width: 132px;
+        height: auto;
+        flex-shrink: 0;
+      }
+      .lp.m .lp-masthead img {
+        width: 96px;
+      }
+
+      /* the catalog section */
+      .lp-catalog {
+        padding: 34px 0 84px;
+      }
+      .lp.m .lp-catalog {
+        padding: 24px 0 56px;
+      }
+      .lp-eyebrow {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--head);
+        margin-bottom: 18px;
+      }
+      .lp-eyebrow .n {
+        opacity: 0.65;
+        margin-left: 8px;
+      }
+      .lp-nohero-line {
+        font-size: 15px;
+        line-height: 1.55;
+        color: var(--body);
+        max-width: 52ch;
+        margin: -6px 0 22px;
+      }
+
+      /* resume banner (Guide · resume — simulated) */
+      .lp-resume-w {
+        filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.05))
+          drop-shadow(0 3px 8px rgba(0, 0, 0, 0.07));
+        margin-bottom: 22px;
+      }
+      .lp-resume {
+        clip-path: var(--clip-card);
+        background: var(--fig);
+        padding: 16px 22px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .lp-resume .lp-eyebrow {
+        margin: 0;
+        flex-basis: 100%;
+      }
+      .lp-resume .t {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--type);
+      }
+      .lp-resume .pts {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        color: var(--bodyFig);
+      }
+      .lp-resume .lp-chev {
+        margin-left: auto;
+        transform: rotate(-90deg);
+        color: var(--type);
+      }
+
+      /* ——— form · cards ——— */
+      .lp-cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        list-style: none;
+        padding: 0;
+      }
+      .lp.m .lp-cards {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .lp-cardw {
+        filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.05))
+          drop-shadow(0 3px 8px rgba(0, 0, 0, 0.07));
+      }
+      .lp-card {
+        clip-path: var(--clip-card);
+        background: var(--sfc);
+        padding: 20px 24px 12px;
+        height: 100%;
+      }
+      .lp.m .lp-card {
+        padding: 18px 20px 10px;
+      }
+      .lp-card-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .lp-card-name {
+        font-size: 17.5px;
+        font-weight: 700;
+        color: var(--tink);
+        letter-spacing: -0.01em;
+      }
+      .lp-card-set {
+        margin-left: auto;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--tmeta);
+        flex-shrink: 0;
+      }
+      .lp-card-blurb {
+        margin: 8px 0 10px;
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: var(--tbody);
+        max-width: 44ch;
+      }
+      .lp-iconchip {
+        width: 30px;
+        height: 30px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      /* ——— form · rows ——— */
+      .lp-rows {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        list-style: none;
+        padding: 0;
+      }
+      .lp-roww {
+        filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.05))
+          drop-shadow(0 3px 8px rgba(0, 0, 0, 0.07));
+      }
+      .lp-row {
+        clip-path: var(--clip-card);
+        background: var(--sfc);
+        padding: 20px 24px;
+        display: grid;
+        grid-template-columns: 1fr 1.1fr;
+        gap: 12px 44px;
+        align-items: start;
+      }
+      .lp.m .lp-row {
+        display: block;
+        padding: 18px 20px 12px;
+      }
+      .lp-row .lp-card-blurb {
+        margin-bottom: 0;
+      }
+      .lp.m .lp-row .lp-card-blurb {
+        margin-bottom: 8px;
+      }
+
+      /* ——— form · ledger (split rail: masthead left, drills right) ——— */
+      .lp-ledger-split {
+        display: grid;
+        grid-template-columns: 0.85fr 1.35fr;
+        gap: 24px 76px;
+        align-items: start;
+        padding-top: 18px;
+      }
+      .lp.m .lp-ledger-split {
+        display: block;
+        padding-top: 0;
+      }
+      .lp-rail .lp-h1-display {
+        font-size: clamp(30px, 3.6vw, 44px);
+      }
+      .lp-rail img {
+        width: 148px;
+        height: auto;
+        margin-top: 26px;
+      }
+      .lp.m .lp-rail img {
+        display: none;
+      }
+      .lp.m .lp-rail {
+        margin-bottom: 22px;
+      }
+      .lp-group + .lp-group {
+        margin-top: 22px;
+      }
+      .lp-group-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--tmeta);
+        margin-bottom: 6px;
+      }
+      .lp-group-head .gsets {
+        margin-left: auto;
+        opacity: 0.8;
+      }
+      .lp-ledger .lp-drillw + .lp-drillw {
+        margin-top: 6px;
+      }
+      .lp-ledger.chips .lp-drillw + .lp-drillw,
+      .lp-ledger.quiet .lp-drillw + .lp-drillw {
+        margin-top: 0;
+      }
+
+      /* ——— drills: rows (gem hover-fill on a ::before layer — the clip
+         crops an outline, so the row itself stays unclipped and focus
+         draws a clean rectangle outside it; canon: a clipped element
+         paints no ring) ——— */
+      .lp-drill {
+        position: relative;
+        isolation: isolate;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 46px;
+        padding: 5px 12px;
+        margin: 0 -12px;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--tink);
+        line-height: 1.3;
+      }
+      .lp-drill::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        clip-path: var(--clip-gem);
+        background: transparent;
+        transition: background-color 0.12s var(--quart);
+      }
+      .lp-drill:hover::before {
+        background: var(--hover);
+      }
+      .lp-drill:hover .t {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .lp-drill:focus-visible {
+        outline: 2px solid var(--tfocus);
+        outline-offset: 0;
+        border-radius: 0;
+      }
+      .lp-drill .lp-chev {
+        margin-left: auto;
+        transform: rotate(-90deg);
+        flex-shrink: 0;
+      }
+      .lp-drill .dset {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--tmeta);
+        flex-shrink: 0;
+      }
+      .lp-chev {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+      }
+      .lp-card .lp-drillw {
+        border-top: 1px solid var(--thair);
+      }
+      .lp-row .lp-drillw + .lp-drillw {
+        border-top: 1px solid var(--thair);
+      }
+      .lp-ledger .lp-drill {
+        min-height: 50px;
+      }
+      .lp-ledger.plates .lp-drill {
+        margin: 0;
+        padding: 5px 16px;
+        clip-path: var(--clip-plate);
+        background: var(--sfc);
+      }
+      .lp-ledger.plates .lp-drill::before {
+        display: none;
+      }
+      .lp-ledger.plates .lp-drill:focus-visible {
+        outline-offset: 2px;
+      }
+      .lp-ledger.chips .lp-drillw,
+      .lp-ledger.quiet .lp-drillw {
+        border-top: 1px solid var(--thair);
+      }
+      .lp-ledger.chips .lp-drillw:last-child,
+      .lp-ledger.quiet .lp-drillw:last-child {
+        border-bottom: 1px solid var(--thair);
+      }
+
+      /* ——— drills: pills ——— */
+      .lp-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 12px 0 10px;
+      }
+      .lp-pill {
+        display: inline-flex;
+      }
+      .lp-pill .in {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 0 18px;
+        clip-path: var(--clip-plate);
+        background: var(--pill);
+        color: var(--pillInk);
+        font-size: 14.5px;
+        font-weight: 600;
+        transition: filter 0.12s var(--quart);
+      }
+      .lp-pill:hover .in {
+        filter: brightness(0.96);
+      }
+      .lp-pill:focus-visible {
+        outline: 2px solid var(--tfocus);
+        outline-offset: 2px;
+        border-radius: 0;
+      }
+      .lp-pill .dset {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--tmeta);
+      }
+
+      /* gems: NEW (shipped grammar, 20px) + START HERE (same silhouette,
+         the topic's own ink — appears exactly once on the page) */
+      .lp-newgem {
+        display: inline-flex;
+        height: 20px;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        background: var(--magenta);
+        padding: 0 10px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #fff;
+        clip-path: var(--clip-gem);
+      }
+      .lp-startgem {
+        display: inline-flex;
+        height: 20px;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        background: var(--tink);
+        padding: 0 10px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--startfg);
+        clip-path: var(--clip-gem);
+      }
+
+      /* ————— the FAQ simulation (context — SHIPPED 2026-08-15
+         composition: white · split · open-fill · display · numbered ·
+         six · edited · named email line; no echo, no instructor strip.
+         Styles mirror docs/faq-lab.html / components/faqSection.tsx ————— */
+      .fq {
+        background: #fff;
+        --bleed: 24px;
+        position: relative;
+      }
+      .fq.m {
+        --bleed: 20px;
+      }
+      .fq-wrap {
+        max-width: 1128px;
+        margin: 0 auto;
+        padding: 76px 24px 88px;
+      }
+      .fq.m .fq-wrap {
+        padding: 46px 20px 56px;
+      }
+      .fq-split {
+        display: grid;
+        grid-template-columns: 0.85fr 1.35fr;
+        gap: 24px 76px;
+        align-items: start;
+      }
+      .fq.m .fq-split {
+        display: block;
+      }
+      .fq-h2-display {
+        font-stretch: 151%;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+        line-height: 1.04;
+        font-size: clamp(30px, 3.1vw, 42px);
+        color: #02302c;
+        text-wrap: balance;
+        hyphens: none;
+      }
+      .fq.m .fq-h2-display {
+        font-size: 26px;
+      }
+      .fq-sub {
+        margin-top: 16px;
+        font-size: 15px;
+        line-height: 1.55;
+        color: #40534f;
+        max-width: 44ch;
+      }
+      .fq-still {
+        margin-top: 28px;
+        font-size: 14.5px;
+        line-height: 1.55;
+        color: #40534f;
+        max-width: 36ch;
+      }
+      .fq-still a {
+        color: #02302c;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .fq.m .fq-still {
+        margin: 4px 0 30px;
+      }
+      .fq-headblock {
+        margin-bottom: 44px;
+      }
+      .fq.m .fq-headblock {
+        margin-bottom: 30px;
+      }
+      .fq-item {
+        position: relative;
+        clip-path: var(--clip-card);
+        margin-inline: calc(var(--bleed) * -1);
+        padding-inline: var(--bleed);
+        background: transparent;
+        transition:
+          background-color 0.18s var(--quart),
+          margin-top 0.24s var(--quart);
+      }
+      .fq-itemw:has(.open) + .fq-itemw .fq-item.open {
+        margin-top: 10px;
+      }
+      .fq-item.open {
+        background: #edede3;
+      }
+      .fq-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: var(--bleed);
+        right: var(--bleed);
+        height: 1px;
+        background: #d6ddd9;
+      }
+      .fq-itemw:first-child .fq-item::before,
+      .fq-item.open::before,
+      .fq-itemw:has(.open) + .fq-itemw .fq-item::before {
+        display: none;
+      }
+      .fq-itemw:last-child .fq-item:not(.open)::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: var(--bleed);
+        right: var(--bleed);
+        height: 1px;
+        background: #d6ddd9;
+      }
+      .fq-h3 {
+        font-size: inherit;
+        font-weight: inherit;
+      }
+      .fq-trigger {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        padding: 17px 0;
+        font-size: 17px;
+        font-weight: 600;
+        line-height: 1.35;
+        color: #02302c;
+      }
+      .fq.m .fq-trigger {
+        font-size: 16px;
+        padding: 15px 0;
+      }
+      .fq-trigger:hover .fq-q {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .fq-trigger:focus-visible {
+        outline: 2px solid #05a24b;
+        outline-offset: 2px;
+        border-radius: 0;
+      }
+      .fq-idx {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        font-variant-numeric: tabular-nums;
+        color: #ac009d;
+        min-width: 2ch;
+        flex-shrink: 0;
+      }
+      .fq-chev {
+        width: 16px;
+        height: 16px;
+        margin-left: auto;
+        flex-shrink: 0;
+        transition: transform 0.2s var(--quart);
+      }
+      .fq-item.open .fq-chev {
+        transform: rotate(180deg);
+      }
+      .fq-panel {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.24s var(--quart);
+      }
+      .fq-item.open .fq-panel {
+        grid-template-rows: 1fr;
+      }
+      .fq-panel-in {
+        overflow: hidden;
+        min-height: 0;
+      }
+      .fq-answer {
+        font-size: 15.5px;
+        line-height: 1.6;
+        color: #3d534e;
+        max-width: 62ch;
+        padding-bottom: 20px;
+        margin-left: 30px;
+      }
+      .fq.m .fq-answer {
+        margin-left: 0;
+      }
+
+      /* ————— the footer simulation (context — decided in the footer
+         lab; structure = Malik's favourite state). Mirrors
+         docs/footer-lab.html verbatim. ————— */
+      .ftx {
+        position: relative;
+      }
+      .ftx-cap,
+      .fq-cap {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        opacity: 0.55;
+        z-index: 5;
+      }
+      .fq-cap {
+        color: #374151;
+      }
+      .ftx-banner-inner {
+        max-width: 1128px;
+        margin: 0 auto;
+        padding: 44px 24px 40px;
+      }
+      .ftx.m .ftx-banner-inner {
+        padding: 36px 20px 30px;
+      }
+      .ftx-banner-head {
+        font-size: 26px;
+        margin-bottom: 6px;
+      }
+      .ftx.m .ftx-banner-head {
+        font-size: 22px;
+      }
+      .ftx-banner-body {
+        font-size: 14.5px;
+        max-width: 60ch;
+        line-height: 1.55;
+      }
+      .ftx-pill {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #fff;
+        padding: 6px 6px 6px 18px;
+        max-width: 560px;
+        margin-top: 16px;
+      }
+      .ftx-pill .ph {
+        flex: 1;
+        min-width: 0;
+        font-size: 14.5px;
+        color: #888;
+        height: 44px;
+        display: flex;
+        align-items: center;
+      }
+      .ftx-pill-btn {
+        flex-shrink: 0;
+        font-weight: 700;
+        font-size: 14px;
+        padding: 11px 26px;
+      }
+      .ftx-fine {
+        margin-top: 8px;
+        font-size: 12px;
+      }
+      .ftx-wrap {
+        max-width: 1128px;
+        margin: 0 auto;
+        padding: 36px 24px 40px;
+      }
+      .ftx.m .ftx-wrap {
+        padding: 30px 20px 26px;
+      }
+      .ftx-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr 1fr 1fr;
+        gap: 40px;
+      }
+      .ftx-colhead {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 14px;
+      }
+      .ftx-links {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .ftx-links span {
+        font-size: 14.5px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ftx-mission {
+        margin-top: 12px;
+        font-size: 14.5px;
+        line-height: 1.55;
+        max-width: 34ch;
+      }
+      .ftx.m .ftx-mission {
+        max-width: none;
+      }
+      .ftx-mcols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px 20px;
+        margin-top: 32px;
+      }
+      .ftx-newgem {
+        display: inline-flex;
+        height: 20px;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        background: var(--magenta);
+        padding: 0 10px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #fff;
+      }
+      .ftx-bottom {
+        border-top: 1px solid;
+      }
+      .ftx-bottom-inner {
+        max-width: 1128px;
+        margin: 0 auto;
+        padding: 18px 24px 34px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+        font-size: 13px;
+      }
+      .ftx.m .ftx-bottom-inner {
+        padding: 16px 20px 30px;
+      }
+      .ftx-socials {
+        margin-left: auto;
+        display: flex;
+        gap: 12px;
+      }
+      .ftx-chip-tap {
+        width: 44px;
+        height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: -7px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .lp-drill::before,
+        .lp-pill .in,
+        .fq-panel,
+        .fq-chev,
+        .fq-item {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="lab-head">
+      <strong>Landing lab.</strong> PROPOSED 2026-08-17 · branch
+      <strong>color-system-exploration</strong><br />
+      <strong
+        >Direction from Malik (2026-08-17, after testing the nav variants on
+        mobile): &ldquo;the navigation items need to be on the frontpage/landing
+        page instead &hellip; The main goal we have is for people to do the
+        logic drills, so we should surface them right away.&rdquo;</strong
+      >
+      The shipped mobile path to a drill is three taps deep (Exercises &rarr;
+      topic &rarr; drill, through the bottom sheet); the whole catalogue is six
+      topics and thirteen drills, so it fits ON the page — zero taps to see
+      every drill. This lab redesigns the landing page around that: the
+      exercises catalogue becomes the homepage&rsquo;s centre, the hero
+      compresses to make room, and the phone frame carries a
+      <strong>fold marker</strong> so &ldquo;first drill above the fold&rdquo;
+      is measured, not felt. Built on the settled canon: scheme roles,
+      ensure-contrast derived tiers, pixel-silhouette cards (D12, shadows on a
+      wrapper), gem hover-fills, the mono eyebrow + display voice, topic IA +
+      colour tiers verbatim from <span class="mono">content/topics.ts</span>,
+      topic icons from <span class="mono">components/nav/topicIcon.tsx</span>.
+      The shipped FAQ and the favourite footer are simulated below as context.
+      <strong
+        >DECIDED same day (Malik, from the dials, two passes): Set&nbsp;L ground
+        · compact masthead · topic cards at BOTH widths (rows held the desktop
+        for an afternoon, retired after more testing) · neutral cards + set
+        chips · drill rows · resume banner · no mascot · verbatim copy.</strong
+      >
+      That composition is now the default (preset&nbsp;A); the superseded
+      morning proposal stays one preset away (A0). Open riders: the resume
+      banner needs a persistence port (LP7), and Set&nbsp;L here front-runs D11
+      without closing it (LP11).
+    </div>
+
+    <div class="screen-label">0 · The landing page — play the dials</div>
+    <div class="controls" id="presets"></div>
+    <div class="controls" id="controls"></div>
+    <div class="frame" id="frame-d">
+      <div id="bar-mount"></div>
+      <div id="lp-mount"></div>
+      <div id="fq-mount"></div>
+      <div id="ft-mount"></div>
+    </div>
+    <p class="b-audit" id="audit"></p>
+
+    <div class="screen-label">
+      0b · The same state at 390&nbsp;px — one set of dials, two widths. The
+      dashed line is the fold (&asymp;660&nbsp;px — iPhone&nbsp;14, Safari
+      chrome at first load).
+    </div>
+    <div class="phoneframe" id="frame-m">
+      <div class="foldline" style="top: 660px"><span>&asymp; fold</span></div>
+      <div id="bar-mount-m"></div>
+      <div id="lp-mount-m"></div>
+      <div id="fq-mount-m"></div>
+      <div id="ft-mount-m"></div>
+    </div>
+    <p class="note">
+      <strong>The mobile reflow:</strong> cards and rows stack to one column;
+      the ledger&rsquo;s rail (heading + one-liner) moves above the list. Drill
+      rows keep &ge;44&nbsp;px targets; the gem hover-fill is a no-op on touch
+      (the underline and the row itself do the work). The mascot never renders
+      in the ledger rail at phone width — the fold budget is spent on drills.
+    </p>
+    <p class="note">
+      <strong>What the dials cover.</strong> Ground: the D11 candidates plus
+      today&rsquo;s white (content region leans white per the 08-15 direction —
+      the scheme grounds stay for honest comparison; note Set&nbsp;L&rsquo;s
+      plate disappears on the Set&nbsp;L ground, expected). Hero: the shipped
+      block (mascot + drift-green H1, honest to the app), a compact display
+      masthead, or none (the catalogue IS the page). Form: six topic cards in a
+      two-column grid · six full-width topic rows · a flat drill ledger in the
+      FAQ&rsquo;s split-rail shape. Colour: set-surface plates (the quilt
+      identity) · neutral cards with the set colour in gem icon-chips and tags ·
+      quiet (no per-set colour). Drills: rows with chevrons vs sprite-clipped
+      pills (ledger is rows by construction). Guide: nothing · a START HERE gem
+      on Set&nbsp;A&rsquo;s first drill · a simulated &ldquo;continue where you
+      left off&rdquo; banner (localStorage in the port). Mascot: on/off where
+      the hero has a slot for it. Copy: verbatim vs a proposed one-liner edit.
+      Below: the shipped FAQ + the favourite footer, re-groundable, or hidden
+      while judging the catalogue alone.
+    </p>
+
+    <div class="screen-label">1 · Decisions to take</div>
+    <div class="dcards">
+      <div class="dcard">
+        <div class="id">LP1 <span class="rec">Rec: do it</span></div>
+        <h3>The catalogue moves onto the landing page</h3>
+        <p>
+          The insight itself, recorded: on mobile the drills sit three taps
+          behind a menu, and the menu is the only signpost. The homepage&rsquo;s
+          job is &ldquo;get people drilling&rdquo;, the catalogue is thirteen
+          links — small enough to BE the page. Content-as-navigation is how
+          every course product solves this (Khan Academy&rsquo;s course pages,
+          Duolingo&rsquo;s path): the index is the interface.
+        </p>
+        <p>
+          Hypothesis, measurable: surfacing the drills should raise the share of
+          landing sessions that start a drill, and cut time-to-first-drill. The
+          port tags every catalogue click (<span class="mono"
+            >landing_drill_click</span
+          >) so both are readable in PostHog — see LP9.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          LP2 <span class="rec">Decided 2026-08-17: topic cards</span>
+        </div>
+        <h3>Catalogue form — cards, rows, or ledger</h3>
+        <p>
+          <strong>Cards</strong> keep the topic as the unit (Gensler&rsquo;s
+          chapters; professors assign by set) — two columns on desktop, a clean
+          stack on the phone, every drill visible inside its topic.
+          <strong>Rows</strong> give each topic the full width — more air, more
+          scroll, reads editorial. <strong>Ledger</strong> is the fastest scan
+          of all thirteen drills (the syllabus reading) in the FAQ&rsquo;s
+          split-rail shape — but the topic identity thins to a group header.
+        </p>
+        <p>
+          <strong>Malik&rsquo;s call: topic cards at both widths.</strong> The
+          judgement moved in two passes the same day — first rows on desktop
+          with cards on the phone, then, after more testing, cards everywhere:
+          the two-column card grid scans better than six full-width bands, and
+          one form at both widths is one component with no layout fork. Rows
+          stay on the dial (and still reflow to cards on the phone) for
+          comparison.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          LP3 <span class="rec">Decided 2026-08-17: chips</span>
+        </div>
+        <h3>How much set colour</h3>
+        <p>
+          <strong>Plates</strong> paint each card in its set&rsquo;s own surface
+          — the landing page becomes the quilt, and the colour a student meets
+          here is the colour their quiz screen wears (the palette as wayfinding,
+          not decoration). <strong>Chips</strong> keep cards neutral and spend
+          the set colour in 30&nbsp;px gem icon-chips and tags — calmer, still
+          keyed. <strong>Quiet</strong> is the control: no per-set colour,
+          proves whether the colour earns its keep. Caution against plates: six
+          pale surfaces at once is loud, and the footer&rsquo;s colour moment
+          follows two sections later. <strong>Malik&rsquo;s call: chips</strong>
+          — the caution won; the set colour stays in the gem icon-chips and
+          tags, and the ground carries the scheme (see LP11). If plates ever
+          return, the per-topic focus finding in § 2 comes with them.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          LP4 <span class="rec">Decided 2026-08-17: masthead</span>
+        </div>
+        <h3>The hero compresses</h3>
+        <p>
+          Today&rsquo;s hero (mascot + H1 + description) spends the whole first
+          phone viewport saying &ldquo;Master Formal Logic&rdquo; with nothing
+          to tap — the audit strip prints where the first drill lands under each
+          hero. The compact masthead keeps the promise (display H1 in the type
+          ink, one-liner under) and hands the fold to the catalogue.
+          &ldquo;None&rdquo; is the brave reading — bar, eyebrow, drills — kept
+          on the dial to test whether the H1 earns its height. The H1&rsquo;s
+          words stay; only its register changes.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          LP5
+          <span class="judge">Leaning off (the 08-17 pick leaves it off)</span>
+        </div>
+        <h3>The mascot&rsquo;s fate</h3>
+        <p>
+          The Rubik&rsquo;s-cube kid is the page&rsquo;s one piece of warmth,
+          and it currently costs a third of the desktop hero and most of the
+          phone fold. The dial keeps it small beside the masthead (and in the
+          ledger&rsquo;s rail on desktop), or drops it. A middle path for the
+          port: keep it on desktop where the width is free, drop it on the phone
+          where the fold is the scarce resource — the lab already does this in
+          the ledger rail.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          LP6
+          <span class="judge"
+            >Malik kept verbatim — edit stays on the dial</span
+          >
+        </div>
+        <h3>The one-liner</h3>
+        <p>
+          Verbatim: &ldquo;Generate endless, error-free exercises with smart
+          step-by-step hints. Works offline, directly in your browser.&rdquo;
+          Two sentences, front-loads &ldquo;generate&rdquo; (the system&rsquo;s
+          feature) over the student&rsquo;s job. Proposed: &ldquo;Endless logic
+          drills with step-by-step hints — free in your browser, online or
+          off.&rdquo; One breath, leads with the drills (which now sit directly
+          below it), keeps every claim. &ldquo;Free&rdquo; does more work than
+          &ldquo;error-free&rdquo; for a student deciding whether to scroll.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          LP7 <span class="judge">Judge — start ships, resume later</span>
+        </div>
+        <h3>Entry guidance — START HERE, and continue?</h3>
+        <p>
+          A first-time student faces thirteen drills with no reading order. The
+          START HERE gem on Set&nbsp;A&rsquo;s first drill answers it in the
+          catalogue&rsquo;s own grammar (one gem, the topic&rsquo;s own ink — it
+          appears exactly once, so it stays a signal). The resume banner is the
+          returning-student half: &ldquo;continue where you left off&rdquo; from
+          localStorage — real value for a semester-long course, but it needs the
+          quiz to write a last-drill key first, so it&rsquo;s a follow-up port,
+          simulated here to judge the shape.
+        </p>
+        <p>
+          <strong>Malik&rsquo;s pick sets resume as the target state.</strong>
+          Port order: the banner renders only when a last-drill key exists, so
+          first-time visitors see a clean catalogue — ship the catalogue first,
+          add the key write to the quiz, then the banner. Whether START HERE
+          serves as the empty-state fallback for new visitors stays open.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          LP8 <span class="rec">Rec: menu stays, stakes drop</span>
+        </div>
+        <h3>What happens to the exercises menu</h3>
+        <p>
+          The menu remains the global chrome — it is how you switch drills from
+          a quiz page, the blog, anywhere that isn&rsquo;t the homepage. Nothing
+          here deletes it. But the landing page stops DEPENDING on it, which
+          reframes the open D13 judgement (3d-f vs 3d-g): the sheet becomes
+          secondary navigation, so that call loses urgency — take it calmly,
+          delete <span class="mono">/nav-preview</span> when done. On the
+          homepage, the bar&rsquo;s &ldquo;Exercises&rdquo; item can simply
+          scroll to the catalogue.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          LP9 <span class="rec">Rec: instrument before judging</span>
+        </div>
+        <h3>Measurement — the hypothesis in PostHog</h3>
+        <p>
+          Events (snake_case per convention):
+          <span class="mono">landing_drill_click</span> with
+          <span class="mono">topic_id</span>,
+          <span class="mono">quiz_path</span>,
+          <span class="mono">position</span>, and
+          <span class="mono">source: 'landing_catalog'</span>. Success looks
+          like: share of homepage sessions reaching
+          <span class="mono">quiz_started</span> up, median time-to-first-drill
+          down, and mobile converging toward desktop. The existing sheet path
+          keeps its own source, so the two routes are comparable in one insight.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          LP10 <span class="rec">Rec: carry D6 + the gems</span>
+        </div>
+        <h3>Set letters, NEW, and the drill titles</h3>
+        <p>
+          Professors assign by set letter (the nav lab&rsquo;s D6), so the
+          letter stays visible: on the card header for single-set topics, on
+          each drill for Informal (Q&nbsp;·&nbsp;R). The NEW gem carries over
+          from the shipped grammar (Informal Fallacies wears it today). Drill
+          titles use the panel rule from
+          <span class="mono">content/topics.ts</span> — topic adjective off
+          (&ldquo;Translations: Easy&rdquo;), full names for the single-title
+          sets — with the WCAG&nbsp;2.4.4 note in the port section.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          LP11
+          <span class="judge">Decided for the landing · D11 still open</span>
+        </div>
+        <h3>Ground — Set&nbsp;L mint on the landing</h3>
+        <p>
+          Malik&rsquo;s 08-17 pick grounds the landing in Set&nbsp;L&rsquo;s
+          mint — the first content surface to leave the white/cream lean, and
+          consistent with the standing lean toward Set&nbsp;L as the brand
+          primary. Consequences to hold: the page now reads mint (landing) →
+          white (FAQ, shipped) → mint (footer) — judge that seam deliberately;
+          the white cards + plum type all derive cleanly (audit strip), and the
+          focus ring on mint is a DERIVED colour (green fails 3:1 there — the
+          08-15 finding). This front-runs D11 for one surface; the global scheme
+          decision (and the token swap in
+          <span class="mono">marketingTheme.ts</span> /
+          <span class="mono">topics.ts</span> /
+          <span class="mono">footer.tsx</span>) stays its own call.
+        </p>
+      </div>
+    </div>
+
+    <div class="screen-label">2 · Accessibility + port notes</div>
+    <div class="infobox">
+      <ul>
+        <li>
+          <strong>Colour tiers are the shipped constants:</strong> each
+          topic&rsquo;s surface/ink/meta/body/hair come verbatim from
+          <span class="mono">content/topics.ts</span> (already ensure-contrast
+          derived and checked in). What the lab adds: tags and body text on
+          NEUTRAL grounds (chips/quiet modes) are re-derived at render against
+          the actual card ground, and a
+          <strong>per-topic focus colour</strong> — the system green fails
+          1.4.11&rsquo;s 3:1 floor on several set surfaces (the audit strip
+          prints the worst case), extending the 08-15 focus finding. If plates
+          ship, the derived focus tier belongs in
+          <span class="mono">content/topics.ts</span> next to the others.
+        </li>
+        <li>
+          <strong>Semantics:</strong> the catalogue is content, not
+          <span class="mono">nav</span> — a
+          <span class="mono">section</span> with a heading, topics as an
+          <span class="mono">ul</span>, drills as plain links. Link names must
+          survive out of context (WCAG&nbsp;2.4.4):
+          &ldquo;Translations:&nbsp;Easy&rdquo; alone doesn&rsquo;t, so the port
+          gives each link an <span class="mono">aria-label</span> of the full
+          catalogue title (&ldquo;Syllogistic Translations: Easy&rdquo;) while
+          the visible text stays short. The START/NEW gems get
+          <span class="mono">sr-only</span> expansions.
+        </li>
+        <li>
+          <strong>Focus:</strong> drill rows stay UNCLIPPED (the gem clip lives
+          on a <span class="mono">::before</span> fill layer) so
+          <span class="mono">:focus-visible</span> draws a clean rectangle —
+          canon: a clipped element paints no outline. Card shadows ride a
+          wrapper as <span class="mono">filter: drop-shadow</span> (the Viewport
+          rule). Targets: rows &ge;46&nbsp;px, pills &ge;44&nbsp;px.
+        </li>
+        <li>
+          <strong>Port shape:</strong> a server component (<span class="mono"
+            >components/landing/catalog.tsx</span
+          >) reading <span class="mono">topics</span> +
+          <span class="mono">drillTitle</span> from
+          <span class="mono">content/topics.ts</span> — the IA and colours
+          already live there; no new data file. The hero edit touches
+          <span class="mono">components/header.tsx</span> only. Hover fills
+          reuse the globals.css gem construction from the nav port. The
+          mascot&rsquo;s conditional render is a
+          <span class="mono">hidden sm:block</span>, not a second image.
+        </li>
+        <li>
+          <strong>Events:</strong>
+          <span class="mono">landing_drill_click</span> —
+          <span class="mono">topic_id</span>,
+          <span class="mono">quiz_path</span>,
+          <span class="mono">position</span> (1-based across the page),
+          <span class="mono">source: 'landing_catalog'</span>. The resume banner
+          (when it lands) writes
+          <span class="mono">landing_resume_click</span> and needs the quiz to
+          persist a <span class="mono">last_drill</span> key first.
+        </li>
+        <li>
+          <strong>H1 semantics:</strong> hero&nbsp;·&nbsp;today and masthead
+          keep the H1 (&ldquo;Master Formal Logic&rdquo;). Hero&nbsp;·&nbsp;none
+          must still ship an H1 — <span class="mono">sr-only</span> above the
+          catalogue — or the page&rsquo;s outline starts at the FAQ&rsquo;s h2.
+        </li>
+        <li>
+          <strong>The fold marker is an estimate</strong> (iPhone&nbsp;14
+          Safari, large URL bar &asymp;660&nbsp;px of 844) — treat it as a
+          budget, not a measurement; the Vercel preview on a real phone is the
+          truth. Capture note: phones render through the 390&nbsp;px frame —
+          headless Chrome clamps windows below &asymp;500&nbsp;px wide.
+        </li>
+        <li>
+          Deep-linkable state:
+          <span class="mono"
+            >landing-lab.html?form=ledger&amp;color=chips&amp;hero=none</span
+          >
+          — any dial key overrides the default, for sharing exact compositions
+          and headless capture.
+        </li>
+      </ul>
+    </div>
+
+    <script>
+      // ————— canon: WCAG contrast + mixing (same math as lib/contrast.ts,
+      // mirrored from docs/faq-lab.html) —————
+      const hexRgb = (h) => {
+        const n = parseInt(h.slice(1), 16);
+        return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+      };
+      const chan = (v) => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+      };
+      const lum = (h) => {
+        const [r, g, b] = hexRgb(h).map(chan);
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      };
+      const contrastOf = (a, b) => {
+        const x = lum(a),
+          y = lum(b);
+        return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+      };
+      const mixHex = (a, b, t) => {
+        const A = hexRgb(a),
+          B = hexRgb(b);
+        return (
+          '#' +
+          A.map((v, i) =>
+            Math.round(v + (B[i] - v) * t)
+              .toString(16)
+              .padStart(2, '0')
+          ).join('')
+        );
+      };
+      const ensureContrast = (fg, bg, deep, target) => {
+        let c = fg;
+        for (let i = 0; i < 24 && contrastOf(c, bg) < target; i++)
+          c = mixHex(c, deep, 0.12);
+        return c;
+      };
+
+      // ————— canon: silhouette generators, ported VERBATIM from
+      // lib/pixel.ts. Edit the source, then the labs — never the other
+      // way round. —————
+      function cornerProfile(R, u) {
+        const n = R / u;
+        const prof = [];
+        for (let k = 0; k < n; k++) {
+          const dy = R - (k + 0.5) * u;
+          const hw = Math.sqrt(R * R - dy * dy);
+          prof.push(R - Math.min(R, Math.round(hw / u) * u));
+        }
+        return prof;
+      }
+      function spritePts(inset, R = 24, u = 4) {
+        const n = R / u;
+        const prof = cornerProfile(R, u);
+        const i0 = inset;
+        const L = (v) => v + 'px';
+        const M = (v) => 'calc(100% - ' + v + 'px)';
+        const pts = [];
+        pts.push(L(i0) + ' ' + L(i0 + R));
+        for (let k = n - 1; k >= 1; k--)
+          if (prof[k - 1] !== prof[k]) {
+            pts.push(L(i0 + prof[k]) + ' ' + L(i0 + k * u));
+            pts.push(L(i0 + prof[k - 1]) + ' ' + L(i0 + k * u));
+          }
+        pts.push(L(i0 + prof[0]) + ' ' + L(i0));
+        pts.push(M(i0 + prof[0]) + ' ' + L(i0));
+        for (let k = 1; k <= n - 1; k++)
+          if (prof[k - 1] !== prof[k]) {
+            pts.push(M(i0 + prof[k - 1]) + ' ' + L(i0 + k * u));
+            pts.push(M(i0 + prof[k]) + ' ' + L(i0 + k * u));
+          }
+        pts.push(M(i0) + ' ' + L(i0 + R));
+        pts.push(M(i0) + ' ' + M(i0 + R));
+        for (let k = n - 1; k >= 1; k--)
+          if (prof[k - 1] !== prof[k]) {
+            pts.push(M(i0 + prof[k]) + ' ' + M(i0 + k * u));
+            pts.push(M(i0 + prof[k - 1]) + ' ' + M(i0 + k * u));
+          }
+        pts.push(M(i0 + prof[0]) + ' ' + M(i0));
+        pts.push(L(i0 + prof[0]) + ' ' + M(i0));
+        for (let k = 1; k <= n - 1; k++)
+          if (prof[k - 1] !== prof[k]) {
+            pts.push(L(i0 + prof[k - 1]) + ' ' + M(i0 + k * u));
+            pts.push(L(i0 + prof[k]) + ' ' + M(i0 + k * u));
+          }
+        pts.push(L(i0) + ' ' + M(i0 + R));
+        return pts;
+      }
+      function spriteClip(inset, R = 24, u = 4) {
+        return 'polygon(' + spritePts(inset, R, u).join(', ') + ')';
+      }
+      function pixelPts(inset, pu = 8) {
+        const i0 = inset;
+        const L = (v) => v + 'px';
+        const M = (v) => 'calc(100% - ' + v + 'px)';
+        return [
+          L(i0) + ' ' + L(i0 + pu * 2),
+          L(i0 + pu) + ' ' + L(i0 + pu * 2),
+          L(i0 + pu) + ' ' + L(i0 + pu),
+          L(i0 + pu * 2) + ' ' + L(i0 + pu),
+          L(i0 + pu * 2) + ' ' + L(i0),
+          M(i0 + pu * 2) + ' ' + L(i0),
+          M(i0 + pu * 2) + ' ' + L(i0 + pu),
+          M(i0 + pu) + ' ' + L(i0 + pu),
+          M(i0 + pu) + ' ' + L(i0 + pu * 2),
+          M(i0) + ' ' + L(i0 + pu * 2),
+          M(i0) + ' ' + M(i0 + pu * 2),
+          M(i0 + pu) + ' ' + M(i0 + pu * 2),
+          M(i0 + pu) + ' ' + M(i0 + pu),
+          M(i0 + pu * 2) + ' ' + M(i0 + pu),
+          M(i0 + pu * 2) + ' ' + M(i0),
+          L(i0 + pu * 2) + ' ' + M(i0),
+          L(i0 + pu * 2) + ' ' + M(i0 + pu),
+          L(i0 + pu) + ' ' + M(i0 + pu),
+          L(i0 + pu) + ' ' + M(i0 + pu * 2),
+          L(i0) + ' ' + M(i0 + pu * 2),
+        ];
+      }
+      const CLIP_CARD = spriteClip(0, 16, 4); // topic cards / rows / banner
+      const CLIP_PLATE = spriteClip(0, 12, 4); // pills, ledger plates
+      const CLIP_PILL = spriteClip(0); // the footer's subscribe pill (R=24)
+      const GEM = 'polygon(' + pixelPts(0, 4).join(', ') + ')';
+
+      // The shipped pixel chevron — polygon verbatim from
+      // components/ui/accordion.tsx ('angle-down-solid').
+      const CHEV_PTS =
+        '<polygon points="5 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 13 12 13 11 14 11 14 10 15 10 15 9 16 9 16 8 17 8 17 7 19 7 19 8 20 8 20 10 19 10 19 11 18 11 18 12 17 12 17 13 16 13 16 14 15 14 15 15 14 15 14 16 13 16 13 17 11 17 11 16 10 16 10 15 9 15 9 14 8 14 8 13 7 13 7 12 6 12 6 11 5 11 5 10 4 10 4 8 5 8 5 7"/>';
+      const chev = (cls) =>
+        '<svg class="' +
+        cls +
+        '" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+        CHEV_PTS +
+        '</svg>';
+
+      // Topic icons — rects verbatim from components/nav/topicIcon.tsx
+      // (logic symbols on the 4px pixel grid; the D13 rider).
+      const ICON_RECTS = {
+        syllogistic: [
+          [10, 4, 4, 4],
+          [4, 14, 4, 4],
+          [16, 14, 4, 4],
+        ],
+        propositional: [
+          [6, 5, 12, 4],
+          [14, 9, 4, 6],
+          [6, 15, 12, 4],
+        ],
+        modal: [
+          [10, 2, 4, 4],
+          [6, 6, 12, 4],
+          [2, 10, 20, 4],
+          [6, 14, 12, 4],
+          [10, 18, 4, 4],
+        ],
+        deontic: [
+          [8, 4, 8, 4],
+          [16, 8, 4, 8],
+          [8, 16, 8, 4],
+          [4, 8, 4, 8],
+        ],
+        belief: [
+          [4, 4, 16, 12],
+          [8, 16, 4, 4],
+        ],
+        informal: [
+          [6, 4, 12, 4],
+          [14, 8, 4, 4],
+          [10, 12, 4, 4],
+          [10, 20, 4, 4],
+        ],
+      };
+      function topicIcon(id, color, size) {
+        return (
+          '<svg width="' +
+          size +
+          '" height="' +
+          size +
+          '" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink:0">' +
+          (ICON_RECTS[id] || [])
+            .map(
+              (r) =>
+                '<rect x="' +
+                r[0] +
+                '" y="' +
+                r[1] +
+                '" width="' +
+                r[2] +
+                '" height="' +
+                r[3] +
+                '" fill="' +
+                color +
+                '"/>'
+            )
+            .join('') +
+          '</svg>'
+        );
+      }
+
+      // ————— schemes: the D11 candidates + today's white, verbatim from
+      // docs/faq-lab.html. Brand · mint stays dead. —————
+      const SCHEMES = {
+        white: {
+          label: 'White · as today',
+          ground: '#FFFFFF',
+          ink: '#05A24B',
+          type: '#02302C',
+          pool: ['#BD00AD'],
+        },
+        cream: {
+          label: 'Brand · cream',
+          ground: '#EDEDE3',
+          ink: '#05A24B',
+          type: '#02302C',
+          pool: ['#BD00AD'],
+        },
+        setL: {
+          label: 'Set L — mint / plum',
+          ground: '#CFF6DD',
+          ink: '#3F0167',
+          type: '#3F0167',
+          pool: ['#BD00AD'],
+        },
+        original: {
+          label: 'Brand · original (2008)',
+          ground: '#BBFFFF',
+          ink: '#000077',
+          type: '#000077',
+          pool: ['#3F0167'],
+        },
+      };
+
+      // ————— the IA + colour tiers, VERBATIM from content/topics.ts
+      // (surface/ink/accent are the quiz screens' own triads from
+      // quizColors.ts; meta/body/hair/grab are the checked-in
+      // ensure-contrast constants — re-derive if a triad moves). Drills
+      // from content/quiz-catalog.json through the drillTitle rule
+      // (topic adjective off; single-title sets keep full names). —————
+      const TOPICS = [
+        {
+          id: 'syllogistic',
+          name: 'Syllogistic Logic',
+          sets: 'Set A',
+          blurb: 'All, no, some — the logic of categories.',
+          c: {
+            surface: '#FFABC6',
+            ink: '#4A1040',
+            accent: '#674900',
+            meta: '#674900',
+            body: '#6E2F5B',
+            hair: '#E292B1',
+          },
+          drills: [
+            {
+              t: 'Translations: Easy',
+              full: 'Syllogistic Translations: Easy',
+              set: 'Set A',
+              path: '/syllogistic/translations/basic/quiz',
+              start: true,
+            },
+            {
+              t: 'Translations: Hard',
+              full: 'Syllogistic Translations: Hard',
+              set: 'Set A',
+              path: '/syllogistic/translations/hard/quiz',
+            },
+          ],
+        },
+        {
+          id: 'propositional',
+          name: 'Propositional Logic',
+          sets: 'Set C',
+          blurb: 'And, or, if-then — the logic of statements.',
+          c: {
+            surface: '#E7F099',
+            ink: '#02302C',
+            accent: '#BD00AD',
+            meta: '#BD00AD',
+            body: '#305642',
+            hair: '#C2D188',
+          },
+          drills: [
+            {
+              t: 'Translations: Easy',
+              full: 'Propositional Translations: Easy',
+              set: 'Set C',
+              path: '/propositional/translations/quiz',
+            },
+            {
+              t: 'Translations: Hard',
+              full: 'Propositional Translations: Hard',
+              set: 'Set C',
+              path: '/propositional/translations/hard/quiz',
+            },
+          ],
+        },
+        {
+          id: 'modal',
+          name: 'Modal Logic',
+          sets: 'Set J',
+          blurb: 'Necessity and possibility — box and diamond.',
+          c: {
+            surface: '#E6ACF4',
+            ink: '#1C3601',
+            accent: '#674900',
+            meta: '#674900',
+            body: '#444E32',
+            hair: '#C699CD',
+          },
+          drills: [
+            {
+              t: 'Translations: Basic',
+              full: 'Modal Translations: Basic',
+              set: 'Set J',
+              path: '/modal/translations/basic/quiz',
+            },
+            {
+              t: 'Translations: Quantified',
+              full: 'Modal Translations: Quantified',
+              set: 'Set J',
+              path: '/modal/translations/quantified/quiz',
+            },
+          ],
+        },
+        {
+          id: 'deontic',
+          name: 'Deontic Logic',
+          sets: 'Set L',
+          blurb: 'Ought, permissible, forbidden — and commands.',
+          c: {
+            surface: '#CFF6DD',
+            ink: '#3F0167',
+            accent: '#BD00AD',
+            meta: '#BD00AD',
+            body: '#5C327F',
+            hair: '#B8CFCA',
+          },
+          drills: [
+            {
+              t: 'Translations: Imperative',
+              full: 'Deontic Translations: Imperative',
+              set: 'Set L',
+              path: '/deontic/translations/imperative/quiz',
+            },
+            {
+              t: 'Translations: Deontic',
+              full: 'Deontic Translations: Deontic',
+              set: 'Set L',
+              path: '/deontic/translations/deontic/quiz',
+            },
+          ],
+        },
+        {
+          id: 'belief',
+          name: 'Belief Logic',
+          sets: 'Set N',
+          blurb: 'Believing, willing, and what it is rational to believe.',
+          c: {
+            surface: '#9EDAFF',
+            ink: '#4A1040',
+            accent: '#8D0381',
+            meta: '#8D0381',
+            body: '#5B3866',
+            hair: '#91BAE0',
+          },
+          drills: [
+            {
+              t: 'Translations: Believing',
+              full: 'Belief Translations: Believing',
+              set: 'Set N',
+              path: '/belief/translations/basic/quiz',
+            },
+            {
+              t: 'Translations: Willing',
+              full: 'Belief Translations: Willing',
+              set: 'Set N',
+              path: '/belief/translations/willing/quiz',
+            },
+            {
+              t: 'Translations: Rationality',
+              full: 'Belief Translations: Rationality',
+              set: 'Set N',
+              path: '/belief/translations/rationality/quiz',
+            },
+          ],
+        },
+        {
+          id: 'informal',
+          name: 'Informal Logic',
+          sets: 'Sets Q · R',
+          multiSet: true,
+          blurb: 'Definitions, meaning, and the classic fallacies.',
+          c: {
+            surface: '#D9CCF9',
+            ink: '#3E1060',
+            accent: '#745400',
+            meta: '#745400',
+            body: '#5D367F',
+            hair: '#C0AEE1',
+          },
+          drills: [
+            {
+              t: 'Meanings and Definitions',
+              full: 'Meanings and Definitions',
+              set: 'Set Q',
+              path: '/informal/definitions/quiz',
+            },
+            {
+              t: 'Informal Fallacies',
+              full: 'Informal Fallacies',
+              set: 'Set R',
+              path: '/informal/fallacies/quiz',
+              isNew: true,
+            },
+          ],
+        },
+      ];
+
+      // ————— copy. VERBATIM = components/header.tsx today; EDITED = the
+      // proposed pass (LP6). H1 words identical either way. —————
+      const COPY = {
+        verbatim: {
+          h1: 'Master Formal Logic',
+          line: 'Generate endless, error-free exercises with smart step-by-step hints. Works offline, directly in your browser.',
+        },
+        edited: {
+          h1: 'Master Formal Logic',
+          line: 'Endless logic drills with step-by-step hints — free in your browser, online or off.',
+        },
+      };
+
+      // The default = MALIK'S PICK (2026-08-17, judged live in this
+      // lab, two passes): Set L ground · compact masthead · TOPIC
+      // CARDS AT BOTH WIDTHS (rows briefly held the desktop, retired
+      // the same day after more testing) · neutral + set chips ·
+      // drill rows · resume banner · no mascot · verbatim copy ·
+      // Set L footer below. The Set L ground front-runs D11 for the
+      // landing surface; the FAQ sim below stays shipped-white, so
+      // the mint → white → mint seam is part of what was judged. The
+      // original 08-17 morning proposal (white · cards · plates ·
+      // START HERE · edited) stays one preset away.
+      const state = {
+        scheme: 'setL', // white | cream | setL | original
+        hero: 'masthead', // today | masthead | none
+        form: 'cards', // cards | rows (cards on the phone) | ledger
+        color: 'chips', // plates | chips | quiet
+        drills: 'rows', // rows | pills (ledger is rows by construction)
+        guide: 'resume', // off | start | resume
+        mascot: 'off', // on | off (today's hero always carries it)
+        copy: 'verbatim', // verbatim | edited
+        below: 'setL', // setL | cream | hidden (FAQ + footer context)
+      };
+
+      // Deep-linkable state: ?form=ledger&color=chips&hero=none …
+      (function applyQuery() {
+        const q = new URLSearchParams(location.search);
+        for (const k of Object.keys(state))
+          if (q.has(k) && q.get(k)) state[k] = q.get(k);
+        if (!SCHEMES[state.scheme]) state.scheme = 'white';
+        if (state.below !== 'hidden' && !SCHEMES[state.below])
+          state.below = 'setL';
+      })();
+
+      const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+      // ————— derivations —————
+      function deriveGround(s) {
+        const deep = s.type;
+        const g = s.ground;
+        return {
+          head: ensureContrast(mixHex(deep, g, 0.35), g, deep, 4.5),
+          body: ensureContrast(mixHex(deep, g, 0.22), g, deep, 4.5),
+          hair: mixHex(g, deep, 0.16),
+          fig: g === '#FFFFFF' ? '#EDEDE3' : '#FFFFFF',
+          focus:
+            contrastOf('#05A24B', g) >= 3
+              ? '#05A24B'
+              : ensureContrast('#05A24B', g, deep, 3),
+        };
+      }
+      // Per-topic tokens per colour mode. plates = the topics.ts
+      // constants verbatim; chips/quiet re-derive text tiers against the
+      // neutral card ground. Focus is derived per ground either way —
+      // the system green fails 3:1 on several set surfaces (the 08-15
+      // finding, extended; audited below).
+      function topicTokens(t, s, d) {
+        const focusOn = (bg, deep) =>
+          contrastOf('#05A24B', bg) >= 3
+            ? '#05A24B'
+            : ensureContrast('#05A24B', bg, deep, 3);
+        if (state.color === 'plates') {
+          return {
+            sfc: t.c.surface,
+            ink: t.c.ink,
+            meta: t.c.meta,
+            body: t.c.body,
+            hair: t.c.hair,
+            focus: focusOn(t.c.surface, t.c.ink),
+            hover: 'rgba(255,255,255,0.5)',
+            pill: '#FFFFFF',
+            pillInk: t.c.ink,
+            startfg: t.c.surface,
+            iconOn: t.c.ink,
+            chipBg: null,
+          };
+        }
+        const cardG = state.color === 'chips' ? d.fig : d.fig;
+        const deep = s.type;
+        if (state.color === 'chips') {
+          return {
+            sfc: cardG,
+            ink: deep,
+            meta: ensureContrast(t.c.accent, cardG, deep, 4.5),
+            body: ensureContrast(mixHex(deep, cardG, 0.22), cardG, deep, 4.5),
+            hair: mixHex(cardG, deep, 0.14),
+            focus: focusOn(cardG, deep),
+            hover: mixHex(cardG, deep, 0.06),
+            pill: t.c.surface,
+            pillInk: t.c.ink,
+            startfg: cardG,
+            iconOn: t.c.ink,
+            chipBg: t.c.surface,
+          };
+        }
+        return {
+          sfc: cardG,
+          ink: deep,
+          meta: ensureContrast(mixHex(deep, cardG, 0.35), cardG, deep, 4.5),
+          body: ensureContrast(mixHex(deep, cardG, 0.22), cardG, deep, 4.5),
+          hair: mixHex(cardG, deep, 0.14),
+          focus: focusOn(cardG, deep),
+          hover: mixHex(cardG, deep, 0.06),
+          pill: cardG,
+          pillInk: deep,
+          startfg: '#FFFFFF',
+          iconOn: deep,
+          chipBg: null,
+        };
+      }
+      // Ledger drills sit on the PAGE ground (chips/quiet) or on their
+      // set plates (plates) — tokens against the right bg.
+      function ledgerTokens(t, s, d) {
+        const tt = topicTokens(t, s, d);
+        if (state.color !== 'plates') {
+          const g = s.ground;
+          const deep = s.type;
+          tt.sfc = 'transparent';
+          tt.ink = deep;
+          tt.meta =
+            state.color === 'chips'
+              ? ensureContrast(t.c.accent, g, deep, 4.5)
+              : d.head;
+          tt.hair = d.hair;
+          tt.focus = d.focus;
+          tt.hover = mixHex(g, deep, 0.05);
+        }
+        return tt;
+      }
+
+      // ————— context bar (shipped; not judged here) —————
+      function renderBar(mount, m) {
+        const donate =
+          '<span class="lp-donate" style="clip-path:' +
+          GEM +
+          ';background:#05A24B;color:#02302C">Donate</span>';
+        const logo =
+          '<span class="lp-bar-logo">' +
+          markSvg(26, '#05A24B', '#fff') +
+          'LogiCola</span>';
+        mount.innerHTML =
+          '<div class="lp-bar' +
+          (m ? ' m' : '') +
+          '"><span class="lp-cap">bar · context (shipped)</span><div class="lp-bar-inner">' +
+          (m
+            ? logo +
+              '<span class="lp-burger" aria-hidden="true"><i></i><i></i><i></i></span>'
+            : logo +
+              '<span class="lp-bar-link">Exercises ' +
+              chev('lp-chev') +
+              '</span><span class="lp-bar-link">Blog</span>' +
+              donate) +
+          '</div></div>';
+      }
+
+      // ————— hero —————
+      function heroHtml(m) {
+        const c = COPY[state.copy];
+        if (state.form === 'ledger') return ''; // the rail carries it
+        if (state.hero === 'today') {
+          return (
+            '<div class="lp-hero-today"><img src="../public/mascot.png" alt="" onerror="this.style.display=\'none\'" /><div class="txt"><h1 class="lp-h1-today">' +
+            esc(c.h1) +
+            '</h1><p class="lp-desc-today">' +
+            esc(c.line) +
+            '</p></div></div>'
+          );
+        }
+        if (state.hero === 'masthead') {
+          const img =
+            state.mascot === 'on'
+              ? '<img src="../public/mascot.png" alt="" onerror="this.style.display=\'none\'" />'
+              : '';
+          return (
+            '<div class="lp-masthead"><div><h1 class="lp-h1-display display">' +
+            esc(c.h1) +
+            '</h1><p class="lp-oneliner">' +
+            esc(c.line) +
+            '</p></div>' +
+            img +
+            '</div>'
+          );
+        }
+        return '';
+      }
+      function railHtml(m) {
+        const c = COPY[state.copy];
+        const img =
+          state.mascot === 'on' && !m
+            ? '<img src="../public/mascot.png" alt="" onerror="this.style.display=\'none\'" />'
+            : '';
+        return (
+          '<div class="lp-rail"><h1 class="lp-h1-display display">' +
+          esc(c.h1) +
+          '</h1><p class="lp-oneliner">' +
+          esc(c.line) +
+          '</p>' +
+          img +
+          '</div>'
+        );
+      }
+
+      // ————— drills —————
+      function gems(dr, tt) {
+        let out = '';
+        if (dr.start && state.guide === 'start')
+          out += '<span class="lp-startgem">Start here</span>';
+        if (dr.isNew) out += '<span class="lp-newgem">NEW</span>';
+        return out;
+      }
+      function drillRow(dr, t, tt, showSet) {
+        return (
+          '<div class="lp-drillw"><a class="lp-drill" href="' +
+          dr.path +
+          '" onclick="return false" aria-label="' +
+          esc(dr.full) +
+          '"><span class="t">' +
+          esc(dr.t) +
+          '</span>' +
+          gems(dr, tt) +
+          (showSet ? '<span class="dset">' + esc(dr.set) + '</span>' : '') +
+          chev('lp-chev') +
+          '</a></div>'
+        );
+      }
+      function drillPill(dr, t, tt, showSet) {
+        return (
+          '<a class="lp-pill" href="' +
+          dr.path +
+          '" onclick="return false" aria-label="' +
+          esc(dr.full) +
+          '"><span class="in"><span class="t">' +
+          esc(dr.t) +
+          '</span>' +
+          gems(dr, tt) +
+          (showSet ? '<span class="dset">' + esc(dr.set) + '</span>' : '') +
+          '</span></a>'
+        );
+      }
+      function drillsHtml(t, tt) {
+        const showSet = !!t.multiSet;
+        if (state.drills === 'pills' && state.form !== 'ledger')
+          return (
+            '<div class="lp-pills">' +
+            t.drills.map((d) => drillPill(d, t, tt, showSet)).join('') +
+            '</div>'
+          );
+        return t.drills.map((d) => drillRow(d, t, tt, showSet)).join('');
+      }
+
+      function topicVars(tt) {
+        return (
+          '--sfc:' +
+          tt.sfc +
+          ';--tink:' +
+          tt.ink +
+          ';--tmeta:' +
+          tt.meta +
+          ';--tbody:' +
+          tt.body +
+          ';--thair:' +
+          tt.hair +
+          ';--tfocus:' +
+          tt.focus +
+          ';--hover:' +
+          tt.hover +
+          ';--pill:' +
+          tt.pill +
+          ';--pillInk:' +
+          tt.pillInk +
+          ';--startfg:' +
+          tt.startfg
+        );
+      }
+      function iconChip(t, tt) {
+        if (tt.chipBg)
+          return (
+            '<span class="lp-iconchip" style="background:' +
+            tt.chipBg +
+            ';clip-path:' +
+            GEM +
+            '">' +
+            topicIcon(t.id, tt.iconOn, 20) +
+            '</span>'
+          );
+        return topicIcon(t.id, tt.iconOn, 22);
+      }
+
+      // ————— catalogue forms —————
+      function cardHtml(t, s, d) {
+        const tt = topicTokens(t, s, d);
+        return (
+          '<li class="lp-cardw"><div class="lp-card" style="' +
+          topicVars(tt) +
+          '"><div class="lp-card-head">' +
+          iconChip(t, tt) +
+          '<span class="lp-card-name">' +
+          esc(t.name) +
+          '</span><span class="lp-card-set">' +
+          esc(t.sets) +
+          '</span></div><p class="lp-card-blurb">' +
+          esc(t.blurb) +
+          '</p>' +
+          drillsHtml(t, tt) +
+          '</div></li>'
+        );
+      }
+      function rowHtml(t, s, d) {
+        const tt = topicTokens(t, s, d);
+        return (
+          '<li class="lp-roww"><div class="lp-row" style="' +
+          topicVars(tt) +
+          '"><div><div class="lp-card-head">' +
+          iconChip(t, tt) +
+          '<span class="lp-card-name">' +
+          esc(t.name) +
+          '</span><span class="lp-card-set">' +
+          esc(t.sets) +
+          '</span></div><p class="lp-card-blurb">' +
+          esc(t.blurb) +
+          '</p></div><div>' +
+          drillsHtml(t, tt) +
+          '</div></div></li>'
+        );
+      }
+      function ledgerHtml(s, d) {
+        return (
+          '<div class="lp-ledger ' +
+          state.color +
+          '">' +
+          TOPICS.map((t) => {
+            const tt = ledgerTokens(t, s, d);
+            return (
+              '<div class="lp-group" style="' +
+              topicVars(tt) +
+              '"><div class="lp-group-head">' +
+              topicIcon(t.id, state.color === 'quiet' ? d.head : tt.meta, 16) +
+              '<span>' +
+              esc(t.name) +
+              '</span><span class="gsets">' +
+              esc(t.sets) +
+              '</span></div>' +
+              // D6: the group header carries the set; only the multi-set
+              // topic (Informal, Q · R) tags its drills individually
+              t.drills.map((dr) => drillRow(dr, t, tt, !!t.multiSet)).join('') +
+              '</div>'
+            );
+          }).join('') +
+          '</div>'
+        );
+      }
+
+      function resumeHtml(s, d) {
+        if (state.guide !== 'resume') return '';
+        const bodyFig = ensureContrast(
+          mixHex(s.type, d.fig, 0.22),
+          d.fig,
+          s.type,
+          4.5
+        );
+        return (
+          '<div class="lp-resume-w"><a class="lp-resume" href="/deontic/translations/imperative/quiz" onclick="return false" style="--fig:' +
+          d.fig +
+          ';--type:' +
+          s.type +
+          ';--bodyFig:' +
+          bodyFig +
+          ';--clip-card:' +
+          CLIP_CARD +
+          '"><span class="lp-eyebrow" style="--head:' +
+          d.head +
+          '">Continue where you left off</span><span class="t">Deontic Translations: Imperative</span><span class="pts">you were at 62 points</span>' +
+          chev('lp-chev') +
+          '</a></div>'
+        );
+      }
+
+      function renderLanding(mount, m) {
+        const s = SCHEMES[state.scheme];
+        const d = deriveGround(s);
+        const drillCount = TOPICS.reduce((a, t) => a + t.drills.length, 0);
+        const eyebrow =
+          '<div class="lp-eyebrow">Exercises<span class="n">' +
+          TOPICS.length +
+          ' topics · ' +
+          drillCount +
+          ' drills</span></div>';
+        const noheroLine =
+          state.hero === 'none' && state.form !== 'ledger'
+            ? '<p class="lp-nohero-line">' + esc(COPY[state.copy].line) + '</p>'
+            : '';
+        // Malik's call (2026-08-17): the rows form reflows to topic
+        // CARDS at phone width — full width is a desktop resource; the
+        // phone wants the card stack.
+        const formEff = m && state.form === 'rows' ? 'cards' : state.form;
+        let catalog;
+        if (formEff === 'cards')
+          catalog =
+            '<ul class="lp-cards">' +
+            TOPICS.map((t) => cardHtml(t, s, d)).join('') +
+            '</ul>';
+        else if (formEff === 'rows')
+          catalog =
+            '<ul class="lp-rows">' +
+            TOPICS.map((t) => rowHtml(t, s, d)).join('') +
+            '</ul>';
+        else catalog = ledgerHtml(s, d);
+
+        const catInner = eyebrow + noheroLine + resumeHtml(s, d) + catalog;
+        const body =
+          state.form === 'ledger' && !m
+            ? '<div class="lp-ledger-split">' +
+              railHtml(m) +
+              '<div>' +
+              catInner +
+              '</div></div>'
+            : state.form === 'ledger'
+              ? railHtml(m) + catInner
+              : heroHtml(m) + '<div class="lp-catalog">' + catInner + '</div>';
+
+        const vars =
+          '--g:' +
+          s.ground +
+          ';--type:' +
+          s.type +
+          ';--head:' +
+          d.head +
+          ';--body:' +
+          d.body +
+          ';--fig:' +
+          d.fig +
+          ';--clip-card:' +
+          CLIP_CARD +
+          ';--clip-plate:' +
+          CLIP_PLATE +
+          ';--clip-gem:' +
+          GEM;
+
+        mount.innerHTML =
+          '<section class="lp' +
+          (m ? ' m' : '') +
+          '" style="' +
+          vars +
+          '"><div class="lp-wrap">' +
+          (state.form === 'ledger'
+            ? '<div class="lp-catalog">' + body + '</div>'
+            : body) +
+          '</div></section>';
+      }
+
+      // ————— the FAQ simulation — the SHIPPED 2026-08-15 composition,
+      // static (copy from components/faqSection.tsx / the faq lab's
+      // edited pass + six entries; first item open, toggles live). —————
+      const FAQ_ITEMS = [
+        {
+          q: 'What is LogiCola?',
+          a: 'LogiCola is the practice companion to Harry Gensler’s Introduction to Logic (Routledge). After Gensler — the original creator — passed away, I rebuilt it for the web to keep an important learning resource alive and to honour his legacy.',
+        },
+        {
+          q: 'Do I have to pay anything to use it?',
+          a: 'No. LogiCola is open source, and the exercises are free — and will stay free. If it helps you, a contribution keeps the platform running and speeds up new content and exercises.',
+        },
+        {
+          q: 'How is this different from the original software?',
+          a: 'It’s a remake of the 2008 program, rebuilt for the browser — it runs on any device with an internet connection, whatever the operating system. Some chapters and exercises from the original are still missing; they’re being added set by set.',
+        },
+        {
+          q: 'Is there also a new version of LogiSkor?',
+          a: 'LogiSkor keeps track of student scores from LogiCola. I’m working on a way for teachers to see how their students are doing. Email me if you’d like to try an early version.',
+        },
+        {
+          q: 'How can I support the project?',
+          a: 'LogiCola is free, open source, and run by one person. A donation pays for hosting and buys development time — that’s the fastest way to help. Telling a logic teacher or student about it helps nearly as much.',
+        },
+        {
+          q: 'Can I use LogiCola in my classroom?',
+          a: 'Yes — that’s exactly what it’s for. The drills follow Gensler’s Introduction to Logic chapter by chapter, so you can assign sets alongside your syllabus. And LogiSkor will let you follow your students’ scores; email me if you’d like early access.',
+        },
+      ];
+      const openSet = new Set([0]);
+      function renderFaq(mount, m) {
+        if (state.below === 'hidden') {
+          mount.innerHTML = '';
+          return;
+        }
+        const pre = m ? 'fq-m' : 'fq-d';
+        const items = FAQ_ITEMS.map((entry, i) => {
+          const open = openSet.has(i);
+          const num = String(i + 1).padStart(2, '0');
+          return (
+            '<div class="fq-itemw"><div class="fq-item' +
+            (open ? ' open' : '') +
+            '" data-item="' +
+            i +
+            '" style="--clip-card:' +
+            CLIP_CARD +
+            '"><h3 class="fq-h3"><button class="fq-trigger" data-idx="' +
+            i +
+            '" id="' +
+            pre +
+            '-t' +
+            i +
+            '" aria-expanded="' +
+            open +
+            '" aria-controls="' +
+            pre +
+            '-p' +
+            i +
+            '"><span class="fq-idx" aria-hidden="true">' +
+            num +
+            '</span><span class="fq-q">' +
+            esc(entry.q) +
+            '</span><svg class="fq-chev" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+            CHEV_PTS +
+            '</svg></button></h3><div class="fq-panel" role="region" id="' +
+            pre +
+            '-p' +
+            i +
+            '" aria-labelledby="' +
+            pre +
+            '-t' +
+            i +
+            '"><div class="fq-panel-in"><div class="fq-answer">' +
+            esc(entry.a) +
+            '</div></div></div></div></div>'
+          );
+        }).join('');
+        const head =
+          '<div class="fq-headblock"><h2 class="fq-h2-display">Frequently asked questions</h2><p class="fq-sub">The project, the price (it’s free), and the classroom — in short answers.</p>' +
+          '<p class="fq-still">Something the list doesn’t answer? <a href="#" onclick="return false">Email me</a> — I’m Malik, and I read every message.</p></div>';
+        const inner = m
+          ? head + '<div class="fq-items">' + items + '</div>'
+          : '<div class="fq-split"><div>' +
+            head +
+            '</div><div><div class="fq-items">' +
+            items +
+            '</div></div></div>';
+        mount.innerHTML =
+          '<section class="fq' +
+          (m ? ' m' : '') +
+          '"><span class="fq-cap">FAQ · context (shipped 2026-08-15)</span><div class="fq-wrap">' +
+          inner +
+          '</div></section>';
+      }
+      function toggle(i) {
+        if (openSet.has(i)) openSet.delete(i);
+        else openSet.add(i);
+        for (const mount of [
+          document.getElementById('fq-mount'),
+          document.getElementById('fq-mount-m'),
+        ]) {
+          mount
+            .querySelectorAll('[data-item="' + i + '"]')
+            .forEach((el) => el.classList.toggle('open', openSet.has(i)));
+          mount
+            .querySelectorAll('[data-idx="' + i + '"]')
+            .forEach((b) =>
+              b.setAttribute('aria-expanded', String(openSet.has(i)))
+            );
+        }
+      }
+      document.addEventListener('click', (e) => {
+        const t = e.target.closest('.fq-trigger');
+        if (t) toggle(Number(t.dataset.idx));
+      });
+
+      // ————— the footer simulation — mirrored from docs/faq-lab.html /
+      // docs/footer-lab.html (structure = Malik's favourite state).
+      // Context only; audited in the footer lab. —————
+      function hiddenOne(c, x, y, ww, hh) {
+        if (x >= c.x + c.w || x + ww <= c.x || y >= c.y + c.h || y + hh <= c.y)
+          return false;
+        return true;
+      }
+      function pixHash(u, v, seed) {
+        let x = (u * 374761393 + v * 668265263 + (seed | 0) * 971) | 0;
+        x = Math.imul(x ^ (x >>> 13), 1274126177);
+        return ((x ^ (x >>> 16)) >>> 0) / 4294967296;
+      }
+      function valueNoise(u, v, seed, cell) {
+        const gx = Math.floor(u / cell),
+          gy = Math.floor(v / cell);
+        const sm = (t) => t * t * (3 - 2 * t);
+        const fx = sm((((u % cell) + cell) % cell) / cell);
+        const fy = sm((((v % cell) + cell) % cell) / cell);
+        const n00 = pixHash(gx, gy, seed),
+          n10 = pixHash(gx + 1, gy, seed);
+        const n01 = pixHash(gx, gy + 1, seed),
+          n11 = pixHash(gx + 1, gy + 1, seed);
+        return (
+          n00 * (1 - fx) * (1 - fy) +
+          n10 * fx * (1 - fy) +
+          n01 * (1 - fx) * fy +
+          n11 * fx * fy
+        );
+      }
+      function pixelLattice(w, h, q, clear, colorAt) {
+        const cols = Math.ceil(w / q),
+          rows = Math.ceil(h / q);
+        let out = '<g shape-rendering="crispEdges">';
+        for (let v = 0; v < rows; v++) {
+          let u = 0;
+          while (u < cols) {
+            const c = colorAt(u, v);
+            if (!c) {
+              u++;
+              continue;
+            }
+            let len = 1;
+            while (u + len < cols && colorAt(u + len, v) === c) len++;
+            out +=
+              '<rect x="' +
+              u * q +
+              '" y="' +
+              v * q +
+              '" width="' +
+              len * q +
+              '" height="' +
+              (q + 0.4) +
+              '" fill="' +
+              c +
+              '"/>';
+            u += len;
+          }
+        }
+        return out + '</g>';
+      }
+      const PIXEL_FIELD_MACRO = 1.7;
+      function camoBody(kind, opts) {
+        const { w, h, ink, pool, scale, seed } = opts;
+        const sc = PIXEL_FIELD_MACRO * scale;
+        const c1 = pool[0] || ink;
+        const q = 10 * sc;
+        return pixelLattice(w, h, q, null, (u, v) => {
+          if (valueNoise(u, v, seed, 6) > 0.58) return ink;
+          if (valueNoise(u, v, seed + 31, 6) > 0.62) return c1;
+          return null;
+        });
+      }
+      function fieldSvgStr(w, h, opts) {
+        const body = camoBody(opts.kind, { ...opts, w, h });
+        return (
+          '<svg xmlns="http://www.w3.org/2000/svg" width="' +
+          w +
+          '" height="' +
+          h +
+          '" viewBox="0 0 ' +
+          w +
+          ' ' +
+          h +
+          '" preserveAspectRatio="xMidYMid slice" aria-hidden="true" style="display:block">' +
+          (opts.ground
+            ? '<rect width="' +
+              w +
+              '" height="' +
+              h +
+              '" fill="' +
+              opts.ground +
+              '"/>'
+            : '') +
+          body +
+          '</svg>'
+        );
+      }
+    </script>
+    <script>
+      // The wordmark, paths verbatim from the nav/footer/faq labs (which
+      // mirror public/logicola-wordmark.svg): body ink, knockout = the
+      // ground it sits on (the lettering is a hole, never white ink).
+      const MARK_PATHS = [
+        [
+          'g',
+          'M46.6906 0.161408C57.5696 -0.164592 69.8788 0.103905 80.8853 0.104905L145.294 0.10991L192.186 0.108155C200.231 0.100405 208.401 0.0321546 216.451 0.137155C218.204 0.270405 220.751 0.609405 222.174 1.69116C226.361 4.87591 227.769 10.3359 224.689 14.7544C220.814 20.3117 216.991 18.2564 211.504 19.1112C204.589 20.1887 209.389 29.6969 205.761 33.7537C201.566 39.2404 198.519 37.1454 192.506 38.0452C191.284 38.2282 189.881 39.0922 189.256 40.1539C188.736 41.0349 188.631 43.5687 188.626 44.6802C188.594 52.5904 188.609 60.5202 188.609 68.4294L188.611 114.841L188.614 134.917C188.614 137.911 188.371 146.292 189.076 148.737L189.159 149.017C193.646 153.624 198.336 149.464 203.441 152.992C208.864 156.742 206.811 161.377 207.611 166.374C208.636 172.747 218.451 168.447 222.776 172.184C224.721 173.652 225.894 175.814 226.186 178.334C226.899 184.494 222.846 188.212 217.351 189.009C206.251 189.334 193.744 189.074 182.521 189.074L116.799 189.072L71.4336 189.079C63.6621 189.084 55.7211 189.154 47.9509 189.002C45.5939 188.954 43.1891 188.597 41.3261 187.147C36.8748 183.684 38.2761 178.894 37.6849 174.449C36.7366 167.319 27.4126 172.272 22.6956 168.369C17.7779 164.304 19.5241 160.712 18.8344 155.482C17.9114 148.484 8.23885 153.309 3.8656 149.467C1.8811 147.724 0.786605 146.782 0.448855 144.019C-0.208145 138.644 0.0503474 132.631 0.0490974 127.197L0.0421012 97.6994L0.0411018 63.6024C0.0418518 57.9299 -0.0501491 51.9744 0.174601 46.3057C0.235601 44.7617 1.2201 42.6354 2.1361 41.4264C5.31935 37.2247 9.88285 38.1274 14.4496 37.7237C21.9781 37.0579 16.7711 27.5629 20.7049 22.7587C24.6149 17.9834 28.3966 19.5624 33.3896 18.8894C40.8469 17.8844 35.6621 8.19541 39.7899 3.59566C41.9451 1.19391 43.5926 0.589908 46.6906 0.161408Z',
+        ],
+        [
+          'w',
+          'M145.744 54.0306C146.758 55.2444 146.463 57.0889 146.435 58.7701C143.725 58.6669 140.75 58.6934 138.019 58.6611C138.487 59.2931 138.903 59.9616 139.264 60.6606C145.296 72.2979 132.957 80.5394 122.517 78.4749C120.139 78.0046 118.923 77.8404 116.529 77.0431C116.476 83.3004 118.338 81.9321 123.33 83.1549C130.034 84.7974 145.484 84.8806 145.71 94.3509C145.981 105.723 134.142 108.63 125.053 109.083C125.049 114.704 124.456 145.962 125.585 148.892C125.988 149.937 127.528 150.469 128.464 150.937C128.68 151.099 128.574 150.979 128.661 151.377C127.513 151.804 112.349 151.622 109.903 151.644C111.559 150.549 114.077 149.589 114.196 147.394C114.424 143.184 114.33 138.918 114.326 134.695L114.294 107.601C105.002 103.166 107.952 95.5761 114.722 90.5934C106.606 86.4044 111.697 81.3381 115.578 76.4239C115.174 76.1754 114.766 75.9181 114.385 75.6366C112.102 73.9294 110.592 71.3846 110.188 68.5631C108.005 53.8986 127.686 50.7429 137.076 57.8364C141.077 56.8839 142.418 56.2011 145.744 54.0306Z',
+        ],
+        [
+          'g',
+          'M116.2 90.9899C117.76 91.4281 125.745 93.0781 127.29 93.0854C134.454 93.1184 143.813 98.9991 134.189 105.38C131.007 106.663 129.096 106.925 125.708 106.967C114.389 107.107 111.708 100.459 116.2 90.9899Z',
+        ],
+        [
+          'g',
+          'M124.002 55.8879C126.728 55.6792 129.194 56.3715 130.092 59.2965C131.55 64.0427 132.368 74.7399 126.688 76.9602C123.915 77.2542 121.597 76.6607 120.652 73.6412C119.244 69.1447 118.58 57.9889 124.002 55.8879Z',
+        ],
+        [
+          'w',
+          'M140.172 115.412C145.164 115.247 155.574 115.091 160.711 115.706C162.084 115.87 161.2 119.758 161.802 120.813C162.856 122.661 164.985 121.263 167.269 122.022C169.348 124.061 167.935 135.088 168.293 138.626C168.771 143.353 172.399 139.828 174.66 141.949C175.312 143.214 175.178 149.047 174.815 150.549C174.408 152.239 167.216 151.692 165.814 151.059C165.363 150.274 165.337 147.229 165.26 146.127C164.65 145.472 163.731 144.969 162.818 145.054C160.89 146.567 162.08 149.549 160.942 151.264C158.999 151.872 140.817 151.867 139.036 150.969C138.25 149.589 138.762 148.244 138.576 146.814C138.168 143.674 134.345 146.182 132.325 144.439C131.585 142.553 131.773 125.048 132.294 122.753C133.434 121.153 135.784 122.244 137.229 121.692C140.493 120.446 136.649 116.482 140.172 115.412Z',
+        ],
+        [
+          'g',
+          'M142.506 125.635C145.611 125.602 155.83 125.052 158.28 126.328C158.459 126.422 159.553 139.914 157.558 141.1C155.594 141.236 144.039 141.646 142.271 140.718C140.939 140.019 141.843 131.344 141.496 129.501C141.341 128.679 141.513 126.619 142.506 125.635Z',
+        ],
+        [
+          'w',
+          'M87.6493 114.222C98.2266 113.581 107.334 121.608 108.026 132.182C108.719 142.756 100.736 151.902 90.1656 152.647C79.5221 153.394 70.2993 145.347 69.6021 134.699C68.9048 124.052 76.9991 114.868 87.6493 114.222Z',
+        ],
+        [
+          'g',
+          'M87.6051 115.64C91.1858 115.462 93.8158 116.562 94.7626 120.329C96.4458 127.174 96.2288 134.775 95.6913 141.775C95.3798 145.832 94.4108 149.812 90.1056 151.072C87.9213 151.192 87.3593 151.082 85.3786 150.434C79.9796 144.937 81.2411 128.751 82.5146 121.417C83.0191 118.51 84.7506 116.547 87.6051 115.64Z',
+        ],
+        [
+          'w',
+          'M75.8353 55.5972C78.9531 55.4877 95.3841 55.1692 97.5043 55.8047C98.8873 57.1187 98.2178 58.7364 98.5258 60.5869C99.0198 63.5562 104.929 60.2897 104.932 63.7062C104.933 66.6654 105.625 83.3189 104.473 84.8199C103.471 85.2347 101.471 85.2812 100.272 85.3294C96.9941 85.4612 99.5154 89.1574 97.6356 91.5839C92.3839 91.8154 81.8616 91.9892 76.3201 91.3737C74.2291 91.1417 75.9893 87.9757 75.4893 86.5982C73.9578 85.0627 71.0589 85.1319 68.9384 84.9812C68.4756 82.2734 68.2748 65.0279 69.1058 62.8107C70.3718 61.3494 72.5066 62.4344 74.5611 61.5692C75.9576 60.4284 75.1283 57.9317 75.8353 55.5972Z',
+        ],
+        [
+          'g',
+          'M84.0741 65.704C86.6533 65.6705 92.7401 65.3034 94.7213 66.2237C95.7778 66.7144 95.7958 79.7117 94.7141 81.0284C93.5113 81.4519 91.8713 81.3484 90.5583 81.3467C88.2821 81.3339 80.2711 81.7977 78.8403 80.8132C78.0558 78.5265 78.0593 68.7002 78.6658 66.4334C79.6966 65.4397 82.5573 65.7017 84.0741 65.704Z',
+        ],
+        [
+          'w',
+          'M35.2156 102.184C40.8311 101.961 51.2843 101.577 56.6978 102.301C56.9878 104.036 56.9636 106.521 57.4668 107.82C59.9296 110.206 64.3493 105.662 63.8101 112.891C63.6133 115.529 64.1823 118.987 63.4916 121.682C63.2008 122.816 61.3743 122.535 60.4598 122.611C50.7743 123.274 55.0988 120.03 53.8518 113.517C53.5156 111.762 39.5586 112.472 37.7178 112.865C37.1446 112.988 37.0081 115.849 37.0596 116.376C37.4293 120.175 36.2961 138.243 37.6076 140.462C39.0141 141.256 51.2343 140.992 53.1746 140.708C53.9201 140.117 53.6828 140.345 53.9793 139.237C54.1758 133.566 52.1806 129.905 59.5968 130.539C60.9728 130.656 62.1843 130.347 63.3946 131.243C64.2068 133.198 63.8471 141.553 63.5173 144.053C63.3881 145.032 60.1221 144.722 59.3011 144.809C55.7763 145.182 57.0651 147.452 57.2978 149.609C57.0711 150.092 56.8761 150.504 56.3116 150.692C53.5161 151.614 36.7548 151.474 34.9288 150.892C33.7008 149.732 34.2196 147.734 33.7726 145.702C32.3471 143.968 30.1578 145.434 28.0303 144.362C27.1073 143.052 27.1433 112.791 27.6721 109.513C29.1261 107.826 31.6963 109.122 33.2783 108.291C35.1963 107.284 32.7873 103.305 35.2156 102.184Z',
+        ],
+        [
+          'w',
+          'M32.4663 41.9565C37.4778 41.8842 42.4901 41.916 47.5003 42.0517C45.5081 43.014 43.0056 43.8975 42.8923 46.4532C42.6823 51.2012 42.7793 55.985 42.7838 60.7425L42.7778 90.1955C47.0976 90.0672 53.9226 90.69 57.7653 89.4465C61.2078 86.1707 62.7786 79.663 64.1363 78.8775C64.8828 79.894 64.4173 84.0862 64.3298 85.5195C64.3056 87.529 64.1301 89.7645 64.0153 91.7872C60.2676 91.5422 55.5498 91.7435 51.7171 91.7407L26.5046 91.7437C28.0041 90.843 29.5531 89.9987 31.0823 89.0742C31.7453 85.8925 31.8086 46.5325 30.9683 44.6485C30.4396 43.4622 27.3481 42.6005 26.1658 42.15C28.1213 42.026 30.4836 42.0125 32.4663 41.9565Z',
+        ],
+        [
+          'w',
+          'M162.849 54.3854C164.46 55.3896 162.388 84.5729 163.607 88.6314C164.016 89.9934 166.297 91.0834 167.323 91.6921C161.724 91.7954 156.099 91.5649 150.476 91.7954C149.865 91.8529 149.69 91.9461 149.175 91.6351C149.771 90.4146 152.473 90.1571 152.543 87.8731C152.75 81.1159 152.589 74.3401 152.629 67.5779C152.641 65.5701 152.702 63.4151 152.422 61.4319C151.491 59.9329 149.912 59.7176 148.173 59.1636C153.025 57.4494 157.918 55.8561 162.849 54.3854Z',
+        ],
+        [
+          'w',
+          'M156.748 38.7834C159.938 38.1649 163.035 40.2194 163.705 43.3992C164.375 46.5789 162.371 49.7087 159.203 50.4304C157.107 50.9082 154.916 50.2184 153.472 48.6264C152.028 47.0342 151.554 44.7869 152.233 42.7474C152.912 40.7077 154.637 39.1924 156.748 38.7834Z',
+        ],
+        [
+          'g',
+          'M233.936 19.1349C251.789 17.7166 239.851 38.6129 250.379 37.8346C267.404 36.5761 264.041 50.1224 264.046 63.0414L264.051 91.2104V123.837C264.049 129.63 264.106 135.52 263.974 141.304C263.931 143.147 263.674 144.957 262.804 146.477C259.254 152.682 253.379 150.532 248.174 151.717C243.501 152.779 246.099 161.659 244.166 165.054C242.509 167.967 240.816 168.917 237.641 170.012C226.571 171.454 226.324 162.029 226.091 154.637C225.946 149.949 216.029 152.164 212.229 150.007C205.604 146.244 207.446 135.128 207.446 128.24V102.3L207.444 67.1759C207.439 60.8564 207.389 54.5269 207.509 48.1979C207.614 45.4284 207.969 43.0269 209.869 40.9321C213.554 36.8134 218.556 38.5514 223.106 37.5271C228.366 36.3426 225.146 27.3919 227.489 23.8069C229.366 20.9306 230.886 20.0861 233.936 19.1349Z',
+        ],
+        [
+          'w',
+          'M230.619 75.6939C234.654 75.6299 240.499 75.0077 243.824 76.8724C244.229 77.5092 244.676 78.1877 244.959 78.8882C245.599 80.4622 245.586 122.861 245.269 127.459C245.211 128.269 244.994 129.059 244.631 129.784C243.881 131.315 242.804 131.842 241.301 132.338C237.424 132.36 233.494 132.421 229.621 132.286C227.249 130.973 226.464 129.947 226.366 127.275C226.249 124.048 226.296 120.832 226.296 117.604L226.291 99.8182C226.291 95.8469 226.046 81.4009 226.661 78.2817C228.146 76.6649 228.519 76.2857 230.619 75.6939Z',
+        ],
+      ];
+      function markSvg(height, body, knock) {
+        const k = height / 190;
+        const w = Math.round(265 * k);
+        let out =
+          '<svg xmlns="http://www.w3.org/2000/svg" width="' +
+          w +
+          '" height="' +
+          height +
+          '" viewBox="0 0 265 190" style="display:block" aria-hidden="true">';
+        for (const p of MARK_PATHS) {
+          out +=
+            '<path d="' +
+            p[1] +
+            '" fill="' +
+            (p[0] === 'g' ? body : knock) +
+            '"/>';
+        }
+        return out + '</svg>';
+      }
+
+      // The shipped pixel-grammar social icons, paths verbatim from
+      // components/footer.tsx — fill currentColor, in white gem chips.
+      const SOCIAL_ICONS = {
+        Reddit:
+          '<path d="m22,9v-2h-1v-2h-1v-1h-1v-1h-2v-1h-2v-1h-6v1h-2v1h-2v1h-1v1h-1v2h-1v2h-1v6h1v2h1v2h1v1h1v1h2v1h2v1h6v-1h2v-1h2v-1h1v-1h1v-2h1v-2h1v-6h-1Zm-3,5h-1v1h-1v2h-1v1h-2v1h-4v-1h-2v-1h-1v-3h-1v-1h-1v-2h1v-1h2v1h1v-1h3v-5h2v1h3v2h-2v-1h-2v3h2v1h1v-1h2v1h1v3Z"/>',
+        X: '<path d="m15.5,10v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h-3v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1h-1v-2h-1v-1h-1v-1H1.5v1h1v1h1v1h1v2h1v1h1v2h1v1h1v2h1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h3v-1h1v-1h1v-1h1v-1h1v-1h1v-1h2v1h1v1h1v2h1v1h1v1h7v-1h-1v-1h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h1Zm0,4v1h1v2h1v1h1v2h-3v-2h-1v-1h-1v-1h-1v-2h-1v-1h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h-1v-2h3v1h1v2h1v1h1v2h1v1h1v1h1v2h1Z"/>',
+        GitHub:
+          '<polygon points="23 9 23 15 22 15 22 17 21 17 21 19 20 19 20 20 19 20 19 21 18 21 18 22 16 22 16 23 15 23 15 18 14 18 14 17 15 17 15 16 17 16 17 15 18 15 18 14 19 14 19 9 18 9 18 6 16 6 16 7 15 7 15 8 14 8 14 7 10 7 10 8 9 8 9 7 8 7 8 6 6 6 6 9 5 9 5 14 6 14 6 15 7 15 7 16 9 16 9 18 7 18 7 17 6 17 6 16 4 16 4 17 5 17 5 19 6 19 6 20 9 20 9 23 8 23 8 22 6 22 6 21 5 21 5 20 4 20 4 19 3 19 3 17 2 17 2 15 1 15 1 9 2 9 2 7 3 7 3 5 4 5 4 4 5 4 5 3 7 3 7 2 9 2 9 1 15 1 15 2 17 2 17 3 19 3 19 4 20 4 20 5 21 5 21 7 22 7 22 9 23 9"/>',
+        LinkedIn:
+          '<path d="m22,2v-1H2v1h-1v20h1v1h20v-1h1V2h-1Zm-9,10v8h-3v-11h3v1h1v-1h4v1h1v10h-3v-8h-3Zm-9-4v-3h3v3h-3Zm3,1v11h-3v-11h3Z"/>',
+      };
+      function ftxIcon(name, color) {
+        return (
+          '<span class="ftx-chip-tap" style="color:' +
+          color +
+          '"><span style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:#fff;clip-path:' +
+          GEM +
+          '"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+          SOCIAL_ICONS[name] +
+          '</svg></span></span>'
+        );
+      }
+
+      // Footer content, verbatim from docs/footer-lab.html.
+      const FOOTER = {
+        resources: [
+          { label: 'Blog' },
+          { label: 'Release Notes' },
+          { label: 'Classic Logicola' },
+          { label: 'Get the Book' },
+          { label: 'Keyboard', isNew: true },
+        ],
+        follow: [
+          { label: 'GitHub' },
+          { label: 'X' },
+          { label: 'Reddit' },
+          { label: 'LinkedIn' },
+        ],
+        legal: [{ label: 'Privacy Policy' }, { label: 'Terms & Conditions' }],
+        copyright: '© 2026 Logicola. Some Rights Reserved.',
+        mission:
+          'Free logic practice in your browser — a remake of Harry Gensler’s LogiCola, kept alive to honour his legacy.',
+        newsBody:
+          'New exercise sets, new features, the occasional essay — straight to your inbox when they ship.',
+        newsFine: 'No spam, and we never share your address.',
+      };
+
+      function btnColors(s) {
+        let bg = s.ink;
+        let fg = s.type && s.type !== s.ink ? s.type : s.ground;
+        if (contrastOf(fg, bg) < 4.5) {
+          const best = [s.ground, '#FFFFFF', '#EDEDE3'].reduce((a, c) =>
+            contrastOf(c, bg) > contrastOf(a, bg) ? c : a
+          );
+          if (contrastOf(best, bg) >= 4.5) {
+            fg = best;
+          } else {
+            bg = s.type;
+            fg = ['#FFFFFF', s.ground, '#EDEDE3'].reduce((a, c) =>
+              contrastOf(c, bg) > contrastOf(a, bg) ? c : a
+            );
+          }
+        }
+        return { bg, fg };
+      }
+
+      // The footer lab's derive(), reduced to the tiers this sim needs.
+      function deriveFt(s) {
+        const deep = s.type;
+        const g = s.ground;
+        return {
+          head: ensureContrast(mixHex(deep, g, 0.35), g, deep, 4.5),
+          link: ensureContrast(mixHex(deep, g, 0.2), g, deep, 4.5),
+          fine: ensureContrast(mixHex(deep, g, 0.3), g, deep, 4.5),
+          hair: mixHex(g, deep, 0.14),
+        };
+      }
+
+      function ftxLinks(items, color) {
+        return (
+          '<ul class="ftx-links" style="color:' +
+          color +
+          '">' +
+          items
+            .map(
+              (it) =>
+                '<li><span>' +
+                esc(it.label) +
+                (it.isNew
+                  ? ' <span class="ftx-newgem" style="clip-path:' +
+                    GEM +
+                    '">NEW</span>'
+                  : '') +
+                '</span></li>'
+            )
+            .join('') +
+          '</ul>'
+        );
+      }
+
+      function renderFooterSim(mount, m) {
+        if (state.below === 'hidden') {
+          mount.innerHTML = '';
+          return;
+        }
+        const s = SCHEMES[state.below];
+        const d = deriveFt(s);
+        const btn = btnColors(s);
+        const brand =
+          markSvg(44, s.ink, s.ground) +
+          '<p class="ftx-mission" style="color:' +
+          d.link +
+          '">' +
+          esc(FOOTER.mission) +
+          '</p>';
+        const col = (head, items) =>
+          '<div><div class="ftx-colhead" style="color:' +
+          d.head +
+          '">' +
+          head +
+          '</div>' +
+          ftxLinks(items, s.type) +
+          '</div>';
+        const banner =
+          '<div class="ftx-banner-inner">' +
+          '<h2 class="ftx-banner-head display" style="color:' +
+          s.type +
+          '">FOLLOW THE RELEASES</h2>' +
+          '<p class="ftx-banner-body" style="color:' +
+          d.link +
+          '">' +
+          esc(FOOTER.newsBody) +
+          '</p>' +
+          '<div class="ftx-pill" style="clip-path:' +
+          CLIP_PILL +
+          '"><span class="ph">you@university.edu</span>' +
+          '<span class="ftx-pill-btn" style="clip-path:' +
+          CLIP_PILL +
+          ';background:' +
+          btn.bg +
+          ';color:' +
+          btn.fg +
+          '">Subscribe</span></div>' +
+          '<div class="ftx-fine" style="color:' +
+          d.fine +
+          '">' +
+          esc(FOOTER.newsFine) +
+          '</div></div>';
+        const body = m
+          ? '<div class="ftx-wrap">' +
+            brand +
+            '<div class="ftx-mcols">' +
+            col('Resources', FOOTER.resources) +
+            col('Follow us', FOOTER.follow) +
+            col('Legal', FOOTER.legal) +
+            '</div></div>'
+          : '<div class="ftx-wrap"><div class="ftx-grid">' +
+            '<div>' +
+            brand +
+            '</div>' +
+            col('Resources', FOOTER.resources) +
+            col('Follow us', FOOTER.follow) +
+            col('Legal', FOOTER.legal) +
+            '</div></div>';
+        const bar =
+          '<div class="ftx-bottom" style="border-color:' +
+          d.hair +
+          '"><div class="ftx-bottom-inner" style="color:' +
+          d.fine +
+          '"><span>' +
+          esc(FOOTER.copyright) +
+          '</span><span class="ftx-socials">' +
+          ['Reddit', 'X', 'GitHub', 'LinkedIn']
+            .map((n) => ftxIcon(n, s.type))
+            .join('') +
+          '</span></div></div>';
+        const band = fieldSvgStr(m ? 390 : 1200, 56, {
+          kind: 'camo',
+          ink: s.ink,
+          pool: s.pool,
+          scale: 0.35,
+          seed: 11,
+          ground: s.ground,
+        });
+        mount.innerHTML =
+          '<div class="ftx' +
+          (m ? ' m' : '') +
+          '" style="background:' +
+          s.ground +
+          '" aria-hidden="true">' +
+          '<span class="ftx-cap" style="color:' +
+          s.type +
+          '">Footer · context (decided in the footer lab)</span>' +
+          banner +
+          body +
+          bar +
+          band +
+          '</div>';
+      }
+
+      // ————— render + audit —————
+      const FOLD_M = 660; // iPhone 14 · Safari chrome at first load
+      function render() {
+        const s = SCHEMES[state.scheme];
+        const d = deriveGround(s);
+        renderBar(document.getElementById('bar-mount'), false);
+        renderBar(document.getElementById('bar-mount-m'), true);
+        renderLanding(document.getElementById('lp-mount'), false);
+        renderLanding(document.getElementById('lp-mount-m'), true);
+        renderFaq(document.getElementById('fq-mount'), false);
+        renderFaq(document.getElementById('fq-mount-m'), true);
+        renderFooterSim(document.getElementById('ft-mount'), false);
+        renderFooterSim(document.getElementById('ft-mount-m'), true);
+
+        // branded selection, per scheme (type ground, ground text)
+        let sel = document.getElementById('lp-dyn');
+        if (!sel) {
+          sel = document.createElement('style');
+          sel.id = 'lp-dyn';
+          document.head.appendChild(sel);
+        }
+        sel.textContent =
+          '.lp ::selection{background:' + s.type + ';color:' + s.ground + '}';
+
+        audit(s, d);
+      }
+
+      function audit(s, d) {
+        const fmt = (r) => r.toFixed(1) + ':1';
+        const cell = (label, r, floor) =>
+          r >= floor
+            ? label + ' ' + fmt(r) + ' ✓'
+            : '<span class="fail">' + label + ' ' + fmt(r) + ' ✗</span>';
+        // worst case across the six topics, on the ground each token
+        // actually sits on (cards/rows: the card; ledger chips/quiet:
+        // the page ground)
+        const onLedgerGround =
+          state.form === 'ledger' && state.color !== 'plates';
+        let worst = null;
+        let focusDerived = [];
+        for (const t of TOPICS) {
+          const tt = onLedgerGround
+            ? ledgerTokens(t, s, d)
+            : topicTokens(t, s, d);
+          const bg = onLedgerGround ? s.ground : tt.sfc;
+          const pairs = {
+            name: contrastOf(tt.ink, bg),
+            blurb: contrastOf(tt.body, bg),
+            tag: contrastOf(tt.meta, bg),
+            focus: contrastOf(tt.focus, bg),
+          };
+          if (state.drills === 'pills' && state.form !== 'ledger')
+            pairs.pill = contrastOf(tt.pillInk, tt.pill);
+          if (!worst) worst = { id: t.id, ...pairs };
+          else {
+            for (const k of Object.keys(pairs))
+              if (pairs[k] < worst[k]) {
+                worst[k] = pairs[k];
+                if (k === 'name') worst.id = t.id;
+              }
+          }
+          if (tt.focus !== '#05A24B') focusDerived.push(t.sets);
+        }
+        const heroH1 =
+          state.hero === 'today' && state.form !== 'ledger'
+            ? cell(
+                'H1 (drift green, large)',
+                contrastOf('#17a34a', s.ground),
+                3
+              )
+            : cell('H1 (large)', contrastOf(s.type, s.ground), 3);
+        const cells = [
+          heroH1,
+          cell('one-liner', contrastOf(d.body, s.ground), 4.5),
+          cell('eyebrow', contrastOf(d.head, s.ground), 4.5),
+          cell('topic name', worst.name, 4.5),
+          cell('blurb', worst.blurb, 4.5),
+          cell('set tag', worst.tag, 4.5),
+          cell('focus', worst.focus, 3),
+        ];
+        if (worst.pill !== undefined)
+          cells.push(cell('pill text', worst.pill, 4.5));
+
+        // the fold measurement — the reason this lab exists
+        const fm = document.getElementById('frame-m');
+        const fd = document.getElementById('frame-d');
+        // the resume banner counts — for a returning student it IS the
+        // first drill tap
+        const q = '.lp-drill, .lp-pill, .lp-resume';
+        const mFirst = fm.querySelector(q);
+        const dFirst = fd.querySelector(q);
+        const yOf = (el, frame) =>
+          el
+            ? Math.round(
+                el.getBoundingClientRect().top -
+                  frame.getBoundingClientRect().top
+              )
+            : null;
+        const my = yOf(mFirst, fm);
+        const dy = yOf(dFirst, fd);
+        const foldMsg =
+          my === null
+            ? '<span class="fail">no drill link on the page ✗</span>'
+            : my <= FOLD_M
+              ? '<span class="good">first drill @ phone y≈' +
+                my +
+                'px — ABOVE the ' +
+                FOLD_M +
+                'px fold ✓</span>'
+              : '<span class="fail">first drill @ phone y≈' +
+                my +
+                'px — BELOW the ' +
+                FOLD_M +
+                'px fold ✗</span>';
+
+        document.getElementById('audit').innerHTML =
+          cells.join(' · ') +
+          (focusDerived.length
+            ? ' — <strong>focus DERIVED</strong> on ' +
+              focusDerived.join(', ') +
+              ' (system green under 3:1 there — the 08-15 finding, extended)'
+            : ' — focus = system green everywhere') +
+          '<br />' +
+          foldMsg +
+          (dy !== null ? ' · desktop y≈' + dy + 'px' : '') +
+          ' · taps to first drill: <span class="good">0</span> (vs 3 through the mobile sheet)' +
+          ' · worst topic for ink: ' +
+          worst.id +
+          ' · FAQ + footer are context, audited in their own labs';
+      }
+
+      // ————— dials —————
+      const DIALS = [
+        [
+          'Ground',
+          'scheme',
+          Object.entries(SCHEMES).map(([id, s]) => [id, s.label]),
+          '— Malik picked Set L for the landing (2026-08-17); D11 still open globally',
+        ],
+        [
+          'Hero',
+          'hero',
+          [
+            ['today', 'Today (mascot + green H1)'],
+            ['masthead', 'Compact masthead'],
+            ['none', 'None — the catalogue is the page'],
+          ],
+          '— the ledger carries the masthead in its rail either way',
+        ],
+        [
+          'Form',
+          'form',
+          [
+            ['cards', 'Topic cards'],
+            ['rows', 'Topic rows'],
+            ['ledger', 'Drill ledger (split rail)'],
+          ],
+          '— DECIDED: topic cards at both widths (Malik, 2026-08-17; rows held the desktop for an afternoon, retired after more testing — they still reflow to cards on the phone)',
+        ],
+        [
+          'Colour',
+          'color',
+          [
+            ['plates', 'Set plates'],
+            ['chips', 'Neutral + set chips'],
+            ['quiet', 'Quiet (control)'],
+          ],
+          '',
+        ],
+        [
+          'Drills',
+          'drills',
+          [
+            ['rows', 'Rows'],
+            ['pills', 'Pills'],
+          ],
+          '— the ledger is rows by construction',
+        ],
+        [
+          'Guide',
+          'guide',
+          [
+            ['off', 'Off'],
+            ['start', 'START HERE gem'],
+            ['resume', 'Resume banner (sim)'],
+          ],
+          '— LP7: resume needs the quiz to persist a last-drill key first',
+        ],
+        [
+          'Mascot',
+          'mascot',
+          [
+            ['off', 'Off'],
+            ['on', 'On'],
+          ],
+          '— masthead + ledger rail only; today’s hero always carries it',
+        ],
+        [
+          'Copy',
+          'copy',
+          [
+            ['verbatim', 'Verbatim'],
+            ['edited', 'Edited (proposed)'],
+          ],
+          '',
+        ],
+        [
+          'Below',
+          'below',
+          [
+            ['setL', 'FAQ + Set L footer'],
+            ['cream', 'FAQ + cream footer'],
+            ['hidden', 'Hidden'],
+          ],
+          '— context only',
+        ],
+      ];
+      // Whole compositions, one click — conveniences, not decisions.
+      const PRESETS = [
+        [
+          'A · The decision (Malik, 2026-08-17)',
+          {
+            scheme: 'setL',
+            hero: 'masthead',
+            form: 'cards',
+            color: 'chips',
+            drills: 'rows',
+            guide: 'resume',
+            mascot: 'off',
+            copy: 'verbatim',
+            below: 'setL',
+          },
+        ],
+        [
+          'A0 · The morning proposal (superseded)',
+          {
+            scheme: 'white',
+            hero: 'masthead',
+            form: 'cards',
+            color: 'plates',
+            drills: 'rows',
+            guide: 'start',
+            mascot: 'off',
+            copy: 'edited',
+            below: 'setL',
+          },
+        ],
+        [
+          'B · Ledger rail',
+          {
+            scheme: 'white',
+            hero: 'masthead',
+            form: 'ledger',
+            color: 'chips',
+            drills: 'rows',
+            guide: 'start',
+            mascot: 'on',
+            copy: 'edited',
+            below: 'setL',
+          },
+        ],
+        [
+          'C · Rainbow rows',
+          {
+            scheme: 'white',
+            hero: 'masthead',
+            form: 'rows',
+            color: 'plates',
+            drills: 'pills',
+            guide: 'start',
+            mascot: 'off',
+            copy: 'edited',
+            below: 'setL',
+          },
+        ],
+        [
+          'D · Quiet catalogue (control)',
+          {
+            scheme: 'white',
+            hero: 'masthead',
+            form: 'cards',
+            color: 'quiet',
+            drills: 'rows',
+            guide: 'start',
+            mascot: 'off',
+            copy: 'edited',
+            below: 'setL',
+          },
+        ],
+        [
+          'E · Today + catalogue (nearest today)',
+          {
+            scheme: 'white',
+            hero: 'today',
+            form: 'cards',
+            color: 'chips',
+            drills: 'rows',
+            guide: 'off',
+            mascot: 'on',
+            copy: 'verbatim',
+            below: 'setL',
+          },
+        ],
+      ];
+      function buildPresets() {
+        const c = document.getElementById('presets');
+        const row = document.createElement('div');
+        row.className = 'ctl-row';
+        const lb = document.createElement('span');
+        lb.textContent = 'Presets:';
+        row.appendChild(lb);
+        const seg = document.createElement('span');
+        seg.className = 'seg';
+        seg.setAttribute('role', 'group');
+        seg.setAttribute('aria-label', 'Presets');
+        for (const [label, preset] of PRESETS) {
+          const b = document.createElement('button');
+          b.textContent = label;
+          b.addEventListener('click', () => {
+            Object.assign(state, preset);
+            buildControls();
+            render();
+          });
+          seg.appendChild(b);
+        }
+        row.appendChild(seg);
+        c.appendChild(row);
+      }
+      function buildControls() {
+        const c = document.getElementById('controls');
+        c.innerHTML = '';
+        for (const [label, key, opts, hint] of DIALS) {
+          const row = document.createElement('div');
+          row.className = 'ctl-row';
+          const lb = document.createElement('span');
+          lb.textContent = label + ':';
+          row.appendChild(lb);
+          const seg = document.createElement('span');
+          seg.className = 'seg';
+          seg.setAttribute('role', 'group');
+          seg.setAttribute('aria-label', label);
+          for (const [val, text] of opts) {
+            const b = document.createElement('button');
+            b.textContent = text;
+            b.setAttribute('aria-pressed', String(state[key] === val));
+            b.addEventListener('click', () => {
+              state[key] = val;
+              buildControls();
+              render();
+            });
+            seg.appendChild(b);
+          }
+          row.appendChild(seg);
+          if (hint) {
+            const h = document.createElement('span');
+            h.textContent = hint;
+            row.appendChild(h);
+          }
+          c.appendChild(row);
+        }
+      }
+
+      buildPresets();
+      buildControls();
+      render();
+      // re-measure once the webfonts land (they shift the fold numbers)
+      if (document.fonts && document.fonts.ready)
+        document.fonts.ready.then(() =>
+          audit(SCHEMES[state.scheme], deriveGround(SCHEMES[state.scheme]))
+        );
+    </script>
+  </body>
+</html>
