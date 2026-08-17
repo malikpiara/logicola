@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { ExercisesCatalog } from '@/components/landing/exercisesCatalog';
 import { FaqSection } from '@/components/faqSection';
 
@@ -7,6 +7,20 @@ import { FaqSection } from '@/components/faqSection';
 // layout, which would aim every route's canonical at the homepage.
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
+};
+
+/**
+ * The Android status bar reads `theme-color`, and the root layout's
+ * viewport says white — so the bar sat white over the mint landing
+ * (Malik's catch, 2026-08-17). Mint here, on `/` only, matching the
+ * navbar's conditional ground. `viewportFit` restated because a leaf
+ * viewport wins per field — losing the root's edge-to-edge `cover`
+ * would break the installed app's transparent bars (see app/layout.tsx).
+ * The quiz keeps its own runtime swap (useQuizChrome).
+ */
+export const viewport: Viewport = {
+  themeColor: '#CFF6DD',
+  viewportFit: 'cover',
 };
 
 export default function Home() {
