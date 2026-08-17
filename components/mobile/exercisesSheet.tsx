@@ -19,26 +19,33 @@ import {
  * container (D7, 2026-08-14: "might be the winner"), in the two
  * chrome-branded variants Malik picked on information hierarchy (D13):
  *
- *   - 'f' (3d-f): chip tiles on the cream chrome; level 2 stays in the
- *     cream world — drills as white cards on cream. ONE world per
- *     screen (the three-grounds dissonance Malik caught, fixed).
+ *   - 'f' (3d-f): chip tiles on the scheme chrome; level 2 stays in
+ *     the scheme's world — drills as white cards on the ground. ONE
+ *     world per screen (the three-grounds dissonance Malik caught,
+ *     fixed).
  *   - 'g' (3d-g): chip rows on the same chrome; level 2 paints the
  *     WHOLE sheet in the set's own triad — grabber and eyebrow
  *     included — previewing the screen the tap opens.
+ *
+ * The chrome is SET L MINT since 2026-08-17 (the landing decision,
+ * docs/landing-lab.html LP11, extended to the chrome — the cream is
+ * retired). Derived tiers re-derived on the mint/white pair with
+ * measured ratios; GRAB is byte-identical to topics.ts's Set L grab
+ * (same formula, same inputs: mint mixed 35% toward the plum).
  *
  * vaul supplies the native sheet physics (drag-to-dismiss, scrim tap) —
  * per the lab's port note, never hand-rolled. HIG pass 2026-08-14:
  * ≥44pt targets, safe-area bottom padding, sr-only text beside the
  * colour-only NEW dot.
  */
-const TYPE = '#02302C';
-const CREAM = '#EDEDE3';
-const GREEN = '#05A24B';
-const HAIR_CREAM = '#CCD3C9';
-const META_CREAM = '#05743E';
-const BLURB_CREAM = '#315651';
-const BODY_WHITE = '#416461';
-const TAG = '#5B7976';
+const TYPE = '#3F0167'; // Set L plum · 12.67:1 on mint, 14.88:1 on white
+const MINT = '#CFF6DD'; // the scheme ground (quizColors L surface)
+const GRAB = '#9DA0B4'; // grabber on the mint — decorative
+const HAIR_MINT = '#BBD4CC'; // mint mixed 14% toward plum — decorative
+const META_MINT = '#BD00AD'; // Set L's own accent · 4.75:1 on mint
+const BLURB_MINT = '#5F3781'; // 7.61:1 on mint
+const BODY_WHITE = '#693988'; // 8.26:1 on white
+const TAG = '#715790'; // 6.06:1 on white
 
 const GEM = gemClip();
 
@@ -57,8 +64,8 @@ export function ExercisesSheet({
 
   // 'g' commits the whole sheet to the set's world on level 2
   const world = variant === 'g' ? activeTopic?.colors : undefined;
-  const sheetBg = world ? world.surface : CREAM;
-  const grab = world ? world.grab : GREEN;
+  const sheetBg = world ? world.surface : MINT;
+  const grab = world ? world.grab : GRAB;
   const headInk = world ? world.ink : TYPE;
 
   const close = () => {
@@ -115,7 +122,7 @@ export function ExercisesSheet({
                     onNavigate={close}
                   />
                 ) : (
-                  <CreamDrills
+                  <MintDrills
                     topic={activeTopic}
                     onBack={() => setActiveTopic(null)}
                     onNavigate={close}
@@ -138,7 +145,7 @@ function NewDot() {
   );
 }
 
-/** 3d-f level 1 — white chip tiles on the cream chrome */
+/** 3d-f level 1 — white chip tiles on the mint chrome */
 function TileGrid({ onPick }: { onPick: (t: Topic) => void }) {
   return (
     <div className='grid grid-cols-2 gap-2.5 p-3'>
@@ -148,7 +155,7 @@ function TileGrid({ onPick }: { onPick: (t: Topic) => void }) {
           type='button'
           onClick={() => onPick(topic)}
           className='motion-button flex min-h-[96px] flex-col items-start gap-1.5 rounded-xl border bg-white p-3.5 text-left'
-          style={{ borderColor: HAIR_CREAM }}
+          style={{ borderColor: HAIR_MINT }}
         >
           <span
             className='inline-flex h-7 w-7 items-center justify-center'
@@ -182,7 +189,7 @@ function TileGrid({ onPick }: { onPick: (t: Topic) => void }) {
   );
 }
 
-/** 3d-g level 1 — chip rows on the cream chrome */
+/** 3d-g level 1 — chip rows on the mint chrome */
 function ChipRows({ onPick }: { onPick: (t: Topic) => void }) {
   return (
     <div>
@@ -191,8 +198,8 @@ function ChipRows({ onPick }: { onPick: (t: Topic) => void }) {
           key={topic.id}
           type='button'
           onClick={() => onPick(topic)}
-          className='flex min-h-[56px] w-full items-center gap-2.5 border-b bg-white px-5 py-3.5 text-left active:bg-[#F6F6F1]'
-          style={{ borderColor: HAIR_CREAM }}
+          className='flex min-h-[56px] w-full items-center gap-2.5 border-b bg-white px-5 py-3.5 text-left active:bg-[#F3F0F6]'
+          style={{ borderColor: HAIR_MINT }}
         >
           <span
             className='inline-flex h-7 w-7 shrink-0 items-center justify-center'
@@ -280,8 +287,8 @@ function DrillHead({
   );
 }
 
-/** 3d-f level 2 — stays in the cream world: white cards on cream */
-function CreamDrills({
+/** 3d-f level 2 — stays in the mint world: white cards on the mint */
+function MintDrills({
   topic,
   onBack,
   onNavigate,
@@ -292,13 +299,13 @@ function CreamDrills({
 }) {
   return (
     <div className='pb-[max(1.25rem,env(safe-area-inset-bottom))]'>
-      <BackRow color={TYPE} border={HAIR_CREAM} onBack={onBack} />
+      <BackRow color={TYPE} border={HAIR_MINT} onBack={onBack} />
       <DrillHead
         topic={topic}
-        meta={META_CREAM}
+        meta={META_MINT}
         title={TYPE}
-        blurb={BLURB_CREAM}
-        border={HAIR_CREAM}
+        blurb={BLURB_MINT}
+        border={HAIR_MINT}
       />
       {topic.drills.map((drill) => (
         <Link
@@ -306,7 +313,7 @@ function CreamDrills({
           href={drill.quizPath}
           onClick={onNavigate}
           className='motion-button mx-3 mt-2.5 block rounded-xl border bg-white p-3.5'
-          style={{ borderColor: HAIR_CREAM }}
+          style={{ borderColor: HAIR_MINT }}
         >
           <span className='flex items-center gap-2.5'>
             <span
@@ -399,7 +406,7 @@ function SheetFooter() {
   return (
     <div
       className='mt-auto flex items-center gap-5 border-t px-5 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]'
-      style={{ borderColor: HAIR_CREAM }}
+      style={{ borderColor: HAIR_MINT }}
     >
       <Link
         href='/blog'
@@ -411,7 +418,7 @@ function SheetFooter() {
       <Link
         href='https://github.com/sponsors/malikpiara'
         className='motion-button ml-auto inline-flex min-h-[40px] items-center px-4 font-mono text-xs font-bold tracking-[0.04em]'
-        style={{ clipPath: GEM, background: TYPE, color: CREAM }}
+        style={{ clipPath: GEM, background: TYPE, color: MINT }}
       >
         Donate
       </Link>
