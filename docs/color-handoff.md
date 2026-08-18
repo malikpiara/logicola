@@ -566,69 +566,98 @@ would make the two near-siblings.
 S1 (−.10, already flagged as "the one compromise"), G4 (.09). C2 also failed
 this gate and was retired instead.
 
-## The tab tier (added 2026-08-18)
+## The tab tier (added 2026-08-18, settled 2026-08-19)
 
 A fourth colour per set, for the browser tab only (`useQuizFavicon` →
-`QuizScreenColors.tabColor`). It exists because none of the three shipped
-colours could do the job, and the measurement is worth keeping:
+`QuizScreenColors.tabColor`).
 
-| Tier     | vs white chrome | vs dark chrome |
+**The rule, in one line: every tab colour is the set's PRIMARY — its
+surface — adjusted to survive a background we do not control.** Same hue as
+the surface, always. Only lightness and chroma move.
+
+| Set | primary (surface) | tab       | light | dark |
+| --- | ----------------- | --------- | ----- | ---- |
+| A   | `#FFABC6` pink    | `#FF268F` | 3.54  | 3.57 |
+| C   | `#E7F099` lime    | `#878E0B` | 3.56  | 3.55 |
+| J   | `#E6ACF4` lilac   | `#D001F4` | 4.21  | 3.00 |
+| L   | `#CFF6DD` mint    | `#049C5F` | 3.54  | 3.57 |
+| N   | `#9EDAFF` sky     | `#0791CA` | 3.55  | 3.56 |
+| Q   | `#D9CCF9` lilac   | `#9B53FE` | 4.15  | 3.05 |
+| R   | `#E4BDF7` lilac   | `#D064FE` | 3.03  | 4.17 |
+
+**Why any adjustment is needed.** The duotone holds only the two ends — pale
+surface, very dark ink — with nothing between them:
+
+| Tier     | vs light chrome | vs dark chrome |
 | -------- | --------------- | -------------- |
 | surfaces | 1.17–1.81       | 6.96–10.76     |
 | inks     | 11.43–14.88     | 1.05–1.18      |
 | accents  | 5.57–8.53       | 1.48–2.27      |
 
-**A favicon sits on a background we do not control**, so it needs a colour
-that clears BOTH extremes — and the duotone system holds only the two ends,
-pale surface and very dark ink, with nothing in between. The best of all 21
-shipped colours reaches 2.27:1 on its weaker side. Darkening a pale surface
-to fix light chrome costs dark chrome by the same step: a trade, not a fix.
-That is not a defect in the palette, it is what the palette _is_.
+The best of all 21 shipped colours reaches 2.27:1 on its weaker side. A
+surface vanishes on a light tab strip; anything dark enough to fix that
+vanishes on a dark one.
 
-Each tab colour is the most chromatic in-gamut colour at its set's own hue
-that clears **3:1 on white and on dark** (1.4.11's non-text threshold, taken
-on by choice — the tab strip is not our UI, but the release standard is):
+**The adjustment is a balance point, not a darkening.** Each colour sits at
+the lightness that maximises the WEAKER of its two chrome contrasts — around
+3.55:1 both ways, which is the arithmetic best available. Chroma is then
+pushed back to the gamut edge, because taking a pale low-chroma surface down
+without restoring chroma yields grey (`#FFABC6` → a muddy `#AB5F79`).
 
-| Set | hue from         | tab       | white | dark |
-| --- | ---------------- | --------- | ----- | ---- |
-| A   | surface          | `#FF4E99` | 3.09  | 4.09 |
-| C   | surface          | `#939B0C` | 3.03  | 4.17 |
-| J   | surface          | `#DF57FE` | 3.03  | 4.17 |
-| L   | surface          | `#00AA68` | 3.02  | 4.18 |
-| N   | surface          | `#0C9EDC` | 3.03  | 4.18 |
-| R   | **rust ink**     | `#FF5F42` | 3.01  | 4.19 |
-| Q   | **olive accent** | `#BD8C0E` | 3.03  | 4.16 |
+**The lilac trio is the one compromise.** J (320°), R (315°) and Q (298°)
+have surfaces within 22° of each other. With hue pinned to the primary they
+are the same colour — at their natural balance points J and R measured ΔOK
+0.035, where <0.10 reads as identical. Separation had to come from lightness
+alone: J and Q sit at the light-favouring end of their usable band, R at the
+dark-favouring end. The trio ends at min ΔOK **0.101** — just past tellable
+apart, and visibly a family. All three still clear 3:1 both ways. **If those
+tabs ever read as one set, the fix is a surface change in the palette, not a
+tab-tier change.**
 
-**No new hues were spent** — each is a hue its set already owns. R and Q had
-to leave their surface hue because J, R and Q are three lilacs within 22°,
-and at a shared mid-lightness they collapsed into one colour; R takes its
-rust ink's hue and Q its olive accent's. All seven now sit ≥30° apart.
+**Root.** The default mark (`app/icon.svg`, and so every non-quiz page) is
+the brand magenta `#BD00AD`, so root reads as its own place rather than as a
+set. It is the only value in the system under 3:1 on dark chrome (5.57 light
+/ 2.27 dark) and Malik took it knowing that. Balancing it the same way gives
+`#F209DE` (3.58 / 3.53) — but that lands ΔOK 0.079 from Set J, closer than J
+and R are to each other. Trading root's dark-mode weakness for a collision
+with a set is the worse deal, so `#BD00AD` stands. Note it is also C's and
+L's ACCENT; that collision is between the default mark and two accents, never
+between two tabs.
 
-**Two sets needed their chroma pulled back, and the reason differs.** Malik
-called both on sight; the measurement followed, as usual.
+Gated in `components/quiz/quizColors.test.ts`: 3:1 on both chromes, all
+seven distinct, none equal to the default mark.
 
-- **L** — at full chroma the mint hue produces a kelly green 9° from the
-  RETIRED brand mark, so the tab read as "LogiCola default", not "Set L".
-  Its other owned hue, the plum ink, sits 15° from Set J, so it was not an
-  escape. With hue fixed and lightness pinned by the 3:1 gates, chroma was
-  the only variable left: 65% of in-gamut gives a sage that reads as mint
-  deepened. **This is structural, not a slip** — a set whose hue is close to
-  a retired brand colour cannot be told apart from it by hue alone.
-- **R** — the hue was right and the loudness was wrong. Full chroma on the
-  rust read as neon coral; Set R is the lilac-and-RUST set, so 70% chroma
-  lands on a terracotta that is recognisably its own.
+### What this replaced, and why each lost
 
-The default mark (`app/icon.svg`, and so every non-quiz page) moved from the
-old green to the brand magenta `#BD00AD` the same day, so root reads as its
-own place rather than as a set. It is the weaker choice on dark chrome
-(2.27:1) and Malik took it knowing that. Note `#BD00AD` is also C's and L's
-ACCENT — the collision is between the default mark and those accents, not
-between two tabs, so it never puts two tabs in the same colour.
+Four schemes were built and rejected before this one. Recorded because each
+failure names a real constraint:
 
-Gated in `components/quiz/quizColors.test.ts` (both chromes, all-distinct,
-and clear of the default mark).
+- **Mark on a chip of the surface.** Solved contrast outright by putting the
+  pale colour behind the mark instead of in it. Rejected on sight: it changes
+  the icon's silhouette, and the ask was the shipped mark recoloured.
+- **The ink.** Strong on light chrome (11–15:1), invisible on dark, and the
+  inks collide anyway — A and N are both `#4A1040`, L `#3F0167` and Q
+  `#3E1060` are one violet.
+- **Mid-tones off whichever hue was convenient** — R from its rust ink, Q
+  from its olive accent, to break the lilac collision. Cleared every gate and
+  was still wrong: it made Set R's tab orange when Set R is a lilac set. A
+  tab that does not carry the set's primary does not say where you are, which
+  was the entire point.
+- **Darkened surfaces with chroma pulled back** (L to a sage, R to a
+  terracotta). Closer, but tuned for light chrome only, and it left J and R
+  on non-surface colours.
 
 ## Guardrails learned the hard way
+
+- **A borrowed standard is not a project standard.** The first tab tier was
+  built to clear 3:1 on both chromes — a threshold lifted from WCAG 1.4.11,
+  which governs components in OUR interface, not the browser's tab strip.
+  Nothing had asked for it. That one invented constraint ruled out every
+  colour the palette already owned and produced seven new ones, and it was
+  written into the test suite where it would have kept enforcing itself.
+  The requirement only became real when Malik asked for it in his own words
+  (2026-08-19, "adjusted to work better in light and dark mode"). Measure
+  against the standard someone actually set.
 
 - **An approved idea is not an approved blast radius.** A token-split
   experiment was approved in principle; the implementation also restored
