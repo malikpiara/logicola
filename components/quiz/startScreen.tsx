@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { GemButton } from './gemButton';
 import { PatternLayer } from './patternLayer';
 import type { QuizPatternKind } from '@/lib/patterns';
+import { haptic } from '@/lib/haptics';
 import {
   DEFAULT_QUIZ_MODE,
   SHIPPED_LEVEL,
@@ -278,9 +279,10 @@ export function StartScreen({
           style={{ backgroundColor: foregroundColor, color: surfaceColor }}
           // Also the mode, not the dial: with the control hidden the run
           // still starts scored, at whatever `level` holds.
-          onClick={() =>
-            onStartQuiz(offerScoredRun ? scoreMode(level) : DEFAULT_QUIZ_MODE)
-          }
+          onClick={() => {
+            haptic('impact');
+            onStartQuiz(offerScoredRun ? scoreMode(level) : DEFAULT_QUIZ_MODE);
+          }}
         >
           Start Quiz
         </GemButton>

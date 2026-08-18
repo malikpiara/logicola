@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Haptics lab — LogiCola</title>
+    <style>
+      /* Lab page, not product: quick and legible on a phone in the hand.
+     Open this ON THE DEVICE (LAN http.server + cache-buster, or the
+     preview deploy) — desktop tells you nothing about haptics. */
+      :root {
+        --ink: #1a2333;
+        --surface: #f4f6f2;
+        --card: #ffffff;
+        --accent: #2f6b4f;
+        --muted: #66708a;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 20px 16px 48px;
+        background: var(--surface);
+        color: var(--ink);
+        font:
+          16px/1.5 system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      h1 {
+        font-size: 22px;
+        margin: 0 0 4px;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 14px;
+        margin: 0 0 20px;
+      }
+      #support {
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: var(--card);
+        border: 1px solid #d8dce4;
+        font-size: 14px;
+        margin-bottom: 24px;
+      }
+      section {
+        margin-bottom: 28px;
+      }
+      h2 {
+        font-size: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin: 0 0 4px;
+      }
+      .note {
+        color: var(--muted);
+        font-size: 13px;
+        margin: 0 0 10px;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      button {
+        /* 44pt-class targets: this page gets used one-handed. */
+        min-height: 48px;
+        padding: 10px 16px;
+        border: 2px solid var(--ink);
+        border-radius: 10px;
+        background: var(--card);
+        color: var(--ink);
+        font: inherit;
+        font-weight: 600;
+      }
+      button:active {
+        background: var(--ink);
+        color: var(--card);
+      }
+      button.pick {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      button.pick:active {
+        background: var(--accent);
+        color: var(--card);
+      }
+      small {
+        display: block;
+        font-weight: 400;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      button:active small {
+        color: inherit;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Haptics lab</h1>
+    <p class="sub">
+      Tap candidates, pick winners, report back. Green = the current defaults
+      wired into <code>lib/haptics.ts</code>.
+    </p>
+
+    <div id="support">Checking platform support…</div>
+
+    <section>
+      <h2>Selection — picking an option</h2>
+      <p class="note">
+        Should feel like a tick, barely there. Fires on every option tap, so
+        lightest wins.
+      </p>
+      <div class="row">
+        <button onclick="buzz(5)">5 ms</button>
+        <button class="pick" onclick="buzz(8)">
+          8 ms<small>default</small>
+        </button>
+        <button onclick="buzz(12)">12 ms</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Impact — Start Quiz</h2>
+      <p class="note">
+        A commitment, so slightly weightier than selection — but still a thud,
+        not a buzz.
+      </p>
+      <div class="row">
+        <button class="pick" onclick="buzz(15)">
+          15 ms<small>default</small>
+        </button>
+        <button onclick="buzz(20)">20 ms</button>
+        <button onclick="buzz(30)">30 ms</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Success — correct answer</h2>
+      <p class="note">Double pulse, mirroring iOS's native success pattern.</p>
+      <div class="row">
+        <button class="pick" onclick="buzz([10, 60, 10])">
+          10·60·10<small>default</small>
+        </button>
+        <button onclick="buzz([15, 80, 15])">15·80·15</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Error — miss</h2>
+      <p class="note">
+        Heavier and flatter than success. It should register, not punish — the
+        damage bar already does the scolding.
+      </p>
+      <div class="row">
+        <button class="pick" onclick="buzz([35, 40, 35])">
+          35·40·35<small>default</small>
+        </button>
+        <button onclick="buzz(50)">50 ms flat</button>
+        <button onclick="buzz([25, 30, 25, 30, 25])">triple 25</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>In sequence — the real quiz rhythm</h2>
+      <p class="note">
+        Defaults played with quiz-like gaps: pick an option, beat, verdict.
+      </p>
+      <div class="row">
+        <button
+          onclick="
+            buzz(8);
+            setTimeout(function () {
+              buzz([10, 60, 10]);
+            }, 700);
+          "
+        >
+          select → correct
+        </button>
+        <button
+          onclick="
+            buzz(8);
+            setTimeout(function () {
+              buzz([35, 40, 35]);
+            }, 700);
+          "
+        >
+          select → miss
+        </button>
+      </div>
+    </section>
+
+    <section>
+      <h2>iOS switch trick — for the iPhone test</h2>
+      <p class="note">
+        These do nothing on Android. On an iPhone (Safari 17.4+, home-screen
+        install included) each tap should give one Taptic tick via a hidden
+        native switch. This is the part that needs your friend.
+      </p>
+      <div class="row">
+        <button onclick="iosTick()">single tick</button>
+        <button
+          onclick="
+            iosTick();
+            setTimeout(iosTick, 120);
+          "
+        >
+          double tick (success)
+        </button>
+      </div>
+    </section>
+
+    <script>
+      function buzz(pattern) {
+        if (navigator.vibrate) navigator.vibrate(pattern);
+      }
+
+      var iosLabel = null;
+      function iosTick() {
+        if (!iosLabel) {
+          iosLabel = document.createElement('label');
+          iosLabel.style.cssText =
+            'position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);pointer-events:none;';
+          iosLabel.setAttribute('aria-hidden', 'true');
+          var input = document.createElement('input');
+          input.type = 'checkbox';
+          input.setAttribute('switch', '');
+          input.tabIndex = -1;
+          iosLabel.appendChild(input);
+          document.body.appendChild(iosLabel);
+        }
+        iosLabel.click();
+      }
+
+      (function () {
+        var el = document.getElementById('support');
+        if (navigator.vibrate) {
+          el.textContent =
+            '✅ Vibration API available — the Android path. If taps stay silent, ' +
+            'check the phone isn’t in silent/DND vibration-off mode.';
+        } else if (navigator.maxTouchPoints > 1) {
+          el.textContent =
+            '🍏 No Vibration API + touch screen — likely iOS. Only the switch-trick ' +
+            'section below can produce haptics here.';
+        } else {
+          el.textContent =
+            '💻 Desktop — no haptics here. Open this page on a phone.';
+        }
+      })();
+    </script>
+  </body>
+</html>
