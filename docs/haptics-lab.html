@@ -139,27 +139,38 @@
 
     <section>
       <h2>Success — correct answer</h2>
-      <p class="note">Double pulse, mirroring iOS's native success pattern.</p>
+      <p class="note">
+        Two crisp ticks. Success and error must differ in rhythm and length —
+        the only axes vibrate() has; "weight" doesn't exist on the web.
+      </p>
       <div class="row">
-        <button class="pick" onclick="buzz([10, 60, 10])">
-          10·60·10<small>default</small>
+        <button class="pick" onclick="buzz([12, 90, 12])">
+          12·90·12<small>default</small>
         </button>
-        <button onclick="buzz([15, 80, 15])">15·80·15</button>
+        <button onclick="buzz([15, 120, 15])">
+          15·120·15<small>wider gap</small>
+        </button>
+        <button onclick="buzz([10, 60, 10])">
+          10·60·10<small>v1 — read as error</small>
+        </button>
       </div>
     </section>
 
     <section>
       <h2>Error — miss</h2>
       <p class="note">
-        Heavier and flatter than success. It should register, not punish — the
-        damage bar already does the scolding.
+        One long flat buzz — the opposite shape of success's two ticks. It
+        should register, not punish; the damage bar already does the scolding.
       </p>
       <div class="row">
-        <button class="pick" onclick="buzz([35, 40, 35])">
-          35·40·35<small>default</small>
+        <button class="pick" onclick="buzz(200)">
+          200 ms flat<small>default</small>
         </button>
-        <button onclick="buzz(50)">50 ms flat</button>
-        <button onclick="buzz([25, 30, 25, 30, 25])">triple 25</button>
+        <button onclick="buzz(120)">120 ms flat</button>
+        <button onclick="buzz(300)">300 ms flat</button>
+        <button onclick="buzz([35, 40, 35])">
+          35·40·35<small>v1 — read as success</small>
+        </button>
       </div>
     </section>
 
@@ -173,7 +184,7 @@
           onclick="
             buzz(8);
             setTimeout(function () {
-              buzz([10, 60, 10]);
+              buzz([12, 90, 12]);
             }, 700);
           "
         >
@@ -183,7 +194,7 @@
           onclick="
             buzz(8);
             setTimeout(function () {
-              buzz([35, 40, 35]);
+              buzz(200);
             }, 700);
           "
         >

@@ -19,11 +19,17 @@
 
 export type HapticKind = 'selection' | 'impact' | 'success' | 'error';
 
+// Success and error must differ in RHYTHM and TOTAL DURATION — the only
+// two axes vibrate() has. The first cut encoded the difference as pulse
+// weight (10ms vs 35ms doubles), and on-device both read as the same
+// "brrt-brrt": there is no amplitude on the web, and real motors blur
+// pulse widths. Two crisp ticks vs one long flat buzz survive any motor
+// (Malik's device test, 2026-08-18).
 const VIBRATE_PATTERNS: Record<HapticKind, number | number[]> = {
   selection: 8,
   impact: 15,
-  success: [10, 60, 10],
-  error: [35, 40, 35],
+  success: [12, 90, 12],
+  error: 200,
 };
 
 // Lazily-created hidden switch for the iOS path. A label click toggles
