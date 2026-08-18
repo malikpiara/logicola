@@ -257,9 +257,9 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   // mid-run.
   useQuizChrome(quizSurface);
 
-  // …and the browser tab takes the set's ink, so a strip of open drills
-  // is readable at a glance.
-  useQuizFavicon(quizForeground);
+  // …and the browser tab takes the set's own surface — the same colour
+  // the screen is wearing, so the tab says where you are.
+  useQuizFavicon(quizSurface);
 
   // Remember the drill for the landing page's resume banner (lab LP7,
   // Malik 2026-08-17) — an OBSERVATION of the run, never a second

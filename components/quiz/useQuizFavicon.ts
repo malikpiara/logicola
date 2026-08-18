@@ -13,13 +13,18 @@ import { useEffect } from 'react';
  * a first pass framed it on a square of the set's surface and that was
  * not the ask).
  *
- * It wears the set's INK rather than its surface. The palette is
- * pale-surface + dark-ink duotones, so a mark painted in #CFF6DD mint
- * all but vanishes against light browser chrome; the ink reads on light
- * and dark chrome both. The cost is that the ink tier has collisions the
- * surface tier does not — Sets A and N share #4A1040 exactly, and L
- * (#3F0167) and Q (#3E1060) are indistinguishable at 16px — so the tab
- * narrows the set down without always naming it.
+ * It wears the set's SURFACE — the main colour, the one that fills the
+ * screen you are looking at — so the tab answers "where am I" the same
+ * way the page does (Malik, 2026-08-18, choosing this over the ink).
+ * That is also the only tier that IDENTIFIES a set: all seven surfaces
+ * are distinct, whereas the inks collide outright (A and N are both
+ * #4A1040; L #3F0167 and Q #3E1060 are one step apart).
+ *
+ * The cost, accepted knowingly: the surfaces are pale by construction,
+ * so on a WHITE browser chrome the mark is low-contrast — legible, but
+ * quiet. It is strongest on dark chrome, where the pale mark pops. The
+ * favicon is an orientation cue, never the only way to tell sets apart,
+ * so quiet is a fair price for a colour that matches the page.
  *
  * Client-side for the same reason `useQuizChrome` is, and the reason is
  * worth repeating because a per-route `icon.tsx` looks like the obvious
@@ -50,18 +55,18 @@ function loadMark(): Promise<string | null> {
   return markPromise;
 }
 
-/** The shipped mark with its green swapped for the set's ink. Returns
+/** The shipped mark with its green swapped for the set's colour. Returns
  *  null if the file isn't the mark we expect, so a surprise leaves the
  *  default favicon alone rather than blanking the tab. */
-export function tintedIcon(markSvg: string, ink: string): string | null {
+export function tintedIcon(markSvg: string, color: string): string | null {
   if (!markSvg.includes('<svg') || !markSvg.includes(SOURCE_FILL)) return null;
-  const svg = markSvg.split(SOURCE_FILL).join(ink);
+  const svg = markSvg.split(SOURCE_FILL).join(color);
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
-export function useQuizFavicon(ink: string | undefined) {
+export function useQuizFavicon(color: string | undefined) {
   useEffect(() => {
-    if (!ink) return;
+    if (!color) return;
 
     let cancelled = false;
     let restore: (() => void) | null = null;
@@ -70,7 +75,7 @@ export function useQuizFavicon(ink: string | undefined) {
       // The run can end before the fetch lands; don't paint a tab the
       // user has already left.
       if (cancelled || !markSvg) return;
-      const href = tintedIcon(markSvg, ink);
+      const href = tintedIcon(markSvg, color);
       if (!href) return;
 
       let link = document.querySelector<HTMLLinkElement>('link[rel~="icon"]');
@@ -107,5 +112,5 @@ export function useQuizFavicon(ink: string | undefined) {
       cancelled = true;
       restore?.();
     };
-  }, [ink]);
+  }, [color]);
 }
