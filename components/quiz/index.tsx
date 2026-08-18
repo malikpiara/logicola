@@ -31,6 +31,7 @@ import { getQuizScreenColors } from './quizColors';
 import { PatternLayer, patternKindForSubSet } from './patternLayer';
 import { useSafeAreaBottom } from './useSafeAreaBottom';
 import { useQuizChrome } from './useQuizChrome';
+import { useQuizFavicon } from './useQuizFavicon';
 import { hasWffGuide, WffGuide } from './wffGuide';
 
 export interface QuizProps {
@@ -255,6 +256,10 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   // question and end screens all wear it, so it never has to change
   // mid-run.
   useQuizChrome(quizSurface);
+
+  // …and the browser tab takes the set's ink, so a strip of open drills
+  // is readable at a glance.
+  useQuizFavicon(quizForeground);
 
   // Remember the drill for the landing page's resume banner (lab LP7,
   // Malik 2026-08-17) — an OBSERVATION of the run, never a second
