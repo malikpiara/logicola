@@ -28,7 +28,12 @@ export type HapticKind = 'selection' | 'impact' | 'success' | 'error';
 const VIBRATE_PATTERNS: Record<HapticKind, number | number[]> = {
   selection: 8,
   impact: 15,
-  success: [12, 90, 12],
+  // Success RISES — Apple's native .success is a light tap then a
+  // stronger one, never two equals (two equals read as "notification",
+  // not "reward"; Malik felt exactly that, 2026-08-18). With no
+  // amplitude on the web, duration is the proxy: an ERM motor spins up
+  // over ~10-20ms, so a longer pulse genuinely feels stronger.
+  success: [8, 80, 20],
   error: 200,
 };
 

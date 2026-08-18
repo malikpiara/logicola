@@ -140,18 +140,22 @@
     <section>
       <h2>Success — correct answer</h2>
       <p class="note">
-        Two crisp ticks. Success and error must differ in rhythm and length —
-        the only axes vibrate() has; "weight" doesn't exist on the web.
+        Success rises: light tick, then a stronger one — "da-DUM", like Apple's
+        native .success. Longer pulse = stronger on a real motor (it needs
+        ~10–20 ms to spin up), so duration stands in for amplitude.
       </p>
       <div class="row">
-        <button class="pick" onclick="buzz([12, 90, 12])">
-          12·90·12<small>default</small>
+        <button class="pick" onclick="buzz([8, 80, 20])">
+          8·80·20<small>default — rising</small>
         </button>
-        <button onclick="buzz([15, 120, 15])">
-          15·120·15<small>wider gap</small>
+        <button onclick="buzz([5, 70, 25])">
+          5·70·25<small>steeper rise</small>
         </button>
-        <button onclick="buzz([10, 60, 10])">
-          10·60·10<small>v1 — read as error</small>
+        <button onclick="buzz([20, 80, 8])">
+          20·80·8<small>inverted — should feel wrong</small>
+        </button>
+        <button onclick="buzz([12, 90, 12])">
+          12·90·12<small>v2 — flat twins</small>
         </button>
       </div>
     </section>
@@ -184,7 +188,7 @@
           onclick="
             buzz(8);
             setTimeout(function () {
-              buzz([12, 90, 12]);
+              buzz([8, 80, 20]);
             }, 700);
           "
         >
