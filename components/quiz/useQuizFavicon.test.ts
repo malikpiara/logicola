@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { tintedIcon } from './useQuizFavicon';
 
 /** A stand-in for `app/icon.svg`: the same wrapper shape, and the same
- *  `#00A742` fill the real mark is drawn in. */
+ *  `#BD00AD` fill the real mark is drawn in. */
 const MARK =
   '<svg width="9" height="12" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-  '<path d="M0 0h9v12H0z" fill="#00A742"/>' +
-  '<path d="M1 1h7v10H1z" fill="#00A742"/>' +
+  '<path d="M0 0h9v12H0z" fill="#BD00AD"/>' +
+  '<path d="M1 1h7v10H1z" fill="#BD00AD"/>' +
   '</svg>';
 
 function decode(uri: string): string {
@@ -29,9 +29,9 @@ describe('tintedIcon', () => {
   it('replaces every occurrence of the source fill, not just the first', () => {
     const svg = decode(tintedIcon(MARK, '#751100')!);
     expect(svg.split('#751100')).toHaveLength(3); // two paths → two fills
-    // The shipped green is the one colour we replace; none may survive,
+    // The shipped fill is the one colour we replace; none may survive,
     // or a set would wear the wrong ink.
-    expect(svg).not.toContain('#00A742');
+    expect(svg).not.toContain('#BD00AD');
   });
 
   it('emits a data URI that survives decoding', () => {

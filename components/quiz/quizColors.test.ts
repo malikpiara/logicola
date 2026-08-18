@@ -40,26 +40,31 @@ describe('getQuizScreenColors', () => {
       surfaceColor: '#FFABC6',
       foregroundColor: '#4A1040',
       countColor: '#674900',
+      tabColor: '#FF4E99',
     });
     expect(getQuizScreenColors(subSetNamed('Set C'))).toEqual({
       surfaceColor: '#E7F099',
       foregroundColor: '#02302C',
       countColor: '#BD00AD',
+      tabColor: '#939B0C',
     });
     expect(getQuizScreenColors(subSetNamed('Set J'))).toEqual({
       surfaceColor: '#E6ACF4',
       foregroundColor: '#1C3601',
       countColor: '#674900',
+      tabColor: '#DF57FE',
     });
     expect(getQuizScreenColors(subSetNamed('Set L'))).toEqual({
       surfaceColor: '#CFF6DD',
       foregroundColor: '#3F0167',
       countColor: '#BD00AD',
+      tabColor: '#00AA68',
     });
     expect(getQuizScreenColors(subSetNamed('Set N'))).toEqual({
       surfaceColor: '#9EDAFF',
       foregroundColor: '#4A1040',
       countColor: '#8D0381',
+      tabColor: '#0C9EDC',
     });
   });
 
@@ -71,6 +76,7 @@ describe('getQuizScreenColors', () => {
       surfaceColor: '#D9CCF9',
       foregroundColor: '#3E1060',
       countColor: '#745400',
+      tabColor: '#BD8C0E',
     });
     expect(getQuizScreenColors(subSetNamed('Set Q'))).toEqual({});
   });
@@ -84,6 +90,7 @@ describe('getQuizScreenColors', () => {
       surfaceColor: '#E4BDF7',
       foregroundColor: '#751100',
       countColor: '#824616',
+      tabColor: '#FF5F42',
     });
   });
 
@@ -159,6 +166,41 @@ function mixHex(a: string, b: string, weightA: number): string {
  * the accents sit at ~4.6:1 on their bare surfaces and have no AA
  * headroom over any darkened plate. These gates lock both halves.
  */
+/**
+ * The tab tier's ONE gate. Unlike the other three colours, a favicon sits on
+ * a background we do not control, so it must clear both extremes of browser
+ * chrome — not one of them. 3:1 is 1.4.11's non-text threshold; the tab strip
+ * is not our UI, but the release standard is (Malik, 2026-08-18).
+ */
+describe('tab colour gates (browser chrome, both extremes)', () => {
+  /** Chrome's light tab strip, and a representative dark one. */
+  const LIGHT = '#FFFFFF';
+  const DARK = '#333333';
+
+  it.each(PALETTES)(
+    '%s clears 3:1 on light AND dark chrome',
+    (_name, colors) => {
+      const tab = colors.tabColor;
+      expect(tab).toBeDefined();
+      expect(contrastRatio(tab!, LIGHT)).toBeGreaterThanOrEqual(3);
+      expect(contrastRatio(tab!, DARK)).toBeGreaterThanOrEqual(3);
+    }
+  );
+
+  it('spends a distinct colour on every set — a shared tab says nothing', () => {
+    const tabs = PALETTES.map(([, colors]) => colors.tabColor);
+    expect(new Set(tabs).size).toBe(PALETTES.length);
+  });
+
+  it('sits clear of the default mark, or root and a drill would match', () => {
+    // app/icon.svg ships in the brand magenta; useQuizFavicon swaps it out.
+    const DEFAULT_MARK = '#BD00AD';
+    for (const [, colors] of PALETTES) {
+      expect(colors.tabColor).not.toBe(DEFAULT_MARK);
+    }
+  });
+});
+
 describe('guide accent-chip gates (white sheet)', () => {
   it.each(PALETTES)(
     '%s: accent text ≥ 4.5:1 over its 10%-accent plate on white',
