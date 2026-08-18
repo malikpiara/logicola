@@ -14,6 +14,7 @@ import useQuizState, { getRevealThreshold } from './useQuizState';
 import { progressLabel, type QuizMode } from './quizMode';
 import { canScore, chargeFor, progress } from '@/lib/scoring';
 import { writeLastDrill } from '@/lib/lastDrill';
+import { haptic } from '@/lib/haptics';
 import classNames from 'classnames';
 import { SubSet } from '@/content/types';
 import {
@@ -454,6 +455,9 @@ const QuizSession: React.FC<QuizSessionProps> = ({
     const wasFirstAttempt = previousGuesses.length === 0;
     // The hook is the only grader; the shell just reacts to its verdict.
     const outcome = onCheckAnswer();
+    // The one moment a haptic carries information, not just texture: it
+    // confirms the outcome the eye is still racing to read.
+    if (outcome) haptic(outcome === 'correct' ? 'success' : 'error');
 
     if (outcome === 'miss') {
       flashBarDamage();
@@ -913,6 +917,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                         )}
                         label={option.label}
                         onClick={() => {
+                          haptic('selection');
                           setLastInput('pointer');
                           selectOption(index);
                         }}
