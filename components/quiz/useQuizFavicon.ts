@@ -13,18 +13,13 @@ import { useEffect } from 'react';
  * a first pass framed it on a square of the set's surface and that was
  * not the ask).
  *
- * It wears the set's SURFACE — the main colour, the one that fills the
- * screen you are looking at — so the tab answers "where am I" the same
- * way the page does (Malik, 2026-08-18, choosing this over the ink).
- * That is also the only tier that IDENTIFIES a set: all seven surfaces
- * are distinct, whereas the inks collide outright (A and N are both
- * #4A1040; L #3F0167 and Q #3E1060 are one step apart).
- *
- * The cost, accepted knowingly: the surfaces are pale by construction,
- * so on a WHITE browser chrome the mark is low-contrast — legible, but
- * quiet. It is strongest on dark chrome, where the pale mark pops. The
- * favicon is an orientation cue, never the only way to tell sets apart,
- * so quiet is a fair price for a colour that matches the page.
+ * It wears the set's `tabColor` — a fourth colour the palette gained for
+ * this job, because none of the three it already had could do it. A tab
+ * strip is a background we do not control, and the duotone holds only
+ * pale surfaces and very dark inks: measured against white and dark
+ * chrome, the best of all 21 shipped set colours reached 2.27:1 on its
+ * weaker side. The reasoning and the per-set ratios live on
+ * `QuizScreenColors.tabColor`.
  *
  * Client-side for the same reason `useQuizChrome` is, and the reason is
  * worth repeating because a per-route `icon.tsx` looks like the obvious
@@ -39,8 +34,12 @@ import { useEffect } from 'react';
  * thing this file knows about the artwork is which fill to swap.
  */
 
-/** The green the shipped mark is drawn in — the one colour we replace. */
-const SOURCE_FILL = '#00A742';
+/** The colour the shipped mark is drawn in — the one fill we replace. Must
+ *  track `app/icon.svg`: the default mark is the brand magenta as of
+ *  2026-08-18 (Malik — root and the marketing pages read as their own place
+ *  rather than as a set). If the artwork is ever redrawn in another colour,
+ *  this constant moves with it or the tab quietly keeps the default. */
+const SOURCE_FILL = '#BD00AD';
 
 /** One fetch per page load, shared by every mount. Resolves to null if
  *  the icon can't be read, which simply leaves the default favicon up. */

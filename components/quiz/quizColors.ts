@@ -23,6 +23,25 @@ export interface QuizScreenColors {
   surfaceColor?: string;
   foregroundColor?: string;
   countColor?: string;
+  /**
+   * The BROWSER TAB colour — the set's hue at a lightness that survives a
+   * background we do not control (`useQuizFavicon`). A FOURTH colour rather
+   * than a reuse of one of the three, because the duotone is pale-surface +
+   * very-dark-ink by construction and a favicon needs exactly the mid-tone
+   * that sits between them. Measured 2026-08-18 against white and dark tab
+   * strips: the best of all 21 shipped set colours reaches only 2.27:1 on
+   * its weaker side, and darkening a surface to fix light chrome breaks
+   * dark chrome by the same step — it is a trade, not a fix.
+   *
+   * Each is the most chromatic in-gamut colour at its set's own hue that
+   * clears **3:1 on white AND on dark** (1.4.11's non-text threshold,
+   * applied by choice — the tab strip is not our UI, but the release
+   * standard is). All seven sit ≥30° apart so they stay tellable apart.
+   * Ratios are recorded per set below. Signed off by Malik, 2026-08-18.
+   *
+   * Spends no new HUES: every one is a hue its set already owns.
+   */
+  tabColor?: string;
 }
 
 /**
@@ -67,6 +86,8 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#FFABC6',
       foregroundColor: '#4A1040',
       countColor: '#674900',
+      // tab: the surface's own hue at mid-lightness · 3.09:1 white / 4.09 dark
+      tabColor: '#FF4E99',
     };
   }
 
@@ -75,6 +96,8 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#E7F099',
       foregroundColor: '#02302C',
       countColor: '#BD00AD',
+      // tab: the surface's own hue at mid-lightness · 3.03:1 white / 4.17 dark
+      tabColor: '#939B0C',
     };
   }
 
@@ -83,6 +106,8 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#E6ACF4',
       foregroundColor: '#1C3601',
       countColor: '#674900',
+      // tab: the surface's own hue at mid-lightness · 3.03:1 white / 4.17 dark
+      tabColor: '#DF57FE',
     };
   }
 
@@ -91,6 +116,8 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#CFF6DD',
       foregroundColor: '#3F0167',
       countColor: '#BD00AD',
+      // tab: the surface's own hue at mid-lightness · 3.02:1 white / 4.18 dark
+      tabColor: '#00AA68',
     };
   }
 
@@ -99,6 +126,8 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#9EDAFF',
       foregroundColor: '#4A1040',
       countColor: '#8D0381',
+      // tab: the surface's own hue at mid-lightness · 3.03:1 white / 4.18 dark
+      tabColor: '#0C9EDC',
     };
   }
 
@@ -118,6 +147,10 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#E4BDF7',
       foregroundColor: '#751100',
       countColor: '#824616',
+      // tab: from the RUST INK's hue, not the lilac surface — J, R and Q are
+      // three lilacs within 22°, and at mid-lightness they became one colour
+      // · 3.01:1 white / 4.19 dark
+      tabColor: '#FF5F42',
     };
   }
 
@@ -126,6 +159,9 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#D9CCF9',
       foregroundColor: '#3E1060',
       countColor: '#745400',
+      // tab: from the OLIVE ACCENT's hue, for the same lilac collision as
+      // Set R · 3.03:1 white / 4.16 dark
+      tabColor: '#BD8C0E',
     };
   }
 

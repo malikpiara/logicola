@@ -566,6 +566,54 @@ would make the two near-siblings.
 S1 (−.10, already flagged as "the one compromise"), G4 (.09). C2 also failed
 this gate and was retired instead.
 
+## The tab tier (added 2026-08-18)
+
+A fourth colour per set, for the browser tab only (`useQuizFavicon` →
+`QuizScreenColors.tabColor`). It exists because none of the three shipped
+colours could do the job, and the measurement is worth keeping:
+
+| Tier     | vs white chrome | vs dark chrome |
+| -------- | --------------- | -------------- |
+| surfaces | 1.17–1.81       | 6.96–10.76     |
+| inks     | 11.43–14.88     | 1.05–1.18      |
+| accents  | 5.57–8.53       | 1.48–2.27      |
+
+**A favicon sits on a background we do not control**, so it needs a colour
+that clears BOTH extremes — and the duotone system holds only the two ends,
+pale surface and very dark ink, with nothing in between. The best of all 21
+shipped colours reaches 2.27:1 on its weaker side. Darkening a pale surface
+to fix light chrome costs dark chrome by the same step: a trade, not a fix.
+That is not a defect in the palette, it is what the palette _is_.
+
+Each tab colour is the most chromatic in-gamut colour at its set's own hue
+that clears **3:1 on white and on dark** (1.4.11's non-text threshold, taken
+on by choice — the tab strip is not our UI, but the release standard is):
+
+| Set | hue from         | tab       | white | dark |
+| --- | ---------------- | --------- | ----- | ---- |
+| A   | surface          | `#FF4E99` | 3.09  | 4.09 |
+| C   | surface          | `#939B0C` | 3.03  | 4.17 |
+| J   | surface          | `#DF57FE` | 3.03  | 4.17 |
+| L   | surface          | `#00AA68` | 3.02  | 4.18 |
+| N   | surface          | `#0C9EDC` | 3.03  | 4.18 |
+| R   | **rust ink**     | `#FF5F42` | 3.01  | 4.19 |
+| Q   | **olive accent** | `#BD8C0E` | 3.03  | 4.16 |
+
+**No new hues were spent** — each is a hue its set already owns. R and Q had
+to leave their surface hue because J, R and Q are three lilacs within 22°,
+and at a shared mid-lightness they collapsed into one colour; R takes its
+rust ink's hue and Q its olive accent's. All seven now sit ≥30° apart.
+
+The default mark (`app/icon.svg`, and so every non-quiz page) moved from the
+old green to the brand magenta `#BD00AD` the same day, so root reads as its
+own place rather than as a set. It is the weaker choice on dark chrome
+(2.27:1) and Malik took it knowing that. Note `#BD00AD` is also C's and L's
+ACCENT — the collision is between the default mark and those accents, not
+between two tabs, so it never puts two tabs in the same colour.
+
+Gated in `components/quiz/quizColors.test.ts` (both chromes, all-distinct,
+and clear of the default mark).
+
 ## Guardrails learned the hard way
 
 - **An approved idea is not an approved blast radius.** A token-split
