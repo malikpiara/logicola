@@ -50,13 +50,30 @@ const BUTTON = { bg: TYPE, fg: GROUND };
 
 const GEM = gemClip();
 
-const GET_THE_BOOK_URL =
+/** The publisher's page for Gensler's textbook, bare. Kept separate from
+ *  the linked URL below because it is what we send to PostHog: the
+ *  campaign decoration is for Routledge's analytics, not ours, and saved
+ *  insights already filter on this exact string. */
+const BOOK_URL =
   'https://www.routledge.com/Introduction-to-Logic/Gensler/p/book/9781138910591';
+/** What we actually link to. The UTM triple + placement lets Routledge
+ *  attribute the sale to LogiCola in their own reporting — the Referer
+ *  header alone gives them the bare origin, and browsers drop or trim it
+ *  under stricter privacy settings, so the referral would otherwise land
+ *  in their "direct" bucket. utm_content names the placement so a second
+ *  copy of this link (landing, FAQ) stays distinguishable from the
+ *  footer's. (Malik, 2026-08-18) */
+const GET_THE_BOOK_URL =
+  `${BOOK_URL}?utm_source=logicola.org&utm_medium=referral` +
+  '&utm_campaign=get-the-book&utm_content=footer_resources';
 const REDDIT_URL = 'https://www.reddit.com/r/Logicola/';
 // Used by both the "Follow us" list and the icon row, like REDDIT_URL above.
 const X_URL = 'https://x.com/LogicolaThree';
 const GITHUB_URL = 'https://github.com/malikpiara/logicola';
 const LINKEDIN_URL = 'https://www.linkedin.com/company/logicola';
+// Malik's personal account — Logicola has no Bluesky of its own yet, so the
+// maintainer's handle stands in for it here (Malik, 2026-08-18).
+const BLUESKY_URL = 'https://bsky.app/profile/malikpiara.bsky.social';
 
 /** The band: 1600×56 once, `slice`-cropped at any viewport so the camo
  *  features keep their proportion instead of squeezing (the LinkedIn
@@ -176,16 +193,19 @@ export function Footer() {
               style={{ color: TYPE }}
             >
               <li>
-                <Link href='/blog' className='motion-colors hover:underline'>
-                  Blog
+                <Link
+                  href='/blog'
+                  className='motion-colors inline-flex items-center gap-2 hover:underline'
+                >
+                  Blog <NewBadge />
                 </Link>
               </li>
               <li>
                 <Link
                   href='/release-notes'
-                  className='motion-colors hover:underline'
+                  className='motion-colors inline-flex items-center gap-2 hover:underline'
                 >
-                  Release Notes
+                  Release Notes <NewBadge />
                 </Link>
               </li>
               <li>
@@ -202,7 +222,7 @@ export function Footer() {
                   eventName='book_cta_clicked'
                   properties={{
                     link_text: 'Get the Book',
-                    link_url: GET_THE_BOOK_URL,
+                    link_url: BOOK_URL,
                     link_location: 'footer_resources',
                     destination_domain: 'routledge.com',
                     resource_type: 'book',
@@ -215,9 +235,9 @@ export function Footer() {
               <li>
                 <Link
                   href='/keyboard'
-                  className='motion-colors flex items-center gap-2 hover:underline'
+                  className='motion-colors hover:underline'
                 >
-                  Keyboard <NewBadge />
+                  Keyboard
                 </Link>
               </li>
             </ul>
@@ -248,10 +268,18 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href={REDDIT_URL}
-                  className='motion-colors hover:underline'
+                  href={BLUESKY_URL}
+                  className='motion-colors inline-flex items-center gap-2 hover:underline'
                 >
-                  Reddit
+                  Bluesky <NewBadge />
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={REDDIT_URL}
+                  className='motion-colors inline-flex items-center gap-2 hover:underline'
+                >
+                  Reddit <NewBadge />
                 </Link>
               </li>
               <li>
@@ -329,6 +357,16 @@ export function Footer() {
                 aria-hidden='true'
               >
                 <path d='m15.5,10v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h-3v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1h-1v-2h-1v-1h-1v-1H1.5v1h1v1h1v1h1v2h1v1h1v2h1v1h1v2h1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h3v-1h1v-1h1v-1h1v-1h1v-1h1v-1h2v1h1v1h1v2h1v1h1v1h7v-1h-1v-1h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h1Zm0,4v1h1v2h1v1h1v2h-3v-2h-1v-1h-1v-1h-1v-2h-1v-1h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h-1v-2h3v1h1v2h1v1h1v2h1v1h1v1h1v2h1Z' />
+              </svg>
+            </SocialChip>
+            <SocialChip href={BLUESKY_URL} label='Malik Piara on Bluesky'>
+              <svg
+                className='h-[18px] w-[18px]'
+                fill='currentColor'
+                viewBox='0 0 24 24'
+                aria-hidden='true'
+              >
+                <path d='M23 3V11H22V13H20V14H18V15H20V16H21V19H20V20H19V21H17V22H15V21H14V20H13V18H11V20H10V21H9V22H7V21H5V20H4V19H3V16H4V15H6V14H4V13H2V11H1V3H2V2H4V3H6V4H7V5H8V6H9V7H10V9H11V10H13V9H14V7H15V6H16V5H17V4H18V3H20V2H22V3H23Z' />
               </svg>
             </SocialChip>
             <SocialChip href={GITHUB_URL} label='Logicola on GitHub'>
