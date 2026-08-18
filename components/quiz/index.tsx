@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import Link from 'next/link';
 import { GemButton } from './gemButton';
 import { BookHeartIcon, TimesIcon } from './pixelIcons';
@@ -66,6 +67,15 @@ export default function Quiz({ subSet }: QuizProps) {
 }
 
 const QUESTION_EXIT_MS = 90;
+
+// Mobile advance is a spatial push (old exercise slides off left, new one
+// arrives from the right — see .motion-quiz-question's width < 40rem block
+// in globals.css), and the longer travel needs a longer exit than the
+// desktop fade-up. Must match that block's transition-duration.
+const QUESTION_EXIT_MOBILE_MS = 130;
+
+// Tailwind's `sm` breakpoint — below it the quiz uses the mobile push.
+const MOBILE_QUERY = '(width < 40rem)';
 
 // Direction A — "hit flicker" — locked from the damage lab
 // (docs/damage-bar-lab.html; Malik, 2026-08-12): on a scored miss the
@@ -205,6 +215,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
     multiSelect,
     showSolution,
     currentQuestion,
+    willFinishOnNext,
     questionCounter,
     correctQuestions,
     onCheckAnswer,
@@ -298,6 +309,9 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   const [isPaneResizing, setIsPaneResizing] = useState(false);
   const [isQuestionLeaving, setIsQuestionLeaving] = useState(false);
   const isQuestionLeavingRef = useRef(false);
+  // The current question block — after the keyed remount inside a view
+  // transition this already points at the NEW node (flushSync commits it).
+  const questionBlockRef = useRef<HTMLDivElement>(null);
   const [isMissFlashing, setIsMissFlashing] = useState(false);
   const missFlashTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
@@ -488,14 +502,56 @@ const QuizSession: React.FC<QuizSessionProps> = ({
       return;
     }
 
+    // Mobile advance is a push — the old exercise slides off left WHILE the
+    // new one arrives from the right (Duolingo's model, measured off Malik's
+    // capture 2026-08-19: header pinned, layers overlapping, ~230ms; same
+    // spatial grammar as mindful's slide-forward). Both questions must be on
+    // screen at once, which the keyed remount can't do — the View Transitions
+    // API's snapshot layers provide that without double-mounting. The
+    // choreography lives on ::view-transition-*(quiz-question) in
+    // globals.css.
+    //
+    // NOT on the run's last advance: the end screen replaces the whole
+    // canvas, so there is no incoming pane — a push would strand the old
+    // question sliding over the end screen's cross-fade (Malik, 2026-08-19).
+    // It falls through to the short exit below; the end screen then makes
+    // its own `motion-enter` entrance, same as the start screen.
+    if (
+      !willFinishOnNext &&
+      window.matchMedia(MOBILE_QUERY).matches &&
+      'startViewTransition' in document
+    ) {
+      isQuestionLeavingRef.current = true;
+      const transition = document.startViewTransition(() => {
+        flushSync(() => handleNextQuestion());
+        // The remount would replay the CSS entrance inside the incoming
+        // snapshot — the push already IS the entrance, so silence it for
+        // this node. Inline (not a class) so it can't restart on removal.
+        questionBlockRef.current?.style.setProperty('animation', 'none');
+      });
+      // A hidden document (backgrounded tab) skips the transition and
+      // rejects these promises — the advance itself still committed, so
+      // swallow the rejections instead of surfacing an uncaught error.
+      transition.ready.catch(() => {});
+      transition.finished
+        .catch(() => {})
+        .finally(() => {
+          isQuestionLeavingRef.current = false;
+        });
+      return;
+    }
+
     isQuestionLeavingRef.current = true;
     setIsQuestionLeaving(true);
+    const exitMs = window.matchMedia(MOBILE_QUERY).matches
+      ? QUESTION_EXIT_MOBILE_MS
+      : QUESTION_EXIT_MS;
     questionExitTimeoutRef.current = setTimeout(() => {
       handleNextQuestion();
       isQuestionLeavingRef.current = false;
       setIsQuestionLeaving(false);
       questionExitTimeoutRef.current = null;
-    }, QUESTION_EXIT_MS);
+    }, exitMs);
   }
 
   /**
@@ -830,6 +886,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
               {currentQuestion && (
                 <div
                   key={currentQuestion.id}
+                  ref={questionBlockRef}
                   className='motion-quiz-question flex flex-col md:justify-between gap-5 max-sm:flex'
                   data-motion={isQuestionLeaving ? 'leaving' : 'entered'}
                 >
