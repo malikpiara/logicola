@@ -58,7 +58,7 @@ describe('getQuizScreenColors', () => {
       surfaceColor: '#CFF6DD',
       foregroundColor: '#3F0167',
       countColor: '#BD00AD',
-      tabColor: '#00AA68',
+      tabColor: '#56A276',
     });
     expect(getQuizScreenColors(subSetNamed('Set N'))).toEqual({
       surfaceColor: '#9EDAFF',
@@ -90,7 +90,7 @@ describe('getQuizScreenColors', () => {
       surfaceColor: '#E4BDF7',
       foregroundColor: '#751100',
       countColor: '#824616',
-      tabColor: '#FF5F42',
+      tabColor: '#E4725B',
     });
   });
 

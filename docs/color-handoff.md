@@ -604,6 +604,20 @@ to leave their surface hue because J, R and Q are three lilacs within 22°,
 and at a shared mid-lightness they collapsed into one colour; R takes its
 rust ink's hue and Q its olive accent's. All seven now sit ≥30° apart.
 
+**Two sets needed their chroma pulled back, and the reason differs.** Malik
+called both on sight; the measurement followed, as usual.
+
+- **L** — at full chroma the mint hue produces a kelly green 9° from the
+  RETIRED brand mark, so the tab read as "LogiCola default", not "Set L".
+  Its other owned hue, the plum ink, sits 15° from Set J, so it was not an
+  escape. With hue fixed and lightness pinned by the 3:1 gates, chroma was
+  the only variable left: 65% of in-gamut gives a sage that reads as mint
+  deepened. **This is structural, not a slip** — a set whose hue is close to
+  a retired brand colour cannot be told apart from it by hue alone.
+- **R** — the hue was right and the loudness was wrong. Full chroma on the
+  rust read as neon coral; Set R is the lilac-and-RUST set, so 70% chroma
+  lands on a terracotta that is recognisably its own.
+
 The default mark (`app/icon.svg`, and so every non-quiz page) moved from the
 old green to the brand magenta `#BD00AD` the same day, so root reads as its
 own place rather than as a set. It is the weaker choice on dark chrome

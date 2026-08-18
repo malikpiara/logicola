@@ -116,8 +116,12 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#CFF6DD',
       foregroundColor: '#3F0167',
       countColor: '#BD00AD',
-      // tab: the surface's own hue at mid-lightness · 3.02:1 white / 4.18 dark
-      tabColor: '#00AA68',
+      // tab: the mint surface's hue, but at 65% of the in-gamut chroma. At
+      // full chroma it lands 9° from the RETIRED brand green and reads as
+      // the old default mark rather than as this set; the plum ink was the
+      // other candidate and sits 15° from Set J. Chroma was the only lever
+      // left (Malik, 2026-08-18) · 3.08:1 white / 4.11 dark
+      tabColor: '#56A276',
     };
   }
 
@@ -147,10 +151,12 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#E4BDF7',
       foregroundColor: '#751100',
       countColor: '#824616',
-      // tab: from the RUST INK's hue, not the lilac surface — J, R and Q are
-      // three lilacs within 22°, and at mid-lightness they became one colour
-      // · 3.01:1 white / 4.19 dark
-      tabColor: '#FF5F42',
+      // tab: from the RUST INK's hue at 70% chroma, not the lilac surface —
+      // J, R and Q are three lilacs within 22° and merged at mid-lightness
+      // (R's lilac lands 5° from J). Full chroma on the rust read as neon
+      // coral instead of as this set's rust, so the hue stays and the
+      // loudness goes (Malik, 2026-08-18) · 3.06:1 white / 4.13 dark
+      tabColor: '#E4725B',
     };
   }
 
