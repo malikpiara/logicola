@@ -24,22 +24,32 @@ export interface QuizScreenColors {
   foregroundColor?: string;
   countColor?: string;
   /**
-   * The BROWSER TAB colour — the set's hue at a lightness that survives a
-   * background we do not control (`useQuizFavicon`). A FOURTH colour rather
-   * than a reuse of one of the three, because the duotone is pale-surface +
-   * very-dark-ink by construction and a favicon needs exactly the mid-tone
-   * that sits between them. Measured 2026-08-18 against white and dark tab
-   * strips: the best of all 21 shipped set colours reaches only 2.27:1 on
-   * its weaker side, and darkening a surface to fix light chrome breaks
-   * dark chrome by the same step — it is a trade, not a fix.
+   * The BROWSER TAB colour — what `useQuizFavicon` paints the mark in for
+   * the duration of a run, so a strip of open drills says which set each
+   * one is.
    *
-   * Each is the most chromatic in-gamut colour at its set's own hue that
-   * clears **3:1 on white AND on dark** (1.4.11's non-text threshold,
-   * applied by choice — the tab strip is not our UI, but the release
-   * standard is). All seven sit ≥30° apart so they stay tellable apart.
-   * Ratios are recorded per set below. Signed off by Malik, 2026-08-18.
+   * Every one is the set's PRIMARY colour — its surface, the colour that
+   * fills the screen you are looking at — adjusted to survive a background
+   * we do not control (Malik, 2026-08-18). Same hue as the surface, always;
+   * only lightness and chroma move.
    *
-   * Spends no new HUES: every one is a hue its set already owns.
+   * The adjustment: the surfaces are pale by construction (1.17–1.81:1 on
+   * white) and vanish on a light tab strip, while anything dark enough to
+   * fix that vanishes on a dark one. Each colour therefore sits at the
+   * lightness that maximises the WEAKER of its two chrome contrasts — the
+   * balance point, ~3.55:1 on both — with chroma pushed back to the gamut
+   * edge, because taking a pale low-chroma surface down without restoring
+   * chroma yields grey (#FFABC6 → a muddy #AB5F79).
+   *
+   * THE LILAC TRIO is the one compromise. J (320°), R (315°) and Q (298°)
+   * have surfaces within 22° of each other — at the balance point they were
+   * one colour (J–R measured ΔOK 0.035, where <0.10 reads as identical).
+   * Since the hue is fixed by the primary, separation had to come from
+   * lightness: J and Q sit at the light-chrome-favouring end of their band,
+   * R at the dark-favouring end. All three still clear 3:1 both ways, and
+   * the trio ends up just past tellable-apart (min ΔOK 0.101). If those
+   * three sets ever read as one in the tab strip, this is why, and the fix
+   * is a surface change in the palette, not here.
    */
   tabColor?: string;
 }
@@ -86,8 +96,8 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#FFABC6',
       foregroundColor: '#4A1040',
       countColor: '#674900',
-      // tab: the surface's own hue at mid-lightness · 3.09:1 white / 4.09 dark
-      tabColor: '#FF4E99',
+      // tab: the pink primary at its balance point · 3.54:1 white / 3.57 dark
+      tabColor: '#FF268F',
     };
   }
 
@@ -96,8 +106,8 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#E7F099',
       foregroundColor: '#02302C',
       countColor: '#BD00AD',
-      // tab: the surface's own hue at mid-lightness · 3.03:1 white / 4.17 dark
-      tabColor: '#939B0C',
+      // tab: the lime primary at its balance point · 3.56:1 white / 3.55 dark
+      tabColor: '#878E0B',
     };
   }
 
@@ -106,8 +116,10 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#E6ACF4',
       foregroundColor: '#1C3601',
       countColor: '#674900',
-      // tab: the surface's own hue at mid-lightness · 3.03:1 white / 4.17 dark
-      tabColor: '#DF57FE',
+      // tab: the lilac primary, pushed to the LIGHT-favouring end of its
+      // band to clear Set R — see the lilac-trio note on tabColor
+      // · 4.21:1 white / 3.00 dark
+      tabColor: '#D001F4',
     };
   }
 
@@ -116,12 +128,8 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#CFF6DD',
       foregroundColor: '#3F0167',
       countColor: '#BD00AD',
-      // tab: the mint surface's hue, but at 65% of the in-gamut chroma. At
-      // full chroma it lands 9° from the RETIRED brand green and reads as
-      // the old default mark rather than as this set; the plum ink was the
-      // other candidate and sits 15° from Set J. Chroma was the only lever
-      // left (Malik, 2026-08-18) · 3.08:1 white / 4.11 dark
-      tabColor: '#56A276',
+      // tab: the mint primary at its balance point · 3.54:1 white / 3.57 dark
+      tabColor: '#049C5F',
     };
   }
 
@@ -130,8 +138,8 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#9EDAFF',
       foregroundColor: '#4A1040',
       countColor: '#8D0381',
-      // tab: the surface's own hue at mid-lightness · 3.03:1 white / 4.18 dark
-      tabColor: '#0C9EDC',
+      // tab: the sky primary at its balance point · 3.55:1 white / 3.56 dark
+      tabColor: '#0791CA',
     };
   }
 
@@ -151,12 +159,9 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#E4BDF7',
       foregroundColor: '#751100',
       countColor: '#824616',
-      // tab: from the RUST INK's hue at 70% chroma, not the lilac surface —
-      // J, R and Q are three lilacs within 22° and merged at mid-lightness
-      // (R's lilac lands 5° from J). Full chroma on the rust read as neon
-      // coral instead of as this set's rust, so the hue stays and the
-      // loudness goes (Malik, 2026-08-18) · 3.06:1 white / 4.13 dark
-      tabColor: '#E4725B',
+      // tab: the lilac primary, pushed to the DARK-favouring end of its band
+      // so it clears Set J, whose surface sits 5° away · 3.03:1 white / 4.17 dark
+      tabColor: '#D064FE',
     };
   }
 
@@ -165,9 +170,9 @@ export function getQuizScreenColors(subSet: SubSet): QuizScreenColors {
       surfaceColor: '#D9CCF9',
       foregroundColor: '#3E1060',
       countColor: '#745400',
-      // tab: from the OLIVE ACCENT's hue, for the same lilac collision as
-      // Set R · 3.03:1 white / 4.16 dark
-      tabColor: '#BD8C0E',
+      // tab: the lilac primary, light-favouring end, clearing Set R
+      // · 4.15:1 white / 3.05 dark
+      tabColor: '#9B53FE',
     };
   }
 
