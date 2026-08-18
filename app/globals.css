@@ -108,6 +108,39 @@
     transform: translateY(-4px) scale(0.998);
   }
 
+  /* Mobile: advancing is a spatial push. The real thing is the layered
+     View Transitions push below (::view-transition-*(quiz-question));
+     these rules are the FALLBACK for browsers without the API, where the
+     exit must finish before the keyed remount plays the entrance.
+     Sequential, so both travels stay short — full-width travel across a
+     seam you never see would read as a stutter, not a push. Exit
+     duration must match QUESTION_EXIT_MOBILE_MS in
+     components/quiz/index.tsx. */
+  @media (width < 40rem) {
+    .motion-quiz-question {
+      animation-name: quizQuestionInRight;
+      animation-duration: 200ms;
+      transition-duration: 130ms;
+      transition-property: opacity, transform, filter;
+    }
+
+    .motion-quiz-question[data-motion='leaving'] {
+      transform: translateX(-40px);
+      filter: blur(6px);
+    }
+
+    /* The push's named element is the CONTAINER, not the keyed question
+       block: question blocks differ in height and (being justify-centered)
+       vertical position, so naming them made the transition group
+       interpolate geometry — a diagonal drift + stretch on top of the
+       slide (Malik, 2026-08-19). The container's box is identical across
+       questions, leaving nothing to interpolate: a pure horizontal push
+       of the full pane, which is also exactly Duolingo's model. */
+    .quiz-immersive .qcontainer {
+      view-transition-name: quiz-question;
+    }
+  }
+
   .motion-answer-reveal {
     animation: quizAnswerReveal 160ms var(--ease-out-quart) both;
     transform-origin: center top;
@@ -1103,6 +1136,62 @@
   }
 }
 
+/* == The mobile advance push (View Transitions API) =======================
+   Old exercise slides off left WHILE the new one arrives from the right —
+   Duolingo's model, measured off Malik's capture (2026-08-19): header
+   pinned, both layers travelling together, ~230ms. The JS only starts a
+   view transition under 40rem (see handleNextQuestionTransition), so
+   these need no media guard. Overriding animation-name drops the UA's
+   default cross-fade; 110% travel clears the container padding so each
+   layer fully leaves/enters the screen. */
+::view-transition-old(quiz-question),
+::view-transition-new(quiz-question) {
+  animation-duration: 240ms;
+  animation-timing-function: var(--ease-out-cubic);
+}
+::view-transition-old(quiz-question) {
+  animation-name: vtQuestionOutLeft;
+}
+::view-transition-new(quiz-question) {
+  animation-name: vtQuestionInRight;
+}
+/* Unlike Duolingo's fully-opaque layers, ours fade + slightly blur in
+   flight (Malik, 2026-08-19): the pane is justify-centered, so content
+   rests at different heights per question — softening the layers masks
+   that offset sliding past itself. Shared easing means the outgoing
+   fades early and the incoming turns readable early. Blur stays small:
+   big blurs are expensive, and 6px is enough to read as motion. */
+@keyframes vtQuestionOutLeft {
+  to {
+    transform: translateX(-110%);
+    opacity: 0;
+    filter: blur(6px);
+  }
+}
+@keyframes vtQuestionInRight {
+  from {
+    transform: translateX(110%);
+    opacity: 0;
+    filter: blur(6px);
+  }
+}
+
+/* Mobile entrance for .motion-quiz-question: in from the right, slightly
+   more travel than the exit so the arrival reads as the emphasised half.
+   Only reached by the no-view-transitions fallback (and first mount). */
+@keyframes quizQuestionInRight {
+  from {
+    opacity: 0;
+    transform: translateX(48px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+
 @keyframes quizAnswerReveal {
   from {
     opacity: 0;
@@ -1227,6 +1316,12 @@
   .animate-accordion-up {
     animation: none;
     transition: none;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
   }
 
   .motion-button,

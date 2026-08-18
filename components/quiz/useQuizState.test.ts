@@ -529,6 +529,45 @@ describe('useQuizState — multi-select (subset rule)', () => {
     );
   });
 
+  it('flags willFinishOnNext on the last question only', async () => {
+    const longQuiz = createMockQuiz(60);
+    const { result } = renderHook(() => useQuizState(longQuiz));
+
+    await waitFor(() => {
+      expect(result.current.currentQuestion).toBeDefined();
+    });
+
+    act(() => {
+      result.current.onShowStartScreen();
+    });
+
+    for (let i = 0; i < 10; i++) {
+      // The advance transition branches on this (the end screen is not a
+      // question it can push in) — it must flip on the final question only.
+      expect(result.current.willFinishOnNext).toBe(i === 9);
+
+      act(() => {
+        result.current.selectOption(0);
+      });
+
+      act(() => {
+        result.current.onCheckAnswer();
+      });
+
+      await waitFor(() => {
+        expect(result.current.showSolution).toBe(true);
+      });
+
+      act(() => {
+        result.current.handleNextQuestion();
+      });
+    }
+
+    await waitFor(() => {
+      expect(result.current.showEndScreen).toBe(true);
+    });
+  });
+
   it('captures quiz_retried and resets to a fresh attempt', async () => {
     const { result } = renderHook(() => useQuizState(mockQuiz));
 

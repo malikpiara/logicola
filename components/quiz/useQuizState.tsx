@@ -181,39 +181,39 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
   // but we read from shuffledQuestions now, because it may have shuffled options
   const currentQuestion = shuffledQuestions[questionOrder[questionIdx]];
 
+  // Will the next advance end the run (end screen, not another question)?
+  // The end condition is the whole difference between the two modes.
+  // `count`: stop at the Nth question. `score`: stop at 100 points, however
+  // many questions that takes — so we only run out when the drawn pool is
+  // exhausted (a prototype limit; see components/quiz/generated/).
+  // Exposed to the shell so the advance TRANSITION can branch on it (the
+  // end screen makes its own entrance — pushing "the next question" in
+  // would promise a question that isn't coming) without re-deriving run
+  // progression in a component.
+  const willFinishOnNext =
+    (mode.kind === 'count'
+      ? questionCounter >= totalQuestionCount
+      : isComplete(scoreState)) || questionIdx >= subSet.questions.length - 1;
+
   /**
    * Move to next question or show the end screen if we’re done
    */
   function handleNextQuestion() {
-    // The end condition is the whole difference between the two modes.
-    // `count`: stop at the Nth question. `score`: stop at 100 points, however
-    // many questions that takes — so we only run out when the drawn pool is
-    // exhausted (a prototype limit; see components/quiz/generated/).
-    const finished =
-      mode.kind === 'count'
-        ? questionCounter >= totalQuestionCount
-        : isComplete(scoreState);
-
-    if (finished) {
+    if (willFinishOnNext) {
       onShowEndScreen();
       return;
     }
 
-    if (questionIdx < subSet.questions.length - 1) {
-      setQuestionIdx(questionIdx + 1);
-      setSelectedOptionIndex(null);
-      setSelectedOptionIds([]);
-      setWrongAttempts(0);
-      setPreviousGuesses([]);
-      setShowSolution(false);
-      setQuestionCounter(questionCounter + 1);
-      // original program `*m`: q := level, r := 8 — re-arm both registers for the new
-      // problem, so a miss never poisons the one after it.
-      setScoreState(beginProblem);
-      return;
-    }
-
-    onShowEndScreen();
+    setQuestionIdx(questionIdx + 1);
+    setSelectedOptionIndex(null);
+    setSelectedOptionIds([]);
+    setWrongAttempts(0);
+    setPreviousGuesses([]);
+    setShowSolution(false);
+    setQuestionCounter(questionCounter + 1);
+    // original program `*m`: q := level, r := 8 — re-arm both registers for the new
+    // problem, so a miss never poisons the one after it.
+    setScoreState(beginProblem);
   }
 
   /**
@@ -419,6 +419,7 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
 
     // Current question
     currentQuestion,
+    willFinishOnNext,
 
     // Selection & correctness
     selectedOptionIndex,
