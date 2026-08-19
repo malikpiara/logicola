@@ -392,6 +392,7 @@
             <label for="fade">Fade</label
             ><select id="fade">
               <option value="travel">with travel</option>
+              <option value="through">through — out, then in</option>
               <option value="late">late — opaque 60%</option>
               <option value="none">none (opaque)</option>
             </select>
@@ -466,15 +467,27 @@
           dur: 260,
           ease: 'ease-out-cubic',
           fade: 'travel',
-          blur: 1,
-          travel: 25,
+          blur: 0,
+          travel: 20,
         },
-        'Drift 15': {
+        // The symmetric crossfade puts both layers at ~50% opacity while
+        // they sit only ~75px apart — the classic short-travel ghosting
+        // risk. Material's shared axis uses a fade-THROUGH (outgoing
+        // leaves before the incoming arrives) to avoid exactly that.
+        // Here to test whether ours needs it.
+        'Fade-through': {
+          dur: 260,
+          ease: 'ease-out-cubic',
+          fade: 'through',
+          blur: 0,
+          travel: 20,
+        },
+        'Drift 12': {
           dur: 260,
           ease: 'ease-out-cubic',
           fade: 'travel',
-          blur: 1,
-          travel: 15,
+          blur: 0,
+          travel: 12,
         },
         Duolingo: {
           dur: 230,
@@ -498,10 +511,10 @@
         dur: 260,
         ease: 'ease-out-cubic',
         fade: 'travel',
-        blur: 1,
-        travel: 25,
+        blur: 0,
+        travel: 20,
       };
-      const slots = ['Shipped', 'Drift 15', 'Duolingo'];
+      const slots = ['Shipped', 'Fade-through', 'Drift 12'];
       let active = 0,
         speed = 1,
         qIndex = 0,
@@ -539,6 +552,14 @@
             { opacity: 1, filter: 'blur(0)', offset: 0.6 },
             { ...to, opacity: 0, filter: `blur(${s.blur}px)` },
           ];
+        // fade-THROUGH: the outgoing layer is gone by 35%, so the two
+        // never share the screen at partial opacity (no ghosting).
+        if (s.fade === 'through')
+          return [
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+            { opacity: 0, filter: `blur(${s.blur}px)`, offset: 0.35 },
+            { ...to, opacity: 0, filter: `blur(${s.blur}px)` },
+          ];
         return [{ transform: 'translateX(0)' }, to];
       }
       function inFrames(s) {
@@ -552,6 +573,13 @@
           return [
             { ...from, opacity: 0, filter: `blur(${s.blur}px)` },
             { opacity: 1, filter: 'blur(0)', offset: 0.4 },
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+          ];
+        // fade-THROUGH: hold invisible until the outgoing has left.
+        if (s.fade === 'through')
+          return [
+            { ...from, opacity: 0, filter: `blur(${s.blur}px)` },
+            { opacity: 0, filter: `blur(${s.blur}px)`, offset: 0.35 },
             { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
           ];
         return [from, { transform: 'translateX(0)' }];
