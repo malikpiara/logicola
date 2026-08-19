@@ -1111,6 +1111,12 @@
     flex: 1;
     min-height: 6rem;
     overflow-y: auto;
+    /* The flexed grid is now taller than its content when a set FITS
+       (Set Q's 7 options), and align-content's stretch default poured
+       the slack into the auto rows — options ballooned to fill the
+       screen (Malik, 2026-08-19). Rows keep their natural height; the
+       slack stays below, inside the scroller. */
+    align-content: start;
     /* The collapsed sheet (128px + inset) overlays the canvas foot; this
        keeps the last row clear of it, INSIDE the scroller where it
        belongs — outside, it read as dead space under the options. */
