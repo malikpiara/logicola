@@ -1,5 +1,28 @@
 import { Set } from '../types';
 
+/**
+ * UNITS, 2026-08-19 (Malik). Four exercises carried imperial units — 86°F,
+ * 20°F, 6 feet, 50 pounds — and now carry metric with the imperial value in
+ * parentheses. Dual rather than metric-only was the reviewed decision: the
+ * threshold has to be felt by BOTH audiences, and neither is worse off.
+ * Conversions are exact where the numbers allow (30°C = 86°F, 183 cm = 6 ft)
+ * and rounded where they do not (20 kg ≈ 44 lb).
+ *
+ * Safe because the unit is pedagogically inert in all four: three test rule 5
+ * (a precise threshold for a vague word) and one tests rule 7 (a non-essential
+ * property), and every one of those flaws is structural. The answer never
+ * depended on the number, only on the FORM of the definition, so any threshold
+ * in any unit teaches the identical lesson.
+ *
+ * Worth changing because the flaw still has to be FELT. Rule 5 works only if
+ * the reader senses that the stated threshold is arbitrary for the word being
+ * defined, and PostHog GeoIP puts most of the drilling population in the
+ * Philippines, Ontario, Kenya and Singapore — all metric — where 86°F carries
+ * no temperature intuition at all. But Gensler's textbook market is US
+ * universities, where Fahrenheit is the felt unit, and instructors assigning
+ * the book are the channel that brings those students here. Both audiences
+ * are real, which is why both units ship.
+ */
 const setQ: Set = {
   name: 'Set Q',
   slugs: ['informal', 'definitions'],
@@ -218,7 +241,8 @@ const setQ: Set = {
         },
         {
           id: '3.13',
-          prompt: 'A bachelor is an unmarried man who weighs over 50 pounds.',
+          prompt:
+            'A bachelor is an unmarried man who weighs over 20 kilograms (44 pounds).',
           options: [
             { id: 0, label: 'Too broad' },
             { id: 1, label: 'Too narrow' },
@@ -279,7 +303,7 @@ const setQ: Set = {
         },
         {
           id: '3.17',
-          prompt: 'A warm day is one that is over 86 degrees Fahrenheit.',
+          prompt: 'A warm day is one that is over 30 degrees Celsius (86°F).',
           options: [
             { id: 0, label: 'Too broad' },
             { id: 1, label: 'Too narrow' },
@@ -714,7 +738,7 @@ const setQ: Set = {
         },
         {
           id: '3.45',
-          prompt: 'A cold day is one that is under 20 degrees Fahrenheit.',
+          prompt: 'A cold day is one that is under 5 degrees Celsius (41°F).',
           options: [
             { id: 0, label: 'Too broad' },
             { id: 1, label: 'Too narrow' },
@@ -942,7 +966,8 @@ const setQ: Set = {
         },
         {
           id: '3.60',
-          prompt: '"Tall person" means "person over 6 feet tall."',
+          prompt:
+            '"Tall person" means "person over 183 centimetres (6 feet) tall."',
           options: [
             { id: 0, label: 'Too broad' },
             { id: 1, label: 'Too narrow' },

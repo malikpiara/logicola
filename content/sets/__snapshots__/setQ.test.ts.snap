@@ -515,7 +515,7 @@ exports[`setQ > matches snapshot 1`] = `
               "label": "Has non-essential properties",
             },
           ],
-          "prompt": "A bachelor is an unmarried man who weighs over 50 pounds.",
+          "prompt": "A bachelor is an unmarried man who weighs over 20 kilograms (44 pounds).",
         },
         {
           "answer": "This violates 1 (you study other things too).",
@@ -668,7 +668,7 @@ exports[`setQ > matches snapshot 1`] = `
               "label": "Has non-essential properties",
             },
           ],
-          "prompt": "A warm day is one that is over 86 degrees Fahrenheit.",
+          "prompt": "A warm day is one that is over 30 degrees Celsius (86°F).",
         },
         {
           "answer": "This violates 2 (some religions believe in many gods).",
@@ -1741,7 +1741,7 @@ exports[`setQ > matches snapshot 1`] = `
               "label": "Has non-essential properties",
             },
           ],
-          "prompt": "A cold day is one that is under 20 degrees Fahrenheit.",
+          "prompt": "A cold day is one that is under 5 degrees Celsius (41°F).",
         },
         {
           "answer": "This violates 2 (consider liars who don't steal).",
@@ -2320,7 +2320,7 @@ exports[`setQ > matches snapshot 1`] = `
               "label": "Has non-essential properties",
             },
           ],
-          "prompt": ""Tall person" means "person over 6 feet tall."",
+          "prompt": ""Tall person" means "person over 183 centimetres (6 feet) tall."",
         },
       ],
       "slugs": [
