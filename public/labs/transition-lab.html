@@ -323,7 +323,7 @@
         </div>
         <div class="row">
           <label for="travel">Travel</label
-          ><input type="range" id="travel" min="40" max="110" step="5" /><output
+          ><input type="range" id="travel" min="10" max="110" step="5" /><output
             id="travelOut"
           ></output>
         </div>
@@ -371,9 +371,9 @@
         Shipped: {
           dur: 260,
           ease: 'ease-out-cubic',
-          fade: 'late',
-          blur: 4,
-          travel: 110,
+          fade: 'travel',
+          blur: 1,
+          travel: 25,
         },
         Duolingo: {
           dur: 230,
@@ -382,19 +382,19 @@
           blur: 0,
           travel: 100,
         },
-        'Travel fade (v1)': {
-          dur: 240,
+        'Late-fade push': {
+          dur: 260,
           ease: 'ease-out-cubic',
-          fade: 'travel',
-          blur: 6,
+          fade: 'late',
+          blur: 4,
           travel: 110,
         },
         Slower: {
           dur: 320,
           ease: 'ease-out-quart',
-          fade: 'late',
-          blur: 4,
-          travel: 110,
+          fade: 'travel',
+          blur: 1,
+          travel: 25,
         },
         Custom: null, // resolved from the dials at advance time
       };
@@ -403,11 +403,11 @@
       const custom = {
         dur: 260,
         ease: 'ease-out-cubic',
-        fade: 'late',
-        blur: 4,
-        travel: 110,
+        fade: 'travel',
+        blur: 1,
+        travel: 25,
       };
-      const DEFAULT_SLOTS = ['Shipped', 'Duolingo', 'Travel fade (v1)'];
+      const DEFAULT_SLOTS = ['Shipped', 'Late-fade push', 'Duolingo'];
       let slotCount = 3,
         qIndex = 0,
         busy = false,
