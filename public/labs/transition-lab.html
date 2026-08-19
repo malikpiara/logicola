@@ -9,14 +9,18 @@
     <meta name="robots" content="noindex" />
     <title>Transition lab — quiz advance push</title>
     <!--
-  Transition lab v2 (Malik, 2026-08-19). Rebuilt around SIMULTANEOUS
-  comparison: motion memory is ~2s, so preset-flipping one stage can't
-  answer "which feels better" — two or three mini quiz stages advance
-  on one tap, identical content, only the motion differs. Dials under
-  the fold define the "Custom" spec any slot can wear. Lives in
-  public/ (not docs/) because judging needs a phone; judged values go
-  into ::view-transition-*(quiz-question) in app/globals.css. The
-  "Shipped" preset must track those values.
+  Transition lab v3 (Malik, 2026-08-19). Full-viewport stage that mimics
+  the real mobile quiz anatomy — pinned header row, centered question
+  column, footer sheet — because mini stages compress motion (same
+  percentage travel, fewer pixels) and the judgment is about the real
+  scale. Side-by-side is impossible at full screen, so comparison comes
+  from (a) three spec SLOTS hot-switchable between advances and (b) an
+  animation speed control (1x/half/quarter/tenth — the Android
+  "animation scale" trick): at quarter speed, motion memory spans
+  sequential advances easily. v2's side-by-side mini-stage lab lives in
+  git history (0ce0203) if it's ever wanted back.
+  Judged values go into ::view-transition-*(quiz-question) in
+  app/globals.css; the "Shipped" preset must track them.
 -->
     <style>
       :root {
@@ -24,95 +28,63 @@
         --ink: #12352b;
         --accent: #b31ba0;
         --chip: rgba(18, 53, 43, 0.1);
-        --panel: #ffffff;
+        --sheet: #f2f6c8;
       }
       * {
         margin: 0;
         box-sizing: border-box;
       }
+      html,
       body {
-        background: #f4f1e8;
+        height: 100%;
+      }
+      body {
+        background: #2a2a26;
         color: var(--ink);
         font-family:
           -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        min-height: 100dvh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 12px calc(14px + env(safe-area-inset-bottom));
-      }
-      h1 {
-        font-size: 14px;
-        font-weight: 600;
-      }
-      h1 small {
-        font-weight: 400;
-        opacity: 0.6;
+        overflow: hidden;
       }
 
-      /* == Comparison slots ================================================== */
-      #slots {
-        width: min(420px, 100%);
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .slot {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
-      .slot-head {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .slot-head select {
-        font: inherit;
-        font-size: 13px;
-        font-weight: 600;
-        padding: 4px 8px;
-        border-radius: 8px;
-        border: 1px solid rgba(0, 0, 0, 0.16);
-        background: #fff;
-      }
-      .slot-head .spec {
-        font-family: ui-monospace, monospace;
-        font-size: 10.5px;
-        opacity: 0.55;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+      /* == The stage: the phone IS the screen; framed only on wide screens == */
       .stage {
+        position: fixed;
+        inset: 0;
         background: var(--surface);
-        border-radius: 14px;
-        position: relative;
         overflow: hidden;
-        height: 172px;
-        box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
       }
+      @media (min-width: 520px) {
+        .stage {
+          inset: 50% auto auto 50%;
+          translate: -50% -50%;
+          width: 400px;
+          height: min(850px, 96vh);
+          border-radius: 20px;
+          box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+        }
+      }
+
       .bar {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        height: 26px;
+        height: calc(52px + env(safe-area-inset-top));
+        padding: calc(8px + env(safe-area-inset-top)) 16px 8px;
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 0 12px;
+        gap: 14px;
         z-index: 3;
       }
       .bar .x {
-        font-size: 13px;
-        opacity: 0.6;
+        font-size: 19px;
+        opacity: 0.65;
+        width: 28px;
       }
       .track {
         flex: 1;
-        height: 7px;
-        border-radius: 4px;
+        height: 10px;
+        border-radius: 5px;
         background: rgba(255, 255, 255, 0.55);
         overflow: hidden;
       }
@@ -122,10 +94,20 @@
         background: var(--accent);
         transition: width 300ms ease-out;
       }
+      .bar .book {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.45);
+        display: grid;
+        place-items: center;
+        font-size: 17px;
+      }
+
       .viewport {
         position: absolute;
-        top: 26px;
-        bottom: 0;
+        top: calc(52px + env(safe-area-inset-top));
+        bottom: calc(118px + env(safe-area-inset-bottom));
         left: 0;
         right: 0;
         overflow: hidden;
@@ -136,107 +118,173 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 9px;
-        padding: 10px 14px;
+        gap: 22px;
+        padding: 16px;
         will-change: transform, opacity, filter;
       }
       .prompt {
-        font-size: 14.5px;
+        font-size: 22px;
         font-weight: 600;
         text-align: center;
         text-wrap: balance;
         line-height: 1.3;
       }
+      .eyebrow {
+        font-family: ui-monospace, monospace;
+        font-size: 11.5px;
+        letter-spacing: 0.14em;
+        opacity: 0.6;
+      }
       .opts {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 12px;
       }
       .opt {
         display: flex;
         align-items: center;
-        gap: 9px;
+        gap: 13px;
         background: var(--chip);
-        border-radius: 9px;
-        padding: 7px 11px;
-        font-size: 13px;
+        border-radius: 12px;
+        padding: 14px 15px;
+        font-size: 17px;
         font-family: ui-serif, Georgia, serif;
         font-style: italic;
       }
       .opt b {
         font-family: ui-monospace, monospace;
         font-style: normal;
-        font-size: 10px;
-        width: 18px;
-        height: 18px;
-        border-radius: 5px;
+        font-size: 12px;
+        width: 24px;
+        height: 24px;
+        border-radius: 7px;
         background: rgba(18, 53, 43, 0.14);
         display: grid;
         place-items: center;
         flex: none;
       }
 
-      /* == Shared controls =================================================== */
-      .ctrl {
-        width: min(420px, 100%);
+      /* == The control sheet, wearing the real footer sheet's anatomy ======== */
+      .sheet {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--sheet);
+        border-radius: 16px 16px 0 0;
+        padding: 8px 16px calc(12px + env(safe-area-inset-bottom));
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 4;
+        box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.08);
+      }
+      .grabber {
+        width: 48px;
+        height: 5px;
+        border-radius: 3px;
+        background: rgba(18, 53, 43, 0.2);
+        margin: 0 auto;
+        cursor: pointer;
+        flex: none;
+        /* generous tap zone */
+        box-shadow:
+          0 -10px 0 12px transparent,
+          0 10px 0 12px transparent;
+      }
+      .quick {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 7px;
       }
-      .ctrl .go {
+      .slotchips {
+        display: flex;
+        gap: 5px;
         flex: 1;
-        height: 50px;
+        min-width: 0;
+      }
+      .slotchip {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+        padding: 6px 4px;
+        border-radius: 10px;
+        border: 1.5px solid rgba(18, 53, 43, 0.18);
+        background: transparent;
+        font-family: inherit;
+        color: inherit;
+      }
+      .slotchip[data-active] {
+        border-color: var(--ink);
+        background: rgba(18, 53, 43, 0.08);
+      }
+      .slotchip .k {
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .slotchip .v {
+        font-family: ui-monospace, monospace;
+        font-size: 9.5px;
+        opacity: 0.65;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .speed {
+        display: flex;
+        gap: 0;
+        border: 1.5px solid rgba(18, 53, 43, 0.18);
+        border-radius: 10px;
+        overflow: hidden;
+        flex: none;
+      }
+      .speed button {
+        font: inherit;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 8px 8px;
+        border: 0;
+        background: transparent;
+        color: inherit;
+      }
+      .speed button[data-on] {
+        background: var(--ink);
+        color: var(--surface);
+      }
+
+      .go {
+        height: 52px;
         border: 0;
         border-radius: 12px;
         background: var(--ink);
         color: var(--surface);
-        font-size: 16px;
+        font-size: 16.5px;
         font-weight: 600;
         font-family: inherit;
       }
-      .ctrl .go:active {
+      .go:active {
         transform: scale(0.98);
       }
-      .ctrl .count,
-      .ctrl .loop {
-        height: 50px;
-        padding: 0 14px;
-        border-radius: 12px;
-        border: 1px solid rgba(0, 0, 0, 0.16);
-        background: #fff;
-        font: inherit;
-        font-size: 13px;
-        font-weight: 500;
-      }
-      .ctrl .loop[data-on] {
-        background: var(--accent);
-        color: #fff;
-        border-color: var(--accent);
-      }
 
-      details {
-        width: min(420px, 100%);
-        background: var(--panel);
-        border-radius: 12px;
-        padding: 10px 14px;
-        font-size: 13px;
-        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
-      }
-      summary {
-        font-weight: 600;
-        font-size: 13px;
-        cursor: pointer;
-      }
-      .dials {
-        display: flex;
+      /* Expanded region — preset pickers + dials */
+      .more {
+        display: none;
         flex-direction: column;
-        gap: 9px;
-        padding-top: 10px;
+        gap: 10px;
+        padding-top: 2px;
+      }
+      .sheet[data-open] .more {
+        display: flex;
       }
       .row {
         display: flex;
         align-items: center;
         gap: 10px;
+        font-size: 13px;
       }
       .row label {
         width: 76px;
@@ -250,110 +298,156 @@
         font-family: ui-monospace, monospace;
         font-size: 11.5px;
       }
+      .row select {
+        flex: 1;
+        font: inherit;
+        font-size: 13px;
+        padding: 6px 8px;
+        border-radius: 8px;
+        border: 1px solid rgba(18, 53, 43, 0.25);
+        background: rgba(255, 255, 255, 0.6);
+        color: inherit;
+      }
       input[type='range'] {
         flex: 1;
         accent-color: var(--accent);
       }
-      .dials select {
-        flex: 1;
-        font: inherit;
-        font-size: 13px;
-        padding: 5px 8px;
-        border-radius: 8px;
-        border: 1px solid rgba(0, 0, 0, 0.18);
-        background: #fff;
-      }
-      .dials .actions {
+      .actions {
         display: flex;
         gap: 8px;
+        align-items: center;
       }
-      .dials .actions button {
+      .actions button {
         font: inherit;
         font-size: 12px;
         font-weight: 500;
-        padding: 7px 11px;
+        color: inherit;
+        padding: 7px 12px;
         border-radius: 999px;
-        border: 1px solid rgba(0, 0, 0, 0.16);
-        background: #fff;
+        border: 1px solid rgba(18, 53, 43, 0.25);
+        background: rgba(255, 255, 255, 0.6);
       }
-      .hint {
-        font-size: 11px;
-        opacity: 0.55;
-        line-height: 1.45;
+      .actions button[data-on] {
+        background: var(--ink);
+        color: var(--surface);
+        border-color: var(--ink);
+      }
+      .hr {
+        height: 1px;
+        background: rgba(18, 53, 43, 0.12);
       }
     </style>
   </head>
   <body>
-    <h1>Push, side by side <small>— one tap advances every stage</small></h1>
+    <div class="stage">
+      <div class="bar">
+        <span class="x">×</span>
+        <div class="track"><div class="fill" id="fill"></div></div>
+        <div class="book">📖</div>
+      </div>
+      <div class="viewport" id="viewport"></div>
 
-    <div id="slots"></div>
-
-    <div class="ctrl">
-      <button class="count" id="count">3-up</button>
-      <button class="go" id="go">Advance all</button>
-      <button class="loop" id="loop">Loop</button>
+      <div class="sheet" id="sheet">
+        <div class="grabber" id="grabber"></div>
+        <div class="quick">
+          <div class="slotchips" id="slotchips"></div>
+          <div class="speed" id="speed">
+            <button data-v="1" data-on>1×</button>
+            <button data-v="0.5">½</button>
+            <button data-v="0.25">¼</button>
+            <button data-v="0.1">⅒</button>
+          </div>
+        </div>
+        <button class="go" id="go">Next Question</button>
+        <div class="more">
+          <div class="hr"></div>
+          <div class="row">
+            <label>Slot A</label
+            ><select data-slot="0"></select>
+          </div>
+          <div class="row">
+            <label>Slot B</label
+            ><select data-slot="1"></select>
+          </div>
+          <div class="row">
+            <label>Slot C</label
+            ><select data-slot="2"></select>
+          </div>
+          <div class="hr"></div>
+          <div class="row">
+            <label for="dur">Duration</label
+            ><input
+              type="range"
+              id="dur"
+              min="120"
+              max="450"
+              step="10"
+            /><output id="durOut"></output>
+          </div>
+          <div class="row">
+            <label for="ease">Easing</label
+            ><select id="ease"></select>
+          </div>
+          <div class="row">
+            <label for="fade">Fade</label
+            ><select id="fade">
+              <option value="travel">with travel</option>
+              <option value="late">late — opaque 60%</option>
+              <option value="none">none (opaque)</option>
+            </select>
+          </div>
+          <div class="row">
+            <label for="blur">Blur</label
+            ><input type="range" id="blur" min="0" max="12" step="1" /><output
+              id="blurOut"
+            ></output>
+          </div>
+          <div class="row">
+            <label for="travel">Travel</label
+            ><input
+              type="range"
+              id="travel"
+              min="5"
+              max="110"
+              step="5"
+            /><output id="travelOut"></output>
+          </div>
+          <div class="actions">
+            <button id="loop">Loop</button>
+            <div style="flex: 1"></div>
+            <button id="copy">Copy custom spec</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <details>
-      <summary>Custom spec — dials for the “Custom” preset</summary>
-      <div class="dials">
-        <div class="row">
-          <label for="dur">Duration</label
-          ><input type="range" id="dur" min="150" max="450" step="10" /><output
-            id="durOut"
-          ></output>
-        </div>
-        <div class="row">
-          <label for="ease">Easing</label
-          ><select id="ease"></select>
-        </div>
-        <div class="row">
-          <label for="fade">Fade</label
-          ><select id="fade">
-            <option value="late">late — opaque 60% of the way</option>
-            <option value="travel">with travel</option>
-            <option value="none">none (opaque)</option>
-          </select>
-        </div>
-        <div class="row">
-          <label for="blur">Blur</label
-          ><input type="range" id="blur" min="0" max="12" step="1" /><output
-            id="blurOut"
-          ></output>
-        </div>
-        <div class="row">
-          <label for="travel">Travel</label
-          ><input type="range" id="travel" min="10" max="110" step="5" /><output
-            id="travelOut"
-          ></output>
-        </div>
-        <div class="actions"><button id="copy">Copy custom spec</button></div>
-        <p class="hint">
-          Pick “Custom” in any slot’s dropdown, then tune it here while
-          comparing against fixed presets live. “Shipped” tracks what’s deployed
-          in the app. Copy the spec and paste it into the chat when a winner
-          emerges.
-        </p>
-      </div>
-    </details>
-
     <script>
-      // Alternating 1-line/2-line prompts on purpose: the height offset the
-      // fade must mask comes from exactly that variance.
+      // Alternating 1-line/2-line prompts on purpose — the resting-height
+      // variance is part of what's being judged.
       const QUESTIONS = [
-        { p: 'Not either C or L.', o: ['(∼C ∨ ∼L)', '∼(C ∨ L)', '∼C ∨ L'] },
+        {
+          p: 'Not either C or L.',
+          o: ['(∼C ∨ ∼L)', '∼(C ∨ L)', '∼C ∨ L', '(∼C ∨ L)'],
+        },
         {
           p: 'If you aren’t courageous then you aren’t likeable.',
-          o: ['(∼C ⊃ ∼L)', '∼(C ⊃ ∼L)', '∼C ⊃ ∼L'],
+          o: ['(∼C ⊃ ∼L)', '∼(C ⊃ ∼L)', '∼C ⊃ ∼L', '(∼C ⊃ L)'],
         },
-        { p: 'Both not F and R.', o: ['(∼F · R)', '∼(F · R)', '∼F · R'] },
+        {
+          p: 'Both not F and R.',
+          o: ['(∼F · R)', '∼(F · R)', '∼F · R', '(∼F · ∼R)'],
+        },
         {
           p: 'You’re cheerful, and wild or generous.',
-          o: ['(C · (W ∨ G))', '((C · W) ∨ G)', 'C · W ∨ G'],
+          o: ['(C · (W ∨ G))', '((C · W) ∨ G)', 'C · W ∨ G', '(C · W) ∨ G'],
         },
         {
           p: 'If T then F, or S.',
-          o: ['((T ⊃ F) ∨ S)', '(T ⊃ (F ∨ S))', 'T ⊃ F ∨ S'],
+          o: ['((T ⊃ F) ∨ S)', '(T ⊃ (F ∨ S))', 'T ⊃ F ∨ S', '(T ⊃ F) ∨ S'],
+        },
+        {
+          p: 'You’re either not demented or not selfish.',
+          o: ['(∼D ∨ ∼S)', '∼(D ∨ S)', '∼D ∨ ∼S', '(∼D · ∼S)'],
         },
       ];
 
@@ -375,6 +469,13 @@
           blur: 1,
           travel: 25,
         },
+        'Drift 15': {
+          dur: 260,
+          ease: 'ease-out-cubic',
+          fade: 'travel',
+          blur: 1,
+          travel: 15,
+        },
         Duolingo: {
           dur: 230,
           ease: 'ease-out-cubic',
@@ -389,13 +490,6 @@
           blur: 4,
           travel: 110,
         },
-        Slower: {
-          dur: 320,
-          ease: 'ease-out-quart',
-          fade: 'travel',
-          blur: 1,
-          travel: 25,
-        },
         Custom: null, // resolved from the dials at advance time
       };
 
@@ -407,66 +501,29 @@
         blur: 1,
         travel: 25,
       };
-      const DEFAULT_SLOTS = ['Shipped', 'Late-fade push', 'Duolingo'];
-      let slotCount = 3,
+      const slots = ['Shipped', 'Drift 15', 'Duolingo'];
+      let active = 0,
+        speed = 1,
         qIndex = 0,
         busy = false,
         progress = 12;
 
-      function specOf(name) {
-        return name === 'Custom' ? { ...custom } : PRESETS[name];
-      }
-      function specLabel(s) {
-        return `${s.dur}ms · ${s.ease.replace('ease-out-', '')} · fade ${s.fade} · blur ${s.blur} · ${s.travel}%`;
-      }
+      const specOf = (name) =>
+        name === 'Custom' ? { ...custom } : PRESETS[name];
 
       function paneFor(q) {
         const pane = document.createElement('div');
         pane.className = 'pane';
         pane.innerHTML = `
       <p class="prompt">${q.p}</p>
+      <div>
+        <p class="eyebrow">TRANSLATES INTO LOGIC AS:</p>
+      </div>
       <div class="opts">${q.o.map((t, i) => `<div class="opt"><b>${i + 1}</b>${t}</div>`).join('')}</div>`;
         return pane;
       }
-
-      const slotsBox = $('slots');
-      function buildSlots() {
-        const previous = [...slotsBox.querySelectorAll('select')].map(
-          (s) => s.value
-        );
-        slotsBox.innerHTML = '';
-        for (let i = 0; i < slotCount; i++) {
-          const slot = document.createElement('div');
-          slot.className = 'slot';
-          const preset = previous[i] || DEFAULT_SLOTS[i] || 'Custom';
-          slot.innerHTML = `
-        <div class="slot-head">
-          <select></select>
-          <span class="spec"></span>
-        </div>
-        <div class="stage">
-          <div class="bar"><span class="x">×</span><div class="track"><div class="fill"></div></div></div>
-          <div class="viewport"></div>
-        </div>`;
-          const sel = slot.querySelector('select');
-          for (const name of Object.keys(PRESETS))
-            sel.add(new Option(name, name));
-          sel.value = preset;
-          sel.addEventListener('change', updateSpecs);
-          slot
-            .querySelector('.viewport')
-            .appendChild(paneFor(QUESTIONS[qIndex]));
-          slot.querySelector('.fill').style.width = progress + '%';
-          slotsBox.appendChild(slot);
-        }
-        updateSpecs();
-      }
-      function updateSpecs() {
-        for (const slot of slotsBox.children) {
-          const spec = specOf(slot.querySelector('select').value);
-          slot.querySelector('.spec').textContent = specLabel(spec);
-        }
-      }
+      const viewport = $('viewport');
+      viewport.appendChild(paneFor(QUESTIONS[0]));
 
       // Keyframe builders — mirror the ::view-transition-old/new pairs.
       function outFrames(s) {
@@ -500,44 +557,86 @@
         return [from, { transform: 'translateX(0)' }];
       }
 
-      function advanceAll() {
+      function advance() {
         if (busy) return;
         busy = true;
         qIndex = (qIndex + 1) % QUESTIONS.length;
         progress = progress >= 88 ? 12 : progress + 9;
+        $('fill').style.width = progress + '%';
 
-        const finishes = [];
-        for (const slot of slotsBox.children) {
-          const spec = specOf(slot.querySelector('select').value);
-          const viewport = slot.querySelector('.viewport');
-          slot.querySelector('.fill').style.width = progress + '%';
-          const oldPane = viewport.querySelector('.pane');
-          const newPane = paneFor(QUESTIONS[qIndex]);
-          viewport.appendChild(newPane);
-          const opts = {
-            duration: spec.dur,
-            easing: EASINGS[spec.ease],
-            fill: 'both',
-          };
-          oldPane.animate(outFrames(spec), opts);
-          const anim = newPane.animate(inFrames(spec), opts);
-          finishes.push(
-            anim.finished
-              .then(() => oldPane.remove())
-              .catch(() => oldPane.remove())
-          );
-        }
-        Promise.all(finishes).then(() => {
-          busy = false;
-        });
+        const spec = specOf(slots[active]);
+        const oldPane = viewport.querySelector('.pane');
+        const newPane = paneFor(QUESTIONS[qIndex]);
+        viewport.appendChild(newPane);
+        // The speed control divides time, not the spec — 1/4x plays the same
+        // 260ms choreography over 1040ms, like a dev-settings animation scale.
+        const opts = {
+          duration: spec.dur / speed,
+          easing: EASINGS[spec.ease],
+          fill: 'both',
+        };
+        oldPane.animate(outFrames(spec), opts);
+        const anim = newPane.animate(inFrames(spec), opts);
+        anim.finished
+          .then(() => {
+            oldPane.remove();
+            busy = false;
+          })
+          .catch(() => {
+            oldPane.remove();
+            busy = false;
+          });
       }
 
-      $('go').addEventListener('click', advanceAll);
-      $('count').addEventListener('click', () => {
-        slotCount = slotCount === 3 ? 2 : 3;
-        $('count').textContent = slotCount + '-up';
-        buildSlots();
+      // == Controls ==
+      const chipsBox = $('slotchips');
+      function renderChips() {
+        chipsBox.innerHTML = '';
+        slots.forEach((name, i) => {
+          const b = document.createElement('button');
+          b.className = 'slotchip';
+          if (i === active) b.setAttribute('data-active', '');
+          const s = specOf(name);
+          b.innerHTML = `<span class="k">${'ABC'[i]} · ${name}</span><span class="v">${s.dur}ms · ${s.travel}% · ${s.fade}</span>`;
+          b.onclick = () => {
+            active = i;
+            renderChips();
+          };
+          chipsBox.appendChild(b);
+        });
+        document
+          .querySelectorAll('.more select[data-slot]')
+          .forEach((sel, i) => {
+            sel.value = slots[i];
+          });
+      }
+
+      document.querySelectorAll('.more select[data-slot]').forEach((sel) => {
+        for (const name of Object.keys(PRESETS))
+          sel.add(new Option(name, name));
+        sel.addEventListener('change', () => {
+          slots[+sel.dataset.slot] = sel.value;
+          renderChips();
+        });
       });
+
+      $('speed').addEventListener('click', (e) => {
+        const b = e.target.closest('button');
+        if (!b) return;
+        speed = +b.dataset.v;
+        document
+          .querySelectorAll('#speed button')
+          .forEach((x) => x.removeAttribute('data-on'));
+        b.setAttribute('data-on', '');
+      });
+
+      $('go').addEventListener('click', advance);
+      $('grabber').addEventListener('click', () => {
+        const sheet = $('sheet');
+        if (sheet.hasAttribute('data-open')) sheet.removeAttribute('data-open');
+        else sheet.setAttribute('data-open', '');
+      });
+
       let loopTimer = null;
       $('loop').addEventListener('click', () => {
         if (loopTimer) {
@@ -545,7 +644,8 @@
           loopTimer = null;
           $('loop').removeAttribute('data-on');
         } else {
-          loopTimer = setInterval(advanceAll, 1600);
+          const period = () => Math.max(1400, 260 / speed + 1000);
+          loopTimer = setInterval(advance, period());
           $('loop').setAttribute('data-on', '');
         }
       });
@@ -563,7 +663,7 @@
         $('blurOut').value = custom.blur + ' px';
         $('travel').value = custom.travel;
         $('travelOut').value = custom.travel + '%';
-        updateSpecs();
+        renderChips();
       }
       function bind(id, key) {
         $(id).addEventListener('input', () => {
@@ -578,7 +678,7 @@
       bind('travel', 'travel');
 
       $('copy').addEventListener('click', async () => {
-        const spec = `custom → ${specLabel(custom)} (${EASINGS[custom.ease]})`;
+        const spec = `custom → ${custom.dur}ms · ${custom.ease} · fade ${custom.fade} · blur ${custom.blur} · ${custom.travel}% (${EASINGS[custom.ease]})`;
         try {
           await navigator.clipboard.writeText(spec);
           $('copy').textContent = 'Copied ✓';
@@ -588,7 +688,6 @@
         setTimeout(() => ($('copy').textContent = 'Copy custom spec'), 1400);
       });
 
-      buildSlots();
       syncDials();
     </script>
   </body>
