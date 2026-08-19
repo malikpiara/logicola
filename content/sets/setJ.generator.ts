@@ -29,6 +29,7 @@
 import type { Option, Question, Set } from '../types';
 import { rngFromSeed, pickFrom, type Rng } from '@/lib/rng';
 import { adjectives, names, nounsProfessions } from '../lexicons';
+import { indefiniteArticle } from '@/lib/grammar';
 
 // =============================================================
 // KaTeX rendering of modal wffs
@@ -647,7 +648,7 @@ function template12(rng: Rng, counter: number): Question {
       const noun = pickFrom(rng, nounsProfessions);
       const adj = pickFrom(rng, adjectives);
       const [u, v] = [noun[0]!.toUpperCase(), adj[0]!.toUpperCase()];
-      prompt = `If you’re a ${noun} then you’re ${adj}.`;
+      prompt = `If you’re ${indefiniteArticle(noun)} ${noun} then you’re ${adj}.`;
       correct = `(${u} ⊃ ${v})`;
     } else {
       const [h, j] = pickDistinctLetters(rng, 2);
@@ -680,7 +681,7 @@ function template12(rng: Rng, counter: number): Question {
     if (useNL) {
       const noun = pickFrom(rng, nounsProfessions);
       const u = noun[0]!.toUpperCase();
-      prompt = `You’re a ${noun}.`;
+      prompt = `You’re ${indefiniteArticle(noun)} ${noun}.`;
       correct = u;
     } else {
       const h = pickDistinctLetters(rng, 1)[0]!;
@@ -1077,7 +1078,7 @@ function template26(rng: Rng, counter: number): Question {
   return buildQuestion(
     26,
     counter,
-    `Being ${adj} is a ${word} property of ${name}.`,
+    `Being ${adj} is ${indefiniteArticle(word)} ${word} property of ${name}.`,
     [
       { raw: `(${V}${n} · ◇∼${V}${n})` },
       {
@@ -1124,7 +1125,7 @@ function template27(rng: Rng, counter: number): Question {
   return buildQuestion(
     27,
     counter,
-    `Being ${adj} is a ${word} property of ${name}.`,
+    `Being ${adj} is ${indefiniteArticle(word)} ${word} property of ${name}.`,
     [
       { raw: `☐${W}${n}` },
       { raw: `${W}${n}`, layer2: HINT_NEED_ANOTHER_MODAL },
