@@ -14,33 +14,52 @@ import {
   FALLACIES,
   GENDERS,
   PARTIES,
+  POLITICIANS,
   SECTIONS,
   SURNAMES,
   type FallacyCode,
 } from './setR.data';
 
 const EXPECTED_VARIANT_COUNTS: Record<FallacyCode, number> = {
-  aa: 6,
-  ac: 6,
-  ae: 7,
-  af: 6,
+  aa: 14,
+  ac: 10,
+  ae: 9,
+  af: 8,
   ah: 11,
-  ai: 8,
-  am: 7,
-  bp: 7,
-  bw: 7,
+  ai: 9,
+  am: 14,
+  bp: 11,
+  bw: 9,
   ci: 9,
-  cq: 7,
-  fs: 7,
-  ge: 6,
-  op: 3,
-  pc: 4,
-  ph: 8,
-  pw: 9,
-  sm: 6,
+  cq: 10,
+  fs: 11,
+  ge: 13,
+  op: 10,
+  pc: 11,
+  ph: 13,
+  pw: 11,
+  sm: 8,
 };
 
-const KNOWN_TOKENS = ['a', 'A', 'b', 'B', 'hc', 'hC', 'HC', 'd', 'D', 'E', 'g'];
+const KNOWN_TOKENS = [
+  'a',
+  'A',
+  'b',
+  'B',
+  'hc',
+  'hC',
+  'HC',
+  'd',
+  'D',
+  'E',
+  'g',
+  'p',
+  'P',
+  'l',
+  'f',
+  's',
+  'S',
+];
 
 const allVariants = SECTIONS.flatMap((section) =>
   section.variants.map((variant) => ({ section, variant }))
@@ -209,9 +228,106 @@ describe('setR data — substitution pools', () => {
     expect(CARS).not.toContain('Pontiac');
   });
 
-  it('leaves the party and gender pools at the 2008 text', () => {
-    expect(PARTIES).toHaveLength(5);
+  /**
+   * The party pool is the corpus's political-safety mechanism: seven passages
+   * carry {D}/{E}, so the same sentence indicts a different side on every
+   * draw and no single rendering of it is representative. That only holds if
+   * the pool stays balanced, which is what this pins.
+   */
+  it('keeps every 2008 party label', () => {
+    for (const noun of [
+      'socialist',
+      'republican',
+      'democrat',
+      'conservative',
+      'liberal',
+    ]) {
+      expect(PARTIES.map((p) => p.noun)).toContain(noun);
+    }
     expect(PARTIES.find((p) => p.noun === 'democrat')?.adj).toBe('democratic');
+  });
+
+  it('stays balanced left and right', () => {
+    const nouns = PARTIES.map((p) => p.noun);
+    const left = ['socialist', 'democrat', 'liberal', 'progressive', 'green'];
+    const right = ['republican', 'conservative', 'libertarian', 'nationalist'];
+    const count = (side: string[]) =>
+      nouns.filter((n) => side.includes(n)).length;
+    expect(Math.abs(count(left) - count(right))).toBeLessThanOrEqual(1);
+  });
+
+  it('every party label survives all four token slots', () => {
+    for (const { noun, adj } of PARTIES) {
+      // "us {D}s" — the noun must pluralise with a bare -s
+      expect(noun).not.toMatch(/[sxz]$/);
+      // "the {E} party" / "the {E} candidate" — single word, no article
+      expect(adj).not.toContain(' ');
+    }
+  });
+
+  /**
+   * The roster's safety is its balance, exactly as with the party pool: the
+   * same sentence names a different side on every draw, so no single
+   * rendering of "this proposal from X is typically nauseating" is
+   * representative. If someone adds three figures from one side, this fails.
+   */
+  it('the politician roster stays balanced', () => {
+    const right = [
+      'Orbán',
+      'Meloni',
+      'Reagan',
+      'Thatcher',
+      'Milei',
+      'Merkel',
+      'Trump',
+      'Modi',
+    ];
+    const left = [
+      'Obama',
+      'Blair',
+      'Starmer',
+      'Ardern',
+      'Sanders',
+      'Mamdani',
+      'Harris',
+      'Hillary Clinton',
+      'John F. Kennedy',
+    ];
+    const names = POLITICIANS.map((p) => p.name);
+    for (const n of [...right, ...left]) expect(names).toContain(n);
+    const count = (side: string[]) =>
+      names.filter((n) => side.includes(n)).length;
+    expect(Math.abs(count(left) - count(right))).toBeLessThanOrEqual(1);
+  });
+
+  /**
+   * Pronouns travel with the figure rather than being drawn. Without this,
+   * "most people favor Thatcher... So I'm going to vote for him" ships.
+   */
+  it('every politician carries a self-consistent pronoun set', () => {
+    for (const p of POLITICIANS) {
+      expect(p.label.length).toBeGreaterThan(0);
+      expect(p.B).toBe(p.b[0]!.toUpperCase() + p.b.slice(1));
+      expect(p.HC).toBe(p.hC[0]!.toUpperCase() + p.hC.slice(1));
+      expect(['he', 'she', 'they']).toContain(p.b);
+    }
+  });
+
+  /**
+   * A surname naming more than one prominent figure cannot carry an honest
+   * label or pronoun, so those entries use a full name. Pinned because the
+   * failure is silent: "Clinton, the democrat candidate... vote for her"
+   * reads fine unless you meant Bill.
+   */
+  it('disambiguates surnames shared by several figures', () => {
+    const names = POLITICIANS.map((p) => p.name);
+    for (const bare of ['Clinton', 'Kennedy']) {
+      expect(names).not.toContain(bare);
+      expect(names.some((n) => n.endsWith(bare))).toBe(true);
+    }
+  });
+
+  it('leaves the gender pool at the 2008 text', () => {
     expect(GENDERS).toHaveLength(2);
   });
 

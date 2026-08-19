@@ -2,6 +2,13 @@
 // Structure + answers: logicola-ghidra/notes/exercises/2008/decoded/set_R.txt (2008 DSL).
 // The parsed JSON in that repo is defective (drops section *14, mangles the last sm entry).
 //
+// PASSAGE PROVENANCE. Every passage added after the 2008 port carries an
+// `// Added YYYY-MM-DD` comment above it; a passage with no such comment is
+// from the 2008 source. Both are generated — to change either, edit
+// port_set_r.py, never this file. The dates exist so that a reader years
+// from now can tell Gensler's material from ours at a glance, and can date
+// anything that has gone stale without needing the git history.
+//
 // Wording follows the 2008 DSL except where Gensler himself later revised the same
 // exercise for Introduction to Logic 3rd ed. (Routledge, 2017) §4.2a — the drill set
 // these passages come from. Those revisions are listed in port_set_r.py's REVISIONS
@@ -262,7 +269,7 @@ export const SECTIONS: FallacySection[] = [
       },
       {
         template:
-          'The gorgeous actress Ms. {a} says that this is the best brand of shaving cream – and that she goes wild over men who use it. So I’m getting this brand!',
+          'The actress Ms. {a} posts that this is the best skincare brand – and that everyone who uses it will look as good as she does. So I’m getting this brand!',
         accepted: ['aa', 'ae'],
         note: 'This violates appeal to emotion and all three clauses of appeal to authority.',
       },
@@ -274,7 +281,7 @@ export const SECTIONS: FallacySection[] = [
       },
       {
         template:
-          'The head of the {E} party claims that {A} is by far the best candidate. So {A} must be the best candidate.',
+          'The head of the {l} party claims that {P} is by far the best candidate. So {P} must be the best candidate.',
         accepted: ['aa'],
         note: 'This violates (2) and (3).',
       },
@@ -283,6 +290,62 @@ export const SECTIONS: FallacySection[] = [
           'Dr. {a} of the biology department has spent years researching the effects of marijuana. {B} says that marijuana is harmless. So this must be true.',
         accepted: ['aa'],
         note: 'This violates (2) and (3).',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Linus Pauling won two Nobel Prizes, and he spent his later years arguing that megadoses of vitamin C prevent the common cold. So megadoses of vitamin C must prevent the common cold.',
+        accepted: ['aa'],
+        note: 'This violates (1), (2) and (3). His prizes were in chemistry and in peace, and no consensus of nutrition researchers agreed with him.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Kary Mullis won a Nobel Prize for a technique now used in every laboratory on earth. He also said that astrology works. So there is probably something to astrology.',
+        accepted: ['aa'],
+        note: 'This violates (1) and (2) — but not (3). The fallacy does not require the conclusion to claim certainty.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'MrBeast has hundreds of millions of subscribers, and he says his lunch kits are healthier than the ones they replaced. So they must be healthier.',
+        accepted: ['aa'],
+        note: 'This violates (1), (2) and (3). Registered dietitians disputed the claim, and an audience is not a qualification.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Tom Brady won seven Super Bowls, and his nutrition method says that drinking enough water prevents sunburn. So drinking enough water probably prevents sunburn.',
+        accepted: ['aa'],
+        note: 'This violates (1) and (2). There is no evidence that hydration prevents sunburn, and quarterbacking is not dermatology.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Picasso said that good artists copy and great artists steal. He was one of the greatest painters who ever lived. So he must have been right about it.',
+        accepted: ['aa'],
+        note: 'Two things are wrong. There is no evidence Picasso ever said it — his name is first attached to the line in a 1989 magazine article, sixteen years after his death, and it most likely descends from T. S. Eliot in 1920. And being a great painter would not make him right about it in any case.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'The startup’s board has two former Secretaries of State, a former Secretary of Defense, an admiral and a general. So its blood-testing technology must work.',
+        accepted: ['aa'],
+        note: 'This violates (1) and (3). Theranos had exactly this board. Not one member had a background in blood diagnostics, investors said the board was what convinced them, the valuation reached nine billion dollars — and the technology never worked.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'The engineers say the seals aren’t rated for tomorrow’s temperature. But management has approved the launch, and they’re the ones responsible for flight safety. So it must be safe to fly.',
+        accepted: ['aa'],
+        note: 'This violates (1) and (3) — and note who the actual authorities are here. This is the argument that preceded Challenger: the engineers said not to launch below 53°F, it was 36°F, and the Rogers Commission found management’s reversal was not driven by any new engineering data. Nothing changed except who was deciding.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'A new study found that chocolate helps you lose weight, and it was in the news everywhere. So chocolate must help you lose weight.',
+        accepted: ['aa'],
+        note: 'This violates (2) and (3). A single unreplicated study is not a consensus of authorities.',
       },
     ],
   },
@@ -296,7 +359,7 @@ export const SECTIONS: FallacySection[] = [
       },
       {
         template:
-          'Recent polls say that most people favor {a}, the {E} candidate. So I’m going to vote for {hc}.',
+          'Recent polls say that most people favor {p}, the {l} candidate. So I’m going to vote for {hc}.',
         accepted: ['ac'],
       },
       {
@@ -311,14 +374,52 @@ export const SECTIONS: FallacySection[] = [
       },
       {
         template:
-          'A lot of people are saying that {a} will be the next {E} candidate. So this is sure to happen.',
+          'A lot of people are saying that {p} will be the next {l} candidate. So this is sure to happen.',
         accepted: ['ac'],
       },
       {
         template:
-          'This {g} gets rave reviews from most people. So the {g} must be pretty good.',
+          'This {g} gets five-star reviews from most people. So the {g} must be pretty good.',
         accepted: ['ac'],
-        pool: ['course', 'beer', 'book', 'cereal', 'teacher'],
+        pool: [
+          'course',
+          'book',
+          'teacher',
+          'wine',
+          'app',
+          'podcast',
+          'restaurant',
+          'show',
+          'game',
+        ],
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Millions of people have signed up to sell it. So it must be a good way to make money.',
+        accepted: ['ac'],
+        note: "The FTC's own figures put the share of participants who lose money at around 99%. How many people joined says nothing about how they did.",
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Cristiano Ronaldo has more followers than any other player in the game. So he must be the best player in the game.',
+        accepted: ['ac'],
+        note: 'The premise is true — he is the most-followed person on Instagram. It is a fact about how many people are watching, not about how well he plays.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'More fans name {f} as the best in the game than name anyone else. So {f} is the best in the game.',
+        accepted: ['ac'],
+        note: 'This is a headcount of opinion. It reports what fans think, and offers nothing else.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Look at the size of the crowd. Nobody else is drawing numbers like this. So {P} must be right about the economy.',
+        accepted: ['ac'],
+        note: 'Turnout measures enthusiasm. It does not measure whether the economic claim is true.',
       },
     ],
   },
@@ -337,7 +438,7 @@ export const SECTIONS: FallacySection[] = [
       },
       {
         template:
-          'This proposal from {a} is a typically nauseating {E} proposal and thus is to be rejected.',
+          'This proposal from {p} is a typically nauseating {l} proposal and thus is to be rejected.',
         accepted: ['ae', 'op', 'fs'],
         note: 'This violates appeal to emotion, false stereotype, and opposition.',
       },
@@ -362,6 +463,20 @@ export const SECTIONS: FallacySection[] = [
           'Dr. {a}, my parents will get mad at me if I get a D – and I will feel so bad inside. Please? You know how I loved your course. I surely deserve at least a C.',
         accepted: ['ae'],
       },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Look at this photograph of the child. Now tell me you still oppose the policy.',
+        accepted: ['ae'],
+        note: 'The photograph may be moving and the policy may still be a bad one. Nothing here is an argument.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          '{P} talked about their own family for ten minutes and half the room was in tears. So we should back the bill.',
+        accepted: ['ae'],
+        note: 'Whether the bill is any good was never addressed.',
+      },
     ],
   },
   {
@@ -373,7 +488,7 @@ export const SECTIONS: FallacySection[] = [
       },
       {
         template:
-          '{A}, you better support this measure. Otherwise you’ll lose a lot of votes from us {D}s.',
+          '{P}, you better support this measure. Otherwise you’ll lose a lot of votes from us {D}s.',
         accepted: ['af'],
       },
       {
@@ -396,6 +511,20 @@ export const SECTIONS: FallacySection[] = [
           'If I don’t get a good grade, Dr. {a}, I’m going to talk to the dean about you. You recall that the dean is my {g}, don’t you?',
         accepted: ['af'],
         pool: ['father', 'mother'],
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Rate the course five stars, {a}. I’ll be writing your reference letter in the spring.',
+        accepted: ['af'],
+        note: 'Nothing here is an argument that the course was good.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Sign the agreement, {A}. Our lawyers have a great deal more time than you do.',
+        accepted: ['af'],
+        note: 'The threat is the whole content of the appeal.',
       },
     ],
   },
@@ -509,13 +638,56 @@ export const SECTIONS: FallacySection[] = [
         template:
           'We haven’t been able to disprove the existence of {g}. Therefore we should affirm the existence of {g}.',
         accepted: ['ai'],
-        pool: ['bigfoot', 'visitors from space', 'an afterlife'],
+        pool: [
+          'bigfoot',
+          'visitors from space',
+          'an afterlife',
+          'Atlantis',
+          'mermaids',
+          'unicorns',
+          'ghosts',
+          'psychic powers',
+          'the Loch Ness monster',
+          'alien life',
+          'intelligent alien civilisations',
+          'a multiverse',
+          'a simulated universe',
+          'parallel universes',
+          'machine consciousness',
+          'free will',
+          'a soul',
+        ],
       },
       {
         template:
           'We haven’t been able to prove the existence of {g}. Therefore we should deny the existence of {g}.',
         accepted: ['ai'],
-        pool: ['bigfoot', 'visitors from space', 'an afterlife'],
+        pool: [
+          'bigfoot',
+          'visitors from space',
+          'an afterlife',
+          'Atlantis',
+          'mermaids',
+          'unicorns',
+          'ghosts',
+          'psychic powers',
+          'the Loch Ness monster',
+          'alien life',
+          'intelligent alien civilisations',
+          'a multiverse',
+          'a simulated universe',
+          'parallel universes',
+          'machine consciousness',
+          'free will',
+          'a soul',
+        ],
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'I’ve never heard of a single book written in medieval West Africa. So there can’t have been many.',
+        accepted: ['ai'],
+        note: 'Timbuktu’s libraries hold as many as 700,000 manuscripts — science, medicine, law, theology, poetry — some from the thirteenth century, and the university at Sankore taught up to 25,000 students. Not having heard of something is a fact about the hearer.',
       },
     ],
   },
@@ -564,6 +736,55 @@ export const SECTIONS: FallacySection[] = [
         accepted: ['am', 'fs'],
         note: 'This shifts between the “average” and “healthy” senses of “normal.”',
       },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'The model is intelligent — it scores higher than most people on the exam. Intelligent beings deserve rights. So the model deserves rights.',
+        accepted: ['am'],
+        note: '“Intelligent” means one thing in the first premise (scoring well on a test) and another in the second (the kind of mind that can be wronged).',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'He’s the most valuable player in the league — no club has ever paid a higher fee for anyone. The most valuable player is the one who contributes most to his team. So he contributes more than anyone in the league.',
+        accepted: ['am'],
+        note: '“Valuable” means market price in the first premise and contribution in the second. Same word, two different things being measured.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'They promise your data is secure. Secure means nobody can get at it. So nobody can get at your data.',
+        accepted: ['am'],
+        note: '“Secure” in the promise means encrypted against interception. In the conclusion it means inaccessible to anyone at all, which is a different claim.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'The average salary here is ninety thousand. So half the people here earn more than that.',
+        accepted: ['am'],
+        note: '“Average” is the mean in the premise and the median in the conclusion. One word, two different statistics — and they come apart badly whenever a few figures are very large.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'The result was statistically significant. Significant findings matter. So this finding matters.',
+        accepted: ['am'],
+        note: '“Significant” means unlikely to be chance in the first premise, and important in the second. A tiny effect measured precisely enough is significant in the first sense and can matter not at all in the second.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Italy is one of the oldest countries in Europe. But Italy became a country in 1861 and Brazil in 1822. So Brazil is older than one of the oldest countries in Europe.',
+        accepted: ['am'],
+        note: '“Country” means a place and a people in the first premise and a unified state in the second. Both dates are right — Italian unification 1861, Brazilian independence 1822 — and the conclusion still does not follow.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'In the sip test more people preferred Pepsi. So more people prefer Pepsi.',
+        accepted: ['am'],
+        note: '“Prefer” ranges over one mouthful in the premise and over a whole can in the conclusion. Sweeter drinks win a sip and can lose a can, which is why sip tests and sales can disagree.',
+      },
     ],
   },
   {
@@ -610,6 +831,34 @@ export const SECTIONS: FallacySection[] = [
         accepted: ['bp', 'ae'],
         note: 'This violates beside the point (we have to show that {a} is guilty) and appeal to emotion.',
       },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'You say this study was too small to show anything. But science has given us antibiotics, vaccines and spaceflight. Are you really going to stand there and attack science?',
+        accepted: ['bp'],
+        note: 'Whether science in general is valuable is not the issue. The issue is whether THIS study, with this sample size, shows what it is said to show.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'You say this patent extension shouldn’t be granted. But without patents, nobody would develop new medicines at all.',
+        accepted: ['bp'],
+        note: 'Nobody in the argument denied that patents fund research. The question was whether this particular extension was warranted.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'You say there’s no evidence that playing classical music to babies helps them. But a study in Nature found that Mozart improved spatial reasoning in college students.',
+        accepted: ['bp'],
+        note: 'The study was on adults, on one spatial task, and the effect lasted minutes. Whatever it showed, it was not about babies.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'You say the album is badly produced. But she has sold more records this year than anyone alive.',
+        accepted: ['bp'],
+        note: 'Whether it sold is not whether it was well made. The reply answers a question nobody asked.',
+      },
     ],
   },
   {
@@ -648,6 +897,20 @@ export const SECTIONS: FallacySection[] = [
         template:
           'I figure that a person who doesn’t think that the American free enterprise system is the greatest in the world must be a Communist.',
         accepted: ['bw'],
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Either you are with me, or you are my enemy. There is nothing in between.',
+        accepted: ['bw'],
+        note: 'The reply in the film — “only a Sith deals in absolutes” — is itself an absolute, and so refutes itself. Two errors in one exchange.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Either you accept the risk of another Chernobyl, or you close the reactors. There is nothing in between.',
+        accepted: ['bw'],
+        note: 'There is a great deal in between: siting, safety standards, which reactors, and on what timetable relative to whatever replaces them. Fukushima followed an earthquake and a tsunami, and what that implies for a country with different geology is a real question — one this framing stops anyone from asking.',
       },
     ],
   },
@@ -743,6 +1006,25 @@ export const SECTIONS: FallacySection[] = [
         accepted: ['cq', 'ci'],
         note: 'This violates complex question and perhaps circular.',
       },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template: 'Why do these companies refuse to make their products safe?',
+        accepted: ['cq', 'ci'],
+        note: 'The question assumes they refuse, which is the very thing in dispute. Answer it either way and you have conceded the point.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template: 'When did {P} decide to stop listening to ordinary people?',
+        accepted: ['cq', 'ci'],
+        note: 'Any answer concedes that they stopped. The question does the arguing.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Why did Jewish communities stay out of the Caribbean entirely?',
+        accepted: ['cq', 'ci'],
+        note: 'They did not. Sephardim expelled from Iberia settled across the Caribbean, and Port Royal in Jamaica had a synagogue and a street called Jews Street before the 1692 earthquake destroyed it. Some sailed as privateers against Spanish shipping — Moses Cohen Henriques helped take a Spanish treasure fleet in 1628. Answer either way and you have conceded an absence that was never there.',
+      },
     ],
   },
   {
@@ -773,7 +1055,7 @@ export const SECTIONS: FallacySection[] = [
       },
       {
         template:
-          '{a} made an appointment to see me. But of course {b} didn’t show. Students are all irresponsible.',
+          '{a} made an appointment to see me. But of course {b} didn’t show. {S} are all irresponsible.',
         accepted: ['fs'],
       },
       {
@@ -781,6 +1063,32 @@ export const SECTIONS: FallacySection[] = [
           'Academic philosophers these days are all logical positivists. None of them accept a spiritual dimension of humanity.',
         accepted: ['fs', 'sm'],
         note: 'This violates false stereotype and straw man.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'He’s a Lannister. Lannisters always pay their debts. So he’ll pay me what he owes.',
+        accepted: ['fs'],
+        note: 'Even where a group really does have a reputation, its members are not interchangeable.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template: 'She’s Asian, so she’ll be good at maths.',
+        accepted: ['fs'],
+        note: 'A flattering stereotype is still a stereotype. This one covers nearly five billion people, and it lands on someone as an expectation they never asked for.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template: 'He’s German, so he’ll be punctual.',
+        accepted: ['fs'],
+        note: 'The same move with a different group and a compliment nobody objects to. That is the point: if the reasoning fails in one, it fails in the other.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Steve Jobs was famously brutal with his staff, and he built the most valuable company in the world. So you have to be brutal to build something great.',
+        accepted: ['fs'],
+        note: 'The unstated premise is that the founders you can name are a fair sample of the founders there are. You never hear about the brutal ones whose companies failed, or the decent ones who succeeded without a documentary.',
       },
     ],
   },
@@ -817,6 +1125,55 @@ export const SECTIONS: FallacySection[] = [
           'The main reason you buy {d}s is that your family taught you that {d} makes the best cars. So your belief that {d}s are great cars is clearly wrong.',
         accepted: ['ge'],
       },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'The process that makes most of the world’s fertiliser was invented by the man who ran Germany’s chemical weapons programme and supervised the first gas attack at Ypres. So we should have nothing to do with it.',
+        accepted: ['ge'],
+        note: 'Both halves are true of Fritz Haber. About a third of the world’s food is grown with nitrogen fixed by his process. Where something came from is not what makes it good or bad.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'This argument was written with AI help. So it can’t be a good argument.',
+        accepted: ['ge'],
+        note: 'An argument is good or bad because of its structure, not because of what produced it.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'The study was funded by the Gates Foundation. So its findings must be false.',
+        accepted: ['ge'],
+        note: 'Who paid for a study is a reason to read it carefully. It is not a reason to conclude it is wrong.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Chillies only reached Asia after 1492, carried from the Americas by Portuguese traders. So Sichuan cooking isn’t really Chinese.',
+        accepted: ['ge'],
+        note: 'Every word of the premise is true. Capsicum was domesticated in the Americas, and Portuguese ships had it in Goa, Malacca and Japan within thirty years of Columbus. Where an ingredient came from is not what makes a cuisine someone’s own.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'The tomato is a New World plant. Europeans thought it poisonous for two hundred years, and pasta with tomato sauce doesn’t appear in an Italian cookbook until the 1830s. So pasta al pomodoro isn’t really Italian.',
+        accepted: ['ge'],
+        note: 'Every date holds. Tomatoes reached Europe with the Spanish in the early 1500s, were shunned as nightshade for two centuries, and Cavalcanti’s vermicelli con lo pommodoro dates from 1839. A dish is not less a people’s own for having been invented at a particular moment.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'There wasn’t a single cow anywhere in the Americas until the Spanish brought them after 1493. So the Argentine asado isn’t really Argentine.',
+        accepted: ['ge'],
+        note: 'Cattle reached the Río de la Plata around 1536, and with no predators on the Pampas the feral herds ran to millions within the century. Where an animal came from is not what makes a tradition someone’s own.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Alface, azeite, almofada, açúcar — hundreds of everyday Portuguese words came from Arabic, during five centuries of Muslim rule. So Portuguese isn’t really a Romance language.',
+        accepted: ['ge'],
+        note: 'The words are Arabic and the five centuries are real: Muslim rule in the Iberian southwest ran from 711 to 1249. A language is not disqualified from its family by what it borrowed — English would fail the same test twice over.',
+      },
     ],
   },
   {
@@ -836,6 +1193,54 @@ export const SECTIONS: FallacySection[] = [
         template:
           'The {D}s have come out in favor of the measure. So we should come out against it.',
         accepted: ['op'],
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Every account I have muted is sharing this study. So there must be something wrong with it.',
+        accepted: ['op'],
+        note: 'Who else believes something is not evidence about whether it is true.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template: 'My ex loves this restaurant. So it can’t be any good.',
+        accepted: ['op'],
+        note: 'The fallacy does not need politics to work. Any opponent will do.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'The union has endorsed the proposal. So management should oppose it.',
+        accepted: ['op'],
+        note: 'Whether the proposal is any good is a separate question from who is for it.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          '{P} came out in favour of the bill. That settles it for me — I’m against.',
+        accepted: ['op'],
+        note: 'This is the whole of the reasoning: someone I oppose is for it, so I am against it.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Our biggest rivals have started using this training method. So we should stay well away from it.',
+        accepted: ['op'],
+        note: 'If the method works, it works whoever is using it.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'The people who have mocked her for a decade are saying the new album is her weakest. So it must actually be one of her best.',
+        accepted: ['op'],
+        note: 'Being wrong before does not make someone wrong now.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'The only people saying the album is any good are Swifties. So it can’t be any good.',
+        accepted: ['op'],
+        note: 'The same fallacy as the passage above, running in the opposite direction.',
       },
     ],
   },
@@ -866,6 +1271,55 @@ export const SECTIONS: FallacySection[] = [
         accepted: ['pc'],
         note: 'What are the disadvantages?',
       },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'The brochure lists eleven benefits of the procedure and no risks at all. So it must be worth doing.',
+        accepted: ['pc'],
+        note: 'A list with no second column is not a weighing-up.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'This app is free, it saves you two hours a week, and it sets up in a minute. So obviously you should install it.',
+        accepted: ['pc'],
+        note: 'Everything stated is an advantage. That is the tell.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Moving to the city means a longer commute, higher rent and no garden. So we shouldn’t move.',
+        accepted: ['pc'],
+        note: 'One-sided in the other direction: only disadvantages are mentioned.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'The plan will create thousands of jobs and bring investment to the region. So we should approve it.',
+        accepted: ['pc'],
+        note: 'What the plan costs, and who bears it, is not mentioned at all.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'We send the EU £350 million a week. Think what our health service could do with that. So we should leave.',
+        accepted: ['pc'],
+        note: 'That was the gross figure. It left out the rebate, which was never sent, and the money that came back. The UK Statistics Authority called using it this way potentially misleading.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Leaving the EU would leave every household £4,300 worse off by 2030. So we should stay.',
+        accepted: ['pc'],
+        note: 'A fourteen-year projection, quoted to the nearest hundred pounds, and an aggregate change in output restated as a household loss. One column again — the other one.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'Rent control means tenants pay less each month than they otherwise would. So we should have rent control.',
+        accepted: ['pc'],
+        note: 'Everything stated is a benefit, and to one group. What happens to the supply of housing, or to people who do not yet have a tenancy, is not mentioned at all.',
+      },
     ],
   },
   {
@@ -893,7 +1347,7 @@ export const SECTIONS: FallacySection[] = [
       },
       {
         template:
-          'Look at all the bad things that happened while my {E} opponent {a} was in office. If you don’t want to elect an official who will bring about such things, then vote against my opponent.',
+          'Look at all the bad things that happened while my {l} opponent {p} was in office. If you don’t want to elect an official who will bring about such things, then vote against my opponent.',
         accepted: ['ph'],
       },
       {
@@ -910,6 +1364,41 @@ export const SECTIONS: FallacySection[] = [
         template:
           'Ms. {a} brushed her teeth with Ultra Zest and then attracted boys like a magnet! Wow – I’m going to get some Ultra Zest, because then I will attract boys too!',
         accepted: ['ph'],
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'I started taking the supplement on Monday, and by Friday my cold was gone. So the supplement cured my cold.',
+        accepted: ['ph'],
+        note: 'Colds go away on their own in about a week. That something happened after something else is not yet a reason to think it happened because of it.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'I got the booster and felt terrible the next day. So the booster made me ill.',
+        accepted: ['ph'],
+        note: 'The question is not whether one person felt ill afterwards, but whether people who get it feel ill more often than people who do not.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'I sent in a donation, and the next month I got a raise. So the donation caused the raise.',
+        accepted: ['ph'],
+        note: 'The “seed faith” pitch runs on exactly this inference: any good thing that happens after a donation gets credited to the donation.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'He worked eighteen-hour days for a decade, and the company is now worth billions. So the hours are why it worked.',
+        accepted: ['ph'],
+        note: 'The premise nobody states is that whatever a successful person did is what made them successful. Plenty of people keep those hours and fail, and plenty succeed without them. You hear about neither.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'I’ve worn this shirt for every match they’ve won this season. So I need to wear it tonight.',
+        accepted: ['ph'],
+        note: 'The shirt was there for the wins, and for everything else that happened those days too. Being present is not being the cause.',
       },
     ],
   },
@@ -961,6 +1450,20 @@ export const SECTIONS: FallacySection[] = [
           'Each part of life has a purpose. Your eyes, hands, and so forth all have a purpose. Hence life itself must have a purpose.',
         accepted: ['pw'],
       },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'India has one of the largest economies in the world. So the average person in India must be well off.',
+        accepted: ['pw'],
+        note: 'True of the whole, not of the parts. A very large economy divided among a very large population is a different quantity altogether.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          'It has been the coldest week here in twenty years. So much for global warming.',
+        accepted: ['pw'],
+        note: 'One week in one place is not the global average across decades, which is the quantity the phrase names. What holds of a part need not hold of the whole.',
+      },
     ],
   },
   {
@@ -998,6 +1501,20 @@ export const SECTIONS: FallacySection[] = [
           '{a} and the other Christians are pretty stupid. They all believe that the world was created in six days. None of them cares anything about science.',
         accepted: ['sm', 'fs'],
         note: 'This violates straw man and false stereotype.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          '(A colleague suggests the team try a four-day week for one month.) So you want us to just stop working. Got it.',
+        accepted: ['sm'],
+        note: 'A one-month trial of four days is not a proposal to stop working.',
+      },
+      {
+        // Added 2026-08-19. Passages with no date are from the 2008 source.
+        template:
+          '(Someone points out that the population is still growing.) So you’re Thanos now. You want to wipe out half of everyone.',
+        accepted: ['sm'],
+        note: 'Noting a fact about population is not proposing to do anything about it, let alone that.',
       },
     ],
   },
@@ -1054,6 +1571,201 @@ export const CARS = [
   'Mazda',
 ];
 
+/** Affiliation groups for the {s}/{S} token. Chosen affiliations only. */
+export const GROUPS = [
+  'boomers',
+  'millennials',
+  'zoomers',
+  'vegans',
+  'gamers',
+  'cyclists',
+  'crypto investors',
+  'influencers',
+  'homeschoolers',
+  'journalists',
+  'academics',
+  'lawyers',
+  'bankers',
+  'economists',
+  'consultants',
+  'landlords',
+  'environmentalists',
+  'activists',
+  'libertarians',
+  'nationalists',
+  'populists',
+  'preppers',
+];
+
+/** Footballers for the {f} token (opinion-headcount passages only). */
+export const PLAYERS = ['Ronaldo', 'Messi'];
+
+/** Named political figures: {p}/{P} render the name, {l} their own label. */
+export const POLITICIANS = [
+  {
+    name: 'Orbán',
+    label: 'nationalist',
+    b: 'he',
+    B: 'He',
+    hc: 'him',
+    hC: 'his',
+    HC: 'His',
+  },
+  {
+    name: 'Meloni',
+    label: 'nationalist',
+    b: 'she',
+    B: 'She',
+    hc: 'her',
+    hC: 'her',
+    HC: 'Her',
+  },
+  {
+    name: 'Reagan',
+    label: 'conservative',
+    b: 'he',
+    B: 'He',
+    hc: 'him',
+    hC: 'his',
+    HC: 'His',
+  },
+  {
+    name: 'Thatcher',
+    label: 'conservative',
+    b: 'she',
+    B: 'She',
+    hc: 'her',
+    hC: 'her',
+    HC: 'Her',
+  },
+  {
+    name: 'Milei',
+    label: 'libertarian',
+    b: 'he',
+    B: 'He',
+    hc: 'him',
+    hC: 'his',
+    HC: 'His',
+  },
+  {
+    name: 'Merkel',
+    label: 'christian democrat',
+    b: 'she',
+    B: 'She',
+    hc: 'her',
+    hC: 'her',
+    HC: 'Her',
+  },
+  {
+    name: 'Macron',
+    label: 'centrist',
+    b: 'he',
+    B: 'He',
+    hc: 'him',
+    hC: 'his',
+    HC: 'His',
+  },
+  {
+    name: 'Obama',
+    label: 'democrat',
+    b: 'he',
+    B: 'He',
+    hc: 'him',
+    hC: 'his',
+    HC: 'His',
+  },
+  {
+    name: 'Blair',
+    label: 'labour',
+    b: 'he',
+    B: 'He',
+    hc: 'him',
+    hC: 'his',
+    HC: 'His',
+  },
+  {
+    name: 'Starmer',
+    label: 'labour',
+    b: 'he',
+    B: 'He',
+    hc: 'him',
+    hC: 'his',
+    HC: 'His',
+  },
+  {
+    name: 'Ardern',
+    label: 'progressive',
+    b: 'she',
+    B: 'She',
+    hc: 'her',
+    hC: 'her',
+    HC: 'Her',
+  },
+  {
+    name: 'Sanders',
+    label: 'socialist',
+    b: 'he',
+    B: 'He',
+    hc: 'him',
+    hC: 'his',
+    HC: 'His',
+  },
+  {
+    name: 'Mamdani',
+    label: 'democratic socialist',
+    b: 'he',
+    B: 'He',
+    hc: 'him',
+    hC: 'his',
+    HC: 'His',
+  },
+  {
+    name: 'Trump',
+    label: 'republican',
+    b: 'he',
+    B: 'He',
+    hc: 'him',
+    hC: 'his',
+    HC: 'His',
+  },
+  {
+    name: 'Modi',
+    label: 'nationalist',
+    b: 'he',
+    B: 'He',
+    hc: 'him',
+    hC: 'his',
+    HC: 'His',
+  },
+  {
+    name: 'Harris',
+    label: 'democrat',
+    b: 'she',
+    B: 'She',
+    hc: 'her',
+    hC: 'her',
+    HC: 'Her',
+  },
+  {
+    name: 'Hillary Clinton',
+    label: 'democrat',
+    b: 'she',
+    B: 'She',
+    hc: 'her',
+    hC: 'her',
+    HC: 'Her',
+  },
+  {
+    name: 'John F. Kennedy',
+    label: 'democrat',
+    b: 'he',
+    B: 'He',
+    hc: 'him',
+    hC: 'his',
+    HC: 'His',
+  },
+];
+
 /** Party pools: {D} renders the noun, {E} the adjective (democrat -> democratic). */
 export const PARTIES = [
   { noun: 'socialist', adj: 'socialist' },
@@ -1061,6 +1773,11 @@ export const PARTIES = [
   { noun: 'democrat', adj: 'democratic' },
   { noun: 'conservative', adj: 'conservative' },
   { noun: 'liberal', adj: 'liberal' },
+  { noun: 'progressive', adj: 'progressive' },
+  { noun: 'libertarian', adj: 'libertarian' },
+  { noun: 'populist', adj: 'populist' },
+  { noun: 'nationalist', adj: 'nationalist' },
+  { noun: 'green', adj: 'green' },
 ];
 
 /** Pronoun bundles; one is chosen per passage so pronouns agree throughout. */
