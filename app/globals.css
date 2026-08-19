@@ -121,12 +121,11 @@
       animation-name: quizQuestionInRight;
       animation-duration: 200ms;
       transition-duration: 130ms;
-      transition-property: opacity, transform, filter;
+      transition-property: opacity, transform;
     }
 
     .motion-quiz-question[data-motion='leaving'] {
       transform: translateX(-40px);
-      filter: blur(6px);
     }
 
     /* The push's named element is the CONTAINER, not the keyed question
@@ -1359,25 +1358,31 @@
   animation-name: vtQuestionInRight;
 }
 /* SHORT-TRAVEL drift, judged in the lab (Malik, 2026-08-19, superseding
-   the 110%-travel late-fade push): 25% travel with a full-travel fade.
+   the 110%-travel late-fade push): 20% travel with a full-travel fade.
    At this distance the fade IS the transition and the slide is its
    accent — the late-fade hold existed to keep a FULL push legible, so
    it no longer applies. This is Material's shared-axis X grammar, which
    fits exercises better than a navigation push: siblings at one level,
-   not a descent. Blur down to 1px — at ~90px of travel it only softens
-   edges. */
+   not a descent.
+
+   NO BLUR. It rode along from the 110% push, where it masked the height
+   offset of two panes sliding past each other; the fade took that job
+   over at short travel. Measured before removing: blur and opacity sat
+   on the same keyframe pair, so blur peaked exactly where the layer was
+   invisible — peak VISIBLE blur was ~0.5px at 49% opacity, under the
+   perceptual threshold, while still forcing a compositing layer and a
+   per-pixel pass over the snapshot every frame. Cost without return
+   (Malik, 2026-08-19). */
 @keyframes vtQuestionOutLeft {
   to {
-    transform: translateX(-25%);
+    transform: translateX(-20%);
     opacity: 0;
-    filter: blur(1px);
   }
 }
 @keyframes vtQuestionInRight {
   from {
-    transform: translateX(25%);
+    transform: translateX(20%);
     opacity: 0;
-    filter: blur(1px);
   }
 }
 
@@ -1388,12 +1393,10 @@
   from {
     opacity: 0;
     transform: translateX(48px);
-    filter: blur(6px);
   }
   to {
     opacity: 1;
     transform: translateX(0);
-    filter: blur(0);
   }
 }
 
