@@ -1146,7 +1146,7 @@
    layer fully leaves/enters the screen. */
 ::view-transition-old(quiz-question),
 ::view-transition-new(quiz-question) {
-  animation-duration: 240ms;
+  animation-duration: 260ms;
   animation-timing-function: var(--ease-out-cubic);
 }
 ::view-transition-old(quiz-question) {
@@ -1155,24 +1155,46 @@
 ::view-transition-new(quiz-question) {
   animation-name: vtQuestionInRight;
 }
-/* Unlike Duolingo's fully-opaque layers, ours fade + slightly blur in
-   flight (Malik, 2026-08-19): the pane is justify-centered, so content
-   rests at different heights per question — softening the layers masks
-   that offset sliding past itself. Shared easing means the outgoing
-   fades early and the incoming turns readable early. Blur stays small:
-   big blurs are expensive, and 6px is enough to read as motion. */
+/* LATE fade, judged in public/labs/transition-lab.html (Malik,
+   2026-08-19). The first cut faded along the whole travel; at equal
+   duration it felt FASTER than Duolingo's opaque push, because the
+   ease-out curve dissolved the outgoing layer in the first ~100ms —
+   the eye lost the motion early. Legibility time, not clock time.
+   So: opaque through 60% of the time (≈85% of the eased travel, where
+   motion is read), fading only at the edges — which is also where the
+   justify-centered height offset shows, the reason we fade at all.
+   Opacity/filter sit on mid keyframes; transform spans end-to-end, so
+   each property gets the easing over its own segment. */
 @keyframes vtQuestionOutLeft {
-  to {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+    filter: blur(0);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
     transform: translateX(-110%);
     opacity: 0;
-    filter: blur(6px);
+    filter: blur(4px);
   }
 }
 @keyframes vtQuestionInRight {
-  from {
+  0% {
     transform: translateX(110%);
     opacity: 0;
-    filter: blur(6px);
+    filter: blur(4px);
+  }
+  40% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+    filter: blur(0);
   }
 }
 
