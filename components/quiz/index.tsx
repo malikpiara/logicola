@@ -890,42 +890,50 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                   className='motion-quiz-question flex flex-col md:justify-between gap-5 max-sm:flex'
                   data-motion={isQuestionLeaving ? 'leaving' : 'entered'}
                 >
-                  <Prompt value={currentQuestion.prompt} />
+                  {/* On phones the argument pins while a long palette
+                      (Set R runs ~2 screens) scrolls beneath — the fallacy
+                      task means re-reading the argument per option, so it
+                      must not leave with the scroll (Malik, 2026-08-19).
+                      Desktop: display:contents, so md:justify-between still
+                      sees three children. See `.qpin` in globals.css. */}
+                  <div className='qpin'>
+                    <Prompt value={currentQuestion.prompt} />
 
-                  <div
-                    className={
-                      isGridLayout
-                        ? classNames('w-full self-center', gridMaxWidth)
-                        : ''
-                    }
-                  >
-                    {/* The set's drill question, in the start screen's mono
+                    <div
+                      className={
+                        isGridLayout
+                          ? classNames('w-full self-center', gridMaxWidth)
+                          : ''
+                      }
+                    >
+                      {/* The set's drill question, in the start screen's mono
                         eyebrow voice — the question screen reads as a
                         continuation of the start card, not a different app. */}
-                    <h2 className='qheader'>{subSet.header}</h2>
-                    {/* Multi-select is a MODE, and an unannounced mode is
+                      <h2 className='qheader'>{subSet.header}</h2>
+                      {/* Multi-select is a MODE, and an unannounced mode is
                         where users make errors they can't diagnose. NOT
                         "select all that apply": the subset rule accepts ANY
                         genuine answer, so demanding all of them would
                         promise something the grader doesn't do. */}
-                    {multiSelect && (
-                      <p className='qmulti'>
-                        More than one answer can be right.
-                      </p>
-                    )}
-                    {/* Reading order: question → attempt → response →
+                      {multiSelect && (
+                        <p className='qmulti'>
+                          More than one answer can be right.
+                        </p>
+                      )}
+                      {/* Reading order: question → attempt → response →
                         palette. The slot is always present and never moves
                         the options — see FeedbackSlot. */}
-                    {currentQuestion && (
-                      <FeedbackSlot
-                        question={currentQuestion}
-                        liveHint={liveHint}
-                        liveAnswer={liveAnswer}
-                        motionKey={`${currentQuestion.id}-${previousGuesses.length}-${
-                          showSolution ? 'sol' : 'try'
-                        }-${liveHintOption?.id ?? 'answer'}`}
-                      />
-                    )}
+                      {currentQuestion && (
+                        <FeedbackSlot
+                          question={currentQuestion}
+                          liveHint={liveHint}
+                          liveAnswer={liveAnswer}
+                          motionKey={`${currentQuestion.id}-${previousGuesses.length}-${
+                            showSolution ? 'sol' : 'try'
+                          }-${liveHintOption?.id ?? 'answer'}`}
+                        />
+                      )}
+                    </div>
                   </div>
 
                   <div

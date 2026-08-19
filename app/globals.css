@@ -141,6 +141,44 @@
     }
   }
 
+  /* The argument + question pin while a long option palette scrolls
+     (Set R's 18-fallacy grid runs ~2 screens on phones; the task means
+     re-reading the argument per option — Malik, 2026-08-19). On lg+ the
+     wrapper is display:contents so the question block's md:justify-between
+     still distributes three children; below lg it pins under the sticky
+     mobile header row. Sticky works because the canvas scrolls the BODY
+     (overflow-clip, not hidden — the porting trap in pixel-ui.md), and
+     it is inert wherever content fits the viewport. */
+  .qpin {
+    display: contents;
+  }
+
+  @media (width < 64rem) {
+    .quiz-immersive .qpin {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem; /* mirrors the question block's gap-5 */
+      position: sticky;
+      /* Clears the header row: 44px tap boxes + 12px paddings, plus the
+         status-bar inset the row absorbs. Tracks that row's geometry. */
+      top: calc(68px + env(safe-area-inset-top));
+      z-index: 10; /* under the z-20 header row, over the options */
+      background: var(--quiz-surface);
+    }
+
+    /* Scrolled options dissolve under the pinned block instead of being
+       cut by a hard edge. */
+    .quiz-immersive .qpin::after {
+      content: '';
+      position: absolute;
+      inset-inline: 0;
+      top: 100%;
+      height: 16px;
+      background: linear-gradient(var(--quiz-surface), transparent);
+      pointer-events: none;
+    }
+  }
+
   .motion-answer-reveal {
     animation: quizAnswerReveal 160ms var(--ease-out-quart) both;
     transform-origin: center top;
@@ -1016,6 +1054,24 @@
 .quiz-immersive .qfeed-live {
   position: absolute;
   inset: 0;
+}
+
+/* Inside the mobile pin (.qpin, @layer utilities) the ghost reservation
+   would pin a BLANK band the height of the tallest hint — a third of a
+   phone screen on Set R. Below lg the slot sizes to its live content
+   instead: a deliberate, dated exception to the constant-height contract
+   above — options shift down when a hint lands, but that lands on a
+   checked miss, a reorientation moment, not mid-aim (Malik, 2026-08-19).
+   Desktop keeps the contract. Unlayered on purpose: the rules being
+   amended are unlayered, and layered overrides lose to them. */
+@media (width < 64rem) {
+  .quiz-immersive .qpin .qfeed-ghost {
+    display: none;
+  }
+  .quiz-immersive .qpin .qfeed-live {
+    position: static;
+    inset: auto;
+  }
 }
 
 /* TWO TONES: the container is the error tone, but every structured block
