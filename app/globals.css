@@ -1350,46 +1350,26 @@
 ::view-transition-new(quiz-question) {
   animation-name: vtQuestionInRight;
 }
-/* LATE fade, judged in public/labs/transition-lab.html (Malik,
-   2026-08-19). The first cut faded along the whole travel; at equal
-   duration it felt FASTER than Duolingo's opaque push, because the
-   ease-out curve dissolved the outgoing layer in the first ~100ms —
-   the eye lost the motion early. Legibility time, not clock time.
-   So: opaque through 60% of the time (≈85% of the eased travel, where
-   motion is read), fading only at the edges — which is also where the
-   justify-centered height offset shows, the reason we fade at all.
-   Opacity/filter sit on mid keyframes; transform spans end-to-end, so
-   each property gets the easing over its own segment. */
+/* SHORT-TRAVEL drift, judged in the lab (Malik, 2026-08-19, superseding
+   the 110%-travel late-fade push): 25% travel with a full-travel fade.
+   At this distance the fade IS the transition and the slide is its
+   accent — the late-fade hold existed to keep a FULL push legible, so
+   it no longer applies. This is Material's shared-axis X grammar, which
+   fits exercises better than a navigation push: siblings at one level,
+   not a descent. Blur down to 1px — at ~90px of travel it only softens
+   edges. */
 @keyframes vtQuestionOutLeft {
-  0% {
-    transform: translateX(0);
-    opacity: 1;
-    filter: blur(0);
-  }
-  60% {
-    opacity: 1;
-    filter: blur(0);
-  }
-  100% {
-    transform: translateX(-110%);
+  to {
+    transform: translateX(-25%);
     opacity: 0;
-    filter: blur(4px);
+    filter: blur(1px);
   }
 }
 @keyframes vtQuestionInRight {
-  0% {
-    transform: translateX(110%);
+  from {
+    transform: translateX(25%);
     opacity: 0;
-    filter: blur(4px);
-  }
-  40% {
-    opacity: 1;
-    filter: blur(0);
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-    filter: blur(0);
+    filter: blur(1px);
   }
 }
 
