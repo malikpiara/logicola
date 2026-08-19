@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="robots" content="noindex" />
+    <title>Transition lab — quiz advance push</title>
+    <!--
+  Transition lab (Malik, 2026-08-19). Dials for the mobile quiz-advance
+  push shipped in 2f6bcd0. Lives in public/ (not docs/, the usual lab
+  home) because sign-off needs a phone on the Vercel preview URL.
+  Two plain layers stand in for the View Transition snapshots — the
+  named element's geometry is fixed, so the render is identical.
+  Judged values go back into ::view-transition-*(quiz-question) in
+  app/globals.css; this file never ships in the app bundle.
+-->
+    <style>
+      :root {
+        --surface: #e9f0a5;
+        --ink: #12352b;
+        --accent: #b31ba0;
+        --chip: rgba(18, 53, 43, 0.1);
+        --panel: #ffffff;
+      }
+      * {
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #f4f1e8;
+        color: var(--ink);
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 12px calc(16px + env(safe-area-inset-bottom));
+      }
+      h1 {
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+      }
+      h1 small {
+        font-weight: 400;
+        opacity: 0.6;
+      }
+
+      /* == The stage: a phone-shaped quiz surface ============================ */
+      .stage {
+        width: min(400px, 100%);
+        height: min(620px, 62dvh);
+        background: var(--surface);
+        border-radius: 18px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.1);
+        flex: none;
+      }
+      .bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 16px;
+        z-index: 3;
+      }
+      .bar .x {
+        font-size: 18px;
+        opacity: 0.65;
+      }
+      .track {
+        flex: 1;
+        height: 10px;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.55);
+        overflow: hidden;
+      }
+      .fill {
+        height: 100%;
+        width: 12%;
+        background: var(--accent);
+        transition: width 300ms ease-out;
+      }
+      .foot {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 76px;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        z-index: 3;
+      }
+      .foot button {
+        width: 100%;
+        height: 52px;
+        border: 0;
+        border-radius: 12px;
+        background: var(--ink);
+        color: var(--surface);
+        font-size: 16px;
+        font-weight: 600;
+        font-family: inherit;
+      }
+      .foot button:active {
+        transform: scale(0.98);
+      }
+
+      .viewport {
+        position: absolute;
+        top: 52px;
+        bottom: 76px;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+      }
+      .pane {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 22px;
+        padding: 16px;
+        will-change: transform, opacity, filter;
+      }
+      .prompt {
+        font-size: 21px;
+        font-weight: 600;
+        text-align: center;
+        text-wrap: balance;
+      }
+      .eyebrow {
+        font-family: ui-monospace, monospace;
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        opacity: 0.6;
+        text-align: left;
+      }
+      .opts {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .opt {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--chip);
+        border-radius: 12px;
+        padding: 13px 14px;
+        font-size: 17px;
+        font-family: ui-serif, Georgia, serif;
+        font-style: italic;
+      }
+      .opt b {
+        font-family: ui-monospace, monospace;
+        font-style: normal;
+        font-size: 12px;
+        width: 24px;
+        height: 24px;
+        border-radius: 7px;
+        background: rgba(18, 53, 43, 0.14);
+        display: grid;
+        place-items: center;
+        flex: none;
+      }
+
+      /* == Controls ========================================================== */
+      .controls {
+        width: min(400px, 100%);
+        background: var(--panel);
+        border-radius: 14px;
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 11px;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+        font-size: 13px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .row label {
+        width: 92px;
+        flex: none;
+        font-weight: 500;
+      }
+      .row output {
+        width: 58px;
+        flex: none;
+        text-align: right;
+        font-family: ui-monospace, monospace;
+        font-size: 12px;
+      }
+      input[type='range'] {
+        flex: 1;
+        accent-color: var(--accent);
+      }
+      select {
+        flex: 1;
+        font: inherit;
+        padding: 5px 8px;
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.18);
+        background: #fff;
+      }
+      .presets {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+      }
+      .presets button,
+      .actions button {
+        font: inherit;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 7px 11px;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 0, 0, 0.16);
+        background: #fff;
+      }
+      .presets button[data-active] {
+        background: var(--ink);
+        color: #fff;
+        border-color: var(--ink);
+      }
+      .actions {
+        display: flex;
+        gap: 7px;
+        align-items: center;
+      }
+      .actions .spacer {
+        flex: 1;
+      }
+      .hint {
+        font-size: 11px;
+        opacity: 0.55;
+        line-height: 1.45;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Quiz-advance push <small>— tap Next, tweak, copy the spec</small></h1>
+
+    <div class="stage">
+      <div class="bar">
+        <span class="x">×</span>
+        <div class="track"><div class="fill" id="fill"></div></div>
+      </div>
+      <div class="viewport" id="viewport"></div>
+      <div class="foot"><button id="next">Next Question</button></div>
+    </div>
+
+    <div class="controls">
+      <div class="presets" id="presets"></div>
+      <div class="row">
+        <label for="dur">Duration</label
+        ><input type="range" id="dur" min="150" max="450" step="10" /><output
+          id="durOut"
+        ></output>
+      </div>
+      <div class="row">
+        <label for="ease">Easing</label
+        ><select id="ease"></select>
+      </div>
+      <div class="row">
+        <label for="fade">Fade</label
+        ><select id="fade">
+          <option value="travel">with travel (shipped)</option>
+          <option value="late">late — opaque 60% of the way</option>
+          <option value="none">none (Duolingo)</option>
+        </select>
+      </div>
+      <div class="row">
+        <label for="blur">Blur</label
+        ><input type="range" id="blur" min="0" max="12" step="1" /><output
+          id="blurOut"
+        ></output>
+      </div>
+      <div class="row">
+        <label for="travel">Travel</label
+        ><input type="range" id="travel" min="40" max="110" step="5" /><output
+          id="travelOut"
+        ></output>
+      </div>
+      <div class="actions">
+        <label><input type="checkbox" id="loop" /> auto-advance</label>
+        <div class="spacer"></div>
+        <button id="copy">Copy spec</button>
+      </div>
+      <p class="hint">
+        Presets are starting points — every dial edits the active one.
+        “Duolingo” replicates the measured capture: ≈230 ms, opaque layers, no
+        blur. “Copy spec” puts the current values on the clipboard to paste back
+        into the chat.
+      </p>
+    </div>
+
+    <script>
+      // Varying prompt lengths on purpose: the 1-line/2-line difference is what
+      // produces the height offset the fade is meant to mask. Feel it here.
+      const QUESTIONS = [
+        {
+          p: 'If you aren’t courageous then you aren’t likeable.',
+          o: ['∼(C ⊃ ∼L)', '(∼C ⊃ ∼L)', '∼C ⊃ ∼L', '(∼C ⊃ L)'],
+        },
+        {
+          p: 'Not either C or L.',
+          o: ['(∼C ∨ L)', '(∼C ∨ ∼L)', '∼(C ∨ L)', '∼C ∨ L'],
+        },
+        {
+          p: 'You’re cheerful, and wild or generous.',
+          o: ['(C · (W ∨ G))', 'C · W ∨ G', '((C · W) ∨ G)', '(C · W) ∨ G'],
+        },
+        {
+          p: 'Both not F and R.',
+          o: ['∼(F · R)', '(∼F · R)', '∼F · R', '(∼F · ∼R)'],
+        },
+        {
+          p: 'Either both L and T or M, but never both at once.',
+          o: ['((L · T) ∨ M)', 'L · T ∨ M', '(L · (T ∨ M))', '∼((L · T) · M)'],
+        },
+        {
+          p: 'If T then F, or S.',
+          o: ['(T ⊃ F) ∨ S', 'T ⊃ F ∨ S', '((T ⊃ F) ∨ S)', '(T ⊃ (F ∨ S))'],
+        },
+      ];
+
+      const EASINGS = {
+        'ease-out-cubic (shipped)': 'cubic-bezier(0.215, 0.61, 0.355, 1)',
+        'ease-out-quad': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        'ease-out-quart': 'cubic-bezier(0.165, 0.84, 0.44, 1)',
+        'ease-out-quint': 'cubic-bezier(0.23, 1, 0.32, 1)',
+        'ease-out-expo': 'cubic-bezier(0.19, 1, 0.22, 1)',
+        'ease-in-out-cubic': 'cubic-bezier(0.645, 0.045, 0.355, 1)',
+      };
+
+      const PRESETS = {
+        Shipped: {
+          dur: 240,
+          ease: 'ease-out-cubic (shipped)',
+          fade: 'travel',
+          blur: 6,
+          travel: 110,
+        },
+        Duolingo: {
+          dur: 230,
+          ease: 'ease-out-cubic (shipped)',
+          fade: 'none',
+          blur: 0,
+          travel: 100,
+        },
+        'Late fade': {
+          dur: 260,
+          ease: 'ease-out-cubic (shipped)',
+          fade: 'late',
+          blur: 4,
+          travel: 110,
+        },
+        Slower: {
+          dur: 320,
+          ease: 'ease-out-quart',
+          fade: 'travel',
+          blur: 6,
+          travel: 110,
+        },
+      };
+
+      const $ = (id) => document.getElementById(id);
+      const state = { ...PRESETS['Shipped'] };
+      let qIndex = 0,
+        busy = false,
+        progress = 12;
+
+      const easeSel = $('ease');
+      for (const name of Object.keys(EASINGS))
+        easeSel.add(new Option(name, name));
+
+      const presetsBox = $('presets');
+      for (const name of Object.keys(PRESETS)) {
+        const b = document.createElement('button');
+        b.textContent = name;
+        b.onclick = () => {
+          Object.assign(state, PRESETS[name]);
+          syncControls();
+          markPreset(name);
+        };
+        presetsBox.appendChild(b);
+      }
+      function markPreset(name) {
+        for (const b of presetsBox.children) {
+          if (b.textContent === name) b.setAttribute('data-active', '');
+          else b.removeAttribute('data-active');
+        }
+      }
+
+      function syncControls() {
+        $('dur').value = state.dur;
+        $('durOut').value = state.dur + ' ms';
+        easeSel.value = state.ease;
+        $('fade').value = state.fade;
+        $('blur').value = state.blur;
+        $('blurOut').value = state.blur + ' px';
+        $('travel').value = state.travel;
+        $('travelOut').value = state.travel + '%';
+      }
+      function bind(id, key, fmt) {
+        $(id).addEventListener('input', () => {
+          state[key] = $(id).type === 'range' ? +$(id).value : $(id).value;
+          syncControls();
+          markPreset('');
+        });
+      }
+      bind('dur', 'dur');
+      bind('ease', 'ease');
+      bind('fade', 'fade');
+      bind('blur', 'blur');
+      bind('travel', 'travel');
+
+      function paneFor(q) {
+        const pane = document.createElement('div');
+        pane.className = 'pane';
+        pane.innerHTML = `
+      <p class="prompt">${q.p}</p>
+      <p class="eyebrow">TRANSLATES INTO LOGIC AS:</p>
+      <div class="opts">${q.o.map((t, i) => `<div class="opt"><b>${i + 1}</b>${t}</div>`).join('')}</div>`;
+        return pane;
+      }
+
+      const viewport = $('viewport');
+      viewport.appendChild(paneFor(QUESTIONS[0]));
+
+      // Keyframe builders — mirror the ::view-transition-old/new pairs.
+      function outFrames() {
+        const to = { transform: `translateX(-${state.travel}%)` };
+        if (state.fade === 'travel')
+          return [
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+            { ...to, opacity: 0, filter: `blur(${state.blur}px)` },
+          ];
+        if (state.fade === 'late')
+          return [
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+            { opacity: 1, filter: 'blur(0)', offset: 0.6 },
+            { ...to, opacity: 0, filter: `blur(${state.blur}px)` },
+          ];
+        return [{ transform: 'translateX(0)' }, to];
+      }
+      function inFrames() {
+        const from = { transform: `translateX(${state.travel}%)` };
+        if (state.fade === 'travel')
+          return [
+            { ...from, opacity: 0, filter: `blur(${state.blur}px)` },
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+          ];
+        if (state.fade === 'late')
+          return [
+            { ...from, opacity: 0, filter: `blur(${state.blur}px)` },
+            { opacity: 1, filter: 'blur(0)', offset: 0.4 },
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+          ];
+        return [from, { transform: 'translateX(0)' }];
+      }
+
+      function advance() {
+        if (busy) return;
+        busy = true;
+        qIndex = (qIndex + 1) % QUESTIONS.length;
+        progress = progress >= 88 ? 12 : progress + 9;
+        $('fill').style.width = progress + '%';
+
+        const oldPane = viewport.querySelector('.pane');
+        const newPane = paneFor(QUESTIONS[qIndex]);
+        viewport.appendChild(newPane);
+
+        const opts = {
+          duration: state.dur,
+          easing: EASINGS[state.ease],
+          fill: 'both',
+        };
+        oldPane.animate(outFrames(), opts);
+        const inAnim = newPane.animate(inFrames(), opts);
+        inAnim.onfinish = () => {
+          oldPane.remove();
+          busy = false;
+        };
+      }
+
+      $('next').addEventListener('click', advance);
+      let loopTimer = null;
+      $('loop').addEventListener('change', (e) => {
+        if (e.target.checked)
+          loopTimer = setInterval(advance, Math.max(1200, state.dur + 900));
+        else clearInterval(loopTimer);
+      });
+
+      $('copy').addEventListener('click', async () => {
+        const spec = `duration: ${state.dur}ms · easing: ${state.ease} → ${EASINGS[state.ease]} · fade: ${state.fade} · blur: ${state.blur}px · travel: ${state.travel}%`;
+        try {
+          await navigator.clipboard.writeText(spec);
+          $('copy').textContent = 'Copied ✓';
+        } catch {
+          prompt('Copy the spec:', spec);
+        }
+        setTimeout(() => ($('copy').textContent = 'Copy spec'), 1400);
+      });
+
+      syncControls();
+      markPreset('Shipped');
+    </script>
+  </body>
+</html>
