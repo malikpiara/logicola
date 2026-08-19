@@ -9,13 +9,14 @@
     <meta name="robots" content="noindex" />
     <title>Transition lab — quiz advance push</title>
     <!--
-  Transition lab (Malik, 2026-08-19). Dials for the mobile quiz-advance
-  push shipped in 2f6bcd0. Lives in public/ (not docs/, the usual lab
-  home) because sign-off needs a phone on the Vercel preview URL.
-  Two plain layers stand in for the View Transition snapshots — the
-  named element's geometry is fixed, so the render is identical.
-  Judged values go back into ::view-transition-*(quiz-question) in
-  app/globals.css; this file never ships in the app bundle.
+  Transition lab v2 (Malik, 2026-08-19). Rebuilt around SIMULTANEOUS
+  comparison: motion memory is ~2s, so preset-flipping one stage can't
+  answer "which feels better" — two or three mini quiz stages advance
+  on one tap, identical content, only the motion differs. Dials under
+  the fold define the "Custom" spec any slot can wear. Lives in
+  public/ (not docs/) because judging needs a phone; judged values go
+  into ::view-transition-*(quiz-question) in app/globals.css. The
+  "Shipped" preset must track those values.
 -->
     <style>
       :root {
@@ -38,50 +39,80 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 12px;
-        padding: 12px 12px calc(16px + env(safe-area-inset-bottom));
+        gap: 10px;
+        padding: 10px 12px calc(14px + env(safe-area-inset-bottom));
       }
       h1 {
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 600;
-        letter-spacing: 0.01em;
       }
       h1 small {
         font-weight: 400;
         opacity: 0.6;
       }
 
-      /* == The stage: a phone-shaped quiz surface ============================ */
+      /* == Comparison slots ================================================== */
+      #slots {
+        width: min(420px, 100%);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .slot {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .slot-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .slot-head select {
+        font: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.16);
+        background: #fff;
+      }
+      .slot-head .spec {
+        font-family: ui-monospace, monospace;
+        font-size: 10.5px;
+        opacity: 0.55;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       .stage {
-        width: min(400px, 100%);
-        height: min(620px, 62dvh);
         background: var(--surface);
-        border-radius: 18px;
+        border-radius: 14px;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.1);
-        flex: none;
+        height: 172px;
+        box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
       }
       .bar {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        height: 52px;
+        height: 26px;
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 0 16px;
+        gap: 8px;
+        padding: 0 12px;
         z-index: 3;
       }
       .bar .x {
-        font-size: 18px;
-        opacity: 0.65;
+        font-size: 13px;
+        opacity: 0.6;
       }
       .track {
         flex: 1;
-        height: 10px;
-        border-radius: 5px;
+        height: 7px;
+        border-radius: 4px;
         background: rgba(255, 255, 255, 0.55);
         overflow: hidden;
       }
@@ -91,36 +122,10 @@
         background: var(--accent);
         transition: width 300ms ease-out;
       }
-      .foot {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 76px;
-        display: flex;
-        align-items: center;
-        padding: 0 16px;
-        z-index: 3;
-      }
-      .foot button {
-        width: 100%;
-        height: 52px;
-        border: 0;
-        border-radius: 12px;
-        background: var(--ink);
-        color: var(--surface);
-        font-size: 16px;
-        font-weight: 600;
-        font-family: inherit;
-      }
-      .foot button:active {
-        transform: scale(0.98);
-      }
-
       .viewport {
         position: absolute;
-        top: 52px;
-        bottom: 76px;
+        top: 26px;
+        bottom: 0;
         left: 0;
         right: 0;
         overflow: hidden;
@@ -131,63 +136,102 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 22px;
-        padding: 16px;
+        gap: 9px;
+        padding: 10px 14px;
         will-change: transform, opacity, filter;
       }
       .prompt {
-        font-size: 21px;
+        font-size: 14.5px;
         font-weight: 600;
         text-align: center;
         text-wrap: balance;
-      }
-      .eyebrow {
-        font-family: ui-monospace, monospace;
-        font-size: 11px;
-        letter-spacing: 0.14em;
-        opacity: 0.6;
-        text-align: left;
+        line-height: 1.3;
       }
       .opts {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 6px;
       }
       .opt {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 9px;
         background: var(--chip);
-        border-radius: 12px;
-        padding: 13px 14px;
-        font-size: 17px;
+        border-radius: 9px;
+        padding: 7px 11px;
+        font-size: 13px;
         font-family: ui-serif, Georgia, serif;
         font-style: italic;
       }
       .opt b {
         font-family: ui-monospace, monospace;
         font-style: normal;
-        font-size: 12px;
-        width: 24px;
-        height: 24px;
-        border-radius: 7px;
+        font-size: 10px;
+        width: 18px;
+        height: 18px;
+        border-radius: 5px;
         background: rgba(18, 53, 43, 0.14);
         display: grid;
         place-items: center;
         flex: none;
       }
 
-      /* == Controls ========================================================== */
-      .controls {
-        width: min(400px, 100%);
+      /* == Shared controls =================================================== */
+      .ctrl {
+        width: min(420px, 100%);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ctrl .go {
+        flex: 1;
+        height: 50px;
+        border: 0;
+        border-radius: 12px;
+        background: var(--ink);
+        color: var(--surface);
+        font-size: 16px;
+        font-weight: 600;
+        font-family: inherit;
+      }
+      .ctrl .go:active {
+        transform: scale(0.98);
+      }
+      .ctrl .count,
+      .ctrl .loop {
+        height: 50px;
+        padding: 0 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.16);
+        background: #fff;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .ctrl .loop[data-on] {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      details {
+        width: min(420px, 100%);
         background: var(--panel);
-        border-radius: 14px;
-        padding: 14px 16px;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-size: 13px;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+      }
+      summary {
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .dials {
         display: flex;
         flex-direction: column;
-        gap: 11px;
-        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
-        font-size: 13px;
+        gap: 9px;
+        padding-top: 10px;
       }
       .row {
         display: flex;
@@ -195,36 +239,35 @@
         gap: 10px;
       }
       .row label {
-        width: 92px;
+        width: 76px;
         flex: none;
         font-weight: 500;
       }
       .row output {
-        width: 58px;
+        width: 54px;
         flex: none;
         text-align: right;
         font-family: ui-monospace, monospace;
-        font-size: 12px;
+        font-size: 11.5px;
       }
       input[type='range'] {
         flex: 1;
         accent-color: var(--accent);
       }
-      select {
+      .dials select {
         flex: 1;
         font: inherit;
+        font-size: 13px;
         padding: 5px 8px;
         border-radius: 8px;
         border: 1px solid rgba(0, 0, 0, 0.18);
         background: #fff;
       }
-      .presets {
+      .dials .actions {
         display: flex;
-        gap: 7px;
-        flex-wrap: wrap;
+        gap: 8px;
       }
-      .presets button,
-      .actions button {
+      .dials .actions button {
         font: inherit;
         font-size: 12px;
         font-weight: 500;
@@ -232,19 +275,6 @@
         border-radius: 999px;
         border: 1px solid rgba(0, 0, 0, 0.16);
         background: #fff;
-      }
-      .presets button[data-active] {
-        background: var(--ink);
-        color: #fff;
-        border-color: var(--ink);
-      }
-      .actions {
-        display: flex;
-        gap: 7px;
-        align-items: center;
-      }
-      .actions .spacer {
-        flex: 1;
       }
       .hint {
         font-size: 11px;
@@ -254,94 +284,81 @@
     </style>
   </head>
   <body>
-    <h1>Quiz-advance push <small>— tap Next, tweak, copy the spec</small></h1>
+    <h1>Push, side by side <small>— one tap advances every stage</small></h1>
 
-    <div class="stage">
-      <div class="bar">
-        <span class="x">×</span>
-        <div class="track"><div class="fill" id="fill"></div></div>
-      </div>
-      <div class="viewport" id="viewport"></div>
-      <div class="foot"><button id="next">Next Question</button></div>
+    <div id="slots"></div>
+
+    <div class="ctrl">
+      <button class="count" id="count">3-up</button>
+      <button class="go" id="go">Advance all</button>
+      <button class="loop" id="loop">Loop</button>
     </div>
 
-    <div class="controls">
-      <div class="presets" id="presets"></div>
-      <div class="row">
-        <label for="dur">Duration</label
-        ><input type="range" id="dur" min="150" max="450" step="10" /><output
-          id="durOut"
-        ></output>
+    <details>
+      <summary>Custom spec — dials for the “Custom” preset</summary>
+      <div class="dials">
+        <div class="row">
+          <label for="dur">Duration</label
+          ><input type="range" id="dur" min="150" max="450" step="10" /><output
+            id="durOut"
+          ></output>
+        </div>
+        <div class="row">
+          <label for="ease">Easing</label
+          ><select id="ease"></select>
+        </div>
+        <div class="row">
+          <label for="fade">Fade</label
+          ><select id="fade">
+            <option value="late">late — opaque 60% of the way</option>
+            <option value="travel">with travel</option>
+            <option value="none">none (opaque)</option>
+          </select>
+        </div>
+        <div class="row">
+          <label for="blur">Blur</label
+          ><input type="range" id="blur" min="0" max="12" step="1" /><output
+            id="blurOut"
+          ></output>
+        </div>
+        <div class="row">
+          <label for="travel">Travel</label
+          ><input type="range" id="travel" min="40" max="110" step="5" /><output
+            id="travelOut"
+          ></output>
+        </div>
+        <div class="actions"><button id="copy">Copy custom spec</button></div>
+        <p class="hint">
+          Pick “Custom” in any slot’s dropdown, then tune it here while
+          comparing against fixed presets live. “Shipped” tracks what’s deployed
+          in the app. Copy the spec and paste it into the chat when a winner
+          emerges.
+        </p>
       </div>
-      <div class="row">
-        <label for="ease">Easing</label
-        ><select id="ease"></select>
-      </div>
-      <div class="row">
-        <label for="fade">Fade</label
-        ><select id="fade">
-          <option value="travel">with travel (shipped)</option>
-          <option value="late">late — opaque 60% of the way</option>
-          <option value="none">none (Duolingo)</option>
-        </select>
-      </div>
-      <div class="row">
-        <label for="blur">Blur</label
-        ><input type="range" id="blur" min="0" max="12" step="1" /><output
-          id="blurOut"
-        ></output>
-      </div>
-      <div class="row">
-        <label for="travel">Travel</label
-        ><input type="range" id="travel" min="40" max="110" step="5" /><output
-          id="travelOut"
-        ></output>
-      </div>
-      <div class="actions">
-        <label><input type="checkbox" id="loop" /> auto-advance</label>
-        <div class="spacer"></div>
-        <button id="copy">Copy spec</button>
-      </div>
-      <p class="hint">
-        Presets are starting points — every dial edits the active one.
-        “Duolingo” replicates the measured capture: ≈230 ms, opaque layers, no
-        blur. “Copy spec” puts the current values on the clipboard to paste back
-        into the chat.
-      </p>
-    </div>
+    </details>
 
     <script>
-      // Varying prompt lengths on purpose: the 1-line/2-line difference is what
-      // produces the height offset the fade is meant to mask. Feel it here.
+      // Alternating 1-line/2-line prompts on purpose: the height offset the
+      // fade must mask comes from exactly that variance.
       const QUESTIONS = [
+        { p: 'Not either C or L.', o: ['(∼C ∨ ∼L)', '∼(C ∨ L)', '∼C ∨ L'] },
         {
           p: 'If you aren’t courageous then you aren’t likeable.',
-          o: ['∼(C ⊃ ∼L)', '(∼C ⊃ ∼L)', '∼C ⊃ ∼L', '(∼C ⊃ L)'],
+          o: ['(∼C ⊃ ∼L)', '∼(C ⊃ ∼L)', '∼C ⊃ ∼L'],
         },
-        {
-          p: 'Not either C or L.',
-          o: ['(∼C ∨ L)', '(∼C ∨ ∼L)', '∼(C ∨ L)', '∼C ∨ L'],
-        },
+        { p: 'Both not F and R.', o: ['(∼F · R)', '∼(F · R)', '∼F · R'] },
         {
           p: 'You’re cheerful, and wild or generous.',
-          o: ['(C · (W ∨ G))', 'C · W ∨ G', '((C · W) ∨ G)', '(C · W) ∨ G'],
-        },
-        {
-          p: 'Both not F and R.',
-          o: ['∼(F · R)', '(∼F · R)', '∼F · R', '(∼F · ∼R)'],
-        },
-        {
-          p: 'Either both L and T or M, but never both at once.',
-          o: ['((L · T) ∨ M)', 'L · T ∨ M', '(L · (T ∨ M))', '∼((L · T) · M)'],
+          o: ['(C · (W ∨ G))', '((C · W) ∨ G)', 'C · W ∨ G'],
         },
         {
           p: 'If T then F, or S.',
-          o: ['(T ⊃ F) ∨ S', 'T ⊃ F ∨ S', '((T ⊃ F) ∨ S)', '(T ⊃ (F ∨ S))'],
+          o: ['((T ⊃ F) ∨ S)', '(T ⊃ (F ∨ S))', 'T ⊃ F ∨ S'],
         },
       ];
 
       const EASINGS = {
-        'ease-out-cubic (shipped)': 'cubic-bezier(0.215, 0.61, 0.355, 1)',
+        'ease-out-cubic': 'cubic-bezier(0.215, 0.61, 0.355, 1)',
         'ease-out-quad': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         'ease-out-quart': 'cubic-bezier(0.165, 0.84, 0.44, 1)',
         'ease-out-quint': 'cubic-bezier(0.23, 1, 0.32, 1)',
@@ -349,26 +366,25 @@
         'ease-in-out-cubic': 'cubic-bezier(0.645, 0.045, 0.355, 1)',
       };
 
-      // "Shipped" tracks ::view-transition-*(quiz-question) in
-      // app/globals.css — keep them in sync when a judgment lands.
+      // "Shipped" tracks ::view-transition-*(quiz-question) in app/globals.css.
       const PRESETS = {
         Shipped: {
           dur: 260,
-          ease: 'ease-out-cubic (shipped)',
+          ease: 'ease-out-cubic',
           fade: 'late',
           blur: 4,
           travel: 110,
         },
         Duolingo: {
           dur: 230,
-          ease: 'ease-out-cubic (shipped)',
+          ease: 'ease-out-cubic',
           fade: 'none',
           blur: 0,
           travel: 100,
         },
         'Travel fade (v1)': {
           dur: 240,
-          ease: 'ease-out-cubic (shipped)',
+          ease: 'ease-out-cubic',
           fade: 'travel',
           blur: 6,
           travel: 110,
@@ -376,55 +392,183 @@
         Slower: {
           dur: 320,
           ease: 'ease-out-quart',
-          fade: 'travel',
-          blur: 6,
+          fade: 'late',
+          blur: 4,
           travel: 110,
         },
+        Custom: null, // resolved from the dials at advance time
       };
 
       const $ = (id) => document.getElementById(id);
-      const state = { ...PRESETS['Shipped'] };
-      let qIndex = 0,
+      const custom = {
+        dur: 260,
+        ease: 'ease-out-cubic',
+        fade: 'late',
+        blur: 4,
+        travel: 110,
+      };
+      const DEFAULT_SLOTS = ['Shipped', 'Duolingo', 'Travel fade (v1)'];
+      let slotCount = 3,
+        qIndex = 0,
         busy = false,
         progress = 12;
 
-      const easeSel = $('ease');
-      for (const name of Object.keys(EASINGS))
-        easeSel.add(new Option(name, name));
-
-      const presetsBox = $('presets');
-      for (const name of Object.keys(PRESETS)) {
-        const b = document.createElement('button');
-        b.textContent = name;
-        b.onclick = () => {
-          Object.assign(state, PRESETS[name]);
-          syncControls();
-          markPreset(name);
-        };
-        presetsBox.appendChild(b);
+      function specOf(name) {
+        return name === 'Custom' ? { ...custom } : PRESETS[name];
       }
-      function markPreset(name) {
-        for (const b of presetsBox.children) {
-          if (b.textContent === name) b.setAttribute('data-active', '');
-          else b.removeAttribute('data-active');
+      function specLabel(s) {
+        return `${s.dur}ms · ${s.ease.replace('ease-out-', '')} · fade ${s.fade} · blur ${s.blur} · ${s.travel}%`;
+      }
+
+      function paneFor(q) {
+        const pane = document.createElement('div');
+        pane.className = 'pane';
+        pane.innerHTML = `
+      <p class="prompt">${q.p}</p>
+      <div class="opts">${q.o.map((t, i) => `<div class="opt"><b>${i + 1}</b>${t}</div>`).join('')}</div>`;
+        return pane;
+      }
+
+      const slotsBox = $('slots');
+      function buildSlots() {
+        const previous = [...slotsBox.querySelectorAll('select')].map(
+          (s) => s.value
+        );
+        slotsBox.innerHTML = '';
+        for (let i = 0; i < slotCount; i++) {
+          const slot = document.createElement('div');
+          slot.className = 'slot';
+          const preset = previous[i] || DEFAULT_SLOTS[i] || 'Custom';
+          slot.innerHTML = `
+        <div class="slot-head">
+          <select></select>
+          <span class="spec"></span>
+        </div>
+        <div class="stage">
+          <div class="bar"><span class="x">×</span><div class="track"><div class="fill"></div></div></div>
+          <div class="viewport"></div>
+        </div>`;
+          const sel = slot.querySelector('select');
+          for (const name of Object.keys(PRESETS))
+            sel.add(new Option(name, name));
+          sel.value = preset;
+          sel.addEventListener('change', updateSpecs);
+          slot
+            .querySelector('.viewport')
+            .appendChild(paneFor(QUESTIONS[qIndex]));
+          slot.querySelector('.fill').style.width = progress + '%';
+          slotsBox.appendChild(slot);
+        }
+        updateSpecs();
+      }
+      function updateSpecs() {
+        for (const slot of slotsBox.children) {
+          const spec = specOf(slot.querySelector('select').value);
+          slot.querySelector('.spec').textContent = specLabel(spec);
         }
       }
 
-      function syncControls() {
-        $('dur').value = state.dur;
-        $('durOut').value = state.dur + ' ms';
-        easeSel.value = state.ease;
-        $('fade').value = state.fade;
-        $('blur').value = state.blur;
-        $('blurOut').value = state.blur + ' px';
-        $('travel').value = state.travel;
-        $('travelOut').value = state.travel + '%';
+      // Keyframe builders — mirror the ::view-transition-old/new pairs.
+      function outFrames(s) {
+        const to = { transform: `translateX(-${s.travel}%)` };
+        if (s.fade === 'travel')
+          return [
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+            { ...to, opacity: 0, filter: `blur(${s.blur}px)` },
+          ];
+        if (s.fade === 'late')
+          return [
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+            { opacity: 1, filter: 'blur(0)', offset: 0.6 },
+            { ...to, opacity: 0, filter: `blur(${s.blur}px)` },
+          ];
+        return [{ transform: 'translateX(0)' }, to];
       }
-      function bind(id, key, fmt) {
+      function inFrames(s) {
+        const from = { transform: `translateX(${s.travel}%)` };
+        if (s.fade === 'travel')
+          return [
+            { ...from, opacity: 0, filter: `blur(${s.blur}px)` },
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+          ];
+        if (s.fade === 'late')
+          return [
+            { ...from, opacity: 0, filter: `blur(${s.blur}px)` },
+            { opacity: 1, filter: 'blur(0)', offset: 0.4 },
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+          ];
+        return [from, { transform: 'translateX(0)' }];
+      }
+
+      function advanceAll() {
+        if (busy) return;
+        busy = true;
+        qIndex = (qIndex + 1) % QUESTIONS.length;
+        progress = progress >= 88 ? 12 : progress + 9;
+
+        const finishes = [];
+        for (const slot of slotsBox.children) {
+          const spec = specOf(slot.querySelector('select').value);
+          const viewport = slot.querySelector('.viewport');
+          slot.querySelector('.fill').style.width = progress + '%';
+          const oldPane = viewport.querySelector('.pane');
+          const newPane = paneFor(QUESTIONS[qIndex]);
+          viewport.appendChild(newPane);
+          const opts = {
+            duration: spec.dur,
+            easing: EASINGS[spec.ease],
+            fill: 'both',
+          };
+          oldPane.animate(outFrames(spec), opts);
+          const anim = newPane.animate(inFrames(spec), opts);
+          finishes.push(
+            anim.finished
+              .then(() => oldPane.remove())
+              .catch(() => oldPane.remove())
+          );
+        }
+        Promise.all(finishes).then(() => {
+          busy = false;
+        });
+      }
+
+      $('go').addEventListener('click', advanceAll);
+      $('count').addEventListener('click', () => {
+        slotCount = slotCount === 3 ? 2 : 3;
+        $('count').textContent = slotCount + '-up';
+        buildSlots();
+      });
+      let loopTimer = null;
+      $('loop').addEventListener('click', () => {
+        if (loopTimer) {
+          clearInterval(loopTimer);
+          loopTimer = null;
+          $('loop').removeAttribute('data-on');
+        } else {
+          loopTimer = setInterval(advanceAll, 1600);
+          $('loop').setAttribute('data-on', '');
+        }
+      });
+
+      // Dials define the Custom spec.
+      const easeSel = $('ease');
+      for (const name of Object.keys(EASINGS))
+        easeSel.add(new Option(name, name));
+      function syncDials() {
+        $('dur').value = custom.dur;
+        $('durOut').value = custom.dur + ' ms';
+        easeSel.value = custom.ease;
+        $('fade').value = custom.fade;
+        $('blur').value = custom.blur;
+        $('blurOut').value = custom.blur + ' px';
+        $('travel').value = custom.travel;
+        $('travelOut').value = custom.travel + '%';
+        updateSpecs();
+      }
+      function bind(id, key) {
         $(id).addEventListener('input', () => {
-          state[key] = $(id).type === 'range' ? +$(id).value : $(id).value;
-          syncControls();
-          markPreset('');
+          custom[key] = $(id).type === 'range' ? +$(id).value : $(id).value;
+          syncDials();
         });
       }
       bind('dur', 'dur');
@@ -433,96 +577,19 @@
       bind('blur', 'blur');
       bind('travel', 'travel');
 
-      function paneFor(q) {
-        const pane = document.createElement('div');
-        pane.className = 'pane';
-        pane.innerHTML = `
-      <p class="prompt">${q.p}</p>
-      <p class="eyebrow">TRANSLATES INTO LOGIC AS:</p>
-      <div class="opts">${q.o.map((t, i) => `<div class="opt"><b>${i + 1}</b>${t}</div>`).join('')}</div>`;
-        return pane;
-      }
-
-      const viewport = $('viewport');
-      viewport.appendChild(paneFor(QUESTIONS[0]));
-
-      // Keyframe builders — mirror the ::view-transition-old/new pairs.
-      function outFrames() {
-        const to = { transform: `translateX(-${state.travel}%)` };
-        if (state.fade === 'travel')
-          return [
-            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
-            { ...to, opacity: 0, filter: `blur(${state.blur}px)` },
-          ];
-        if (state.fade === 'late')
-          return [
-            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
-            { opacity: 1, filter: 'blur(0)', offset: 0.6 },
-            { ...to, opacity: 0, filter: `blur(${state.blur}px)` },
-          ];
-        return [{ transform: 'translateX(0)' }, to];
-      }
-      function inFrames() {
-        const from = { transform: `translateX(${state.travel}%)` };
-        if (state.fade === 'travel')
-          return [
-            { ...from, opacity: 0, filter: `blur(${state.blur}px)` },
-            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
-          ];
-        if (state.fade === 'late')
-          return [
-            { ...from, opacity: 0, filter: `blur(${state.blur}px)` },
-            { opacity: 1, filter: 'blur(0)', offset: 0.4 },
-            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
-          ];
-        return [from, { transform: 'translateX(0)' }];
-      }
-
-      function advance() {
-        if (busy) return;
-        busy = true;
-        qIndex = (qIndex + 1) % QUESTIONS.length;
-        progress = progress >= 88 ? 12 : progress + 9;
-        $('fill').style.width = progress + '%';
-
-        const oldPane = viewport.querySelector('.pane');
-        const newPane = paneFor(QUESTIONS[qIndex]);
-        viewport.appendChild(newPane);
-
-        const opts = {
-          duration: state.dur,
-          easing: EASINGS[state.ease],
-          fill: 'both',
-        };
-        oldPane.animate(outFrames(), opts);
-        const inAnim = newPane.animate(inFrames(), opts);
-        inAnim.onfinish = () => {
-          oldPane.remove();
-          busy = false;
-        };
-      }
-
-      $('next').addEventListener('click', advance);
-      let loopTimer = null;
-      $('loop').addEventListener('change', (e) => {
-        if (e.target.checked)
-          loopTimer = setInterval(advance, Math.max(1200, state.dur + 900));
-        else clearInterval(loopTimer);
-      });
-
       $('copy').addEventListener('click', async () => {
-        const spec = `duration: ${state.dur}ms · easing: ${state.ease} → ${EASINGS[state.ease]} · fade: ${state.fade} · blur: ${state.blur}px · travel: ${state.travel}%`;
+        const spec = `custom → ${specLabel(custom)} (${EASINGS[custom.ease]})`;
         try {
           await navigator.clipboard.writeText(spec);
           $('copy').textContent = 'Copied ✓';
         } catch {
           prompt('Copy the spec:', spec);
         }
-        setTimeout(() => ($('copy').textContent = 'Copy spec'), 1400);
+        setTimeout(() => ($('copy').textContent = 'Copy custom spec'), 1400);
       });
 
-      syncControls();
-      markPreset('Shipped');
+      buildSlots();
+      syncDials();
     </script>
   </body>
 </html>
