@@ -56,7 +56,7 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "d is T",
             },
             {
-              "hint": "“A tall person in London” could describe many persons, and so translates into a capital letter.",
+              "hint": "“A tall person in Madrid” could describe many persons, and so translates into a capital letter.",
               "id": 1,
               "label": "d is t",
             },
@@ -67,12 +67,12 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "hint": "“Donna” stands for a single person, and so translates into a small letter.
-“A tall person in London” could describe many persons, and so translates into a capital letter.",
+“A tall person in Madrid” could describe many persons, and so translates into a capital letter.",
               "id": 3,
               "label": "D is t",
             },
           ],
-          "prompt": "Donna is a tall person in London.",
+          "prompt": "Donna is a tall person in Madrid.",
         },
         {
           "answer": "",
@@ -276,7 +276,7 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "k is L",
             },
             {
-              "hint": "“A logical person in Hamburg” could describe many persons, and so translates into a capital letter.",
+              "hint": "“A logical person in Barcelona” could describe many persons, and so translates into a capital letter.",
               "id": 1,
               "label": "k is l",
             },
@@ -287,12 +287,12 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "hint": "“Keith” stands for a single person, and so translates into a small letter.
-“A logical person in Hamburg” could describe many persons, and so translates into a capital letter.",
+“A logical person in Barcelona” could describe many persons, and so translates into a capital letter.",
               "id": 3,
               "label": "K is l",
             },
           ],
-          "prompt": "Keith is a logical person in Hamburg.",
+          "prompt": "Keith is a logical person in Barcelona.",
         },
       ],
       "shuffleOptions": true,
@@ -465,7 +465,7 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "g is h",
             },
             {
-              "hint": "“The most hideous one in Hamburg” stands for a single person, and so translates into a small letter.",
+              "hint": "“The most hideous one in Santa Monica” stands for a single person, and so translates into a small letter.",
               "id": 1,
               "label": "g is H",
             },
@@ -476,12 +476,12 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "hint": "“George” stands for a single person, and so translates into a small letter.
-“The most hideous one in Hamburg” stands for a single person, and so translates into a small letter.",
+“The most hideous one in Santa Monica” stands for a single person, and so translates into a small letter.",
               "id": 3,
               "label": "G is H",
             },
           ],
-          "prompt": "George is the most hideous one in Hamburg.",
+          "prompt": "George is the most hideous one in Santa Monica.",
         },
         {
           "answer": "",

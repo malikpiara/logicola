@@ -62,6 +62,25 @@ const places: readonly string[] = [
   'Santa Monica',
   'Mexico City',
   'Virginia',
+  // Entries above are the 2008 catalog, order preserved. Entries below
+  // are the top cities of actual drilling users per PostHog GeoIP
+  // (quiz_started, logicola.org only, 180 days to 2026-08-19) —
+  // hypothesis: prompts naming a student's own city read as written
+  // for their classroom, not a 2008 American one. Place strings are
+  // flavor only; no wff letter derives from them. (Malik, 2026-08-19)
+  'Quezon City',
+  'Manila',
+  'Makati',
+  'Caloocan',
+  'Ottawa',
+  'Toronto',
+  'Sudbury',
+  'Nairobi',
+  'Singapore',
+  'Saint Paul',
+  'Minneapolis',
+  'Newport News',
+  'Providenciales',
 ] as const;
 
 // =============================================================
