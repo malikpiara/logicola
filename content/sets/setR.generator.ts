@@ -29,9 +29,12 @@ import { pickFrom, rngFromSeed, type Rng } from '@/lib/rng';
 import {
   CARS,
   FALLACIES,
+  GROUPS,
   GENDERS,
   PARTIES,
   SECTIONS,
+  PLAYERS,
+  POLITICIANS,
   SURNAMES,
   type Fallacy,
   type FallacyCode,
@@ -99,10 +102,18 @@ function buildOptions(): Option[] {
  * drawn per token for the whole question, so the same surname, car,
  * party, and pronoun gender carry through passage and answer note.
  */
-function makeSubstitutions(rng: Rng, pool?: string[]): Record<string, string> {
+function makeSubstitutions(
+  rng: Rng,
+  pool?: string[],
+  usesPolitician = false
+): Record<string, string> {
   const surname = pickFrom(rng, SURNAMES);
-  const gender = pickFrom(rng, GENDERS);
   const party = pickFrom(rng, PARTIES);
+  // Six passages name a real figure. Their pronouns must travel with them —
+  // a random gender bundle there yields "vote for him" after naming Thatcher.
+  const politician = usesPolitician ? pickFrom(rng, POLITICIANS) : undefined;
+  const group = pickFrom(rng, GROUPS);
+  const gender = politician ?? pickFrom(rng, GENDERS);
   return {
     a: surname,
     A: surname,
@@ -115,12 +126,19 @@ function makeSubstitutions(rng: Rng, pool?: string[]): Record<string, string> {
     D: party.noun,
     E: party.adj,
     g: pool ? pickFrom(rng, pool) : '',
+    p: politician?.name ?? '',
+    P: politician?.name ?? '',
+    l: politician?.label ?? '',
+    f: pickFrom(rng, PLAYERS),
+    // Drawn once per question so {s} and {S} name the same group.
+    s: group,
+    S: group[0]!.toUpperCase() + group.slice(1),
   };
 }
 
 function resolve(template: string, subs: Record<string, string>): string {
   return template.replace(
-    /\{(a|A|b|B|hc|hC|HC|d|D|E|g)\}/g,
+    /\{(a|A|b|B|hc|hC|HC|d|D|E|g|p|P|l|f|s|S)\}/g,
     (_, token: string) => {
       const value = subs[token];
       if (!value) throw new Error(`setR: unresolved token {${token}}`);
@@ -197,7 +215,9 @@ function buildQuestion(
   const variant = pickFrom(rng, section.variants);
   const template =
     variant.mirror && rng() < 0.5 ? variant.mirror : variant.template;
-  const subs = makeSubstitutions(rng, variant.pool);
+  // The note is rendered with the same subs, so detect the token across both.
+  const usesPolitician = /\{[pPl]\}/.test(template + (variant.note ?? ''));
+  const subs = makeSubstitutions(rng, variant.pool, usesPolitician);
   return {
     id: qid(section.code, counter),
     prompt: resolve(template, subs),
