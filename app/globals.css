@@ -1121,6 +1121,95 @@
        keeps the last row clear of it, INSIDE the scroller where it
        belongs — outside, it read as dead space under the options. */
     padding-bottom: calc(128px + env(safe-area-inset-bottom));
+    /* The scroller reaches the SCREEN edge (canvas p-2 + qcontainer p-4
+       = 1.5rem per side) so its scrollbar rides the bezel, not the
+       options (Malik, 2026-08-19); the padding hands the gutter back to
+       the content. The bar is transparent until a scroll is actually
+       happening — the shell flips [data-scrolling] (see index.tsx). */
+    width: calc(100% + 3rem);
+    margin-inline: -1.5rem;
+    padding-inline: 1.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    /* Edge fades in the shadcn scroll-fade manner: a mask dissolves the
+       content itself near each edge, driven by the element's own scroll
+       timeline — no fade at an edge you can't scroll past. The bottom
+       boundary sits at the sheet line: content fades BEFORE passing
+       under the sheet, and at scroll-end the fade collapses so the last
+       row reads at full ink. Browsers without scroll-driven animations
+       keep these static values (the same graceful fallback shadcn
+       ships). */
+    --qfade-top: 16px;
+    --qfade-bottom: 32px;
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black var(--qfade-top),
+      black
+        calc(
+          100% - 128px - env(safe-area-inset-bottom, 0px) - var(--qfade-bottom)
+        ),
+      transparent calc(100% - 128px - env(safe-area-inset-bottom, 0px))
+    );
+  }
+
+  .quiz-immersive.quiz-grid-set .qoptions-grid[data-scrolling] {
+    scrollbar-color: color-mix(in srgb, var(--quiz-fg) 35%, transparent)
+      transparent;
+  }
+
+  /* The mask's top fade replaces the pin's gradient strip on grid sets —
+     both at once double-dimmed the first row. */
+  .quiz-immersive.quiz-grid-set .qpin::after {
+    content: none;
+  }
+
+  @supports (animation-timeline: scroll(self)) {
+    .quiz-immersive.quiz-grid-set .qoptions-grid {
+      animation: qoptsEdgeFade linear both;
+      animation-timeline: scroll(self block);
+    }
+  }
+}
+
+/* On md (48–64rem) the canvas pads p-8, so the screen edge is 3rem out. */
+@media (48rem <= width < 64rem) {
+  .quiz-immersive.quiz-grid-set .qoptions-grid {
+    width: calc(100% + 6rem);
+    margin-inline: -3rem;
+    padding-inline: 3rem;
+  }
+}
+
+/* Typed registration so the mask's fade distances interpolate smoothly
+   along the scroll timeline instead of flipping at keyframe midpoints. */
+@property --qfade-top {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+@property --qfade-bottom {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes qoptsEdgeFade {
+  0% {
+    --qfade-top: 0px;
+    --qfade-bottom: 32px;
+  }
+  6% {
+    --qfade-top: 16px;
+    --qfade-bottom: 32px;
+  }
+  94% {
+    --qfade-top: 16px;
+    --qfade-bottom: 32px;
+  }
+  100% {
+    --qfade-top: 16px;
+    --qfade-bottom: 0px;
   }
 }
 

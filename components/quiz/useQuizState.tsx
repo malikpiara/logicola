@@ -315,6 +315,11 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
       setSelectedOptionIds((prev) =>
         prev.filter((id) => correctId.includes(id))
       );
+      // Clear the cursor like single-select does below. Leaving it on the
+      // last-tapped wrong option meant a reveal-by-exhaustion put that
+      // option "under review" — its hint hijacked the answer explanation
+      // the reveal exists to show (Malik, 2026-08-19).
+      setSelectedOptionIndex(null);
       // DSL `*a k0<y:-2*$q` then `c0<y:q0`/`r0` — charges 2*level once, then
       // disarms. Safe to call on every miss; only the first one costs.
       setScoreState(registerMiss);

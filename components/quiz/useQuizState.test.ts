@@ -442,6 +442,16 @@ describe('useQuizState — multi-select (subset rule)', () => {
     await waitFor(() => expect(result.current.showSolution).toBe(true));
   });
 
+  it('clears the cursor on a wrong submission — a reveal shows the answer, not the last pick', async () => {
+    const result = await renderMulti(1); // reveal on the first wrong submission
+    act(() => result.current.selectOption(3)); // wrong — cursor lands here
+    act(() => result.current.onCheckAnswer());
+    await waitFor(() => expect(result.current.showSolution).toBe(true));
+    // With the cursor still on the wrong pick, the shell's review rule put
+    // that option's hint where the answer explanation belongs.
+    expect(result.current.selectedOptionIndex).toBeNull();
+  });
+
   it('does not score a question solved only after a wrong submission', async () => {
     const result = await renderMulti();
     act(() => result.current.selectOption(3)); // wrong

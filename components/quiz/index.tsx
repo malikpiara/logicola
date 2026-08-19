@@ -312,6 +312,23 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   // The current question block — after the keyed remount inside a view
   // transition this already points at the NEW node (flushSync commits it).
   const questionBlockRef = useRef<HTMLDivElement>(null);
+  // The options scroller's scrollbar is transparent until a scroll is
+  // actually happening ([data-scrolling] in globals.css); it fades back
+  // after a beat of stillness. Straight to the node, no per-frame state.
+  const optionsScrollIdleRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+  function handleOptionsScroll() {
+    const el = optionsGridRef.current;
+    if (!el) return;
+    el.dataset.scrolling = '';
+    if (optionsScrollIdleRef.current)
+      clearTimeout(optionsScrollIdleRef.current);
+    optionsScrollIdleRef.current = setTimeout(() => {
+      delete el.dataset.scrolling;
+      optionsScrollIdleRef.current = null;
+    }, 700);
+  }
   const [isMissFlashing, setIsMissFlashing] = useState(false);
   const missFlashTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
@@ -944,6 +961,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
 
                   <div
                     ref={optionsGridRef}
+                    onScroll={handleOptionsScroll}
                     className={
                       isGridLayout
                         ? // Column-major (options read down each column),
