@@ -349,12 +349,14 @@
         'ease-in-out-cubic': 'cubic-bezier(0.645, 0.045, 0.355, 1)',
       };
 
+      // "Shipped" tracks ::view-transition-*(quiz-question) in
+      // app/globals.css — keep them in sync when a judgment lands.
       const PRESETS = {
         Shipped: {
-          dur: 240,
+          dur: 260,
           ease: 'ease-out-cubic (shipped)',
-          fade: 'travel',
-          blur: 6,
+          fade: 'late',
+          blur: 4,
           travel: 110,
         },
         Duolingo: {
@@ -364,11 +366,11 @@
           blur: 0,
           travel: 100,
         },
-        'Late fade': {
-          dur: 260,
+        'Travel fade (v1)': {
+          dur: 240,
           ease: 'ease-out-cubic (shipped)',
-          fade: 'late',
-          blur: 4,
+          fade: 'travel',
+          blur: 6,
           travel: 110,
         },
         Slower: {
