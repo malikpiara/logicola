@@ -36,6 +36,7 @@
 import type { Option, Question, Set } from '../types';
 import { rngFromSeed, pickFrom, type Rng } from '@/lib/rng';
 import { adjectives, names, nounsProfessions, verbsA } from '../lexicons';
+import { indefiniteArticle, indefiniteArticleCapitalized } from '@/lib/grammar';
 
 // =============================================================
 // Lexicon — places (used for $p substitution)
@@ -94,6 +95,10 @@ const places: readonly string[] = [
  * Adjectives outside this set fall through to "most X" form.
  */
 const ESTREGULARS: ReadonlySet<string> = new Set([
+  // Modern-layer adjectives; the 2008 morphology rule never saw these,
+  // so the inflection is ours (Malik, 2026-08-19).
+  'kind',
+  'quiet',
   'clean',
   'smart',
   'short',
@@ -225,11 +230,11 @@ function template0(rng: Rng, counter: number): Question {
   const j = name[0]!.toLowerCase();
   const C = adj[0]!.toUpperCase();
   const c = adj[0]!.toLowerCase();
-  const classTerm = `A ${adj} person in ${place}`;
+  const classTerm = `${indefiniteArticleCapitalized(adj)} ${adj} person in ${place}`;
 
   return {
     id: qid('0', counter),
-    prompt: `${name} is a ${adj} person in ${place}.`,
+    prompt: `${name} is ${indefiniteArticle(adj)} ${adj} person in ${place}.`,
     ...buildOptions(
       [
         { label: `${j} is ${C}` },
@@ -261,11 +266,11 @@ function template2(rng: Rng, counter: number): Question {
   const place = pickFrom(rng, places);
   const A = noun[0]!.toUpperCase();
   const a = noun[0]!.toLowerCase();
-  const classTerm = `A ${adjB} ${noun}`;
+  const classTerm = `${indefiniteArticleCapitalized(adjB)} ${adjB} ${noun}`;
 
   return {
     id: qid('2', counter),
-    prompt: `I'm a ${adjB} ${noun} in ${place}.`,
+    prompt: `I'm ${indefiniteArticle(adjB)} ${adjB} ${noun} in ${place}.`,
     ...buildOptions(
       [
         { label: `i is ${A}` },
@@ -329,11 +334,11 @@ function template4(rng: Rng, counter: number): Question {
   const a = noun[0]!.toLowerCase();
   const C = adj[0]!.toUpperCase();
   const c = adj[0]!.toLowerCase();
-  const classTerm = `A ${adj} person`;
+  const classTerm = `${indefiniteArticleCapitalized(adj)} ${adj} person`;
 
   return {
     id: qid('4', counter),
-    prompt: `This ${noun} isn't a ${adj} person.`,
+    prompt: `This ${noun} isn't ${indefiniteArticle(adj)} ${adj} person.`,
     ...buildOptions(
       [
         { label: `${a} is not ${C}` },
@@ -394,11 +399,11 @@ function template6(rng: Rng, counter: number): Question {
   const adjB = pickFrom(rng, adjectives);
   const A = noun[0]!.toUpperCase();
   const a = noun[0]!.toLowerCase();
-  const classTerm = `A ${adjB} ${noun}`;
+  const classTerm = `${indefiniteArticleCapitalized(adjB)} ${adjB} ${noun}`;
 
   return {
     id: qid('6', counter),
-    prompt: `You aren't a ${adjB} ${noun}.`,
+    prompt: `You aren't ${indefiniteArticle(adjB)} ${adjB} ${noun}.`,
     ...buildOptions(
       [
         { label: `u is not ${A}` },

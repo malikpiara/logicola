@@ -28,28 +28,28 @@ exports[`setL generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "$ (Bcu \\supset  B\\underline{u}c) $",
+              "label": "$ (Inu \\supset  I\\underline{u}n) $",
             },
             {
               "hint": "Cross-person imperative: in \`(Hmu ⊃ H{u}m)\` the \`m\` is Madonna and the \`u\` is you. The consequent \`H{u}m\` is the imperative ‘help Madonna’.
-Argument order — Carol is the agent in the antecedent, so Bcu (= ‘Carol bothers you’).",
+Argument order — Noah is the agent in the antecedent, so Inu (= ‘Noah insults you’).",
               "id": 1,
-              "label": "$ (Buc \\supset  B\\underline{u}c) $",
+              "label": "$ (Iun \\supset  I\\underline{u}n) $",
             },
             {
               "hint": "Cross-person imperative: in \`(Hmu ⊃ H{u}m)\` the \`m\` is Madonna and the \`u\` is you. The consequent \`H{u}m\` is the imperative ‘help Madonna’.
 You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs. (The consequent is imperative — underline the u.)",
               "id": 2,
-              "label": "$ (Bcu \\supset  Buc) $",
+              "label": "$ (Inu \\supset  Iun) $",
             },
             {
               "hint": "Cross-person imperative: in \`(Hmu ⊃ H{u}m)\` the \`m\` is Madonna and the \`u\` is you. The consequent \`H{u}m\` is the imperative ‘help Madonna’.
-The antecedent is descriptive — don’t underline u in Bcu.",
+The antecedent is descriptive — don’t underline u in Inu.",
               "id": 3,
-              "label": "$ (Bc\\underline{u} \\supset  B\\underline{u}c) $",
+              "label": "$ (In\\underline{u} \\supset  I\\underline{u}n) $",
             },
           ],
-          "prompt": "If Carol is bothering you, then bother Carol.",
+          "prompt": "If Noah is insulting you, then insult Noah.",
         },
         {
           "answer": "",
@@ -60,28 +60,28 @@ The antecedent is descriptive — don’t underline u in Bcu.",
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim A\\underline{u}s $",
+              "label": "$ \\sim D\\underline{u}h $",
             },
             {
               "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
-You forgot the ‘∼’ — the prompt says DON’T abandon.",
+You forgot the ‘∼’ — the prompt says DON’T disturb.",
               "id": 1,
-              "label": "$ A\\underline{u}s $",
+              "label": "$ D\\underline{u}h $",
             },
             {
               "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
 You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs.",
               "id": 2,
-              "label": "$ \\sim Aus $",
+              "label": "$ \\sim Duh $",
             },
             {
               "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
-Argument order matters — A{u}s means ‘you, abandon Sally’.",
+Argument order matters — D{u}h means ‘you, disturb Harry’.",
               "id": 3,
-              "label": "$ \\sim A\\underline{n}u $",
+              "label": "$ \\sim D\\underline{n}u $",
             },
           ],
-          "prompt": "Don’t abandon Sally.",
+          "prompt": "Don’t disturb Harry.",
         },
         {
           "answer": "",
@@ -92,28 +92,28 @@ Argument order matters — A{u}s means ‘you, abandon Sally’.",
           "options": [
             {
               "id": 0,
-              "label": "$ (Fhu \\supset  F\\underline{u}h) $",
+              "label": "$ (Bbu \\supset  B\\underline{u}b) $",
             },
             {
               "hint": "Cross-person imperative: in \`(Hmu ⊃ H{u}m)\` the \`m\` is Madonna and the \`u\` is you. The consequent \`H{u}m\` is the imperative ‘help Madonna’.
-Argument order — Harry is the agent in the antecedent, so Fhu (= ‘Harry flatters you’).",
+Argument order — Ben is the agent in the antecedent, so Bbu (= ‘Ben bothers you’).",
               "id": 1,
-              "label": "$ (Fuh \\supset  F\\underline{u}h) $",
+              "label": "$ (Bub \\supset  B\\underline{u}b) $",
             },
             {
               "hint": "Cross-person imperative: in \`(Hmu ⊃ H{u}m)\` the \`m\` is Madonna and the \`u\` is you. The consequent \`H{u}m\` is the imperative ‘help Madonna’.
 You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs. (The consequent is imperative — underline the u.)",
               "id": 2,
-              "label": "$ (Fhu \\supset  Fuh) $",
+              "label": "$ (Bbu \\supset  Bub) $",
             },
             {
               "hint": "Cross-person imperative: in \`(Hmu ⊃ H{u}m)\` the \`m\` is Madonna and the \`u\` is you. The consequent \`H{u}m\` is the imperative ‘help Madonna’.
-The antecedent is descriptive — don’t underline u in Fhu.",
+The antecedent is descriptive — don’t underline u in Bbu.",
               "id": 3,
-              "label": "$ (Fh\\underline{u} \\supset  F\\underline{u}h) $",
+              "label": "$ (Bb\\underline{u} \\supset  B\\underline{u}b) $",
             },
           ],
-          "prompt": "Flatter Harry if Harry is flattering you.",
+          "prompt": "Bother Ben if Ben is bothering you.",
         },
         {
           "answer": "",
@@ -124,28 +124,28 @@ The antecedent is descriptive — don’t underline u in Fhu.",
           "options": [
             {
               "id": 0,
-              "label": "$ (Dgu \\supset  D\\underline{u}g) $",
+              "label": "$ (Dmu \\supset  D\\underline{u}m) $",
             },
             {
               "hint": "Cross-person imperative: in \`(Hmu ⊃ H{u}m)\` the \`m\` is Madonna and the \`u\` is you. The consequent \`H{u}m\` is the imperative ‘help Madonna’.
-Argument order — George is the agent in the antecedent, so Dgu (= ‘George disturbs you’).",
+Argument order — Mei is the agent in the antecedent, so Dmu (= ‘Mei disturbs you’).",
               "id": 1,
-              "label": "$ (Dug \\supset  D\\underline{u}g) $",
+              "label": "$ (Dum \\supset  D\\underline{u}m) $",
             },
             {
               "hint": "Cross-person imperative: in \`(Hmu ⊃ H{u}m)\` the \`m\` is Madonna and the \`u\` is you. The consequent \`H{u}m\` is the imperative ‘help Madonna’.
 You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs. (The consequent is imperative — underline the u.)",
               "id": 2,
-              "label": "$ (Dgu \\supset  Dug) $",
+              "label": "$ (Dmu \\supset  Dum) $",
             },
             {
               "hint": "Cross-person imperative: in \`(Hmu ⊃ H{u}m)\` the \`m\` is Madonna and the \`u\` is you. The consequent \`H{u}m\` is the imperative ‘help Madonna’.
-The antecedent is descriptive — don’t underline u in Dgu.",
+The antecedent is descriptive — don’t underline u in Dmu.",
               "id": 3,
-              "label": "$ (Dg\\underline{u} \\supset  D\\underline{u}g) $",
+              "label": "$ (Dm\\underline{u} \\supset  D\\underline{u}m) $",
             },
           ],
-          "prompt": "If George is disturbing you, then disturb George.",
+          "prompt": "If Mei is disturbing you, then disturb Mei.",
         },
         {
           "answer": "",
@@ -156,28 +156,28 @@ The antecedent is descriptive — don’t underline u in Dgu.",
           "options": [
             {
               "id": 0,
-              "label": "$ (Su \\supset  R\\underline{u}) $",
+              "label": "$ (Tu \\supset  S\\underline{u}) $",
             },
             {
               "hint": "Conditional with imperative consequent: only the consequent letter is underlined — \`(Su ⊃ L{u})\` reads ‘if you’re sleeping, then leave’.
-The antecedent is descriptive (‘you’re selling’), not imperative — don’t underline the u in Su.",
+The antecedent is descriptive (‘you’re talking’), not imperative — don’t underline the u in Tu.",
               "id": 1,
-              "label": "$ (S\\underline{u} \\supset  R\\underline{u}) $",
+              "label": "$ (T\\underline{u} \\supset  S\\underline{u}) $",
             },
             {
               "hint": "Conditional with imperative consequent: only the consequent letter is underlined — \`(Su ⊃ L{u})\` reads ‘if you’re sleeping, then leave’.
 You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs. (The consequent is the imperative.)",
               "id": 2,
-              "label": "$ (Su \\supset  Ru) $",
+              "label": "$ (Tu \\supset  Su) $",
             },
             {
               "hint": "Conditional with imperative consequent: only the consequent letter is underlined — \`(Su ⊃ L{u})\` reads ‘if you’re sleeping, then leave’.
 ‘If A then B’ is \`(A ⊃ B)\`, not \`(A · B)\`.",
               "id": 3,
-              "label": "$ (Su \\cdot  R\\underline{u}) $",
+              "label": "$ (Tu \\cdot  S\\underline{u}) $",
             },
           ],
-          "prompt": "If you’re selling, then repent.",
+          "prompt": "If you’re talking, then stay.",
         },
         {
           "answer": "",
@@ -188,28 +188,28 @@ You forgot to underline the imperative agent letter — descriptive \`Au\` and i
           "options": [
             {
               "id": 0,
-              "label": "$ S\\underline{u} $",
+              "label": "$ P\\underline{u} $",
             },
             {
               "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
 You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs.",
               "id": 1,
-              "label": "$ Su $",
+              "label": "$ Pu $",
             },
             {
               "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
 You dropped the agent — bare imperative addressed to you needs the underlined u.",
               "id": 2,
-              "label": "$ S $",
+              "label": "$ P $",
             },
             {
               "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
 There’s no ‘ought’ in the prompt — drop the \`O\`.",
               "id": 3,
-              "label": "$ OS\\underline{u} $",
+              "label": "$ OP\\underline{u} $",
             },
           ],
-          "prompt": "Sleep.",
+          "prompt": "Park.",
         },
         {
           "answer": "",
@@ -220,28 +220,28 @@ There’s no ‘ought’ in the prompt — drop the \`O\`.",
           "options": [
             {
               "id": 0,
-              "label": "$ (x)(Fx \\supset  R\\underline{x}) $",
+              "label": "$ (x)(Hx \\supset  C\\underline{x}) $",
             },
             {
               "hint": "‘Let everyone do A’ uses an imperative inside the quantifier — \`(x)A{x}\`. The underlined x marks the predicate as imperative.
-The antecedent ‘who is forfeiting’ is descriptive — don’t underline F.",
+The antecedent ‘who is hesitateing’ is descriptive — don’t underline H.",
               "id": 1,
-              "label": "$ (x)(F\\underline{x} \\supset  R\\underline{x}) $",
+              "label": "$ (x)(H\\underline{x} \\supset  C\\underline{x}) $",
             },
             {
               "hint": "‘Let everyone do A’ uses an imperative inside the quantifier — \`(x)A{x}\`. The underlined x marks the predicate as imperative.
 You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs. (The consequent is imperative.)",
               "id": 2,
-              "label": "$ (x)(Fx \\supset  Rx) $",
+              "label": "$ (x)(Hx \\supset  Cx) $",
             },
             {
               "hint": "‘Let everyone do A’ uses an imperative inside the quantifier — \`(x)A{x}\`. The underlined x marks the predicate as imperative.
 ‘Let everyone who…’ is universal-conditional \`(x)(… ⊃ …)\`, not existential-conjunction.",
               "id": 3,
-              "label": "$ (\\exists x)(Fx \\cdot  R\\underline{x}) $",
+              "label": "$ (\\exists x)(Hx \\cdot  C\\underline{x}) $",
             },
           ],
-          "prompt": "Would that everyone who is forfeiting repent.",
+          "prompt": "Would that everyone who is hesitateing cheat.",
         },
         {
           "answer": "",
@@ -252,28 +252,28 @@ You forgot to underline the imperative agent letter — descriptive \`Au\` and i
           "options": [
             {
               "id": 0,
-              "label": "$ (Bcu \\supset  B\\underline{u}c) $",
+              "label": "$ (Hpu \\supset  H\\underline{u}p) $",
             },
             {
               "hint": "Cross-person imperative: in \`(Hmu ⊃ H{u}m)\` the \`m\` is Madonna and the \`u\` is you. The consequent \`H{u}m\` is the imperative ‘help Madonna’.
-Argument order — Carol is the agent in the antecedent, so Bcu (= ‘Carol bothers you’).",
+Argument order — Priya is the agent in the antecedent, so Hpu (= ‘Priya hurts you’).",
               "id": 1,
-              "label": "$ (Buc \\supset  B\\underline{u}c) $",
+              "label": "$ (Hup \\supset  H\\underline{u}p) $",
             },
             {
               "hint": "Cross-person imperative: in \`(Hmu ⊃ H{u}m)\` the \`m\` is Madonna and the \`u\` is you. The consequent \`H{u}m\` is the imperative ‘help Madonna’.
 You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs. (The consequent is imperative — underline the u.)",
               "id": 2,
-              "label": "$ (Bcu \\supset  Buc) $",
+              "label": "$ (Hpu \\supset  Hup) $",
             },
             {
               "hint": "Cross-person imperative: in \`(Hmu ⊃ H{u}m)\` the \`m\` is Madonna and the \`u\` is you. The consequent \`H{u}m\` is the imperative ‘help Madonna’.
-The antecedent is descriptive — don’t underline u in Bcu.",
+The antecedent is descriptive — don’t underline u in Hpu.",
               "id": 3,
-              "label": "$ (Bc\\underline{u} \\supset  B\\underline{u}c) $",
+              "label": "$ (Hp\\underline{u} \\supset  H\\underline{u}p) $",
             },
           ],
-          "prompt": "If Carol is bothering you, then bother Carol.",
+          "prompt": "If Priya is hurting you, then hurt Priya.",
         },
         {
           "answer": "",
@@ -284,28 +284,28 @@ The antecedent is descriptive — don’t underline u in Bcu.",
           "options": [
             {
               "id": 0,
-              "label": "$ B\\underline{u} $",
+              "label": "$ I\\underline{u} $",
             },
             {
               "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
 You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs.",
               "id": 1,
-              "label": "$ Bu $",
+              "label": "$ Iu $",
             },
             {
               "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
 You dropped the agent — bare imperative addressed to you needs the underlined u.",
               "id": 2,
-              "label": "$ B $",
+              "label": "$ I $",
             },
             {
               "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
 There’s no ‘ought’ in the prompt — drop the \`O\`.",
               "id": 3,
-              "label": "$ OB\\underline{u} $",
+              "label": "$ OI\\underline{u} $",
             },
           ],
-          "prompt": "Boast.",
+          "prompt": "Improvise.",
         },
         {
           "answer": "",
@@ -316,28 +316,28 @@ There’s no ‘ought’ in the prompt — drop the \`O\`.",
           "options": [
             {
               "id": 0,
-              "label": "$ (\\sim S\\underline{u} \\vee  \\sim F\\underline{u}) $",
+              "label": "$ (\\sim A\\underline{u} \\vee  \\sim H\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine doing A with doing B’ → \`∼(A{u} · B{u})\` — both action letters are imperative (underlined).
 You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs. Both parts are imperatives here — underline both u’s.",
               "id": 1,
-              "label": "$ (\\sim Su \\vee  \\sim F\\underline{u}) $",
+              "label": "$ (\\sim Au \\vee  \\sim H\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine doing A with doing B’ → \`∼(A{u} · B{u})\` — both action letters are imperative (underlined).
 ‘Or’ is ‘∨’, not ‘·’.",
               "id": 2,
-              "label": "$ (\\sim S\\underline{u} \\cdot  \\sim F\\underline{u}) $",
+              "label": "$ (\\sim A\\underline{u} \\cdot  \\sim H\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine doing A with doing B’ → \`∼(A{u} · B{u})\` — both action letters are imperative (underlined).
 Wrong scope — that says ‘not (E or F)’, i.e., neither. The original says ‘either not-E or not-F’.",
               "id": 3,
-              "label": "$ \\sim (S\\underline{u} \\vee  F\\underline{u}) $",
+              "label": "$ \\sim (A\\underline{u} \\vee  H\\underline{u}) $",
             },
           ],
-          "prompt": "Either don’t speak or don’t forfeit.",
+          "prompt": "Either don’t argue or don’t hesitate.",
         },
       ],
       "shuffleOptions": true,
@@ -365,28 +365,28 @@ Wrong scope — that says ‘not (E or F)’, i.e., neither. The original says �
           "options": [
             {
               "id": 0,
-              "label": "$ (OC\\underline{u} \\supset  \\lozenge Cu) $",
+              "label": "$ (OD\\underline{u} \\supset  \\lozenge Du) $",
             },
             {
               "hint": "‘If you ought to do A, then A is possible’ — bridges deontic and modal: \`(OA{u} ⊃ ◇Au)\`. Often shortened as ‘ought implies can’.
-‘Your conforming is possible’ is descriptive (the act IS possible) — don’t underline u in Cu.",
+‘Your despairing is possible’ is descriptive (the act IS possible) — don’t underline u in Du.",
               "id": 1,
-              "label": "$ (OC\\underline{u} \\supset  \\lozenge C\\underline{u}) $",
+              "label": "$ (OD\\underline{u} \\supset  \\lozenge D\\underline{u}) $",
             },
             {
               "hint": "‘If you ought to do A, then A is possible’ — bridges deontic and modal: \`(OA{u} ⊃ ◇Au)\`. Often shortened as ‘ought implies can’.
 The prompt is plain if-then, not entailment — drop the outer ‘☐’.",
               "id": 2,
-              "label": "$ \\square (OC\\underline{u} \\supset  \\lozenge Cu) $",
+              "label": "$ \\square (OD\\underline{u} \\supset  \\lozenge Du) $",
             },
             {
               "hint": "‘If you ought to do A, then A is possible’ — bridges deontic and modal: \`(OA{u} ⊃ ◇Au)\`. Often shortened as ‘ought implies can’.
 ‘O’ must attach to an imperative wff — write \`OA{u}\`, not \`OAu\`.",
               "id": 3,
-              "label": "$ (OCu \\supset  \\lozenge Cu) $",
+              "label": "$ (ODu \\supset  \\lozenge Du) $",
             },
           ],
-          "prompt": "If you ought to conform, then it’s possible for you to conform.",
+          "prompt": "If you ought to despair, then it’s possible for you to despair.",
         },
         {
           "answer": "",
@@ -418,7 +418,7 @@ Group obligation \`O(∃x)Ax\` ≠ individual obligation \`(∃x)OAx\`. Quantifi
               "label": "$ (x)OS\\underline{x} $",
             },
           ],
-          "prompt": "Someone has the obligation to steal.",
+          "prompt": "Someone has the obligation to sell.",
         },
         {
           "answer": "",
@@ -429,28 +429,28 @@ Group obligation \`O(∃x)Ax\` ≠ individual obligation \`(∃x)OAx\`. Quantifi
           "options": [
             {
               "id": 0,
-              "label": "$ O(\\exists x)C\\underline{x} $",
+              "label": "$ O(\\exists x)A\\underline{x} $",
             },
             {
               "hint": "‘It’s obligatory that someone do A’ is \`O(∃x)Ax\` (group obligation); ‘there’s someone who has the obligation to do A’ is \`(∃x)OAx\` (specific person’s obligation). Different claims!
 Group obligation \`O(∃x)Ax\` ≠ individual obligation \`(∃x)OAx\`. Quantifier scope matters here. This prompt asserts the GROUP’s obligation.",
               "id": 1,
-              "label": "$ (\\exists x)OC\\underline{x} $",
+              "label": "$ (\\exists x)OA\\underline{x} $",
             },
             {
               "hint": "‘It’s obligatory that someone do A’ is \`O(∃x)Ax\` (group obligation); ‘there’s someone who has the obligation to do A’ is \`(∃x)OAx\` (specific person’s obligation). Different claims!
 ‘O’ must attach to an imperative wff — write \`OA{u}\`, not \`OAu\`.",
               "id": 2,
-              "label": "$ O(\\exists x)Cx $",
+              "label": "$ O(\\exists x)Ax $",
             },
             {
               "hint": "‘It’s obligatory that someone do A’ is \`O(∃x)Ax\` (group obligation); ‘there’s someone who has the obligation to do A’ is \`(∃x)OAx\` (specific person’s obligation). Different claims!
 ‘Someone’ is existential \`(∃x)\`, not universal \`(x)\`.",
               "id": 3,
-              "label": "$ O(x)C\\underline{x} $",
+              "label": "$ O(x)A\\underline{x} $",
             },
           ],
-          "prompt": "It’s obligatory that someone cheer.",
+          "prompt": "It’s obligatory that someone argue.",
         },
         {
           "answer": "",
@@ -461,28 +461,28 @@ Group obligation \`O(∃x)Ax\` ≠ individual obligation \`(∃x)OAx\`. Quantifi
           "options": [
             {
               "id": 0,
-              "label": "$ (OF\\underline{u} \\supset  \\lozenge Fu) $",
+              "label": "$ (OI\\underline{u} \\supset  \\lozenge Iu) $",
             },
             {
               "hint": "‘If you ought to do A, then A is possible’ — bridges deontic and modal: \`(OA{u} ⊃ ◇Au)\`. Often shortened as ‘ought implies can’.
 You swapped antecedent and consequent — ‘A only if B’ is \`(A ⊃ B)\`.",
               "id": 1,
-              "label": "$ (\\lozenge Fu \\supset  OF\\underline{u}) $",
+              "label": "$ (\\lozenge Iu \\supset  OI\\underline{u}) $",
             },
             {
               "hint": "‘If you ought to do A, then A is possible’ — bridges deontic and modal: \`(OA{u} ⊃ ◇Au)\`. Often shortened as ‘ought implies can’.
 ‘Only if’ is plain if-then, not entailment — drop the outer ‘☐’.",
               "id": 2,
-              "label": "$ \\square (OF\\underline{u} \\supset  \\lozenge Fu) $",
+              "label": "$ \\square (OI\\underline{u} \\supset  \\lozenge Iu) $",
             },
             {
               "hint": "‘If you ought to do A, then A is possible’ — bridges deontic and modal: \`(OA{u} ⊃ ◇Au)\`. Often shortened as ‘ought implies can’.
 ‘O’ must attach to an imperative wff — write \`OA{u}\`, not \`OAu\`.",
               "id": 3,
-              "label": "$ (OFu \\supset  \\lozenge Fu) $",
+              "label": "$ (OIu \\supset  \\lozenge Iu) $",
             },
           ],
-          "prompt": "It’s your duty to forfeit, only if it’s possible for you to forfeit.",
+          "prompt": "It’s your duty to improvise, only if it’s possible for you to improvise.",
         },
         {
           "answer": "",
@@ -493,28 +493,28 @@ You swapped antecedent and consequent — ‘A only if B’ is \`(A ⊃ B)\`.",
           "options": [
             {
               "id": 0,
-              "label": "$ O\\sim P\\underline{u} $",
+              "label": "$ O\\sim B\\underline{u} $",
             },
             {
               "hint": "‘O’ attaches to an imperative wff: \`OS{u}\` = ‘you ought to sing’. \`O\` followed by an underlined letter, not by a plain capital.
 You dropped the ‘∼’.",
               "id": 1,
-              "label": "$ OP\\underline{u} $",
+              "label": "$ OB\\underline{u} $",
             },
             {
               "hint": "‘O’ attaches to an imperative wff: \`OS{u}\` = ‘you ought to sing’. \`O\` followed by an underlined letter, not by a plain capital.
 ‘O’ must attach to an imperative wff — write \`OA{u}\`, not \`OAu\`.",
               "id": 2,
-              "label": "$ O\\sim Pu $",
+              "label": "$ O\\sim Bu $",
             },
             {
               "hint": "‘O’ attaches to an imperative wff: \`OS{u}\` = ‘you ought to sing’. \`O\` followed by an underlined letter, not by a plain capital.
 Wrong scope — ‘ought not’ is \`O∼\`, not \`∼O\`.",
               "id": 3,
-              "label": "$ \\sim OP\\underline{u} $",
+              "label": "$ \\sim OB\\underline{u} $",
             },
           ],
-          "prompt": "It’s your duty not to pray.",
+          "prompt": "It’s your duty not to boast.",
         },
         {
           "answer": "",
@@ -546,7 +546,7 @@ Group obligation \`O(∃x)Ax\` ≠ individual obligation \`(∃x)OAx\`. Quantifi
               "label": "$ O(x)S\\underline{x} $",
             },
           ],
-          "prompt": "It ought to be that someone steal.",
+          "prompt": "It ought to be that someone sell.",
         },
         {
           "answer": "",
@@ -557,28 +557,28 @@ Group obligation \`O(∃x)Ax\` ≠ individual obligation \`(∃x)OAx\`. Quantifi
           "options": [
             {
               "id": 0,
-              "label": "$ O\\sim T\\underline{u} $",
+              "label": "$ O\\sim W\\underline{u} $",
             },
             {
               "hint": "‘O’ attaches to an imperative wff: \`OS{u}\` = ‘you ought to sing’. \`O\` followed by an underlined letter, not by a plain capital.
 You dropped the ‘∼’.",
               "id": 1,
-              "label": "$ OT\\underline{u} $",
+              "label": "$ OW\\underline{u} $",
             },
             {
               "hint": "‘O’ attaches to an imperative wff: \`OS{u}\` = ‘you ought to sing’. \`O\` followed by an underlined letter, not by a plain capital.
 ‘O’ must attach to an imperative wff — write \`OA{u}\`, not \`OAu\`.",
               "id": 2,
-              "label": "$ O\\sim Tu $",
+              "label": "$ O\\sim Wu $",
             },
             {
               "hint": "‘O’ attaches to an imperative wff: \`OS{u}\` = ‘you ought to sing’. \`O\` followed by an underlined letter, not by a plain capital.
 Wrong scope — ‘ought not’ is \`O∼\`, not \`∼O\`.",
               "id": 3,
-              "label": "$ \\sim OT\\underline{u} $",
+              "label": "$ \\sim OW\\underline{u} $",
             },
           ],
-          "prompt": "It’s your duty not to talk.",
+          "prompt": "It’s your duty not to wander.",
         },
         {
           "answer": "",
@@ -589,28 +589,28 @@ Wrong scope — ‘ought not’ is \`O∼\`, not \`∼O\`.",
           "options": [
             {
               "id": 0,
-              "label": "$ \\square (OG\\underline{u} \\supset  RG\\underline{u}) $",
+              "label": "$ \\square (OP\\underline{u} \\supset  RP\\underline{u}) $",
             },
             {
               "hint": "‘If you ought to do A, then A is possible’ — bridges deontic and modal: \`(OA{u} ⊃ ◇Au)\`. Often shortened as ‘ought implies can’.
 ‘Entails’ wraps the conditional in \`☐\` — see Gensler §10.1.",
               "id": 1,
-              "label": "$ (OG\\underline{u} \\supset  RG\\underline{u}) $",
+              "label": "$ (OP\\underline{u} \\supset  RP\\underline{u}) $",
             },
             {
               "hint": "‘If you ought to do A, then A is possible’ — bridges deontic and modal: \`(OA{u} ⊃ ◇Au)\`. Often shortened as ‘ought implies can’.
-The consequent is ‘permissible’, not the bare action — use \`R\` not raw G{u}.",
+The consequent is ‘permissible’, not the bare action — use \`R\` not raw P{u}.",
               "id": 2,
-              "label": "$ \\square (OG\\underline{u} \\supset  G\\underline{u}) $",
+              "label": "$ \\square (OP\\underline{u} \\supset  P\\underline{u}) $",
             },
             {
               "hint": "‘If you ought to do A, then A is possible’ — bridges deontic and modal: \`(OA{u} ⊃ ◇Au)\`. Often shortened as ‘ought implies can’.
 ‘O’ must attach to an imperative wff — write \`OA{u}\`, not \`OAu\`.",
               "id": 3,
-              "label": "$ \\square (OGu \\supset  RGu) $",
+              "label": "$ \\square (OPu \\supset  RPu) $",
             },
           ],
-          "prompt": "“You ought to groan” entails “It’s permissible for you to groan.”",
+          "prompt": "“You ought to pray” entails “It’s permissible for you to pray.”",
         },
         {
           "answer": "",
@@ -621,28 +621,28 @@ The consequent is ‘permissible’, not the bare action — use \`R\` not raw G
           "options": [
             {
               "id": 0,
-              "label": "$ O\\sim (G\\underline{u} \\cdot  \\sim F\\underline{u}) $",
+              "label": "$ O\\sim (P\\underline{u} \\cdot  \\sim G\\underline{u}) $",
             },
             {
               "hint": "‘You ought not to combine A with B’ → \`O∼(A{u} · B{u})\` — the negation is INSIDE the \`O\` operator.
 ‘Ought not to combine’ is the don’t-combine form \`O∼(… · …)\`, not a conditional \`(… ⊃ O∼…)\`.",
               "id": 1,
-              "label": "$ (G\\underline{u} \\supset  OF\\underline{u}) $",
+              "label": "$ (P\\underline{u} \\supset  OG\\underline{u}) $",
             },
             {
               "hint": "‘You ought not to combine A with B’ → \`O∼(A{u} · B{u})\` — the negation is INSIDE the \`O\` operator.
 You dropped the ‘O’ — this is an obligation claim, not just a prohibition.",
               "id": 2,
-              "label": "$ \\sim (G\\underline{u} \\cdot  \\sim F\\underline{u}) $",
+              "label": "$ \\sim (P\\underline{u} \\cdot  \\sim G\\underline{u}) $",
             },
             {
               "hint": "‘You ought not to combine A with B’ → \`O∼(A{u} · B{u})\` — the negation is INSIDE the \`O\` operator.
 You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs. (Both action letters are imperative.)",
               "id": 3,
-              "label": "$ O\\sim (Gu \\cdot  \\sim Fu) $",
+              "label": "$ O\\sim (Pu \\cdot  \\sim Gu) $",
             },
           ],
-          "prompt": "It’s wrong to combine groaning with not flirting.",
+          "prompt": "It’s wrong to combine praying with not groaning.",
         },
         {
           "answer": "",
@@ -653,28 +653,28 @@ You forgot to underline the imperative agent letter — descriptive \`Au\` and i
           "options": [
             {
               "id": 0,
-              "label": "$ O\\sim I\\underline{u}c $",
+              "label": "$ O\\sim H\\underline{u}p $",
             },
             {
               "hint": "‘O’ attaches to an imperative wff: \`OS{u}\` = ‘you ought to sing’. \`O\` followed by an underlined letter, not by a plain capital.
 You dropped the ‘∼’.",
               "id": 1,
-              "label": "$ OI\\underline{u}c $",
+              "label": "$ OH\\underline{u}p $",
             },
             {
               "hint": "‘O’ attaches to an imperative wff: \`OS{u}\` = ‘you ought to sing’. \`O\` followed by an underlined letter, not by a plain capital.
 ‘O’ must attach to an imperative wff — write \`OA{u}\`, not \`OAu\`.",
               "id": 2,
-              "label": "$ O\\sim Iuc $",
+              "label": "$ O\\sim Hup $",
             },
             {
               "hint": "‘O’ attaches to an imperative wff: \`OS{u}\` = ‘you ought to sing’. \`O\` followed by an underlined letter, not by a plain capital.
 Wrong scope — ‘ought not’ is \`O∼\`, not \`∼O\`.",
               "id": 3,
-              "label": "$ \\sim OI\\underline{u}c $",
+              "label": "$ \\sim OH\\underline{u}p $",
             },
           ],
-          "prompt": "It’s your duty not to insult Carol.",
+          "prompt": "It’s your duty not to help Pedro.",
         },
       ],
       "shuffleOptions": true,

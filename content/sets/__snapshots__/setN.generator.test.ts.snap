@@ -32,7 +32,7 @@ exports[`setN generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-The outer believer is descriptive (each person sings), don’t underline the first x.",
+The outer believer is descriptive (each person sleeps), don’t underline the first x.",
               "id": 1,
               "label": "$ (x)\\underline{x}:OS\\underline{x} $",
             },
@@ -44,12 +44,12 @@ O scopes over a single imperative-believe wff, not the whole quantifier.",
             },
             {
               "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-‘Ought’ uses \`O\`. Don’t drop it. The prompt says ‘ought to sing’.",
+‘Ought’ uses \`O\`. Don’t drop it. The prompt says ‘ought to sleep’.",
               "id": 3,
               "label": "$ (x)x:S\\underline{x} $",
             },
           ],
-          "prompt": "Each person believes that they ought to sing.",
+          "prompt": "Each person believes that they ought to sleep.",
         },
         {
           "answer": "",
@@ -220,28 +220,28 @@ That describes (you believe not-A) instead of telling (don’t believe A).",
           "options": [
             {
               "id": 0,
-              "label": "$ (x)x:OD\\underline{x} $",
+              "label": "$ (x)x:OF\\underline{x} $",
             },
             {
               "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-The outer believer is descriptive (each person despairs), don’t underline the first x.",
+The outer believer is descriptive (each person flirts), don’t underline the first x.",
               "id": 1,
-              "label": "$ (x)\\underline{x}:OD\\underline{x} $",
+              "label": "$ (x)\\underline{x}:OF\\underline{x} $",
             },
             {
               "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
 O scopes over a single imperative-believe wff, not the whole quantifier.",
               "id": 2,
-              "label": "$ O(x)x:D\\underline{x} $",
+              "label": "$ O(x)x:F\\underline{x} $",
             },
             {
               "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-‘Ought’ uses \`O\`. Don’t drop it. The prompt says ‘ought to despair’.",
+‘Ought’ uses \`O\`. Don’t drop it. The prompt says ‘ought to flirt’.",
               "id": 3,
-              "label": "$ (x)x:D\\underline{x} $",
+              "label": "$ (x)x:F\\underline{x} $",
             },
           ],
-          "prompt": "Everyone believes that they ought to despair.",
+          "prompt": "Everyone believes that they ought to flirt.",
         },
         {
           "answer": "",
@@ -252,28 +252,28 @@ O scopes over a single imperative-believe wff, not the whole quantifier.",
           "options": [
             {
               "id": 0,
-              "label": "$ (x)x:OS\\underline{x} $",
+              "label": "$ (x)x:OP\\underline{x} $",
             },
             {
               "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-The outer believer is descriptive (each person sleeps), don’t underline the first x.",
+The outer believer is descriptive (each person parks), don’t underline the first x.",
               "id": 1,
-              "label": "$ (x)\\underline{x}:OS\\underline{x} $",
+              "label": "$ (x)\\underline{x}:OP\\underline{x} $",
             },
             {
               "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
 O scopes over a single imperative-believe wff, not the whole quantifier.",
               "id": 2,
-              "label": "$ O(x)x:S\\underline{x} $",
+              "label": "$ O(x)x:P\\underline{x} $",
             },
             {
               "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-‘Ought’ uses \`O\`. Don’t drop it. The prompt says ‘ought to sleep’.",
+‘Ought’ uses \`O\`. Don’t drop it. The prompt says ‘ought to park’.",
               "id": 3,
-              "label": "$ (x)x:S\\underline{x} $",
+              "label": "$ (x)x:P\\underline{x} $",
             },
           ],
-          "prompt": "Each person believes that they ought to sleep.",
+          "prompt": "Each person believes that they ought to park.",
         },
         {
           "answer": "",
@@ -365,28 +365,28 @@ You inverted the negations — the prompt says you DON’T believe both.",
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim (\\underline{u}:C\\underline{u} \\cdot  \\sim Cu) $",
+              "label": "$ \\sim (\\underline{u}:D\\underline{u} \\cdot  \\sim Du) $",
             },
             {
               "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 ‘Don’t combine A with B’ is the don’t-combine form \`∼(A · B)\`, not the if-then \`(A ⊃ ∼B)\`.",
               "id": 1,
-              "label": "$ (\\underline{u}:C\\underline{u} \\supset  Cu) $",
+              "label": "$ (\\underline{u}:D\\underline{u} \\supset  Du) $",
             },
             {
               "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-The second conjunct is descriptive (you don’t actually conform) — don’t underline the u in Cu.",
+The second conjunct is descriptive (you don’t actually despair) — don’t underline the u in Du.",
               "id": 2,
-              "label": "$ \\sim (\\underline{u}:C\\underline{u} \\cdot  \\sim C\\underline{u}) $",
+              "label": "$ \\sim (\\underline{u}:D\\underline{u} \\cdot  \\sim D\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner C{u} is imperative — what you’re wanting yourself to do.)",
+You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner D{u} is imperative — what you’re wanting yourself to do.)",
               "id": 3,
-              "label": "$ \\sim (\\underline{u}:Cu \\cdot  \\sim Cu) $",
+              "label": "$ \\sim (\\underline{u}:Du \\cdot  \\sim Du) $",
             },
           ],
-          "prompt": "Don’t combine wanting yourself to conform with not conforming.",
+          "prompt": "Don’t combine wanting yourself to despair with not despairing.",
         },
         {
           "answer": "",
@@ -397,28 +397,28 @@ You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` a
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim (\\underline{u}:P\\underline{u} \\cdot  \\sim Pu) $",
+              "label": "$ \\sim (\\underline{u}:C\\underline{u} \\cdot  \\sim Cu) $",
             },
             {
               "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 ‘Don’t combine A with B’ is the don’t-combine form \`∼(A · B)\`, not the if-then \`(A ⊃ ∼B)\`.",
               "id": 1,
-              "label": "$ (\\underline{u}:P\\underline{u} \\supset  Pu) $",
+              "label": "$ (\\underline{u}:C\\underline{u} \\supset  Cu) $",
             },
             {
               "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-The second conjunct is descriptive (you don’t actually pray) — don’t underline the u in Pu.",
+The second conjunct is descriptive (you don’t actually cheat) — don’t underline the u in Cu.",
               "id": 2,
-              "label": "$ \\sim (\\underline{u}:P\\underline{u} \\cdot  \\sim P\\underline{u}) $",
+              "label": "$ \\sim (\\underline{u}:C\\underline{u} \\cdot  \\sim C\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner P{u} is imperative — what you’re wanting yourself to do.)",
+You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner C{u} is imperative — what you’re wanting yourself to do.)",
               "id": 3,
-              "label": "$ \\sim (\\underline{u}:Pu \\cdot  \\sim Pu) $",
+              "label": "$ \\sim (\\underline{u}:Cu \\cdot  \\sim Cu) $",
             },
           ],
-          "prompt": "Don’t want to pray without actually praying.",
+          "prompt": "Don’t want to cheat without actually cheating.",
         },
         {
           "answer": "",
@@ -426,102 +426,6 @@ You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` a
             0,
           ],
           "id": "gen.N.2.2",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ \\underline{u}:(x)S\\underline{x} $",
-            },
-            {
-              "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be underlined. (Outer u: is imperative — the prompt is a command to want.)",
-              "id": 1,
-              "label": "$ u:(x)S\\underline{x} $",
-            },
-            {
-              "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Sx is also imperative.)",
-              "id": 2,
-              "label": "$ \\underline{u}:(x)Sx $",
-            },
-            {
-              "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-‘Ought’ uses \`O\`. Don’t drop it. — wait, the prompt doesn’t say ‘ought’, just ‘want’. Drop the O.",
-              "id": 3,
-              "label": "$ O\\underline{u}:(x)S\\underline{x} $",
-            },
-          ],
-          "prompt": "Would that everyone sleep.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.N.3.3",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ (Au \\supset  u:S\\underline{u}) $",
-            },
-            {
-              "hint": "‘You resolve to do A’ = ‘You accept the imperative for you to do A’ → \`u:A{u}\`. The outer u: is your accepting the imperative; the inner A{u} is the imperative addressed to you.
-You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Su is the imperative ‘sing!’.)",
-              "id": 1,
-              "label": "$ (Au \\supset  u:Su) $",
-            },
-            {
-              "hint": "‘You resolve to do A’ = ‘You accept the imperative for you to do A’ → \`u:A{u}\`. The outer u: is your accepting the imperative; the inner A{u} is the imperative addressed to you.
-Since the sentence DESCRIBES what you believe, the letter before ‘:’ should NOT be underlined. (The antecedent ‘you ARE A’ describes — don’t underline.)",
-              "id": 2,
-              "label": "$ (A\\underline{u} \\supset  u:S\\underline{u}) $",
-            },
-            {
-              "hint": "‘You resolve to do A’ = ‘You accept the imperative for you to do A’ → \`u:A{u}\`. The outer u: is your accepting the imperative; the inner A{u} is the imperative addressed to you.
-Since the sentence DESCRIBES what you believe, the letter before ‘:’ should NOT be underlined. (Outer u: is descriptive — you DO resolve, you’re not commanded to.)",
-              "id": 3,
-              "label": "$ (Au \\supset  \\underline{u}:S\\underline{u}) $",
-            },
-          ],
-          "prompt": "If you are A, you commit yourself to sing.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.N.4.4",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ \\sim (\\underline{u}:F\\underline{u} \\cdot  \\sim Fu) $",
-            },
-            {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-‘Don’t combine A with B’ is the don’t-combine form \`∼(A · B)\`, not the if-then \`(A ⊃ ∼B)\`.",
-              "id": 1,
-              "label": "$ (\\underline{u}:F\\underline{u} \\supset  Fu) $",
-            },
-            {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-The second conjunct is descriptive (you don’t actually forfeit) — don’t underline the u in Fu.",
-              "id": 2,
-              "label": "$ \\sim (\\underline{u}:F\\underline{u} \\cdot  \\sim F\\underline{u}) $",
-            },
-            {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner F{u} is imperative — what you’re wanting yourself to do.)",
-              "id": 3,
-              "label": "$ \\sim (\\underline{u}:Fu \\cdot  \\sim Fu) $",
-            },
-          ],
-          "prompt": "Don’t combine wanting yourself to forfeit with not forfeiting.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.N.2.5",
           "options": [
             {
               "id": 0,
@@ -546,7 +450,103 @@ You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` a
               "label": "$ O\\underline{u}:(x)P\\underline{x} $",
             },
           ],
-          "prompt": "Would that everyone pray.",
+          "prompt": "Would that everyone park.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.N.3.3",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ (Au \\supset  u:S\\underline{u}) $",
+            },
+            {
+              "hint": "‘You resolve to do A’ = ‘You accept the imperative for you to do A’ → \`u:A{u}\`. The outer u: is your accepting the imperative; the inner A{u} is the imperative addressed to you.
+You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Su is the imperative ‘sleep!’.)",
+              "id": 1,
+              "label": "$ (Au \\supset  u:Su) $",
+            },
+            {
+              "hint": "‘You resolve to do A’ = ‘You accept the imperative for you to do A’ → \`u:A{u}\`. The outer u: is your accepting the imperative; the inner A{u} is the imperative addressed to you.
+Since the sentence DESCRIBES what you believe, the letter before ‘:’ should NOT be underlined. (The antecedent ‘you ARE A’ describes — don’t underline.)",
+              "id": 2,
+              "label": "$ (A\\underline{u} \\supset  u:S\\underline{u}) $",
+            },
+            {
+              "hint": "‘You resolve to do A’ = ‘You accept the imperative for you to do A’ → \`u:A{u}\`. The outer u: is your accepting the imperative; the inner A{u} is the imperative addressed to you.
+Since the sentence DESCRIBES what you believe, the letter before ‘:’ should NOT be underlined. (Outer u: is descriptive — you DO resolve, you’re not commanded to.)",
+              "id": 3,
+              "label": "$ (Au \\supset  \\underline{u}:S\\underline{u}) $",
+            },
+          ],
+          "prompt": "If you are A, you commit yourself to sleep.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.N.4.4",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ \\sim (\\underline{u}:I\\underline{u} \\cdot  \\sim Iu) $",
+            },
+            {
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
+‘Don’t combine A with B’ is the don’t-combine form \`∼(A · B)\`, not the if-then \`(A ⊃ ∼B)\`.",
+              "id": 1,
+              "label": "$ (\\underline{u}:I\\underline{u} \\supset  Iu) $",
+            },
+            {
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
+The second conjunct is descriptive (you don’t actually improvise) — don’t underline the u in Iu.",
+              "id": 2,
+              "label": "$ \\sim (\\underline{u}:I\\underline{u} \\cdot  \\sim I\\underline{u}) $",
+            },
+            {
+              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
+You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner I{u} is imperative — what you’re wanting yourself to do.)",
+              "id": 3,
+              "label": "$ \\sim (\\underline{u}:Iu \\cdot  \\sim Iu) $",
+            },
+          ],
+          "prompt": "Don’t combine wanting yourself to improvise with not improviseing.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.N.2.5",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ \\underline{u}:(x)B\\underline{x} $",
+            },
+            {
+              "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
+Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be underlined. (Outer u: is imperative — the prompt is a command to want.)",
+              "id": 1,
+              "label": "$ u:(x)B\\underline{x} $",
+            },
+            {
+              "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
+You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Bx is also imperative.)",
+              "id": 2,
+              "label": "$ \\underline{u}:(x)Bx $",
+            },
+            {
+              "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
+‘Ought’ uses \`O\`. Don’t drop it. — wait, the prompt doesn’t say ‘ought’, just ‘want’. Drop the O.",
+              "id": 3,
+              "label": "$ O\\underline{u}:(x)B\\underline{x} $",
+            },
+          ],
+          "prompt": "Would that everyone boast.",
         },
         {
           "answer": "",
@@ -578,7 +578,7 @@ You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` a
               "label": "$ O\\underline{u}:(x)S\\underline{x} $",
             },
           ],
-          "prompt": "Want everyone to steal.",
+          "prompt": "Want everyone to sell.",
         },
         {
           "answer": "",
@@ -621,28 +621,28 @@ You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` a
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim (\\underline{u}:G\\underline{u} \\cdot  \\sim Gu) $",
+              "label": "$ \\sim (\\underline{u}:B\\underline{u} \\cdot  \\sim Bu) $",
             },
             {
               "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
 ‘Don’t combine A with B’ is the don’t-combine form \`∼(A · B)\`, not the if-then \`(A ⊃ ∼B)\`.",
               "id": 1,
-              "label": "$ (\\underline{u}:G\\underline{u} \\supset  Gu) $",
+              "label": "$ (\\underline{u}:B\\underline{u} \\supset  Bu) $",
             },
             {
               "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-The second conjunct is descriptive (you don’t actually groan) — don’t underline the u in Gu.",
+The second conjunct is descriptive (you don’t actually bluff) — don’t underline the u in Bu.",
               "id": 2,
-              "label": "$ \\sim (\\underline{u}:G\\underline{u} \\cdot  \\sim G\\underline{u}) $",
+              "label": "$ \\sim (\\underline{u}:B\\underline{u} \\cdot  \\sim B\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner G{u} is imperative — what you’re wanting yourself to do.)",
+You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner B{u} is imperative — what you’re wanting yourself to do.)",
               "id": 3,
-              "label": "$ \\sim (\\underline{u}:Gu \\cdot  \\sim Gu) $",
+              "label": "$ \\sim (\\underline{u}:Bu \\cdot  \\sim Bu) $",
             },
           ],
-          "prompt": "Don’t both want yourself to groan and fail to groan.",
+          "prompt": "Don’t both want yourself to bluff and fail to bluff.",
         },
         {
           "answer": "",
@@ -653,28 +653,28 @@ You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` a
           "options": [
             {
               "id": 0,
-              "label": "$ \\underline{u}:(x)P\\underline{x} $",
+              "label": "$ \\underline{u}:(x)B\\underline{x} $",
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
 Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be underlined. (Outer u: is imperative — the prompt is a command to want.)",
               "id": 1,
-              "label": "$ u:(x)P\\underline{x} $",
+              "label": "$ u:(x)B\\underline{x} $",
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Px is also imperative.)",
+You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Bx is also imperative.)",
               "id": 2,
-              "label": "$ \\underline{u}:(x)Px $",
+              "label": "$ \\underline{u}:(x)Bx $",
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
 ‘Ought’ uses \`O\`. Don’t drop it. — wait, the prompt doesn’t say ‘ought’, just ‘want’. Drop the O.",
               "id": 3,
-              "label": "$ O\\underline{u}:(x)P\\underline{x} $",
+              "label": "$ O\\underline{u}:(x)B\\underline{x} $",
             },
           ],
-          "prompt": "Want everyone to pray.",
+          "prompt": "Want everyone to boast.",
         },
       ],
       "shuffleOptions": true,
