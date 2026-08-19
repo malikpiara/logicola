@@ -11,7 +11,7 @@ import Prompt from '../prompt';
 import { EndScreen } from './endScreen';
 import { KeyboardKeys } from './keyboardKeys';
 import { StartScreen } from './startScreen';
-import useQuizState, { getRevealThreshold } from './useQuizState';
+import useQuizState from './useQuizState';
 import { progressLabel, type QuizMode } from './quizMode';
 import { canScore, chargeFor, progress } from '@/lib/scoring';
 import { writeLastDrill } from '@/lib/lastDrill';
@@ -333,7 +333,6 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   const missFlashTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
-  const hasExpandedGuideAfterMissRef = useRef(false);
   const questionExitTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
@@ -455,15 +454,6 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   const liveAnswer =
     showSolution && !liveHintOption ? currentQuestion?.answer : undefined;
 
-  function expandGuideForFirstMiss() {
-    if (!hasGuide) return;
-    if (!currentQuestion) return;
-    if (hasExpandedGuideAfterMissRef.current) return;
-
-    hasExpandedGuideAfterMissRef.current = true;
-    setSnapKind('guide');
-  }
-
   // The bar flashes only where it is health: scored mode, where the
   // penalty genuinely shrinks it. Count mode keeps its completion
   // reading — blinking it would threaten progress a miss doesn't
@@ -487,28 +477,18 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   }
 
   function handleCheckAnswer() {
-    // First attempt = no wrong guesses yet, read BEFORE grading commits.
-    const wasFirstAttempt = previousGuesses.length === 0;
     // The hook is the only grader; the shell just reacts to its verdict.
     const outcome = onCheckAnswer();
     // The one moment a haptic carries information, not just texture: it
     // confirms the outcome the eye is still racing to read.
     if (outcome) haptic(outcome === 'correct' ? 'success' : 'error');
 
-    if (outcome === 'miss') {
-      flashBarDamage();
-
-      // A missed first attempt opens the guide — unless the miss exhausted
-      // the reveal budget (threshold 1), where the answer is showing and the
-      // guide would arrive a beat too late to help.
-      if (
-        wasFirstAttempt &&
-        currentQuestion &&
-        1 < getRevealThreshold(subSet, currentQuestion)
-      ) {
-        expandGuideForFirstMiss();
-      }
-    }
+    // A first miss used to expand the guide sheet on its own. Retired
+    // 2026-08-19 (Malik): an uninvited sheet takes the screen at exactly
+    // the moment the learner is re-reading the question, and the standing
+    // Guide chip in the header already carries the affordance — the help
+    // is offered, not pushed. The miss still flashes the damage.
+    if (outcome === 'miss') flashBarDamage();
   }
 
   function handleNextQuestionTransition() {
