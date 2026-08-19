@@ -158,11 +158,64 @@ describe('setR data — original multi-answer (M-code) fidelity', () => {
 });
 
 describe('setR data — substitution pools', () => {
-  it('matches the original header pools', () => {
-    expect(SURNAMES).toHaveLength(16);
-    expect(CARS).toHaveLength(8);
+  /**
+   * These pools are layered the same way content/lexicons.ts is: the 2008
+   * header block is frozen in the Set R port as SURNAMES_2008 / CARS_2008, and
+   * the live pools are (baseline − retired) + modern additions. So the
+   * assertion is no longer an exact count — it is that every 2008 entry
+   * survived, minus the one deliberate retirement.
+   *
+   * Names and brands are safe to modernise in a way the passages are not:
+   * substituting them changes who a passage is about, never what it argues.
+   */
+  it('keeps every 2008 surname', () => {
+    for (const surname of [
+      'Martinez',
+      'Smith',
+      'Jones',
+      'Brown',
+      'Greene',
+      'Fernandez',
+      'Connolly',
+      'Wong',
+      'Weiss',
+      'Gensler', // the author's own name — an easter egg the port preserves
+      'Wilson',
+      'Rogers',
+      'Hilton',
+      'Miller',
+      'Boyle',
+      'Hughes',
+    ]) {
+      expect(SURNAMES).toContain(surname);
+    }
+    expect(SURNAMES.length).toBeGreaterThan(16);
+  });
+
+  it('keeps every 2008 car except the retired one', () => {
+    for (const car of [
+      'Honda',
+      'Ford',
+      'Chevrolet',
+      'Toyota',
+      'Volkswagen',
+      'Buick',
+      'Dodge',
+    ]) {
+      expect(CARS).toContain(car);
+    }
+    // Discontinued in 2010; retired in the Set R port's CARS_RETIRED.
+    expect(CARS).not.toContain('Pontiac');
+  });
+
+  it('leaves the party and gender pools at the 2008 text', () => {
     expect(PARTIES).toHaveLength(5);
     expect(PARTIES.find((p) => p.noun === 'democrat')?.adj).toBe('democratic');
     expect(GENDERS).toHaveLength(2);
+  });
+
+  it('has no duplicate entries in either modernised pool', () => {
+    expect(new Set(SURNAMES).size).toBe(SURNAMES.length);
+    expect(new Set(CARS).size).toBe(CARS.length);
   });
 });

@@ -450,7 +450,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "Look at all the bad things that happened while my socialist opponent Martinez was in office. If you don’t want to elect an official who will bring about such things, then vote against my opponent.",
+          "prompt": "Look at all the bad things that happened while my socialist opponent Smith was in office. If you don’t want to elect an official who will bring about such things, then vote against my opponent.",
         },
         {
           "answer": "This passage illustrates the appeal to ignorance fallacy. “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
@@ -880,7 +880,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "The head of the socialist party claims that Fernandez is by far the best candidate. So Fernandez must be the best candidate.",
+          "prompt": "The head of the socialist party claims that Wilson is by far the best candidate. So Wilson must be the best candidate.",
         },
         {
           "answer": "This passage illustrates the part-whole fallacy. The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
@@ -1310,10 +1310,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "Rogers must like me. She told me she likes me – and she said that she always tells the truth to people she likes.",
+          "prompt": "Singh must like me. She told me she likes me – and she said that she always tells the truth to people she likes.",
         },
         {
-          "answer": "This passage illustrates the pro-con fallacy. What are the disadvantages of getting a Volkswagen?",
+          "answer": "This passage illustrates the pro-con fallacy. What are the disadvantages of getting a Hyundai?",
           "correctId": [
             14,
           ],
@@ -1525,7 +1525,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "Volkswagens are inexpensive and get good gas mileage. So you should get a Volkswagen.",
+          "prompt": "Hyundais are inexpensive and get good gas mileage. So you should get a Hyundai.",
         },
         {
           "answer": "This passage illustrates the appeal to crowd fallacy. Most people believe A. ∴ A is true.",
@@ -1740,7 +1740,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "A lot of people are saying that Boyle will be the next liberal candidate. So this is sure to happen.",
+          "prompt": "A lot of people are saying that Garcia will be the next liberal candidate. So this is sure to happen.",
         },
         {
           "answer": "This passage illustrates the ad hominem fallacy. This violates appeal to emotion, false stereotype, and both clauses of ad hominem.",
@@ -1957,7 +1957,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "Jones and others who opposed the war were obviously wrong. They were just a bunch of cowardly homosexual communists.",
+          "prompt": "Greene and others who opposed the war were obviously wrong. They were just a bunch of cowardly homosexual communists.",
         },
         {
           "answer": "This passage illustrates the black and white fallacy. Oversimplifying by assuming that one or another of two extremes must be true.",
