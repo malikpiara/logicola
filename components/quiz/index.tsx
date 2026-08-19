@@ -747,7 +747,13 @@ const QuizSession: React.FC<QuizSessionProps> = ({
               // PADDING, not margin: margin exposed a white strip of page
               // between the full-bleed card and the sheet. On `lg` the
               // controls sit inside the card, so none is needed.
-              isGridLayout ? 'pb-40 mb-0 lg:mb-6' : 'mb-0 lg:mb-6'
+              // `quiz-grid-set` flips the mobile scroll model: the page
+              // stops scrolling and the options region scrolls INTERNALLY,
+              // so the argument never moves at all (Malik, 2026-08-19; see
+              // globals.css). The sheet clearance moves inside the scroll
+              // region there, so the pb-40 is neutralised below lg by the
+              // same block.
+              isGridLayout ? 'quiz-grid-set pb-40 mb-0 lg:mb-6' : 'mb-0 lg:mb-6'
             )}
             style={
               {

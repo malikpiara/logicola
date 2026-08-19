@@ -1072,6 +1072,50 @@
     position: static;
     inset: auto;
   }
+
+  /* The empty slot's 26px reservation margin read as dead space between
+     the question and the options inside the pin (Malik, 2026-08-19);
+     the column's own gap-5 is the spacing. */
+  .quiz-immersive .qpin .qfeed {
+    margin-bottom: 0;
+  }
+}
+
+/* == Grid sets on phones: the options scroll, nothing else moves ==========
+   Sticky was the first cut, but the page still scrolled until the pin
+   engaged — the argument drifted before locking (Malik, 2026-08-19).
+   Grid sets (the only ones that overflow by construction) now cap the
+   canvas at the viewport and scroll the OPTIONS REGION internally: the
+   argument is fixed by construction, not pinned after a drift. The vaul
+   sheet's clearance moves inside the scroll region — its old home, the
+   canvas' pb-40, is neutralised here (unlayered beats the utility).
+   List sets keep the page-scroll + sticky model above. */
+@media (width < 64rem) {
+  .quiz-immersive.quiz-grid-set {
+    height: 100dvh;
+    padding-bottom: 0;
+  }
+  .quiz-immersive.quiz-grid-set .qcontainer {
+    min-height: 0;
+  }
+  .quiz-immersive.quiz-grid-set .motion-quiz-question {
+    flex: 1;
+    min-height: 0;
+    justify-content: flex-start; /* md:justify-between would strand a void
+                                    between question and options on tablets */
+  }
+  .quiz-immersive.quiz-grid-set .qpin {
+    position: static; /* fixed by construction — nothing scrolls above it */
+  }
+  .quiz-immersive.quiz-grid-set .qoptions-grid {
+    flex: 1;
+    min-height: 6rem;
+    overflow-y: auto;
+    /* The collapsed sheet (128px + inset) overlays the canvas foot; this
+       keeps the last row clear of it, INSIDE the scroller where it
+       belongs — outside, it read as dead space under the options. */
+    padding-bottom: calc(128px + env(safe-area-inset-bottom));
+  }
 }
 
 /* TWO TONES: the container is the error tone, but every structured block
