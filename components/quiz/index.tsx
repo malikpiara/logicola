@@ -837,7 +837,10 @@ const QuizSession: React.FC<QuizSessionProps> = ({
               <div
                 aria-hidden
                 className={classNames(
-                  'qbar relative h-2.5 min-w-0 flex-1 -ml-[13px]',
+                  // h-3, up from h-2.5 — at 10px the bar read a touch
+                  // frail next to the 44px chrome (Malik, 2026-08-19);
+                  // the R=4 sprite caps still fit a 12px strip.
+                  'qbar relative h-3 min-w-0 flex-1 -ml-[13px]',
                   !hasGuide && 'mr-[13px]'
                 )}
                 style={{ clipPath: MOBILE_BAR_CLIP }}

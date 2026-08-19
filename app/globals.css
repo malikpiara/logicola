@@ -365,11 +365,14 @@
   display: block;
 }
 
-/* Buttons that give a little under the press read as pressable; 97% is
-   felt rather than seen. On the wrapper so the band travels with the
-   pill — on the pill alone the ring would stay behind. */
+/* Buttons that give a little under the press read as pressable. On the
+   wrapper so the band travels with the pill — on the pill alone the ring
+   would stay behind. 98.5%, not the button-standard 97%: these are
+   full-width rows, and scale is proportional — 97% moved a 375px row's
+   edges ~11px, which read as a cartoon squash rather than a press
+   (Malik, 2026-08-19). At 98.5% the give is felt, not watched. */
 .quiz-immersive .qopt-wrap:has(.qopt:not(.is-ruled):not(.is-revealed):active) {
-  transform: scale(0.97);
+  transform: scale(0.985);
 }
 
 /* A control is not a passage: a long-press on an option should feel
@@ -677,8 +680,13 @@
 }
 
 .quiz-immersive .qbar-fill {
+  /* The fill was quantised to the 4px sprite grid (round(down, --qp,
+     4px)) so the bar advanced in pixel steps — but a correct answer's
+     500ms sweep rendered as ~6 visible snaps and read as CLUNK, not
+     pixels (Malik, 2026-08-19). The scored bar's doctrine is a
+     continuous line, never cells: the silhouette stays on the grid via
+     the sprite-cap clip; the MOTION is now continuous. */
   width: var(--qp, 0%);
-  width: round(down, var(--qp, 0%), 4px);
   transition: --qp 500ms var(--ease-out-quart);
 }
 
