@@ -89,7 +89,10 @@ const places: readonly string[] = [
   'Saint Paul',
   'Minneapolis',
   'Newport News',
-  'Providenciales',
+  // 'Providenciales' was here and is removed (2026-08-20). Turks and Caicos is
+  // not a drilling population — it is where an Apple Private Relay or VPN
+  // egress node geolocates. GeoIP city counts include relay exits, so presence
+  // in the list is not evidence of a user; only session weight would be.
 ] as const;
 
 // =============================================================

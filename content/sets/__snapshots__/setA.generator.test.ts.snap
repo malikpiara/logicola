@@ -53,26 +53,26 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "t is W",
+              "label": "b is C",
             },
             {
-              "hint": "“A wild person in Madrid” could describe many persons, and so translates into a capital letter.",
+              "hint": "“A clean person in London” could describe many persons, and so translates into a capital letter.",
               "id": 1,
-              "label": "t is w",
+              "label": "b is c",
             },
             {
-              "hint": "“Tariq” stands for a single person, and so translates into a small letter.",
+              "hint": "“Bruce” stands for a single person, and so translates into a small letter.",
               "id": 2,
-              "label": "T is W",
+              "label": "B is C",
             },
             {
-              "hint": "“Tariq” stands for a single person, and so translates into a small letter.
-“A wild person in Madrid” could describe many persons, and so translates into a capital letter.",
+              "hint": "“Bruce” stands for a single person, and so translates into a small letter.
+“A clean person in London” could describe many persons, and so translates into a capital letter.",
               "id": 3,
-              "label": "T is w",
+              "label": "B is c",
             },
           ],
-          "prompt": "Tariq is a wild person in Madrid.",
+          "prompt": "Bruce is a clean person in London.",
         },
         {
           "answer": "",
@@ -136,24 +136,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "w is not y",
+              "label": "a is not o",
             },
             {
-              "hint": "“The youngest person” stands for a single person, and so translates into a small letter.",
+              "hint": "“The oldest person” stands for a single person, and so translates into a small letter.",
               "id": 1,
-              "label": "w is not Y",
+              "label": "a is not O",
             },
             {
               "id": 2,
-              "label": "W is not y",
+              "label": "A is not o",
             },
             {
-              "hint": "“The youngest person” stands for a single person, and so translates into a small letter.",
+              "hint": "“The oldest person” stands for a single person, and so translates into a small letter.",
               "id": 3,
-              "label": "W is not Y",
+              "label": "A is not O",
             },
           ],
-          "prompt": "This wrestler isn't the youngest person.",
+          "prompt": "This architect isn't the oldest person.",
         },
         {
           "answer": "",
@@ -190,24 +190,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "p is not c",
+              "label": "s is not c",
             },
             {
               "hint": "“The most confident person” stands for a single person, and so translates into a small letter.",
               "id": 1,
-              "label": "p is not C",
+              "label": "s is not C",
             },
             {
               "id": 2,
-              "label": "P is not c",
+              "label": "S is not c",
             },
             {
               "hint": "“The most confident person” stands for a single person, and so translates into a small letter.",
               "id": 3,
-              "label": "P is not C",
+              "label": "S is not C",
             },
           ],
-          "prompt": "This pickpocket isn't the most confident person.",
+          "prompt": "This student isn't the most confident person.",
         },
         {
           "answer": "",
@@ -218,23 +218,23 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "some D is T",
+              "label": "some W is C",
             },
             {
               "id": 1,
-              "label": "D is T",
+              "label": "W is C",
             },
             {
               "id": 2,
-              "label": "some d is t",
+              "label": "some w is c",
             },
             {
               "hint": "Why did you switch the letters around?",
               "id": 3,
-              "label": "some T is D",
+              "label": "some C is W",
             },
           ],
-          "prompt": "Some witty democrats are terrified.",
+          "prompt": "Some witty wrestlers are curious.",
         },
         {
           "answer": "",
@@ -245,24 +245,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "c is not P",
+              "label": "s is not P",
             },
             {
               "hint": "“A prosperous person” could describe many persons, and so translates into a capital letter.",
               "id": 1,
-              "label": "c is not p",
+              "label": "s is not p",
             },
             {
               "id": 2,
-              "label": "C is not P",
+              "label": "S is not P",
             },
             {
               "hint": "“A prosperous person” could describe many persons, and so translates into a capital letter.",
               "id": 3,
-              "label": "C is not p",
+              "label": "S is not p",
             },
           ],
-          "prompt": "This Canadian isn't a prosperous person.",
+          "prompt": "This senator isn't a prosperous person.",
         },
         {
           "answer": "",
@@ -273,26 +273,26 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "j is E",
+              "label": "p is E",
             },
             {
               "hint": "“An energetic person in Barcelona” could describe many persons, and so translates into a capital letter.",
               "id": 1,
-              "label": "j is e",
+              "label": "p is e",
             },
             {
-              "hint": "“Jessica” stands for a single person, and so translates into a small letter.",
+              "hint": "“Peter” stands for a single person, and so translates into a small letter.",
               "id": 2,
-              "label": "J is E",
+              "label": "P is E",
             },
             {
-              "hint": "“Jessica” stands for a single person, and so translates into a small letter.
+              "hint": "“Peter” stands for a single person, and so translates into a small letter.
 “An energetic person in Barcelona” could describe many persons, and so translates into a capital letter.",
               "id": 3,
-              "label": "J is e",
+              "label": "P is e",
             },
           ],
-          "prompt": "Jessica is an energetic person in Barcelona.",
+          "prompt": "Peter is an energetic person in Barcelona.",
         },
       ],
       "shuffleOptions": true,
@@ -347,25 +347,25 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "no S is C",
+              "label": "no B is C",
             },
             {
               "hint": "Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
               "id": 1,
-              "label": "all S is not C",
+              "label": "all B is not C",
             },
             {
               "hint": "Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
               "id": 2,
-              "label": "S is not C",
+              "label": "B is not C",
             },
             {
               "hint": "Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
               "id": 3,
-              "label": "some S is not C",
+              "label": "some B is not C",
             },
           ],
-          "prompt": "People who are students aren't colorful.",
+          "prompt": "People who are bankers aren't comical.",
         },
         {
           "answer": "",
@@ -376,24 +376,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "no C is F",
+              "label": "no P is R",
             },
             {
               "hint": "‘Not some’ means ‘none.’",
               "id": 1,
-              "label": "all C is F",
+              "label": "all P is R",
             },
             {
               "id": 2,
-              "label": "C is not F",
+              "label": "P is not R",
             },
             {
               "hint": "‘Not some’ means ‘none.’",
               "id": 3,
-              "label": "some C is not F",
+              "label": "some P is not R",
             },
           ],
-          "prompt": "It isn't true that some clowns are funny.",
+          "prompt": "It isn't true that some pilots are romantic.",
         },
         {
           "answer": "",
@@ -465,23 +465,23 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "m is t",
             },
             {
-              "hint": "“The most terrified one in Santa Monica” stands for a single person, and so translates into a small letter.",
+              "hint": "“The most terrified one in Barcelona” stands for a single person, and so translates into a small letter.",
               "id": 1,
               "label": "m is T",
             },
             {
-              "hint": "“Mary” stands for a single person, and so translates into a small letter.",
+              "hint": "“Maya” stands for a single person, and so translates into a small letter.",
               "id": 2,
               "label": "M is t",
             },
             {
-              "hint": "“Mary” stands for a single person, and so translates into a small letter.
-“The most terrified one in Santa Monica” stands for a single person, and so translates into a small letter.",
+              "hint": "“Maya” stands for a single person, and so translates into a small letter.
+“The most terrified one in Barcelona” stands for a single person, and so translates into a small letter.",
               "id": 3,
               "label": "M is T",
             },
           ],
-          "prompt": "Mary is the most terrified one in Santa Monica.",
+          "prompt": "Maya is the most terrified one in Barcelona.",
         },
         {
           "answer": "",
@@ -492,24 +492,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "no S is N",
+              "label": "no P is F",
             },
             {
               "hint": "‘Not some’ means ‘none.’",
               "id": 1,
-              "label": "all S is N",
+              "label": "all P is F",
             },
             {
               "id": 2,
-              "label": "S is not N",
+              "label": "P is not F",
             },
             {
               "hint": "‘Not some’ means ‘none.’",
               "id": 3,
-              "label": "some S is not N",
+              "label": "some P is not F",
             },
           ],
-          "prompt": "It isn't true that some scientists are notorious.",
+          "prompt": "It isn't true that some pharmacists are faithful.",
         },
         {
           "answer": "",
@@ -549,25 +549,25 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "all L is W",
+              "label": "all P is W",
             },
             {
               "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
               "id": 1,
-              "label": "not some L is W",
+              "label": "not some P is W",
             },
             {
               "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
               "id": 2,
-              "label": "some L is W",
+              "label": "some P is W",
             },
             {
               "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
               "id": 3,
-              "label": "L is W",
+              "label": "P is W",
             },
           ],
-          "prompt": "It is false that some librarians aren't witty.",
+          "prompt": "It is false that some prisoners aren't witty.",
         },
         {
           "answer": "",
@@ -578,24 +578,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "some S is not R",
+              "label": "some D is not C",
             },
             {
               "hint": "You forgot the ‘not.’",
               "id": 1,
-              "label": "some S is R",
+              "label": "some D is C",
             },
             {
               "id": 2,
-              "label": "S is not R",
+              "label": "D is not C",
             },
             {
               "hint": "People often get this one wrong.",
               "id": 3,
-              "label": "all S is not R",
+              "label": "all D is not C",
             },
           ],
-          "prompt": "Not all senators are remarkable.",
+          "prompt": "Not all doctors are cheerful.",
         },
       ],
       "shuffleOptions": true,

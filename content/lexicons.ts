@@ -410,6 +410,12 @@ const verbsTransitive2008: readonly string[] = [
 const nounsProfessionsRetired: readonly string[] = [
   'druggist', // archaic; the 2008 pool already carries `pharmacist`
   'lunatic', // slur for mental illness
+  // 0.78/M and falling (0.88x) — the same profile as `courteous`, the one
+  // genuinely dated adjective. Its replacement `expat` is no commoner TODAY
+  // (both 3.01 on wordfreq) but the trends are opposite: grocer x0.88 against
+  // expat x73. That gap is the whole "dated vs merely rare" distinction, and
+  // it is the clearest case of it in the file. (Malik, 2026-08-20)
+  'grocer',
 ];
 
 /** Entries withdrawn from `adjectives`. */
@@ -533,6 +539,7 @@ const nounsProfessionsModern: readonly string[] = [
   'architect',
   'athlete',
   'barista',
+  'expat', // 3.01, up 73x since 1950 — replaces `grocer` (0.88x)
   'chemist',
   'designer',
   'economist',
@@ -684,7 +691,7 @@ const namesModern: readonly string[] = [
   // Ordinary given names. PostHog GeoIP puts the drilling population in
   // Metro Manila, Ontario, Nairobi and Singapore; the 2008 eight are one
   // generation of one country.
-  'Aisha',
+  'Alida',
   'Amani',
   'Ana',
   'André',
@@ -708,10 +715,9 @@ const namesModern: readonly string[] = [
   'Ravi',
   'Sarah',
   'Sebastian',
-  'Sofia',
+  'Sophia',
   'Svitlana',
   'Syed',
-  'Tariq',
   'Timothy',
   // Marvel first names. These read as ordinary given names in a prompt and
   // only land as a reference if the reader catches them, which is the whole
@@ -733,6 +739,11 @@ const namesModern: readonly string[] = [
   'Batman',
   'Thor',
   'Loki',
+  // Added 2026-08-20. `Viserys` was wanted alongside these and is BLOCKED:
+  // V is a reserved name initial — it reads as ∨. Nothing else about the name
+  // fails, which is exactly why the rule is a test and not a habit.
+  'Cersei',
+  'Daenerys', // trailing `s` is fine — no generator takes a possessive
 ];
 
 /** Modern Class A verbs (attitude or feeling toward a person). 9 entries. */

@@ -210,6 +210,8 @@ describe('setR data — substitution pools', () => {
       expect(SURNAMES).toContain(surname);
     }
     expect(SURNAMES.length).toBeGreaterThan(16);
+    // Same joke, one port later (2026-08-20).
+    expect(SURNAMES).toContain('Piara');
   });
 
   it('keeps every 2008 car except the retired one', () => {

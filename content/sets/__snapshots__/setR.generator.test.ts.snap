@@ -451,7 +451,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "Smith wore this headband and then kicked two long field goals. The headband brought him good luck.",
+          "prompt": "Jones wore this headband and then kicked two long field goals. The headband brought him good luck.",
         },
         {
           "answer": "This passage illustrates the appeal to ignorance fallacy. “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
