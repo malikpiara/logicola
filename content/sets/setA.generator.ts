@@ -55,7 +55,15 @@ const places: readonly string[] = [
   'Lisbon',
   'Hamburg',
   'Dallas',
-  'Kiev',
+  // Emended from the 2008 catalog's 'Kiev'. Ukraine asked for the
+  // Ukrainian-derived 'Kyiv' in 1995, AP switched in 2019, and US
+  // newsrooms have used it exclusively since 2022 — so to a student
+  // this is no longer a neutral flavor word, it reads as taking a
+  // side. This is the one class of stale vocabulary that frequency
+  // data cannot find: the word is neither rare nor falling, it names
+  // a RENAMED ENTITY. Guarded by the exonym sweep in
+  // content/generators.test.ts. (Malik, 2026-08-20)
+  'Kyiv',
   'Milan',
   'Bratislava',
   'Detroit',
