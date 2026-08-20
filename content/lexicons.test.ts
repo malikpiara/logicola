@@ -55,7 +55,7 @@ describe('lexicons — 2008 baseline is intact', () => {
     // The modern-layer size is pinned to the figure its doc comment claims,
     // so an addition cannot silently make that comment a lie. If this fails,
     // update BOTH the number here and the one in lexicons.ts.
-    expect(adjectives.length - 87 + retired2008.adjectives.length).toBe(41);
+    expect(adjectives.length - 87 + retired2008.adjectives.length).toBe(42);
     expect(baselines2008.names.length).toBe(8);
     expect(baselines2008.verbsA.length).toBe(22);
     expect(baselines2008.praiseStrings.length).toBe(30);

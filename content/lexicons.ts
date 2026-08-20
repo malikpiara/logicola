@@ -554,7 +554,7 @@ const nounsProfessionsModern: readonly string[] = [
 ];
 
 /**
- * Modern adjectives. 41 entries — pinned by lexicons.test.ts, because this
+ * Modern adjectives. 42 entries — pinned by lexicons.test.ts, because this
  * count read "24" while the array held 40 and nobody noticed for a day.
  *
  * Character traits, rather than the 2008 list's taste for the lurid
@@ -614,6 +614,17 @@ const adjectivesModern: readonly string[] = [
   // word in this file. Its blended 4.18 understates it. Stays out of
   // ESTREGULARS on purpose: "most stressed" is right, "stressedest" is not.
   'stressed', // 4.18 — replaces `frantic` (3.33)
+  //
+  // `quick` (4.98) is not a replacement for anything — it closes a gap that
+  // had been open since 1985. `slow` is in the pool and always has been; its
+  // antonym never was, so a drill could say a logician was slow but never
+  // that one was quick. It also thins the worst letter crowding: 19 of 118
+  // adjectives began with C and 13 with S against one apiece for J, K, Q and
+  // U, and since the wff letter is the adjective's initial, that lopsidedness
+  // is something a student SEES. Joins ESTREGULARS in setA.generator.ts —
+  // "the quickest" outruns "the most quick" 716 to 3 per billion, and beats
+  // "the slowest" (419), which already inflects.
+  'quick', // 4.98 — the missing antonym of `slow`
   //
   // Excluded despite scoring well, to avoid padding: `sweet` and `warm`
   // overlap `gentle` and `charming`; `clever` overlaps `smart` and `bright`;

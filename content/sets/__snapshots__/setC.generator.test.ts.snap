@@ -27,25 +27,25 @@ exports[`setC generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "$ ((P \\supset  H) \\vee  C) $",
+              "label": "$ ((P \\supset  L) \\vee  D) $",
             },
             {
               "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 1,
-              "label": "$ P \\supset  H \\vee  C $",
+              "label": "$ P \\supset  L \\vee  D $",
             },
             {
               "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 2,
-              "label": "$ (P \\supset  (H \\vee  C)) $",
+              "label": "$ (P \\supset  (L \\vee  D)) $",
             },
             {
               "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 3,
-              "label": "$ (P \\supset  H) \\vee  C $",
+              "label": "$ (P \\supset  L) \\vee  D $",
             },
           ],
-          "prompt": "If you're powerful then you're humorous, or you're cruel.",
+          "prompt": "If you're powerful then you're likeable, or you're dull.",
         },
         {
           "answer": "",
@@ -114,26 +114,26 @@ exports[`setC generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "$ (\\sim P \\vee  \\sim C) $",
+              "label": "$ (\\sim P \\vee  \\sim B) $",
             },
             {
               "hint": "‘Either’ translates into ‘(’; so ‘either not’ translates into ‘(∼’.
 You forgot the second ‘∼’!",
               "id": 1,
-              "label": "$ (\\sim P \\vee  C) $",
+              "label": "$ (\\sim P \\vee  B) $",
             },
             {
               "hint": "‘Either’ translates into ‘(’; so ‘either not’ translates into ‘(∼’.",
               "id": 2,
-              "label": "$ \\sim (P \\vee  \\sim C) $",
+              "label": "$ \\sim (P \\vee  \\sim B) $",
             },
             {
               "hint": "‘Either’ translates into ‘(’; so ‘either not’ translates into ‘(∼’.",
               "id": 3,
-              "label": "$ \\sim P \\vee  \\sim C $",
+              "label": "$ \\sim P \\vee  \\sim B $",
             },
           ],
-          "prompt": "Either not P or not C.",
+          "prompt": "Either not P or not B.",
         },
         {
           "answer": "",
@@ -264,26 +264,26 @@ Why did you put in an extra ‘∼’?",
           "options": [
             {
               "id": 0,
-              "label": "$ (\\sim O \\supset  \\sim P) $",
+              "label": "$ (\\sim O \\supset  \\sim S) $",
             },
             {
               "hint": "‘If’ translates into ‘(’; so ‘if not’ translates into ‘(∼’.
 You forgot the second ‘∼’!",
               "id": 1,
-              "label": "$ (\\sim O \\supset  P) $",
+              "label": "$ (\\sim O \\supset  S) $",
             },
             {
               "hint": "‘If’ translates into ‘(’; so ‘if not’ translates into ‘(∼’.",
               "id": 2,
-              "label": "$ \\sim (O \\supset  \\sim P) $",
+              "label": "$ \\sim (O \\supset  \\sim S) $",
             },
             {
               "hint": "‘If’ translates into ‘(’; so ‘if not’ translates into ‘(∼’.",
               "id": 3,
-              "label": "$ \\sim O \\supset  \\sim P $",
+              "label": "$ \\sim O \\supset  \\sim S $",
             },
           ],
-          "prompt": "If not O then not P.",
+          "prompt": "If not O then not S.",
         },
         {
           "answer": "",
@@ -294,25 +294,25 @@ You forgot the second ‘∼’!",
           "options": [
             {
               "id": 0,
-              "label": "$ ((D \\supset  B) \\vee  L) $",
+              "label": "$ ((L \\supset  C) \\vee  Q) $",
             },
             {
               "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 1,
-              "label": "$ D \\supset  B \\vee  L $",
+              "label": "$ L \\supset  C \\vee  Q $",
             },
             {
               "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 2,
-              "label": "$ (D \\supset  (B \\vee  L)) $",
+              "label": "$ (L \\supset  (C \\vee  Q)) $",
             },
             {
               "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 3,
-              "label": "$ (D \\supset  B) \\vee  L $",
+              "label": "$ (L \\supset  C) \\vee  Q $",
             },
           ],
-          "prompt": "If you're disgusting then you're brave, or you're lively.",
+          "prompt": "If you're logical then you're calm, or you're quick.",
         },
       ],
       "shuffleOptions": true,
@@ -339,25 +339,25 @@ You forgot the second ‘∼’!",
           "options": [
             {
               "id": 0,
-              "label": "$ (M \\equiv  B) $",
+              "label": "$ (M \\equiv  C) $",
             },
             {
               "hint": "‘Necessary and sufficient’ means ‘if and only if.’",
               "id": 1,
-              "label": "$ (M \\supset  B) $",
+              "label": "$ (M \\supset  C) $",
             },
             {
               "hint": "‘Necessary and sufficient’ means ‘if and only if.’",
               "id": 2,
-              "label": "$ (B \\supset  M) $",
+              "label": "$ (C \\supset  M) $",
             },
             {
               "hint": "‘Necessary and sufficient’ means ‘if and only if.’",
               "id": 3,
-              "label": "$ M \\equiv  B $",
+              "label": "$ M \\equiv  C $",
             },
           ],
-          "prompt": "M is necessary and sufficient for B.",
+          "prompt": "M is necessary and sufficient for C.",
         },
         {
           "answer": "",
@@ -398,54 +398,55 @@ You forgot the second ‘∼’!",
           "options": [
             {
               "id": 0,
-              "label": "$ (C \\equiv  P) $",
+              "label": "$ (P \\equiv  S) $",
             },
             {
               "hint": "‘Iff’ means ‘if and only if.’",
               "id": 1,
-              "label": "$ (C \\supset  P) $",
+              "label": "$ (P \\supset  S) $",
             },
             {
               "hint": "‘Iff’ means ‘if and only if.’",
               "id": 2,
-              "label": "$ (P \\supset  C) $",
+              "label": "$ (S \\supset  P) $",
             },
             {
               "hint": "‘Iff’ means ‘if and only if.’",
               "id": 3,
-              "label": "$ C \\equiv  P $",
+              "label": "$ P \\equiv  S $",
             },
           ],
-          "prompt": "C iff P.",
+          "prompt": "You're powerful iff you're sensitive.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.C.31.3",
+          "id": "gen.C.33.3",
           "options": [
             {
               "id": 0,
-              "label": "$ (C \\equiv  E) $",
-            },
-            {
-              "hint": "‘Necessary and sufficient’ means ‘if and only if.’",
-              "id": 1,
-              "label": "$ (C \\supset  E) $",
-            },
-            {
-              "hint": "‘Necessary and sufficient’ means ‘if and only if.’",
-              "id": 2,
               "label": "$ (E \\supset  C) $",
             },
             {
-              "hint": "‘Necessary and sufficient’ means ‘if and only if.’",
+              "hint": "‘Sufficient for’ is just an ‘if-then.’
+‘Sufficient for’ is NOT an ‘if and only if.’",
+              "id": 1,
+              "label": "$ (E \\equiv  C) $",
+            },
+            {
+              "hint": "‘Sufficient for’ is just an ‘if-then.’",
+              "id": 2,
+              "label": "$ (\\sim E \\supset  \\sim C) $",
+            },
+            {
+              "hint": "‘Sufficient for’ is just an ‘if-then.’",
               "id": 3,
-              "label": "$ C \\equiv  E $",
+              "label": "$ E \\supset  C $",
             },
           ],
-          "prompt": "Being cheap is necessary and sufficient for your being efficient.",
+          "prompt": "Being efficient is sufficient for you to be cheap.",
         },
         {
           "answer": "",
@@ -456,26 +457,26 @@ You forgot the second ‘∼’!",
           "options": [
             {
               "id": 0,
-              "label": "$ (M \\supset  C) $",
+              "label": "$ (C \\supset  L) $",
             },
             {
               "hint": "The part after ‘provided that’ is the antecedent (the if-part, the part before the horseshoe).",
               "id": 1,
-              "label": "$ (C \\supset  M) $",
+              "label": "$ (L \\supset  C) $",
             },
             {
               "hint": "The part after ‘provided that’ is the antecedent (the if-part, the part before the horseshoe).
 ‘Provided that’ is NOT an ‘if and only if.’",
               "id": 2,
-              "label": "$ (C \\equiv  M) $",
+              "label": "$ (L \\equiv  C) $",
             },
             {
               "hint": "The part after ‘provided that’ is the antecedent (the if-part, the part before the horseshoe).",
               "id": 3,
-              "label": "$ C \\supset  M $",
+              "label": "$ L \\supset  C $",
             },
           ],
-          "prompt": "You're colorful provided that you're miserable.",
+          "prompt": "You're lonely provided that you're comical.",
         },
         {
           "answer": "",
@@ -486,26 +487,26 @@ You forgot the second ‘∼’!",
           "options": [
             {
               "id": 0,
-              "label": "$ (M \\supset  C) $",
+              "label": "$ (P \\supset  C) $",
             },
             {
               "hint": "‘Sufficient for’ is just an ‘if-then.’
 ‘Sufficient for’ is NOT an ‘if and only if.’",
               "id": 1,
-              "label": "$ (M \\equiv  C) $",
+              "label": "$ (P \\equiv  C) $",
             },
             {
               "hint": "‘Sufficient for’ is just an ‘if-then.’",
               "id": 2,
-              "label": "$ (\\sim M \\supset  \\sim C) $",
+              "label": "$ (\\sim P \\supset  \\sim C) $",
             },
             {
               "hint": "‘Sufficient for’ is just an ‘if-then.’",
               "id": 3,
-              "label": "$ M \\supset  C $",
+              "label": "$ P \\supset  C $",
             },
           ],
-          "prompt": "M is sufficient for C.",
+          "prompt": "P is sufficient for C.",
         },
         {
           "answer": "",
@@ -565,67 +566,66 @@ Get rid of the ‘∼’!",
               "label": "$ F \\equiv  C $",
             },
           ],
-          "prompt": "Unless you're faithful, you're cautious.",
+          "prompt": "Unless you're fortunate, you're cautious.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.C.21.8",
+          "id": "gen.C.25.8",
           "options": [
             {
               "id": 0,
-              "label": "$ (C \\supset  E) $",
-            },
-            {
-              "hint": "‘Only if’ is NOT an ‘if and only if.’",
-              "id": 1,
-              "label": "$ (E \\equiv  C) $",
-            },
-            {
-              "hint": "‘Only if’ is NOT an ‘if and only if.’",
-              "id": 2,
-              "label": "$ E \\supset  C $",
-            },
-            {
-              "hint": "‘Only if’ is NOT an ‘if and only if.’
-The part after ‘only if’ is the consequent (the then-part, the part after the horseshoe).",
-              "id": 3,
-              "label": "$ (E \\supset  C) $",
-            },
-          ],
-          "prompt": "Only if E, C.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.C.25.9",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ (A \\supset  C) $",
+              "label": "$ (E \\supset  S) $",
             },
             {
               "hint": "The part after ‘if’ is the antecedent (the if-part, the part before the horseshoe).",
               "id": 1,
-              "label": "$ (C \\supset  A) $",
+              "label": "$ (S \\supset  E) $",
             },
             {
               "hint": "The part after ‘if’ is the antecedent (the if-part, the part before the horseshoe).
 ‘If’ is NOT an ‘if and only if.’",
               "id": 2,
-              "label": "$ (C \\equiv  A) $",
+              "label": "$ (S \\equiv  E) $",
             },
             {
               "hint": "The part after ‘if’ is the antecedent (the if-part, the part before the horseshoe).",
               "id": 3,
-              "label": "$ C \\supset  A $",
+              "label": "$ S \\supset  E $",
             },
           ],
-          "prompt": "C if A.",
+          "prompt": "You're slow if you're easygoing.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.C.28.9",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ (C \\equiv  F) $",
+            },
+            {
+              "hint": "‘Iff’ means ‘if and only if.’",
+              "id": 1,
+              "label": "$ (C \\supset  F) $",
+            },
+            {
+              "hint": "‘Iff’ means ‘if and only if.’",
+              "id": 2,
+              "label": "$ (F \\supset  C) $",
+            },
+            {
+              "hint": "‘Iff’ means ‘if and only if.’",
+              "id": 3,
+              "label": "$ C \\equiv  F $",
+            },
+          ],
+          "prompt": "C iff F.",
         },
       ],
       "shuffleOptions": true,
