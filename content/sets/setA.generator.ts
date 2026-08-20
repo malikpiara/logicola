@@ -107,6 +107,7 @@ const ESTREGULARS: ReadonlySet<string> = new Set([
   // so the inflection is ours (Malik, 2026-08-19).
   'kind',
   'quiet',
+  'quick',
   // `shy` inflects cleanly; `witty` would need y->i and `lovable` an -e drop,
   // which this rule does not do, so both fall through to "most X" (2026-08-20).
   'shy',

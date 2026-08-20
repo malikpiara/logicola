@@ -189,28 +189,28 @@ That means ‘doesn’t entail W’, not ‘entails not-W’.",
           "options": [
             {
               "id": 0,
-              "label": "$ \\square \\sim C $",
+              "label": "$ \\square \\sim B $",
             },
             {
               "hint": "Translate ‘must’ / ‘necessary’ as ‘☐’ — the modal applies to the negation of the proposition.
 Wrong scope — that means ‘not [necessary]’, not ‘[necessary] not’.",
               "id": 1,
-              "label": "$ \\sim \\square C $",
+              "label": "$ \\sim \\square B $",
             },
             {
               "hint": "Translate ‘must’ / ‘necessary’ as ‘☐’ — the modal applies to the negation of the proposition.
 Wrong modal — ‘must / necessary’ maps to ‘☐’.",
               "id": 2,
-              "label": "$ \\lozenge \\sim C $",
+              "label": "$ \\lozenge \\sim B $",
             },
             {
               "hint": "Translate ‘must’ / ‘necessary’ as ‘☐’ — the modal applies to the negation of the proposition.
 Your answer isn’t a wff — modal operators don’t take parentheses around their argument: write ‘☐A’, not ‘☐(A)’ or ‘(☐A)’.",
               "id": 3,
-              "label": "$ \\square \\sim (C) $",
+              "label": "$ \\square \\sim (B) $",
             },
           ],
-          "prompt": "It must be that you aren’t courageous.",
+          "prompt": "It must be that you aren’t bitter.",
         },
         {
           "answer": "",
@@ -526,28 +526,28 @@ Your answer has too many boxes.",
           "options": [
             {
               "id": 0,
-              "label": "$ (x)\\square Cx $",
+              "label": "$ (x)\\square Sx $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
-That’s the de dicto reading; ‘has the property of being necessarily curious’ disambiguates to de re.",
+That’s the de dicto reading; ‘has the property of being necessarily sarcastic’ disambiguates to de re.",
               "id": 1,
-              "label": "$ \\square (x)Cx $",
+              "label": "$ \\square (x)Sx $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
 You need another modal operator.",
               "id": 2,
-              "label": "$ (x)Cx $",
+              "label": "$ (x)Sx $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
 Wrong quantifier — should be universal.",
               "id": 3,
-              "label": "$ (\\exists x)\\square Cx $",
+              "label": "$ (\\exists x)\\square Sx $",
             },
           ],
-          "prompt": "Everyone has the property of being necessarily curious.",
+          "prompt": "Everyone has the property of being necessarily sarcastic.",
         },
         {
           "answer": "",
@@ -558,28 +558,28 @@ Wrong quantifier — should be universal.",
           "options": [
             {
               "id": 0,
-              "label": "$ (Mm \\cdot  \\lozenge \\sim Mm) $",
+              "label": "$ (Cm \\cdot  \\lozenge \\sim Cm) $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
-A contingent property of Moritz means Moritz actually has it — first conjunct should be ‘Mm’, not ‘◇Mm’.",
+A contingent property of Moritz means Moritz actually has it — first conjunct should be ‘Cm’, not ‘◇Cm’.",
               "id": 1,
-              "label": "$ (\\lozenge Mm \\cdot  \\lozenge \\sim Mm) $",
+              "label": "$ (\\lozenge Cm \\cdot  \\lozenge \\sim Cm) $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
 That’s the necessary-property form. Contingent means it actually has it but COULD have lacked it.",
               "id": 2,
-              "label": "$ \\square Mm $",
+              "label": "$ \\square Cm $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
-Self-contradiction. The second conjunct should say ‘could have lacked it’ — \`◇∼Mm\`.",
+Self-contradiction. The second conjunct should say ‘could have lacked it’ — \`◇∼Cm\`.",
               "id": 3,
-              "label": "$ (Mm \\cdot  \\sim Mm) $",
+              "label": "$ (Cm \\cdot  \\sim Cm) $",
             },
           ],
-          "prompt": "Being miserable is a contingent property of Moritz.",
+          "prompt": "Being comical is a contingent property of Moritz.",
         },
         {
           "answer": "",
@@ -654,28 +654,28 @@ Wrong quantifier — should be universal.",
           "options": [
             {
               "id": 0,
-              "label": "$ (x)\\square Dx $",
+              "label": "$ (x)\\square Px $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
-That’s the de dicto reading; ‘has the property of being necessarily dangerous’ disambiguates to de re.",
+That’s the de dicto reading; ‘has the property of being necessarily polite’ disambiguates to de re.",
               "id": 1,
-              "label": "$ \\square (x)Dx $",
+              "label": "$ \\square (x)Px $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
 You need another modal operator.",
               "id": 2,
-              "label": "$ (x)Dx $",
+              "label": "$ (x)Px $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
 Wrong quantifier — should be universal.",
               "id": 3,
-              "label": "$ (\\exists x)\\square Dx $",
+              "label": "$ (\\exists x)\\square Px $",
             },
           ],
-          "prompt": "Everyone has the property of being necessarily dangerous.",
+          "prompt": "Everyone has the property of being necessarily polite.",
         },
       ],
       "shuffleOptions": true,

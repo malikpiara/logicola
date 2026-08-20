@@ -37,7 +37,7 @@ removed for that reason.
 
 `content/lexicons.ts` keeps the 2008 arrays frozen as `*2008` and composes
 live pools as (baseline − retired) + additions. Ten adjective
-retirements, forty-one additions, each carrying its figure.
+retirements, forty-two additions, each carrying its figure.
 
 `frantic` is the tenth retirement and the only one the evidence argues
 against — 3.33, rising 2.64×, no rarer than words we kept. Malik retired
@@ -48,6 +48,12 @@ would invite a "fix". Its replacement, `stressed`, is the exact inverse
 of the `frivolous` finding — the collocation test that condemned that
 word vindicates this one ("feeling stressed" 0.1 → 70.7 per billion,
 592×, while the emphasis sense sits flat at 0.91×).
+
+`quick` closes a gap open since 1985: `slow` has always been in the pool
+and its antonym never was. It also thins the worst letter crowding — 19
+of 118 adjectives began with C and 13 with S, against one apiece for J,
+K, Q and U, and the wff letter IS the adjective's initial, so that
+lopsidedness is something a student sees.
 
 **Two instruments, and they mostly agree.** Google Books Ngrams for
 _trend_ (is it declining?), `wordfreq` for _current frequency_ across
