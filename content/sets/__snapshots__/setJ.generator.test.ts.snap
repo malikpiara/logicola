@@ -398,28 +398,28 @@ Your answer has too many boxes.",
           "options": [
             {
               "id": 0,
-              "label": "$ \\square (x)(Sx \\supset  Cx) $",
+              "label": "$ \\square (x)(Bx \\supset  Cx) $",
             },
             {
               "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
 That’s the de re (box-inside) reading. ‘Necessary that …’ disambiguates to box-outside.",
               "id": 1,
-              "label": "$ (x)(Sx \\supset  \\square Cx) $",
+              "label": "$ (x)(Bx \\supset  \\square Cx) $",
             },
             {
               "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
 The sentence isn’t ambiguous. ‘It’s necessary that …’ disambiguates.",
               "id": 2,
-              "label": "Ambiguous between (x)(Sx ⊃ ☐Cx) and ☐(x)(Sx ⊃ Cx)",
+              "label": "Ambiguous between (x)(Bx ⊃ ☐Cx) and ☐(x)(Bx ⊃ Cx)",
             },
             {
               "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
 Your answer has too many boxes.",
               "id": 3,
-              "label": "$ \\square (x)(Sx \\supset  \\square Cx) $",
+              "label": "$ \\square (x)(Bx \\supset  \\square Cx) $",
             },
           ],
-          "prompt": "It’s necessary that all students are colorful.",
+          "prompt": "It’s necessary that all bankers are colorful.",
         },
         {
           "answer": "",
@@ -558,28 +558,28 @@ Wrong quantifier — should be universal.",
           "options": [
             {
               "id": 0,
-              "label": "$ (Cm \\cdot  \\lozenge \\sim Cm) $",
+              "label": "$ (Cn \\cdot  \\lozenge \\sim Cn) $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
-A contingent property of Moritz means Moritz actually has it — first conjunct should be ‘Cm’, not ‘◇Cm’.",
+A contingent property of Nia means Nia actually has it — first conjunct should be ‘Cn’, not ‘◇Cn’.",
               "id": 1,
-              "label": "$ (\\lozenge Cm \\cdot  \\lozenge \\sim Cm) $",
+              "label": "$ (\\lozenge Cn \\cdot  \\lozenge \\sim Cn) $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
 That’s the necessary-property form. Contingent means it actually has it but COULD have lacked it.",
               "id": 2,
-              "label": "$ \\square Cm $",
+              "label": "$ \\square Cn $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
-Self-contradiction. The second conjunct should say ‘could have lacked it’ — \`◇∼Cm\`.",
+Self-contradiction. The second conjunct should say ‘could have lacked it’ — \`◇∼Cn\`.",
               "id": 3,
-              "label": "$ (Cm \\cdot  \\sim Cm) $",
+              "label": "$ (Cn \\cdot  \\sim Cn) $",
             },
           ],
-          "prompt": "Being comical is a contingent property of Moritz.",
+          "prompt": "Being comical is a contingent property of Nia.",
         },
         {
           "answer": "",

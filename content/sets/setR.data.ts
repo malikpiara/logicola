@@ -1553,6 +1553,7 @@ export const SURNAMES = [
   'Garcia',
   'Rodriguez',
   'Lee',
+  'Piara',
 ];
 
 export const CARS = [
@@ -1598,7 +1599,7 @@ export const GROUPS = [
 ];
 
 /** Footballers for the {f} token (opinion-headcount passages only). */
-export const PLAYERS = ['Ronaldo', 'Messi'];
+export const PLAYERS = ['Ronaldo', 'Messi', 'Haaland', 'Mbappé'];
 
 /** Named political figures: {p}/{P} render the name, {l} their own label. */
 export const POLITICIANS = [

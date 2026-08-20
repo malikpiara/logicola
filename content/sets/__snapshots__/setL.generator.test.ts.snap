@@ -60,28 +60,28 @@ The antecedent is descriptive — don’t underline u in Inu.",
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim D\\underline{u}h $",
+              "label": "$ \\sim D\\underline{u}g $",
             },
             {
               "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
 You forgot the ‘∼’ — the prompt says DON’T disturb.",
               "id": 1,
-              "label": "$ D\\underline{u}h $",
+              "label": "$ D\\underline{u}g $",
             },
             {
               "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
 You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs.",
               "id": 2,
-              "label": "$ \\sim Duh $",
+              "label": "$ \\sim Dug $",
             },
             {
               "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
-Argument order matters — D{u}h means ‘you, disturb Harry’.",
+Argument order matters — D{u}g means ‘you, disturb George’.",
               "id": 3,
               "label": "$ \\sim D\\underline{n}u $",
             },
           ],
-          "prompt": "Don’t disturb Harry.",
+          "prompt": "Don’t disturb George.",
         },
         {
           "answer": "",
@@ -128,7 +128,7 @@ The antecedent is descriptive — don’t underline u in Bbu.",
             },
             {
               "hint": "Cross-person imperative: in \`(Hmu ⊃ H{u}m)\` the \`m\` is Madonna and the \`u\` is you. The consequent \`H{u}m\` is the imperative ‘help Madonna’.
-Argument order — Mei is the agent in the antecedent, so Dmu (= ‘Mei disturbs you’).",
+Argument order — Miguel is the agent in the antecedent, so Dmu (= ‘Miguel disturbs you’).",
               "id": 1,
               "label": "$ (Dum \\supset  D\\underline{u}m) $",
             },
@@ -145,7 +145,7 @@ The antecedent is descriptive — don’t underline u in Dmu.",
               "label": "$ (Dm\\underline{u} \\supset  D\\underline{u}m) $",
             },
           ],
-          "prompt": "If Mei is disturbing you, then disturb Mei.",
+          "prompt": "If Miguel is disturbing you, then disturb Miguel.",
         },
         {
           "answer": "",

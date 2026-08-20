@@ -162,6 +162,8 @@ describe('lexicons — the modern layer', () => {
   it('retired entries are gone from the live pools', () => {
     expect(nounsProfessions).not.toContain('druggist');
     expect(nounsProfessions).not.toContain('lunatic');
+    expect(nounsProfessions).not.toContain('grocer');
+    expect(nounsProfessions).toContain('expat');
     expect(adjectives).not.toContain('demented');
     // `comical` is deliberately absent from this list: it was retired on
     // intuition and reinstated when Ngram data showed it rising 2.87x.
@@ -229,7 +231,20 @@ describe('lexicons — the modern layer', () => {
     expect(nounsProfessions).toContain('programmer');
     expect(adjectives).toContain('honest');
     expect(adjectives).toContain('reliable');
-    expect(names).toContain('Aisha');
+    expect(names).toContain('Alida');
+    // Dropped 2026-08-20 before ever shipping: Aisha, Tariq (author's call),
+    // and Sofia, which became Sophia — a wash globally (3.74/3.70) but 2.4x
+    // apart in the US Books corpus (2.12 vs 5.00), and the audience is US.
+    // These were modern-layer entries, so they were edited in place; the
+    // retire-and-re-add machinery exists only for the frozen 2008 arrays.
+    for (const gone of ['Aisha', 'Tariq', 'Sofia']) {
+      expect(names).not.toContain(gone);
+    }
+    expect(names).toContain('Sophia');
+    // V reads as ∨, so `Viserys` is blocked while its two companions are not.
+    expect(names).toContain('Cersei');
+    expect(names).toContain('Daenerys');
+    expect(names).not.toContain('Viserys');
     expect(names).toContain('Priya');
     expect(verbsA).toContain('trust');
     expect(verbsB).toContain('apologize');
