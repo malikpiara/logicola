@@ -338,6 +338,10 @@ const setQ: Set = {
         },
         {
           id: '3.19',
+          // 'egghead' was reviewed 2026-08-21 and KEPT on Malik's call, with
+          // the instruments against it (Zipf 2.21, halved since 1950, 92.9%
+          // of 18-23s know it vs 100% of over-60s). It stays as Gensler's
+          // voice; recorded so nobody re-retires it from the figures alone.
           prompt: 'A university instructor is just an egghead.',
           options: [
             { id: 0, label: 'Too broad' },
