@@ -55,7 +55,7 @@ describe('lexicons — 2008 baseline is intact', () => {
     // The modern-layer size is pinned to the figure its doc comment claims,
     // so an addition cannot silently make that comment a lie. If this fails,
     // update BOTH the number here and the one in lexicons.ts.
-    expect(adjectives.length - 87 + retired2008.adjectives.length).toBe(42);
+    expect(adjectives.length - 87 + retired2008.adjectives.length).toBe(46);
     expect(baselines2008.names.length).toBe(8);
     expect(baselines2008.verbsA.length).toBe(22);
     expect(baselines2008.praiseStrings.length).toBe(30);
@@ -163,6 +163,8 @@ describe('lexicons — the modern layer', () => {
     expect(nounsProfessions).not.toContain('druggist');
     expect(nounsProfessions).not.toContain('lunatic');
     expect(nounsProfessions).not.toContain('grocer');
+    expect(nounsProfessions).not.toContain('bandit');
+    expect(nounsProfessions).toContain('hacker');
     expect(nounsProfessions).toContain('expat');
     expect(adjectives).not.toContain('demented');
     // `comical` is deliberately absent from this list: it was retired on
@@ -244,9 +246,37 @@ describe('lexicons — the modern layer', () => {
     // V reads as ∨, so `Viserys` is blocked while its two companions are not.
     expect(names).toContain('Cersei');
     expect(names).toContain('Daenerys');
+    // 2026-08-21 round: the ambiguous channel + Hulk (tagged).
+    for (const n of [
+      'Miles',
+      'Gwen',
+      'Diana',
+      'Clark',
+      'Logan',
+      'Alfred',
+      'Hulk',
+    ]) {
+      expect(names).toContain(n);
+    }
+    expect(names).not.toContain('Kamala'); // collides with Set R's Harris
     expect(names).not.toContain('Viserys');
     expect(names).toContain('Priya');
     expect(verbsA).toContain('trust');
+    // 2026-08-20 second round — one spot check per pool, so a botched merge
+    // of the slate cannot pass silently:
+    expect(adjectives).toContain('relatable');
+    expect(nounsProfessions).toContain('influencer');
+    expect(verbsA).toContain('follow');
+    expect(verbsB).toContain('procrastinate');
+    expect(verbsTransitive).toContain('ghost');
+    // Set A's Every/Each surfaces conjugate verbs with verbThirdPerson(),
+    // whose rule fails only on the irregulars — which therefore must
+    // never enter a pool ("every economist gos").
+    for (const irregular of ['go', 'do', 'have', 'be']) {
+      expect(verbsA).not.toContain(irregular);
+      expect(verbsB).not.toContain(irregular);
+      expect(verbsTransitive).not.toContain(irregular);
+    }
     expect(verbsB).toContain('apologize');
     expect(verbsTransitive).toContain('interrupt');
   });

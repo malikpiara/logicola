@@ -28,7 +28,8 @@
  */
 
 import type { Option, Question, Set } from '../types';
-import { rngFromSeed, pickFrom, type Rng } from '@/lib/rng';
+import { rngFromSeed, pickFresh, type Rng } from '@/lib/rng';
+import { gerund } from '@/lib/grammar';
 import { names, verbsB, verbsTransitive } from '../lexicons';
 
 // =============================================================
@@ -109,27 +110,15 @@ const HINT_R_VS_O =
 // Helpers
 // =============================================================
 
-function gerund(verb: string): string {
-  // Most lexicon verbs just take +ing. Edge cases (verbs ending in
-  // `e`, CVC doubling) aren't in the current pool, so the simple
-  // rule covers everything.
-  return verb + 'ing';
-}
-
 function pickDistinctLetterPair<T extends string>(
   rng: Rng,
   pool: readonly T[]
 ): [T, T] {
-  const a = pickFrom(rng, pool);
-  let b = pickFrom(
-    rng,
-    pool.filter((x) => x !== a && x[0]!.toLowerCase() !== a[0]!.toLowerCase())
-  );
-  if (!b)
-    b = pickFrom(
-      rng,
-      pool.filter((x) => x !== a)
-    );
+  // Reject predicates, not filtered copies — see pickFresh in lib/rng.ts.
+  const a = pickFresh(rng, pool);
+  const b = pickFresh(rng, pool, {
+    reject: (x) => x === a || x[0]!.toLowerCase() === a[0]!.toLowerCase(),
+  });
   return [a, b];
 }
 
@@ -182,10 +171,10 @@ function template0(rng: Rng, counter: number): Question {
     'transitive-not', // negated transitive
     'addressed', // intransitive addressed to you ("Sleep!")
   ] as const;
-  const v = pickFrom(rng, variants);
+  const v = pickFresh(rng, variants);
   if (v === 'sing-tom') {
-    const verb = pickFrom(rng, verbsB);
-    const name = pickFrom(rng, names);
+    const verb = pickFresh(rng, verbsB);
+    const name = pickFresh(rng, names);
     const V = verb[0]!.toUpperCase();
     const n = name[0]!.toLowerCase();
     return buildQuestion(
@@ -207,7 +196,7 @@ function template0(rng: Rng, counter: number): Question {
     );
   }
   if (v === 'addressed') {
-    const verb = pickFrom(rng, verbsB);
+    const verb = pickFresh(rng, verbsB);
     const V = verb[0]!.toUpperCase();
     const cap = verb[0]!.toUpperCase() + verb.slice(1);
     return buildQuestion(
@@ -229,8 +218,8 @@ function template0(rng: Rng, counter: number): Question {
     );
   }
   if (v === 'transitive-not') {
-    const verb = pickFrom(rng, verbsTransitive);
-    const name = pickFrom(rng, names);
+    const verb = pickFresh(rng, verbsTransitive);
+    const name = pickFresh(rng, names);
     const V = verb[0]!.toUpperCase();
     const n = name[0]!.toLowerCase();
     return buildQuestion(
@@ -263,8 +252,8 @@ function template0(rng: Rng, counter: number): Question {
     );
   }
   // transitive: "Defeat Tom"
-  const verb = pickFrom(rng, verbsTransitive);
-  const name = pickFrom(rng, names);
+  const verb = pickFresh(rng, verbsTransitive);
+  const name = pickFresh(rng, names);
   const V = verb[0]!.toUpperCase();
   const n = name[0]!.toLowerCase();
   const cap = verb[0]!.toUpperCase() + verb.slice(1);
@@ -304,12 +293,12 @@ function template1(rng: Rng, counter: number): Question {
   // Per Gensler §12.1: 2008 lists 4 paraphrases for *1; the
   // first three share the "(Eu ⊃ ±Fu)" form.
   const prompt = negate
-    ? pickFrom(rng, [
+    ? pickFresh(rng, [
         `If you’re ${gerund(eVerb)}, then don’t ${fVerb}.`,
         `If you ${eVerb}, then don’t ${fVerb}.`,
         `Don’t ${fVerb}, if you ${eVerb}.`,
       ])
-    : pickFrom(rng, [
+    : pickFresh(rng, [
         `If you’re ${gerund(eVerb)}, then ${fVerb}.`,
         `If you ${eVerb}, then ${fVerb}.`,
         `Do ${fVerb}, only if you ${eVerb}.`,
@@ -351,7 +340,7 @@ function template1(rng: Rng, counter: number): Question {
  *   "Do A and B" → (A{u} · B{u})
  */
 function template3(rng: Rng, counter: number): Question {
-  const variant = pickFrom(rng, [
+  const variant = pickFresh(rng, [
     'combine',
     'combine-not',
     'and',
@@ -363,7 +352,7 @@ function template3(rng: Rng, counter: number): Question {
   const F = fVerb[0]!.toUpperCase();
   const capE = eVerb[0]!.toUpperCase() + eVerb.slice(1);
   if (variant === 'combine') {
-    const prompt = pickFrom(rng, [
+    const prompt = pickFresh(rng, [
       `Don’t combine ${gerund(eVerb)} with ${gerund(fVerb)}.`,
       `Don’t both ${eVerb} and ${fVerb}.`,
     ]);
@@ -425,7 +414,7 @@ function template3(rng: Rng, counter: number): Question {
     );
   }
   if (variant === 'and') {
-    const prompt = pickFrom(rng, [
+    const prompt = pickFresh(rng, [
       `${capE} and ${fVerb}.`,
       `Do ${eVerb} and ${fVerb}.`,
       `${capE}, and also ${fVerb}.`,
@@ -448,7 +437,7 @@ function template3(rng: Rng, counter: number): Question {
     );
   }
   if (variant === 'or') {
-    const prompt = pickFrom(rng, [
+    const prompt = pickFresh(rng, [
       `${capE} or ${fVerb}.`,
       `Do ${eVerb} or ${fVerb}.`,
       `Either ${eVerb} or ${fVerb}.`,
@@ -509,16 +498,16 @@ function template3(rng: Rng, counter: number): Question {
  */
 function template6(rng: Rng, counter: number): Question {
   // 2008's *6 has 4 paraphrases × 2 lead-ins ("Let "/"Would that ").
-  const variant = pickFrom(rng, [
+  const variant = pickFresh(rng, [
     'simple',
     'conditional',
     'predicate-of',
     'both-and',
   ]);
   if (variant === 'simple') {
-    const verb = pickFrom(rng, verbsB);
+    const verb = pickFresh(rng, verbsB);
     const V = verb[0]!.toUpperCase();
-    const prompt = pickFrom(rng, [
+    const prompt = pickFresh(rng, [
       `Let everyone ${verb}.`,
       `Would that everyone ${verb}.`,
     ]);
@@ -551,7 +540,7 @@ function template6(rng: Rng, counter: number): Question {
     const [eVerb, fVerb] = pickDistinctLetterPair(rng, verbsB);
     const E = eVerb[0]!.toUpperCase();
     const F = fVerb[0]!.toUpperCase();
-    const prompt = pickFrom(rng, [
+    const prompt = pickFresh(rng, [
       `Let everyone who is ${gerund(eVerb)} ${fVerb}.`,
       `Would that everyone who is ${gerund(eVerb)} ${fVerb}.`,
       `Let everyone who ${eVerb}s ${fVerb}.`,
@@ -655,11 +644,11 @@ function template6(rng: Rng, counter: number): Question {
  *   "If Madonna is helping you, then help her"  → (Hmu ⊃ H{u}m)
  */
 function template9(rng: Rng, counter: number): Question {
-  const verb = pickFrom(rng, verbsTransitive);
-  const name = pickFrom(rng, names);
+  const verb = pickFresh(rng, verbsTransitive);
+  const name = pickFresh(rng, names);
   const V = verb[0]!.toUpperCase();
   const n = name[0]!.toLowerCase();
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `If ${name} is ${gerund(verb)} you, then ${verb} ${name}.`,
     `If ${name} ${verb}s you, then ${verb} ${name} back.`,
     `${verb[0]!.toUpperCase() + verb.slice(1)} ${name} if ${name} is ${gerund(verb)} you.`,
@@ -716,26 +705,26 @@ function template9(rng: Rng, counter: number): Question {
  *   "You ought not to defeat Tom"   → O∼D{u}t
  */
 function template7(rng: Rng, counter: number): Question {
-  const variant = pickFrom(rng, [
+  const variant = pickFresh(rng, [
     'intrans',
     'intrans-not',
     'trans',
     'trans-not',
   ]);
   if (variant === 'intrans' || variant === 'intrans-not') {
-    const verb = pickFrom(rng, verbsB);
+    const verb = pickFresh(rng, verbsB);
     const V = verb[0]!.toUpperCase();
     const negate = variant === 'intrans-not';
     const prompt = negate
-      ? pickFrom(rng, [
+      ? pickFresh(rng, [
           `You ought not to ${verb}.`,
           `It’s your duty not to ${verb}.`,
-          `${verb[0]!.toUpperCase() + verb.slice(1)}ing is wrong for you.`,
+          `${((g) => g[0]!.toUpperCase() + g.slice(1))(gerund(verb))} is wrong for you.`,
         ])
-      : pickFrom(rng, [
+      : pickFresh(rng, [
           `You ought to ${verb}.`,
           `It’s your duty to ${verb}.`,
-          `${verb[0]!.toUpperCase() + verb.slice(1)}ing is required of you.`,
+          `${((g) => g[0]!.toUpperCase() + g.slice(1))(gerund(verb))} is required of you.`,
         ]);
     const correct = negate ? `O∼${V}{u}` : `O${V}{u}`;
     return buildQuestion(
@@ -761,18 +750,18 @@ function template7(rng: Rng, counter: number): Question {
       HINT_OUGHT_BASIC
     );
   }
-  const verb = pickFrom(rng, verbsTransitive);
-  const name = pickFrom(rng, names);
+  const verb = pickFresh(rng, verbsTransitive);
+  const name = pickFresh(rng, names);
   const V = verb[0]!.toUpperCase();
   const n = name[0]!.toLowerCase();
   const negate = variant === 'trans-not';
   const prompt = negate
-    ? pickFrom(rng, [
+    ? pickFresh(rng, [
         `You ought not to ${verb} ${name}.`,
         `It’s your duty not to ${verb} ${name}.`,
         `It would be wrong for you to ${verb} ${name}.`,
       ])
-    : pickFrom(rng, [
+    : pickFresh(rng, [
         `You ought to ${verb} ${name}.`,
         `It’s your duty to ${verb} ${name}.`,
         `It would be obligatory for you to ${verb} ${name}.`,
@@ -816,12 +805,12 @@ function template8(rng: Rng, counter: number): Question {
   const E = eVerb[0]!.toUpperCase();
   const F = fVerb[0]!.toUpperCase();
   const prompt = negSecond
-    ? pickFrom(rng, [
+    ? pickFresh(rng, [
         `You ought not to combine ${gerund(eVerb)} with not ${gerund(fVerb)}.`,
         `It’s wrong to combine ${gerund(eVerb)} with not ${gerund(fVerb)}.`,
         `You ought not to ${eVerb} without also ${gerund(fVerb)}.`,
       ])
-    : pickFrom(rng, [
+    : pickFresh(rng, [
         `You ought not to combine ${gerund(eVerb)} with ${gerund(fVerb)}.`,
         `It’s wrong to combine ${gerund(eVerb)} with ${gerund(fVerb)}.`,
         `You ought not to both ${eVerb} and ${fVerb}.`,
@@ -863,11 +852,11 @@ function template8(rng: Rng, counter: number): Question {
  *   "It's obligatory that everyone do A"  → O(x)A{x}
  */
 function template11(rng: Rng, counter: number): Question {
-  const variant = pickFrom(rng, ['simple', 'conditional']);
+  const variant = pickFresh(rng, ['simple', 'conditional']);
   if (variant === 'simple') {
-    const verb = pickFrom(rng, verbsB);
+    const verb = pickFresh(rng, verbsB);
     const V = verb[0]!.toUpperCase();
-    const prompt = pickFrom(rng, [
+    const prompt = pickFresh(rng, [
       `It’s obligatory that everyone ${verb}.`,
       `It ought to be that everyone ${verb}.`,
       `Everyone is required to ${verb}.`,
@@ -896,7 +885,7 @@ function template11(rng: Rng, counter: number): Question {
   const [eVerb, fVerb] = pickDistinctLetterPair(rng, verbsB);
   const E = eVerb[0]!.toUpperCase();
   const F = fVerb[0]!.toUpperCase();
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `It’s obligatory that everyone who is ${gerund(eVerb)} ${fVerb}.`,
     `It ought to be that everyone who is ${gerund(eVerb)} ${fVerb}.`,
     `It’s obligatory that everyone ${fVerb} who is ${gerund(eVerb)}.`,
@@ -938,11 +927,11 @@ function template11(rng: Rng, counter: number): Question {
  *   "There is someone who has a duty to help"  → (∃x)OH{x}
  */
 function template12(rng: Rng, counter: number): Question {
-  const verb = pickFrom(rng, verbsB);
+  const verb = pickFresh(rng, verbsB);
   const V = verb[0]!.toUpperCase();
-  const variant = pickFrom(rng, ['group', 'individual']);
+  const variant = pickFresh(rng, ['group', 'individual']);
   if (variant === 'group') {
-    const prompt = pickFrom(rng, [
+    const prompt = pickFresh(rng, [
       `It’s obligatory that someone ${verb}.`,
       `It’s required that someone (or other) ${verb}.`,
       `It ought to be that someone ${verb}.`,
@@ -969,7 +958,7 @@ function template12(rng: Rng, counter: number): Question {
       HINT_OBLIG_SOMEONE
     );
   }
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `There is someone who has a duty to ${verb}.`,
     `Someone has the obligation to ${verb}.`,
     `There’s a specific person whose duty it is to ${verb}.`,
@@ -1005,9 +994,9 @@ function template12(rng: Rng, counter: number): Question {
  *   "It's required that you A"         → OA{u}
  */
 function template13(rng: Rng, counter: number): Question {
-  const verb = pickFrom(rng, verbsB);
+  const verb = pickFresh(rng, verbsB);
   const V = verb[0]!.toUpperCase();
-  const variant = pickFrom(rng, [
+  const variant = pickFresh(rng, [
     'allright',
     'permissible',
     'wrong',
@@ -1083,15 +1072,15 @@ function template13(rng: Rng, counter: number): Question {
  *   "‘You ought to do A’ entails ‘A is permissible’"  → ☐(OA{u} ⊃ RA{u})
  */
 function template14(rng: Rng, counter: number): Question {
-  const verb = pickFrom(rng, verbsB);
+  const verb = pickFresh(rng, verbsB);
   const V = verb[0]!.toUpperCase();
-  const variant = pickFrom(rng, [
+  const variant = pickFresh(rng, [
     'ought-implies-can',
     'ought-implies-permissible',
     'permissible-only-if',
   ]);
   if (variant === 'ought-implies-can') {
-    const prompt = pickFrom(rng, [
+    const prompt = pickFresh(rng, [
       `If you ought to ${verb}, then your ${gerund(verb)} is possible.`,
       `If you ought to ${verb}, then it’s possible for you to ${verb}.`,
     ]);
@@ -1194,7 +1183,7 @@ export function* imperativeQuestions(seed?: number): Generator<Question> {
   const rng = rngFromSeed(seed);
   let counter = 0;
   while (true) {
-    const renderer = pickFrom(rng, imperativeTemplates);
+    const renderer = pickFresh(rng, imperativeTemplates);
     yield renderer(rng, counter++);
   }
 }
@@ -1203,7 +1192,7 @@ export function* deonticQuestions(seed?: number): Generator<Question> {
   const rng = rngFromSeed(seed);
   let counter = 0;
   while (true) {
-    const renderer = pickFrom(rng, deonticTemplates);
+    const renderer = pickFresh(rng, deonticTemplates);
     yield renderer(rng, counter++);
   }
 }
