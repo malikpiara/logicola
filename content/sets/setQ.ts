@@ -1674,6 +1674,36 @@ const setQ: Set = {
           correctId: [2],
           answer: 'This violates 3 (circular).',
         },
+        // AUTHORING PRINCIPLES for this drill, set by Malik 2026-08-21:
+        //
+        // 1. The best specimens are definitions that feel ALMOST RIGHT, or
+        //    that students already know by heart — Gensler's five rules
+        //    describe near-misses, so the drill should serve near-misses.
+        //    "Power is power" and the NBER recession threshold are the
+        //    models; a definition nobody would ever offer teaches nothing.
+        //
+        // 2. The book's own exercise items (3.2a) are deliberately NOT
+        //    ported: Introduction to Logic is still sold and is this
+        //    software's companion text — its exercises stay its own. We
+        //    author passages that RHYME with them instead: same lesson,
+        //    new sentence. (This boundary differs from the ORIGINAL PROGRAM,
+        //    which is the thing we port.)
+        {
+          id: '3.102',
+          prompt: 'A superfood is any food that’s good for you.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0, 5],
+          answer:
+            'This violates 1 (too broad — that’s most food) and 6 (emotional tone — the glow is marketing; the EU restricts the term for exactly this reason).',
+        },
       ],
     },
   ],

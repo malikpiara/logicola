@@ -3899,6 +3899,45 @@ exports[`setQ > matches snapshot 1`] = `
           ],
           "prompt": "Comfort food is food that comforts.",
         },
+        {
+          "answer": "This violates 1 (too broad — that’s most food) and 6 (emotional tone — the glow is marketing; the EU restricts the term for exactly this reason).",
+          "correctId": [
+            0,
+            5,
+          ],
+          "id": "3.102",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A superfood is any food that’s good for you.",
+        },
       ],
       "slugs": [
         "informal",
