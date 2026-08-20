@@ -1704,6 +1704,72 @@ const setQ: Set = {
           answer:
             'This violates 1 (too broad — that’s most food) and 6 (emotional tone — the glow is marketing; the EU restricts the term for exactly this reason).',
         },
+        // The rhyme slate, 2026-08-21: same lessons as the book's 3.2a items, new sentences, per the companion-text boundary above. (true-means-trending and fair-means-Pareto-optimal were cut on review.)
+        {
+          id: '3.103',
+          prompt: 'A good argument is one that changes minds.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0],
+          answer:
+            'This violates 1 (too broad — bad arguments change minds every day, and valid ones often fail to).',
+        },
+        {
+          id: '3.104',
+          prompt:
+            '“Influencer” means “someone with followers,” and “follower” means “someone who follows influencers.”',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [2],
+          answer:
+            'This violates 3 (circular — the two definitions lean on each other; neither ever touches ground).',
+        },
+        {
+          id: '3.105',
+          prompt: '“Misinformation” means “lying online.”',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [1],
+          answer:
+            'This violates 2 (too narrow — misinformation needn’t be intended; the intentional kind is disinformation).',
+        },
+        {
+          id: '3.106',
+          prompt: '“Knowing” means “being sure.”',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0],
+          answer:
+            'This violates 1 (too broad — everyone has been sure and wrong).',
+        },
       ],
     },
   ],

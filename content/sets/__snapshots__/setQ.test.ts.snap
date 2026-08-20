@@ -3938,6 +3938,158 @@ exports[`setQ > matches snapshot 1`] = `
           ],
           "prompt": "A superfood is any food that’s good for you.",
         },
+        {
+          "answer": "This violates 1 (too broad — bad arguments change minds every day, and valid ones often fail to).",
+          "correctId": [
+            0,
+          ],
+          "id": "3.103",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A good argument is one that changes minds.",
+        },
+        {
+          "answer": "This violates 3 (circular — the two definitions lean on each other; neither ever touches ground).",
+          "correctId": [
+            2,
+          ],
+          "id": "3.104",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "“Influencer” means “someone with followers,” and “follower” means “someone who follows influencers.”",
+        },
+        {
+          "answer": "This violates 2 (too narrow — misinformation needn’t be intended; the intentional kind is disinformation).",
+          "correctId": [
+            1,
+          ],
+          "id": "3.105",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "“Misinformation” means “lying online.”",
+        },
+        {
+          "answer": "This violates 1 (too broad — everyone has been sure and wrong).",
+          "correctId": [
+            0,
+          ],
+          "id": "3.106",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "“Knowing” means “being sure.”",
+        },
       ],
       "slugs": [
         "informal",
