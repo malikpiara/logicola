@@ -2475,6 +2475,238 @@ exports[`setQ > matches snapshot 1`] = `
           ],
           "prompt": "A meme is a unit of cultural transmission propagating via imitation.",
         },
+        {
+          "answer": "This violates 1 (too broad — strangers follow back) and 2 (too narrow — your oldest friend may not be on the platform).",
+          "correctId": [
+            0,
+            1,
+          ],
+          "id": "3.65",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A friend is someone who follows you back.",
+        },
+        {
+          "answer": "This violates 5 (vagueness mismatch — a precise threshold for a vague word).",
+          "correctId": [
+            4,
+          ],
+          "id": "3.66",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "“Viral” means “seen by more than a million people.”",
+        },
+        {
+          "answer": "This violates 2 (too narrow — the average gamer is around thirty-five) and 6 (emotional tone).",
+          "correctId": [
+            1,
+            5,
+          ],
+          "id": "3.67",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A gamer is an antisocial teenager who plays video games.",
+        },
+        {
+          "answer": "This violates 1 (too broad — the corner bakery is small, and it is no startup).",
+          "correctId": [
+            0,
+          ],
+          "id": "3.68",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A startup is a small company.",
+        },
+        {
+          "answer": "This violates 2 (too narrow — most use is not criminal) and 6 (emotional tone).",
+          "correctId": [
+            1,
+            5,
+          ],
+          "id": "3.69",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Crypto is money for criminals.",
+        },
+        {
+          "answer": "This violates 5 (vagueness mismatch — “the future of money” could mean almost anything) and 6 (emotional tone — boosterism is a tone too).",
+          "correctId": [
+            4,
+            5,
+          ],
+          "id": "3.70",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Crypto is the future of money.",
+        },
       ],
       "slugs": [
         "informal",
