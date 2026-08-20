@@ -45,7 +45,7 @@ subtitles, social media, news and books. Install: `pip3 install --user
 wordfreq`. Ngrams JSON is curl-able:
 `books.google.com/ngrams/json?content=W&year_start=1948&year_end=2019&corpus=en-2019`.
 
-Three findings worth keeping:
+Four findings worth keeping:
 
 - **"Dated" and "rare" are different failures.** `bashful` is rare (0.59/M
   against a 9.39 median) but _rising_; `courteous` is common-ish but
@@ -57,6 +57,15 @@ Three findings worth keeping:
   person". It is a legal term now. The same test flags `colorful` and
   `notorious`, but those were NOT acted on: the test undercounts
   adjectives that prefer a specific noun ("notorious criminal").
+- **A fourth failure neither instrument can see.** The 2008 place catalog
+  shipped `Kiev`. It is not rare and not falling — it names a _renamed
+  entity_, and a superseded name reads to a student as taking a side
+  rather than as dated. Frequency data is structurally blind to this, so
+  the class gets a denylist (`SUPERSEDED_EXONYMS` in
+  `content/generators.test.ts`) that sweeps rendered output across all six
+  generators. Burma, Saigon and Turkey are deliberately excluded: each is
+  still used by people making a considered choice, so pinning one form
+  would encode a position instead of correcting an error.
 - **The register finding, which is the real one.** Across 24
   Latinate/plain synonym pairs the 2003 core holds the Latinate word alone
   17 times and the plain word alone once. But the head of the 2008 list is
