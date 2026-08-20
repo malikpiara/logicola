@@ -645,7 +645,11 @@ const setQ: Set = {
         {
           id: '3.39',
           prompt:
-            'A computer is a box made by Dell that has a keyboard and a screen.',
+            // Brand emended from the 2008 text's 'Dell' (Malik, 2026-08-21):
+            // the Kiev class of staleness — Dell was the everyman PC of 2008.
+            // Apple keeps the lesson identical and adds a bonus wrongness:
+            // they now make computers that are neither boxes nor keyboarded.
+            'A computer is a box made by Apple that has a keyboard and a screen.',
           options: [
             { id: 0, label: 'Too broad' },
             { id: 1, label: 'Too narrow' },
@@ -693,7 +697,7 @@ const setQ: Set = {
         },
         {
           id: '3.42',
-          prompt: 'An adolescent is a person between 9 and 19 years-old.',
+          prompt: 'An adolescent is a person between 9 and 19 years old.',
           options: [
             { id: 0, label: 'Too broad' },
             { id: 1, label: 'Too narrow' },
