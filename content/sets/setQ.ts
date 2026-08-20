@@ -1069,6 +1069,108 @@ const setQ: Set = {
           answer:
             'This violates 4 (obscure terms — and it is Dawkins’ own definition, which is the point).',
         },
+        // Second slate, 2026-08-21. The crypto pair ships together on the
+        // house symmetry rule — Gensler's own liberal/conservative pair is
+        // the precedent: neither side's tone gets the last word. ("The
+        // cloud is someone else's computer" was considered and parked:
+        // the quip is almost a good definition, which makes it ambiguous
+        // as a specimen.)
+        {
+          id: '3.65',
+          prompt: 'A friend is someone who follows you back.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0, 1],
+          answer:
+            'This violates 1 (too broad — strangers follow back) and 2 (too narrow — your oldest friend may not be on the platform).',
+        },
+        {
+          id: '3.66',
+          prompt: '“Viral” means “seen by more than a million people.”',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [4],
+          answer:
+            'This violates 5 (vagueness mismatch — a precise threshold for a vague word).',
+        },
+        {
+          id: '3.67',
+          prompt: 'A gamer is an antisocial teenager who plays video games.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [1, 5],
+          answer:
+            'This violates 2 (too narrow — the average gamer is around thirty-five) and 6 (emotional tone).',
+        },
+        {
+          id: '3.68',
+          prompt: 'A startup is a small company.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0],
+          answer:
+            'This violates 1 (too broad — the corner bakery is small, and it is no startup).',
+        },
+        {
+          id: '3.69',
+          prompt: 'Crypto is money for criminals.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [1, 5],
+          answer:
+            'This violates 2 (too narrow — most use is not criminal) and 6 (emotional tone).',
+        },
+        {
+          id: '3.70',
+          prompt: 'Crypto is the future of money.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [4, 5],
+          answer:
+            'This violates 5 (vagueness mismatch — “the future of money” could mean almost anything) and 6 (emotional tone — boosterism is a tone too).',
+        },
       ],
     },
   ],
