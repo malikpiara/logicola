@@ -12,7 +12,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
   ],
   "subSets": [
     {
-      "description": "Read a short passage and name the fallacy it commits — from ad hominem to post hoc.",
+      "description": "Read a short passage and name the fallacy it commits.",
       "header": "What fallacy does this illustrate?",
       "id": 18,
       "isNew": true,

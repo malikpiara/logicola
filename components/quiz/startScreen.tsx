@@ -128,7 +128,12 @@ export function StartScreen({
             {eyebrow}
           </div>
         )}
-        <h1 className='mb-4 px-6 text-4xl md:text-5xl font-bold font-stretch'>
+        {/* px-10 on mobile, not px-6: the pattern's clean panel is 88% wide,
+            which leaves ~23px of pattern each side on a 390px phone — the
+            same 24px the old px-6 gave the text, so long headlines touched
+            the pattern frame (user testing, 2026-08-21). Desktop keeps px-6;
+            the panel caps at 760px there and never crowds. */}
+        <h1 className='mb-4 px-10 md:px-6 text-4xl md:text-5xl font-bold font-stretch'>
           {headline || 'Ready for a challenge?'}
         </h1>
         {/*
@@ -137,7 +142,7 @@ export function StartScreen({
           it is the line that says what the drill actually is. The hierarchy is
           unaffected — the headline above is `font-bold`.
         */}
-        <p className='mb-8 max-w-lg px-6 mx-auto text-lg font-normal'>
+        <p className='mb-8 max-w-lg px-10 md:px-6 mx-auto text-lg font-normal'>
           {description}
         </p>
         <div

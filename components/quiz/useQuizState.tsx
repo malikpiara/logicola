@@ -126,6 +126,9 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
   );
 
   const isMulti = !!subSet.multiSelect;
+  // See selectOption: the corpus's largest accepted set is 3 (pinned by
+  // setR.data.test.ts), so more than 3 picks is never a legitimate answer.
+  const MAX_MULTI_PICKS = 3;
   // A retry mount is already "started": quiz_started belongs to the first
   // run only (the retry fired quiz_retried instead).
   const hasStartedRef = useRef(initialMode != null);
@@ -249,9 +252,24 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
     if (!isMulti) return;
     const id = currentQuestion?.options[index]?.id;
     if (id == null) return;
-    setSelectedOptionIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
+    setSelectedOptionIds((prev) => {
+      if (prev.includes(id)) return prev.filter((x) => x !== id);
+      // A pick already submitted and flagged wrong cannot be re-selected —
+      // user testing found people re-picking ruled-out fallacies and
+      // burning attempts. The click is not dead: the cursor still moves,
+      // and the shell shows the flagged option's hint as a mid-attempt
+      // review (Malik, 2026-08-21).
+      if (previousGuesses.includes(id)) return prev;
+      // Cap picks at the largest accepted set in the corpus (3). Two
+      // reasons from Set R user testing (Malik, 2026-08-21): people
+      // didn't know how many they could pick, and people picked ALL to
+      // game the grader — a miss filters the selection down to exactly
+      // the correct ids, so select-everything bought the answer for the
+      // price of one miss. A fourth pick is simply refused; deselect one
+      // to change your mind.
+      if (prev.length >= MAX_MULTI_PICKS) return prev;
+      return [...prev, id];
+    });
   }
 
   /**
