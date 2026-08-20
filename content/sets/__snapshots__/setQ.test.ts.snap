@@ -2707,6 +2707,390 @@ exports[`setQ > matches snapshot 1`] = `
           ],
           "prompt": "Crypto is the future of money.",
         },
+        {
+          "answer": "This violates 3 (circular — Cersei defines the word with itself).",
+          "correctId": [
+            2,
+          ],
+          "id": "3.71",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Power is power.",
+        },
+        {
+          "answer": "This violates 1 (too broad — the real thing is a sustained campaign to make someone doubt their own perception).",
+          "correctId": [
+            0,
+          ],
+          "id": "3.72",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Gaslighting is when someone disagrees with you.",
+        },
+        {
+          "answer": "This violates 5 (vagueness mismatch — a precise threshold for a judgment call; the NBER itself rejects this rule of thumb).",
+          "correctId": [
+            4,
+          ],
+          "id": "3.73",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A recession is two consecutive quarters of negative growth.",
+        },
+        {
+          "answer": "This violates 1 (too broad — any hunch counts) and 2 (too narrow — it excludes gravity and germ theory).",
+          "correctId": [
+            0,
+            1,
+          ],
+          "id": "3.74",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "“Theory” means “an unproven guess.”",
+        },
+        {
+          "answer": "This violates 2 (too narrow — Benin City’s earthworks and Timbuktu’s libraries were not stone) and 7 (building material is not essential).",
+          "correctId": [
+            1,
+            6,
+          ],
+          "id": "3.75",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Civilization is a society that builds in stone.",
+        },
+        {
+          "answer": "This violates 2 (too narrow — everyone has an accent; yours is just the local one).",
+          "correctId": [
+            1,
+          ],
+          "id": "3.76",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "An accent is what people from somewhere else have.",
+        },
+        {
+          "answer": "This violates 1 (too broad — rebuilding after a disaster counts) and 2 (too narrow — unpaid care does not).",
+          "correctId": [
+            0,
+            1,
+          ],
+          "id": "3.77",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "GDP is how well a country is doing.",
+        },
+        {
+          "answer": "This violates 1 (too broad — villains have powers too) and 2 (too narrow — Batman has none).",
+          "correctId": [
+            0,
+            1,
+          ],
+          "id": "3.78",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A hero is someone with superpowers.",
+        },
+        {
+          "answer": "This violates 2 (too narrow — goalkeepers use their hands, and Americans mean a different sport entirely).",
+          "correctId": [
+            1,
+          ],
+          "id": "3.79",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "“Football” means “the sport you play with your feet.”",
+        },
+        {
+          "answer": "This violates 1 (too broad — the clinical term names something narrower than everything upsetting).",
+          "correctId": [
+            0,
+          ],
+          "id": "3.80",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Trauma is anything that upsets you.",
+        },
       ],
       "slugs": [
         "informal",

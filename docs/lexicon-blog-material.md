@@ -38,6 +38,15 @@ disagreeing with us, which is the interesting part.
    Frequency data is structurally blind to this class, so it gets a
    denylist swept over rendered output, not a measurement.
 
+**A fifth instrument, found late (Malik, 2026-08-21): Word-of-the-Year
+lists.** Merriam-Webster, Oxford, and the other dictionaries' WOTY picks
+are curated records of exactly when a word became culturally
+load-bearing — the recency signal Ngrams (ends 2019) and wordfreq
+(~2021) structurally cannot see. Gaslighting (M-W 2022) entered Set Q as
+a specimen precisely because the dictionary itself flagged the
+definitional crisis. Use the lists both ways: as candidates for
+additions, and as dated evidence when defending one.
+
 A fifth blind spot, found later: for a _living person_, corpus
 frequency measures how long they have been famous, not how famous they
 are. Haaland scores 1.97 against Neymar's 3.47.
