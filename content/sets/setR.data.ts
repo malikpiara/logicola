@@ -308,7 +308,7 @@ export const SECTIONS: FallacySection[] = [
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
         template:
-          'MrBeast has hundreds of millions of subscribers, and he says his lunch kits are healthier than the ones they replaced. So they must be healthier.',
+          'MrBeast has hundreds of millions of subscribers, and he says his lunch kits are healthier than the kits they’re compared against. So they must be healthier.',
         accepted: ['aa'],
         note: 'This violates (1), (2) and (3). Registered dietitians disputed the claim, and an audience is not a qualification.',
       },
@@ -324,7 +324,7 @@ export const SECTIONS: FallacySection[] = [
         template:
           'Picasso said that good artists copy and great artists steal. He was one of the greatest painters who ever lived. So he must have been right about it.',
         accepted: ['aa'],
-        note: 'Two things are wrong. There is no evidence Picasso ever said it — his name is first attached to the line in a 1989 magazine article, sixteen years after his death, and it most likely descends from T. S. Eliot in 1920. And being a great painter would not make him right about it in any case.',
+        note: 'Two things are wrong. There is no evidence Picasso ever said it — his name only became attached to the line decades after his death, and it most likely descends from T. S. Eliot in 1920. And being a great painter would not make him right about it in any case.',
       },
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
@@ -396,9 +396,9 @@ export const SECTIONS: FallacySection[] = [
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
         template:
-          'Millions of people have signed up to sell it. So it must be a good way to make money.',
+          'Millions of people have signed up to sell for this multi-level marketing company. So it must be a good way to make money.',
         accepted: ['ac'],
-        note: "The FTC's own figures put the share of participants who lose money at around 99%. How many people joined says nothing about how they did.",
+        note: 'Analyses of income-disclosure statements put the share of participants who lose money at around 99%. How many people joined says nothing about how they did.',
       },
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
@@ -475,7 +475,7 @@ export const SECTIONS: FallacySection[] = [
         template:
           '{P} talked about their own family for ten minutes and half the room was in tears. So we should back the bill.',
         accepted: ['ae'],
-        note: 'Whether the bill is any good was never addressed.',
+        note: 'Whether the bill is any good is never addressed.',
       },
     ],
   },
@@ -649,7 +649,7 @@ export const SECTIONS: FallacySection[] = [
           'psychic powers',
           'the Loch Ness monster',
           'alien life',
-          'intelligent alien civilisations',
+          'intelligent alien civilizations',
           'a multiverse',
           'a simulated universe',
           'parallel universes',
@@ -673,7 +673,7 @@ export const SECTIONS: FallacySection[] = [
           'psychic powers',
           'the Loch Ness monster',
           'alien life',
-          'intelligent alien civilisations',
+          'intelligent alien civilizations',
           'a multiverse',
           'a simulated universe',
           'parallel universes',
@@ -685,9 +685,9 @@ export const SECTIONS: FallacySection[] = [
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
         template:
-          'I’ve never heard of a single book written in medieval West Africa. So there can’t have been many.',
+          'No one has ever shown that medieval West Africa produced books. So it can’t have produced many.',
         accepted: ['ai'],
-        note: 'Timbuktu’s libraries hold as many as 700,000 manuscripts — science, medicine, law, theology, poetry — some from the thirteenth century, and the university at Sankore taught up to 25,000 students. Not having heard of something is a fact about the hearer.',
+        note: 'Timbuktu’s libraries hold hundreds of thousands of manuscripts — science, medicine, law, theology, poetry — some from the thirteenth century, and the university at Sankore taught thousands of students. That something has not been shown to you is a fact about you.',
       },
     ],
   },
@@ -835,15 +835,15 @@ export const SECTIONS: FallacySection[] = [
         // Added 2026-08-19. Passages with no date are from the 2008 source.
         template:
           'You say this study was too small to show anything. But science has given us antibiotics, vaccines and spaceflight. Are you really going to stand there and attack science?',
-        accepted: ['bp'],
-        note: 'Whether science in general is valuable is not the issue. The issue is whether THIS study, with this sample size, shows what it is said to show.',
+        accepted: ['bp', 'sm'],
+        note: 'Whether science in general is valuable is not the issue. The issue is whether *this* study, with this sample size, shows what it is said to show.',
       },
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
         template:
           'You say this patent extension shouldn’t be granted. But without patents, nobody would develop new medicines at all.',
-        accepted: ['bp'],
-        note: 'Nobody in the argument denied that patents fund research. The question was whether this particular extension was warranted.',
+        accepted: ['bp', 'sm'],
+        note: 'Nobody in the argument denied that patents fund research. The question is whether this particular extension is warranted.',
       },
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
@@ -903,7 +903,7 @@ export const SECTIONS: FallacySection[] = [
         template:
           'Either you are with me, or you are my enemy. There is nothing in between.',
         accepted: ['bw'],
-        note: 'The reply in the film — “only a Sith deals in absolutes” — is itself an absolute, and so refutes itself. Two errors in one exchange.',
+        note: 'Between ally and enemy lie most people: the neutral, the undecided, the ally who disagrees. (And the reply in Star Wars — “only a Sith deals in absolutes” — is itself an absolute, and refutes itself.)',
       },
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
@@ -1073,7 +1073,7 @@ export const SECTIONS: FallacySection[] = [
       },
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
-        template: 'She’s Asian, so she’ll be good at maths.',
+        template: 'She’s Asian, so she’ll be good at math.',
         accepted: ['fs'],
         note: 'A flattering stereotype is still a stereotype. This one covers nearly five billion people, and it lands on someone as an expectation they never asked for.',
       },
@@ -1086,7 +1086,7 @@ export const SECTIONS: FallacySection[] = [
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
         template:
-          'Steve Jobs was famously brutal with his staff, and he built the most valuable company in the world. So you have to be brutal to build something great.',
+          'Steve Jobs was famously brutal with his staff, and he built one of the most valuable companies in the world. So you have to be brutal to build something great.',
         accepted: ['fs'],
         note: 'The unstated premise is that the founders you can name are a fair sample of the founders there are. You never hear about the brutal ones whose companies failed, or the decent ones who succeeded without a documentary.',
       },
@@ -1128,16 +1128,16 @@ export const SECTIONS: FallacySection[] = [
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
         template:
-          'The process that makes most of the world’s fertiliser was invented by the man who ran Germany’s chemical weapons programme and supervised the first gas attack at Ypres. So we should have nothing to do with it.',
+          'The process that makes most of the world’s fertilizer was invented by the man who ran Germany’s chemical weapons program and supervised the first gas attack at Ypres. So we should have nothing to do with it.',
         accepted: ['ge'],
-        note: 'Both halves are true of Fritz Haber. About a third of the world’s food is grown with nitrogen fixed by his process. Where something came from is not what makes it good or bad.',
+        note: 'Both halves are true of Fritz Haber. About half the world’s people are fed with nitrogen fixed by his process. Where something came from is not what makes it good or bad. The classic form dismisses a belief by its origin; dismissing the process itself is the same move.',
       },
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
         template:
           'This argument was written with AI help. So it can’t be a good argument.',
         accepted: ['ge'],
-        note: 'An argument is good or bad because of its structure, not because of what produced it.',
+        note: 'An argument is good or bad because of its premises and its structure, not because of what produced it.',
       },
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
@@ -1149,23 +1149,23 @@ export const SECTIONS: FallacySection[] = [
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
         template:
-          'Chillies only reached Asia after 1492, carried from the Americas by Portuguese traders. So Sichuan cooking isn’t really Chinese.',
+          'Chilies only reached Asia after 1492, carried from the Americas by Portuguese traders. So Sichuan cooking isn’t really Chinese.',
         accepted: ['ge'],
-        note: 'Every word of the premise is true. Capsicum was domesticated in the Americas, and Portuguese ships had it in Goa, Malacca and Japan within thirty years of Columbus. Where an ingredient came from is not what makes a cuisine someone’s own.',
+        note: 'Every word of the premise is true. Capsicum was domesticated in the Americas, and Portuguese ships had it in Goa and Malacca within twenty years of Columbus, and in Japan by the 1540s. Where an ingredient came from is not what makes a cuisine someone’s own.',
       },
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
         template:
-          'The tomato is a New World plant. Europeans thought it poisonous for two hundred years, and pasta with tomato sauce doesn’t appear in an Italian cookbook until the 1830s. So pasta al pomodoro isn’t really Italian.',
+          'The tomato is a New World plant. Many Europeans thought it poisonous for two centuries, and pasta with tomato sauce doesn’t appear in an Italian cookbook until the 1830s. So pasta al pomodoro isn’t really Italian.',
         accepted: ['ge'],
-        note: 'Every date holds. Tomatoes reached Europe with the Spanish in the early 1500s, were shunned as nightshade for two centuries, and Cavalcanti’s vermicelli con lo pommodoro dates from 1839. A dish is not less a people’s own for having been invented at a particular moment.',
+        note: 'Every date holds. Tomatoes reached Europe with the Spanish in the early 1500s, were long shunned in the north as nightshade, and Cavalcanti’s vermicelli con lo pommodoro dates from 1839. A dish is not less a people’s own for having been invented at a particular moment.',
       },
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
         template:
           'There wasn’t a single cow anywhere in the Americas until the Spanish brought them after 1493. So the Argentine asado isn’t really Argentine.',
         accepted: ['ge'],
-        note: 'Cattle reached the Río de la Plata around 1536, and with no predators on the Pampas the feral herds ran to millions within the century. Where an animal came from is not what makes a tradition someone’s own.',
+        note: 'Cattle reached the Río de la Plata in the mid-1500s, and with no predators on the Pampas the feral herds ran to millions within a century. Where an animal came from is not what makes a tradition someone’s own.',
       },
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
@@ -1217,7 +1217,7 @@ export const SECTIONS: FallacySection[] = [
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
         template:
-          '{P} came out in favour of the bill. That settles it for me — I’m against.',
+          '{P} came out in favor of the bill. That settles it for me — I’m against.',
         accepted: ['op'],
         note: 'This is the whole of the reasoning: someone I oppose is for it, so I am against it.',
       },
@@ -1233,14 +1233,14 @@ export const SECTIONS: FallacySection[] = [
         template:
           'The people who have mocked her for a decade are saying the new album is her weakest. So it must actually be one of her best.',
         accepted: ['op'],
-        note: 'Being wrong before does not make someone wrong now.',
+        note: 'That her detractors call it her weakest tells you about them, not about the album.',
       },
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.
         template:
-          'The only people saying the album is any good are Swifties. So it can’t be any good.',
+          'The only people who like the album are the Swifties I spend all day arguing with online. So it can’t be any good.',
         accepted: ['op'],
-        note: 'The same fallacy as the passage above, running in the opposite direction.',
+        note: 'Inverting the endorsement of people you oppose is the same mistake as inverting their criticism. Their liking it is not evidence against it.',
       },
     ],
   },
@@ -1304,7 +1304,7 @@ export const SECTIONS: FallacySection[] = [
         template:
           'We send the EU £350 million a week. Think what our health service could do with that. So we should leave.',
         accepted: ['pc'],
-        note: 'That was the gross figure. It left out the rebate, which was never sent, and the money that came back. The UK Statistics Authority called using it this way potentially misleading.',
+        note: 'That was the gross figure. It left out the rebate, which was never sent, and the money that came back. The UK Statistics Authority called it “a clear misuse of official statistics.”',
       },
       {
         // Added 2026-08-19. Passages with no date are from the 2008 source.

@@ -1530,7 +1530,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "prompt": "Hyundais are inexpensive and get good gas mileage. So you should get a Hyundai.",
         },
         {
-          "answer": "This passage illustrates the appeal to crowd fallacy. The FTC's own figures put the share of participants who lose money at around 99%. How many people joined says nothing about how they did.",
+          "answer": "This passage illustrates the appeal to crowd fallacy. Analyses of income-disclosure statements put the share of participants who lose money at around 99%. How many people joined says nothing about how they did.",
           "correctId": [
             1,
           ],
@@ -1742,7 +1742,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "Millions of people have signed up to sell it. So it must be a good way to make money.",
+          "prompt": "Millions of people have signed up to sell for this multi-level marketing company. So it must be a good way to make money.",
         },
         {
           "answer": "This passage illustrates the ad hominem fallacy. This violates clauses (1) and (2). Here, (1) the grounds of the attack are irrelevant to the person’s rational competence; (2) the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).",

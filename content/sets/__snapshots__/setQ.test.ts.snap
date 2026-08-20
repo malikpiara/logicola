@@ -1513,7 +1513,7 @@ exports[`setQ > matches snapshot 1`] = `
               "label": "Has non-essential properties",
             },
           ],
-          "prompt": "A computer is a box made by Dell that has a keyboard and a screen.",
+          "prompt": "A computer is a box made by Apple that has a keyboard and a screen.",
         },
         {
           "answer": "This violates 1 (if you do not know that it is false, it is just a mistake and not a lie).",
@@ -1627,7 +1627,7 @@ exports[`setQ > matches snapshot 1`] = `
               "label": "Has non-essential properties",
             },
           ],
-          "prompt": "An adolescent is a person between 9 and 19 years-old.",
+          "prompt": "An adolescent is a person between 9 and 19 years old.",
         },
         {
           "answer": "This violates 5.",
