@@ -99,6 +99,16 @@ const ESTREGULARS: ReadonlySet<string> = new Set([
   // so the inflection is ours (Malik, 2026-08-19).
   'kind',
   'quiet',
+  // `shy` inflects cleanly; `witty` would need y->i and `lovable` an -e drop,
+  // which this rule does not do, so both fall through to "most X" (2026-08-20).
+  'shy',
+  'old',
+  'young',
+  'sad',
+  'wise',
+  'calm',
+  'proud',
+  'brave',
   'clean',
   'smart',
   'short',
@@ -118,6 +128,8 @@ const ESTREGULARS: ReadonlySet<string> = new Set([
   'cheap',
   'strong',
 ]);
+
+const NO_INFLECTION: ReadonlySet<string> = new Set(['cowardly', 'scholarly']);
 
 const HINT_SWITCHED = 'Why did you switch the letters around?';
 const HINT_FORGOT_NOT = 'You forgot the ‘not.’';
@@ -160,10 +172,41 @@ function qid(template: string, n: number): string {
  * inflected form; everything else falls back to "most X".
  */
 function superlative(adj: string): string {
-  if (ESTREGULARS.has(adj)) {
-    return adj.endsWith('e') ? adj + 'st' : adj + 'est';
-  }
-  return `most ${adj}`;
+  // Consonant + y inflects for ANY adjective, not just the allowlist: English
+  // has no "most friendly", only "friendliest". Twelve live adjectives end
+  // this way — nine of them Gensler's — and every one of them rendered as
+  // "most X" until this was measured (2026-08-20).
+  //
+  // PROVENANCE (2026-08-20, settling whether the original's behaviour was
+  // pedagogy or limitation): it was limitation. The 2008 engine's parser
+  // reads ONE character after '$', so $Best was word($B) + literal "est" —
+  // it shipped "beautifulest" and "cheerfulest" (logicola-ghidra 0121b7d).
+  // Verified for the 2008 build ONLY. The earliest binary in that repo is
+  // 2003 and its LC.FIL does not yield templates to a strings dump, so how
+  // far back this goes is unknown — do not repeat it as "since 1985". Gensler's hand-written textbook prose, where
+  // no parser constrains him, inflects exactly as this function now does:
+  // "nastiest" (y->i, Intro to Logic Set B) and "biggest" (consonant
+  // doubling, Set Q), with zero "most X person" constructions anywhere in
+  // the book notes. This function converges with the author; the binary
+  // never could.
+  // Length guard: English keeps the y in one-syllable words. Measured, not
+  // assumed — "shyest" is Zipf 1.56 and "shiest" is 0.00.
+  //
+  // NO_INFLECTION holds the only two consonant+y adjectives in these pools
+  // whose -iest form does not exist: "cowardliest" and "scholarliest" both
+  // measure Zipf 0.00, against 1.50-3.59 for every other y-adjective here.
+  // Both are -ly adjectives built on a noun; the basic ones (friendly,
+  // lively, lonely) inflect normally. These two fall through to "most X".
+  if (adj.length > 3 && !NO_INFLECTION.has(adj) && /[^aeiou]y$/.test(adj))
+    return adj.slice(0, -1) + 'iest';
+  if (!ESTREGULARS.has(adj)) return `most ${adj}`;
+  if (adj.endsWith('e')) return adj + 'st';
+  // Single-syllable consonant-vowel-consonant doubles the final letter:
+  // sad -> saddest, big -> biggest. Guarded to the allowlist, so it cannot
+  // fire on a long adjective that merely ends CVC.
+  if (/^[^aeiou]*[aeiou][^aeiouwxy]$/.test(adj))
+    return adj + adj.slice(-1) + 'est';
+  return adj + 'est';
 }
 
 /** Spec for one option being assembled. */
@@ -358,8 +401,15 @@ function template4(rng: Rng, counter: number): Question {
  *   "The dancer isn't the most cheerful person." → d is not c
  *
  * Subject: "this $A" → lowercase.
- * Predicate: "the most $C person" → lowercase (definite, single
+ * Predicate: superlative phrase → lowercase (definite, single
  *   referent).
+ *
+ * The 2008 DSL hardcodes "most $C" here, but that was a workaround for
+ * a parser that could not inflect ($Best was $B + literal "est" —
+ * logicola-ghidra 0121b7d), not authored style: Gensler's textbook
+ * writes this exact sentence shape inflected ("David isn't the
+ * nastiest person at the party", Intro to Logic Set B). This template
+ * now uses superlative(), converging with the book (2026-08-20).
  */
 function template5(rng: Rng, counter: number): Question {
   const noun = pickFrom(rng, nounsProfessions);
@@ -368,11 +418,12 @@ function template5(rng: Rng, counter: number): Question {
   const a = noun[0]!.toLowerCase();
   const C = adj[0]!.toUpperCase();
   const c = adj[0]!.toLowerCase();
-  const indTerm = `The most ${adj} person`;
+  const sup = superlative(adj);
+  const indTerm = `The ${sup} person`;
 
   return {
     id: qid('5', counter),
-    prompt: `This ${noun} isn't the most ${adj} person.`,
+    prompt: `This ${noun} isn't the ${sup} person.`,
     ...buildOptions(
       [
         { label: `${a} is not ${c}` },

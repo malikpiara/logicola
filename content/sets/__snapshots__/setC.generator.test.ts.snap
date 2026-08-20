@@ -27,144 +27,142 @@ exports[`setC generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "$ ((G \\supset  C) \\vee  D) $",
+              "label": "$ ((P \\supset  C) \\vee  D) $",
             },
             {
               "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 1,
-              "label": "$ G \\supset  C \\vee  D $",
+              "label": "$ P \\supset  C \\vee  D $",
             },
             {
               "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 2,
-              "label": "$ (G \\supset  (C \\vee  D)) $",
+              "label": "$ (P \\supset  (C \\vee  D)) $",
             },
             {
               "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 3,
-              "label": "$ (G \\supset  C) \\vee  D $",
+              "label": "$ (P \\supset  C) \\vee  D $",
             },
           ],
-          "prompt": "If you're generous then you're confident, or you're dangerous.",
+          "prompt": "If P then C, or D.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.C.1.1",
+          "id": "gen.C.0.1",
           "options": [
             {
               "id": 0,
-              "label": "$ (\\sim I \\cdot  T) $",
+              "label": "$ \\sim (D \\cdot  J) $",
             },
             {
-              "hint": "‘Both’ translates into ‘(’; so ‘both not’ translates into ‘(∼’.",
+              "hint": "‘Both’ translates into ‘(’; so ‘not both’ translates into ‘∼(’.",
               "id": 1,
-              "label": "$ \\sim (I \\cdot  T) $",
+              "label": "$ (\\sim D \\cdot  \\sim J) $",
             },
             {
-              "hint": "‘Both’ translates into ‘(’; so ‘both not’ translates into ‘(∼’.
-Why did you put in an extra ‘∼’?",
+              "hint": "‘Both’ translates into ‘(’; so ‘not both’ translates into ‘∼(’.",
               "id": 2,
-              "label": "$ (\\sim I \\cdot  \\sim T) $",
+              "label": "$ (\\sim D \\cdot  J) $",
             },
             {
-              "hint": "‘Both’ translates into ‘(’; so ‘both not’ translates into ‘(∼’.",
+              "hint": "‘Both’ translates into ‘(’; so ‘not both’ translates into ‘∼(’.",
               "id": 3,
-              "label": "$ \\sim I \\cdot  T $",
+              "label": "$ \\sim D \\cdot  J $",
             },
           ],
-          "prompt": "You're both not impulsive and tactful.",
+          "prompt": "You aren't both dull and jealous.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.C.17.2",
+          "id": "gen.C.5.2",
           "options": [
             {
               "id": 0,
-              "label": "$ (P \\supset  (C \\cdot  F)) $",
+              "label": "$ \\sim (H \\supset  R) $",
             },
             {
-              "hint": "The comma indicates that the parts on either side glob together as units.",
+              "hint": "‘If’ translates into ‘(’; so ‘not if’ translates into ‘∼(’.",
               "id": 1,
-              "label": "$ P \\supset  C \\cdot  F $",
+              "label": "$ (\\sim H \\supset  \\sim R) $",
             },
             {
-              "hint": "The comma indicates that the parts on either side glob together as units.",
+              "hint": "‘If’ translates into ‘(’; so ‘not if’ translates into ‘∼(’.",
               "id": 2,
-              "label": "$ (P \\supset  C) \\cdot  F $",
+              "label": "$ (\\sim H \\supset  R) $",
             },
             {
-              "hint": "The comma indicates that the parts on either side glob together as units.",
+              "hint": "‘If’ translates into ‘(’; so ‘not if’ translates into ‘∼(’.",
               "id": 3,
-              "label": "$ ((P \\supset  C) \\cdot  F) $",
+              "label": "$ \\sim H \\supset  R $",
             },
           ],
-          "prompt": "If you're practical, then you're cruel and fanatical.",
+          "prompt": "It's false that if you're honest then you're reliable.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.C.7.3",
+          "id": "gen.C.9.3",
           "options": [
             {
               "id": 0,
-              "label": "$ (\\sim L \\cdot  \\sim P) $",
+              "label": "$ (\\sim P \\vee  \\sim C) $",
             },
             {
-              "hint": "‘Both’ translates into ‘(’; so ‘both not’ translates into ‘(∼’.",
-              "id": 1,
-              "label": "$ \\sim (L \\cdot  \\sim P) $",
-            },
-            {
-              "hint": "‘Both’ translates into ‘(’; so ‘both not’ translates into ‘(∼’.
+              "hint": "‘Either’ translates into ‘(’; so ‘either not’ translates into ‘(∼’.
 You forgot the second ‘∼’!",
-              "id": 2,
-              "label": "$ (\\sim L \\cdot  P) $",
+              "id": 1,
+              "label": "$ (\\sim P \\vee  C) $",
             },
             {
-              "hint": "‘Both’ translates into ‘(’; so ‘both not’ translates into ‘(∼’.",
+              "hint": "‘Either’ translates into ‘(’; so ‘either not’ translates into ‘(∼’.",
+              "id": 2,
+              "label": "$ \\sim (P \\vee  \\sim C) $",
+            },
+            {
+              "hint": "‘Either’ translates into ‘(’; so ‘either not’ translates into ‘(∼’.",
               "id": 3,
-              "label": "$ \\sim L \\cdot  \\sim P $",
+              "label": "$ \\sim P \\vee  \\sim C $",
             },
           ],
-          "prompt": "You're both not logical and not practical.",
+          "prompt": "Either not P or not C.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.C.1.4",
+          "id": "gen.C.14.4",
           "options": [
             {
               "id": 0,
-              "label": "$ (\\sim P \\cdot  L) $",
+              "label": "$ ((R \\cdot  G) \\vee  C) $",
             },
             {
-              "hint": "‘Both’ translates into ‘(’; so ‘both not’ translates into ‘(∼’.",
+              "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 1,
-              "label": "$ \\sim (P \\cdot  L) $",
+              "label": "$ R \\cdot  G \\vee  C $",
             },
             {
-              "hint": "‘Both’ translates into ‘(’; so ‘both not’ translates into ‘(∼’.
-Why did you put in an extra ‘∼’?",
+              "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 2,
-              "label": "$ (\\sim P \\cdot  \\sim L) $",
+              "label": "$ (R \\cdot  (G \\vee  C)) $",
             },
             {
-              "hint": "‘Both’ translates into ‘(’; so ‘both not’ translates into ‘(∼’.",
+              "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 3,
-              "label": "$ \\sim P \\cdot  L $",
+              "label": "$ (R \\cdot  G) \\vee  C $",
             },
           ],
-          "prompt": "Both not P and L.",
+          "prompt": "R and G, or C.",
         },
         {
           "answer": "",
@@ -175,144 +173,149 @@ Why did you put in an extra ‘∼’?",
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim (\\sim A \\vee  L) $",
+              "label": "$ \\sim (\\sim C \\vee  B) $",
             },
             {
               "hint": "‘Either’ translates into ‘(’; so ‘not either not’ translates into ‘∼(∼’.
 The ‘(’ keeps the negations from canceling out.",
               "id": 1,
-              "label": "$ A \\vee  L $",
+              "label": "$ C \\vee  B $",
             },
             {
               "hint": "‘Either’ translates into ‘(’; so ‘not either not’ translates into ‘∼(∼’.
 The ‘(’ keeps the negations from canceling out.",
               "id": 2,
-              "label": "$ (A \\vee  L) $",
+              "label": "$ (C \\vee  B) $",
             },
             {
               "hint": "‘Either’ translates into ‘(’; so ‘not either not’ translates into ‘∼(∼’.
 The ‘(’ keeps the negations from canceling out.",
               "id": 3,
-              "label": "$ \\sim \\sim A \\vee  L $",
+              "label": "$ \\sim \\sim C \\vee  B $",
             },
           ],
-          "prompt": "Not either not A or L.",
+          "prompt": "Not either not C or B.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.C.20.6",
+          "id": "gen.C.14.6",
           "options": [
             {
               "id": 0,
-              "label": "$ ((V \\supset  F) \\vee  T) $",
+              "label": "$ ((R \\cdot  W) \\vee  P) $",
             },
             {
               "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 1,
-              "label": "$ V \\supset  F \\vee  T $",
+              "label": "$ R \\cdot  W \\vee  P $",
             },
             {
               "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 2,
-              "label": "$ (V \\supset  (F \\vee  T)) $",
+              "label": "$ (R \\cdot  (W \\vee  P)) $",
             },
             {
               "hint": "The comma indicates that the parts on either side glob together as units.",
               "id": 3,
-              "label": "$ (V \\supset  F) \\vee  T $",
+              "label": "$ (R \\cdot  W) \\vee  P $",
             },
           ],
-          "prompt": "If you're vicious then you're frantic, or you're talented.",
+          "prompt": "R and W, or P.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.C.17.7",
+          "id": "gen.C.4.7",
           "options": [
             {
               "id": 0,
-              "label": "$ (E \\supset  (H \\cdot  O)) $",
+              "label": "$ (\\sim C \\supset  E) $",
             },
             {
-              "hint": "The comma indicates that the parts on either side glob together as units.",
+              "hint": "‘If’ translates into ‘(’; so ‘if not’ translates into ‘(∼’.
+Why did you put in an extra ‘∼’?",
               "id": 1,
-              "label": "$ E \\supset  H \\cdot  O $",
+              "label": "$ (\\sim C \\supset  \\sim E) $",
             },
             {
-              "hint": "The comma indicates that the parts on either side glob together as units.",
+              "hint": "‘If’ translates into ‘(’; so ‘if not’ translates into ‘(∼’.",
               "id": 2,
-              "label": "$ (E \\supset  H) \\cdot  O $",
+              "label": "$ \\sim (C \\supset  E) $",
             },
             {
-              "hint": "The comma indicates that the parts on either side glob together as units.",
+              "hint": "‘If’ translates into ‘(’; so ‘if not’ translates into ‘(∼’.",
               "id": 3,
-              "label": "$ ((E \\supset  H) \\cdot  O) $",
+              "label": "$ \\sim C \\supset  E $",
             },
           ],
-          "prompt": "If E, then H and O.",
+          "prompt": "If not C then E.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.C.16.8",
+          "id": "gen.C.10.8",
           "options": [
             {
               "id": 0,
-              "label": "$ ((U \\cdot  C) \\supset  P) $",
+              "label": "$ (\\sim O \\supset  \\sim W) $",
             },
             {
-              "hint": "The comma indicates that the parts on either side glob together as units.",
+              "hint": "‘If’ translates into ‘(’; so ‘if not’ translates into ‘(∼’.
+You forgot the second ‘∼’!",
               "id": 1,
-              "label": "$ U \\cdot  C \\supset  P $",
+              "label": "$ (\\sim O \\supset  W) $",
             },
             {
-              "hint": "The comma indicates that the parts on either side glob together as units.",
+              "hint": "‘If’ translates into ‘(’; so ‘if not’ translates into ‘(∼’.",
               "id": 2,
-              "label": "$ (U \\cdot  (C \\supset  P)) $",
+              "label": "$ \\sim (O \\supset  \\sim W) $",
             },
             {
-              "hint": "The comma indicates that the parts on either side glob together as units.",
+              "hint": "‘If’ translates into ‘(’; so ‘if not’ translates into ‘(∼’.",
               "id": 3,
-              "label": "$ (U \\cdot  C) \\supset  P $",
+              "label": "$ \\sim O \\supset  \\sim W $",
             },
           ],
-          "prompt": "If you're unpredictable and candid, then you're poetic.",
+          "prompt": "If not O then not W.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.C.5.9",
+          "id": "gen.C.11.9",
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim (V \\supset  C) $",
+              "label": "$ \\sim (\\sim A \\supset  L) $",
             },
             {
-              "hint": "‘If’ translates into ‘(’; so ‘not if’ translates into ‘∼(’.",
+              "hint": "‘If’ translates into ‘(’; so ‘not if not’ translates into ‘∼(∼’.
+The ‘(’ keeps the negations from canceling out.",
               "id": 1,
-              "label": "$ (\\sim V \\supset  \\sim C) $",
+              "label": "$ A \\supset  L $",
             },
             {
-              "hint": "‘If’ translates into ‘(’; so ‘not if’ translates into ‘∼(’.",
+              "hint": "‘If’ translates into ‘(’; so ‘not if not’ translates into ‘∼(∼’.
+The ‘(’ keeps the negations from canceling out.",
               "id": 2,
-              "label": "$ (\\sim V \\supset  C) $",
+              "label": "$ (A \\supset  L) $",
             },
             {
-              "hint": "‘If’ translates into ‘(’; so ‘not if’ translates into ‘∼(’.",
+              "hint": "‘If’ translates into ‘(’; so ‘not if not’ translates into ‘∼(∼’.
+The ‘(’ keeps the negations from canceling out.",
               "id": 3,
-              "label": "$ \\sim V \\supset  C $",
+              "label": "$ \\sim \\sim A \\supset  L $",
             },
           ],
-          "prompt": "It's false that if you're virtuous then you're cruel.",
+          "prompt": "It is false that if you aren't arrogant then you're lively.",
         },
       ],
       "shuffleOptions": true,
@@ -339,25 +342,25 @@ The ‘(’ keeps the negations from canceling out.",
           "options": [
             {
               "id": 0,
-              "label": "$ (S \\equiv  W) $",
+              "label": "$ (M \\equiv  B) $",
             },
             {
               "hint": "‘Necessary and sufficient’ means ‘if and only if.’",
               "id": 1,
-              "label": "$ (S \\supset  W) $",
+              "label": "$ (M \\supset  B) $",
             },
             {
               "hint": "‘Necessary and sufficient’ means ‘if and only if.’",
               "id": 2,
-              "label": "$ (W \\supset  S) $",
+              "label": "$ (B \\supset  M) $",
             },
             {
               "hint": "‘Necessary and sufficient’ means ‘if and only if.’",
               "id": 3,
-              "label": "$ S \\equiv  W $",
+              "label": "$ M \\equiv  B $",
             },
           ],
-          "prompt": "S is necessary and sufficient for W.",
+          "prompt": "M is necessary and sufficient for B.",
         },
         {
           "answer": "",
@@ -387,7 +390,7 @@ The ‘(’ keeps the negations from canceling out.",
               "label": "$ C \\supset  G $",
             },
           ],
-          "prompt": "You're confident provided that you're greedy.",
+          "prompt": "You're comical provided that you're gloomy.",
         },
         {
           "answer": "",
@@ -398,25 +401,25 @@ The ‘(’ keeps the negations from canceling out.",
           "options": [
             {
               "id": 0,
-              "label": "$ (G \\equiv  R) $",
+              "label": "$ (P \\equiv  O) $",
             },
             {
               "hint": "‘Iff’ means ‘if and only if.’",
               "id": 1,
-              "label": "$ (G \\supset  R) $",
+              "label": "$ (P \\supset  O) $",
             },
             {
               "hint": "‘Iff’ means ‘if and only if.’",
               "id": 2,
-              "label": "$ (R \\supset  G) $",
+              "label": "$ (O \\supset  P) $",
             },
             {
               "hint": "‘Iff’ means ‘if and only if.’",
               "id": 3,
-              "label": "$ G \\equiv  R $",
+              "label": "$ P \\equiv  O $",
             },
           ],
-          "prompt": "You're generous iff you're romantic.",
+          "prompt": "You're powerful iff you're outgoing.",
         },
         {
           "answer": "",
@@ -427,26 +430,26 @@ The ‘(’ keeps the negations from canceling out.",
           "options": [
             {
               "id": 0,
-              "label": "$ (E \\supset  S) $",
+              "label": "$ (E \\supset  C) $",
             },
             {
               "hint": "‘Sufficient for’ is just an ‘if-then.’
 ‘Sufficient for’ is NOT an ‘if and only if.’",
               "id": 1,
-              "label": "$ (E \\equiv  S) $",
+              "label": "$ (E \\equiv  C) $",
             },
             {
               "hint": "‘Sufficient for’ is just an ‘if-then.’",
               "id": 2,
-              "label": "$ (\\sim E \\supset  \\sim S) $",
+              "label": "$ (\\sim E \\supset  \\sim C) $",
             },
             {
               "hint": "‘Sufficient for’ is just an ‘if-then.’",
               "id": 3,
-              "label": "$ E \\supset  S $",
+              "label": "$ E \\supset  C $",
             },
           ],
-          "prompt": "Being easygoing is sufficient for you to be slow.",
+          "prompt": "Being efficient is sufficient for you to be cheap.",
         },
         {
           "answer": "",
@@ -457,26 +460,26 @@ The ‘(’ keeps the negations from canceling out.",
           "options": [
             {
               "id": 0,
-              "label": "$ (F \\supset  G) $",
+              "label": "$ (L \\supset  G) $",
             },
             {
               "hint": "The part after ‘provided that’ is the antecedent (the if-part, the part before the horseshoe).",
               "id": 1,
-              "label": "$ (G \\supset  F) $",
+              "label": "$ (G \\supset  L) $",
             },
             {
               "hint": "The part after ‘provided that’ is the antecedent (the if-part, the part before the horseshoe).
 ‘Provided that’ is NOT an ‘if and only if.’",
               "id": 2,
-              "label": "$ (G \\equiv  F) $",
+              "label": "$ (G \\equiv  L) $",
             },
             {
               "hint": "The part after ‘provided that’ is the antecedent (the if-part, the part before the horseshoe).",
               "id": 3,
-              "label": "$ G \\supset  F $",
+              "label": "$ G \\supset  L $",
             },
           ],
-          "prompt": "You're greedy provided that you're forgetful.",
+          "prompt": "You're gloomy provided that you're lonely.",
         },
         {
           "answer": "",
@@ -517,27 +520,27 @@ The ‘(’ keeps the negations from canceling out.",
           "options": [
             {
               "id": 0,
-              "label": "$ (U \\cdot  F) $",
+              "label": "$ (W \\cdot  C) $",
             },
             {
               "hint": "‘But’ means ‘and.’
 Get rid of the ‘∼’!",
               "id": 1,
-              "label": "$ (U \\cdot  \\sim F) $",
+              "label": "$ (W \\cdot  \\sim C) $",
             },
             {
               "hint": "‘But’ means ‘and.’",
               "id": 2,
-              "label": "$ U \\cdot  F $",
+              "label": "$ W \\cdot  C $",
             },
             {
               "hint": "‘But’ means ‘and.’
 Get rid of the ‘∼’!",
               "id": 3,
-              "label": "$ U \\cdot  \\sim F $",
+              "label": "$ W \\cdot  \\sim C $",
             },
           ],
-          "prompt": "U but F.",
+          "prompt": "W but C.",
         },
         {
           "answer": "",
@@ -548,84 +551,85 @@ Get rid of the ‘∼’!",
           "options": [
             {
               "id": 0,
-              "label": "$ (F \\vee  T) $",
+              "label": "$ (F \\vee  C) $",
             },
             {
               "hint": "‘Unless’ means ‘or.’",
               "id": 1,
-              "label": "$ (F \\equiv  T) $",
+              "label": "$ (F \\equiv  C) $",
             },
             {
               "hint": "‘Unless’ means ‘or.’",
               "id": 2,
-              "label": "$ (F \\supset  \\sim T) $",
+              "label": "$ (F \\supset  \\sim C) $",
             },
             {
               "hint": "‘Unless’ means ‘or.’",
               "id": 3,
-              "label": "$ F \\equiv  T $",
+              "label": "$ F \\equiv  C $",
             },
           ],
-          "prompt": "Unless you're famous, you're tactful.",
+          "prompt": "Unless you're faithful, you're cautious.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.C.25.8",
+          "id": "gen.C.21.8",
           "options": [
             {
               "id": 0,
-              "label": "$ (A \\supset  S) $",
+              "label": "$ (C \\supset  E) $",
+            },
+            {
+              "hint": "‘Only if’ is NOT an ‘if and only if.’",
+              "id": 1,
+              "label": "$ (E \\equiv  C) $",
+            },
+            {
+              "hint": "‘Only if’ is NOT an ‘if and only if.’",
+              "id": 2,
+              "label": "$ E \\supset  C $",
+            },
+            {
+              "hint": "‘Only if’ is NOT an ‘if and only if.’
+The part after ‘only if’ is the consequent (the then-part, the part after the horseshoe).",
+              "id": 3,
+              "label": "$ (E \\supset  C) $",
+            },
+          ],
+          "prompt": "Only if E, C.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.C.25.9",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ (R \\supset  C) $",
             },
             {
               "hint": "The part after ‘if’ is the antecedent (the if-part, the part before the horseshoe).",
               "id": 1,
-              "label": "$ (S \\supset  A) $",
+              "label": "$ (C \\supset  R) $",
             },
             {
               "hint": "The part after ‘if’ is the antecedent (the if-part, the part before the horseshoe).
 ‘If’ is NOT an ‘if and only if.’",
               "id": 2,
-              "label": "$ (S \\equiv  A) $",
+              "label": "$ (C \\equiv  R) $",
             },
             {
               "hint": "The part after ‘if’ is the antecedent (the if-part, the part before the horseshoe).",
               "id": 3,
-              "label": "$ S \\supset  A $",
+              "label": "$ C \\supset  R $",
             },
           ],
-          "prompt": "You're slow if you're awkward.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.C.28.9",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ (G \\equiv  C) $",
-            },
-            {
-              "hint": "‘Iff’ means ‘if and only if.’",
-              "id": 1,
-              "label": "$ (G \\supset  C) $",
-            },
-            {
-              "hint": "‘Iff’ means ‘if and only if.’",
-              "id": 2,
-              "label": "$ (C \\supset  G) $",
-            },
-            {
-              "hint": "‘Iff’ means ‘if and only if.’",
-              "id": 3,
-              "label": "$ G \\equiv  C $",
-            },
-          ],
-          "prompt": "You're gloomy iff you're cowardly.",
+          "prompt": "You're clean if you're romantic.",
         },
       ],
       "shuffleOptions": true,

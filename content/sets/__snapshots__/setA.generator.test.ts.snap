@@ -27,22 +27,22 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "all F is P",
+              "label": "all L is P",
             },
             {
               "id": 1,
-              "label": "some F is P",
+              "label": "some L is P",
             },
             {
               "id": 2,
-              "label": "all f is p",
+              "label": "all l is p",
             },
             {
               "id": 3,
-              "label": "F is P",
+              "label": "L is P",
             },
           ],
-          "prompt": "All forgetful people are plumbers.",
+          "prompt": "All lonely people are plumbers.",
         },
         {
           "answer": "",
@@ -83,23 +83,23 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "no B is G",
+              "label": "no B is C",
             },
             {
               "id": 1,
-              "label": "all B is not G",
+              "label": "all B is not C",
             },
             {
               "id": 2,
-              "label": "B is not G",
+              "label": "B is not C",
             },
             {
-              "hint": "The term “energetic backpacker” could describe many persons, and so translates into a capital letter.",
+              "hint": "The term “jealous backpacker” could describe many persons, and so translates into a capital letter.",
               "id": 3,
-              "label": "b is not G",
+              "label": "b is not C",
             },
           ],
-          "prompt": "No energetic backpacker is generous.",
+          "prompt": "No jealous backpacker is cheerful.",
         },
         {
           "answer": "",
@@ -110,22 +110,22 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "all H is C",
+              "label": "all M is C",
             },
             {
               "id": 1,
-              "label": "some H is C",
+              "label": "some M is C",
             },
             {
               "id": 2,
-              "label": "all h is c",
+              "label": "all m is c",
             },
             {
               "id": 3,
-              "label": "H is C",
+              "label": "M is C",
             },
           ],
-          "prompt": "All hideous people are carpenters.",
+          "prompt": "All miserable people are carpenters.",
         },
         {
           "answer": "",
@@ -136,24 +136,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "w is not n",
+              "label": "w is not o",
             },
             {
-              "hint": "“The most naive person” stands for a single person, and so translates into a small letter.",
+              "hint": "“The oldest person” stands for a single person, and so translates into a small letter.",
               "id": 1,
-              "label": "w is not N",
+              "label": "w is not O",
             },
             {
               "id": 2,
-              "label": "W is not n",
+              "label": "W is not o",
             },
             {
-              "hint": "“The most naive person” stands for a single person, and so translates into a small letter.",
+              "hint": "“The oldest person” stands for a single person, and so translates into a small letter.",
               "id": 3,
-              "label": "W is not N",
+              "label": "W is not O",
             },
           ],
-          "prompt": "This wrestler isn't the most naive person.",
+          "prompt": "This wrestler isn't the oldest person.",
         },
         {
           "answer": "",
@@ -164,22 +164,22 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "some W is P",
+              "label": "some C is P",
             },
             {
               "id": 1,
-              "label": "all W is P",
+              "label": "all C is P",
             },
             {
               "id": 2,
-              "label": "some w is p",
+              "label": "some c is p",
             },
             {
               "id": 3,
-              "label": "W is P",
+              "label": "C is P",
             },
           ],
-          "prompt": "Some wild people are poets.",
+          "prompt": "Some cruel people are poets.",
         },
         {
           "answer": "",
@@ -190,24 +190,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "p is not f",
+              "label": "p is not c",
             },
             {
-              "hint": "“The most faithful person” stands for a single person, and so translates into a small letter.",
+              "hint": "“The most confident person” stands for a single person, and so translates into a small letter.",
               "id": 1,
-              "label": "p is not F",
+              "label": "p is not C",
             },
             {
               "id": 2,
-              "label": "P is not f",
+              "label": "P is not c",
             },
             {
-              "hint": "“The most faithful person” stands for a single person, and so translates into a small letter.",
+              "hint": "“The most confident person” stands for a single person, and so translates into a small letter.",
               "id": 3,
-              "label": "P is not F",
+              "label": "P is not C",
             },
           ],
-          "prompt": "This pickpocket isn't the most faithful person.",
+          "prompt": "This pickpocket isn't the most confident person.",
         },
         {
           "answer": "",
@@ -218,23 +218,23 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "some D is G",
+              "label": "some D is C",
             },
             {
               "id": 1,
-              "label": "D is G",
+              "label": "D is C",
             },
             {
               "id": 2,
-              "label": "some d is g",
+              "label": "some d is c",
             },
             {
               "hint": "Why did you switch the letters around?",
               "id": 3,
-              "label": "some G is D",
+              "label": "some C is D",
             },
           ],
-          "prompt": "Some unpredictable democrats are gloomy.",
+          "prompt": "Some witty democrats are curious.",
         },
         {
           "answer": "",
@@ -245,24 +245,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "c is not T",
+              "label": "c is not P",
             },
             {
-              "hint": "“A talented person” could describe many persons, and so translates into a capital letter.",
+              "hint": "“A prosperous person” could describe many persons, and so translates into a capital letter.",
               "id": 1,
-              "label": "c is not t",
+              "label": "c is not p",
             },
             {
               "id": 2,
-              "label": "C is not T",
+              "label": "C is not P",
             },
             {
-              "hint": "“A talented person” could describe many persons, and so translates into a capital letter.",
+              "hint": "“A prosperous person” could describe many persons, and so translates into a capital letter.",
               "id": 3,
-              "label": "C is not t",
+              "label": "C is not p",
             },
           ],
-          "prompt": "This Canadian isn't a talented person.",
+          "prompt": "This Canadian isn't a prosperous person.",
         },
         {
           "answer": "",
@@ -276,7 +276,7 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "j is E",
             },
             {
-              "hint": "“An efficient person in Barcelona” could describe many persons, and so translates into a capital letter.",
+              "hint": "“An energetic person in Barcelona” could describe many persons, and so translates into a capital letter.",
               "id": 1,
               "label": "j is e",
             },
@@ -287,12 +287,12 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "hint": "“Jessica” stands for a single person, and so translates into a small letter.
-“An efficient person in Barcelona” could describe many persons, and so translates into a capital letter.",
+“An energetic person in Barcelona” could describe many persons, and so translates into a capital letter.",
               "id": 3,
               "label": "J is e",
             },
           ],
-          "prompt": "Jessica is an efficient person in Barcelona.",
+          "prompt": "Jessica is an energetic person in Barcelona.",
         },
       ],
       "shuffleOptions": true,
@@ -319,24 +319,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "some F is S",
+              "label": "some F is M",
             },
             {
               "hint": "Why did you switch the letters around?",
               "id": 1,
-              "label": "S is F",
+              "label": "M is F",
             },
             {
               "id": 2,
-              "label": "F is S",
+              "label": "F is M",
             },
             {
               "hint": "Why did you put in the ‘not’?",
               "id": 3,
-              "label": "some F is not S",
+              "label": "some F is not M",
             },
           ],
-          "prompt": "One or more foreigners are short.",
+          "prompt": "One or more foreigners are mean.",
         },
         {
           "answer": "",
@@ -347,25 +347,25 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "no S is H",
+              "label": "no S is G",
             },
             {
               "hint": "Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
               "id": 1,
-              "label": "all S is not H",
+              "label": "all S is not G",
             },
             {
               "hint": "Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
               "id": 2,
-              "label": "S is not H",
+              "label": "S is not G",
             },
             {
               "hint": "Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
               "id": 3,
-              "label": "some S is not H",
+              "label": "some S is not G",
             },
           ],
-          "prompt": "People who are students aren't hideous.",
+          "prompt": "People who are students aren't gloomy.",
         },
         {
           "answer": "",
@@ -376,24 +376,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "no C is H",
+              "label": "no C is V",
             },
             {
               "hint": "‘Not some’ means ‘none.’",
               "id": 1,
-              "label": "all C is H",
+              "label": "all C is V",
             },
             {
               "id": 2,
-              "label": "C is not H",
+              "label": "C is not V",
             },
             {
               "hint": "‘Not some’ means ‘none.’",
               "id": 3,
-              "label": "some C is not H",
+              "label": "some C is not V",
             },
           ],
-          "prompt": "It isn't true that some clowns are humorous.",
+          "prompt": "It isn't true that some clowns are virtuous.",
         },
         {
           "answer": "",
@@ -451,7 +451,7 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "I is A",
             },
           ],
-          "prompt": "It is false that some interns aren't anxious.",
+          "prompt": "It is false that some interns aren't awkward.",
         },
         {
           "answer": "",
@@ -462,26 +462,26 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "m is g",
+              "label": "m is c",
             },
             {
-              "hint": "“The most gloomy one in Santa Monica” stands for a single person, and so translates into a small letter.",
+              "hint": "“The most curious one in Santa Monica” stands for a single person, and so translates into a small letter.",
               "id": 1,
-              "label": "m is G",
+              "label": "m is C",
             },
             {
               "hint": "“Mary” stands for a single person, and so translates into a small letter.",
               "id": 2,
-              "label": "M is g",
+              "label": "M is c",
             },
             {
               "hint": "“Mary” stands for a single person, and so translates into a small letter.
-“The most gloomy one in Santa Monica” stands for a single person, and so translates into a small letter.",
+“The most curious one in Santa Monica” stands for a single person, and so translates into a small letter.",
               "id": 3,
-              "label": "M is G",
+              "label": "M is C",
             },
           ],
-          "prompt": "Mary is the most gloomy one in Santa Monica.",
+          "prompt": "Mary is the most curious one in Santa Monica.",
         },
         {
           "answer": "",
@@ -492,24 +492,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "no S is C",
+              "label": "no S is N",
             },
             {
               "hint": "‘Not some’ means ‘none.’",
               "id": 1,
-              "label": "all S is C",
+              "label": "all S is N",
             },
             {
               "id": 2,
-              "label": "S is not C",
+              "label": "S is not N",
             },
             {
               "hint": "‘Not some’ means ‘none.’",
               "id": 3,
-              "label": "some S is not C",
+              "label": "some S is not N",
             },
           ],
-          "prompt": "It isn't true that some scientists are courteous.",
+          "prompt": "It isn't true that some scientists are notorious.",
         },
         {
           "answer": "",
@@ -520,25 +520,25 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "all L is C",
+              "label": "all L is F",
             },
             {
               "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
               "id": 1,
-              "label": "not some L is C",
+              "label": "not some L is F",
             },
             {
               "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
               "id": 2,
-              "label": "some L is C",
+              "label": "some L is F",
             },
             {
               "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
               "id": 3,
-              "label": "L is C",
+              "label": "L is F",
             },
           ],
-          "prompt": "It is false that some lifeguards aren't cheerful.",
+          "prompt": "It is false that some lifeguards aren't famous.",
         },
         {
           "answer": "",
@@ -549,25 +549,25 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "all L is U",
+              "label": "all L is W",
             },
             {
               "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
               "id": 1,
-              "label": "not some L is U",
+              "label": "not some L is W",
             },
             {
               "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
               "id": 2,
-              "label": "some L is U",
+              "label": "some L is W",
             },
             {
               "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
               "id": 3,
-              "label": "L is U",
+              "label": "L is W",
             },
           ],
-          "prompt": "It is false that some librarians aren't unpredictable.",
+          "prompt": "It is false that some librarians aren't witty.",
         },
         {
           "answer": "",
@@ -578,24 +578,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "some S is not G",
+              "label": "some S is not R",
             },
             {
               "hint": "You forgot the ‘not.’",
               "id": 1,
-              "label": "some S is G",
+              "label": "some S is R",
             },
             {
               "id": 2,
-              "label": "S is not G",
+              "label": "S is not R",
             },
             {
               "hint": "People often get this one wrong.",
               "id": 3,
-              "label": "all S is not G",
+              "label": "all S is not R",
             },
           ],
-          "prompt": "Not all senators are gentle.",
+          "prompt": "Not all senators are remarkable.",
         },
       ],
       "shuffleOptions": true,

@@ -159,6 +159,39 @@ describe('lexicons — the modern layer', () => {
     expect(nounsProfessions).not.toContain('druggist');
     expect(nounsProfessions).not.toContain('lunatic');
     expect(adjectives).not.toContain('demented');
+    // `comical` is deliberately absent from this list: it was retired on
+    // intuition and reinstated when Ngram data showed it rising 2.87x.
+    for (const dated of [
+      'bashful',
+      'courteous',
+      'tactful',
+      'loveable',
+      'boastful',
+      'sociable',
+      'fanatical',
+      'frivolous',
+    ]) {
+      expect(adjectives).not.toContain(dated);
+    }
+    // `loveable` is a respelling rather than a retirement: the frozen-baseline
+    // rule forbids editing the 2008 array, so the fix is retire + re-add.
+    expect(adjectives).toContain('lovable');
+    expect(adjectives).toContain('comical');
+    // Kept despite being rare: `forgetful` has no one-word replacement, and
+    // `likeable` has no reform — the American spelling `likable` is RARER.
+    expect(adjectives).toContain('forgetful');
+    expect(adjectives).toContain('likeable');
+  });
+
+  /**
+   * The additions are chosen on measured frequency, not taste. wordfreq Zipf
+   * blends subtitles, social media, news and books; the pool median is ~4.07.
+   * If someone adds a word well below that, this is the tripwire.
+   */
+  it('every modern adjective is at least as common as the rarest 2008 one', () => {
+    for (const w of ['arrogant', 'brave', 'calm', 'proud', 'wise', 'silly']) {
+      expect(adjectives).toContain(w);
+    }
   });
 
   // Proposed for retirement, reinstated on review. Pinned so the decision

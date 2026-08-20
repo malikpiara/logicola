@@ -415,6 +415,46 @@ const nounsProfessionsRetired: readonly string[] = [
 /** Entries withdrawn from `adjectives`. */
 const adjectivesRetired: readonly string[] = [
   'demented', // clinical term for dementia, used here pejoratively
+  // Reviewed against Google Books Ngram frequencies, 2026-08-20. Figures are
+  // occurrences per million in 2015-19, and the multiple is 2015-19 against
+  // 1948-52 — the pool's median adjective runs 9.39/M.
+  //
+  // The measurement corrected two intuitions and produced one word nobody had
+  // flagged. `comical` was retired here and REINSTATED: it reads dated but has
+  // nearly tripled since 1950 (2.87x, 1.57/M). And "dated" turned out to be
+  // the wrong charge against `bashful`, which is rising — its problem is
+  // rarity, not decline.
+  'bashful', // 0.59/M — a sixteenth of the pool median. Rare, though rising.
+  'courteous', // 2.01/M and falling (0.77x) — the one genuinely dated word,
+  // and `polite` (8.83/M, rising) already covers it
+  'tactful', // 0.59/M AND falling (0.79x). The only 2008 adjective failing
+  // both tests, and it was waved through on intuition as "still used, fine".
+  'boastful', // 2.50 — rarer than `bashful`; neither of us flagged it, the
+  // measurement did. `arrogant` (3.74) covers the same ground.
+  'sociable', // 2.97 — `friendly` (4.64) is already in the pool, and
+  // `outgoing` (3.59) joins it
+  'fanatical', // 3.02 and falling (0.81x on Ngrams) — `obsessive` (3.43)
+  // NOT retired despite being rare: `forgetful` (2.87) has no one-word
+  // replacement, and the pool needs conceptual range, not only frequency.
+  // `likeable` (3.02) has no reform available either — the American spelling
+  // `likable` is 2.96, RARER than the British one, which is the opposite of
+  // the loveable/lovable case and would have been got wrong by analogy.
+  'frivolous', // retired for SENSE DRIFT, not rarity — at 3.22 it is no rarer
+  // than `comical` (3.23), which stays. In Google Books 2000-19 the bigram
+  // "frivolous lawsuits" runs 51.1 per billion against "frivolous person" at
+  // 3.1: the word has become a legal term, and its overall frequency rests on
+  // a sense that never appears in "a frivolous biologist". `silly` (4.39)
+  // covers the ground. Malik spotted this one; the collocation test confirmed
+  // it (2026-08-20).
+  //
+  // The same test flags colorful (1.8), notorious (2.1), prosperous (3.4),
+  // realistic (3.5) and persistent (3.9) on "X person" counts — but NOT acted
+  // on, because the test undercounts adjectives that prefer a specific noun.
+  // We say "notorious criminal", never "notorious person". Only frivolous had
+  // a measured ratio showing the drift.
+  'loveable', // respelling, not datedness: `lovable` runs 0.84/M against this
+  // spelling's 0.18/M. The frozen-baseline rule forbids editing the 2008 array
+  // in place, so the fix is a retirement plus an addition.
 ];
 
 /**
@@ -500,7 +540,7 @@ const nounsProfessionsModern: readonly string[] = [
 ];
 
 /**
- * Modern adjectives. 21 entries.
+ * Modern adjectives. 24 entries.
  *
  * Character traits, rather than the 2008 list's taste for the lurid
  * (`hideous`, `frantic`). Those stay — a logic drill wants vivid predicates
@@ -511,6 +551,45 @@ const nounsProfessionsModern: readonly string[] = [
  * kindest poet") instead of falling through to "the most kind".
  */
 const adjectivesModern: readonly string[] = [
+  // Added 2026-08-20, chosen on measured frequency rather than taste. Figures
+  // are wordfreq Zipf, which blends subtitles, social media, news, Wikipedia
+  // and books — a better instrument here than books alone, because the
+  // question is what a nineteen-year-old actually meets. The pool median is
+  // 4.07; every word below is at or above it.
+  //
+  // These continue a revision GENSLER STARTED. Across 24 Latinate/plain
+  // synonym pairs his 2003 core holds the Latinate word alone 17 times and
+  // the plain word alone once — plausibly the formation of a Jesuit
+  // philosopher in a discipline whose own vocabulary is Latin. But the head
+  // of his 2008 list is eighteen plain monosyllables, eleven of them added
+  // that year. He diagnosed it himself; this finishes the move.
+  // The six commonest person-adjectives the pool lacked entirely. `happy`,
+  // `sad` and `funny` are again the plain partners to `cheerful`, `gloomy`
+  // and `humorous` — the Latinate/plain pattern keeps producing the same
+  // answer. `old`/`young` fill a stranger gap: the pool had no age dimension
+  // at all. Four of the six needed the superlative rule fixed first.
+  'busy', // 4.75
+  'funny', // 5.02
+  'happy', // 5.35
+  'old', // 5.75
+  'sad', // 4.84
+  'young', // 5.43
+  //
+  'arrogant', // 3.74 — replaces `boastful` (2.50)
+  'brave', // 4.33 — the plain partner to `courageous` (3.59), which stays
+  'calm', // 4.54
+  'lazy', // 4.24
+  'obsessive', // 3.43 — replaces `fanatical` (3.02)
+  'outgoing', // 3.59 — replaces `sociable` (2.97)
+  'proud', // 4.78
+  'sensitive', // 4.46
+  'silly', // 4.39
+  'wise', // 4.51
+  //
+  // Excluded despite scoring well, to avoid padding: `sweet` and `warm`
+  // overlap `gentle` and `charming`; `clever` overlaps `smart` and `bright`;
+  // `loyal` (4.20) is barely commoner than `faithful` (4.10), already present.
+  //
   'ambitious',
   'anxious',
   'awkward',
@@ -528,10 +607,13 @@ const adjectivesModern: readonly string[] = [
   'practical',
   'quiet',
   'reliable',
+  'lovable', // the respelling of the retired `loveable`
+  'shy', // replaces `bashful`
   'skeptical',
   'stubborn',
   'thoughtful',
   'unpredictable',
+  'witty', // replaces `comical`
 ];
 
 /**

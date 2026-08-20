@@ -189,28 +189,28 @@ That means ‘doesn’t entail W’, not ‘entails not-W’.",
           "options": [
             {
               "id": 0,
-              "label": "$ \\square \\sim P $",
+              "label": "$ \\square \\sim C $",
             },
             {
               "hint": "Translate ‘must’ / ‘necessary’ as ‘☐’ — the modal applies to the negation of the proposition.
 Wrong scope — that means ‘not [necessary]’, not ‘[necessary] not’.",
               "id": 1,
-              "label": "$ \\sim \\square P $",
+              "label": "$ \\sim \\square C $",
             },
             {
               "hint": "Translate ‘must’ / ‘necessary’ as ‘☐’ — the modal applies to the negation of the proposition.
 Wrong modal — ‘must / necessary’ maps to ‘☐’.",
               "id": 2,
-              "label": "$ \\lozenge \\sim P $",
+              "label": "$ \\lozenge \\sim C $",
             },
             {
               "hint": "Translate ‘must’ / ‘necessary’ as ‘☐’ — the modal applies to the negation of the proposition.
 Your answer isn’t a wff — modal operators don’t take parentheses around their argument: write ‘☐A’, not ‘☐(A)’ or ‘(☐A)’.",
               "id": 3,
-              "label": "$ \\square \\sim (P) $",
+              "label": "$ \\square \\sim (C) $",
             },
           ],
-          "prompt": "It must be that you aren’t powerful.",
+          "prompt": "It must be that you aren’t courageous.",
         },
         {
           "answer": "",
@@ -366,28 +366,28 @@ Your answer isn’t a wff — modal operators don’t take parentheses around th
           "options": [
             {
               "id": 0,
-              "label": "$ \\square (x)(Fx \\supset  Sx) $",
+              "label": "$ \\square (x)(Fx \\supset  Mx) $",
             },
             {
               "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
 That’s the de re (box-inside) reading. ‘Necessary that …’ disambiguates to box-outside.",
               "id": 1,
-              "label": "$ (x)(Fx \\supset  \\square Sx) $",
+              "label": "$ (x)(Fx \\supset  \\square Mx) $",
             },
             {
               "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
 The sentence isn’t ambiguous. ‘It’s necessary that …’ disambiguates.",
               "id": 2,
-              "label": "Ambiguous between (x)(Fx ⊃ ☐Sx) and ☐(x)(Fx ⊃ Sx)",
+              "label": "Ambiguous between (x)(Fx ⊃ ☐Mx) and ☐(x)(Fx ⊃ Mx)",
             },
             {
               "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
 Your answer has too many boxes.",
               "id": 3,
-              "label": "$ \\square (x)(Fx \\supset  \\square Sx) $",
+              "label": "$ \\square (x)(Fx \\supset  \\square Mx) $",
             },
           ],
-          "prompt": "It’s necessary that all foreigners are short.",
+          "prompt": "It’s necessary that all foreigners are mean.",
         },
         {
           "answer": "",
@@ -419,7 +419,7 @@ Your answer has too many boxes.",
               "label": "$ \\square (x)(Sx \\supset  \\square Gx) $",
             },
           ],
-          "prompt": "It’s necessary that all students are greedy.",
+          "prompt": "It’s necessary that all students are gloomy.",
         },
         {
           "answer": "",
@@ -430,28 +430,28 @@ Your answer has too many boxes.",
           "options": [
             {
               "id": 0,
-              "label": "$ (Cr \\cdot  \\lozenge \\sim Cr) $",
+              "label": "$ (Fr \\cdot  \\lozenge \\sim Fr) $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
-A contingent property of Ravi means Ravi actually has it — first conjunct should be ‘Cr’, not ‘◇Cr’.",
+A contingent property of Ravi means Ravi actually has it — first conjunct should be ‘Fr’, not ‘◇Fr’.",
               "id": 1,
-              "label": "$ (\\lozenge Cr \\cdot  \\lozenge \\sim Cr) $",
+              "label": "$ (\\lozenge Fr \\cdot  \\lozenge \\sim Fr) $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
 That’s the necessary-property form. Contingent means it actually has it but COULD have lacked it.",
               "id": 2,
-              "label": "$ \\square Cr $",
+              "label": "$ \\square Fr $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
-Self-contradiction. The second conjunct should say ‘could have lacked it’ — \`◇∼Cr\`.",
+Self-contradiction. The second conjunct should say ‘could have lacked it’ — \`◇∼Fr\`.",
               "id": 3,
-              "label": "$ (Cr \\cdot  \\sim Cr) $",
+              "label": "$ (Fr \\cdot  \\sim Fr) $",
             },
           ],
-          "prompt": "Being cowardly is an accidental property of Ravi.",
+          "prompt": "Being filthy is an accidental property of Ravi.",
         },
         {
           "answer": "",
@@ -515,7 +515,7 @@ Your answer has too many boxes.",
               "label": "$ \\square (x)(Ix \\supset  \\square Ex) $",
             },
           ],
-          "prompt": "All interns have the property of being necessarily easygoing.",
+          "prompt": "All interns have the property of being necessarily efficient.",
         },
         {
           "answer": "",
@@ -526,28 +526,28 @@ Your answer has too many boxes.",
           "options": [
             {
               "id": 0,
-              "label": "$ (x)\\square Gx $",
+              "label": "$ (x)\\square Rx $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
-That’s the de dicto reading; ‘has the property of being necessarily gloomy’ disambiguates to de re.",
+That’s the de dicto reading; ‘has the property of being necessarily romantic’ disambiguates to de re.",
               "id": 1,
-              "label": "$ \\square (x)Gx $",
+              "label": "$ \\square (x)Rx $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
 You need another modal operator.",
               "id": 2,
-              "label": "$ (x)Gx $",
+              "label": "$ (x)Rx $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
 Wrong quantifier — should be universal.",
               "id": 3,
-              "label": "$ (\\exists x)\\square Gx $",
+              "label": "$ (\\exists x)\\square Rx $",
             },
           ],
-          "prompt": "Everyone has the property of being necessarily gloomy.",
+          "prompt": "Everyone has the property of being necessarily romantic.",
         },
         {
           "answer": "",
@@ -558,28 +558,28 @@ Wrong quantifier — should be universal.",
           "options": [
             {
               "id": 0,
-              "label": "$ (Fm \\cdot  \\lozenge \\sim Fm) $",
+              "label": "$ (Lm \\cdot  \\lozenge \\sim Lm) $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
-A contingent property of Moritz means Moritz actually has it — first conjunct should be ‘Fm’, not ‘◇Fm’.",
+A contingent property of Moritz means Moritz actually has it — first conjunct should be ‘Lm’, not ‘◇Lm’.",
               "id": 1,
-              "label": "$ (\\lozenge Fm \\cdot  \\lozenge \\sim Fm) $",
+              "label": "$ (\\lozenge Lm \\cdot  \\lozenge \\sim Lm) $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
 That’s the necessary-property form. Contingent means it actually has it but COULD have lacked it.",
               "id": 2,
-              "label": "$ \\square Fm $",
+              "label": "$ \\square Lm $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
-Self-contradiction. The second conjunct should say ‘could have lacked it’ — \`◇∼Fm\`.",
+Self-contradiction. The second conjunct should say ‘could have lacked it’ — \`◇∼Lm\`.",
               "id": 3,
-              "label": "$ (Fm \\cdot  \\sim Fm) $",
+              "label": "$ (Lm \\cdot  \\sim Lm) $",
             },
           ],
-          "prompt": "Being forgetful is a contingent property of Moritz.",
+          "prompt": "Being lonely is a contingent property of Moritz.",
         },
         {
           "answer": "",
@@ -611,7 +611,7 @@ Your answer has too many boxes.",
               "label": "$ \\square (x)(Lx \\supset  \\square Cx) $",
             },
           ],
-          "prompt": "Every lifeguard has the property of being necessarily courteous.",
+          "prompt": "Every lifeguard has the property of being necessarily childish.",
         },
         {
           "answer": "",
@@ -622,28 +622,28 @@ Your answer has too many boxes.",
           "options": [
             {
               "id": 0,
-              "label": "$ (x)\\square Ux $",
+              "label": "$ (x)\\square Wx $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
-That’s the de dicto reading; ‘has the property of being necessarily unpredictable’ disambiguates to de re.",
+That’s the de dicto reading; ‘has the property of being necessarily witty’ disambiguates to de re.",
               "id": 1,
-              "label": "$ \\square (x)Ux $",
+              "label": "$ \\square (x)Wx $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
 You need another modal operator.",
               "id": 2,
-              "label": "$ (x)Ux $",
+              "label": "$ (x)Wx $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
 Wrong quantifier — should be universal.",
               "id": 3,
-              "label": "$ (\\exists x)\\square Ux $",
+              "label": "$ (\\exists x)\\square Wx $",
             },
           ],
-          "prompt": "Everyone has the property of being necessarily unpredictable.",
+          "prompt": "Everyone has the property of being necessarily witty.",
         },
         {
           "answer": "",
@@ -654,28 +654,28 @@ Wrong quantifier — should be universal.",
           "options": [
             {
               "id": 0,
-              "label": "$ (x)\\square Mx $",
+              "label": "$ (x)\\square Px $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
-That’s the de dicto reading; ‘has the property of being necessarily mediocre’ disambiguates to de re.",
+That’s the de dicto reading; ‘has the property of being necessarily persistent’ disambiguates to de re.",
               "id": 1,
-              "label": "$ \\square (x)Mx $",
+              "label": "$ \\square (x)Px $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
 You need another modal operator.",
               "id": 2,
-              "label": "$ (x)Mx $",
+              "label": "$ (x)Px $",
             },
             {
               "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
 Wrong quantifier — should be universal.",
               "id": 3,
-              "label": "$ (\\exists x)\\square Mx $",
+              "label": "$ (\\exists x)\\square Px $",
             },
           ],
-          "prompt": "Everyone has the property of being necessarily mediocre.",
+          "prompt": "Everyone has the property of being necessarily persistent.",
         },
       ],
       "shuffleOptions": true,

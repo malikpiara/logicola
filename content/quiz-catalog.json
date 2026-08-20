@@ -4,14 +4,16 @@
     "title": "Syllogistic Translations: Easy",
     "description": "Translate everyday English — all, no, some — into syllogistic logic without losing the structure of the claim.",
     "slugs": ["syllogistic", "translations", "basic"],
-    "quizPath": "/syllogistic/translations/basic/quiz"
+    "quizPath": "/syllogistic/translations/basic/quiz",
+    "isNew": true
   },
   {
     "chapter": "Set A",
     "title": "Syllogistic Translations: Hard",
     "description": "Tackle the trickier idioms — only, every, and sentences that reorder subject and predicate.",
     "slugs": ["syllogistic", "translations", "hard"],
-    "quizPath": "/syllogistic/translations/hard/quiz"
+    "quizPath": "/syllogistic/translations/hard/quiz",
+    "isNew": true
   },
   {
     "chapter": "Set C",
