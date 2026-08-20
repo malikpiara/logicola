@@ -96,6 +96,14 @@ describe('setR data — sections', () => {
     expect(counts).toEqual(EXPECTED_VARIANT_COUNTS);
   });
 
+  it('never accepts more than 3 fallacies (the UI pick cap depends on it)', () => {
+    // useQuizState caps multi-select at 3 picks; if a future passage
+    // accepts four, that cap must move with it.
+    for (const { variant } of allVariants) {
+      expect(variant.accepted.length).toBeLessThanOrEqual(3);
+    }
+  });
+
   it('lists the primary fallacy first in every accepted array', () => {
     for (const { section, variant } of allVariants) {
       expect(variant.accepted[0]).toBe(section.code);

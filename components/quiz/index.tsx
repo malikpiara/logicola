@@ -449,7 +449,21 @@ const QuizSession: React.FC<QuizSessionProps> = ({
     !currentQuestion!.correctId.includes(selectedOption.id)
       ? selectedOption
       : undefined;
-  const liveHintOption = showSolution ? reviewedOption : lastWrongOption;
+  // Mid-attempt review (2026-08-21): a multi-select miss can flag SEVERAL
+  // wrong picks in one submission, but the slot only shows the last one's
+  // hint — user testing found people unable to read the hint for their
+  // other wrong pick. Putting the cursor on any already-flagged option now
+  // surfaces THAT option's hint, before the solve, in both modes. (The
+  // same click can no longer re-select the option — see selectOption.)
+  const midReviewOption =
+    !showSolution &&
+    selectedOption &&
+    previousGuesses.includes(selectedOption.id)
+      ? selectedOption
+      : undefined;
+  const liveHintOption = showSolution
+    ? reviewedOption
+    : (midReviewOption ?? lastWrongOption);
   const liveHint = liveHintOption ? hintPartsOf(liveHintOption) : undefined;
   const liveAnswer =
     showSolution && !liveHintOption ? currentQuestion?.answer : undefined;
@@ -923,7 +937,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                         promise something the grader doesn't do. */}
                       {multiSelect && (
                         <p className='qmulti'>
-                          More than one answer can be right.
+                          More than one answer can be right — pick up to 3.
                         </p>
                       )}
                       {/* Reading order: question → attempt → response →

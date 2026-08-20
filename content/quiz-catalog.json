@@ -88,7 +88,7 @@
   {
     "chapter": "Set R",
     "title": "Informal Fallacies",
-    "description": "Read a short passage and name the fallacy it commits — from ad hominem to post hoc.",
+    "description": "Read a short passage and name the fallacy it commits.",
     "slugs": ["informal", "fallacies"],
     "quizPath": "/informal/fallacies/quiz",
     "isNew": true
