@@ -36,8 +36,18 @@ removed for that reason.
 ## 2. Lexicon — measured, not tasted
 
 `content/lexicons.ts` keeps the 2008 arrays frozen as `*2008` and composes
-live pools as (baseline − retired) + additions. Nine adjective
-retirements, forty additions, each carrying its figure.
+live pools as (baseline − retired) + additions. Ten adjective
+retirements, forty-one additions, each carrying its figure.
+
+`frantic` is the tenth retirement and the only one the evidence argues
+against — 3.33, rising 2.64×, no rarer than words we kept. Malik retired
+it anyway on the ground the instruments cannot reach: not the word's
+health but the cluster it sat in. Recorded at length in `lexicons.ts`,
+because the `comical` case ran the other way and the Ngram figure alone
+would invite a "fix". Its replacement, `stressed`, is the exact inverse
+of the `frivolous` finding — the collocation test that condemned that
+word vindicates this one ("feeling stressed" 0.1 → 70.7 per billion,
+592×, while the emphasis sense sits flat at 0.91×).
 
 **Two instruments, and they mostly agree.** Google Books Ngrams for
 _trend_ (is it declining?), `wordfreq` for _current frequency_ across
