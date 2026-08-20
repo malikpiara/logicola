@@ -22,7 +22,7 @@ exports[`setQ > matches snapshot 1`] = `
       "optionLayout": "grid",
       "questions": [
         {
-          "answer": "This violates 4 and 6.",
+          "answer": "This violates 4 (obscure terms) and 6 (emotional tone).",
           "correctId": [
             3,
             5,
@@ -61,7 +61,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Science is that cold and empty worship of experiments.",
         },
         {
-          "answer": "This violates 2 (tents might be made of nylon).",
+          "answer": "This violates 2 (too narrow — tents might be made of nylon).",
           "correctId": [
             1,
           ],
@@ -99,7 +99,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A tent is a movable dwelling made of canvas.",
         },
         {
-          "answer": "This violates 1.",
+          "answer": "This violates 1 (too broad).",
           "correctId": [
             0,
           ],
@@ -137,7 +137,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Philosophy is the study of the human condition.",
         },
         {
-          "answer": "This violates 6.",
+          "answer": "This violates 6 (emotional tone).",
           "correctId": [
             5,
           ],
@@ -175,7 +175,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Logic is that dreadful discipline that analyzes reasoning.",
         },
         {
-          "answer": "This violates 5.",
+          "answer": "This violates 5 (vagueness mismatch).",
           "correctId": [
             4,
           ],
@@ -251,7 +251,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A game is an amusing competition between various players.",
         },
         {
-          "answer": "This violates 6.",
+          "answer": "This violates 6 (emotional tone).",
           "correctId": [
             5,
           ],
@@ -289,7 +289,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A logician is an obnoxious hair-splitter.",
         },
         {
-          "answer": "This violates 1 (whales are not fish).",
+          "answer": "This violates 1 (too broad — whales are not fish).",
           "correctId": [
             0,
           ],
@@ -327,7 +327,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A fish is an animal that lives mainly in the water.",
         },
         {
-          "answer": "This violates 3 (and 2, if we consider castration).",
+          "answer": "This violates 3 (circular) — and 2 (too narrow), if we consider castration.",
           "correctId": [
             1,
             2,
@@ -366,7 +366,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A male is whatever has male reproductive organs.",
         },
         {
-          "answer": "This violates 6.",
+          "answer": "This violates 6 (emotional tone).",
           "correctId": [
             5,
           ],
@@ -442,7 +442,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": ""Uncle" means "brother of a parent".",
         },
         {
-          "answer": "This violates 2 (most knowledge is not absolutely certain).",
+          "answer": "This violates 2 (too narrow — most knowledge is not absolutely certain).",
           "correctId": [
             1,
           ],
@@ -480,7 +480,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Knowledge is a true belief that is absolutely certain.",
         },
         {
-          "answer": "This violates 7.",
+          "answer": "This violates 7 (non-essential properties).",
           "correctId": [
             6,
           ],
@@ -518,7 +518,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A bachelor is an unmarried man who weighs over 20 kilograms (44 pounds).",
         },
         {
-          "answer": "This violates 1 (you study other things too).",
+          "answer": "This violates 1 (too broad — you study other things too).",
           "correctId": [
             0,
           ],
@@ -556,7 +556,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Triangles are what you study in geometry.",
         },
         {
-          "answer": "This violates 4.",
+          "answer": "This violates 4 (obscure terms).",
           "correctId": [
             3,
           ],
@@ -633,7 +633,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "An apple is a red fruit.",
         },
         {
-          "answer": "This violates 5.",
+          "answer": "This violates 5 (vagueness mismatch).",
           "correctId": [
             4,
           ],
@@ -671,7 +671,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A warm day is one that is over 30 degrees Celsius (86°F).",
         },
         {
-          "answer": "This violates 2 (some religions believe in many gods).",
+          "answer": "This violates 2 (too narrow — some religions believe in many gods).",
           "correctId": [
             1,
           ],
@@ -709,7 +709,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Religion is a way of life based on belief in a supreme being.",
         },
         {
-          "answer": "This violates 6.",
+          "answer": "This violates 6 (emotional tone).",
           "correctId": [
             5,
           ],
@@ -747,7 +747,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A university instructor is just an egghead.",
         },
         {
-          "answer": "This violates 2 and especially 3.",
+          "answer": "This violates 2 (too narrow) and especially 3 (circular).",
           "correctId": [
             1,
             2,
@@ -786,7 +786,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": ""True" means "proved to be true".",
         },
         {
-          "answer": "This violates 3.",
+          "answer": "This violates 3 (circular).",
           "correctId": [
             2,
           ],
@@ -824,7 +824,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A chair is whatever is used as a chair.",
         },
         {
-          "answer": "This violates 2.",
+          "answer": "This violates 2 (too narrow).",
           "correctId": [
             1,
           ],
@@ -862,7 +862,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A teacher is one who instructs children.",
         },
         {
-          "answer": "This violates 4.",
+          "answer": "This violates 4 (obscure terms).",
           "correctId": [
             3,
           ],
@@ -939,7 +939,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Cars are vehicles powered by gasoline.",
         },
         {
-          "answer": "This violates 4.",
+          "answer": "This violates 4 (obscure terms).",
           "correctId": [
             3,
           ],
@@ -1016,7 +1016,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": ""God" means "object of ultimate concern".",
         },
         {
-          "answer": "This violates 1 (consider pipe organs).",
+          "answer": "This violates 1 (too broad — consider pipe organs).",
           "correctId": [
             0,
           ],
@@ -1054,7 +1054,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A piano is any musical instrument with keys to select notes.",
         },
         {
-          "answer": "This violates 1 (coaches also work for such teams).",
+          "answer": "This violates 1 (too broad — coaches also work for such teams).",
           "correctId": [
             0,
           ],
@@ -1170,7 +1170,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Punishment is anything unpleasant done to a person.",
         },
         {
-          "answer": "This violates 1 (consider presidents and dictators).",
+          "answer": "This violates 1 (too broad — consider presidents and dictators).",
           "correctId": [
             0,
           ],
@@ -1208,7 +1208,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A king is the ruler of a country.",
         },
         {
-          "answer": "This violates 1, 2 and 6.",
+          "answer": "This violates 1 (too broad), 2 (too narrow) and 6 (emotional tone).",
           "correctId": [
             0,
             1,
@@ -1248,7 +1248,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Backpacking is the enduring of misery by living out of doors.",
         },
         {
-          "answer": "This violates 1 (a true belief might be a lucky guess).",
+          "answer": "This violates 1 (too broad — a true belief might be a lucky guess).",
           "correctId": [
             0,
           ],
@@ -1286,7 +1286,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Knowledge is true belief.",
         },
         {
-          "answer": "This violates 4.",
+          "answer": "This violates 4 (obscure terms).",
           "correctId": [
             3,
           ],
@@ -1324,7 +1324,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A belief is the closing of a phase of an intellectual symphony.",
         },
         {
-          "answer": "This violates 2 (some are honest) and 6.",
+          "answer": "This violates 2 (too narrow — some are honest) and 6 (emotional tone).",
           "correctId": [
             1,
             5,
@@ -1363,7 +1363,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A politician is a scoundrel involved in politics.",
         },
         {
-          "answer": "This violates 4.",
+          "answer": "This violates 4 (obscure terms).",
           "correctId": [
             3,
           ],
@@ -1401,7 +1401,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Philosophy is the attempt to transcend cognitive subjectivity.",
         },
         {
-          "answer": "This violates 2 (many doctors are women).",
+          "answer": "This violates 2 (too narrow — many doctors are women).",
           "correctId": [
             1,
           ],
@@ -1439,7 +1439,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A doctor is a man who is licensed to practice medicine.",
         },
         {
-          "answer": "This violates 3.",
+          "answer": "This violates 3 (circular).",
           "correctId": [
             2,
           ],
@@ -1554,7 +1554,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A lie is a falsehood that you assert to be true.",
         },
         {
-          "answer": "This violates 7.",
+          "answer": "This violates 7 (non-essential properties).",
           "correctId": [
             6,
           ],
@@ -1592,7 +1592,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Philosophy is the discipline developed by Aristotle and Plato.",
         },
         {
-          "answer": "This violates 5.",
+          "answer": "This violates 5 (vagueness mismatch).",
           "correctId": [
             4,
           ],
@@ -1630,7 +1630,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "An adolescent is a person between 9 and 19 years old.",
         },
         {
-          "answer": "This violates 5.",
+          "answer": "This violates 5 (vagueness mismatch).",
           "correctId": [
             4,
           ],
@@ -1668,7 +1668,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "An adult is anyone over 17.",
         },
         {
-          "answer": "This violates 3.",
+          "answer": "This violates 3 (circular).",
           "correctId": [
             2,
           ],
@@ -1706,7 +1706,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Philosophy is what you study in philosophy classes.",
         },
         {
-          "answer": "This violates 5.",
+          "answer": "This violates 5 (vagueness mismatch).",
           "correctId": [
             4,
           ],
@@ -1782,7 +1782,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "An honest person is one who doesn't steal.",
         },
         {
-          "answer": "This violates 1 (consider accidental killing).",
+          "answer": "This violates 1 (too broad — consider accidental killing).",
           "correctId": [
             0,
           ],
@@ -1820,7 +1820,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": ""Murder" means "killing of a human being."",
         },
         {
-          "answer": "This violates 1, 2 and especially 6.",
+          "answer": "This violates 1 (too broad), 2 (too narrow) and especially 6 (emotional tone).",
           "correctId": [
             0,
             1,
@@ -1860,7 +1860,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A liberal is a permissive do-gooder who knows nothing.",
         },
         {
-          "answer": "This violates 6.",
+          "answer": "This violates 6 (emotional tone).",
           "correctId": [
             5,
           ],
@@ -1937,7 +1937,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": ""Chair" means "what you sit on."",
         },
         {
-          "answer": "This violates 1, 2 and especially 6.",
+          "answer": "This violates 1 (too broad), 2 (too narrow) and especially 6 (emotional tone).",
           "correctId": [
             0,
             1,
@@ -1977,7 +1977,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A conservative is an inflexible person who never thinks.",
         },
         {
-          "answer": "This violates 1 and 2.",
+          "answer": "This violates 1 (too broad) and 2 (too narrow).",
           "correctId": [
             0,
             1,
@@ -2016,7 +2016,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A wrong action is one that is against the law.",
         },
         {
-          "answer": "This violates 5.",
+          "answer": "This violates 5 (vagueness mismatch).",
           "correctId": [
             4,
           ],
@@ -2054,7 +2054,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A child is anyone between 2 and 12 years old.",
         },
         {
-          "answer": "This violates 3.",
+          "answer": "This violates 3 (circular).",
           "correctId": [
             2,
           ],
@@ -2092,7 +2092,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A football game is whatever is played by the rules of football.",
         },
         {
-          "answer": "This violates 2 (kittens can be male).",
+          "answer": "This violates 2 (too narrow — kittens can be male).",
           "correctId": [
             1,
           ],
@@ -2130,7 +2130,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A kitten is a young female cat.",
         },
         {
-          "answer": "This violates 7.",
+          "answer": "This violates 7 (non-essential properties).",
           "correctId": [
             6,
           ],
@@ -2168,7 +2168,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Logic is defined as that subject that is treated by LogiCola.",
         },
         {
-          "answer": "This violates 4.",
+          "answer": "This violates 4 (obscure terms).",
           "correctId": [
             3,
           ],
@@ -2206,7 +2206,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "Knowledge is the cognizance of a reality by an intellect.",
         },
         {
-          "answer": "This violates 1 (consider ostriches) and 2 (consider bats).",
+          "answer": "This violates 1 (too broad — consider ostriches) and 2 (too narrow — consider bats).",
           "correctId": [
             0,
             1,
@@ -2245,7 +2245,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A bird is an animal that can fly.",
         },
         {
-          "answer": "This violates 1, 2 and 6.",
+          "answer": "This violates 1 (too broad), 2 (too narrow) and 6 (emotional tone).",
           "correctId": [
             0,
             1,
@@ -2285,7 +2285,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": ""Metaphysics" means "any sleep-inducing subject".",
         },
         {
-          "answer": "This violates 5.",
+          "answer": "This violates 5 (vagueness mismatch).",
           "correctId": [
             4,
           ],
@@ -2321,6 +2321,159 @@ exports[`setQ > matches snapshot 1`] = `
             },
           ],
           "prompt": ""Tall person" means "person over 183 centimetres (6 feet) tall."",
+        },
+        {
+          "answer": "This violates 3 (circular).",
+          "correctId": [
+            2,
+          ],
+          "id": "3.61",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "An influencer is a person who is famous for being famous.",
+        },
+        {
+          "answer": "This violates 2 (too narrow — the boundary moves: every solved problem stops counting as AI).",
+          "correctId": [
+            1,
+          ],
+          "id": "3.62",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "AI is whatever computers can't do yet.",
+        },
+        {
+          "answer": "This violates 1 (too broad — it lets in live radio streamed online) and 2 (too narrow — it shuts out video and music podcasts).",
+          "correctId": [
+            0,
+            1,
+          ],
+          "id": "3.63",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A podcast is talk radio for the internet.",
+        },
+        {
+          "answer": "This violates 4 (obscure terms — and it is Dawkins’ own definition, which is the point).",
+          "correctId": [
+            3,
+          ],
+          "id": "3.64",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A meme is a unit of cultural transmission propagating via imitation.",
         },
       ],
       "slugs": [

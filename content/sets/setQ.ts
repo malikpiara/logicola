@@ -70,7 +70,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [3, 5],
-          answer: 'This violates 4 and 6.',
+          answer: 'This violates 4 (obscure terms) and 6 (emotional tone).',
         },
         {
           id: '3.2',
@@ -85,7 +85,8 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [1],
-          answer: 'This violates 2 (tents might be made of nylon).',
+          answer:
+            'This violates 2 (too narrow — tents might be made of nylon).',
         },
         {
           id: '3.3',
@@ -100,7 +101,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [0],
-          answer: 'This violates 1.',
+          answer: 'This violates 1 (too broad).',
         },
         {
           id: '3.4',
@@ -115,7 +116,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [5],
-          answer: 'This violates 6.',
+          answer: 'This violates 6 (emotional tone).',
         },
         {
           id: '3.5',
@@ -130,7 +131,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [4],
-          answer: 'This violates 5.',
+          answer: 'This violates 5 (vagueness mismatch).',
         },
         {
           id: '3.6',
@@ -161,7 +162,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [5],
-          answer: 'This violates 6.',
+          answer: 'This violates 6 (emotional tone).',
         },
         {
           id: '3.8',
@@ -176,7 +177,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [0],
-          answer: 'This violates 1 (whales are not fish).',
+          answer: 'This violates 1 (too broad — whales are not fish).',
         },
         {
           id: '3.9',
@@ -191,7 +192,8 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [1, 2],
-          answer: 'This violates 3 (and 2, if we consider castration).',
+          answer:
+            'This violates 3 (circular) — and 2 (too narrow), if we consider castration.',
         },
         {
           id: '3.10',
@@ -206,7 +208,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [5],
-          answer: 'This violates 6.',
+          answer: 'This violates 6 (emotional tone).',
         },
         {
           id: '3.11',
@@ -237,7 +239,8 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [1],
-          answer: 'This violates 2 (most knowledge is not absolutely certain).',
+          answer:
+            'This violates 2 (too narrow — most knowledge is not absolutely certain).',
         },
         {
           id: '3.13',
@@ -253,7 +256,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [6],
-          answer: 'This violates 7.',
+          answer: 'This violates 7 (non-essential properties).',
         },
         {
           id: '3.14',
@@ -268,7 +271,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [0],
-          answer: 'This violates 1 (you study other things too).',
+          answer: 'This violates 1 (too broad — you study other things too).',
         },
         {
           id: '3.15',
@@ -283,7 +286,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [3],
-          answer: 'This violates 4.',
+          answer: 'This violates 4 (obscure terms).',
         },
         {
           id: '3.16',
@@ -314,7 +317,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [4],
-          answer: 'This violates 5.',
+          answer: 'This violates 5 (vagueness mismatch).',
         },
         {
           id: '3.18',
@@ -330,7 +333,8 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [1],
-          answer: 'This violates 2 (some religions believe in many gods).',
+          answer:
+            'This violates 2 (too narrow — some religions believe in many gods).',
         },
         {
           id: '3.19',
@@ -345,7 +349,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [5],
-          answer: 'This violates 6.',
+          answer: 'This violates 6 (emotional tone).',
         },
         {
           id: '3.20',
@@ -360,7 +364,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [1, 2],
-          answer: 'This violates 2 and especially 3.',
+          answer: 'This violates 2 (too narrow) and especially 3 (circular).',
         },
         {
           id: '3.21',
@@ -375,7 +379,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [2],
-          answer: 'This violates 3.',
+          answer: 'This violates 3 (circular).',
         },
         {
           id: '3.22',
@@ -390,7 +394,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [1],
-          answer: 'This violates 2.',
+          answer: 'This violates 2 (too narrow).',
         },
         {
           id: '3.23',
@@ -405,7 +409,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [3],
-          answer: 'This violates 4.',
+          answer: 'This violates 4 (obscure terms).',
         },
         {
           id: '3.24',
@@ -436,7 +440,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [3],
-          answer: 'This violates 4.',
+          answer: 'This violates 4 (obscure terms).',
         },
         {
           id: '3.26',
@@ -468,7 +472,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [0],
-          answer: 'This violates 1 (consider pipe organs).',
+          answer: 'This violates 1 (too broad — consider pipe organs).',
         },
         {
           id: '3.28',
@@ -484,7 +488,8 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [0],
-          answer: 'This violates 1 (coaches also work for such teams).',
+          answer:
+            'This violates 1 (too broad — coaches also work for such teams).',
         },
         {
           id: '3.29',
@@ -531,7 +536,8 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [0],
-          answer: 'This violates 1 (consider presidents and dictators).',
+          answer:
+            'This violates 1 (too broad — consider presidents and dictators).',
         },
         {
           id: '3.32',
@@ -547,7 +553,8 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [0, 1, 5],
-          answer: 'This violates 1, 2 and 6.',
+          answer:
+            'This violates 1 (too broad), 2 (too narrow) and 6 (emotional tone).',
         },
         {
           id: '3.33',
@@ -562,7 +569,8 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [0],
-          answer: 'This violates 1 (a true belief might be a lucky guess).',
+          answer:
+            'This violates 1 (too broad — a true belief might be a lucky guess).',
         },
         {
           id: '3.34',
@@ -578,7 +586,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [3],
-          answer: 'This violates 4.',
+          answer: 'This violates 4 (obscure terms).',
         },
         {
           id: '3.35',
@@ -593,7 +601,8 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [1, 5],
-          answer: 'This violates 2 (some are honest) and 6.',
+          answer:
+            'This violates 2 (too narrow — some are honest) and 6 (emotional tone).',
         },
         {
           id: '3.36',
@@ -609,7 +618,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [3],
-          answer: 'This violates 4.',
+          answer: 'This violates 4 (obscure terms).',
         },
         {
           id: '3.37',
@@ -624,7 +633,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [1],
-          answer: 'This violates 2 (many doctors are women).',
+          answer: 'This violates 2 (too narrow — many doctors are women).',
         },
         {
           id: '3.38',
@@ -640,7 +649,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [2],
-          answer: 'This violates 3.',
+          answer: 'This violates 3 (circular).',
         },
         {
           id: '3.39',
@@ -693,7 +702,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [6],
-          answer: 'This violates 7.',
+          answer: 'This violates 7 (non-essential properties).',
         },
         {
           id: '3.42',
@@ -708,7 +717,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [4],
-          answer: 'This violates 5.',
+          answer: 'This violates 5 (vagueness mismatch).',
         },
         {
           id: '3.43',
@@ -723,7 +732,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [4],
-          answer: 'This violates 5.',
+          answer: 'This violates 5 (vagueness mismatch).',
         },
         {
           id: '3.44',
@@ -738,7 +747,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [2],
-          answer: 'This violates 3.',
+          answer: 'This violates 3 (circular).',
         },
         {
           id: '3.45',
@@ -753,7 +762,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [4],
-          answer: 'This violates 5.',
+          answer: 'This violates 5 (vagueness mismatch).',
         },
         {
           id: '3.46',
@@ -783,7 +792,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [0],
-          answer: 'This violates 1 (consider accidental killing).',
+          answer: 'This violates 1 (too broad — consider accidental killing).',
         },
         {
           id: '3.48',
@@ -798,7 +807,8 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [0, 1, 5],
-          answer: 'This violates 1, 2 and especially 6.',
+          answer:
+            'This violates 1 (too broad), 2 (too narrow) and especially 6 (emotional tone).',
         },
         {
           id: '3.49',
@@ -813,7 +823,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [5],
-          answer: 'This violates 6.',
+          answer: 'This violates 6 (emotional tone).',
         },
         {
           id: '3.50',
@@ -844,7 +854,8 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [0, 1, 5],
-          answer: 'This violates 1, 2 and especially 6.',
+          answer:
+            'This violates 1 (too broad), 2 (too narrow) and especially 6 (emotional tone).',
         },
         {
           id: '3.52',
@@ -859,7 +870,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [0, 1],
-          answer: 'This violates 1 and 2.',
+          answer: 'This violates 1 (too broad) and 2 (too narrow).',
         },
         {
           id: '3.53',
@@ -874,7 +885,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [4],
-          answer: 'This violates 5.',
+          answer: 'This violates 5 (vagueness mismatch).',
         },
         {
           id: '3.54',
@@ -890,7 +901,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [2],
-          answer: 'This violates 3.',
+          answer: 'This violates 3 (circular).',
         },
         {
           id: '3.55',
@@ -905,7 +916,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [1],
-          answer: 'This violates 2 (kittens can be male).',
+          answer: 'This violates 2 (too narrow — kittens can be male).',
         },
         {
           id: '3.56',
@@ -921,7 +932,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [6],
-          answer: 'This violates 7.',
+          answer: 'This violates 7 (non-essential properties).',
         },
         {
           id: '3.57',
@@ -936,7 +947,7 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [3],
-          answer: 'This violates 4.',
+          answer: 'This violates 4 (obscure terms).',
         },
         {
           id: '3.58',
@@ -951,7 +962,8 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [0, 1],
-          answer: 'This violates 1 (consider ostriches) and 2 (consider bats).',
+          answer:
+            'This violates 1 (too broad — consider ostriches) and 2 (too narrow — consider bats).',
         },
         {
           id: '3.59',
@@ -966,7 +978,8 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [0, 1, 5],
-          answer: 'This violates 1, 2 and 6.',
+          answer:
+            'This violates 1 (too broad), 2 (too narrow) and 6 (emotional tone).',
         },
         {
           id: '3.60',
@@ -982,7 +995,79 @@ const setQ: Set = {
             { id: 6, label: 'Has non-essential properties' },
           ],
           correctId: [4],
-          answer: 'This violates 5.',
+          answer: 'This violates 5 (vagueness mismatch).',
+        },
+        // The 2026 specimens (Malik-approved slate, 2026-08-21). Gensler's
+        // sixty are at canonical parity above and stay untouched; these
+        // extend the drill into vocabulary the students own. Same seven
+        // options, same grading, each authored around one named flaw.
+        {
+          id: '3.61',
+          prompt: 'An influencer is a person who is famous for being famous.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [2],
+          answer: 'This violates 3 (circular).',
+        },
+        {
+          id: '3.62',
+          // Larry Tesler's actual quip about AI, offered straight-faced as a
+          // definition — which is exactly what makes it a specimen.
+          prompt: "AI is whatever computers can't do yet.",
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [1],
+          answer:
+            'This violates 2 (too narrow — the boundary moves: every solved problem stops counting as AI).',
+        },
+        {
+          id: '3.63',
+          prompt: 'A podcast is talk radio for the internet.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0, 1],
+          answer:
+            'This violates 1 (too broad — it lets in live radio streamed online) and 2 (too narrow — it shuts out video and music podcasts).',
+        },
+        {
+          id: '3.64',
+          // Dawkins' own definition from The Selfish Gene, near verbatim —
+          // a real definition by a careful writer can still fail rule 4.
+          prompt:
+            'A meme is a unit of cultural transmission propagating via imitation.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [3],
+          answer:
+            'This violates 4 (obscure terms — and it is Dawkins’ own definition, which is the point).',
         },
       ],
     },
