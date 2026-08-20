@@ -1175,6 +1175,168 @@ const setQ: Set = {
           answer:
             'This violates 5 (vagueness mismatch — “the future of money” could mean almost anything) and 6 (emotional tone — boosterism is a tone too).',
         },
+        // Third slate, 2026-08-21, drawn from Malik's source list. Cersei's verbatim reply to Littlefinger — a circular definition shipped inside a scene students know by heart; the mottos principle arriving in Set Q. (The Silk Road and Europe-is-the-EU candidates are parked: Malik unsure, 2026-08-21.)
+        {
+          id: '3.71',
+          prompt: 'Power is power.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [2],
+          answer:
+            'This violates 3 (circular — Cersei defines the word with itself).',
+        },
+        // Merriam-Webster's 2022 Word of the Year, picked by the dictionary because of this exact drift — WOTY lists are now a standing instrument (see docs/lexicon-blog-material.md).
+        {
+          id: '3.72',
+          prompt: 'Gaslighting is when someone disagrees with you.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0],
+          answer:
+            'This violates 1 (too broad — the real thing is a sustained campaign to make someone doubt their own perception).',
+        },
+        {
+          id: '3.73',
+          prompt: 'A recession is two consecutive quarters of negative growth.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [4],
+          answer:
+            'This violates 5 (vagueness mismatch — a precise threshold for a judgment call; the NBER itself rejects this rule of thumb).',
+        },
+        {
+          id: '3.74',
+          prompt: '“Theory” means “an unproven guess.”',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0, 1],
+          answer:
+            'This violates 1 (too broad — any hunch counts) and 2 (too narrow — it excludes gravity and germ theory).',
+        },
+        {
+          id: '3.75',
+          prompt: 'Civilization is a society that builds in stone.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [1, 6],
+          answer:
+            'This violates 2 (too narrow — Benin City’s earthworks and Timbuktu’s libraries were not stone) and 7 (building material is not essential).',
+        },
+        {
+          id: '3.76',
+          prompt: 'An accent is what people from somewhere else have.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [1],
+          answer:
+            'This violates 2 (too narrow — everyone has an accent; yours is just the local one).',
+        },
+        {
+          id: '3.77',
+          prompt: 'GDP is how well a country is doing.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0, 1],
+          answer:
+            'This violates 1 (too broad — rebuilding after a disaster counts) and 2 (too narrow — unpaid care does not).',
+        },
+        {
+          id: '3.78',
+          prompt: 'A hero is someone with superpowers.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0, 1],
+          answer:
+            'This violates 1 (too broad — villains have powers too) and 2 (too narrow — Batman has none).',
+        },
+        {
+          id: '3.79',
+          prompt: '“Football” means “the sport you play with your feet.”',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [1],
+          answer:
+            'This violates 2 (too narrow — goalkeepers use their hands, and Americans mean a different sport entirely).',
+        },
+        {
+          id: '3.80',
+          prompt: 'Trauma is anything that upsets you.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0],
+          answer:
+            'This violates 1 (too broad — the clinical term names something narrower than everything upsetting).',
+        },
       ],
     },
   ],
