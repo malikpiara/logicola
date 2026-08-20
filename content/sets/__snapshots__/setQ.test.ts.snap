@@ -3091,6 +3091,467 @@ exports[`setQ > matches snapshot 1`] = `
           ],
           "prompt": "Trauma is anything that upsets you.",
         },
+        {
+          "answer": "This violates 4 (obscure terms — chemically true, and still a bad definition; obscurity is how the famous dihydrogen-monoxide petition fooled people).",
+          "correctId": [
+            3,
+          ],
+          "id": "3.81",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Water is dihydrogen monoxide.",
+        },
+        {
+          "answer": "This violates 7 (non-essential properties — the beret is the stereotype, not the essence).",
+          "correctId": [
+            6,
+          ],
+          "id": "3.82",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A Frenchman is someone from France who wears a beret.",
+        },
+        {
+          "answer": "This violates 2 (too narrow — many first languages aren’t the mother’s) and 7 (the mother is non-essential — the term names early exposure).",
+          "correctId": [
+            1,
+            6,
+          ],
+          "id": "3.83",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A mother tongue is the language your mother speaks.",
+        },
+        {
+          "answer": "This violates 3 (circular).",
+          "correctId": [
+            2,
+          ],
+          "id": "3.84",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A leader is someone who leads.",
+        },
+        {
+          "answer": "This violates 1 (too broad — being born somewhere doesn’t always confer it) and 2 (too narrow — naturalized citizens earned theirs elsewhere).",
+          "correctId": [
+            0,
+            1,
+          ],
+          "id": "3.85",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Your nationality is where you were born.",
+        },
+        {
+          "answer": "This violates 1 (too broad — it lets in Spaniards) and 2 (too narrow — it shuts out Brazilians).",
+          "correctId": [
+            0,
+            1,
+          ],
+          "id": "3.86",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "“Latino” means “someone who speaks Spanish.”",
+        },
+        {
+          "answer": "This violates 2 (too narrow — most viruses infect bacteria, and “living” is itself contested).",
+          "correctId": [
+            1,
+          ],
+          "id": "3.87",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A virus is a living thing that makes you sick.",
+        },
+        {
+          "answer": "This violates 1 (too broad — lookalike species differ) and 2 (too narrow — males and females of one species can look nothing alike).",
+          "correctId": [
+            0,
+            1,
+          ],
+          "id": "3.88",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A species is a group of animals that look alike.",
+        },
+        {
+          "answer": "This violates 2 (too narrow — no tradition has always been done: cassava reached Africa in the 1500s, horses the Plains in the 1600s).",
+          "correctId": [
+            1,
+          ],
+          "id": "3.89",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "“Traditional” means “having always been done.”",
+        },
+        {
+          "answer": "This violates 2 (too narrow — the label also sits on high-speed rail and the phone in your pocket) and 6 (emotional tone).",
+          "correctId": [
+            1,
+            5,
+          ],
+          "id": "3.90",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "“Made in China” means “cheaply made.”",
+        },
+        {
+          "answer": "This violates 1 (too broad — that describes almost everyone; the legal term means fleeing persecution).",
+          "correctId": [
+            0,
+          ],
+          "id": "3.91",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A refugee is someone who wants a better life.",
+        },
+        {
+          "answer": "This violates 1 (too broad — Oxford’s 2024 word names a specific dulling, not all phone time).",
+          "correctId": [
+            0,
+          ],
+          "id": "3.92",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Brain rot is any time spent on your phone.",
+        },
       ],
       "slugs": [
         "informal",
