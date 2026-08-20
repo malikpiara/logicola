@@ -24,8 +24,14 @@ describe('setQ', () => {
     expect(setQ.subSets.length).toBe(1);
   });
 
-  it('has 60 questions (canonical 2008 count)', () => {
-    expect(setQ.subSets[0]!.questions.length).toBe(60);
+  it('has the canonical 60 plus the dated 2026 specimens', () => {
+    // Gensler's sixty (ids 3.1–3.60) are at canonical parity and stay
+    // untouched; entries past 3.60 are dated additions (see the comment
+    // block above id 3.61). Both halves are pinned so neither drifts
+    // silently.
+    const ids = setQ.subSets[0]!.questions.map((q) => q.id);
+    expect(ids.filter((id) => Number(id.split('.')[1]) <= 60)).toHaveLength(60);
+    expect(setQ.subSets[0]!.questions.length).toBe(64);
   });
 
   it('every question has a non-empty prompt', () => {
