@@ -89,3 +89,74 @@ export function indefiniteArticleCapitalized(word: string): 'A' | 'An' {
 export function withArticle(phrase: string): string {
   return `${indefiniteArticle(phrase)} ${phrase}`;
 }
+
+/**
+ * Verbs whose final silent `e` survives -ing, because dropping it would
+ * collapse a soft g/soft c onto the suffix: "binging" reads as /bɪŋɪŋ/.
+ * AP and Merriam-Webster both prefer the -e- spellings.
+ */
+const GERUND_KEEPS_E: readonly string[] = ['binge', 'singe', 'tinge'];
+
+/**
+ * Multi-syllable verbs that double their final consonant because the stress
+ * falls on the last syllable ("upsetting", "regretting"). The CVC regex below
+ * only proves doubling for monosyllables — stress is not recoverable from
+ * spelling, so the polysyllables are enumerated. `upset` is the only pool
+ * verb affected today (latently: verbsA has no gerund consumer), found by the
+ * attestation audit of 2026-08-20; the others are here so the next vocabulary
+ * round doesn't re-discover this the way the e-drop verbs were discovered.
+ */
+const GERUND_DOUBLES: readonly string[] = [
+  'upset',
+  'regret',
+  'admit',
+  'commit',
+  'forget',
+  'begin',
+  'refer',
+  'occur',
+  'prefer',
+  'permit',
+];
+
+/**
+ * The -ing form of `verb`.
+ *
+ * Until 2026-08-20 both Set L and Set N carried a private one-line version
+ * of this ("verb + 'ing'") whose comment claimed e-final verbs "aren't in
+ * the current pool". That was true of the 2008 pool and silently broken by
+ * the modern layer — "hesitateing" and "argueing" reached committed
+ * snapshots before anyone read the output. Same species as the indefinite-
+ * article bug above: an unwritten 2008 constraint, violated the first time
+ * the vocabulary moved. The morphology below mirrors superlative() in
+ * setA.generator.ts: handle the rule, keep the exceptions in a named list.
+ */
+export function gerund(verb: string): string {
+  if (GERUND_KEEPS_E.includes(verb)) return verb + 'ing';
+  if (GERUND_DOUBLES.includes(verb)) return verb + verb.slice(-1) + 'ing';
+  if (verb.endsWith('ie')) return verb.slice(0, -2) + 'ying';
+  if (verb.endsWith('e') && !/[eoy]e$/.test(verb))
+    return verb.slice(0, -1) + 'ing';
+  // Monosyllabic consonant-vowel-consonant doubles: "chat" → "chatting".
+  // The single-[aeiou] requirement keeps vowel digraphs safe ("steal" →
+  // "stealing") and multisyllables take US spelling ("travel" → "traveling").
+  if (/^[^aeiou]*[aeiou][^aeiouwxy]$/.test(verb))
+    return verb + verb.slice(-1) + 'ing';
+  return verb + 'ing';
+}
+
+/**
+ * Third-person singular of `verb` ("Every economist complains").
+ *
+ * English 3sg -s follows the same rule as noun pluralization — sibilants
+ * take -es ("guesses"), consonant-y takes -ies, everything else -s. All
+ * 41 verbsB forms were attestation-checked on 2026-08-20 (none score
+ * Zipf 0.00). The rule's ONLY failure modes are the irregular verbs
+ * go/do/have/be — none is in any pool, and lexicons.test.ts guards the
+ * door, because "every economist gos" is one careless addition away.
+ */
+export function verbThirdPerson(verb: string): string {
+  if (/(s|x|z|ch|sh)$/.test(verb)) return verb + 'es';
+  if (/[^aeiou]y$/.test(verb)) return verb.slice(0, -1) + 'ies';
+  return verb + 's';
+}

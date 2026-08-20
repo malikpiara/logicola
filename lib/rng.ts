@@ -76,3 +76,116 @@ export function pickFrom<T>(rng: Rng, pool: readonly T[]): T {
   const i = Math.floor(rng() * pool.length);
   return pool[i]!;
 }
+
+/**
+ * Recently-drawn memory, keyed rng → pool → recent picks. WeakMaps on both
+ * levels: pools are module-level arrays (stable identities), and in
+ * production every generator shares `Math.random` itself as the key, so
+ * freshness deliberately persists across quiz mounts in one session — a
+ * retry does not reset the "recently seen" window. Deterministic test rngs
+ * are distinct objects, so seeds stay isolated from each other.
+ */
+const recentByRng = new WeakMap<Rng, WeakMap<readonly unknown[], unknown[]>>();
+
+/**
+ * `pickFrom` with perceived randomness (Malik, 2026-08-20).
+ *
+ * Uniform independent draws are statistically fine and experientially
+ * broken: with 10 questions drawing from a 77-noun pool, some word repeats
+ * within a 3-question window in 18% of quizzes — user testing caught
+ * "diabetic" twice in 3 questions. What users read as random is spread, not
+ * independence (the reason Spotify rewrote shuffle). So this draws
+ * uniformly but redraws while the candidate is among the last `window`
+ * accepted picks from the same pool.
+ *
+ * - `window` defaults to min(12, ⌊pool/2⌋) — small pools degrade gracefully
+ *   (a 2-entry pool just alternates) and 12 covers the densest 3-question
+ *   span of any template.
+ * - `reject` filters candidates without destroying pool identity — the
+ *   letter-avoidance helpers previously built filtered copies, which would
+ *   defeat the memory. Rejected candidates are never recorded.
+ * - Falls back in two stages (ignore recency, then ignore everything
+ *   except emptiness) so a hostile combination can stall but never throw.
+ *
+ * Same seed still means the same quiz; only the sequence changed, which is
+ * what the snapshots pin.
+ */
+export function pickFresh<T>(
+  rng: Rng,
+  pool: readonly T[],
+  opts?: { window?: number; reject?: (item: T) => boolean }
+): T {
+  if (pool.length === 0) {
+    throw new Error('pickFresh: pool is empty');
+  }
+  const reject = opts?.reject;
+  if (pool.length === 1) return pool[0]!;
+
+  let pools = recentByRng.get(rng);
+  if (!pools) {
+    pools = new WeakMap();
+    recentByRng.set(rng, pools);
+  }
+  let recent = pools.get(pool) as T[] | undefined;
+  if (!recent) {
+    recent = [];
+    pools.set(pool, recent);
+  }
+  const window = opts?.window ?? Math.min(12, Math.floor(pool.length / 2));
+
+  let pick: T | undefined;
+  for (let tries = 0; tries < 24; tries++) {
+    const candidate = pool[Math.floor(rng() * pool.length)]!;
+    if (reject?.(candidate)) continue;
+    if (recent.includes(candidate)) continue;
+    pick = candidate;
+    break;
+  }
+  if (pick === undefined) {
+    // Recency is a nicety; the reject predicate is a correctness rule.
+    for (let tries = 0; tries < 24 && pick === undefined; tries++) {
+      const candidate = pool[Math.floor(rng() * pool.length)]!;
+      if (!reject?.(candidate)) pick = candidate;
+    }
+  }
+  if (pick === undefined) pick = pickFrom(rng, pool);
+
+  recent.push(pick);
+  if (recent.length > window) recent.shift();
+  return pick;
+}
+
+function recentFor<T>(rng: Rng, pool: readonly T[]): T[] {
+  let pools = recentByRng.get(rng);
+  if (!pools) {
+    pools = new WeakMap();
+    recentByRng.set(rng, pools);
+  }
+  let recent = pools.get(pool) as T[] | undefined;
+  if (!recent) {
+    recent = [];
+    pools.set(pool, recent);
+  }
+  return recent;
+}
+
+/**
+ * Register `item` in `pool`'s recently-drawn memory WITHOUT drawing it —
+ * for fixed content that QUOTES a pool word ("Strong are the Tyrells"
+ * quotes the adjective `strong`). Without this, a quoted word and a
+ * drawn word can sit two questions apart and the student sees exactly
+ * the repetition pickFresh exists to prevent; the memory doesn't care
+ * whether a word arrived by draw or by quotation, and now neither does
+ * the code (Malik's call, 2026-08-21).
+ */
+export function noteUsed<T>(rng: Rng, pool: readonly T[], item: T): void {
+  const recent = recentFor(rng, pool);
+  recent.push(item);
+  const window = Math.min(12, Math.floor(pool.length / 2));
+  if (recent.length > window) recent.shift();
+}
+
+/** The read side of noteUsed: is `item` in the pool's recent window? */
+export function isRecent<T>(rng: Rng, pool: readonly T[], item: T): boolean {
+  return recentFor(rng, pool).includes(item);
+}
