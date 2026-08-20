@@ -1529,6 +1529,151 @@ const setQ: Set = {
           answer:
             'This violates 1 (too broad — Oxford’s 2024 word names a specific dulling, not all phone time).',
         },
+        // Fifth slate, 2026-08-21 — engineered against the combination census: 15 of 21 rule-pairs had never appeared. This round fills 3+4, 6+7, 5+7 and 1+5, and feeds the starved rule 3. (The hot-dog item was retried at Malik's request; `superfood` replaced it.)
+        {
+          id: '3.93',
+          prompt: 'Being is the presencing of what presences.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [2, 3],
+          answer:
+            'This violates 3 (circular — “presencing” restates “being”) and 4 (obscure terms).',
+        },
+        {
+          id: '3.94',
+          prompt: 'Time is what clocks measure.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [2],
+          answer:
+            'This violates 3 (circular — a clock is exactly the thing defined by keeping time).',
+        },
+        {
+          id: '3.95',
+          prompt: 'Recursion: see recursion.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [2],
+          answer:
+            'This violates 3 (circular — and yes, real programming glossaries have printed it).',
+        },
+        {
+          id: '3.96',
+          prompt:
+            'A programmer is someone who codes in the dark drinking energy drinks.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [5, 6],
+          answer:
+            'This violates 6 (emotional tone) and 7 (every property named is non-essential).',
+        },
+        {
+          id: '3.97',
+          prompt: '“Big data” means “data too big for Excel.”',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [4, 6],
+          answer:
+            'This violates 5 (vagueness mismatch — “too big” is doing all the work) and 7 (Excel is non-essential).',
+        },
+        {
+          id: '3.98',
+          prompt: 'A continent is a large landmass.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0, 4],
+          answer:
+            'This violates 1 (too broad — Greenland walks in) and 5 (vagueness mismatch — “large” is why the continent count is a convention, not a discovery).',
+        },
+        {
+          id: '3.99',
+          prompt: 'A limit is what a function approaches but never reaches.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [1],
+          answer:
+            'This violates 2 (too narrow — a constant function reaches its limit everywhere).',
+        },
+        {
+          id: '3.100',
+          prompt: 'Sushi is raw fish.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [1, 6],
+          answer:
+            'This violates 2 (too narrow — vegetable rolls are sushi) and 7 (the fish is non-essential — sushi names the vinegared rice; sashimi is the raw fish).',
+        },
+        {
+          id: '3.101',
+          prompt: 'Comfort food is food that comforts.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [2],
+          answer: 'This violates 3 (circular).',
+        },
       ],
     },
   ],

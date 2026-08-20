@@ -3552,6 +3552,353 @@ exports[`setQ > matches snapshot 1`] = `
           ],
           "prompt": "Brain rot is any time spent on your phone.",
         },
+        {
+          "answer": "This violates 3 (circular — “presencing” restates “being”) and 4 (obscure terms).",
+          "correctId": [
+            2,
+            3,
+          ],
+          "id": "3.93",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Being is the presencing of what presences.",
+        },
+        {
+          "answer": "This violates 3 (circular — a clock is exactly the thing defined by keeping time).",
+          "correctId": [
+            2,
+          ],
+          "id": "3.94",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Time is what clocks measure.",
+        },
+        {
+          "answer": "This violates 3 (circular — and yes, real programming glossaries have printed it).",
+          "correctId": [
+            2,
+          ],
+          "id": "3.95",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Recursion: see recursion.",
+        },
+        {
+          "answer": "This violates 6 (emotional tone) and 7 (every property named is non-essential).",
+          "correctId": [
+            5,
+            6,
+          ],
+          "id": "3.96",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A programmer is someone who codes in the dark drinking energy drinks.",
+        },
+        {
+          "answer": "This violates 5 (vagueness mismatch — “too big” is doing all the work) and 7 (Excel is non-essential).",
+          "correctId": [
+            4,
+            6,
+          ],
+          "id": "3.97",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "“Big data” means “data too big for Excel.”",
+        },
+        {
+          "answer": "This violates 1 (too broad — Greenland walks in) and 5 (vagueness mismatch — “large” is why the continent count is a convention, not a discovery).",
+          "correctId": [
+            0,
+            4,
+          ],
+          "id": "3.98",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A continent is a large landmass.",
+        },
+        {
+          "answer": "This violates 2 (too narrow — a constant function reaches its limit everywhere).",
+          "correctId": [
+            1,
+          ],
+          "id": "3.99",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A limit is what a function approaches but never reaches.",
+        },
+        {
+          "answer": "This violates 2 (too narrow — vegetable rolls are sushi) and 7 (the fish is non-essential — sushi names the vinegared rice; sashimi is the raw fish).",
+          "correctId": [
+            1,
+            6,
+          ],
+          "id": "3.100",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Sushi is raw fish.",
+        },
+        {
+          "answer": "This violates 3 (circular).",
+          "correctId": [
+            2,
+          ],
+          "id": "3.101",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Comfort food is food that comforts.",
+        },
       ],
       "slugs": [
         "informal",
