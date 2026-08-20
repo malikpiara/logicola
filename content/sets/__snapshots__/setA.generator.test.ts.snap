@@ -27,22 +27,22 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "all L is P",
+              "label": "all M is P",
             },
             {
               "id": 1,
-              "label": "some L is P",
+              "label": "some M is P",
             },
             {
               "id": 2,
-              "label": "all l is p",
+              "label": "all m is p",
             },
             {
               "id": 3,
-              "label": "L is P",
+              "label": "M is P",
             },
           ],
-          "prompt": "All lonely people are plumbers.",
+          "prompt": "All miserable people are plumbers.",
         },
         {
           "answer": "",
@@ -110,22 +110,22 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "all M is C",
+              "label": "all H is C",
             },
             {
               "id": 1,
-              "label": "some M is C",
+              "label": "some H is C",
             },
             {
               "id": 2,
-              "label": "all m is c",
+              "label": "all h is c",
             },
             {
               "id": 3,
-              "label": "M is C",
+              "label": "H is C",
             },
           ],
-          "prompt": "All miserable people are carpenters.",
+          "prompt": "All humorous people are carpenters.",
         },
         {
           "answer": "",
@@ -136,24 +136,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "w is not o",
+              "label": "w is not s",
             },
             {
-              "hint": "“The oldest person” stands for a single person, and so translates into a small letter.",
+              "hint": "“The saddest person” stands for a single person, and so translates into a small letter.",
               "id": 1,
-              "label": "w is not O",
+              "label": "w is not S",
             },
             {
               "id": 2,
-              "label": "W is not o",
+              "label": "W is not s",
             },
             {
-              "hint": "“The oldest person” stands for a single person, and so translates into a small letter.",
+              "hint": "“The saddest person” stands for a single person, and so translates into a small letter.",
               "id": 3,
-              "label": "W is not O",
+              "label": "W is not S",
             },
           ],
-          "prompt": "This wrestler isn't the oldest person.",
+          "prompt": "This wrestler isn't the saddest person.",
         },
         {
           "answer": "",
@@ -218,23 +218,23 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "some D is C",
+              "label": "some D is S",
             },
             {
               "id": 1,
-              "label": "D is C",
+              "label": "D is S",
             },
             {
               "id": 2,
-              "label": "some d is c",
+              "label": "some d is s",
             },
             {
               "hint": "Why did you switch the letters around?",
               "id": 3,
-              "label": "some C is D",
+              "label": "some S is D",
             },
           ],
-          "prompt": "Some witty democrats are curious.",
+          "prompt": "Some witty democrats are sarcastic.",
         },
         {
           "answer": "",
@@ -376,24 +376,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "no C is V",
+              "label": "no C is B",
             },
             {
               "hint": "‘Not some’ means ‘none.’",
               "id": 1,
-              "label": "all C is V",
+              "label": "all C is B",
             },
             {
               "id": 2,
-              "label": "C is not V",
+              "label": "C is not B",
             },
             {
               "hint": "‘Not some’ means ‘none.’",
               "id": 3,
-              "label": "some C is not V",
+              "label": "some C is not B",
             },
           ],
-          "prompt": "It isn't true that some clowns are virtuous.",
+          "prompt": "It isn't true that some clowns are busy.",
         },
         {
           "answer": "",
@@ -462,26 +462,26 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "m is c",
+              "label": "m is s",
             },
             {
-              "hint": "“The most curious one in Santa Monica” stands for a single person, and so translates into a small letter.",
+              "hint": "“The most sarcastic one in Santa Monica” stands for a single person, and so translates into a small letter.",
               "id": 1,
-              "label": "m is C",
+              "label": "m is S",
             },
             {
               "hint": "“Mary” stands for a single person, and so translates into a small letter.",
               "id": 2,
-              "label": "M is c",
+              "label": "M is s",
             },
             {
               "hint": "“Mary” stands for a single person, and so translates into a small letter.
-“The most curious one in Santa Monica” stands for a single person, and so translates into a small letter.",
+“The most sarcastic one in Santa Monica” stands for a single person, and so translates into a small letter.",
               "id": 3,
-              "label": "M is C",
+              "label": "M is S",
             },
           ],
-          "prompt": "Mary is the most curious one in Santa Monica.",
+          "prompt": "Mary is the most sarcastic one in Santa Monica.",
         },
         {
           "answer": "",
@@ -492,24 +492,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "no S is N",
+              "label": "no S is F",
             },
             {
               "hint": "‘Not some’ means ‘none.’",
               "id": 1,
-              "label": "all S is N",
+              "label": "all S is F",
             },
             {
               "id": 2,
-              "label": "S is not N",
+              "label": "S is not F",
             },
             {
               "hint": "‘Not some’ means ‘none.’",
               "id": 3,
-              "label": "some S is not N",
+              "label": "some S is not F",
             },
           ],
-          "prompt": "It isn't true that some scientists are notorious.",
+          "prompt": "It isn't true that some scientists are faithful.",
         },
         {
           "answer": "",
@@ -578,24 +578,24 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "some S is not R",
+              "label": "some S is not P",
             },
             {
               "hint": "You forgot the ‘not.’",
               "id": 1,
-              "label": "some S is R",
+              "label": "some S is P",
             },
             {
               "id": 2,
-              "label": "S is not R",
+              "label": "S is not P",
             },
             {
               "hint": "People often get this one wrong.",
               "id": 3,
-              "label": "all S is not R",
+              "label": "all S is not P",
             },
           ],
-          "prompt": "Not all senators are remarkable.",
+          "prompt": "Not all senators are powerful.",
         },
       ],
       "shuffleOptions": true,

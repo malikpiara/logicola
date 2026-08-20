@@ -52,6 +52,10 @@ describe('lexicons — 2008 baseline is intact', () => {
   it('counts match the 2008 binary', () => {
     expect(baselines2008.nounsProfessions.length).toBe(52);
     expect(baselines2008.adjectives.length).toBe(87);
+    // The modern-layer size is pinned to the figure its doc comment claims,
+    // so an addition cannot silently make that comment a lie. If this fails,
+    // update BOTH the number here and the one in lexicons.ts.
+    expect(adjectives.length - 87 + retired2008.adjectives.length).toBe(41);
     expect(baselines2008.names.length).toBe(8);
     expect(baselines2008.verbsA.length).toBe(22);
     expect(baselines2008.praiseStrings.length).toBe(30);
@@ -173,6 +177,13 @@ describe('lexicons — the modern layer', () => {
     ]) {
       expect(adjectives).not.toContain(dated);
     }
+    // `frantic` is the mirror of the `comical` case and belongs in neither
+    // list above: it is rising (2.64x) and no rarer than words we kept, so it
+    // was retired on editorial judgment rather than evidence — the lurid
+    // cluster it sat in, not the word. Pinned separately so the reasoning
+    // travels with the assertion and nobody reinstates it citing the figure.
+    expect(adjectives).not.toContain('frantic');
+    expect(adjectives).toContain('stressed');
     // `loveable` is a respelling rather than a retirement: the frozen-baseline
     // rule forbids editing the 2008 array, so the fix is retire + re-add.
     expect(adjectives).toContain('lovable');

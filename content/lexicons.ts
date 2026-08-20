@@ -452,6 +452,20 @@ const adjectivesRetired: readonly string[] = [
   // on, because the test undercounts adjectives that prefer a specific noun.
   // We say "notorious criminal", never "notorious person". Only frivolous had
   // a measured ratio showing the drift.
+  //
+  // `frantic` is the one retirement here that the DATA ARGUES AGAINST, and
+  // that is deliberate. It runs 3.33 — no rarer than `comical` (3.23), which
+  // stays — and it is the steepest riser in its cluster (2.64x since 1950).
+  // Both instruments say keep it. Malik retired it anyway (2026-08-20), on
+  // the ground the measurement cannot reach: not the word's health, but the
+  // company it keeps. The 2008 pool had a real taste for the lurid — hideous,
+  // disgusting, miserable, filthy, gloomy, frantic — at 16% of 87 entries, so
+  // a student met one roughly every six draws. The modern layer dilutes that
+  // to 12%; this takes one more out of the cluster rather than out of the
+  // language. Recorded in full because the comical case ran the other way and
+  // someone reading the Ngram figure alone would "fix" this back.
+  'frantic', // 3.33 and RISING — retired on editorial judgment, not evidence
+  //
   'loveable', // respelling, not datedness: `lovable` runs 0.84/M against this
   // spelling's 0.18/M. The frozen-baseline rule forbids editing the 2008 array
   // in place, so the fix is a retirement plus an addition.
@@ -540,12 +554,15 @@ const nounsProfessionsModern: readonly string[] = [
 ];
 
 /**
- * Modern adjectives. 24 entries.
+ * Modern adjectives. 41 entries — pinned by lexicons.test.ts, because this
+ * count read "24" while the array held 40 and nobody noticed for a day.
  *
  * Character traits, rather than the 2008 list's taste for the lurid
- * (`hideous`, `frantic`). Those stay — a logic drill wants vivid predicates
- * and they are not slurs — but they were most of what the pool had, so a
- * student met the same handful of extremes every run.
+ * (`hideous`, `disgusting`, `miserable`, `filthy`). Most of those stay — a
+ * logic drill wants vivid predicates and they are not slurs — but they were
+ * 16% of the 87-word pool, so a student met one roughly every six draws.
+ * These additions dilute that to 12%; `frantic` was the one taken out of the
+ * cluster outright (see adjectivesRetired).
  *
  * `kind` and `quiet` also join Set A's ESTREGULARS so they inflect ("the
  * kindest poet") instead of falling through to "the most kind".
@@ -585,6 +602,18 @@ const adjectivesModern: readonly string[] = [
   'sensitive', // 4.46
   'silly', // 4.39
   'wise', // 4.51
+  //
+  // `stressed` (4.18) replaces `frantic` — the same agitation, in the word a
+  // student would actually use for it. It is also the exact inverse of the
+  // `frivolous` finding above, and the collocation test that condemned that
+  // word is what vindicates this one: in Google Books, "he stressed that"
+  // (the emphasis sense, useless to us) is FLAT at 0.91x, while "feeling
+  // stressed" has gone from 0.1 to 70.7 per billion — 592x — and "stressed
+  // out" 191x. So the psychological sense, the only one that can appear in
+  // "a stressed logician", is not merely current but the fastest-growing
+  // word in this file. Its blended 4.18 understates it. Stays out of
+  // ESTREGULARS on purpose: "most stressed" is right, "stressedest" is not.
+  'stressed', // 4.18 — replaces `frantic` (3.33)
   //
   // Excluded despite scoring well, to avoid padding: `sweet` and `warm`
   // overlap `gentle` and `charming`; `clever` overlaps `smart` and `bright`;
