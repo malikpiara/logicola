@@ -85,3 +85,68 @@ describe('generators dispatcher', () => {
     }
   });
 });
+
+/**
+ * Superseded exonyms.
+ *
+ * The 2008 place catalog shipped `Kiev`. Frequency data cannot find that
+ * kind of staleness — the word is neither rare nor falling, it simply
+ * names a RENAMED ENTITY, and a name that has been superseded reads as
+ * taking a side rather than as neutral flavor. So it gets a denylist
+ * instead of a measurement, and the denylist sweeps rendered output
+ * rather than the pool, because a place string can reach a student
+ * through a template as easily as through the catalog.
+ *
+ * Deliberately excluded: Burma, Saigon and Turkey/Türkiye. Each is still
+ * in live use by people making a considered choice, so pinning one form
+ * would encode a position rather than a correction. Every entry below is
+ * a renaming no major US style guide still contests, and each is a string
+ * with no other common English meaning — `Macedonia` and `Georgia` are
+ * out on that second test alone. (Malik, 2026-08-20)
+ */
+const SUPERSEDED_EXONYMS: Record<string, string> = {
+  Kiev: 'Kyiv',
+  Bombay: 'Mumbai',
+  Calcutta: 'Kolkata',
+  Madras: 'Chennai',
+  Peking: 'Beijing',
+  Rangoon: 'Yangon',
+  Ceylon: 'Sri Lanka',
+  Zaire: 'the DRC',
+  Swaziland: 'Eswatini',
+};
+
+describe('place names', () => {
+  it('no generated prompt uses a superseded exonym', () => {
+    for (const key of registeredSetKeys()) {
+      const gen = getGenerator(key)!;
+      for (const seed of [1, 7, 42, 99, 12345]) {
+        for (const subset of gen(seed, 20).subSets) {
+          for (const q of subset.questions) {
+            const texts = [q.prompt, ...q.options.map((o) => o.hint ?? '')];
+            for (const text of texts) {
+              for (const [stale, current] of Object.entries(
+                SUPERSEDED_EXONYMS
+              )) {
+                expect(
+                  new RegExp(`\\b${stale}\\b`).test(text),
+                  `${key} seed ${seed}: "${stale}" is superseded by "${current}": ${text}`
+                ).toBe(false);
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+
+  it('Set A still offers Kyiv', () => {
+    const seen = new Set<string>();
+    for (let seed = 1; seed <= 200; seed++) {
+      for (const subset of getGenerator('setA')!(seed, 20).subSets) {
+        for (const q of subset.questions) seen.add(q.prompt);
+      }
+    }
+    expect([...seen].some((p) => p.includes('Kyiv'))).toBe(true);
+  });
+});
