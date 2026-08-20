@@ -451,7 +451,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "Jones wore this headband and then kicked two long field goals. The headband brought him good luck.",
+          "prompt": "Smith wore this headband and then kicked two long field goals. The headband brought him good luck.",
         },
         {
           "answer": "This passage illustrates the appeal to ignorance fallacy. “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
@@ -666,12 +666,13 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "We haven’t been able to prove the existence of bigfoot. Therefore we should deny the existence of bigfoot.",
+          "prompt": "Ahmed states that his company has been unable to prove that these cigarettes are dangerous. So they must be safe.",
         },
         {
-          "answer": "This passage illustrates the appeal to authority fallacy. This violates (1), (2) and (3). Registered dietitians disputed the claim, and an audience is not a qualification. Here, (1) the person isn’t an authority on the subject; (2) there’s no consensus of such authorities; (3) the argument concludes that the authority *must* be right (and isn’t just probably right).",
+          "answer": "This passage illustrates the appeal to authority fallacy. This violates appeal to emotion and all three clauses of appeal to authority.",
           "correctId": [
             0,
+            2,
           ],
           "id": "gen.R.aa.3",
           "options": [
@@ -881,10 +882,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "MrBeast has hundreds of millions of subscribers, and he says his lunch kits are healthier than the ones they replaced. So they must be healthier.",
+          "prompt": "The actress Ms. Gensler posts that this is the best skincare brand – and that everyone who uses it will look as good as she does. So I’m getting this brand!",
         },
         {
-          "answer": "This passage illustrates the part-whole fallacy. The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+          "answer": "This passage illustrates the part-whole fallacy. One week in one place is not the global average across decades, which is the quantity the phrase names. What holds of a part need not hold of the whole.",
           "correctId": [
             16,
           ],
@@ -1096,7 +1097,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "I kept thinking “One little drink won’t hurt” as I had one little drink. I repeated this reasoning ten times.",
+          "prompt": "It has been the coldest week here in twenty years. So much for global warming.",
         },
         {
           "answer": "This passage illustrates the circular fallacy. An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
@@ -1311,10 +1312,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "The bible must tell the truth. After all, it is God’s word. How do I know that it is God’s word? Well, the bible says it is – and the bible tells the truth.",
+          "prompt": "Believing in miracles is unreasonable, since no responsible person believes in them. How about Nguyen? Well, the mere fact that she believes in miracles shows that she is not responsible.",
         },
         {
-          "answer": "This passage illustrates the pro-con fallacy. What are the disadvantages of getting a Subaru?",
+          "answer": "This passage illustrates the pro-con fallacy. What are the disadvantages of getting a Hyundai?",
           "correctId": [
             14,
           ],
@@ -1526,10 +1527,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "Subarus are inexpensive and get good gas mileage. So you should get a Subaru.",
+          "prompt": "Hyundais are inexpensive and get good gas mileage. So you should get a Hyundai.",
         },
         {
-          "answer": "This passage illustrates the appeal to crowd fallacy. The premise is true — he is the most-followed person on Instagram. It is a fact about how many people are watching, not about how well he plays.",
+          "answer": "This passage illustrates the appeal to crowd fallacy. The FTC's own figures put the share of participants who lose money at around 99%. How many people joined says nothing about how they did.",
           "correctId": [
             1,
           ],
@@ -1741,10 +1742,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "Cristiano Ronaldo has more followers than any other player in the game. So he must be the best player in the game.",
+          "prompt": "Millions of people have signed up to sell it. So it must be a good way to make money.",
         },
         {
-          "answer": "This passage illustrates the ad hominem fallacy. This violates clause (2). Here, (2) the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).",
+          "answer": "This passage illustrates the ad hominem fallacy. This violates clauses (1) and (2). Here, (1) the grounds of the attack are irrelevant to the person’s rational competence; (2) the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).",
           "correctId": [
             4,
           ],
@@ -1956,7 +1957,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "Hume’s philosophy said human knowledge was impossible. But Hume was inconsistent, since in real life he thought he knew things. So his philosophy must be wrong.",
+          "prompt": "We can’t take seriously Kim’s plea for lower tax rates for corporations. Kim is the head of a large company and thus he stands to gain from lower taxes.",
         },
         {
           "answer": "This passage illustrates the black and white fallacy. Oversimplifying by assuming that one or another of two extremes must be true.",
@@ -2171,7 +2172,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "Straw man",
             },
           ],
-          "prompt": "Either you favor a massive arms buildup, or you aren’t a patriotic American.",
+          "prompt": "The way I figure it, people are either logical types who have little emotion or else emotional types who care little about logical reasoning.",
         },
       ],
       "shuffleOptions": false,

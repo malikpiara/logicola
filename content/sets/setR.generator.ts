@@ -25,7 +25,7 @@
  */
 
 import type { Option, Question, Set } from '../types';
-import { pickFrom, rngFromSeed, type Rng } from '@/lib/rng';
+import { pickFresh, rngFromSeed, type Rng } from '@/lib/rng';
 import {
   CARS,
   FALLACIES,
@@ -107,13 +107,13 @@ function makeSubstitutions(
   pool?: string[],
   usesPolitician = false
 ): Record<string, string> {
-  const surname = pickFrom(rng, SURNAMES);
-  const party = pickFrom(rng, PARTIES);
+  const surname = pickFresh(rng, SURNAMES);
+  const party = pickFresh(rng, PARTIES);
   // Six passages name a real figure. Their pronouns must travel with them —
   // a random gender bundle there yields "vote for him" after naming Thatcher.
-  const politician = usesPolitician ? pickFrom(rng, POLITICIANS) : undefined;
-  const group = pickFrom(rng, GROUPS);
-  const gender = politician ?? pickFrom(rng, GENDERS);
+  const politician = usesPolitician ? pickFresh(rng, POLITICIANS) : undefined;
+  const group = pickFresh(rng, GROUPS);
+  const gender = politician ?? pickFresh(rng, GENDERS);
   return {
     a: surname,
     A: surname,
@@ -122,14 +122,14 @@ function makeSubstitutions(
     hc: gender.hc,
     hC: gender.hC,
     HC: gender.HC,
-    d: pickFrom(rng, CARS),
+    d: pickFresh(rng, CARS),
     D: party.noun,
     E: party.adj,
-    g: pool ? pickFrom(rng, pool) : '',
+    g: pool ? pickFresh(rng, pool) : '',
     p: politician?.name ?? '',
     P: politician?.name ?? '',
     l: politician?.label ?? '',
-    f: pickFrom(rng, PLAYERS),
+    f: pickFresh(rng, PLAYERS),
     // Drawn once per question so {s} and {S} name the same group.
     s: group,
     S: group[0]!.toUpperCase() + group.slice(1),
@@ -212,7 +212,7 @@ function buildQuestion(
   rng: Rng,
   counter: number
 ): Question {
-  const variant = pickFrom(rng, section.variants);
+  const variant = pickFresh(rng, section.variants);
   const template =
     variant.mirror && rng() < 0.5 ? variant.mirror : variant.template;
   // The note is rendered with the same subs, so detect the token across both.

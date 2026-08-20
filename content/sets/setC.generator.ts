@@ -23,7 +23,7 @@
  */
 
 import type { Option, Question, Set } from '../types';
-import { rngFromSeed, pickFrom, type Rng } from '@/lib/rng';
+import { rngFromSeed, pickFresh, type Rng } from '@/lib/rng';
 import { adjectives } from '../lexicons';
 
 // =============================================================
@@ -581,14 +581,14 @@ function pickDistinctLetterAdj(rng: Rng, count: 1 | 2 | 3): string[] {
   let attempts = 0;
   while (out.length < count && attempts < 500) {
     attempts++;
-    const a = pickFrom(rng, adjectives);
+    const a = pickFresh(rng, adjectives);
     const letter = a[0]!.toLowerCase();
     if (seenLetters.has(letter) || out.includes(a)) continue;
     out.push(a);
     seenLetters.add(letter);
   }
   while (out.length < count) {
-    out.push(pickFrom(rng, adjectives));
+    out.push(pickFresh(rng, adjectives));
   }
   return out;
 }
@@ -673,7 +673,7 @@ export function* easyQuestions(seed?: number): Generator<Question> {
   const rng = rngFromSeed(seed);
   let counter = 0;
   while (true) {
-    const spec = pickFrom(rng, easySpecs);
+    const spec = pickFresh(rng, easySpecs);
     yield renderTemplate(spec, rng, counter++);
   }
 }
@@ -682,7 +682,7 @@ export function* hardQuestions(seed?: number): Generator<Question> {
   const rng = rngFromSeed(seed);
   let counter = 0;
   while (true) {
-    const spec = pickFrom(rng, hardSpecs);
+    const spec = pickFresh(rng, hardSpecs);
     yield renderTemplate(spec, rng, counter++);
   }
 }

@@ -189,28 +189,28 @@ That means ‘doesn’t entail W’, not ‘entails not-W’.",
           "options": [
             {
               "id": 0,
-              "label": "$ \\square \\sim B $",
+              "label": "$ \\square \\sim F $",
             },
             {
               "hint": "Translate ‘must’ / ‘necessary’ as ‘☐’ — the modal applies to the negation of the proposition.
 Wrong scope — that means ‘not [necessary]’, not ‘[necessary] not’.",
               "id": 1,
-              "label": "$ \\sim \\square B $",
+              "label": "$ \\sim \\square F $",
             },
             {
               "hint": "Translate ‘must’ / ‘necessary’ as ‘☐’ — the modal applies to the negation of the proposition.
 Wrong modal — ‘must / necessary’ maps to ‘☐’.",
               "id": 2,
-              "label": "$ \\lozenge \\sim B $",
+              "label": "$ \\lozenge \\sim F $",
             },
             {
               "hint": "Translate ‘must’ / ‘necessary’ as ‘☐’ — the modal applies to the negation of the proposition.
 Your answer isn’t a wff — modal operators don’t take parentheses around their argument: write ‘☐A’, not ‘☐(A)’ or ‘(☐A)’.",
               "id": 3,
-              "label": "$ \\square \\sim (B) $",
+              "label": "$ \\square \\sim (F) $",
             },
           ],
-          "prompt": "It must be that you aren’t bitter.",
+          "prompt": "It must be that you aren’t filthy.",
         },
         {
           "answer": "",
@@ -249,96 +249,96 @@ Your answer isn’t a wff — modal operators don’t take parentheses around th
           "correctId": [
             0,
           ],
-          "id": "gen.J.5.7",
+          "id": "gen.J.20.7",
           "options": [
             {
               "id": 0,
-              "label": "$ \\square (B \\supset  \\sim W) $",
+              "label": "$ \\square ((K \\cdot  P) \\supset  J) $",
             },
             {
-              "hint": "‘… entails not-…’ means ‘Necessarily if … then not-….’
-You forgot the ‘∼’.",
+              "hint": "‘… entails …’ means ‘Necessarily if … then ….’ (Box-outside.)
+Box-inside reading — ‘entails’ disambiguates to box-outside.",
               "id": 1,
-              "label": "$ \\square (B \\supset  W) $",
+              "label": "$ ((K \\cdot  P) \\supset  \\square J) $",
             },
             {
-              "hint": "‘… entails not-…’ means ‘Necessarily if … then not-….’
-That’s the box-inside form — ‘entails’ disambiguates to box-outside.",
+              "hint": "‘… entails …’ means ‘Necessarily if … then ….’ (Box-outside.)
+Each conjunct alone needn’t entail J; only the whole.",
               "id": 2,
-              "label": "$ (B \\supset  \\square \\sim W) $",
+              "label": "$ (\\square (K \\supset  J) \\cdot  \\square (P \\supset  J)) $",
             },
             {
-              "hint": "‘… entails not-…’ means ‘Necessarily if … then not-….’
-That means ‘doesn’t entail W’, not ‘entails not-W’.",
+              "hint": "‘… entails …’ means ‘Necessarily if … then ….’ (Box-outside.)
+You need another modal operator.",
               "id": 3,
-              "label": "$ \\sim \\square (B \\supset  W) $",
+              "label": "$ (K \\cdot  P) \\supset  J $",
             },
           ],
-          "prompt": "Necessarily, if B then not-W.",
+          "prompt": "K-and-P entails J.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.J.13.8",
+          "id": "gen.J.18.8",
           "options": [
             {
               "id": 0,
-              "label": "$ (\\lozenge T \\supset  \\lozenge K) $",
+              "label": "$ \\lozenge (Q \\cdot  N) $",
             },
             {
-              "hint": "Translate ‘if A is necessary’ as ‘(☐A’. Use a separate ‘☐’ for each English ‘necessary’.
-Use a separate ‘◇’ for each English ‘possible’.",
+              "hint": "‘… is consistent (compatible) with …’ means ‘It’s possible that … and … are both true’ — \`◇(A · B)\`.
+You need another modal operator.",
               "id": 1,
-              "label": "$ \\lozenge (T \\supset  K) $",
+              "label": "$ (Q \\cdot  N) $",
             },
             {
-              "hint": "Translate ‘if A is necessary’ as ‘(☐A’. Use a separate ‘☐’ for each English ‘necessary’.
-You switched the antecedent and consequent.",
+              "hint": "‘… is consistent (compatible) with …’ means ‘It’s possible that … and … are both true’ — \`◇(A · B)\`.
+One diamond outside, not one per conjunct.",
               "id": 2,
-              "label": "$ (\\lozenge K \\supset  \\lozenge T) $",
+              "label": "$ (\\lozenge Q \\cdot  \\lozenge N) $",
             },
             {
-              "hint": "Translate ‘if A is necessary’ as ‘(☐A’. Use a separate ‘☐’ for each English ‘necessary’.
-Your answer isn’t a wff — modal operators don’t take parentheses around their argument: write ‘☐A’, not ‘☐(A)’ or ‘(☐A)’.",
+              "hint": "‘… is consistent (compatible) with …’ means ‘It’s possible that … and … are both true’ — \`◇(A · B)\`.
+Wrong modal — ‘consistent with’ means ‘possibly both’, not ‘necessarily both’.",
               "id": 3,
-              "label": "$ \\lozenge (T) \\supset  \\lozenge (K) $",
+              "label": "$ \\square (Q \\cdot  N) $",
             },
           ],
-          "prompt": "If T is possible then K is possible.",
+          "prompt": "Q is compatible with N.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.J.13.9",
+          "id": "gen.J.12.9",
           "options": [
             {
               "id": 0,
-              "label": "$ (\\lozenge F \\supset  \\lozenge Z) $",
+              "label": "$ (E \\supset  E) $",
             },
             {
-              "hint": "Translate ‘if A is necessary’ as ‘(☐A’. Use a separate ‘☐’ for each English ‘necessary’.
-Use a separate ‘◇’ for each English ‘possible’.",
+              "hint": "There’s no modal word in the English — translate without ‘☐’ or ‘◇’.
+Get rid of the box! The English doesn’t claim ‘necessary’.",
               "id": 1,
-              "label": "$ \\lozenge (F \\supset  Z) $",
+              "label": "$ \\square (E \\supset  E) $",
             },
             {
-              "hint": "Translate ‘if A is necessary’ as ‘(☐A’. Use a separate ‘☐’ for each English ‘necessary’.
-You switched the antecedent and consequent.",
+              "hint": "There’s no modal word in the English — translate without ‘☐’ or ‘◇’.
+Get rid of the box! The English doesn’t claim necessity.",
               "id": 2,
-              "label": "$ (\\lozenge Z \\supset  \\lozenge F) $",
+              "label": "$ (E \\supset  \\square E) $",
             },
             {
-              "hint": "Translate ‘if A is necessary’ as ‘(☐A’. Use a separate ‘☐’ for each English ‘necessary’.
-Your answer isn’t a wff — modal operators don’t take parentheses around their argument: write ‘☐A’, not ‘☐(A)’ or ‘(☐A)’.",
+              "hint": "There’s no modal word in the English — translate without ‘☐’ or ‘◇’.
+Extra outer parentheses make this a non-wff.",
               "id": 3,
-              "label": "$ \\lozenge (F) \\supset  \\lozenge (Z) $",
+              "label": "$ ((E \\supset  E)) $",
             },
           ],
-          "prompt": "If F is possible then Z is possible.",
+          "prompt": "If you’re an engineer then you’re energetic.",
         },
       ],
       "shuffleOptions": true,
@@ -366,316 +366,316 @@ Your answer isn’t a wff — modal operators don’t take parentheses around th
           "options": [
             {
               "id": 0,
-              "label": "$ \\square (x)(Fx \\supset  Mx) $",
+              "label": "$ \\square (x)(Dx \\supset  Px) $",
             },
             {
               "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
 That’s the de re (box-inside) reading. ‘Necessary that …’ disambiguates to box-outside.",
               "id": 1,
-              "label": "$ (x)(Fx \\supset  \\square Mx) $",
+              "label": "$ (x)(Dx \\supset  \\square Px) $",
             },
             {
               "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
 The sentence isn’t ambiguous. ‘It’s necessary that …’ disambiguates.",
               "id": 2,
-              "label": "Ambiguous between (x)(Fx ⊃ ☐Mx) and ☐(x)(Fx ⊃ Mx)",
+              "label": "Ambiguous between (x)(Dx ⊃ ☐Px) and ☐(x)(Dx ⊃ Px)",
             },
             {
               "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
 Your answer has too many boxes.",
               "id": 3,
-              "label": "$ \\square (x)(Fx \\supset  \\square Mx) $",
+              "label": "$ \\square (x)(Dx \\supset  \\square Px) $",
             },
           ],
-          "prompt": "It’s necessary that all foreigners are mean.",
+          "prompt": "It’s necessary that all diabetics are poor.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.J.29.1",
+          "id": "gen.J.27.1",
           "options": [
             {
               "id": 0,
-              "label": "$ \\square (x)(Bx \\supset  Cx) $",
+              "label": "$ \\square Ms $",
             },
             {
-              "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
-That’s the de re (box-inside) reading. ‘Necessary that …’ disambiguates to box-outside.",
+              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
+You need another modal operator.",
               "id": 1,
-              "label": "$ (x)(Bx \\supset  \\square Cx) $",
+              "label": "$ Ms $",
             },
             {
-              "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
-The sentence isn’t ambiguous. ‘It’s necessary that …’ disambiguates.",
+              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
+Your answer isn’t a wff — modal operators don’t take parentheses around their argument: write ‘☐A’, not ‘☐(A)’ or ‘(☐A)’.",
               "id": 2,
-              "label": "Ambiguous between (x)(Bx ⊃ ☐Cx) and ☐(x)(Bx ⊃ Cx)",
+              "label": "$ \\square (Ms) $",
             },
             {
-              "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
-Your answer has too many boxes.",
+              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
+That’s the contingent-property form, not necessary.",
               "id": 3,
-              "label": "$ \\square (x)(Bx \\supset  \\square Cx) $",
+              "label": "$ (Ms \\cdot  \\lozenge \\sim Ms) $",
             },
           ],
-          "prompt": "It’s necessary that all bankers are colorful.",
+          "prompt": "Being miserable is a necessary property of Svitlana.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.J.26.2",
+          "id": "gen.J.28.2",
           "options": [
             {
               "id": 0,
-              "label": "$ (Fr \\cdot  \\lozenge \\sim Fr) $",
+              "label": "Ambiguous between (x)(Cx ⊃ ☐Cx) and ☐(x)(Cx ⊃ Cx)",
+            },
+            {
+              "hint": "‘All A’s are necessarily B’s’ is ambiguous between simple necessity \`(x)(Ax ⊃ ☐Bx)\` (de re — each A inherently B) and conditional necessity \`☐(x)(Ax ⊃ Bx)\` (de dicto — the proposition is necessary).
+You missed the ambiguity — ☐(x)(Cx ⊃ Cx) is also a valid reading.",
+              "id": 1,
+              "label": "$ (x)(Cx \\supset  \\square Cx) $",
+            },
+            {
+              "hint": "‘All A’s are necessarily B’s’ is ambiguous between simple necessity \`(x)(Ax ⊃ ☐Bx)\` (de re — each A inherently B) and conditional necessity \`☐(x)(Ax ⊃ Bx)\` (de dicto — the proposition is necessary).
+You missed the ambiguity — (x)(Cx ⊃ ☐Cx) is also a valid reading.",
+              "id": 2,
+              "label": "$ \\square (x)(Cx \\supset  Cx) $",
+            },
+            {
+              "hint": "‘All A’s are necessarily B’s’ is ambiguous between simple necessity \`(x)(Ax ⊃ ☐Bx)\` (de re — each A inherently B) and conditional necessity \`☐(x)(Ax ⊃ Bx)\` (de dicto — the proposition is necessary).
+Your answer has too many boxes.",
+              "id": 3,
+              "label": "$ \\square (x)(Cx \\supset  \\square Cx) $",
+            },
+          ],
+          "prompt": "Every customer is necessarily cheap.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.J.22.3",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ \\lozenge (\\exists x)Cx $",
+            },
+            {
+              "hint": "Translate ‘possible some’ as ‘◇(∃x)’.
+Wrong scope — that means ‘there’s some x such that x could be candid’ (anyone). Different claim.",
+              "id": 1,
+              "label": "$ (\\exists x)\\lozenge Cx $",
+            },
+            {
+              "hint": "Translate ‘possible some’ as ‘◇(∃x)’.
+That means ‘possibly everyone’ — wrong quantifier.",
+              "id": 2,
+              "label": "$ \\lozenge (x)Cx $",
+            },
+            {
+              "hint": "Translate ‘possible some’ as ‘◇(∃x)’.
+You forgot the ‘∼’. (You added a ‘not’.)",
+              "id": 3,
+              "label": "$ \\sim \\lozenge (\\exists x)Cx $",
+            },
+          ],
+          "prompt": "It’s possible that someone is candid.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.J.26.4",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ (Ls \\cdot  \\lozenge \\sim Ls) $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
-A contingent property of Ravi means Ravi actually has it — first conjunct should be ‘Fr’, not ‘◇Fr’.",
+A contingent property of Sebastian means Sebastian actually has it — first conjunct should be ‘Ls’, not ‘◇Ls’.",
               "id": 1,
-              "label": "$ (\\lozenge Fr \\cdot  \\lozenge \\sim Fr) $",
+              "label": "$ (\\lozenge Ls \\cdot  \\lozenge \\sim Ls) $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
 That’s the necessary-property form. Contingent means it actually has it but COULD have lacked it.",
               "id": 2,
-              "label": "$ \\square Fr $",
+              "label": "$ \\square Ls $",
             },
             {
               "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
-Self-contradiction. The second conjunct should say ‘could have lacked it’ — \`◇∼Fr\`.",
+Self-contradiction. The second conjunct should say ‘could have lacked it’ — \`◇∼Ls\`.",
               "id": 3,
-              "label": "$ (Fr \\cdot  \\sim Fr) $",
+              "label": "$ (Ls \\cdot  \\sim Ls) $",
             },
           ],
-          "prompt": "Being filthy is an accidental property of Ravi.",
+          "prompt": "Being likeable is a contingent property of Sebastian.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.J.24.3",
+          "id": "gen.J.30.5",
           "options": [
             {
               "id": 0,
-              "label": "$ (x)\\lozenge Cx $",
+              "label": "$ (x)(Cx \\supset  \\square Bx) $",
+            },
+            {
+              "hint": "‘All A’s have the property of being necessarily B’ uses the simple (box-inside) form — \`(x)(Ax ⊃ ☐Bx)\`. Not ambiguous: ‘property of being necessarily …’ disambiguates.
+That’s the de dicto (box-outside) reading. ‘Property of being necessarily …’ disambiguates to box-inside.",
+              "id": 1,
+              "label": "$ \\square (x)(Cx \\supset  Bx) $",
+            },
+            {
+              "hint": "‘All A’s have the property of being necessarily B’ uses the simple (box-inside) form — \`(x)(Ax ⊃ ☐Bx)\`. Not ambiguous: ‘property of being necessarily …’ disambiguates.
+The sentence isn’t ambiguous. ‘Property of being necessarily …’ disambiguates.",
+              "id": 2,
+              "label": "Ambiguous between (x)(Cx ⊃ ☐Bx) and ☐(x)(Cx ⊃ Bx)",
+            },
+            {
+              "hint": "‘All A’s have the property of being necessarily B’ uses the simple (box-inside) form — \`(x)(Ax ⊃ ☐Bx)\`. Not ambiguous: ‘property of being necessarily …’ disambiguates.
+Your answer has too many boxes.",
+              "id": 3,
+              "label": "$ \\square (x)(Cx \\supset  \\square Bx) $",
+            },
+          ],
+          "prompt": "Every convict has the property of being necessarily bitter.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.J.25.6",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ (x)\\square Ux $",
+            },
+            {
+              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
+That’s the de dicto reading; ‘has the property of being necessarily unpredictable’ disambiguates to de re.",
+              "id": 1,
+              "label": "$ \\square (x)Ux $",
+            },
+            {
+              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
+You need another modal operator.",
+              "id": 2,
+              "label": "$ (x)Ux $",
+            },
+            {
+              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
+Wrong quantifier — should be universal.",
+              "id": 3,
+              "label": "$ (\\exists x)\\square Ux $",
+            },
+          ],
+          "prompt": "Everyone has the property of being necessarily unpredictable.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.J.27.7",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ \\square Rb $",
+            },
+            {
+              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
+You need another modal operator.",
+              "id": 1,
+              "label": "$ Rb $",
+            },
+            {
+              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
+Your answer isn’t a wff — modal operators don’t take parentheses around their argument: write ‘☐A’, not ‘☐(A)’ or ‘(☐A)’.",
+              "id": 2,
+              "label": "$ \\square (Rb) $",
+            },
+            {
+              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
+That’s the contingent-property form, not necessary.",
+              "id": 3,
+              "label": "$ (Rb \\cdot  \\lozenge \\sim Rb) $",
+            },
+          ],
+          "prompt": "Being remarkable is a necessary property of Ben.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.J.24.8",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ (x)\\lozenge Sx $",
             },
             {
               "hint": "‘Anyone could be …’ uses ‘(x)◇’ — read ‘for any x, x could be …’. Different from ‘Everyone could be …’ which is ‘◇(x)’.
 ‘Anyone could be’ ≠ ‘Everyone could be’. Anyone → (x)◇; everyone-could-be → ◇(x).",
               "id": 1,
-              "label": "$ \\lozenge (x)Cx $",
+              "label": "$ \\lozenge (x)Sx $",
             },
             {
               "hint": "‘Anyone could be …’ uses ‘(x)◇’ — read ‘for any x, x could be …’. Different from ‘Everyone could be …’ which is ‘◇(x)’.
 ‘Anyone’ takes a universal ‘(x)’, not an existential.",
               "id": 2,
-              "label": "$ (\\exists x)\\lozenge Cx $",
+              "label": "$ (\\exists x)\\lozenge Sx $",
             },
             {
               "hint": "‘Anyone could be …’ uses ‘(x)◇’ — read ‘for any x, x could be …’. Different from ‘Everyone could be …’ which is ‘◇(x)’.
 You need another modal operator.",
               "id": 3,
-              "label": "$ (x)Cx $",
-            },
-          ],
-          "prompt": "It’s possible for anyone to be cheap.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.J.30.4",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ (x)(Ix \\supset  \\square Ex) $",
-            },
-            {
-              "hint": "‘All A’s have the property of being necessarily B’ uses the simple (box-inside) form — \`(x)(Ax ⊃ ☐Bx)\`. Not ambiguous: ‘property of being necessarily …’ disambiguates.
-That’s the de dicto (box-outside) reading. ‘Property of being necessarily …’ disambiguates to box-inside.",
-              "id": 1,
-              "label": "$ \\square (x)(Ix \\supset  Ex) $",
-            },
-            {
-              "hint": "‘All A’s have the property of being necessarily B’ uses the simple (box-inside) form — \`(x)(Ax ⊃ ☐Bx)\`. Not ambiguous: ‘property of being necessarily …’ disambiguates.
-The sentence isn’t ambiguous. ‘Property of being necessarily …’ disambiguates.",
-              "id": 2,
-              "label": "Ambiguous between (x)(Ix ⊃ ☐Ex) and ☐(x)(Ix ⊃ Ex)",
-            },
-            {
-              "hint": "‘All A’s have the property of being necessarily B’ uses the simple (box-inside) form — \`(x)(Ax ⊃ ☐Bx)\`. Not ambiguous: ‘property of being necessarily …’ disambiguates.
-Your answer has too many boxes.",
-              "id": 3,
-              "label": "$ \\square (x)(Ix \\supset  \\square Ex) $",
-            },
-          ],
-          "prompt": "All interns have the property of being necessarily efficient.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.J.25.5",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ (x)\\square Sx $",
-            },
-            {
-              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
-That’s the de dicto reading; ‘has the property of being necessarily sarcastic’ disambiguates to de re.",
-              "id": 1,
-              "label": "$ \\square (x)Sx $",
-            },
-            {
-              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
-You need another modal operator.",
-              "id": 2,
               "label": "$ (x)Sx $",
             },
-            {
-              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
-Wrong quantifier — should be universal.",
-              "id": 3,
-              "label": "$ (\\exists x)\\square Sx $",
-            },
           ],
-          "prompt": "Everyone has the property of being necessarily sarcastic.",
+          "prompt": "It’s possible for anyone to be slow.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.J.26.6",
+          "id": "gen.J.29.9",
           "options": [
             {
               "id": 0,
-              "label": "$ (Cn \\cdot  \\lozenge \\sim Cn) $",
+              "label": "$ \\square (x)(Lx \\supset  Dx) $",
             },
             {
-              "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
-A contingent property of Nia means Nia actually has it — first conjunct should be ‘Cn’, not ‘◇Cn’.",
+              "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
+That’s the de re (box-inside) reading. ‘Necessary that …’ disambiguates to box-outside.",
               "id": 1,
-              "label": "$ (\\lozenge Cn \\cdot  \\lozenge \\sim Cn) $",
+              "label": "$ (x)(Lx \\supset  \\square Dx) $",
             },
             {
-              "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
-That’s the necessary-property form. Contingent means it actually has it but COULD have lacked it.",
+              "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
+The sentence isn’t ambiguous. ‘It’s necessary that …’ disambiguates.",
               "id": 2,
-              "label": "$ \\square Cn $",
+              "label": "Ambiguous between (x)(Lx ⊃ ☐Dx) and ☐(x)(Lx ⊃ Dx)",
             },
             {
-              "hint": "‘F is a contingent property of x’ means ‘x is F but could have lacked F’ — \`(Fx · ◇∼Fx)\`.
-Self-contradiction. The second conjunct should say ‘could have lacked it’ — \`◇∼Cn\`.",
-              "id": 3,
-              "label": "$ (Cn \\cdot  \\sim Cn) $",
-            },
-          ],
-          "prompt": "Being comical is a contingent property of Nia.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.J.30.7",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ (x)(Lx \\supset  \\square Cx) $",
-            },
-            {
-              "hint": "‘All A’s have the property of being necessarily B’ uses the simple (box-inside) form — \`(x)(Ax ⊃ ☐Bx)\`. Not ambiguous: ‘property of being necessarily …’ disambiguates.
-That’s the de dicto (box-outside) reading. ‘Property of being necessarily …’ disambiguates to box-inside.",
-              "id": 1,
-              "label": "$ \\square (x)(Lx \\supset  Cx) $",
-            },
-            {
-              "hint": "‘All A’s have the property of being necessarily B’ uses the simple (box-inside) form — \`(x)(Ax ⊃ ☐Bx)\`. Not ambiguous: ‘property of being necessarily …’ disambiguates.
-The sentence isn’t ambiguous. ‘Property of being necessarily …’ disambiguates.",
-              "id": 2,
-              "label": "Ambiguous between (x)(Lx ⊃ ☐Cx) and ☐(x)(Lx ⊃ Cx)",
-            },
-            {
-              "hint": "‘All A’s have the property of being necessarily B’ uses the simple (box-inside) form — \`(x)(Ax ⊃ ☐Bx)\`. Not ambiguous: ‘property of being necessarily …’ disambiguates.
+              "hint": "‘It’s necessary that all A’s are B’s’ uses the conditional (box-outside) form — \`☐(x)(Ax ⊃ Bx)\`. Not ambiguous: ‘necessary that …’ disambiguates.
 Your answer has too many boxes.",
               "id": 3,
-              "label": "$ \\square (x)(Lx \\supset  \\square Cx) $",
+              "label": "$ \\square (x)(Lx \\supset  \\square Dx) $",
             },
           ],
-          "prompt": "Every lifeguard has the property of being necessarily childish.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.J.25.8",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ (x)\\square Wx $",
-            },
-            {
-              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
-That’s the de dicto reading; ‘has the property of being necessarily witty’ disambiguates to de re.",
-              "id": 1,
-              "label": "$ \\square (x)Wx $",
-            },
-            {
-              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
-You need another modal operator.",
-              "id": 2,
-              "label": "$ (x)Wx $",
-            },
-            {
-              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
-Wrong quantifier — should be universal.",
-              "id": 3,
-              "label": "$ (\\exists x)\\square Wx $",
-            },
-          ],
-          "prompt": "Everyone has the property of being necessarily witty.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.J.25.9",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ (x)\\square Px $",
-            },
-            {
-              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
-That’s the de dicto reading; ‘has the property of being necessarily polite’ disambiguates to de re.",
-              "id": 1,
-              "label": "$ \\square (x)Px $",
-            },
-            {
-              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
-You need another modal operator.",
-              "id": 2,
-              "label": "$ (x)Px $",
-            },
-            {
-              "hint": "‘F is a necessary property of x’ means ‘in all possible worlds, x would be F’ — \`☐Fx\`.
-Wrong quantifier — should be universal.",
-              "id": 3,
-              "label": "$ (\\exists x)\\square Px $",
-            },
-          ],
-          "prompt": "Everyone has the property of being necessarily polite.",
+          "prompt": "It’s necessary that all logicians are dangerous.",
         },
       ],
       "shuffleOptions": true,

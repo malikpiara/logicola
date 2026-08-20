@@ -416,6 +416,14 @@ const nounsProfessionsRetired: readonly string[] = [
   // expat x73. That gap is the whole "dated vs merely rare" distinction, and
   // it is the clearest case of it in the file. (Malik, 2026-08-20)
   'grocer',
+  // Retired 2026-08-21 AGAINST its instruments — the frantic shape, on
+  // the noun side: bandit is rising (x1.64 since 1950), sits mid-pool
+  // (3.37), and 100% of 18-23s know it. The evidence says the word is
+  // alive; the judgment is that it lives in the GAMING register (bandit
+  // camps) while being dead in the news register, and Malik wants the
+  // crime cluster to read like the news. Don't relitigate from the
+  // figures alone — they were on the table.
+  'bandit',
 ];
 
 /** Entries withdrawn from `adjectives`. */
@@ -539,7 +547,30 @@ const nounsProfessionsModern: readonly string[] = [
   'architect',
   'athlete',
   'barista',
-  'expat', // 3.01, up 73x since 1950 — replaces `grocer` (0.88x)
+  'expat', // 3.01, up 73x since 1950 — replaces `grocer` (0.88x).
+  // KEPT 2026-08-20 with the counter-evidence on the table: Brysbaert
+  // prevalence has expat at 56% known among 18-23s (grocer: 92%). Malik's
+  // call, twice affirmed. Note the norms measure NATIVE speakers — for the
+  // L2 students this app also serves, a Latinate/international word can be
+  // the more familiar one, not the less. Don't relitigate from either
+  // instrument alone.
+  // 2026-08-20 second round (see the adjectives block for method):
+  'founder', // 4.46 — above the pool median; pairs with Set R's startup passages
+  'gamer', // 3.62 — near median, unambiguous, a definitional student identity
+  'influencer', // 2.95 but x3.06 — the `expat` profile: rare, steeply rising
+  'hacker', // 3.67, rising, 98.9% of 18-23s — replaces `bandit` (Malik's
+  // pick over `spy` at 4.24; spy's place-synergy noted for a future round)
+  // 2026-08-20, fantasy class nouns — the `Canadian` precedent: a proper-noun
+  // class term is exactly what categorical logic wants, and "all Lannisters
+  // are rich" is the categorical form students already know as a motto.
+  // `Stark` was wanted and is excluded: it is House Stark, Tony Stark and the
+  // adjective at once, so it fails the one-word-one-realm rule. These carry
+  // FANTASY_REALM tags below; Set A matches their places strictly while REAL
+  // nouns roam free — "all bachelors in Essos" is a joke, "all Lannisters in
+  // Minneapolis" is a glitch (Malik's call, 2026-08-20).
+  'Lannister', // 3.04
+  'Targaryen', // 2.71
+  'Avenger', // 3.09
   'chemist',
   'designer',
   'economist',
@@ -561,7 +592,7 @@ const nounsProfessionsModern: readonly string[] = [
 ];
 
 /**
- * Modern adjectives. 42 entries — pinned by lexicons.test.ts, because this
+ * Modern adjectives. 46 entries — pinned by lexicons.test.ts, because this
  * count read "24" while the array held 40 and nobody noticed for a day.
  *
  * Character traits, rather than the 2008 list's taste for the lurid
@@ -633,6 +664,20 @@ const adjectivesModern: readonly string[] = [
   // "the slowest" (419), which already inflects.
   'quick', // 4.98 — the missing antonym of `slow`
   //
+  // 2026-08-20 vocabulary review, second round: words that rose in the last
+  // decade, proposed with figures and approved by Malik as a slate. Zipf from
+  // wordfreq; trend is Books 2005-09 vs 2015-19. Both instruments end around
+  // 2019-2021, so post-2020 coinages are invisible to them — everything here
+  // is either measured or carries its judgment argument inline.
+  'relatable', // 3.33, x4.39 in Books — the steepest riser found in any pool
+  'toxic', // 4.24 — the `stressed` pattern: "toxic chemicals" falls x0.8 while
+  // "toxic relationship" runs x5.2 and "toxic people" x2.9; the person-sense
+  // is the current one and the only sense a drill can render
+  'chill', // 4.18, x1.58 — student register; stays OUT of ESTREGULARS
+  // ("chillest" is 1.92, "most chill" wins). Cost accepted: C now holds 21
+  // initials, the pool's most crowded letter.
+  'mindful', // 3.49, x1.52
+  //
   // Excluded despite scoring well, to avoid padding: `sweet` and `warm`
   // overlap `gentle` and `charming`; `clever` overlaps `smart` and `bright`;
   // `loyal` (4.20) is barely commoner than `faithful` (4.10), already present.
@@ -698,6 +743,7 @@ const namesModern: readonly string[] = [
   'Ben',
   'Diego',
   'Elena',
+  'Grace', // 4.56 — the commonest name in the pool (Malik's pick, 2026-08-20)
   'Jonathan',
   'Luca',
   'Maria',
@@ -744,11 +790,43 @@ const namesModern: readonly string[] = [
   // fails, which is exactly why the rule is a test and not a habit.
   'Cersei',
   'Daenerys', // trailing `s` is fine — no generator takes a possessive
+  'Tyrion',
+  'Arya',
+  'Jaime',
+  'Sansa',
+  // 2026-08-20, second fantasy round (approved slate): each franchise needs
+  // at least two names and two places once Set A realm-matches draws.
+  // `Vision` (4.63) would have been the strongest fictional name in the pool
+  // and is blocked — V reads as ∨. Wanda and Wonder Woman fall to W.
+  'Superman',
+  'Joker',
+  'Groot',
+  'Thanos',
+  'Hulk', // tagged marvel — fills the H-gap (Harry stood alone)
+  // 2026-08-21, the AMBIGUOUS channel extended (Malik-approved): each
+  // reads as an ordinary name to non-fans and as a wink to fans, so none
+  // is realm-tagged and none costs fantasy dosage — the Bruce/Tony
+  // design. `Diana` is the deliberate route around the W-ban: Wonder
+  // Woman falls to the reserved initial, her name doesn't. `Kamala` was
+  // wanted and is excluded: it collides with Harris in Set R's
+  // politician roster — one word, two people, ACROSS realms.
+  'Miles',
+  'Gwen',
+  'Diana',
+  'Clark',
+  'Logan',
+  'Alfred',
 ];
 
 /** Modern Class A verbs (attitude or feeling toward a person). 9 entries. */
 const verbsAModern: readonly string[] = [
   'avoid',
+  // 2026-08-20 second round. `follow` (5.14 — the commonest word added to any
+  // pool today) is the one addition where the 2008 frame and the 2026 sense
+  // collapse into each other: "everyone who follows Rihanna" was gibberish in
+  // 2008 and is literal now. Both readings translate identically, so the
+  // ambiguity costs the logic nothing.
+  'follow',
   'doubt',
   'envy',
   'notice',
@@ -771,6 +849,19 @@ const verbsBModern: readonly string[] = [
   'travel',
   'volunteer',
   'wander',
+  // 2026-08-20 second round (method in the adjectives block). These land in
+  // the deontic and belief frames, where "whether you ought to scroll" is a
+  // moral question 2026 students actually have:
+  'scroll', // 3.86
+  'binge', // 3.60 — "binge-watching" ran x1081 in Books 2005-19
+  'vent', // 3.80
+  'procrastinate', // 2.71 — rarest word added today, kept on the `forgetful`
+  // precedent: no one-word substitute, and arguably the most student-central
+  // verb in English. Frequency was never the only test.
+  'meditate', // 3.26
+  'commute', // 3.56
+  'run', // ~5 — generically useful and, in passing, Flash-flavored;
+  // gerund 'running' (CVC doubling) and 3sg 'runs' both covered
 ];
 
 /**
@@ -792,6 +883,15 @@ const verbsTransitiveModern: readonly string[] = [
   'interrupt',
   'mislead',
   'rescue',
+  // 2026-08-20 second round. The figures for `ghost` and `troll` are noun-
+  // contaminated and were treated as floors, not measurements: "ghosted
+  // him/her" ran x8 in Books by 2019 — and Books ENDS mid-climb. A deontic
+  // drill about whether you may ghost someone teaches the logic in the
+  // student's own moral vocabulary, which is the whole hypothesis.
+  'ghost', // 4.42, noun-contaminated
+  'troll', // 3.73, noun-contaminated
+  'block', // 4.88 — the social and physical readings both work in the frame
+  'mute', // 3.66
 ];
 
 /**
@@ -848,6 +948,43 @@ const verbsTransitiveModern: readonly string[] = [
  * so the omission reads as a decision rather than an oversight.
  */
 export const RESERVED_VERB_INITIALS: readonly string[] = ['o'];
+
+/**
+ * Names whose bearer is unambiguously fictional, each tagged with its
+ * franchise. Set A realm-matches draws on this, so "Batman is a bachelor in
+ * Rome" cannot render and neither can "Loki in Gotham" — fictional names
+ * draw places from their own world (Malik, 2026-08-20).
+ *
+ * Bruce, Natasha, Tony, Peter and Jaime are deliberately NOT here: they were
+ * chosen because they read as ordinary names, and tagging them would forfeit
+ * exactly that ambiguity. Madonna, Ronaldo and Rihanna are real people.
+ */
+export type FantasyRealm = 'marvel' | 'dc' | 'westeros';
+
+export const FANTASY_REALM: Readonly<Record<string, FantasyRealm>> = {
+  Batman: 'dc',
+  Superman: 'dc',
+  Joker: 'dc',
+  Thor: 'marvel',
+  Loki: 'marvel',
+  Groot: 'marvel',
+  Thanos: 'marvel',
+  Cersei: 'westeros',
+  Daenerys: 'westeros',
+  Tyrion: 'westeros',
+  Arya: 'westeros',
+  Sansa: 'westeros',
+  // Class nouns share the map — realm is a property of the word, not of
+  // whether it names an individual or a class.
+  Hulk: 'marvel',
+  Lannister: 'westeros',
+  Targaryen: 'westeros',
+  Avenger: 'marvel',
+};
+
+export const FANTASY_NAMES: ReadonlySet<string> = new Set(
+  Object.keys(FANTASY_REALM)
+);
 
 /**
  * Compose a live pool: the 2008 baseline minus its retirements, then the

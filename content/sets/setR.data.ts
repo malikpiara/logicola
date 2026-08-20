@@ -1553,7 +1553,6 @@ export const SURNAMES = [
   'Garcia',
   'Rodriguez',
   'Lee',
-  'Piara',
 ];
 
 export const CARS = [
@@ -1562,14 +1561,16 @@ export const CARS = [
   'Chevrolet',
   'Toyota',
   'Volkswagen',
-  'Buick',
-  'Dodge',
   'Tesla',
   'Hyundai',
   'Kia',
   'Nissan',
   'Subaru',
   'Mazda',
+  'BMW',
+  'Audi',
+  'Volvo',
+  'Ferrari',
 ];
 
 /** Affiliation groups for the {s}/{S} token. Chosen affiliations only. */

@@ -210,24 +210,23 @@ describe('setR data — substitution pools', () => {
       expect(SURNAMES).toContain(surname);
     }
     expect(SURNAMES.length).toBeGreaterThan(16);
-    // Same joke, one port later (2026-08-20).
-    expect(SURNAMES).toContain('Piara');
   });
 
-  it('keeps every 2008 car except the retired one', () => {
-    for (const car of [
-      'Honda',
-      'Ford',
-      'Chevrolet',
-      'Toyota',
-      'Volkswagen',
-      'Buick',
-      'Dodge',
-    ]) {
+  it('keeps every 2008 car except the retired ones', () => {
+    for (const car of ['Honda', 'Ford', 'Chevrolet', 'Toyota', 'Volkswagen']) {
       expect(CARS).toContain(car);
     }
-    // Discontinued in 2010; retired in port_set_r.py's CARS_RETIRED.
-    expect(CARS).not.toContain('Pontiac');
+    // Two retirement criteria (port_set_r.py): Pontiac died as a marque
+    // (2010); Buick and Dodge are alive but globally illegible — retired
+    // 2026-08-21 on Malik's call. Mercedes and Lexus were considered as
+    // replacements and excluded: "{d}s" pluralizes with a bare -s, and
+    // "Mercedess" is not a word.
+    for (const retired of ['Pontiac', 'Buick', 'Dodge']) {
+      expect(CARS).not.toContain(retired);
+    }
+    for (const global of ['BMW', 'Audi', 'Volvo', 'Ferrari']) {
+      expect(CARS).toContain(global);
+    }
   });
 
   /**
