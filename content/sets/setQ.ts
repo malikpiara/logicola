@@ -1862,6 +1862,71 @@ const setQ: Set = {
           answer:
             'This violates 1 (too broad — last night’s dream is known only to you and is no secret) and 2 (too narrow — two people share secrets constantly).',
         },
+        // The closing slate, 2026-08-21: art and AI, per Malik's themes; the campaign ends here at 115.
+        {
+          id: '3.112',
+          prompt: 'Art is whatever hangs in a museum.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0, 1],
+          answer:
+            'This violates 1 (too broad — the fire extinguisher on the museum wall is not art) and 2 (too narrow — street murals never hang there).',
+        },
+        {
+          id: '3.113',
+          prompt: 'Art is anything beautiful.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0, 1],
+          answer:
+            'This violates 1 (too broad — sunsets are beautiful and nobody made them) and 2 (too narrow — plenty of great art is deliberately ugly).',
+        },
+        {
+          id: '3.114',
+          prompt: 'An AI is a program that thinks.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [3],
+          answer:
+            'This violates 4 (obscure terms — “thinks” is less understood than the term it defines).',
+        },
+        {
+          id: '3.115',
+          prompt: 'A follower is a fan.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0, 1],
+          answer:
+            'This violates 1 (too broad — bots and hate-follows follow) and 2 (too narrow — devoted offline fans follow nothing).',
+        },
       ],
     },
   ],
