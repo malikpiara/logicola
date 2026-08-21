@@ -1770,6 +1770,22 @@ const setQ: Set = {
           answer:
             'This violates 1 (too broad — everyone has been sure and wrong).',
         },
+        {
+          id: '3.107',
+          prompt: 'A wedding is an expensive party with a cake.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0, 6],
+          answer:
+            'This violates 1 (too broad — birthdays qualify) and 7 (cost and cake are exactly what a wedding doesn’t need).',
+        },
       ],
     },
   ],
