@@ -1962,7 +1962,42 @@ const setQ: Set = {
           ],
           correctId: [0],
           answer:
-            'This violates 1 (too broad — Mexico flies green, white, and red; the arrangement and the eagle are doing the work the colours can’t).',
+            'This violates 1 (too broad — Mexico and Hungary both fly green, white, and red; arrangement and emblem are doing the work the colours can’t).',
+        },
+        {
+          id: '3.117',
+          // Conditional form, per principle 4 — and the botany in the answer
+          // is a bonus fact: the SOLVING needs only the usage fact that
+          // sweet-potato fries are called fries.
+          prompt: "As long as it's made from potatoes, it's fries.",
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0, 1],
+          answer:
+            'This violates 1 (too broad — mash and vodka are made from potatoes) and 2 (too narrow — sweet-potato fries are fries, and sweet potatoes aren’t even potatoes).',
+        },
+        {
+          id: '3.118',
+          prompt: 'A bear is a large brown forest animal.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [1, 6],
+          answer:
+            'This violates 2 (too narrow — polar bears are white and live on the ice) and 7 (brown and forest are not what makes a bear).',
         },
       ],
     },
