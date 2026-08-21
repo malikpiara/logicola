@@ -4129,6 +4129,160 @@ exports[`setQ > matches snapshot 1`] = `
           ],
           "prompt": "A wedding is an expensive party with a cake.",
         },
+        {
+          "answer": "This violates 1 (too broad — crystals grow, fire spreads) and 2 (too narrow — mules don’t reproduce).",
+          "correctId": [
+            0,
+            1,
+          ],
+          "id": "3.108",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A living thing is anything that grows and reproduces.",
+        },
+        {
+          "answer": "This violates 1 (too broad — “I’ll probably be late” says you’ll do something and promises nothing).",
+          "correctId": [
+            0,
+          ],
+          "id": "3.109",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A promise is saying you will do something.",
+        },
+        {
+          "answer": "This violates 2 (too narrow — solitaire and lotteries are won with no opponent at all).",
+          "correctId": [
+            1,
+          ],
+          "id": "3.110",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "Winning is beating your opponent.",
+        },
+        {
+          "answer": "This violates 1 (too broad — last night’s dream is known only to you and is no secret) and 2 (too narrow — two people share secrets constantly).",
+          "correctId": [
+            0,
+            1,
+          ],
+          "id": "3.111",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A secret is something only you know.",
+        },
       ],
       "slugs": [
         "informal",

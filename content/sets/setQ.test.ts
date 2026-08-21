@@ -31,7 +31,7 @@ describe('setQ', () => {
     // silently.
     const ids = setQ.subSets[0]!.questions.map((q) => q.id);
     expect(ids.filter((id) => Number(id.split('.')[1]) <= 60)).toHaveLength(60);
-    expect(setQ.subSets[0]!.questions.length).toBe(107);
+    expect(setQ.subSets[0]!.questions.length).toBe(111);
   });
 
   it('every question has a non-empty prompt', () => {
