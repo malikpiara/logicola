@@ -4474,7 +4474,7 @@ exports[`setQ > matches snapshot 1`] = `
               "label": "Has non-essential properties",
             },
           ],
-          "prompt": "A French flag is any flag that's blue, white, and red.",
+          "prompt": "As long as a flag is blue, white, and red, it is a French flag.",
         },
       ],
       "slugs": [
