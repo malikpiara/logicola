@@ -1935,7 +1935,13 @@ const setQ: Set = {
         // occurring in nature. The campaign's true closer.
         {
           id: '3.116',
-          prompt: "A French flag is any flag that's blue, white, and red.",
+          // Malik's rephrase (2026-08-21): the conditional form states ONLY
+          // the sufficiency claim — the arrow that fails — where the
+          // definitional form bundled it with the true direction. "As long
+          // as" also reads as careful hedging, which makes it feel MORE
+          // almost-right. And it is now nearly verbatim the wild artifact.
+          prompt:
+            'As long as a flag is blue, white, and red, it is a French flag.',
           options: [
             { id: 0, label: 'Too broad' },
             { id: 1, label: 'Too narrow' },
