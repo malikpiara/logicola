@@ -4439,7 +4439,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A follower is a fan.",
         },
         {
-          "answer": "This violates 1 (too broad — the Netherlands flies blue, white, and red; the arrangement is doing the work the colours can’t).",
+          "answer": "This violates 1 (too broad — Mexico flies green, white, and red; the arrangement and the eagle are doing the work the colours can’t).",
           "correctId": [
             0,
           ],
@@ -4474,7 +4474,7 @@ exports[`setQ > matches snapshot 1`] = `
               "label": "Has non-essential properties",
             },
           ],
-          "prompt": "As long as a flag is blue, white, and red, it is a French flag.",
+          "prompt": "As long as a flag is green, white, and red, it is an Italian flag.",
         },
       ],
       "slugs": [

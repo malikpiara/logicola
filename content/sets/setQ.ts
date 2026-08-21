@@ -1688,6 +1688,12 @@ const setQ: Set = {
         //    author passages that RHYME with them instead: same lesson,
         //    new sentence. (This boundary differs from the ORIGINAL PROGRAM,
         //    which is the thing we port.)
+        //
+        // 4. Conditional phrasings ("as long as a flag is...") make strong
+        //    specimens: a definition asserts two directions at once, but the
+        //    conditional states ONLY the failing arrow — nothing true to
+        //    hide behind — and "as long as" reads as careful hedging, which
+        //    makes the near-miss feel nearer (Malik, 2026-08-21).
         {
           id: '3.102',
           prompt: 'A superfood is any food that’s good for you.',
@@ -1932,7 +1938,10 @@ const setQ: Set = {
         // upvotes — and the replies refuted it by counterexample, posting
         // rearranged tricolours captioned "behold, a France". Rule-1
         // refutation performed natively by the internet; the drill's method
-        // occurring in nature. The campaign's true closer.
+        // occurring in nature. The country moved from France to Italy
+        // (Malik, 2026-08-21) so the item rhymes with the found artifact
+        // instead of copying it — the same courtesy the 3.2a boundary
+        // extends to the book. The campaign's true closer.
         {
           id: '3.116',
           // Malik's rephrase (2026-08-21): the conditional form states ONLY
@@ -1941,7 +1950,7 @@ const setQ: Set = {
           // as" also reads as careful hedging, which makes it feel MORE
           // almost-right. And it is now nearly verbatim the wild artifact.
           prompt:
-            'As long as a flag is blue, white, and red, it is a French flag.',
+            'As long as a flag is green, white, and red, it is an Italian flag.',
           options: [
             { id: 0, label: 'Too broad' },
             { id: 1, label: 'Too narrow' },
@@ -1953,7 +1962,7 @@ const setQ: Set = {
           ],
           correctId: [0],
           answer:
-            'This violates 1 (too broad — the Netherlands flies blue, white, and red; the arrangement is doing the work the colours can’t).',
+            'This violates 1 (too broad — Mexico flies green, white, and red; the arrangement and the eagle are doing the work the colours can’t).',
         },
       ],
     },
