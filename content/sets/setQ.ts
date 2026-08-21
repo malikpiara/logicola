@@ -1786,6 +1786,82 @@ const setQ: Set = {
           answer:
             'This violates 1 (too broad — birthdays qualify) and 7 (cost and cake are exactly what a wedding doesn’t need).',
         },
+        // THE THIRD AUTHORING PRINCIPLE (Malik-confirmed, 2026-08-21): the flaw
+        // must be findable from ordinary usage and common knowledge alone —
+        // if the counterexample requires a doctrine, the item tests the
+        // doctrine, not the skill. Gensler's own counterexamples (whales,
+        // ostriches, kittens) all pass this test, and he left justified-true-
+        // belief out of his own chapter despite knowing Gettier. Parked under
+        // this principle, by name: prime-admits-1 (needs the mathematicians'
+        // convention), planet-minus-clearing (needs the IAU), temperature-as-
+        // speed (needs kinetic theory), knowledge-as-JTB (needs Gettier), and
+        // cheating-as-rule-breaking (the counterexample turned out to be
+        // contestable — a footballer diving in plain view breaks rules openly
+        // and is still called a cheat).
+        {
+          id: '3.108',
+          prompt: 'A living thing is anything that grows and reproduces.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0, 1],
+          answer:
+            'This violates 1 (too broad — crystals grow, fire spreads) and 2 (too narrow — mules don’t reproduce).',
+        },
+        {
+          id: '3.109',
+          prompt: 'A promise is saying you will do something.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0],
+          answer:
+            'This violates 1 (too broad — “I’ll probably be late” says you’ll do something and promises nothing).',
+        },
+        {
+          id: '3.110',
+          prompt: 'Winning is beating your opponent.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [1],
+          answer:
+            'This violates 2 (too narrow — solitaire and lotteries are won with no opponent at all).',
+        },
+        {
+          id: '3.111',
+          prompt: 'A secret is something only you know.',
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0, 1],
+          answer:
+            'This violates 1 (too broad — last night’s dream is known only to you and is no secret) and 2 (too narrow — two people share secrets constantly).',
+        },
       ],
     },
   ],
