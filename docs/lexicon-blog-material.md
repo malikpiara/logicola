@@ -150,6 +150,15 @@ pronoun-free variants ("No one is A without being B") if a purist ever
 objects — the alternative to modernising was never "unchanged", it was
 "differently changed".
 
+## The Set Q positioning line (Malik-approved for marketing, 2026-08-21)
+
+The drill's identity shifted from "spot the flaw in this definition" to
+**"spot the flaw in how people actually talk."** Its newest item is a
+Reddit comment with 2.7K upvotes; its oldest is Plato being refuted by a
+plucked chicken. Twenty-four centuries, same move — and the internet
+turned out to be full of definitions begging to be graded. This is the
+frame for a Set Q-only post if one gets written.
+
 ## Lines worth keeping
 
 - "The instruments kept disagreeing with us, which is how you know
