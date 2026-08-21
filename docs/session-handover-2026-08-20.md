@@ -290,6 +290,26 @@ never touches Set A, and his 24-slot selector arithmetic (`C:wz%12`,
 live exports. `vocabulary-experiment.md` deliberately NOT updated with
 the prevalence correction — Malik wants the L2 framing settled first.
 
+## 10. The Set Q campaign (2026-08-21)
+
+Gensler's sixty stay at canonical parity (Dell→Apple and one typo the
+only emendations; egghead reviewed and KEPT against its instruments).
+Fifty-five dated specimens joined across six slates, ending at 115.
+Answers converted to number-plus-tag ("This violates 4 (obscure
+terms)"). Three authoring principles live as the block comments in
+setQ.ts: (1) specimens must feel ALMOST RIGHT or be known by heart;
+(2) the book's 3.2a exercises are never ported — the companion text's
+exercises stay its own; we author rhymes; (3) the flaw must be findable
+from ordinary usage and common knowledge — doctrine-locked items
+(prime-admits-1, planet/IAU, JTB/Gettier, temperature-as-speed) are
+parked by name. The rule/combination census drove the later slates;
+seven unnatural rule-pairs are closed rather than force-filled. Parked
+items with reasons: ceasefire-is-peace, true-means-trending,
+fair-means-Pareto, hot-dog, the cloud quip, cheating-as-rule-breaking
+(killed by its own counterexample). The multi-select pick cap, the
+"pick up to 3" line and mid-attempt hint review all apply to Set Q
+for free (its max accepted set is exactly 3).
+
 ## Open
 
 - **None of this is in production.** `main` has no Set R at all, 87
