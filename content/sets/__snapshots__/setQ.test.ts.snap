@@ -4439,7 +4439,7 @@ exports[`setQ > matches snapshot 1`] = `
           "prompt": "A follower is a fan.",
         },
         {
-          "answer": "This violates 1 (too broad — Mexico flies green, white, and red; the arrangement and the eagle are doing the work the colours can’t).",
+          "answer": "This violates 1 (too broad — Mexico and Hungary both fly green, white, and red; arrangement and emblem are doing the work the colours can’t).",
           "correctId": [
             0,
           ],
@@ -4475,6 +4475,84 @@ exports[`setQ > matches snapshot 1`] = `
             },
           ],
           "prompt": "As long as a flag is green, white, and red, it is an Italian flag.",
+        },
+        {
+          "answer": "This violates 1 (too broad — mash and vodka are made from potatoes) and 2 (too narrow — sweet-potato fries are fries, and sweet potatoes aren’t even potatoes).",
+          "correctId": [
+            0,
+            1,
+          ],
+          "id": "3.117",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "As long as it's made from potatoes, it's fries.",
+        },
+        {
+          "answer": "This violates 2 (too narrow — polar bears are white and live on the ice) and 7 (brown and forest are not what makes a bear).",
+          "correctId": [
+            1,
+            6,
+          ],
+          "id": "3.118",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A bear is a large brown forest animal.",
         },
       ],
       "slugs": [
