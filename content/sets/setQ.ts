@@ -1927,6 +1927,28 @@ const setQ: Set = {
           answer:
             'This violates 1 (too broad — bots and hate-follows follow) and 2 (too narrow — devoted offline fans follow nothing).',
         },
+        // Found in the wild (Malik, 2026-08-21): a Reddit comment asserted
+        // "as long as it's blue, white, and red, it's a French flag" — 2.7K
+        // upvotes — and the replies refuted it by counterexample, posting
+        // rearranged tricolours captioned "behold, a France". Rule-1
+        // refutation performed natively by the internet; the drill's method
+        // occurring in nature. The campaign's true closer.
+        {
+          id: '3.116',
+          prompt: "A French flag is any flag that's blue, white, and red.",
+          options: [
+            { id: 0, label: 'Too broad' },
+            { id: 1, label: 'Too narrow' },
+            { id: 2, label: 'Circular' },
+            { id: 3, label: 'Uses poorly understood terms' },
+            { id: 4, label: 'Poor match in vagueness' },
+            { id: 5, label: 'Poor match in emotional tone' },
+            { id: 6, label: 'Has non-essential properties' },
+          ],
+          correctId: [0],
+          answer:
+            'This violates 1 (too broad — the Netherlands flies blue, white, and red; the arrangement is doing the work the colours can’t).',
+        },
       ],
     },
   ],

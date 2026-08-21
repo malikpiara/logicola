@@ -4438,6 +4438,44 @@ exports[`setQ > matches snapshot 1`] = `
           ],
           "prompt": "A follower is a fan.",
         },
+        {
+          "answer": "This violates 1 (too broad — the Netherlands flies blue, white, and red; the arrangement is doing the work the colours can’t).",
+          "correctId": [
+            0,
+          ],
+          "id": "3.116",
+          "options": [
+            {
+              "id": 0,
+              "label": "Too broad",
+            },
+            {
+              "id": 1,
+              "label": "Too narrow",
+            },
+            {
+              "id": 2,
+              "label": "Circular",
+            },
+            {
+              "id": 3,
+              "label": "Uses poorly understood terms",
+            },
+            {
+              "id": 4,
+              "label": "Poor match in vagueness",
+            },
+            {
+              "id": 5,
+              "label": "Poor match in emotional tone",
+            },
+            {
+              "id": 6,
+              "label": "Has non-essential properties",
+            },
+          ],
+          "prompt": "A French flag is any flag that's blue, white, and red.",
+        },
       ],
       "slugs": [
         "informal",
