@@ -1,5 +1,6 @@
 import { Question } from '@/content/types';
 import { useEffect, useEffectEvent, useRef } from 'react';
+import { markShortcutsUsed } from '@/lib/shortcutTeaching';
 
 /** How long a partially-typed abbreviation stays alive before resetting. */
 const ABBREVIATION_BUFFER_MS = 1000;
@@ -85,6 +86,8 @@ const useKeyboardNavigation = ({
     if (matchIndex !== -1) {
       resetAbbreviationBuffer();
       selectOption(matchIndex);
+      // The lesson landed — the shortcut tooltips retire (long loop).
+      markShortcutsUsed();
       return true;
     }
 
@@ -196,6 +199,8 @@ const useKeyboardNavigation = ({
         if (idx >= currentQuestion.options.length) break;
         event.preventDefault();
         selectOption(idx);
+        // The lesson landed — the shortcut tooltips retire (long loop).
+        markShortcutsUsed();
         break;
       }
       default:

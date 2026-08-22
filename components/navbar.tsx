@@ -46,8 +46,11 @@ const Navbar = () => {
     // navbar shifts with the page body instead of the sheet sliding over it.
     // Inert everywhere else: the offset variable is only set while that sheet
     // is open (see globals.css).
+    // relative z-50: the Exercises menu must open ABOVE the quiz's
+    // reference pane (z-30) — the pane never sits under the bar itself
+    // (quiz-pane-push shifts it), so the raise can't occlude anything.
     <nav
-      className='quiz-pane-push border-gray-200 hidden md:block'
+      className='quiz-pane-push border-gray-200 hidden md:block relative z-50'
       style={
         {
           background: 'var(--nav-ground)',

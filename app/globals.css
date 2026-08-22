@@ -1126,6 +1126,87 @@
   );
 }
 
+/* ---- Pixel tooltips (Radix Tooltip under a pixel chip; contract:
+   docs/pixel-ui.md § Tooltips) -------------------------------------------
+   Plain labels for icon-only DESKTOP controls, shortcut teaching as
+   "Close — Esc" / "Press 3". Chrome-ink chip. Positioning, delay
+   grouping, Esc and aria all belong to Radix (components/ui/pixelTip);
+   only the look and the motion live here. The reveal MOVES 3px in from
+   its side — feedback that points at what it belongs to. */
+.qtip {
+  z-index: 80;
+  padding: 4px 9px;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  background: #3f0167;
+  color: #ffffff;
+  animation: qtip-in 0.15s var(--ease-out-quart);
+}
+
+.qtip[data-side='top'] {
+  --qtip-dy: 3px;
+}
+.qtip[data-side='bottom'] {
+  --qtip-dy: -3px;
+}
+.qtip[data-side='left'] {
+  --qtip-dx: 3px;
+}
+.qtip[data-side='right'] {
+  --qtip-dx: -3px;
+}
+
+@keyframes qtip-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--qtip-dx, 0), var(--qtip-dy, 0));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A key inside a tip — the shortcut rendered as the thing you press.
+   Explicit colour: a portal already lifts the tip out of
+   .quiz-immersive's `kbd` rule (which paints keys in the set's ink —
+   the unreadable rust-on-plum Malik caught), but the chip's own
+   contract shouldn't depend on where it renders. */
+.qtip-kbd {
+  font: inherit;
+  padding: 0 5px;
+  margin: 0 1px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+/* Touch has no hover — tooltips are pointer hardware territory (HIG).
+   Radix never opens on touch; this is the belt to its braces. */
+@media (hover: none) {
+  .qtip {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qtip {
+    animation: none;
+  }
+}
+
+/* The grip darkens for the WHOLE drag (driven by isPaneResizing, not
+   :active — the cursor outruns the 16px handle constantly mid-drag).
+   Unlayered so it outranks the hover/focus utilities: pressed is the
+   top of the ladder. gray-500 — one step past the focus tone. */
+.qgrip-wrap[data-resizing] .qgrip-pill {
+  background: #6a7282;
+}
+
 /* The explicit way down — M3 requires a collapse affordance at full
    height, and the grabber cycle is forward-only. */
 .qsheet-x {

@@ -3,6 +3,8 @@ import React from 'react';
 import KatexSpan from './katexSpan';
 import { CheckIcon, TimesIcon } from './quiz/pixelIcons';
 import { CURSOR_W, FOCUS_W, focusR, ringBand, spriteClip } from '@/lib/pixel';
+import { PixelTip } from '@/components/ui/pixelTip';
+import { shortcutsUsed } from '@/lib/shortcutTeaching';
 
 /** Selection band width (the Tint treatment's `sringw`). */
 const SELECT_W = 4;
@@ -119,6 +121,15 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
     const isRevealedCorrect = showSolution && isCorrect;
     const isRuledOut =
       (showSolution && !isCorrect) || hasBeenIncorrectlyGuessed;
+
+    // Long loop (lib/shortcutTeaching.ts): once this device has selected
+    // by key, the shortcut-tip scaffold retires. Hooks live ABOVE the
+    // non-immersive early return (rules of hooks); effect-gated so SSR
+    // and first paint agree. Retirement lands from the next question on.
+    const [tipRetired, setTipRetired] = React.useState(false);
+    React.useEffect(() => {
+      setTipRetired(shortcutsUsed());
+    }, []);
 
     if (!immersive) {
       return (
@@ -253,6 +264,23 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
     // `is-ringed`, NOT the lab's `ring`: in the app that word is Tailwind
     // v4's ring utility (a 1px currentColor box-shadow), and the collision
     // drew a stray rectangle around every ringed pill.
+    //
+    // Shortcut-teaching tooltip (Malik, 2026-08-22; docs/pixel-ui.md §
+    // Tooltips): a labeled control may carry a tip when it teaches
+    // something the label doesn't — here, that the badge is a KEY.
+    // Hover-only (keyboard users are already pressing keys; arrow-driven
+    // focus would flash a tip on every move), desktop-only by the
+    // hover:none rule, and silent once the solution shows — a finished
+    // question teaches nothing.
+    const shortcutTip = abbreviation ? (
+      <>
+        Type <kbd className='qtip-kbd'>{abbreviation}</kbd>
+      </>
+    ) : typeof index === 'number' && index >= 1 && index <= 9 ? (
+      <>
+        Press <kbd className='qtip-kbd'>{index}</kbd>
+      </>
+    ) : null;
     return (
       <div
         className={classNames('qopt-wrap', {
@@ -261,7 +289,13 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
         })}
         style={wrapStyle}
       >
-        {pill}
+        {shortcutTip && !showSolution && !tipRetired ? (
+          <PixelTip tip={shortcutTip} side='top' hoverOnly>
+            {pill}
+          </PixelTip>
+        ) : (
+          pill
+        )}
       </div>
     );
   }

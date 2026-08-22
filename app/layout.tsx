@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { PixelTipProvider } from '@/components/ui/pixelTip';
 import { Roboto_Flex } from 'next/font/google';
 import './globals.css';
 import thumbnail from '../public/thumbnail.jpg';
@@ -92,7 +93,9 @@ export default function RootLayout({
       <body
         className={`antialiased min-h-screen bg-white text-primaryColor ${robotoFlex.className}`}
       >
-        {children}
+        {/* One tooltip provider for the whole app: Radix's delay
+            grouping (300ms first, neighbors instant) lives here. */}
+        <PixelTipProvider>{children}</PixelTipProvider>
         <Toaster />
         <RegisterSW />
         <WebsiteAnalytics />

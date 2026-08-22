@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { GemButton } from './gemButton';
 import { BookHeartIcon, TimesIcon } from './pixelIcons';
 import { sheetLeftClip, spriteClip } from '@/lib/pixel';
+import { PixelTip } from '@/components/ui/pixelTip';
 import Option from '../option';
 import Prompt from '../prompt';
 import { EndScreen } from './endScreen';
@@ -96,6 +97,13 @@ const MOBILE_BAR_CLIP = spriteClip(0, 4, 2);
 
 // The reference panel's ✕ chip: R=8 is the 32px chip scale (pixel-ui.md).
 const CLOSE_CHIP_CLIP = spriteClip(0, 8);
+
+// The desktop pane's TEXT ink: the site chrome's own #3F0167 (navbar,
+// footer — "the blue", Malik 2026-08-22), not the set ink. The pane sits
+// on the quiz's OUTSIDE, so it speaks the outside's voice; each set's
+// accent still rides in for the chips and codes, which keeps the
+// personality. Mobile keeps the full set ink — decided the same day.
+const PANE_INK = '#3F0167';
 
 // The reference sheet's silhouette: stair-stepped left corners at chip
 // scale (R=12 — the drawer's old 10px curve, rasterised), square against
@@ -480,6 +488,71 @@ const QuizSession: React.FC<QuizSessionProps> = ({
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
+
+  /**
+   * vaul 1.1.2 never forwards `modal` to the Radix Dialog it wraps, so
+   * Radix manages body pointer-events as if BOTH our non-modal drawers
+   * were modal — it writes `pointer-events: none` on <body> at drawer
+   * mount and on layer changes. vaul compensates with one-shot "auto"
+   * restores, and those restores LOSE the race in this tree (measured:
+   * the page goes pointer-dead the moment the question screen mounts —
+   * Malik's Set R report, 2026-08-22). One-shot timing can't win a
+   * race against another library's effect order, so this is a WATCHDOG:
+   * while the question flow is mounted, any `none` written to body is
+   * reverted. Terminates (writing 'auto' re-fires the observer, which
+   * then does nothing) and is safe by construction: every layer this
+   * screen can show is non-modal by decision.
+   */
+  useEffect(() => {
+    if (showStartScreen || showEndScreen) return;
+    const restore = () => {
+      if (document.body.style.pointerEvents === 'none') {
+        document.body.style.pointerEvents = 'auto';
+      }
+    };
+    restore();
+    const observer = new MutationObserver(restore);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['style'],
+    });
+    return () => observer.disconnect();
+  }, [showStartScreen, showEndScreen]);
+
+  /**
+   * Non-modal panel focus etiquette (2026-08-22): opening the desktop
+   * pane moves focus to the pane REGION (tabIndex −1), closing returns
+   * it to the Guide toggle. The region, deliberately not the ✕: a
+   * programmatic focus on the ✕ tripped its tooltip's :focus-visible
+   * reveal, pinning "Close — Esc" on screen for as long as the pane was
+   * open (Malik's report). Focusing the region announces the pane's
+   * title, keeps Tab-to-✕ one stop away, and triggers nothing.
+   */
+  const paneRegionRef = useRef<HTMLDivElement | null>(null);
+  const guideToggleRef = useRef<HTMLButtonElement | null>(null);
+  const prevGuideOpenRef = useRef(isGuideOpen);
+  useEffect(() => {
+    if (prevGuideOpenRef.current === isGuideOpen) return;
+    prevGuideOpenRef.current = isGuideOpen;
+    // rAF with one retry: the pane mounts through a portal, and on the
+    // FIRST open its nodes can miss even the next frame (the same
+    // late-attach that broke the snap measurement). Two frames covers
+    // it; if the node still isn't there, focus stays put — never loop.
+    const target = () => (isGuideOpen ? paneRegionRef : guideToggleRef).current;
+    let retry = 0;
+    const raf = requestAnimationFrame(() => {
+      const el = target();
+      if (el) {
+        el.focus();
+        return;
+      }
+      retry = requestAnimationFrame(() => target()?.focus());
+    });
+    return () => {
+      cancelAnimationFrame(raf);
+      if (retry) cancelAnimationFrame(retry);
+    };
+  }, [isGuideOpen]);
 
   const quizCardRef = useRef<HTMLDivElement | null>(null);
   // Latest values for the touch handlers without re-binding them —
@@ -1079,6 +1152,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                     system's own voice (docs/pixel-ui.md § Guide button). */}
                 <button
                   type='button'
+                  ref={guideToggleRef}
                   onClick={() => setIsGuideOpen((open) => !open)}
                   aria-expanded={isGuideOpen}
                   aria-controls='quiz-reference-pane'
@@ -1308,83 +1382,144 @@ const QuizSession: React.FC<QuizSessionProps> = ({
               card's top-right. Below `lg` it never opens — the bottom sheet
               owns the guide there. */}
           {hasGuide && (
-            <Drawer
-              direction='right'
-              open={isGuideOpen}
-              onOpenChange={setIsGuideOpen}
-              modal={false}
-              dismissible={false}
-              shouldScaleBackground={false}
-            >
-              {/* The branded white sheet (the lab's panel grammar without
+            <>
+              {/* Resize handle — straddling the pane's edge from the
+                  OUTSIDE (Malik, 2026-08-22). A fixed SIBLING of the
+                  drawer, not a child: the pane's stair clips swallow
+                  anything protruding past its own box. Rides paneWidth;
+                  arrows nudge the width on the 16px grid (WCAG 2.1.1 —
+                  left = wider, the direction the edge moves). z-40:
+                  above the pane (z-30), below the navbar (z-50). */}
+              {isGuideOpen && (
+                <PixelTip tip='Resize' side='left' suppressed={isPaneResizing}>
+                  <div
+                    role='separator'
+                    tabIndex={0}
+                    aria-orientation='vertical'
+                    aria-label='Resize the reference guide'
+                    aria-valuenow={paneWidth}
+                    aria-valuemin={384}
+                    aria-valuemax={720}
+                    onPointerDown={startPaneResize}
+                    onKeyDown={(event) => {
+                      if (
+                        event.key !== 'ArrowLeft' &&
+                        event.key !== 'ArrowRight'
+                      )
+                        return;
+                      event.preventDefault();
+                      const delta = event.key === 'ArrowLeft' ? 16 : -16;
+                      setPaneWidth((width) =>
+                        Math.min(720, Math.max(384, width + delta))
+                      );
+                    }}
+                    data-resizing={isPaneResizing || undefined}
+                    className='qgrip-wrap group fixed inset-y-0 z-40 hidden w-4 cursor-col-resize items-center justify-center animate-in fade-in duration-300 focus-visible:outline-none lg:flex'
+                    style={{ right: paneWidth - 8 }}
+                  >
+                    {/* Pressed = darkest (Malik, 2026-08-22): the grip
+                        answers the grab for the WHOLE drag via
+                        isPaneResizing — :active would let go the moment
+                        the cursor outruns the 16px handle. Ladder: muted
+                        → hover gray-300 → focus gray-400 → drag (see
+                        .qgrip-pill in globals.css). The tip is
+                        `suppressed` for the same span. */}
+                    <div
+                      className='qgrip-pill h-24 w-2 bg-muted transition-colors group-hover:bg-gray-300 group-focus-visible:bg-gray-400'
+                      style={{ clipPath: GRIP_CLIP }}
+                    />
+                  </div>
+                </PixelTip>
+              )}
+              <Drawer
+                direction='right'
+                open={isGuideOpen}
+                onOpenChange={setIsGuideOpen}
+                modal={false}
+                dismissible={false}
+                shouldScaleBackground={false}
+              >
+                {/* The branded white sheet (the lab's panel grammar without
                   its surface colour — REJECTED by Malik 2026-08-08: an
                   inked panel moved the focus from the quiz): stair-
                   stepped left corners, a 2px edge rule that follows the
                   stairs (two stacked clips — see SHEET_OUTER_CLIP), the
                   sprite ✕ chip, the REFERENCE mono eyebrow, and a pixel
                   resize grip. */}
-              <DrawerContent
-                side='right'
-                id='quiz-reference-pane'
-                className='hidden rounded-none border-0 bg-gray-200 lg:flex'
-                style={
-                  {
-                    width: paneWidth,
-                    clipPath: SHEET_OUTER_CLIP,
-                    // The accent ALONE rides in (never the surface — the
-                    // sheet stays white, decided 2026-08-08): the guide's
-                    // chips, code column and emphasis mark read it for
-                    // hierarchy.
-                    '--quiz-accent': quizAccent,
-                  } as React.CSSProperties
-                }
-              >
-                <div
-                  className='flex h-full w-full flex-col bg-background'
-                  style={{ clipPath: SHEET_INNER_CLIP }}
+                <DrawerContent
+                  side='right'
+                  id='quiz-reference-pane'
+                  // z-30, under the navbar's z-50: the Exercises menu must
+                  // open ABOVE the pane (Malik, 2026-08-22) — safe because
+                  // quiz-pane-push already shifts the bar out from under
+                  // the pane, so nothing of the nav paints over its header.
+                  className='z-30 hidden rounded-none border-0 bg-gray-200 lg:flex'
+                  style={
+                    {
+                      width: paneWidth,
+                      clipPath: SHEET_OUTER_CLIP,
+                      // The accent AND an ink ride in — never the surface
+                      // (white stays, decided 2026-08-08). The ink is the
+                      // SITE CHROME's #3F0167 rather than the set's
+                      // (Malik, 2026-08-22): the pane lives on the quiz's
+                      // outside and speaks the outside's voice; the set
+                      // accent keeps the personality in chips and codes.
+                      '--quiz-accent': quizAccent,
+                      '--quiz-fg': PANE_INK,
+                    } as React.CSSProperties
+                  }
                 >
                   <div
-                    role='separator'
-                    aria-orientation='vertical'
-                    aria-label='Resize the reference guide'
-                    onPointerDown={startPaneResize}
-                    className='group absolute inset-y-0 left-0 z-10 flex w-4 cursor-col-resize items-center justify-center'
+                    ref={paneRegionRef}
+                    tabIndex={-1}
+                    className='flex h-full w-full flex-col bg-background outline-none'
+                    style={{ clipPath: SHEET_INNER_CLIP }}
                   >
-                    <div
-                      className='h-24 w-2 bg-muted transition-colors group-hover:bg-gray-300'
-                      style={{ clipPath: GRIP_CLIP }}
-                    />
-                  </div>
-                  <div className='flex h-14 shrink-0 items-center justify-between border-b border-gray-100 pl-7 pr-4'>
-                    {/* Same eyebrow voice as the card's header — the panel
+                    <div className='flex h-14 shrink-0 items-center justify-between border-b border-gray-100 pl-7 pr-4'>
+                      {/* Same eyebrow voice as the card's header — the panel
                         answers the GUIDE chip in kind. */}
-                    <DrawerTitle className='font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-gray-600'>
-                      Reference
-                    </DrawerTitle>
-                    <DrawerDescription className='sr-only'>
-                      The well-formed formula guide for this exercise set. Drag
-                      the left edge to resize.
-                    </DrawerDescription>
-                    <button
-                      type='button'
-                      onClick={() => setIsGuideOpen(false)}
-                      aria-label='Close reference guide'
-                      className='qguide-close inline-flex h-8 w-8 shrink-0 items-center justify-center'
-                      style={{ clipPath: CLOSE_CHIP_CLIP }}
-                    >
-                      <TimesIcon className='h-3 w-3' />
-                    </button>
-                  </div>
-                  {/* Container-queried so the guide's columns and heading
+                      {/* One surface, one name — matches the mobile
+                        morph's title (2026-08-22). */}
+                      <DrawerTitle className='font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-gray-600'>
+                        Reference guide
+                      </DrawerTitle>
+                      <DrawerDescription className='sr-only'>
+                        The well-formed formula guide for this exercise set.
+                        Drag the left edge to resize.
+                      </DrawerDescription>
+                      {/* Icon-only control → plain tooltip, teaching the
+                        shortcut while it labels (docs/pixel-ui.md §
+                        Tooltips). */}
+                      <PixelTip
+                        tip={
+                          <>
+                            Close — <kbd className='qtip-kbd'>Esc</kbd>
+                          </>
+                        }
+                        side='bottom'
+                      >
+                        <button
+                          type='button'
+                          onClick={() => setIsGuideOpen(false)}
+                          aria-label='Close reference guide'
+                          className='qguide-close inline-flex h-8 w-8 shrink-0 items-center justify-center'
+                          style={{ clipPath: CLOSE_CHIP_CLIP }}
+                        >
+                          <TimesIcon className='h-3 w-3' />
+                        </button>
+                      </PixelTip>
+                    </div>
+                    {/* Container-queried so the guide's columns and heading
                       sizes follow the sheet's current width (it's
                       resizable), not the viewport — single-column when
                       narrow, opening up as the user drags it wider. */}
-                  <div className='@container min-h-0 flex-1 overflow-y-auto pl-7 pr-6 py-6 flex flex-col gap-10 select-text'>
-                    <WffGuide subSet={subSet} />
+                    <div className='@container min-h-0 flex-1 overflow-y-auto pl-7 pr-6 py-6 flex flex-col gap-10 select-text'>
+                      <WffGuide subSet={subSet} />
+                    </div>
                   </div>
-                </div>
-              </DrawerContent>
-            </Drawer>
+                </DrawerContent>
+              </Drawer>
+            </>
           )}
         </div>
       )}
