@@ -183,7 +183,23 @@ beside the prompt: wrong relationship by spacing. "The boxes" remark
 was Malik's own confusion over the dashed guides, not a rejection to
 act on. The lab dials dock BESIDE the stage on ≥900px viewports
 (always open — the strip had covered the subject on desktop) and stay a
-self-closing bottom strip on phones. Port pending.
+self-closing bottom strip on phones.
+
+PORTED (same evening, after Malik's phone showed the old centering —
+the lab had decided it, the product hadn't): `components/quiz/index.tsx`
+now renders `.qpin` (prompt only) + `.qanswer` (FeedbackSlot → qheader
+→ qmulti → options). Below lg: `qcontainer` is `justify-start`, the
+question block flexes to fill, `.qanswer { margin-top: auto }` sinks
+the group, with `padding-bottom: 144px + safe-area` so the last option
+stops a breath above the sheet (list sets only; grid sets keep their
+internal scroller, now hosted by `.qanswer` with flex:1/min-height:0).
+The 2026-08-19 live-sizing exception was re-targeted from `.qpin` to
+`.qanswer` and KEPT — with the group bottom-anchored it costs nothing on
+list sets (the hint grows upward into the gap). Desktop: feedback above
+the question, column still centered (the anchoring finding was a phone
+finding; desktop anchoring is Malik's call if he wants it). Measured on
+Set C at 430×932: prompt y=96, options 468/546/624/702 before AND after
+a miss, last option 68px above the sheet, no page scroll.
 
 ## Learnings worth carrying (2026-08-22)
 
@@ -218,10 +234,9 @@ self-closing bottom strip on phones. Port pending.
 
 ## Open / next
 
-0. **Port the question-screen layout** (decided above): FeedbackSlot
-   above the question header; column = prompt top / answer group
-   (feedback · question · options) bottom; reassess the 2026-08-19
-   live-sizing exception against the new gap model.
+0. ~~Port the question-screen layout~~ — done (see above). Open
+   sub-question: desktop anchoring (prompt top / palette bottom on
+   wide screens too, or keep the centered Typeform column).
 1. **On-device pass** of the port (gestures need thumbs; the labs were
    phone-tested, the port only pane-tested).
 2. **Set Q start screen** (optional): the removed "what is a definition"
