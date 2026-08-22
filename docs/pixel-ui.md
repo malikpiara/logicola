@@ -415,3 +415,46 @@ The lab's `Question · M` / `Start · M` views. Anatomy, top to bottom:
   immersive mode (badge + label pill, hint attached beneath the pill that
   earned it); port the classes state-for-state: rest / `is-selected` /
   `is-ruled` / `is-revealed`.
+
+## Tooltips (decided 2026-08-22)
+
+The rules, distilled from M3's tooltip guidelines + NN/g's tooltip
+article + WCAG 1.4.13, and enforced by `components/ui/pixelTip.tsx`:
+
+- **Desktop only.** Touch has no hover (HIG's ground truth), so
+  `@media (hover: none)` removes tips entirely — which is why nothing
+  essential may ever live in one.
+- **Plain labels for icon-only controls; never a restatement.** A
+  control with a visible text label gets no tooltip that repeats it
+  (M3's own don't) — but it MAY carry a tip that teaches something the
+  label doesn't (Malik's refinement, 2026-08-22): the option pills tip
+  their keyboard shortcut (`Press 3`, `Type aa`), which is what turns
+  the badge from an index into a KEY in the user's head. Every eligible
+  control gets its tip — NN/g's consistency rule: tips users can't
+  predict are tips users never discover.
+- **Shortcut teaching rides along** in the fixed form `Label — Key`
+  ("Close — Esc") on icon-only controls, or stands alone (`Press 3`) on
+  labeled ones. This is the pedagogy channel. Option tips are
+  hover-only (`hoverOnly`): keyboard users are already pressing the
+  keys, and arrow-driven focus would flash a tip on every move.
+- **Sentence case, never all-caps** (Malik, 2026-08-22) — tips are
+  read, not scanned as labels.
+- **The mechanics are non-negotiable:** 300ms reveal delay, hover and
+  `:focus-visible` both reveal, Esc dismisses without pointer movement
+  (1.4.13), `role="tooltip"` + `aria-describedby` so screen readers get
+  the text with no hover at all, chrome-ink chip (#3F0167) in the
+  keycaps' Sprite-4px clip.
+- **Radix underneath, since 2026-08-22** (`@radix-ui/react-tooltip`,
+  in-family with dialog/navigation-menu/vaul): the CSS-only spike died
+  of geometry — a tip that is a DESCENDANT of a clipped or scrolling
+  control gets eaten (the pane's ✕ tip was cut by the pane's own stair
+  clip; Set R's first-row tips by the grid's overflow). The portal
+  escapes every ancestor, collision handling keeps tips in the
+  viewport, and the Provider's `skipDelayDuration` IS the warm-window
+  delay grouping. Never re-spike this: the ring-band lesson, third
+  time.
+
+Current instances: the pane's resize handle ("Resize"), the pane's ✕
+("Close — Esc"), the footer's social chips, the option pills' shortcut
+tips (hover-only; retire per device once a key selection happens). Candidates need to pass the
+icon-only test before joining.

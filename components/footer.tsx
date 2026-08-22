@@ -4,6 +4,7 @@ import { NewBadge } from './newBadge';
 import { CurrentYear } from './currentYear';
 import { NewsletterForm } from '@/components/marketing/newsletterForm';
 import { markSvg, SPRITE_CLIP, RING_BAND } from '@/lib/marketingTheme';
+import { PixelTip } from '@/components/ui/pixelTip';
 import { camoBody } from '@/lib/patterns';
 import { gemClip } from '@/lib/pixel';
 
@@ -107,22 +108,28 @@ function SocialChip({
   children: React.ReactNode;
 }) {
   return (
-    <Link
-      href={href}
-      aria-label={label}
-      className='motion-colors -m-[7px] inline-flex h-11 w-11 items-center justify-center'
-      style={{ color: TYPE }}
-    >
-      {/* 30px white gem chip inside a 44px tap box: the figure move that
+    // Icon-only link → plain tooltip naming it (docs/pixel-ui.md §
+    // Tooltips; NN/g's consistency rule — every icon-only control gets
+    // one, not just some). Above the chip: the footer sits at the
+    // page's bottom edge.
+    <PixelTip tip={label} side='top'>
+      <Link
+        href={href}
+        aria-label={label}
+        className='motion-colors -m-[7px] inline-flex h-11 w-11 items-center justify-center'
+        style={{ color: TYPE }}
+      >
+        {/* 30px white gem chip inside a 44px tap box: the figure move that
           keeps the icons off the band's colour (footer lab, Malik's
           catch), and the HIG tap floor. */}
-      <span
-        className='inline-flex h-[30px] w-[30px] items-center justify-center bg-white'
-        style={{ clipPath: GEM }}
-      >
-        {children}
-      </span>
-    </Link>
+        <span
+          className='inline-flex h-[30px] w-[30px] items-center justify-center bg-white'
+          style={{ clipPath: GEM }}
+        >
+          {children}
+        </span>
+      </Link>
+    </PixelTip>
   );
 }
 
