@@ -66,6 +66,24 @@ Set Q morph/✕/zebra/fresh examples; Set R fresh text + styled ∴).
 `[hidden]`-vs-display audit of the product: clean (Tailwind's `hidden`
 utility only).
 
+## Device-pass fixes (later 2026-08-22, in working tree — uncommitted)
+
+Three findings from Malik's on-device pass, all implemented + verified:
+
+1. **Back collapses the sheet** before leaving the page (M3's back
+   contract): expand pushes one history entry; Back or any UI collapse
+   pops it. Known accepted quirk: routing away with the sheet open
+   leaves the spent entry (one extra Back later) — popping it during a
+   route transition would yank the user backwards.
+2. **Flick works on Set R now**: the options-region guard yields only
+   while the region can still scroll DOWN — at list end the flick
+   claims the swipe. The old guard blanket-blocked the always-scrollable
+   grid.
+3. **The sheet's top rule fades**: transparent collapsed (the sheet
+   fuses with the page), ink-12% once expanded — moved from inline
+   style to `.quiz-controls-drawer[data-expanded]` CSS so it can
+   transition; unlayered so it outranks the border-0 utility.
+
 ## Open / next
 
 1. **On-device pass** of the port (gestures need thumbs; the labs were

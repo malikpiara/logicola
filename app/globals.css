@@ -1109,6 +1109,23 @@
   transition-delay: 0s, 0s, 0s, 0.2s;
 }
 
+/* Collapsed, the sheet FUSES with the page — same surface, no rule
+   (device finding 2026-08-22, first felt in the lab's below-CTA
+   variant). The ink-tint top rule surfaces only as the sheet expands.
+   Unlayered on purpose: it must outrank the border-0 utility. */
+.quiz-controls-drawer {
+  border-top: 2px solid transparent;
+  transition: border-color 0.25s var(--ease-out-quart);
+}
+
+.quiz-controls-drawer[data-expanded] {
+  border-top-color: color-mix(
+    in srgb,
+    var(--quiz-fg, #374151) 12%,
+    transparent
+  );
+}
+
 /* The explicit way down — M3 requires a collapse affordance at full
    height, and the grabber cycle is forward-only. */
 .qsheet-x {
@@ -1155,7 +1172,8 @@
   .qsheet-head > .qsheet-cta,
   .qsheet-head > .qsheet-reader,
   .qsheet-x,
-  .qsheet-guide {
+  .qsheet-guide,
+  .quiz-controls-drawer {
     transition: none;
   }
 }

@@ -447,6 +447,40 @@ const QuizSession: React.FC<QuizSessionProps> = ({
    * Touch-only by construction: desktop's guide lives in the side pane
    * and the bottom sheet is lg:hidden.
    */
+  /**
+   * Hardware/browser Back collapses the sheet before it leaves the page
+   * (device finding 2026-08-22; M3's own back contract for bottom
+   * sheets). Expanding pushes ONE history entry; popping it — by Back
+   * or by any UI collapse (✕, grabber, drag) — folds the sheet. The
+   * ref keeps push and pop balanced: a UI collapse consumes its own
+   * entry, a finished run (end screen) releases it, and the popstate
+   * handler only acts while an entry of ours is outstanding. Known
+   * quirk, accepted: navigating AWAY with the sheet open leaves the
+   * spent entry in the stack (one extra Back step later) — popping it
+   * during route transition would yank the user backwards instead.
+   */
+  const sheetHistoryPushedRef = useRef(false);
+  const sheetExpandedForHistory =
+    isGuideExpanded && !showStartScreen && !showEndScreen;
+  useEffect(() => {
+    if (sheetExpandedForHistory && !sheetHistoryPushedRef.current) {
+      window.history.pushState({ qsheet: true }, '');
+      sheetHistoryPushedRef.current = true;
+    } else if (!sheetExpandedForHistory && sheetHistoryPushedRef.current) {
+      sheetHistoryPushedRef.current = false;
+      window.history.back();
+    }
+  }, [sheetExpandedForHistory]);
+  useEffect(() => {
+    const onPopState = () => {
+      if (!sheetHistoryPushedRef.current) return;
+      sheetHistoryPushedRef.current = false;
+      setSnapKind('collapsed');
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
   const quizCardRef = useRef<HTMLDivElement | null>(null);
   // Latest values for the touch handlers without re-binding them —
   // synced in an effect (writing refs during render trips
@@ -483,13 +517,20 @@ const QuizSession: React.FC<QuizSessionProps> = ({
       if (!touch) return;
       if (touch.clientY < window.innerHeight * 0.7) return;
       const options = optionsGridRef.current;
+      // The options region owns the swipe only while it can still
+      // scroll DOWN — at list end a swipe up moves nothing, so the
+      // flick may claim it. Without the scroll-position check, Set R's
+      // always-scrollable grid blanket-blocked the flick and the sheet
+      // couldn't be drawn from the bottom at all (device finding,
+      // 2026-08-22).
       if (
         options &&
         event.target instanceof Node &&
         options.contains(event.target) &&
-        options.scrollHeight > options.clientHeight + 1
+        options.scrollHeight > options.clientHeight + 1 &&
+        options.scrollTop + options.clientHeight < options.scrollHeight - 1
       ) {
-        return; // the options region owns its scroll — never claim it
+        return;
       }
       flick = {
         t0: performance.now(),
@@ -1371,20 +1412,20 @@ const QuizSession: React.FC<QuizSessionProps> = ({
           <DrawerContent
             ref={drawerRef}
             disableOpenAnimation
+            data-expanded={isGuideExpanded || undefined}
             className='quiz-controls-drawer fixed flex flex-col overflow-hidden border-0 rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px] lg:hidden'
             style={
               {
                 '--initial-transform': drawerInitialTransform,
                 // The controls sheet follows the set's colour scheme
                 // (Malik, 2026-08-08) — the lab's mobile footer spec:
-                // surface fill, ink-tint top rule, adaptive-ink CTA. All
-                // three vars ride in, so the guide inside the expanded
-                // sheet inks itself too (this is the CONTROLS surface —
-                // the desktop REFERENCE pane stays white by decision).
+                // surface fill, adaptive-ink CTA. The ink-tint top rule
+                // moved to CSS (.quiz-controls-drawer) so it can FADE:
+                // collapsed, the sheet fuses with the page; the rule
+                // surfaces only as the sheet expands (device finding,
+                // 2026-08-22).
                 backgroundColor: quizSurface,
                 color: quizForeground,
-                borderTop:
-                  '2px solid color-mix(in srgb, var(--quiz-fg) 12%, transparent)',
                 '--quiz-surface': quizSurface,
                 '--quiz-fg': quizForeground,
                 '--quiz-accent': quizAccent,
