@@ -83,7 +83,8 @@
     "title": "Meanings and Definitions",
     "description": "Spot what is wrong with a definition — too broad, too narrow, circular, or worse.",
     "slugs": ["informal", "definitions"],
-    "quizPath": "/informal/definitions/quiz"
+    "quizPath": "/informal/definitions/quiz",
+    "isNew": true
   },
   {
     "chapter": "Set R",
