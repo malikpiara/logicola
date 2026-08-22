@@ -1170,7 +1170,12 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                 // cqw type and the option grid's container query read —
                 // the card narrows under the guide pane and on phones,
                 // and viewport units would lie there.
-                'qcontainer mx-auto w-full p-4 flex-1 flex flex-col justify-center',
+                // Below lg the column is NOT centered: the prompt holds the
+                // top and the answer group sinks to the bottom (Malik,
+                // 2026-08-22; docs/question-lab.html). Centering floated a
+                // short prompt over dead space and landed the options at a
+                // different y per question — the user-testing wobble.
+                'qcontainer mx-auto w-full p-4 flex-1 flex flex-col justify-center max-lg:justify-start',
                 // Grid sets need the full canvas; list sets read as a
                 // centered column at a comfortable measure, Typeform-style.
                 isGridLayout ? 'max-w-screen-xl' : 'max-w-3xl'
@@ -1191,7 +1196,18 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                       sees three children. See `.qpin` in globals.css. */}
                   <div className='qpin'>
                     <Prompt value={currentQuestion.prompt} />
+                  </div>
 
+                  {/* The ANSWER GROUP — feedback · drill question · options,
+                      one unit (Malik, 2026-08-22; docs/question-lab.html).
+                      The drill question is the label of the option list, so
+                      it travels with the options, never with the prompt;
+                      feedback sits ABOVE the question (user testing, one
+                      strong voice; desktop was the complaint). Below lg the
+                      group is bottom-anchored (`.qanswer` in globals.css),
+                      so a hint grows the group UPWARD into the gap and the
+                      options hold still. */}
+                  <div className='qanswer flex flex-col gap-5'>
                     <div
                       className={
                         isGridLayout
@@ -1199,6 +1215,19 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                           : ''
                       }
                     >
+                      {/* Reading order: question → attempt → response →
+                        palette, with the response placed above the palette's
+                        label. The slot is always present — see FeedbackSlot. */}
+                      {currentQuestion && (
+                        <FeedbackSlot
+                          question={currentQuestion}
+                          liveHint={liveHint}
+                          liveAnswer={liveAnswer}
+                          motionKey={`${currentQuestion.id}-${previousGuesses.length}-${
+                            showSolution ? 'sol' : 'try'
+                          }-${liveHintOption?.id ?? 'answer'}`}
+                        />
+                      )}
                       {/* The set's drill question, in the start screen's mono
                         eyebrow voice — the question screen reads as a
                         continuation of the start card, not a different app. */}
@@ -1213,80 +1242,67 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                           More than one answer can be right — pick up to 3.
                         </p>
                       )}
-                      {/* Reading order: question → attempt → response →
-                        palette. The slot is always present and never moves
-                        the options — see FeedbackSlot. */}
-                      {currentQuestion && (
-                        <FeedbackSlot
-                          question={currentQuestion}
-                          liveHint={liveHint}
-                          liveAnswer={liveAnswer}
-                          motionKey={`${currentQuestion.id}-${previousGuesses.length}-${
-                            showSolution ? 'sol' : 'try'
-                          }-${liveHintOption?.id ?? 'answer'}`}
-                        />
-                      )}
                     </div>
-                  </div>
 
-                  <div
-                    ref={optionsGridRef}
-                    onScroll={handleOptionsScroll}
-                    className={
-                      isGridLayout
-                        ? // Column-major (options read down each column),
-                          // matching the original 2008 answer grid. Capped
-                          // width + centered so the options aren't full-bleed.
-                          classNames(
-                            'qoptions-grid gap-3 w-full self-center',
-                            gridMaxWidth
-                          )
-                        : 'flex flex-col gap-4'
-                    }
-                    style={
-                      isGridLayout ? optionGridVars(optionCount) : undefined
-                    }
-                  >
-                    {currentQuestion.options.map((option, index) => (
-                      <Option
-                        key={option.id}
-                        index={index + 1}
-                        showIndex
-                        immersive
-                        compact={isGridLayout}
-                        abbreviation={option.abbreviation}
-                        isSelected={
-                          multiSelect
-                            ? selectedOptionIds.includes(option.id)
-                            : index === selectedOptionIndex
-                        }
-                        // Keyboard-only: the cursor answers "where the
-                        // arrow keys are", which a finger doesn't ask.
-                        isCursor={
-                          multiSelect &&
-                          index === selectedOptionIndex &&
-                          lastInput === 'keyboard'
-                        }
-                        isCorrect={currentQuestion.correctId.includes(
-                          option.id
-                        )}
-                        showSolution={showSolution}
-                        ref={
-                          index === selectedOptionIndex
-                            ? focusSelectedOption
-                            : undefined
-                        }
-                        hasBeenIncorrectlyGuessed={previousGuesses.includes(
-                          option.id
-                        )}
-                        label={option.label}
-                        onClick={() => {
-                          haptic('selection');
-                          setLastInput('pointer');
-                          selectOption(index);
-                        }}
-                      />
-                    ))}
+                    <div
+                      ref={optionsGridRef}
+                      onScroll={handleOptionsScroll}
+                      className={
+                        isGridLayout
+                          ? // Column-major (options read down each column),
+                            // matching the original 2008 answer grid. Capped
+                            // width + centered so the options aren't full-bleed.
+                            classNames(
+                              'qoptions-grid gap-3 w-full self-center',
+                              gridMaxWidth
+                            )
+                          : 'flex flex-col gap-4'
+                      }
+                      style={
+                        isGridLayout ? optionGridVars(optionCount) : undefined
+                      }
+                    >
+                      {currentQuestion.options.map((option, index) => (
+                        <Option
+                          key={option.id}
+                          index={index + 1}
+                          showIndex
+                          immersive
+                          compact={isGridLayout}
+                          abbreviation={option.abbreviation}
+                          isSelected={
+                            multiSelect
+                              ? selectedOptionIds.includes(option.id)
+                              : index === selectedOptionIndex
+                          }
+                          // Keyboard-only: the cursor answers "where the
+                          // arrow keys are", which a finger doesn't ask.
+                          isCursor={
+                            multiSelect &&
+                            index === selectedOptionIndex &&
+                            lastInput === 'keyboard'
+                          }
+                          isCorrect={currentQuestion.correctId.includes(
+                            option.id
+                          )}
+                          showSolution={showSolution}
+                          ref={
+                            index === selectedOptionIndex
+                              ? focusSelectedOption
+                              : undefined
+                          }
+                          hasBeenIncorrectlyGuessed={previousGuesses.includes(
+                            option.id
+                          )}
+                          label={option.label}
+                          onClick={() => {
+                            haptic('selection');
+                            setLastInput('pointer');
+                            selectOption(index);
+                          }}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}

@@ -1341,28 +1341,56 @@
   inset: 0;
 }
 
-/* Inside the mobile pin (.qpin, @layer utilities) the ghost reservation
-   would pin a BLANK band the height of the tallest hint — a third of a
-   phone screen on Set R. Below lg the slot sizes to its live content
-   instead: a deliberate, dated exception to the constant-height contract
-   above — options shift down when a hint lands, but that lands on a
-   checked miss, a reorientation moment, not mid-aim (Malik, 2026-08-19).
-   Desktop keeps the contract. Unlayered on purpose: the rules being
-   amended are unlayered, and layered overrides lose to them. */
+/* On phones the ghost reservation would hold a BLANK band the height of
+   the tallest hint — a third of a phone screen on Set R. Below lg the
+   slot sizes to its live content instead: a deliberate, dated exception
+   to the constant-height contract above (Malik, 2026-08-19). Since the
+   answer group is bottom-anchored (2026-08-22, below) the exception costs
+   nothing on list sets: a hint grows the group upward into the gap and
+   the options hold still anyway. Grid sets still shrink their scroller
+   on a miss — a reorientation moment, not mid-aim. Desktop keeps the
+   contract. Unlayered on purpose: the rules being amended are unlayered,
+   and layered overrides lose to them. */
 @media (width < 64rem) {
-  .quiz-immersive .qpin .qfeed-ghost {
+  .quiz-immersive .qanswer .qfeed-ghost {
     display: none;
   }
-  .quiz-immersive .qpin .qfeed-live {
+  .quiz-immersive .qanswer .qfeed-live {
     position: static;
     inset: auto;
   }
 
   /* The empty slot's 26px reservation margin read as dead space between
-     the question and the options inside the pin (Malik, 2026-08-19);
-     the column's own gap-5 is the spacing. */
-  .quiz-immersive .qpin .qfeed {
+     the question and the options (Malik, 2026-08-19); the live content
+     carries its own spacing to the drill question beneath it instead. */
+  .quiz-immersive .qanswer .qfeed {
     margin-bottom: 0;
+  }
+  .quiz-immersive .qanswer .qfeed-live > * {
+    margin-bottom: 1.25rem;
+  }
+}
+
+/* == The question column on phones: prompt top, answer group bottom ======
+   Decided in docs/question-lab.html (Malik, 2026-08-22) after user
+   testing: the 2008 window's own model — the passage holds the top, the
+   palette holds the bottom, and the discourse (feedback) lands in the
+   space between. No reserved boxes: the gap IS the feedback's home. The
+   drill question belongs to the palette (it is the list's label), so it
+   rides in the group. List sets only: grid sets already fill the screen
+   with an internal scroller (below), where anchoring is moot. */
+@media (width < 64rem) {
+  .quiz-immersive:not(.quiz-grid-set) .motion-quiz-question {
+    flex: 1;
+  }
+  .quiz-immersive .qanswer {
+    margin-top: auto;
+  }
+  /* The collapsed sheet (128px + inset) overlays the canvas foot; the
+     group stops a breath above its top rule. Grid sets carry this
+     clearance inside their scroller instead. */
+  .quiz-immersive:not(.quiz-grid-set) .qanswer {
+    padding-bottom: calc(144px + env(safe-area-inset-bottom));
   }
 }
 
@@ -1391,6 +1419,12 @@
   }
   .quiz-immersive.quiz-grid-set .qpin {
     position: static; /* fixed by construction — nothing scrolls above it */
+  }
+  /* The answer group hosts the scroller now (2026-08-22): it must be the
+     flex child that takes the slack, so the grid inside can overflow. */
+  .quiz-immersive.quiz-grid-set .qanswer {
+    flex: 1;
+    min-height: 0;
   }
   .quiz-immersive.quiz-grid-set .qoptions-grid {
     flex: 1;
