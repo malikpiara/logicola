@@ -1,0 +1,2150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <title>Guide lab — LogiCola</title>
+    <style>
+      /* Lab page, not product (Malik, 2026-08-21). The guide CONTENT lab:
+         wears the decided sheet chrome from sheet-lab (classic anatomy,
+         iOS-narrow grabber, CTA↔title morph, ✕ chip, flick) and puts the
+         REAL guide content of Sets A, Q and R behind three dials —
+         content, shipped-vs-redesigned, and fixed-vs-content-fit snaps.
+         The three findings it answers (review 2026-08-21, real device
+         captures):
+           1. Set A at full = one small table + ~800px of empty surface —
+              snaps ignore content height.
+           2. Set Q opens on two paragraphs of prose; the seven-flaw
+              table the drilling user needs is below the fold.
+           3. Set R is a five-screenful linear scan with no way to jump
+              to one fallacy.
+         Open ON THE DEVICE: LAN http.server + cache-buster. */
+      :root {
+        --ease-oq: cubic-bezier(0.165, 0.84, 0.44, 1);
+        --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace;
+        --lab-ink: #1a2333;
+        --lab-muted: #66708a;
+      }
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #dfe4dd;
+        font:
+          16px/1.5 system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      button {
+        font: inherit;
+        touch-action: manipulation;
+      }
+
+      .stage {
+        position: fixed;
+        inset: 0;
+        margin: 0 auto;
+        max-width: 430px;
+        background: var(--surface);
+        overflow: hidden;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      /* Each set's real palette rides the content dial. */
+      .stage[data-content='setA'] {
+        --surface: #ffabc6;
+        --ink: #4a1040;
+        --accent: #674900;
+      }
+      .stage[data-content='setQ'] {
+        --surface: #d9ccf9;
+        --ink: #3e1060;
+        --accent: #745400;
+      }
+      .stage[data-content='setR'] {
+        --surface: #e4bdf7;
+        --ink: #751100;
+        --accent: #824616;
+      }
+
+      /* ---- quiz mock (the sheet-lab's honest mobile chrome) ---- */
+      .quiz {
+        position: absolute;
+        inset: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+        color: var(--ink);
+        padding: 0 20px calc(170px + env(safe-area-inset-bottom));
+      }
+      .qtop {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: var(--surface);
+        margin: 0 -20px;
+        padding: calc(48px + env(safe-area-inset-top)) 8px 12px;
+      }
+      .qexit {
+        width: 44px;
+        height: 44px;
+        flex: none;
+        display: grid;
+        place-items: center;
+        border: 0;
+        background: none;
+        font-size: 18px;
+        color: color-mix(in srgb, var(--ink) 60%, transparent);
+        cursor: pointer;
+      }
+      .qbar3 {
+        flex: 1;
+        min-width: 0;
+        height: 12px;
+        margin-left: -13px;
+        background: color-mix(in srgb, var(--ink) 12%, transparent);
+      }
+      .qbar3 i {
+        display: block;
+        height: 100%;
+        width: 38%;
+        background: var(--accent);
+      }
+      .qguide-chip {
+        width: 44px;
+        height: 44px;
+        flex: none;
+        display: grid;
+        place-items: center;
+        border: 0;
+        color: var(--ink);
+        background: color-mix(in srgb, var(--ink) 9%, transparent);
+        cursor: pointer;
+      }
+      .qguide-chip svg {
+        width: 18px;
+        height: 18px;
+      }
+      .qbody {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: calc(100dvh - 300px);
+        width: 100%;
+        max-width: 48rem;
+        margin: 0 auto;
+        padding: 16px 0 24px;
+      }
+      .qprompt {
+        /* Floor 20 → 21px (Malik, 2026-08-22): the passage gets a tiny
+           bump — port note: .qprompt clamp floor in globals.css. */
+        font-size: clamp(21px, 5.6vw, 26px);
+        line-height: 1.25;
+        text-align: center;
+        margin: 0 0 34px;
+      }
+      .qeyebrow {
+        font: 500 12px var(--mono);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        opacity: 0.8;
+        margin: 0 0 18px;
+      }
+      .qopts {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .qopt {
+        display: block;
+        width: 100%;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: var(--ink);
+        text-align: left;
+        cursor: pointer;
+      }
+      .qopt[aria-pressed='true'] {
+        background: var(--accent);
+      }
+      .qopt-in {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        padding: 13px 22px 13px 14px;
+        font-size: 17px;
+        line-height: 1.35;
+        background: color-mix(in srgb, var(--ink) 9%, var(--surface));
+      }
+      .qopt[aria-pressed='true'] .qopt-in {
+        background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+      }
+      .qbadge {
+        flex: none;
+        min-width: 32px;
+        height: 32px;
+        padding: 0 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font: 500 12px var(--mono);
+        background: color-mix(in srgb, var(--ink) 12%, transparent);
+        color: color-mix(in srgb, var(--ink) 85%, transparent);
+      }
+      .qopt[aria-pressed='true'] .qbadge {
+        background: var(--accent);
+        color: var(--surface);
+      }
+
+      /* ---- the decided sheet ---- */
+      .sheet {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 97%;
+        z-index: 20;
+        display: flex;
+        flex-direction: column;
+        background: var(--surface);
+        color: var(--ink);
+        border-top: 2px solid color-mix(in srgb, var(--ink) 12%, transparent);
+        border-radius: 10px 10px 0 0;
+        touch-action: none;
+        will-change: transform;
+      }
+      .sheet.settling {
+        transition: transform 0.32s var(--ease-oq);
+      }
+      .grabber {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 44px;
+        width: 100px;
+        margin: 0 auto -14px;
+        padding: 0;
+        background: none;
+        border: 0;
+        cursor: grab;
+        touch-action: none;
+        flex: none;
+      }
+      .grabber span {
+        display: block;
+        height: 5px;
+        width: 36px; /* the decided iOS-narrow dragger */
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--ink) 30%, transparent);
+      }
+      .chip-x {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        width: 32px;
+        height: 32px;
+        z-index: 5;
+        border: 0;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        color: var(--ink);
+        background: color-mix(in srgb, var(--ink) 10%, var(--surface));
+        cursor: pointer;
+        opacity: 0;
+        scale: 0.8;
+        pointer-events: none;
+        transition:
+          opacity 0.18s var(--ease-oq),
+          scale 0.18s var(--ease-oq);
+      }
+      .sheet[data-x='on'] .chip-x {
+        opacity: 1;
+        scale: 1;
+        pointer-events: auto;
+      }
+      /* The decided CTA↔title morph (sheet-lab): one grid cell, opacity
+         + 4px blur + directional slide, delayed visibility. */
+      .shead {
+        position: relative;
+        padding: 0 16px;
+        display: grid;
+        flex: none;
+      }
+      .cta-row,
+      .reader-head {
+        grid-area: 1 / 1;
+        transition:
+          opacity 0.2s var(--ease-oq),
+          filter 0.2s var(--ease-oq),
+          transform 0.2s var(--ease-oq),
+          visibility 0s;
+      }
+      .cta-row {
+        padding: 10px 0 calc(12px + env(safe-area-inset-bottom));
+      }
+      .reader-head {
+        align-self: start;
+        font: 500 11px var(--mono);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: color-mix(in srgb, var(--ink) 72%, transparent);
+        padding: 16px 4px 12px;
+      }
+      .shead[data-head='cta'] .reader-head {
+        opacity: 0;
+        filter: blur(4px);
+        transform: translateY(6px);
+        pointer-events: none;
+        visibility: hidden;
+        transition-delay: 0s, 0s, 0s, 0.2s;
+      }
+      .shead[data-head='reader'] .cta-row {
+        opacity: 0;
+        filter: blur(4px);
+        transform: translateY(-6px);
+        pointer-events: none;
+        visibility: hidden;
+        transition-delay: 0s, 0s, 0s, 0.2s;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .cta-row,
+        .reader-head,
+        .gentry.flash {
+          transition: none;
+          animation: none;
+        }
+      }
+      .gem {
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 28px;
+        border: 0;
+        font-weight: 600;
+        font-size: 16px;
+        white-space: nowrap;
+        background: var(--ink);
+        color: var(--surface);
+        cursor: pointer;
+      }
+      .gem[disabled] {
+        background: color-mix(in srgb, var(--ink) 18%, transparent);
+        color: color-mix(in srgb, var(--ink) 55%, transparent);
+        cursor: not-allowed;
+      }
+
+      /* ---- guide content (mirrors globals.css § Reference guide) ---- */
+      .guide {
+        margin: 0 4px;
+        padding: 0 16px;
+        overflow: hidden;
+        opacity: 0;
+        transition: opacity 0.2s;
+        pointer-events: none;
+        position: relative;
+      }
+      .sheet[data-guide='on'] .guide {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      /* Type audit 2026-08-22 (Butterick + Santa Maria): the guide body
+         sat at 13.5px with why-lines at 12.5px — below the 15px web
+         floor, on a phone, for multi-line READ content. Worse, it broke
+         the guide's own doctrine: "the reference and the feedback read
+         as one system", yet the hint body is 15px. Realigned to the
+         hint tier. */
+      .gh {
+        font-size: 16px;
+        font-weight: 650;
+        margin: 4px 0 8px;
+        text-wrap: balance;
+      }
+      .gp {
+        margin: 0 0 12px;
+        font-size: 15px;
+        line-height: 1.55;
+        color: color-mix(in srgb, var(--ink) 84%, transparent);
+      }
+      .gtable {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+      }
+      .gtable th {
+        font: 500 10px var(--mono);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        text-align: left;
+        color: color-mix(in srgb, var(--ink) 60%, transparent);
+        padding: 0 12px 6px 0;
+        border-bottom: 2px solid color-mix(in srgb, var(--ink) 20%, transparent);
+      }
+      .gtable td {
+        padding: 9px 12px 9px 0;
+        border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+        vertical-align: baseline;
+      }
+      .gtable tr:last-child td {
+        border-bottom: 0;
+      }
+      .gmono {
+        font-family: var(--mono);
+        font-size: 14px;
+      }
+      .gcode {
+        font-family: var(--mono);
+        font-size: 12px;
+        font-variant-numeric: tabular-nums;
+        color: var(--accent);
+        white-space: nowrap;
+        width: 1%;
+        padding-right: 10px;
+      }
+      .gname {
+        font-weight: 650;
+        font-size: 15px;
+      }
+      .gwhy {
+        /* 12.5px/ink-66% was caption-tier styling on read content, and
+           the 66% mix needs a contrast check it would likely fail at
+           small sizes — lifted to 13px/72% (the reader-head's ink). */
+        font-size: 13px;
+        color: color-mix(in srgb, var(--ink) 72%, transparent);
+        margin-top: 2px;
+      }
+      .gclauses {
+        margin: 6px 0 0;
+        padding: 0 0 0 4px;
+        list-style: none;
+        counter-reset: cl;
+      }
+      .gclauses li {
+        position: relative;
+        padding-left: 20px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: color-mix(in srgb, var(--ink) 84%, transparent);
+        counter-increment: cl;
+      }
+      .gclauses li::before {
+        content: counter(cl);
+        position: absolute;
+        left: 0;
+        font: 500 11px var(--mono);
+        color: var(--accent);
+        top: 3px;
+      }
+      /* Set R redesign: the sticky code index. Sticky works inside the
+         JS-scrolled overflow container. */
+      .gindex {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 2px 0 10px;
+        background: var(--surface);
+        box-shadow: 0 6px 8px -6px
+          color-mix(in srgb, var(--ink) 25%, transparent);
+      }
+      .gindex button {
+        border: 0;
+        padding: 6px 9px;
+        font: 500 11px var(--mono);
+        color: var(--ink);
+        background: color-mix(in srgb, var(--ink) 9%, transparent);
+        cursor: pointer;
+        min-height: 30px;
+      }
+      .gindex button:active {
+        background: var(--ink);
+        color: var(--surface);
+      }
+      /* Name chips, not codes — user testing 2026-08-21: nobody recalls
+         fallacies by code. Codes are the grading vocabulary. */
+      .gindex.names button {
+        font:
+          600 11px system-ui,
+          sans-serif;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+      .ggroup-h {
+        font: 500 10px var(--mono);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: color-mix(in srgb, var(--ink) 58%, transparent);
+        margin: 16px 0 2px;
+      }
+      .gentry.gcompact {
+        display: block;
+        padding: 7px 0;
+        font-size: 14px;
+        line-height: 1.5;
+        color: color-mix(in srgb, var(--ink) 84%, transparent);
+      }
+      .gfold {
+        margin-top: 18px;
+        border-top: 2px solid color-mix(in srgb, var(--ink) 12%, transparent);
+        padding-top: 10px;
+      }
+      .gfold summary {
+        font: 500 11px var(--mono);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: color-mix(in srgb, var(--ink) 66%, transparent);
+        cursor: pointer;
+        padding: 6px 0;
+        list-style: none;
+      }
+      .gfold summary::-webkit-details-marker {
+        display: none;
+      }
+      .gfold summary::before {
+        content: '+ ';
+        color: var(--accent);
+      }
+      .gfold[open] summary::before {
+        content: '− ';
+      }
+      /* Set A live-letters direction: this question's vocabulary. */
+      .glegend {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 10px;
+        margin: 0 0 12px;
+        font-size: 13px;
+        color: color-mix(in srgb, var(--ink) 80%, transparent);
+      }
+      .gkey {
+        font: 600 12px var(--mono);
+        padding: 2px 7px;
+        background: color-mix(in srgb, var(--ink) 9%, transparent);
+      }
+      .glive {
+        color: var(--accent);
+        font-weight: 650;
+        font-style: normal;
+      }
+      .gsrc {
+        font-size: 11.5px;
+        color: color-mix(in srgb, var(--ink) 55%, transparent);
+        margin: 10px 0 0;
+      }
+      /* ∴ treatments (Set R) */
+      .gtf {
+        color: var(--accent);
+        font-weight: 650;
+        font-size: 1.15em;
+        padding: 0 1px;
+      }
+      .gschema {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin-top: 4px;
+        font-size: 13px;
+        color: color-mix(in srgb, var(--ink) 84%, transparent);
+      }
+      .gschema .con {
+        padding-left: 14px;
+      }
+      .gschema .con::before {
+        content: '∴ ';
+        color: var(--accent);
+        font-weight: 650;
+      }
+      /* Row / divider variations for the table sets */
+      /* Zebra DECIDED 2026-08-22, with "rounded corners" spoken in the
+         brand's own idiom: pixel-stair clips on the washed rows (the R
+         entries get the true stair; table rows approximate with radius —
+         tr can't carry a clip-path, the port rasterises properly). */
+      .stage[data-rows='zebra'] .gtable td,
+      .stage[data-rows='zebra'] .gentry {
+        border-bottom: 0;
+      }
+      .stage[data-rows='zebra'] .gtable td {
+        padding: 9px 12px;
+      }
+      .stage[data-rows='zebra'] .gtable tr:nth-child(odd) td {
+        background: color-mix(in srgb, var(--ink) 6%, transparent);
+      }
+      .stage[data-rows='zebra'] .gtable tr:nth-child(odd) td:first-child {
+        border-radius: 8px 0 0 8px;
+      }
+      .stage[data-rows='zebra'] .gtable tr:nth-child(odd) td:last-child {
+        border-radius: 0 8px 8px 0;
+      }
+      .stage[data-rows='zebra'] .gentry:nth-of-type(odd) {
+        background: color-mix(in srgb, var(--ink) 6%, transparent);
+      }
+      .stage[data-rows='zebra'] .gentry {
+        margin: 0 -8px;
+        padding: 10px 8px;
+      }
+      .stage[data-rows='cards'] .gtable {
+        border-collapse: separate;
+        border-spacing: 0 6px;
+      }
+      .stage[data-rows='cards'] .gtable td {
+        border-bottom: 0;
+        background: color-mix(in srgb, var(--ink) 6%, transparent);
+        padding: 9px 12px;
+      }
+      .stage[data-rows='cards'] .gtable td:first-child {
+        padding-left: 10px;
+      }
+      .stage[data-rows='cards'] .gentry {
+        border-bottom: 0;
+        background: color-mix(in srgb, var(--ink) 6%, transparent);
+        margin: 0 0 6px;
+        padding: 10px;
+      }
+      .stage[data-rows='open'] .gtable td,
+      .stage[data-rows='open'] .gentry {
+        border-bottom: 0;
+      }
+      .stage[data-rows='open'] .gtable td {
+        padding: 7px 12px 7px 0;
+      }
+      .stage[data-rows='open'] .gentry {
+        padding: 8px 0;
+      }
+      .segwrap {
+        flex-wrap: wrap;
+      }
+      .segwrap button {
+        flex: 1 1 45%;
+      }
+      .pgroup.dimmed {
+        opacity: 0.45;
+        pointer-events: none;
+      }
+      .gentry {
+        display: flex;
+        gap: 10px;
+        padding: 10px 0;
+        border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+      }
+      .gentry:last-child {
+        border-bottom: 0;
+      }
+      .gentry .gcode {
+        padding-top: 1px;
+      }
+      .gentry.flash {
+        animation: entryflash 1.2s var(--ease-oq);
+      }
+      @keyframes entryflash {
+        0%,
+        35% {
+          background: color-mix(in srgb, var(--accent) 18%, transparent);
+        }
+        100% {
+          background: transparent;
+        }
+      }
+      .gafter {
+        margin-top: 18px;
+        padding-top: 12px;
+        border-top: 2px solid color-mix(in srgb, var(--ink) 12%, transparent);
+      }
+
+      /* ---- lab chrome ---- */
+      .labchip {
+        position: fixed;
+        top: calc(10px + env(safe-area-inset-top));
+        left: 10px;
+        z-index: 60;
+        border: 0;
+        border-radius: 999px;
+        padding: 8px 14px;
+        background: var(--lab-ink);
+        color: #fff;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .pill {
+        position: fixed;
+        top: calc(13px + env(safe-area-inset-top));
+        right: 12px;
+        z-index: 60;
+        background: rgba(26, 35, 51, 0.82);
+        color: #fff;
+        border-radius: 999px;
+        padding: 6px 10px;
+        font: 500 10px var(--mono);
+        letter-spacing: 0.04em;
+      }
+      .panel {
+        position: fixed;
+        left: 10px;
+        right: 10px;
+        bottom: calc(16px + env(safe-area-inset-bottom));
+        margin: 0 auto;
+        max-width: 410px;
+        z-index: 70;
+        background: #fff;
+        color: var(--lab-ink);
+        border-radius: 14px;
+        padding: 16px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        font-size: 14px;
+        max-height: 72vh;
+        overflow: auto;
+      }
+      .phead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .phead strong {
+        font-size: 15px;
+      }
+      .phead button {
+        border: 0;
+        background: #eef0f4;
+        border-radius: 8px;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+      }
+      .pgroup {
+        margin-bottom: 16px;
+      }
+      .pgroup h3 {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin: 0 0 8px;
+        color: var(--lab-muted);
+      }
+      .seg {
+        display: flex;
+        gap: 6px;
+      }
+      .seg button {
+        flex: 1;
+        min-height: 44px;
+        border: 2px solid #d8dce4;
+        border-radius: 9px;
+        background: #fff;
+        color: var(--lab-ink);
+        font-weight: 600;
+        font-size: 12px;
+        padding: 4px 6px;
+        cursor: pointer;
+      }
+      .seg button small {
+        display: block;
+        font-weight: 400;
+        font-size: 10px;
+        color: var(--lab-muted);
+      }
+      .seg button[aria-pressed='true'] {
+        border-color: var(--lab-ink);
+        background: var(--lab-ink);
+        color: #fff;
+      }
+      .seg button[aria-pressed='true'] small {
+        color: #c7cdd8;
+      }
+      .segnote {
+        font-size: 12px;
+        color: var(--lab-muted);
+        margin: 8px 0 0;
+      }
+      .toggles {
+        display: flex;
+        gap: 8px;
+      }
+      .toggles button {
+        flex: 1;
+        min-height: 44px;
+        border: 2px solid #d8dce4;
+        border-radius: 9px;
+        background: #fff;
+        font-weight: 600;
+        font-size: 12.5px;
+        cursor: pointer;
+        color: var(--lab-ink);
+      }
+      .notes {
+        position: fixed;
+        inset: 0;
+        z-index: 80;
+        background: rgba(20, 26, 38, 0.97);
+        color: #eef1f6;
+        overflow: auto;
+        padding: calc(20px + env(safe-area-inset-top)) 22px 80px;
+        font-size: 15px;
+        line-height: 1.6;
+        user-select: text;
+        -webkit-user-select: text;
+      }
+      .notes h2 {
+        font-size: 18px;
+        margin: 0 0 4px;
+      }
+      .notes h3 {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: #9fb0cc;
+        margin: 26px 0 8px;
+      }
+      .notes p,
+      .notes li {
+        color: #ced6e4;
+        font-size: 14.5px;
+      }
+      .notes ul {
+        padding-left: 20px;
+        margin: 8px 0;
+      }
+      .notes .close {
+        position: sticky;
+        top: 0;
+        float: right;
+        border: 0;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.14);
+        color: #fff;
+        width: 36px;
+        height: 36px;
+        font-size: 15px;
+        cursor: pointer;
+      }
+      .sab-probe {
+        position: fixed;
+        left: -9999px;
+        bottom: 0;
+        height: env(safe-area-inset-bottom, 0px);
+        width: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stage" id="stage" data-content="setQ">
+      <div class="quiz" id="quiz">
+        <div class="qtop">
+          <button class="qexit" aria-label="Exit quiz">✕</button>
+          <div class="qbar3" aria-hidden="true"><i></i></div>
+          <button
+            class="qguide-chip"
+            id="guideChip"
+            aria-label="Open the reference guide"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 7v14" />
+              <path
+                d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="qbody" id="qbody"></div>
+      </div>
+
+      <div class="sheet" id="sheet" data-x="off" data-guide="off">
+        <button
+          class="grabber"
+          id="grabber"
+          aria-label="Cycle sheet snap point"
+        >
+          <span></span>
+        </button>
+        <button class="chip-x" id="chipX" aria-label="Close reference guide">
+          ✕
+        </button>
+        <div class="shead" id="shead" data-head="cta">
+          <div class="cta-row" id="ctaRow">
+            <button class="gem" id="cta" disabled>Check Answer</button>
+          </div>
+          <div class="reader-head">Reference guide</div>
+        </div>
+        <div class="guide" id="guide"><div id="gwrap"></div></div>
+      </div>
+    </div>
+
+    <button class="labchip" id="labChip">⚙ Guide lab</button>
+    <div class="pill" id="statusPill">collapsed</div>
+
+    <div class="panel" id="panel" hidden>
+      <div class="phead">
+        <strong>Guide lab dials</strong>
+        <button id="panelClose" aria-label="Close panel">✕</button>
+      </div>
+      <div class="pgroup">
+        <h3>1 · Content</h3>
+        <div class="seg" data-dial="content">
+          <button data-val="setA">Set A<small>8 forms · tiny</small></button>
+          <button data-val="setQ">Set Q<small>7 flaws</small></button>
+          <button data-val="setR">Set R<small>18 fallacies</small></button>
+        </div>
+      </div>
+      <div class="pgroup">
+        <h3>2 · Direction</h3>
+        <div class="seg" data-dial="design" id="designSeg"></div>
+        <p class="segnote" id="designNote"></p>
+      </div>
+      <div class="pgroup">
+        <h3>3 · Expanded snaps</h3>
+        <div class="seg" data-dial="snaps">
+          <button data-val="fixed">
+            Fixed<small>shipped · 460 + full</small>
+          </button>
+          <button data-val="fit">Fit to content<small>DECIDED</small></button>
+        </div>
+        <p class="segnote">
+          "Fit" sizes the expanded detent to the guide's actual height and drops
+          the full snap when content doesn't need it — Set A stops opening onto
+          800px of empty surface. Q and R still earn 460 + full.
+        </p>
+      </div>
+      <div class="pgroup" id="rowsGroup">
+        <h3>4 · Rows &amp; dividers</h3>
+        <div class="seg segwrap" data-dial="rows">
+          <button data-val="hairline">Hairline<small>shipped</small></button>
+          <button data-val="zebra">
+            Zebra<small>DECIDED · rounded</small>
+          </button>
+          <button data-val="cards">Cards</button>
+          <button data-val="open">Open<small>space only</small></button>
+        </div>
+        <p class="segnote">
+          Zebra decided 2026-08-22, corners rounded in the brand's idiom:
+          pixel-stair clips on the washed rows (true stair on R's entries; the
+          table rows approximate with radius — the port rasterises).
+        </p>
+      </div>
+      <div class="pgroup" id="rtextGroup">
+        <h3>6 · Set R text</h3>
+        <div class="seg" data-dial="rtext">
+          <button data-val="shipped">
+            Shipped<small>near-verbatim Gensler</small>
+          </button>
+          <button data-val="fresh">Fresh<small>DECIDED</small></button>
+        </div>
+        <p class="segnote">
+          DECIDED 2026-08-22: the fresh originals ship, on the linear layout,
+          with the intro shrunk to a credit line. The ∴ schemas stay (minimal
+          logical forms, kept deliberately).
+        </p>
+      </div>
+      <div class="pgroup" id="tfGroup">
+        <h3>5 · The ∴ symbol (Set R)</h3>
+        <div class="seg segwrap" data-dial="tf">
+          <button data-val="shipped">∴ as is<small>shipped</small></button>
+          <button data-val="styled">∴ styled<small>DECIDED</small></button>
+          <button data-val="word">“Therefore”</button>
+          <button data-val="stacked">Stacked schema</button>
+        </div>
+        <p class="segnote">
+          Styled: bigger, accent-inked. Word: the symbol spelled out. Stacked:
+          the five schema entries (crowd, ignorance, genetic, opposition, post
+          hoc) break into premise-over-conclusion lines.
+        </p>
+      </div>
+      <div class="toggles">
+        <button id="notesBtn">Findings &amp; directions</button>
+      </div>
+    </div>
+
+    <div class="notes" id="notes" hidden>
+      <button class="close" id="notesClose" aria-label="Close notes">✕</button>
+      <h2>Guide content — findings &amp; proposals</h2>
+      <p>2026-08-21 · reviewed against the running product at 375×812.</p>
+
+      <h3>Finding 1 — snaps ignore content (Set A)</h3>
+      <p>
+        Sets A/C/J's guides are one small table or a four-row notation group,
+        but the sheet still offers 460px AND 97% snaps. At full, Set A is a
+        heading, eight mono rows, and ~800px of empty surface — the exercise
+        hidden for nothing. Proposal: size the expanded detent to content height
+        and drop the full snap when content fits (HIG: detents exist to fit
+        content, not the other way round). In vaul: compute the snap from the
+        measured guide height.
+      </p>
+
+      <h3>Finding 2 — Set Q opens on the wrong half</h3>
+      <p>
+        The guide's DOM order is "What is a definition?" (two paragraphs) THEN
+        "Ways a definition can be flawed". On mobile the columns stack, so a
+        drilling user opens the guide onto prose and scrolls to reach the
+        seven-flaw table — the thing the question actually asks about, whose
+        numbers already mirror the option indexes. Directions to compare:
+        table-first with the prose as an afterword, or table with the prose
+        behind a disclosure. (Desktop's two-column layout can keep prose left —
+        the reorder is a mobile-stacking concern.)
+      </p>
+
+      <h3>Finding 3 — Set R is a linear scan</h3>
+      <p>
+        Eighteen entries across ~5 screenfuls, prefixed by a 3-line intro, with
+        no way to find one. A code-chip index was prototyped and KILLED by user
+        testing (2026-08-21): nobody recalls fallacies by code — codes are the
+        grading vocabulary, names are the recall vocabulary. Directions to
+        compare, all with the intro cut:
+      </p>
+      <ul>
+        <li>
+          <strong>Name index</strong> — a sticky jump-index of the eighteen
+          short names (the option grid's own labels).
+        </li>
+        <li>
+          <strong>Families</strong> — the list grouped under four editorial
+          subheads (Appeals · People and sides · Faulty structure · One-sided
+          and off the point). The grouping is a lab proposal, not doctrine — the
+          2008 source doesn't group them.
+        </li>
+        <li>
+          <strong>Compact</strong> — no index; entries collapse to run-in lines
+          so the whole list is ~2.5 screens and the scan itself gets cheap.
+        </li>
+      </ul>
+
+      <h3>Decided — 2026-08-22</h3>
+      <ul>
+        <li>Expanded snaps <strong>fit to content</strong>.</li>
+        <li>
+          <strong>Zebra rows with rounded corners</strong> for the table sets —
+          rounding in the brand's idiom (pixel-stair clip, never smooth radius);
+          joins the brand language.
+        </li>
+        <li><strong>∴ styled</strong> — bigger, accent-inked.</li>
+        <li>
+          <strong>Set Q: fresh examples</strong>, table-first — final wording
+          still Malik's to approve.
+        </li>
+        <li>
+          <strong>2026-08-22, round 2:</strong> Set Q's definition prose REMOVED
+          from the sheet (bare decided — the teaching moves to the start screen
+          or stays with the book); the passage floor nudged 20 → 21px
+          (small-text complaint from testing did not cover the passage, but it
+          earns a tiny bump); guide text sizes lifted to the hint tier (13.5 →
+          15) per the type audit — the testing complaint confirmed it; Set R
+          descriptions get fresh original drafts (dial 6, approval pending, same
+          provenance rule as Q's examples).
+        </li>
+        <li>
+          <strong>2026-08-22, round 3: Set R decided</strong> — fresh originals
+          on the shipped linear layout, intro shrunk to a credit line. The index
+          directions stay as the record.
+        </li>
+        <li>
+          Still open: Set A's direction (the Gensler evidence: his 2008 *H Info
+          screens kept the schema abstract even though the software knew each
+          question's letters — schema-first was his revealed choice), and the ✕
+          chip call from sheet-lab (on by default; M3 requires a collapse
+          affordance at full).
+        </li>
+      </ul>
+
+      <h3>Round 3 — 2026-08-21 (Malik's briefs)</h3>
+      <ul>
+        <li>
+          <strong>Set A, live letters:</strong> two directions — a letter legend
+          above the abstract schema, or full substitution into the table. The
+          pedagogy trade is real: the mapping from “logicians” to L is part of
+          what the drill teaches, and substitution does that step for the
+          student. The legend scaffolds without deleting; the live table
+          optimises lookup at the cost of the abstraction. A thumb-and-classroom
+          call.
+        </li>
+        <li>
+          <strong>Set Q, provenance:</strong> the shipped seven examples are
+          verbatim Gensler §3.2 — a Routledge-relationship risk flagged by
+          Malik. Directions: keep with a visible credit line, or replace with
+          original examples (drafts in the lab, wording needs Malik's approval).
+          NOTE: Set R's eighteen descriptions are near-verbatim from the same
+          book — the provenance question is bigger than this sheet and needs its
+          own pass.
+        </li>
+        <li>
+          <strong>Set R, the ∴ symbol:</strong> hard to read at 13.5px.
+          Directions: styled (bigger, accent), spelled out as “Therefore”, or
+          the five schema entries stacked as premise-over-conclusion lines —
+          which also makes the inference SHAPE visible, arguably the most
+          pedagogical of the three.
+        </li>
+        <li>
+          <strong>Dividers for the table sets:</strong> hairline (shipped) vs
+          zebra vs cards vs open. Orthogonal to the direction dial, so any
+          combination can be judged.
+        </li>
+      </ul>
+
+      <h3>Type audit — 2026-08-22 (Butterick / Santa Maria pass)</h3>
+      <ul>
+        <li>
+          <strong>Guide body 13.5px → 15px</strong> (why-lines 12.5 → 13,
+          clauses 13 → 14, names 13.5 → 15, headings 15 → 16). Two reasons: the
+          15px web floor for read content on phones, and an internal
+          inconsistency — the doctrine says the reference and the hints are one
+          system, but the hint body is 15px and the guide wasn't.
+        </li>
+        <li>
+          .gwhy ink lifted 66% → 72% (small text at 66% mix needs a contrast
+          check it would likely fail; 72% matches the reader-head tier). The
+          port should gate it through lib/contrast.
+        </li>
+        <li>
+          text-wrap: balance on guide headings; tabular-nums on the code column.
+          Caps tracking (0.10–0.12em on the mono micro-labels) already sits
+          correctly in the 5–12% band — no change.
+        </li>
+        <li>
+          Standing exceptions kept: spaced em dashes are house style; the
+          &lt;u&gt; on “must” is the 2008 source’s emphasis mark, restored by a
+          dated decision — not an underline-for-emphasis violation to “fix”.
+        </li>
+      </ul>
+
+      <h3>Not changed</h3>
+      <p>
+        The table/row anatomy itself (code chip · weighted name · ink gloss ·
+        hanging-numeral clauses) matches the hint hierarchy by design — that
+        decision holds. The redesigns re-order and index; they don't restyle the
+        rows.
+      </p>
+
+      <h3>Running this on the device</h3>
+      <p>
+        cd docs &amp;&amp; python3 -m http.server 8123 — then
+        http://&lt;mac-ip&gt;:8123/guide-lab.html?v=1
+      </p>
+    </div>
+
+    <div class="sab-probe" id="sabProbe"></div>
+
+    <script>
+      /* ---- pixel geometry (lib/pixel.ts pixelPts) ---- */
+      function pixelPts(inset, pu) {
+        const i0 = inset;
+        const L = (v) => `${v}px`;
+        const M = (v) => `calc(100% - ${v}px)`;
+        return [
+          `${L(i0)} ${L(i0 + pu * 2)}`,
+          `${L(i0 + pu)} ${L(i0 + pu * 2)}`,
+          `${L(i0 + pu)} ${L(i0 + pu)}`,
+          `${L(i0 + pu * 2)} ${L(i0 + pu)}`,
+          `${L(i0 + pu * 2)} ${L(i0)}`,
+          `${M(i0 + pu * 2)} ${L(i0)}`,
+          `${M(i0 + pu * 2)} ${L(i0 + pu)}`,
+          `${M(i0 + pu)} ${L(i0 + pu)}`,
+          `${M(i0 + pu)} ${L(i0 + pu * 2)}`,
+          `${M(i0)} ${L(i0 + pu * 2)}`,
+          `${M(i0)} ${M(i0 + pu * 2)}`,
+          `${M(i0 + pu)} ${M(i0 + pu * 2)}`,
+          `${M(i0 + pu)} ${M(i0 + pu)}`,
+          `${M(i0 + pu * 2)} ${M(i0 + pu)}`,
+          `${M(i0 + pu * 2)} ${M(i0)}`,
+          `${L(i0 + pu * 2)} ${M(i0)}`,
+          `${L(i0 + pu * 2)} ${M(i0 + pu)}`,
+          `${L(i0 + pu)} ${M(i0 + pu)}`,
+          `${L(i0 + pu)} ${M(i0 + pu * 2)}`,
+          `${L(i0)} ${M(i0 + pu * 2)}`,
+        ];
+      }
+      const stair = (inset, pu) => `polygon(${pixelPts(inset, pu).join(', ')})`;
+      const clipCss = document.createElement('style');
+      clipCss.textContent = `
+        .gem { clip-path: ${stair(0, 4)}; }
+        .qopt { clip-path: ${stair(0, 4)}; }
+        .qopt-in { clip-path: ${stair(2, 4)}; }
+        .qbadge { clip-path: ${stair(0, 2)}; }
+        .qbar3 { clip-path: ${stair(0, 2)}; }
+        .qguide-chip { clip-path: ${stair(0, 4)}; }
+        .chip-x { clip-path: ${stair(0, 4)}; }
+        .gindex button { clip-path: ${stair(0, 2)}; }
+        .gkey { clip-path: ${stair(0, 2)}; }
+        .stage[data-rows='zebra'] .gentry { clip-path: ${stair(0, 3)}; }
+      `;
+      document.head.appendChild(clipCss);
+
+      /* ---- content data (verbatim from the product sources) ---- */
+      const FALLACIES = [
+        {
+          code: 'aa',
+          name: 'Appeal to authority',
+          desc: 'This is fallacious if:',
+          clauses: [
+            'the person isn’t an authority on the subject',
+            'there’s no consensus of such authorities',
+            'the argument concludes that the authority <u>must</u> be right (and isn’t just probably right)',
+          ],
+        },
+        {
+          code: 'ac',
+          name: 'Appeal to the crowd',
+          desc: 'Most people believe A. ∴ A is true.',
+        },
+        {
+          code: 'ae',
+          name: 'Appeal to emotion',
+          desc: 'To stir up emotions instead of arguing in a logical manner.',
+        },
+        {
+          code: 'af',
+          name: 'Appeal to force',
+          desc: 'To use threats or intimidation to get a conclusion accepted.',
+        },
+        {
+          code: 'ah',
+          name: 'Ad hominem',
+          desc: '(“personal attack”). This is fallacious if:',
+          clauses: [
+            'the grounds of the attack are irrelevant to the person’s rational competence',
+            'the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held)',
+          ],
+        },
+        {
+          code: 'ai',
+          name: 'Appeal to ignorance',
+          desc: '“No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.”',
+        },
+        {
+          code: 'am',
+          name: 'Ambiguous',
+          desc: 'A term or phrase changes meaning within the argument.',
+        },
+        {
+          code: 'bp',
+          name: 'Beside the point',
+          desc: 'The person argues for a conclusion irrelevant to the issue at hand.',
+        },
+        {
+          code: 'bw',
+          name: 'Black and white',
+          desc: 'Oversimplifying by assuming that one or another of two extremes must be true.',
+        },
+        {
+          code: 'ci',
+          name: 'Circular',
+          desc: 'Presumes the truth of what is to be proved — or uses a premise to prove a conclusion, then uses that conclusion to prove the premise.',
+        },
+        {
+          code: 'cq',
+          name: 'Complex question',
+          desc: 'A question that assumes the truth of something false or doubtful.',
+        },
+        {
+          code: 'fs',
+          name: 'False stereotype',
+          desc: 'Assuming that members of a certain group are more alike than they actually are.',
+        },
+        {
+          code: 'ge',
+          name: 'Genetic fallacy',
+          desc: 'We can explain why you believe A. ∴ A is false.',
+        },
+        {
+          code: 'op',
+          name: 'Opposition fallacy',
+          desc: 'Our opponents believe A. ∴ A is false.',
+        },
+        {
+          code: 'pc',
+          name: 'Pro-con fallacy',
+          desc: 'Stresses only the advantages or only the disadvantages, instead of weighing both.',
+        },
+        {
+          code: 'ph',
+          name: 'Post hoc ergo propter hoc',
+          desc: '(“after this therefore because of this”) A happened after B. ∴ A was caused by B.',
+        },
+        {
+          code: 'pw',
+          name: 'Part-whole',
+          desc: 'Arguing that something true of the whole must be true of all the parts — or vice versa.',
+        },
+        {
+          code: 'sm',
+          name: 'Straw man',
+          desc: 'Misrepresenting the views of an opponent.',
+        },
+      ];
+      // Original examples — DRAFTS for Malik to approve or rewrite. The
+      // shipped seven are lifted verbatim from Gensler §3.2, which the
+      // Routledge-companion relationship may not allow (flagged
+      // 2026-08-21); these use the same flaw framework with fresh
+      // material.
+      const FLAWS_FRESH = [
+        {
+          n: 1,
+          name: 'Too broad',
+          ex: '“Chair” means “furniture.”',
+          why: 'There is furniture that isn’t a chair.',
+        },
+        {
+          n: 2,
+          name: 'Too narrow',
+          ex: '“Book” means “hardcover volume.”',
+          why: 'There are books that aren’t hardcover.',
+        },
+        {
+          n: 3,
+          name: 'Circular',
+          ex: '“Art” means “whatever artists create.”',
+          why: '“Artist” is itself defined by “art.”',
+        },
+        {
+          n: 4,
+          name: 'Uses poorly understood terms',
+          ex: '“Sleep” means “periodic suspension of sensorimotor engagement.”',
+          why: 'The latter is less clear than “sleep.”',
+        },
+        {
+          n: 5,
+          name: 'Poor match in vagueness',
+          ex: '“Tall” means “at least 190.5 cm.”',
+          why: 'Far more precise than “tall” ever is.',
+        },
+        {
+          n: 6,
+          name: 'Poor match in emotional tone',
+          ex: '“Politician” means “self-serving schemer seeking office.”',
+          why: 'Smuggles in a sneer that “politician” doesn’t have.',
+        },
+        {
+          n: 7,
+          name: 'Has non-essential properties',
+          ex: '“Human” means “animal that cooks its food.”',
+          why: 'Maybe true of all and only humans — but cooking isn’t what makes someone human.',
+        },
+      ];
+      const FLAWS = [
+        {
+          n: 1,
+          name: 'Too broad',
+          ex: '“Bachelor” means “man.”',
+          why: 'There are men who aren’t bachelors.',
+        },
+        {
+          n: 2,
+          name: 'Too narrow',
+          ex: '“Bachelor” means “unmarried male astronaut.”',
+          why: 'There are bachelors who aren’t astronauts.',
+        },
+        {
+          n: 3,
+          name: 'Circular',
+          ex: '“True” means “known to be true.”',
+          why: 'This defines “true” using “true.”',
+        },
+        {
+          n: 4,
+          name: 'Uses poorly understood terms',
+          ex: '“Good” means “having positive aretaic value.”',
+          why: 'The latter is less clear than “good.”',
+        },
+        {
+          n: 5,
+          name: 'Poor match in vagueness',
+          ex: '“Bachelor” means “unmarried male over 18 years old.”',
+          why: 'The latter is much more precise than “bachelor.”',
+        },
+        {
+          n: 6,
+          name: 'Poor match in emotional tone',
+          ex: '“Bachelor” means “fortunate man who hasn’t married.”',
+          why: 'The latter has a different emotional tone.',
+        },
+        {
+          n: 7,
+          name: 'Has non-essential properties',
+          ex: '“Bachelor” means “unmarried man living on earth.”',
+          why: 'We could imagine a bachelor who lives on the moon.',
+        },
+      ];
+      const A_FORMS = [
+        ['all A is B', 'c is A'],
+        ['no A is B', 'c is not A'],
+        ['some A is B', 'c is d'],
+        ['some A is not B', 'c is not d'],
+      ];
+      // The short labels the option grid uses — the vocabulary users
+      // actually recall in (testing 2026-08-21: nobody thinks in codes).
+      const R_LABELS = {
+        aa: 'Appeal to authority',
+        ac: 'Appeal to crowd',
+        ae: 'Appeal to emotion',
+        af: 'Appeal to force',
+        ah: 'Ad hominem',
+        ai: 'Appeal to ignorance',
+        am: 'Ambiguous',
+        bp: 'Beside the point',
+        bw: 'Black and white',
+        ci: 'Circular',
+        cq: 'Complex question',
+        fs: 'False stereotype',
+        ge: 'Genetic',
+        op: 'Opposition',
+        pc: 'Pro-con',
+        ph: 'Post hoc',
+        pw: 'Part-whole',
+        sm: 'Straw man',
+      };
+      // Original rewrites of the eighteen descriptions — DRAFTS for
+      // Malik to approve (2026-08-22 brief: don't copy the textbook;
+      // clear and straightforward). The ∴ schemas stay: they're minimal
+      // logical forms, kept deliberately. Clause ANALYSES are rephrased.
+      const R_FRESH = {
+        aa: {
+          desc: 'Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when:',
+          clauses: [
+            'the person isn’t an expert on this subject',
+            'the experts themselves don’t agree',
+            'the conclusion claims the authority <u>must</u> be right, not just probably right',
+          ],
+        },
+        ac: {
+          desc: 'Treats popularity as proof: most people believe A. ∴ A is true.',
+        },
+        ae: {
+          desc: 'Works on feelings instead of giving reasons — outrage, pity, or flattery in place of an argument.',
+        },
+        af: {
+          desc: 'Backs a claim with a threat: agree, or something bad happens to you.',
+        },
+        ah: {
+          desc: 'Attacks the person instead of the claim. It’s a fallacy when:',
+          clauses: [
+            'the attack has nothing to do with whether the person can reason about the issue',
+            'the conclusion says the person’s belief must be false, not just poorly supported',
+          ],
+        },
+        ai: {
+          desc: 'Treats missing evidence as evidence: no one has proved A. ∴ A is false — or no one has disproved A. ∴ A is true.',
+        },
+        am: {
+          desc: 'A key word quietly changes meaning partway through the argument.',
+        },
+        bp: {
+          desc: 'Proves something — just not the thing that was in question.',
+        },
+        bw: {
+          desc: 'Pretends there are only two options when there are more.',
+        },
+        ci: {
+          desc: 'Assumes the very thing it’s trying to prove — directly, or through a chain of arguments that loops back on itself.',
+        },
+        cq: {
+          desc: 'Smuggles a doubtful assumption into the question itself.',
+        },
+        fs: {
+          desc: 'Treats members of a group as more alike than they really are.',
+        },
+        ge: {
+          desc: 'Explains why you believe A — and concludes A must be false.',
+        },
+        op: {
+          desc: 'Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.',
+        },
+        pc: {
+          desc: 'Weighs only one side — all advantages or all disadvantages, never both.',
+        },
+        ph: {
+          desc: 'Mistakes sequence for cause: A happened after B. ∴ B caused A.',
+        },
+        pw: {
+          desc: 'Assumes what’s true of the whole holds for each part — or what’s true of every part holds for the whole.',
+        },
+        sm: {
+          desc: 'Rewrites an opponent’s view into something weaker, then knocks that down.',
+        },
+      };
+      const rText = (f) =>
+        dials.rtext === 'fresh' && R_FRESH[f.code]
+          ? R_FRESH[f.code]
+          : { desc: f.desc, clauses: f.clauses };
+
+      // The inference schemas hiding inside five descriptions — data for
+      // the "stacked" ∴ treatment.
+      const R_SCHEMAS = {
+        ac: [['Most people believe A.', 'A is true.']],
+        ai: [
+          ['No one has proved A.', 'A is false.'],
+          ['No one has disproved A.', 'A is true.'],
+        ],
+        ge: [['We can explain why you believe A.', 'A is false.']],
+        op: [['Our opponents believe A.', 'A is false.']],
+        ph: [['A happened after B.', 'A was caused by B.']],
+      };
+      const R_PREFIX = { ph: '(“after this therefore because of this”)' };
+      // EDITORIAL grouping proposal — the 2008 source does not group the
+      // eighteen; these families are a lab suggestion for Malik to judge,
+      // not doctrine.
+      const R_GROUPS = [
+        { name: 'Appeals', codes: ['aa', 'ac', 'ae', 'af', 'ai'] },
+        { name: 'People and sides', codes: ['ah', 'ge', 'op', 'sm'] },
+        {
+          name: 'Faulty structure',
+          codes: ['am', 'bw', 'ci', 'cq', 'ph', 'pw'],
+        },
+        { name: 'One-sided and off the point', codes: ['bp', 'fs', 'pc'] },
+      ];
+
+      const MOCKS = {
+        setA: {
+          prompt: 'All logicians are charming.',
+          eyebrow: 'Which is the right translation?',
+          options: [
+            ['1', 'all L is C'],
+            ['2', 'no L is C'],
+            ['3', 'some L is C'],
+            ['4', 'l is C'],
+          ],
+        },
+        setQ: {
+          prompt: '“Crypto” means “money for criminals.”',
+          eyebrow: 'What is wrong with this definition?',
+          options: [
+            ['1', 'Too broad'],
+            ['2', 'Too narrow'],
+            ['3', 'Circular'],
+            ['5', 'Poor match in vagueness'],
+          ],
+        },
+        setR: {
+          prompt:
+            'If I don’t get a good grade, Dr. Connolly, I’m going to talk to the dean about you. You recall that the dean is my father, don’t you?',
+          eyebrow: 'What fallacy does this illustrate?',
+          options: [
+            ['aa', 'Appeal to authority'],
+            ['af', 'Appeal to force'],
+            ['ah', 'Ad hominem'],
+            ['ae', 'Appeal to emotion'],
+          ],
+        },
+      };
+
+      /* ---- guide templates ---- */
+      const aTable = () => `
+        <table class="gtable">
+          <thead><tr><th>Class statements</th><th>Individual statements</th></tr></thead>
+          <tbody>${A_FORMS.map(([c, i]) => `<tr><td class="gmono">${c}</td><td class="gmono">${i}</td></tr>`).join('')}</tbody>
+        </table>`;
+      const qProse = () => `
+        <h3 class="gh">What is a definition?</h3>
+        <p class="gp">A definition is a rule of paraphrase designed to explain meaning. More precisely, a definition of a word or phrase is a rule saying how to eliminate this word or phrase in any sentence using it and produce a second sentence that means the same thing — the purpose of this being to explain or clarify the meaning of the word or phrase.</p>
+        <p class="gp">Definitions may be stipulative (specifying your own usage) or lexical (explaining current usage). A good lexical definition should allow us to “paraphrase out” a term — to produce a second sentence that means the same thing but doesn’t use the defined term.</p>`;
+      const qProseCondensed = () => `
+        <h3 class="gh">What is a definition?</h3>
+        <p class="gp">A rule of paraphrase: it says how to eliminate a word in any sentence and produce a second sentence that means the same thing. Stipulative definitions specify your own usage; lexical ones explain current usage — a good lexical definition lets you “paraphrase out” the term.</p>`;
+      const qTable = (flaws) => `
+        <table class="gtable"><tbody>${flaws
+          .map(
+            (f) =>
+              `<tr><td class="gcode">${f.n}</td><td><span class="gname">${f.name}</span><div class="gp" style="margin:2px 0 0">${f.ex}</div><div class="gwhy">${f.why}</div></td></tr>`
+          )
+          .join('')}</tbody></table>`;
+      // Set A live-letters: substitute this question's capitals into the
+      // schema (A→L, B→C); small letters stay abstract.
+      const aLive = (s) =>
+        s
+          .replace(/\bA\b/g, '<i class="glive">L</i>')
+          .replace(/\bB\b/g, '<i class="glive">C</i>');
+      const aTableLive = () => `
+        <table class="gtable">
+          <thead><tr><th>Class statements</th><th>Individual statements</th></tr></thead>
+          <tbody>${A_FORMS.map(([c, i]) => `<tr><td class="gmono">${aLive(c)}</td><td class="gmono">${aLive(i)}</td></tr>`).join('')}</tbody>
+        </table>`;
+      const aLegend = () =>
+        `<div class="glegend"><span class="gkey">L</span> logicians <span class="gkey">C</span> charming</div>`;
+      // ∴ treatments — dial 5. "stacked" applies where a schema exists;
+      // the others transform the description string.
+      function tfText(s) {
+        if (dials.tf === 'styled' || dials.tf === 'stacked')
+          return s.replaceAll('∴', '<span class="gtf">∴</span>');
+        if (dials.tf === 'word') return s.replace(/\.\s*∴\s*/g, '. Therefore ');
+        return s;
+      }
+      const rEntry = (f) => {
+        const t = rText(f);
+        let body;
+        if (dials.tf === 'stacked' && R_SCHEMAS[f.code]) {
+          const prefix = R_PREFIX[f.code]
+            ? `<div class="gp" style="margin:2px 0 0">${R_PREFIX[f.code]}</div>`
+            : '';
+          body =
+            prefix +
+            R_SCHEMAS[f.code]
+              .map(
+                ([p, c]) =>
+                  `<div class="gschema"><span>${p}</span><span class="con">${c}</span></div>`
+              )
+              .join('');
+        } else {
+          body = `<div class="gp" style="margin:2px 0 0">${tfText(t.desc)}</div>`;
+        }
+        return `<div class="gentry" id="entry-${f.code}">
+            <span class="gcode">${f.code}</span>
+            <div><span class="gname">${f.name}</span>
+              ${body}
+              ${t.clauses ? `<ol class="gclauses">${t.clauses.map((c) => `<li>${c}</li>`).join('')}</ol>` : ''}
+            </div>
+          </div>`;
+      };
+      const rEntries = () => FALLACIES.map(rEntry).join('');
+      const rCompactDesc = (f) => {
+        const t = rText(f);
+        return t.clauses
+          ? `${tfText(t.desc)} ${t.clauses.map((c, i) => `(${i + 1}) ${c}`).join('; ')}.`
+          : tfText(t.desc);
+      };
+
+      /* Directions per set — plural on purpose. The lab's job is to lay
+         them side by side; picking is Malik's. Every set defaults to
+         shipped as the control. */
+      const DIRECTIONS = {
+        setA: [
+          { key: 'shipped', label: 'Shipped' },
+          { key: 'legend', label: 'Letter legend' },
+          { key: 'live', label: 'Live letters' },
+        ],
+        setQ: [
+          { key: 'shipped', label: 'Shipped' },
+          { key: 'fresh', label: 'Fresh + afterword' },
+          { key: 'fold', label: 'Fresh + folded prose' },
+          { key: 'bare', label: 'Fresh · no prose<small>DECIDED</small>' },
+        ],
+        setR: [
+          { key: 'shipped', label: 'Linear list<small>DECIDED</small>' },
+          { key: 'names', label: 'Name index' },
+          { key: 'grouped', label: 'Families' },
+          { key: 'compact', label: 'Compact' },
+        ],
+      };
+      const DIRECTION_NOTES = {
+        setA:
+          '“Legend” maps this question’s letters above the abstract ' +
+          'schema; “Live letters” substitutes them into the table itself. ' +
+          'The pedagogy trade to feel: substitution removes the mapping ' +
+          'step users are supposed to learn — the legend scaffolds it ' +
+          'without deleting it.',
+        setQ:
+          'DECIDED 2026-08-22: fresh examples, no prose on the sheet. ' +
+          'The “what is a definition” teaching moves to the start screen ' +
+          'or stays with the book. The other options remain as the ' +
+          'comparison record.',
+        setR:
+          'DECIDED 2026-08-22: the linear list, with fresh text and the ' +
+          'intro shrunk to a credit line. Name index, families and ' +
+          'compact stay as the comparison record (the code index was ' +
+          'killed by user testing before them).',
+      };
+
+      const GUIDES = {
+        setA: {
+          shipped: () => `
+            <h3 class="gh">What makes a well-formed formula (wff)?</h3>
+            <p class="gp">A wff must have one of these eight forms (where other capitals can replace “A” and “B” and other small letters “c” and “d”):</p>
+            ${aTable()}`,
+          legend: () => `
+            <h3 class="gh">What makes a well-formed formula (wff)?</h3>
+            ${aLegend()}
+            <p class="gp">A wff must have one of these eight forms (where other capitals can replace “A” and “B” and other small letters “c” and “d”):</p>
+            ${aTable()}`,
+          live: () => `
+            <h3 class="gh">The eight forms — with this question’s letters</h3>
+            ${aLegend()}
+            ${aTableLive()}
+            <p class="gsrc">Small letters stay abstract: this question has no individual constants.</p>`,
+        },
+        setQ: {
+          shipped: () => `
+            ${qProse()}
+            <h3 class="gh" style="margin-top:18px">Ways a definition can be flawed</h3>
+            <p class="gp">One worked example per flaw, from Gensler §3.2.</p>
+            ${qTable(FLAWS)}`,
+          tablefirst: () => `
+            <h3 class="gh">Ways a definition can be flawed</h3>
+            <p class="gp">One worked example per flaw — the numbers match the answer options.</p>
+            ${qTable(FLAWS)}
+            <p class="gsrc">Examples after Gensler, “Introduction to Logic” §3.2 (Routledge).</p>
+            <div class="gafter">${qProseCondensed()}</div>`,
+          fresh: () => `
+            <h3 class="gh">Ways a definition can be flawed</h3>
+            <p class="gp">One worked example per flaw — the numbers match the answer options.</p>
+            ${qTable(FLAWS_FRESH)}
+            <p class="gsrc">Original examples; framework after Gensler §3.2.</p>
+            <div class="gafter">${qProseCondensed()}</div>`,
+          fold: () => `
+            <h3 class="gh">Ways a definition can be flawed</h3>
+            <p class="gp">One worked example per flaw — the numbers match the answer options.</p>
+            ${qTable(FLAWS_FRESH)}
+            <p class="gsrc">Original examples; framework after Gensler §3.2.</p>
+            <details class="gfold"><summary>What is a definition?</summary>${qProseCondensed().replace('<h3 class="gh">What is a definition?</h3>', '')}</details>`,
+          bare: () => `
+            <h3 class="gh">Ways a definition can be flawed</h3>
+            <p class="gp">One worked example per flaw — the numbers match the answer options.</p>
+            ${qTable(FLAWS_FRESH)}
+            <p class="gsrc">Original examples; framework after Gensler §3.2.</p>`,
+        },
+        setR: {
+          // DECIDED 2026-08-22: shipped layout + fresh text. With
+          // original text the intro can't source the chapter — it
+          // shrinks to a credit line (same pattern as Set Q).
+          shipped: () =>
+            dials.rtext === 'fresh'
+              ? `
+            <h3 class="gh">The eighteen informal fallacies</h3>
+            <p class="gp">Some passages commit more than one fallacy and so have more than one correct answer.</p>
+            ${rEntries()}
+            <p class="gsrc">Original descriptions; framework after Gensler’s “Fallacies and Argumentation” chapter.</p>`
+              : `
+            <h3 class="gh">The eighteen informal fallacies</h3>
+            <p class="gp">From Gensler’s “Fallacies and Argumentation” chapter. Some passages commit more than one fallacy and so have more than one correct answer.</p>
+            ${rEntries()}`,
+          names: () => `
+            <div class="gindex names" id="gindex">${FALLACIES.map((f) => `<button data-jump="${f.code}">${R_LABELS[f.code]}</button>`).join('')}</div>
+            ${rEntries()}`,
+          grouped: () =>
+            R_GROUPS.map(
+              (g) =>
+                `<div class="ggroup-h">${g.name}</div>` +
+                g.codes
+                  .map((code) => rEntry(FALLACIES.find((f) => f.code === code)))
+                  .join('')
+            ).join(''),
+          compact: () =>
+            FALLACIES.map(
+              (f) =>
+                `<div class="gentry gcompact" id="entry-${f.code}"><span class="gname">${R_LABELS[f.code]}</span> — ${rCompactDesc(f)}</div>`
+            ).join(''),
+        },
+      };
+
+      /* ---- refs & dials ---- */
+      const $ = (id) => document.getElementById(id);
+      const stage = $('stage'),
+        quiz = $('quiz'),
+        qbody = $('qbody'),
+        sheet = $('sheet'),
+        shead = $('shead'),
+        guide = $('guide'),
+        gwrap = $('gwrap'),
+        grabber = $('grabber'),
+        chipX = $('chipX'),
+        cta = $('cta'),
+        statusPill = $('statusPill'),
+        panel = $('panel'),
+        notes = $('notes'),
+        sabProbe = $('sabProbe');
+
+      // v3 defaults = the 2026-08-22 decisions: fit snaps, styled ∴,
+      // zebra rows, fresh Set Q examples. Still open: Set A direction
+      // (Gensler evidence favours shipped/legend) and Set R's index.
+      // v4: Q prose removed (bare DECIDED), passage floor 21px, R text
+      // fresh drafts default so the rewrites get judged immediately.
+      const DIAL_KEY = 'guide-lab-dials-v4';
+      let dials = {
+        content: 'setQ',
+        snaps: 'fit',
+        rows: 'zebra',
+        tf: 'styled',
+        rtext: 'fresh',
+        designs: { setA: 'shipped', setQ: 'bare', setR: 'shipped' },
+      };
+      try {
+        const saved = JSON.parse(localStorage.getItem(DIAL_KEY));
+        if (saved && saved.content)
+          dials = {
+            ...dials,
+            ...saved,
+            designs: { ...dials.designs, ...(saved.designs || {}) },
+          };
+      } catch {}
+      // Sanitize directions that no longer exist for a set.
+      for (const set of Object.keys(dials.designs)) {
+        if (!DIRECTIONS[set]?.some((d) => d.key === dials.designs[set]))
+          dials.designs[set] = set === 'setQ' ? 'bare' : 'shipped';
+      }
+
+      /* ---- geometry: snap list is DYNAMIC (finding 1) ---- */
+      const HEADER_OFFSET = 112;
+      const sab = () => sabProbe.offsetHeight;
+      const stageH = () => stage.clientHeight;
+      const sheetSpan = () => stageH() * 0.97;
+      const fullH = () => sheetSpan();
+      const collapsedH = () => 128 + sab();
+      function expandedSnaps() {
+        if (dials.snaps === 'fit') {
+          const contentH = gwrap.scrollHeight + HEADER_OFFSET + 28;
+          if (contentH < fullH() - 40) return [Math.max(280, contentH)];
+        }
+        return [Math.min(460, stageH() * 0.85), fullH()];
+      }
+      const snapList = () => [collapsedH(), ...expandedSnaps()];
+      const nearestIdx = (v) => {
+        const list = snapList();
+        let best = 0;
+        list.forEach((s, i) => {
+          if (Math.abs(v - s) < Math.abs(v - list[best])) best = i;
+        });
+        return best;
+      };
+
+      let visible = 0;
+      let snapIdx = 0;
+
+      function kindLabel(i) {
+        const n = snapList().length;
+        if (i === 0) return 'collapsed';
+        if (n === 2) return 'fit';
+        return i === 1 ? 'guide' : 'full';
+      }
+
+      function render(v) {
+        visible = v;
+        sheet.style.transform = `translate3d(0, ${sheetSpan() - v}px, 0)`;
+        const expanded = v > collapsedH() + 40;
+        shead.dataset.head = expanded ? 'reader' : 'cta';
+        sheet.dataset.x = expanded ? 'on' : 'off';
+        sheet.dataset.guide = v > collapsedH() + 24 ? 'on' : 'off';
+        guide.style.height = `${Math.max(0, v - HEADER_OFFSET)}px`;
+        statusPill.textContent = `${kindLabel(nearestIdx(v))} · ${Math.round(v)}px`;
+      }
+
+      let settleTimer = null;
+      function settleToIdx(i) {
+        const list = snapList();
+        snapIdx = Math.max(0, Math.min(i, list.length - 1));
+        sheet.classList.add('settling');
+        requestAnimationFrame(() => render(list[snapIdx]));
+        clearTimeout(settleTimer);
+        settleTimer = setTimeout(() => sheet.classList.remove('settling'), 340);
+        if (navigator.vibrate) navigator.vibrate(8);
+      }
+
+      /* ---- drag (the sheet-lab machinery, list-generalised) ---- */
+      let ptr = null;
+      let momId = null;
+      const cancelMomentum = () => {
+        if (momId) cancelAnimationFrame(momId);
+        momId = null;
+      };
+      function addSample(s, t, y) {
+        s.push({ t, y });
+        if (s.length > 8) s.shift();
+      }
+      function velocity(s) {
+        if (s.length < 2) return 0;
+        const b = s[s.length - 1];
+        let i = s.length - 2;
+        while (i > 0 && b.t - s[i].t < 100) i--;
+        const a = s[i];
+        const dt = b.t - a.t;
+        return dt ? (b.y - a.y) / dt : 0;
+      }
+      function startSheetGesture(e, mode) {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        cancelMomentum();
+        sheet.classList.remove('settling');
+        ptr = {
+          id: e.pointerId,
+          mode,
+          lastY: e.clientY,
+          startY: e.clientY,
+          maxMove: 0,
+          samples: [],
+          scrolled: false,
+        };
+        addSample(ptr.samples, performance.now(), e.clientY);
+        try {
+          e.target.setPointerCapture(e.pointerId);
+        } catch {}
+      }
+      sheet.addEventListener('pointerdown', (e) => {
+        startSheetGesture(e, e.target.closest('#guide') ? 'guidemix' : 'sheet');
+      });
+      function sheetMove(dy) {
+        const f = snapList()[snapList().length - 1];
+        const c = collapsedH();
+        if (ptr.mode === 'guidemix' && visible >= f - 1) {
+          if (dy < 0) {
+            guide.scrollTop -= dy;
+            ptr.scrolled = true;
+            return;
+          }
+          if (guide.scrollTop > 0) {
+            guide.scrollTop = Math.max(0, guide.scrollTop - dy);
+            ptr.scrolled = true;
+            return;
+          }
+        }
+        let v = visible - dy;
+        if (ptr.mode === 'guidemix' && v > f) {
+          guide.scrollTop += v - f;
+          ptr.scrolled = true;
+          v = f;
+        }
+        if (v > f) v = f + (v - f) / 3;
+        if (v < c) v = c - (c - v) / 3;
+        render(v);
+      }
+      document.addEventListener('pointermove', (e) => {
+        if (!ptr || e.pointerId !== ptr.id) return;
+        const dy = e.clientY - ptr.lastY;
+        ptr.lastY = e.clientY;
+        ptr.maxMove = Math.max(ptr.maxMove, Math.abs(e.clientY - ptr.startY));
+        addSample(ptr.samples, performance.now(), e.clientY);
+        sheetMove(dy);
+      });
+      function momentum(v0) {
+        let v = v0;
+        let last = performance.now();
+        cancelMomentum();
+        const step = (t) => {
+          const dt = t - last;
+          last = t;
+          guide.scrollTop += v * dt;
+          v *= Math.pow(0.94, dt / 16.7);
+          const max = guide.scrollHeight - guide.clientHeight;
+          if (
+            Math.abs(v) > 0.02 &&
+            guide.scrollTop > 0 &&
+            guide.scrollTop < max
+          )
+            momId = requestAnimationFrame(step);
+        };
+        momId = requestAnimationFrame(step);
+      }
+      function finishSheetGesture() {
+        if (ptr.maxMove < 6) return;
+        const list = snapList();
+        const top = list[list.length - 1];
+        const vel = velocity(ptr.samples);
+        if (ptr.mode === 'guidemix' && visible >= top - 1 && ptr.scrolled) {
+          momentum(-vel);
+          render(top);
+          snapIdx = list.length - 1;
+          return;
+        }
+        let target;
+        if (vel <= -0.35) {
+          target = Math.min(
+            nearestIdx(visible) + (visible > list[nearestIdx(visible)] ? 1 : 0),
+            list.length - 1
+          );
+          if (list[target] <= visible)
+            target = Math.min(target + 1, list.length - 1);
+        } else if (vel >= 0.35) {
+          target = Math.max(
+            nearestIdx(visible) - (visible < list[nearestIdx(visible)] ? 1 : 0),
+            0
+          );
+          if (list[target] >= visible) target = Math.max(target - 1, 0);
+        } else target = nearestIdx(visible);
+        settleToIdx(target);
+      }
+      let wasDrag = false;
+      document.addEventListener('pointerup', (e) => {
+        if (!ptr || e.pointerId !== ptr.id) return;
+        wasDrag = ptr.maxMove >= 6;
+        finishSheetGesture();
+        ptr = null;
+      });
+      document.addEventListener('pointercancel', (e) => {
+        if (!ptr || e.pointerId !== ptr.id) return;
+        wasDrag = ptr.maxMove >= 6;
+        finishSheetGesture();
+        ptr = null;
+      });
+
+      /* ---- flick zone (decided gesture) ---- */
+      let flick = null;
+      quiz.addEventListener(
+        'touchstart',
+        (e) => {
+          const t = e.touches[0];
+          const rect = stage.getBoundingClientRect();
+          if (t.clientY - rect.top < stageH() * 0.7) return;
+          flick = {
+            t0: performance.now(),
+            y0: t.clientY,
+            x0: t.clientX,
+            samples: [],
+            done: false,
+          };
+          addSample(flick.samples, flick.t0, t.clientY);
+        },
+        { passive: true }
+      );
+      quiz.addEventListener(
+        'touchmove',
+        (e) => {
+          if (!flick || flick.done) return;
+          const t = e.touches[0];
+          const now = performance.now();
+          addSample(flick.samples, now, t.clientY);
+          const rise = flick.y0 - t.clientY;
+          const drift = Math.abs(t.clientX - flick.x0);
+          const upV = -velocity(flick.samples);
+          if (
+            now - flick.t0 <= 220 &&
+            rise >= 24 &&
+            upV >= 0.55 &&
+            drift < rise
+          ) {
+            flick.done = true;
+            if (snapIdx < snapList().length - 1) {
+              e.preventDefault();
+              settleToIdx(snapIdx + 1);
+            }
+          } else if (now - flick.t0 > 260) flick.done = true;
+        },
+        { passive: false }
+      );
+      quiz.addEventListener('touchend', () => (flick = null), {
+        passive: true,
+      });
+
+      /* ---- taps ---- */
+      grabber.addEventListener('click', () => {
+        if (wasDrag) return;
+        settleToIdx((snapIdx + 1) % snapList().length);
+      });
+      chipX.addEventListener('click', () => settleToIdx(0));
+      $('guideChip').addEventListener('click', () => settleToIdx(1));
+      guide.addEventListener('click', (e) => {
+        const jump = e.target.closest('[data-jump]');
+        if (!jump) return;
+        const entry = $(`entry-${jump.dataset.jump}`);
+        if (!entry) return;
+        const indexH = $('gindex') ? $('gindex').offsetHeight + 6 : 0;
+        guide.scrollTop = entry.offsetTop - indexH;
+        entry.classList.remove('flash');
+        void entry.offsetWidth;
+        entry.classList.add('flash');
+      });
+      cta.addEventListener('click', () => {});
+
+      /* ---- render mock + guide per dials ---- */
+      function renderMock() {
+        const m = MOCKS[dials.content];
+        qbody.innerHTML = `
+          <p class="qprompt">${m.prompt}</p>
+          <h2 class="qeyebrow">${m.eyebrow}</h2>
+          <div class="qopts">${m.options
+            .map(
+              ([badge, label]) =>
+                `<button class="qopt" aria-pressed="false"><span class="qopt-in"><span class="qbadge">${badge}</span><span>${label}</span></span></button>`
+            )
+            .join('')}</div>`;
+        qbody.querySelectorAll('.qopt').forEach((opt) => {
+          opt.addEventListener('click', () => {
+            qbody
+              .querySelectorAll('.qopt')
+              .forEach((o) =>
+                o.setAttribute('aria-pressed', String(o === opt))
+              );
+            cta.disabled = false;
+          });
+        });
+      }
+
+      function applyDials() {
+        stage.dataset.content = dials.content;
+        stage.dataset.rows = dials.rows;
+        $('rowsGroup').classList.toggle('dimmed', dials.content === 'setA');
+        $('tfGroup').classList.toggle('dimmed', dials.content !== 'setR');
+        $('rtextGroup').classList.toggle('dimmed', dials.content !== 'setR');
+        renderMock();
+        const design = dials.designs[dials.content];
+        gwrap.innerHTML = GUIDES[dials.content][design]();
+        guide.scrollTop = 0;
+        cta.disabled = true;
+        // The direction seg is content-dependent — rebuild it.
+        $('designSeg').innerHTML = DIRECTIONS[dials.content]
+          .map((d) => `<button data-val="${d.key}">${d.label}</button>`)
+          .join('');
+        $('designNote').textContent = DIRECTION_NOTES[dials.content];
+        document.querySelectorAll('.seg').forEach((seg) => {
+          const active =
+            seg.dataset.dial === 'design' ? design : dials[seg.dataset.dial];
+          seg.querySelectorAll('button').forEach((b) => {
+            b.setAttribute('aria-pressed', String(b.dataset.val === active));
+          });
+        });
+        // Re-settle: the snap list may have changed shape entirely.
+        snapIdx = Math.min(snapIdx, snapList().length - 1);
+        render(snapList()[snapIdx]);
+        try {
+          localStorage.setItem(DIAL_KEY, JSON.stringify(dials));
+        } catch {}
+      }
+
+      document.querySelectorAll('.seg').forEach((seg) => {
+        seg.addEventListener('click', (e) => {
+          const btn = e.target.closest('button');
+          if (!btn) return;
+          if (seg.dataset.dial === 'design')
+            dials.designs[dials.content] = btn.dataset.val;
+          else dials[seg.dataset.dial] = btn.dataset.val;
+          applyDials();
+        });
+      });
+      $('labChip').addEventListener(
+        'click',
+        () => (panel.hidden = !panel.hidden)
+      );
+      $('panelClose').addEventListener('click', () => (panel.hidden = true));
+      $('notesBtn').addEventListener('click', () => {
+        notes.hidden = false;
+        panel.hidden = true;
+      });
+      $('notesClose').addEventListener('click', () => (notes.hidden = true));
+
+      /* ---- init, resize, capture params ---- */
+      window.addEventListener('resize', () => render(snapList()[snapIdx]));
+      window.visualViewport?.addEventListener('resize', () =>
+        render(snapList()[snapIdx])
+      );
+
+      const q = new URLSearchParams(location.search);
+      if (q.get('content')) dials.content = q.get('content');
+      if (q.get('design')) dials.designs[dials.content] = q.get('design');
+      if (q.get('snaps')) dials.snaps = q.get('snaps');
+      if (q.get('rows')) dials.rows = q.get('rows');
+      if (q.get('tf')) dials.tf = q.get('tf');
+      if (q.get('rtext')) dials.rtext = q.get('rtext');
+      applyDials();
+      render(collapsedH());
+      if (q.get('snap')) settleToIdx(parseInt(q.get('snap'), 10));
+      if (q.get('panel') === '1') panel.hidden = false;
+      if (q.get('notes') === '1') notes.hidden = false;
+
+      window.__lab = { settleToIdx, applyDials, dials, snapList };
+    </script>
+  </body>
+</html>
