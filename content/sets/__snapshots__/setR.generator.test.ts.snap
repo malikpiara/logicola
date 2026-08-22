@@ -32,14 +32,14 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "abbreviation": "aa",
-              "hint": "Appeal to authority: This is fallacious if: (1) the person isn’t an authority on the subject; (2) there’s no consensus of such authorities; (3) the argument concludes that the authority *must* be right (and isn’t just probably right).",
+              "hint": "Appeal to authority: Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when: (1) the person isn’t an expert on this subject; (2) the experts themselves don’t agree; (3) the conclusion claims the authority *must* be right (and isn’t just probably right).",
               "hintParts": {
                 "clauses": [
-                  "the person isn’t an authority on the subject",
-                  "there’s no consensus of such authorities",
-                  "the argument concludes that the authority *must* be right (and isn’t just probably right)",
+                  "the person isn’t an expert on this subject",
+                  "the experts themselves don’t agree",
+                  "the conclusion claims the authority *must* be right (and isn’t just probably right)",
                 ],
-                "lead": "This is fallacious if:",
+                "lead": "Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when:",
                 "term": "Appeal to authority",
               },
               "id": 0,
@@ -47,10 +47,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ac",
-              "hint": "Appeal to the crowd: Most people believe A. ∴ A is true.",
+              "hint": "Appeal to the crowd: Treats popularity as proof: most people believe A. ∴ A is true.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Most people believe A. ∴ A is true.",
+                "lead": "Treats popularity as proof: most people believe A. ∴ A is true.",
                 "term": "Appeal to the crowd",
               },
               "id": 1,
@@ -58,10 +58,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ae",
-              "hint": "Appeal to emotion: To stir up emotions instead of arguing in a logical manner.",
+              "hint": "Appeal to emotion: Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To stir up emotions instead of arguing in a logical manner.",
+                "lead": "Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
                 "term": "Appeal to emotion",
               },
               "id": 2,
@@ -69,10 +69,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "af",
-              "hint": "Appeal to force: To use threats or intimidation to get a conclusion accepted.",
+              "hint": "Appeal to force: Backs a claim with a threat: agree, or something bad happens to you.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To use threats or intimidation to get a conclusion accepted.",
+                "lead": "Backs a claim with a threat: agree, or something bad happens to you.",
                 "term": "Appeal to force",
               },
               "id": 3,
@@ -80,13 +80,13 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ah",
-              "hint": "Ad hominem: (“personal attack”). This is fallacious if: (1) the grounds of the attack are irrelevant to the person’s rational competence; (2) the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).",
+              "hint": "Ad hominem: (“personal attack”). Attacking the person instead of the claim. It’s a fallacy when: (1) the grounds of the attack have nothing to do with the person’s ability to reason about the issue; (2) the argument concludes that the person’s belief must be false (and isn’t just poorly supported).",
               "hintParts": {
                 "clauses": [
-                  "the grounds of the attack are irrelevant to the person’s rational competence",
-                  "the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held)",
+                  "the grounds of the attack have nothing to do with the person’s ability to reason about the issue",
+                  "the argument concludes that the person’s belief must be false (and isn’t just poorly supported)",
                 ],
-                "lead": "(“personal attack”). This is fallacious if:",
+                "lead": "(“personal attack”). Attacking the person instead of the claim. It’s a fallacy when:",
                 "term": "Ad hominem",
               },
               "id": 4,
@@ -94,10 +94,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ai",
-              "hint": "Appeal to ignorance: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+              "hint": "Appeal to ignorance: Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "“No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+                "lead": "Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
                 "term": "Appeal to ignorance",
               },
               "id": 5,
@@ -105,10 +105,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "am",
-              "hint": "Ambiguous: A term or phrase changes meaning within the argument.",
+              "hint": "Ambiguous: A key word or phrase quietly changes meaning partway through the argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A term or phrase changes meaning within the argument.",
+                "lead": "A key word or phrase quietly changes meaning partway through the argument.",
                 "term": "Ambiguous",
               },
               "id": 6,
@@ -116,10 +116,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bp",
-              "hint": "Beside the point: The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+              "hint": "Beside the point: Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+                "lead": "Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
                 "term": "Beside the point",
               },
               "id": 7,
@@ -127,10 +127,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bw",
-              "hint": "Black and white: Oversimplifying by assuming that one or another of two extremes must be true.",
+              "hint": "Black and white: Oversimplifies by pretending one of two extremes must be true when there are options in between.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Oversimplifying by assuming that one or another of two extremes must be true.",
+                "lead": "Oversimplifies by pretending one of two extremes must be true when there are options in between.",
                 "term": "Black and white",
               },
               "id": 8,
@@ -138,10 +138,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ci",
-              "hint": "Circular: An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+              "hint": "Circular: Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+                "lead": "Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
                 "term": "Circular",
               },
               "id": 9,
@@ -149,10 +149,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "cq",
-              "hint": "Complex question: A question that assumes the truth of something false or doubtful.",
+              "hint": "Complex question: A question that smuggles in an assumption that’s false or still in doubt.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A question that assumes the truth of something false or doubtful.",
+                "lead": "A question that smuggles in an assumption that’s false or still in doubt.",
                 "term": "Complex question",
               },
               "id": 10,
@@ -160,10 +160,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "fs",
-              "hint": "False stereotype: Assuming that members of a certain group are more alike than they actually are.",
+              "hint": "False stereotype: Treats members of a group as more alike than they really are.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Assuming that members of a certain group are more alike than they actually are.",
+                "lead": "Treats members of a group as more alike than they really are.",
                 "term": "False stereotype",
               },
               "id": 11,
@@ -171,10 +171,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ge",
-              "hint": "Genetic fallacy: We can explain why you believe A. ∴ A is false.",
+              "hint": "Genetic fallacy: Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "We can explain why you believe A. ∴ A is false.",
+                "lead": "Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
                 "term": "Genetic fallacy",
               },
               "id": 12,
@@ -182,10 +182,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "op",
-              "hint": "Opposition fallacy: Our opponents believe A. ∴ A is false.",
+              "hint": "Opposition fallacy: Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Our opponents believe A. ∴ A is false.",
+                "lead": "Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
                 "term": "Opposition fallacy",
               },
               "id": 13,
@@ -193,10 +193,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pc",
-              "hint": "Pro-con fallacy: This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+              "hint": "Pro-con fallacy: Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+                "lead": "Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
                 "term": "Pro-con fallacy",
               },
               "id": 14,
@@ -204,10 +204,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ph",
-              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ B caused A.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "(“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+                "lead": "(“after this therefore because of this”) A happened after B. ∴ B caused A.",
                 "term": "Post hoc ergo propter hoc",
               },
               "id": 15,
@@ -215,10 +215,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pw",
-              "hint": "Part-whole: The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+              "hint": "Part-whole: Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+                "lead": "Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
                 "term": "Part-whole",
               },
               "id": 16,
@@ -226,10 +226,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "sm",
-              "hint": "Straw man: Misrepresenting the views of an opponent.",
+              "hint": "Straw man: Rewrites an opponent’s view into something weaker, then attacks that instead.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Misrepresenting the views of an opponent.",
+                "lead": "Rewrites an opponent’s view into something weaker, then attacks that instead.",
                 "term": "Straw man",
               },
               "id": 17,
@@ -239,7 +239,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "prompt": "Academic philosophers these days are all logical positivists. None of them accept a spiritual dimension of humanity.",
         },
         {
-          "answer": "This passage illustrates the post hoc fallacy. (“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+          "answer": "This passage illustrates the post hoc fallacy. (“after this therefore because of this”) A happened after B. ∴ B caused A.",
           "correctId": [
             15,
           ],
@@ -247,14 +247,14 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "abbreviation": "aa",
-              "hint": "Appeal to authority: This is fallacious if: (1) the person isn’t an authority on the subject; (2) there’s no consensus of such authorities; (3) the argument concludes that the authority *must* be right (and isn’t just probably right).",
+              "hint": "Appeal to authority: Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when: (1) the person isn’t an expert on this subject; (2) the experts themselves don’t agree; (3) the conclusion claims the authority *must* be right (and isn’t just probably right).",
               "hintParts": {
                 "clauses": [
-                  "the person isn’t an authority on the subject",
-                  "there’s no consensus of such authorities",
-                  "the argument concludes that the authority *must* be right (and isn’t just probably right)",
+                  "the person isn’t an expert on this subject",
+                  "the experts themselves don’t agree",
+                  "the conclusion claims the authority *must* be right (and isn’t just probably right)",
                 ],
-                "lead": "This is fallacious if:",
+                "lead": "Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when:",
                 "term": "Appeal to authority",
               },
               "id": 0,
@@ -262,10 +262,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ac",
-              "hint": "Appeal to the crowd: Most people believe A. ∴ A is true.",
+              "hint": "Appeal to the crowd: Treats popularity as proof: most people believe A. ∴ A is true.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Most people believe A. ∴ A is true.",
+                "lead": "Treats popularity as proof: most people believe A. ∴ A is true.",
                 "term": "Appeal to the crowd",
               },
               "id": 1,
@@ -273,10 +273,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ae",
-              "hint": "Appeal to emotion: To stir up emotions instead of arguing in a logical manner.",
+              "hint": "Appeal to emotion: Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To stir up emotions instead of arguing in a logical manner.",
+                "lead": "Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
                 "term": "Appeal to emotion",
               },
               "id": 2,
@@ -284,10 +284,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "af",
-              "hint": "Appeal to force: To use threats or intimidation to get a conclusion accepted.",
+              "hint": "Appeal to force: Backs a claim with a threat: agree, or something bad happens to you.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To use threats or intimidation to get a conclusion accepted.",
+                "lead": "Backs a claim with a threat: agree, or something bad happens to you.",
                 "term": "Appeal to force",
               },
               "id": 3,
@@ -295,13 +295,13 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ah",
-              "hint": "Ad hominem: (“personal attack”). This is fallacious if: (1) the grounds of the attack are irrelevant to the person’s rational competence; (2) the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).",
+              "hint": "Ad hominem: (“personal attack”). Attacking the person instead of the claim. It’s a fallacy when: (1) the grounds of the attack have nothing to do with the person’s ability to reason about the issue; (2) the argument concludes that the person’s belief must be false (and isn’t just poorly supported).",
               "hintParts": {
                 "clauses": [
-                  "the grounds of the attack are irrelevant to the person’s rational competence",
-                  "the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held)",
+                  "the grounds of the attack have nothing to do with the person’s ability to reason about the issue",
+                  "the argument concludes that the person’s belief must be false (and isn’t just poorly supported)",
                 ],
-                "lead": "(“personal attack”). This is fallacious if:",
+                "lead": "(“personal attack”). Attacking the person instead of the claim. It’s a fallacy when:",
                 "term": "Ad hominem",
               },
               "id": 4,
@@ -309,10 +309,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ai",
-              "hint": "Appeal to ignorance: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+              "hint": "Appeal to ignorance: Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "“No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+                "lead": "Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
                 "term": "Appeal to ignorance",
               },
               "id": 5,
@@ -320,10 +320,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "am",
-              "hint": "Ambiguous: A term or phrase changes meaning within the argument.",
+              "hint": "Ambiguous: A key word or phrase quietly changes meaning partway through the argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A term or phrase changes meaning within the argument.",
+                "lead": "A key word or phrase quietly changes meaning partway through the argument.",
                 "term": "Ambiguous",
               },
               "id": 6,
@@ -331,10 +331,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bp",
-              "hint": "Beside the point: The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+              "hint": "Beside the point: Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+                "lead": "Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
                 "term": "Beside the point",
               },
               "id": 7,
@@ -342,10 +342,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bw",
-              "hint": "Black and white: Oversimplifying by assuming that one or another of two extremes must be true.",
+              "hint": "Black and white: Oversimplifies by pretending one of two extremes must be true when there are options in between.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Oversimplifying by assuming that one or another of two extremes must be true.",
+                "lead": "Oversimplifies by pretending one of two extremes must be true when there are options in between.",
                 "term": "Black and white",
               },
               "id": 8,
@@ -353,10 +353,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ci",
-              "hint": "Circular: An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+              "hint": "Circular: Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+                "lead": "Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
                 "term": "Circular",
               },
               "id": 9,
@@ -364,10 +364,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "cq",
-              "hint": "Complex question: A question that assumes the truth of something false or doubtful.",
+              "hint": "Complex question: A question that smuggles in an assumption that’s false or still in doubt.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A question that assumes the truth of something false or doubtful.",
+                "lead": "A question that smuggles in an assumption that’s false or still in doubt.",
                 "term": "Complex question",
               },
               "id": 10,
@@ -375,10 +375,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "fs",
-              "hint": "False stereotype: Assuming that members of a certain group are more alike than they actually are.",
+              "hint": "False stereotype: Treats members of a group as more alike than they really are.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Assuming that members of a certain group are more alike than they actually are.",
+                "lead": "Treats members of a group as more alike than they really are.",
                 "term": "False stereotype",
               },
               "id": 11,
@@ -386,10 +386,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ge",
-              "hint": "Genetic fallacy: We can explain why you believe A. ∴ A is false.",
+              "hint": "Genetic fallacy: Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "We can explain why you believe A. ∴ A is false.",
+                "lead": "Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
                 "term": "Genetic fallacy",
               },
               "id": 12,
@@ -397,10 +397,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "op",
-              "hint": "Opposition fallacy: Our opponents believe A. ∴ A is false.",
+              "hint": "Opposition fallacy: Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Our opponents believe A. ∴ A is false.",
+                "lead": "Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
                 "term": "Opposition fallacy",
               },
               "id": 13,
@@ -408,10 +408,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pc",
-              "hint": "Pro-con fallacy: This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+              "hint": "Pro-con fallacy: Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+                "lead": "Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
                 "term": "Pro-con fallacy",
               },
               "id": 14,
@@ -419,10 +419,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ph",
-              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ B caused A.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "(“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+                "lead": "(“after this therefore because of this”) A happened after B. ∴ B caused A.",
                 "term": "Post hoc ergo propter hoc",
               },
               "id": 15,
@@ -430,10 +430,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pw",
-              "hint": "Part-whole: The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+              "hint": "Part-whole: Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+                "lead": "Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
                 "term": "Part-whole",
               },
               "id": 16,
@@ -441,10 +441,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "sm",
-              "hint": "Straw man: Misrepresenting the views of an opponent.",
+              "hint": "Straw man: Rewrites an opponent’s view into something weaker, then attacks that instead.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Misrepresenting the views of an opponent.",
+                "lead": "Rewrites an opponent’s view into something weaker, then attacks that instead.",
                 "term": "Straw man",
               },
               "id": 17,
@@ -454,7 +454,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "prompt": "Smith wore this headband and then kicked two long field goals. The headband brought him good luck.",
         },
         {
-          "answer": "This passage illustrates the appeal to ignorance fallacy. “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+          "answer": "This passage illustrates the appeal to ignorance fallacy. Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
           "correctId": [
             5,
           ],
@@ -462,14 +462,14 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "abbreviation": "aa",
-              "hint": "Appeal to authority: This is fallacious if: (1) the person isn’t an authority on the subject; (2) there’s no consensus of such authorities; (3) the argument concludes that the authority *must* be right (and isn’t just probably right).",
+              "hint": "Appeal to authority: Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when: (1) the person isn’t an expert on this subject; (2) the experts themselves don’t agree; (3) the conclusion claims the authority *must* be right (and isn’t just probably right).",
               "hintParts": {
                 "clauses": [
-                  "the person isn’t an authority on the subject",
-                  "there’s no consensus of such authorities",
-                  "the argument concludes that the authority *must* be right (and isn’t just probably right)",
+                  "the person isn’t an expert on this subject",
+                  "the experts themselves don’t agree",
+                  "the conclusion claims the authority *must* be right (and isn’t just probably right)",
                 ],
-                "lead": "This is fallacious if:",
+                "lead": "Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when:",
                 "term": "Appeal to authority",
               },
               "id": 0,
@@ -477,10 +477,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ac",
-              "hint": "Appeal to the crowd: Most people believe A. ∴ A is true.",
+              "hint": "Appeal to the crowd: Treats popularity as proof: most people believe A. ∴ A is true.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Most people believe A. ∴ A is true.",
+                "lead": "Treats popularity as proof: most people believe A. ∴ A is true.",
                 "term": "Appeal to the crowd",
               },
               "id": 1,
@@ -488,10 +488,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ae",
-              "hint": "Appeal to emotion: To stir up emotions instead of arguing in a logical manner.",
+              "hint": "Appeal to emotion: Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To stir up emotions instead of arguing in a logical manner.",
+                "lead": "Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
                 "term": "Appeal to emotion",
               },
               "id": 2,
@@ -499,10 +499,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "af",
-              "hint": "Appeal to force: To use threats or intimidation to get a conclusion accepted.",
+              "hint": "Appeal to force: Backs a claim with a threat: agree, or something bad happens to you.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To use threats or intimidation to get a conclusion accepted.",
+                "lead": "Backs a claim with a threat: agree, or something bad happens to you.",
                 "term": "Appeal to force",
               },
               "id": 3,
@@ -510,13 +510,13 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ah",
-              "hint": "Ad hominem: (“personal attack”). This is fallacious if: (1) the grounds of the attack are irrelevant to the person’s rational competence; (2) the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).",
+              "hint": "Ad hominem: (“personal attack”). Attacking the person instead of the claim. It’s a fallacy when: (1) the grounds of the attack have nothing to do with the person’s ability to reason about the issue; (2) the argument concludes that the person’s belief must be false (and isn’t just poorly supported).",
               "hintParts": {
                 "clauses": [
-                  "the grounds of the attack are irrelevant to the person’s rational competence",
-                  "the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held)",
+                  "the grounds of the attack have nothing to do with the person’s ability to reason about the issue",
+                  "the argument concludes that the person’s belief must be false (and isn’t just poorly supported)",
                 ],
-                "lead": "(“personal attack”). This is fallacious if:",
+                "lead": "(“personal attack”). Attacking the person instead of the claim. It’s a fallacy when:",
                 "term": "Ad hominem",
               },
               "id": 4,
@@ -524,10 +524,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ai",
-              "hint": "Appeal to ignorance: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+              "hint": "Appeal to ignorance: Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "“No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+                "lead": "Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
                 "term": "Appeal to ignorance",
               },
               "id": 5,
@@ -535,10 +535,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "am",
-              "hint": "Ambiguous: A term or phrase changes meaning within the argument.",
+              "hint": "Ambiguous: A key word or phrase quietly changes meaning partway through the argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A term or phrase changes meaning within the argument.",
+                "lead": "A key word or phrase quietly changes meaning partway through the argument.",
                 "term": "Ambiguous",
               },
               "id": 6,
@@ -546,10 +546,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bp",
-              "hint": "Beside the point: The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+              "hint": "Beside the point: Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+                "lead": "Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
                 "term": "Beside the point",
               },
               "id": 7,
@@ -557,10 +557,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bw",
-              "hint": "Black and white: Oversimplifying by assuming that one or another of two extremes must be true.",
+              "hint": "Black and white: Oversimplifies by pretending one of two extremes must be true when there are options in between.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Oversimplifying by assuming that one or another of two extremes must be true.",
+                "lead": "Oversimplifies by pretending one of two extremes must be true when there are options in between.",
                 "term": "Black and white",
               },
               "id": 8,
@@ -568,10 +568,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ci",
-              "hint": "Circular: An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+              "hint": "Circular: Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+                "lead": "Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
                 "term": "Circular",
               },
               "id": 9,
@@ -579,10 +579,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "cq",
-              "hint": "Complex question: A question that assumes the truth of something false or doubtful.",
+              "hint": "Complex question: A question that smuggles in an assumption that’s false or still in doubt.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A question that assumes the truth of something false or doubtful.",
+                "lead": "A question that smuggles in an assumption that’s false or still in doubt.",
                 "term": "Complex question",
               },
               "id": 10,
@@ -590,10 +590,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "fs",
-              "hint": "False stereotype: Assuming that members of a certain group are more alike than they actually are.",
+              "hint": "False stereotype: Treats members of a group as more alike than they really are.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Assuming that members of a certain group are more alike than they actually are.",
+                "lead": "Treats members of a group as more alike than they really are.",
                 "term": "False stereotype",
               },
               "id": 11,
@@ -601,10 +601,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ge",
-              "hint": "Genetic fallacy: We can explain why you believe A. ∴ A is false.",
+              "hint": "Genetic fallacy: Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "We can explain why you believe A. ∴ A is false.",
+                "lead": "Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
                 "term": "Genetic fallacy",
               },
               "id": 12,
@@ -612,10 +612,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "op",
-              "hint": "Opposition fallacy: Our opponents believe A. ∴ A is false.",
+              "hint": "Opposition fallacy: Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Our opponents believe A. ∴ A is false.",
+                "lead": "Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
                 "term": "Opposition fallacy",
               },
               "id": 13,
@@ -623,10 +623,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pc",
-              "hint": "Pro-con fallacy: This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+              "hint": "Pro-con fallacy: Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+                "lead": "Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
                 "term": "Pro-con fallacy",
               },
               "id": 14,
@@ -634,10 +634,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ph",
-              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ B caused A.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "(“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+                "lead": "(“after this therefore because of this”) A happened after B. ∴ B caused A.",
                 "term": "Post hoc ergo propter hoc",
               },
               "id": 15,
@@ -645,10 +645,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pw",
-              "hint": "Part-whole: The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+              "hint": "Part-whole: Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+                "lead": "Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
                 "term": "Part-whole",
               },
               "id": 16,
@@ -656,10 +656,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "sm",
-              "hint": "Straw man: Misrepresenting the views of an opponent.",
+              "hint": "Straw man: Rewrites an opponent’s view into something weaker, then attacks that instead.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Misrepresenting the views of an opponent.",
+                "lead": "Rewrites an opponent’s view into something weaker, then attacks that instead.",
                 "term": "Straw man",
               },
               "id": 17,
@@ -678,14 +678,14 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "abbreviation": "aa",
-              "hint": "Appeal to authority: This is fallacious if: (1) the person isn’t an authority on the subject; (2) there’s no consensus of such authorities; (3) the argument concludes that the authority *must* be right (and isn’t just probably right).",
+              "hint": "Appeal to authority: Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when: (1) the person isn’t an expert on this subject; (2) the experts themselves don’t agree; (3) the conclusion claims the authority *must* be right (and isn’t just probably right).",
               "hintParts": {
                 "clauses": [
-                  "the person isn’t an authority on the subject",
-                  "there’s no consensus of such authorities",
-                  "the argument concludes that the authority *must* be right (and isn’t just probably right)",
+                  "the person isn’t an expert on this subject",
+                  "the experts themselves don’t agree",
+                  "the conclusion claims the authority *must* be right (and isn’t just probably right)",
                 ],
-                "lead": "This is fallacious if:",
+                "lead": "Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when:",
                 "term": "Appeal to authority",
               },
               "id": 0,
@@ -693,10 +693,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ac",
-              "hint": "Appeal to the crowd: Most people believe A. ∴ A is true.",
+              "hint": "Appeal to the crowd: Treats popularity as proof: most people believe A. ∴ A is true.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Most people believe A. ∴ A is true.",
+                "lead": "Treats popularity as proof: most people believe A. ∴ A is true.",
                 "term": "Appeal to the crowd",
               },
               "id": 1,
@@ -704,10 +704,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ae",
-              "hint": "Appeal to emotion: To stir up emotions instead of arguing in a logical manner.",
+              "hint": "Appeal to emotion: Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To stir up emotions instead of arguing in a logical manner.",
+                "lead": "Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
                 "term": "Appeal to emotion",
               },
               "id": 2,
@@ -715,10 +715,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "af",
-              "hint": "Appeal to force: To use threats or intimidation to get a conclusion accepted.",
+              "hint": "Appeal to force: Backs a claim with a threat: agree, or something bad happens to you.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To use threats or intimidation to get a conclusion accepted.",
+                "lead": "Backs a claim with a threat: agree, or something bad happens to you.",
                 "term": "Appeal to force",
               },
               "id": 3,
@@ -726,13 +726,13 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ah",
-              "hint": "Ad hominem: (“personal attack”). This is fallacious if: (1) the grounds of the attack are irrelevant to the person’s rational competence; (2) the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).",
+              "hint": "Ad hominem: (“personal attack”). Attacking the person instead of the claim. It’s a fallacy when: (1) the grounds of the attack have nothing to do with the person’s ability to reason about the issue; (2) the argument concludes that the person’s belief must be false (and isn’t just poorly supported).",
               "hintParts": {
                 "clauses": [
-                  "the grounds of the attack are irrelevant to the person’s rational competence",
-                  "the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held)",
+                  "the grounds of the attack have nothing to do with the person’s ability to reason about the issue",
+                  "the argument concludes that the person’s belief must be false (and isn’t just poorly supported)",
                 ],
-                "lead": "(“personal attack”). This is fallacious if:",
+                "lead": "(“personal attack”). Attacking the person instead of the claim. It’s a fallacy when:",
                 "term": "Ad hominem",
               },
               "id": 4,
@@ -740,10 +740,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ai",
-              "hint": "Appeal to ignorance: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+              "hint": "Appeal to ignorance: Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "“No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+                "lead": "Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
                 "term": "Appeal to ignorance",
               },
               "id": 5,
@@ -751,10 +751,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "am",
-              "hint": "Ambiguous: A term or phrase changes meaning within the argument.",
+              "hint": "Ambiguous: A key word or phrase quietly changes meaning partway through the argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A term or phrase changes meaning within the argument.",
+                "lead": "A key word or phrase quietly changes meaning partway through the argument.",
                 "term": "Ambiguous",
               },
               "id": 6,
@@ -762,10 +762,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bp",
-              "hint": "Beside the point: The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+              "hint": "Beside the point: Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+                "lead": "Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
                 "term": "Beside the point",
               },
               "id": 7,
@@ -773,10 +773,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bw",
-              "hint": "Black and white: Oversimplifying by assuming that one or another of two extremes must be true.",
+              "hint": "Black and white: Oversimplifies by pretending one of two extremes must be true when there are options in between.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Oversimplifying by assuming that one or another of two extremes must be true.",
+                "lead": "Oversimplifies by pretending one of two extremes must be true when there are options in between.",
                 "term": "Black and white",
               },
               "id": 8,
@@ -784,10 +784,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ci",
-              "hint": "Circular: An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+              "hint": "Circular: Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+                "lead": "Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
                 "term": "Circular",
               },
               "id": 9,
@@ -795,10 +795,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "cq",
-              "hint": "Complex question: A question that assumes the truth of something false or doubtful.",
+              "hint": "Complex question: A question that smuggles in an assumption that’s false or still in doubt.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A question that assumes the truth of something false or doubtful.",
+                "lead": "A question that smuggles in an assumption that’s false or still in doubt.",
                 "term": "Complex question",
               },
               "id": 10,
@@ -806,10 +806,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "fs",
-              "hint": "False stereotype: Assuming that members of a certain group are more alike than they actually are.",
+              "hint": "False stereotype: Treats members of a group as more alike than they really are.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Assuming that members of a certain group are more alike than they actually are.",
+                "lead": "Treats members of a group as more alike than they really are.",
                 "term": "False stereotype",
               },
               "id": 11,
@@ -817,10 +817,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ge",
-              "hint": "Genetic fallacy: We can explain why you believe A. ∴ A is false.",
+              "hint": "Genetic fallacy: Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "We can explain why you believe A. ∴ A is false.",
+                "lead": "Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
                 "term": "Genetic fallacy",
               },
               "id": 12,
@@ -828,10 +828,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "op",
-              "hint": "Opposition fallacy: Our opponents believe A. ∴ A is false.",
+              "hint": "Opposition fallacy: Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Our opponents believe A. ∴ A is false.",
+                "lead": "Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
                 "term": "Opposition fallacy",
               },
               "id": 13,
@@ -839,10 +839,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pc",
-              "hint": "Pro-con fallacy: This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+              "hint": "Pro-con fallacy: Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+                "lead": "Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
                 "term": "Pro-con fallacy",
               },
               "id": 14,
@@ -850,10 +850,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ph",
-              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ B caused A.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "(“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+                "lead": "(“after this therefore because of this”) A happened after B. ∴ B caused A.",
                 "term": "Post hoc ergo propter hoc",
               },
               "id": 15,
@@ -861,10 +861,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pw",
-              "hint": "Part-whole: The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+              "hint": "Part-whole: Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+                "lead": "Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
                 "term": "Part-whole",
               },
               "id": 16,
@@ -872,10 +872,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "sm",
-              "hint": "Straw man: Misrepresenting the views of an opponent.",
+              "hint": "Straw man: Rewrites an opponent’s view into something weaker, then attacks that instead.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Misrepresenting the views of an opponent.",
+                "lead": "Rewrites an opponent’s view into something weaker, then attacks that instead.",
                 "term": "Straw man",
               },
               "id": 17,
@@ -893,14 +893,14 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "abbreviation": "aa",
-              "hint": "Appeal to authority: This is fallacious if: (1) the person isn’t an authority on the subject; (2) there’s no consensus of such authorities; (3) the argument concludes that the authority *must* be right (and isn’t just probably right).",
+              "hint": "Appeal to authority: Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when: (1) the person isn’t an expert on this subject; (2) the experts themselves don’t agree; (3) the conclusion claims the authority *must* be right (and isn’t just probably right).",
               "hintParts": {
                 "clauses": [
-                  "the person isn’t an authority on the subject",
-                  "there’s no consensus of such authorities",
-                  "the argument concludes that the authority *must* be right (and isn’t just probably right)",
+                  "the person isn’t an expert on this subject",
+                  "the experts themselves don’t agree",
+                  "the conclusion claims the authority *must* be right (and isn’t just probably right)",
                 ],
-                "lead": "This is fallacious if:",
+                "lead": "Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when:",
                 "term": "Appeal to authority",
               },
               "id": 0,
@@ -908,10 +908,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ac",
-              "hint": "Appeal to the crowd: Most people believe A. ∴ A is true.",
+              "hint": "Appeal to the crowd: Treats popularity as proof: most people believe A. ∴ A is true.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Most people believe A. ∴ A is true.",
+                "lead": "Treats popularity as proof: most people believe A. ∴ A is true.",
                 "term": "Appeal to the crowd",
               },
               "id": 1,
@@ -919,10 +919,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ae",
-              "hint": "Appeal to emotion: To stir up emotions instead of arguing in a logical manner.",
+              "hint": "Appeal to emotion: Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To stir up emotions instead of arguing in a logical manner.",
+                "lead": "Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
                 "term": "Appeal to emotion",
               },
               "id": 2,
@@ -930,10 +930,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "af",
-              "hint": "Appeal to force: To use threats or intimidation to get a conclusion accepted.",
+              "hint": "Appeal to force: Backs a claim with a threat: agree, or something bad happens to you.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To use threats or intimidation to get a conclusion accepted.",
+                "lead": "Backs a claim with a threat: agree, or something bad happens to you.",
                 "term": "Appeal to force",
               },
               "id": 3,
@@ -941,13 +941,13 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ah",
-              "hint": "Ad hominem: (“personal attack”). This is fallacious if: (1) the grounds of the attack are irrelevant to the person’s rational competence; (2) the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).",
+              "hint": "Ad hominem: (“personal attack”). Attacking the person instead of the claim. It’s a fallacy when: (1) the grounds of the attack have nothing to do with the person’s ability to reason about the issue; (2) the argument concludes that the person’s belief must be false (and isn’t just poorly supported).",
               "hintParts": {
                 "clauses": [
-                  "the grounds of the attack are irrelevant to the person’s rational competence",
-                  "the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held)",
+                  "the grounds of the attack have nothing to do with the person’s ability to reason about the issue",
+                  "the argument concludes that the person’s belief must be false (and isn’t just poorly supported)",
                 ],
-                "lead": "(“personal attack”). This is fallacious if:",
+                "lead": "(“personal attack”). Attacking the person instead of the claim. It’s a fallacy when:",
                 "term": "Ad hominem",
               },
               "id": 4,
@@ -955,10 +955,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ai",
-              "hint": "Appeal to ignorance: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+              "hint": "Appeal to ignorance: Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "“No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+                "lead": "Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
                 "term": "Appeal to ignorance",
               },
               "id": 5,
@@ -966,10 +966,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "am",
-              "hint": "Ambiguous: A term or phrase changes meaning within the argument.",
+              "hint": "Ambiguous: A key word or phrase quietly changes meaning partway through the argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A term or phrase changes meaning within the argument.",
+                "lead": "A key word or phrase quietly changes meaning partway through the argument.",
                 "term": "Ambiguous",
               },
               "id": 6,
@@ -977,10 +977,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bp",
-              "hint": "Beside the point: The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+              "hint": "Beside the point: Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+                "lead": "Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
                 "term": "Beside the point",
               },
               "id": 7,
@@ -988,10 +988,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bw",
-              "hint": "Black and white: Oversimplifying by assuming that one or another of two extremes must be true.",
+              "hint": "Black and white: Oversimplifies by pretending one of two extremes must be true when there are options in between.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Oversimplifying by assuming that one or another of two extremes must be true.",
+                "lead": "Oversimplifies by pretending one of two extremes must be true when there are options in between.",
                 "term": "Black and white",
               },
               "id": 8,
@@ -999,10 +999,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ci",
-              "hint": "Circular: An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+              "hint": "Circular: Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+                "lead": "Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
                 "term": "Circular",
               },
               "id": 9,
@@ -1010,10 +1010,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "cq",
-              "hint": "Complex question: A question that assumes the truth of something false or doubtful.",
+              "hint": "Complex question: A question that smuggles in an assumption that’s false or still in doubt.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A question that assumes the truth of something false or doubtful.",
+                "lead": "A question that smuggles in an assumption that’s false or still in doubt.",
                 "term": "Complex question",
               },
               "id": 10,
@@ -1021,10 +1021,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "fs",
-              "hint": "False stereotype: Assuming that members of a certain group are more alike than they actually are.",
+              "hint": "False stereotype: Treats members of a group as more alike than they really are.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Assuming that members of a certain group are more alike than they actually are.",
+                "lead": "Treats members of a group as more alike than they really are.",
                 "term": "False stereotype",
               },
               "id": 11,
@@ -1032,10 +1032,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ge",
-              "hint": "Genetic fallacy: We can explain why you believe A. ∴ A is false.",
+              "hint": "Genetic fallacy: Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "We can explain why you believe A. ∴ A is false.",
+                "lead": "Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
                 "term": "Genetic fallacy",
               },
               "id": 12,
@@ -1043,10 +1043,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "op",
-              "hint": "Opposition fallacy: Our opponents believe A. ∴ A is false.",
+              "hint": "Opposition fallacy: Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Our opponents believe A. ∴ A is false.",
+                "lead": "Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
                 "term": "Opposition fallacy",
               },
               "id": 13,
@@ -1054,10 +1054,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pc",
-              "hint": "Pro-con fallacy: This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+              "hint": "Pro-con fallacy: Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+                "lead": "Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
                 "term": "Pro-con fallacy",
               },
               "id": 14,
@@ -1065,10 +1065,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ph",
-              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ B caused A.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "(“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+                "lead": "(“after this therefore because of this”) A happened after B. ∴ B caused A.",
                 "term": "Post hoc ergo propter hoc",
               },
               "id": 15,
@@ -1076,10 +1076,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pw",
-              "hint": "Part-whole: The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+              "hint": "Part-whole: Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+                "lead": "Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
                 "term": "Part-whole",
               },
               "id": 16,
@@ -1087,10 +1087,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "sm",
-              "hint": "Straw man: Misrepresenting the views of an opponent.",
+              "hint": "Straw man: Rewrites an opponent’s view into something weaker, then attacks that instead.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Misrepresenting the views of an opponent.",
+                "lead": "Rewrites an opponent’s view into something weaker, then attacks that instead.",
                 "term": "Straw man",
               },
               "id": 17,
@@ -1100,7 +1100,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "prompt": "It has been the coldest week here in twenty years. So much for global warming.",
         },
         {
-          "answer": "This passage illustrates the circular fallacy. An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+          "answer": "This passage illustrates the circular fallacy. Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
           "correctId": [
             9,
           ],
@@ -1108,14 +1108,14 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "abbreviation": "aa",
-              "hint": "Appeal to authority: This is fallacious if: (1) the person isn’t an authority on the subject; (2) there’s no consensus of such authorities; (3) the argument concludes that the authority *must* be right (and isn’t just probably right).",
+              "hint": "Appeal to authority: Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when: (1) the person isn’t an expert on this subject; (2) the experts themselves don’t agree; (3) the conclusion claims the authority *must* be right (and isn’t just probably right).",
               "hintParts": {
                 "clauses": [
-                  "the person isn’t an authority on the subject",
-                  "there’s no consensus of such authorities",
-                  "the argument concludes that the authority *must* be right (and isn’t just probably right)",
+                  "the person isn’t an expert on this subject",
+                  "the experts themselves don’t agree",
+                  "the conclusion claims the authority *must* be right (and isn’t just probably right)",
                 ],
-                "lead": "This is fallacious if:",
+                "lead": "Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when:",
                 "term": "Appeal to authority",
               },
               "id": 0,
@@ -1123,10 +1123,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ac",
-              "hint": "Appeal to the crowd: Most people believe A. ∴ A is true.",
+              "hint": "Appeal to the crowd: Treats popularity as proof: most people believe A. ∴ A is true.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Most people believe A. ∴ A is true.",
+                "lead": "Treats popularity as proof: most people believe A. ∴ A is true.",
                 "term": "Appeal to the crowd",
               },
               "id": 1,
@@ -1134,10 +1134,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ae",
-              "hint": "Appeal to emotion: To stir up emotions instead of arguing in a logical manner.",
+              "hint": "Appeal to emotion: Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To stir up emotions instead of arguing in a logical manner.",
+                "lead": "Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
                 "term": "Appeal to emotion",
               },
               "id": 2,
@@ -1145,10 +1145,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "af",
-              "hint": "Appeal to force: To use threats or intimidation to get a conclusion accepted.",
+              "hint": "Appeal to force: Backs a claim with a threat: agree, or something bad happens to you.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To use threats or intimidation to get a conclusion accepted.",
+                "lead": "Backs a claim with a threat: agree, or something bad happens to you.",
                 "term": "Appeal to force",
               },
               "id": 3,
@@ -1156,13 +1156,13 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ah",
-              "hint": "Ad hominem: (“personal attack”). This is fallacious if: (1) the grounds of the attack are irrelevant to the person’s rational competence; (2) the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).",
+              "hint": "Ad hominem: (“personal attack”). Attacking the person instead of the claim. It’s a fallacy when: (1) the grounds of the attack have nothing to do with the person’s ability to reason about the issue; (2) the argument concludes that the person’s belief must be false (and isn’t just poorly supported).",
               "hintParts": {
                 "clauses": [
-                  "the grounds of the attack are irrelevant to the person’s rational competence",
-                  "the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held)",
+                  "the grounds of the attack have nothing to do with the person’s ability to reason about the issue",
+                  "the argument concludes that the person’s belief must be false (and isn’t just poorly supported)",
                 ],
-                "lead": "(“personal attack”). This is fallacious if:",
+                "lead": "(“personal attack”). Attacking the person instead of the claim. It’s a fallacy when:",
                 "term": "Ad hominem",
               },
               "id": 4,
@@ -1170,10 +1170,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ai",
-              "hint": "Appeal to ignorance: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+              "hint": "Appeal to ignorance: Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "“No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+                "lead": "Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
                 "term": "Appeal to ignorance",
               },
               "id": 5,
@@ -1181,10 +1181,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "am",
-              "hint": "Ambiguous: A term or phrase changes meaning within the argument.",
+              "hint": "Ambiguous: A key word or phrase quietly changes meaning partway through the argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A term or phrase changes meaning within the argument.",
+                "lead": "A key word or phrase quietly changes meaning partway through the argument.",
                 "term": "Ambiguous",
               },
               "id": 6,
@@ -1192,10 +1192,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bp",
-              "hint": "Beside the point: The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+              "hint": "Beside the point: Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+                "lead": "Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
                 "term": "Beside the point",
               },
               "id": 7,
@@ -1203,10 +1203,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bw",
-              "hint": "Black and white: Oversimplifying by assuming that one or another of two extremes must be true.",
+              "hint": "Black and white: Oversimplifies by pretending one of two extremes must be true when there are options in between.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Oversimplifying by assuming that one or another of two extremes must be true.",
+                "lead": "Oversimplifies by pretending one of two extremes must be true when there are options in between.",
                 "term": "Black and white",
               },
               "id": 8,
@@ -1214,10 +1214,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ci",
-              "hint": "Circular: An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+              "hint": "Circular: Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+                "lead": "Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
                 "term": "Circular",
               },
               "id": 9,
@@ -1225,10 +1225,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "cq",
-              "hint": "Complex question: A question that assumes the truth of something false or doubtful.",
+              "hint": "Complex question: A question that smuggles in an assumption that’s false or still in doubt.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A question that assumes the truth of something false or doubtful.",
+                "lead": "A question that smuggles in an assumption that’s false or still in doubt.",
                 "term": "Complex question",
               },
               "id": 10,
@@ -1236,10 +1236,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "fs",
-              "hint": "False stereotype: Assuming that members of a certain group are more alike than they actually are.",
+              "hint": "False stereotype: Treats members of a group as more alike than they really are.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Assuming that members of a certain group are more alike than they actually are.",
+                "lead": "Treats members of a group as more alike than they really are.",
                 "term": "False stereotype",
               },
               "id": 11,
@@ -1247,10 +1247,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ge",
-              "hint": "Genetic fallacy: We can explain why you believe A. ∴ A is false.",
+              "hint": "Genetic fallacy: Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "We can explain why you believe A. ∴ A is false.",
+                "lead": "Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
                 "term": "Genetic fallacy",
               },
               "id": 12,
@@ -1258,10 +1258,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "op",
-              "hint": "Opposition fallacy: Our opponents believe A. ∴ A is false.",
+              "hint": "Opposition fallacy: Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Our opponents believe A. ∴ A is false.",
+                "lead": "Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
                 "term": "Opposition fallacy",
               },
               "id": 13,
@@ -1269,10 +1269,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pc",
-              "hint": "Pro-con fallacy: This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+              "hint": "Pro-con fallacy: Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+                "lead": "Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
                 "term": "Pro-con fallacy",
               },
               "id": 14,
@@ -1280,10 +1280,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ph",
-              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ B caused A.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "(“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+                "lead": "(“after this therefore because of this”) A happened after B. ∴ B caused A.",
                 "term": "Post hoc ergo propter hoc",
               },
               "id": 15,
@@ -1291,10 +1291,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pw",
-              "hint": "Part-whole: The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+              "hint": "Part-whole: Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+                "lead": "Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
                 "term": "Part-whole",
               },
               "id": 16,
@@ -1302,10 +1302,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "sm",
-              "hint": "Straw man: Misrepresenting the views of an opponent.",
+              "hint": "Straw man: Rewrites an opponent’s view into something weaker, then attacks that instead.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Misrepresenting the views of an opponent.",
+                "lead": "Rewrites an opponent’s view into something weaker, then attacks that instead.",
                 "term": "Straw man",
               },
               "id": 17,
@@ -1323,14 +1323,14 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "abbreviation": "aa",
-              "hint": "Appeal to authority: This is fallacious if: (1) the person isn’t an authority on the subject; (2) there’s no consensus of such authorities; (3) the argument concludes that the authority *must* be right (and isn’t just probably right).",
+              "hint": "Appeal to authority: Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when: (1) the person isn’t an expert on this subject; (2) the experts themselves don’t agree; (3) the conclusion claims the authority *must* be right (and isn’t just probably right).",
               "hintParts": {
                 "clauses": [
-                  "the person isn’t an authority on the subject",
-                  "there’s no consensus of such authorities",
-                  "the argument concludes that the authority *must* be right (and isn’t just probably right)",
+                  "the person isn’t an expert on this subject",
+                  "the experts themselves don’t agree",
+                  "the conclusion claims the authority *must* be right (and isn’t just probably right)",
                 ],
-                "lead": "This is fallacious if:",
+                "lead": "Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when:",
                 "term": "Appeal to authority",
               },
               "id": 0,
@@ -1338,10 +1338,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ac",
-              "hint": "Appeal to the crowd: Most people believe A. ∴ A is true.",
+              "hint": "Appeal to the crowd: Treats popularity as proof: most people believe A. ∴ A is true.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Most people believe A. ∴ A is true.",
+                "lead": "Treats popularity as proof: most people believe A. ∴ A is true.",
                 "term": "Appeal to the crowd",
               },
               "id": 1,
@@ -1349,10 +1349,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ae",
-              "hint": "Appeal to emotion: To stir up emotions instead of arguing in a logical manner.",
+              "hint": "Appeal to emotion: Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To stir up emotions instead of arguing in a logical manner.",
+                "lead": "Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
                 "term": "Appeal to emotion",
               },
               "id": 2,
@@ -1360,10 +1360,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "af",
-              "hint": "Appeal to force: To use threats or intimidation to get a conclusion accepted.",
+              "hint": "Appeal to force: Backs a claim with a threat: agree, or something bad happens to you.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To use threats or intimidation to get a conclusion accepted.",
+                "lead": "Backs a claim with a threat: agree, or something bad happens to you.",
                 "term": "Appeal to force",
               },
               "id": 3,
@@ -1371,13 +1371,13 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ah",
-              "hint": "Ad hominem: (“personal attack”). This is fallacious if: (1) the grounds of the attack are irrelevant to the person’s rational competence; (2) the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).",
+              "hint": "Ad hominem: (“personal attack”). Attacking the person instead of the claim. It’s a fallacy when: (1) the grounds of the attack have nothing to do with the person’s ability to reason about the issue; (2) the argument concludes that the person’s belief must be false (and isn’t just poorly supported).",
               "hintParts": {
                 "clauses": [
-                  "the grounds of the attack are irrelevant to the person’s rational competence",
-                  "the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held)",
+                  "the grounds of the attack have nothing to do with the person’s ability to reason about the issue",
+                  "the argument concludes that the person’s belief must be false (and isn’t just poorly supported)",
                 ],
-                "lead": "(“personal attack”). This is fallacious if:",
+                "lead": "(“personal attack”). Attacking the person instead of the claim. It’s a fallacy when:",
                 "term": "Ad hominem",
               },
               "id": 4,
@@ -1385,10 +1385,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ai",
-              "hint": "Appeal to ignorance: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+              "hint": "Appeal to ignorance: Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "“No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+                "lead": "Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
                 "term": "Appeal to ignorance",
               },
               "id": 5,
@@ -1396,10 +1396,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "am",
-              "hint": "Ambiguous: A term or phrase changes meaning within the argument.",
+              "hint": "Ambiguous: A key word or phrase quietly changes meaning partway through the argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A term or phrase changes meaning within the argument.",
+                "lead": "A key word or phrase quietly changes meaning partway through the argument.",
                 "term": "Ambiguous",
               },
               "id": 6,
@@ -1407,10 +1407,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bp",
-              "hint": "Beside the point: The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+              "hint": "Beside the point: Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+                "lead": "Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
                 "term": "Beside the point",
               },
               "id": 7,
@@ -1418,10 +1418,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bw",
-              "hint": "Black and white: Oversimplifying by assuming that one or another of two extremes must be true.",
+              "hint": "Black and white: Oversimplifies by pretending one of two extremes must be true when there are options in between.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Oversimplifying by assuming that one or another of two extremes must be true.",
+                "lead": "Oversimplifies by pretending one of two extremes must be true when there are options in between.",
                 "term": "Black and white",
               },
               "id": 8,
@@ -1429,10 +1429,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ci",
-              "hint": "Circular: An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+              "hint": "Circular: Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+                "lead": "Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
                 "term": "Circular",
               },
               "id": 9,
@@ -1440,10 +1440,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "cq",
-              "hint": "Complex question: A question that assumes the truth of something false or doubtful.",
+              "hint": "Complex question: A question that smuggles in an assumption that’s false or still in doubt.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A question that assumes the truth of something false or doubtful.",
+                "lead": "A question that smuggles in an assumption that’s false or still in doubt.",
                 "term": "Complex question",
               },
               "id": 10,
@@ -1451,10 +1451,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "fs",
-              "hint": "False stereotype: Assuming that members of a certain group are more alike than they actually are.",
+              "hint": "False stereotype: Treats members of a group as more alike than they really are.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Assuming that members of a certain group are more alike than they actually are.",
+                "lead": "Treats members of a group as more alike than they really are.",
                 "term": "False stereotype",
               },
               "id": 11,
@@ -1462,10 +1462,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ge",
-              "hint": "Genetic fallacy: We can explain why you believe A. ∴ A is false.",
+              "hint": "Genetic fallacy: Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "We can explain why you believe A. ∴ A is false.",
+                "lead": "Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
                 "term": "Genetic fallacy",
               },
               "id": 12,
@@ -1473,10 +1473,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "op",
-              "hint": "Opposition fallacy: Our opponents believe A. ∴ A is false.",
+              "hint": "Opposition fallacy: Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Our opponents believe A. ∴ A is false.",
+                "lead": "Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
                 "term": "Opposition fallacy",
               },
               "id": 13,
@@ -1484,10 +1484,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pc",
-              "hint": "Pro-con fallacy: This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+              "hint": "Pro-con fallacy: Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+                "lead": "Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
                 "term": "Pro-con fallacy",
               },
               "id": 14,
@@ -1495,10 +1495,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ph",
-              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ B caused A.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "(“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+                "lead": "(“after this therefore because of this”) A happened after B. ∴ B caused A.",
                 "term": "Post hoc ergo propter hoc",
               },
               "id": 15,
@@ -1506,10 +1506,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pw",
-              "hint": "Part-whole: The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+              "hint": "Part-whole: Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+                "lead": "Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
                 "term": "Part-whole",
               },
               "id": 16,
@@ -1517,10 +1517,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "sm",
-              "hint": "Straw man: Misrepresenting the views of an opponent.",
+              "hint": "Straw man: Rewrites an opponent’s view into something weaker, then attacks that instead.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Misrepresenting the views of an opponent.",
+                "lead": "Rewrites an opponent’s view into something weaker, then attacks that instead.",
                 "term": "Straw man",
               },
               "id": 17,
@@ -1538,14 +1538,14 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "abbreviation": "aa",
-              "hint": "Appeal to authority: This is fallacious if: (1) the person isn’t an authority on the subject; (2) there’s no consensus of such authorities; (3) the argument concludes that the authority *must* be right (and isn’t just probably right).",
+              "hint": "Appeal to authority: Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when: (1) the person isn’t an expert on this subject; (2) the experts themselves don’t agree; (3) the conclusion claims the authority *must* be right (and isn’t just probably right).",
               "hintParts": {
                 "clauses": [
-                  "the person isn’t an authority on the subject",
-                  "there’s no consensus of such authorities",
-                  "the argument concludes that the authority *must* be right (and isn’t just probably right)",
+                  "the person isn’t an expert on this subject",
+                  "the experts themselves don’t agree",
+                  "the conclusion claims the authority *must* be right (and isn’t just probably right)",
                 ],
-                "lead": "This is fallacious if:",
+                "lead": "Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when:",
                 "term": "Appeal to authority",
               },
               "id": 0,
@@ -1553,10 +1553,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ac",
-              "hint": "Appeal to the crowd: Most people believe A. ∴ A is true.",
+              "hint": "Appeal to the crowd: Treats popularity as proof: most people believe A. ∴ A is true.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Most people believe A. ∴ A is true.",
+                "lead": "Treats popularity as proof: most people believe A. ∴ A is true.",
                 "term": "Appeal to the crowd",
               },
               "id": 1,
@@ -1564,10 +1564,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ae",
-              "hint": "Appeal to emotion: To stir up emotions instead of arguing in a logical manner.",
+              "hint": "Appeal to emotion: Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To stir up emotions instead of arguing in a logical manner.",
+                "lead": "Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
                 "term": "Appeal to emotion",
               },
               "id": 2,
@@ -1575,10 +1575,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "af",
-              "hint": "Appeal to force: To use threats or intimidation to get a conclusion accepted.",
+              "hint": "Appeal to force: Backs a claim with a threat: agree, or something bad happens to you.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To use threats or intimidation to get a conclusion accepted.",
+                "lead": "Backs a claim with a threat: agree, or something bad happens to you.",
                 "term": "Appeal to force",
               },
               "id": 3,
@@ -1586,13 +1586,13 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ah",
-              "hint": "Ad hominem: (“personal attack”). This is fallacious if: (1) the grounds of the attack are irrelevant to the person’s rational competence; (2) the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).",
+              "hint": "Ad hominem: (“personal attack”). Attacking the person instead of the claim. It’s a fallacy when: (1) the grounds of the attack have nothing to do with the person’s ability to reason about the issue; (2) the argument concludes that the person’s belief must be false (and isn’t just poorly supported).",
               "hintParts": {
                 "clauses": [
-                  "the grounds of the attack are irrelevant to the person’s rational competence",
-                  "the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held)",
+                  "the grounds of the attack have nothing to do with the person’s ability to reason about the issue",
+                  "the argument concludes that the person’s belief must be false (and isn’t just poorly supported)",
                 ],
-                "lead": "(“personal attack”). This is fallacious if:",
+                "lead": "(“personal attack”). Attacking the person instead of the claim. It’s a fallacy when:",
                 "term": "Ad hominem",
               },
               "id": 4,
@@ -1600,10 +1600,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ai",
-              "hint": "Appeal to ignorance: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+              "hint": "Appeal to ignorance: Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "“No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+                "lead": "Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
                 "term": "Appeal to ignorance",
               },
               "id": 5,
@@ -1611,10 +1611,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "am",
-              "hint": "Ambiguous: A term or phrase changes meaning within the argument.",
+              "hint": "Ambiguous: A key word or phrase quietly changes meaning partway through the argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A term or phrase changes meaning within the argument.",
+                "lead": "A key word or phrase quietly changes meaning partway through the argument.",
                 "term": "Ambiguous",
               },
               "id": 6,
@@ -1622,10 +1622,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bp",
-              "hint": "Beside the point: The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+              "hint": "Beside the point: Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+                "lead": "Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
                 "term": "Beside the point",
               },
               "id": 7,
@@ -1633,10 +1633,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bw",
-              "hint": "Black and white: Oversimplifying by assuming that one or another of two extremes must be true.",
+              "hint": "Black and white: Oversimplifies by pretending one of two extremes must be true when there are options in between.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Oversimplifying by assuming that one or another of two extremes must be true.",
+                "lead": "Oversimplifies by pretending one of two extremes must be true when there are options in between.",
                 "term": "Black and white",
               },
               "id": 8,
@@ -1644,10 +1644,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ci",
-              "hint": "Circular: An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+              "hint": "Circular: Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+                "lead": "Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
                 "term": "Circular",
               },
               "id": 9,
@@ -1655,10 +1655,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "cq",
-              "hint": "Complex question: A question that assumes the truth of something false or doubtful.",
+              "hint": "Complex question: A question that smuggles in an assumption that’s false or still in doubt.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A question that assumes the truth of something false or doubtful.",
+                "lead": "A question that smuggles in an assumption that’s false or still in doubt.",
                 "term": "Complex question",
               },
               "id": 10,
@@ -1666,10 +1666,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "fs",
-              "hint": "False stereotype: Assuming that members of a certain group are more alike than they actually are.",
+              "hint": "False stereotype: Treats members of a group as more alike than they really are.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Assuming that members of a certain group are more alike than they actually are.",
+                "lead": "Treats members of a group as more alike than they really are.",
                 "term": "False stereotype",
               },
               "id": 11,
@@ -1677,10 +1677,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ge",
-              "hint": "Genetic fallacy: We can explain why you believe A. ∴ A is false.",
+              "hint": "Genetic fallacy: Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "We can explain why you believe A. ∴ A is false.",
+                "lead": "Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
                 "term": "Genetic fallacy",
               },
               "id": 12,
@@ -1688,10 +1688,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "op",
-              "hint": "Opposition fallacy: Our opponents believe A. ∴ A is false.",
+              "hint": "Opposition fallacy: Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Our opponents believe A. ∴ A is false.",
+                "lead": "Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
                 "term": "Opposition fallacy",
               },
               "id": 13,
@@ -1699,10 +1699,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pc",
-              "hint": "Pro-con fallacy: This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+              "hint": "Pro-con fallacy: Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+                "lead": "Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
                 "term": "Pro-con fallacy",
               },
               "id": 14,
@@ -1710,10 +1710,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ph",
-              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ B caused A.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "(“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+                "lead": "(“after this therefore because of this”) A happened after B. ∴ B caused A.",
                 "term": "Post hoc ergo propter hoc",
               },
               "id": 15,
@@ -1721,10 +1721,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pw",
-              "hint": "Part-whole: The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+              "hint": "Part-whole: Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+                "lead": "Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
                 "term": "Part-whole",
               },
               "id": 16,
@@ -1732,10 +1732,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "sm",
-              "hint": "Straw man: Misrepresenting the views of an opponent.",
+              "hint": "Straw man: Rewrites an opponent’s view into something weaker, then attacks that instead.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Misrepresenting the views of an opponent.",
+                "lead": "Rewrites an opponent’s view into something weaker, then attacks that instead.",
                 "term": "Straw man",
               },
               "id": 17,
@@ -1745,7 +1745,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "prompt": "Millions of people have signed up to sell for this multi-level marketing company. So it must be a good way to make money.",
         },
         {
-          "answer": "This passage illustrates the ad hominem fallacy. This violates clauses (1) and (2). Here, (1) the grounds of the attack are irrelevant to the person’s rational competence; (2) the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).",
+          "answer": "This passage illustrates the ad hominem fallacy. This violates clauses (1) and (2). Here, (1) the grounds of the attack have nothing to do with the person’s ability to reason about the issue; (2) the argument concludes that the person’s belief must be false (and isn’t just poorly supported).",
           "correctId": [
             4,
           ],
@@ -1753,14 +1753,14 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "abbreviation": "aa",
-              "hint": "Appeal to authority: This is fallacious if: (1) the person isn’t an authority on the subject; (2) there’s no consensus of such authorities; (3) the argument concludes that the authority *must* be right (and isn’t just probably right).",
+              "hint": "Appeal to authority: Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when: (1) the person isn’t an expert on this subject; (2) the experts themselves don’t agree; (3) the conclusion claims the authority *must* be right (and isn’t just probably right).",
               "hintParts": {
                 "clauses": [
-                  "the person isn’t an authority on the subject",
-                  "there’s no consensus of such authorities",
-                  "the argument concludes that the authority *must* be right (and isn’t just probably right)",
+                  "the person isn’t an expert on this subject",
+                  "the experts themselves don’t agree",
+                  "the conclusion claims the authority *must* be right (and isn’t just probably right)",
                 ],
-                "lead": "This is fallacious if:",
+                "lead": "Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when:",
                 "term": "Appeal to authority",
               },
               "id": 0,
@@ -1768,10 +1768,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ac",
-              "hint": "Appeal to the crowd: Most people believe A. ∴ A is true.",
+              "hint": "Appeal to the crowd: Treats popularity as proof: most people believe A. ∴ A is true.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Most people believe A. ∴ A is true.",
+                "lead": "Treats popularity as proof: most people believe A. ∴ A is true.",
                 "term": "Appeal to the crowd",
               },
               "id": 1,
@@ -1779,10 +1779,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ae",
-              "hint": "Appeal to emotion: To stir up emotions instead of arguing in a logical manner.",
+              "hint": "Appeal to emotion: Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To stir up emotions instead of arguing in a logical manner.",
+                "lead": "Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
                 "term": "Appeal to emotion",
               },
               "id": 2,
@@ -1790,10 +1790,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "af",
-              "hint": "Appeal to force: To use threats or intimidation to get a conclusion accepted.",
+              "hint": "Appeal to force: Backs a claim with a threat: agree, or something bad happens to you.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To use threats or intimidation to get a conclusion accepted.",
+                "lead": "Backs a claim with a threat: agree, or something bad happens to you.",
                 "term": "Appeal to force",
               },
               "id": 3,
@@ -1801,13 +1801,13 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ah",
-              "hint": "Ad hominem: (“personal attack”). This is fallacious if: (1) the grounds of the attack are irrelevant to the person’s rational competence; (2) the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).",
+              "hint": "Ad hominem: (“personal attack”). Attacking the person instead of the claim. It’s a fallacy when: (1) the grounds of the attack have nothing to do with the person’s ability to reason about the issue; (2) the argument concludes that the person’s belief must be false (and isn’t just poorly supported).",
               "hintParts": {
                 "clauses": [
-                  "the grounds of the attack are irrelevant to the person’s rational competence",
-                  "the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held)",
+                  "the grounds of the attack have nothing to do with the person’s ability to reason about the issue",
+                  "the argument concludes that the person’s belief must be false (and isn’t just poorly supported)",
                 ],
-                "lead": "(“personal attack”). This is fallacious if:",
+                "lead": "(“personal attack”). Attacking the person instead of the claim. It’s a fallacy when:",
                 "term": "Ad hominem",
               },
               "id": 4,
@@ -1815,10 +1815,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ai",
-              "hint": "Appeal to ignorance: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+              "hint": "Appeal to ignorance: Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "“No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+                "lead": "Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
                 "term": "Appeal to ignorance",
               },
               "id": 5,
@@ -1826,10 +1826,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "am",
-              "hint": "Ambiguous: A term or phrase changes meaning within the argument.",
+              "hint": "Ambiguous: A key word or phrase quietly changes meaning partway through the argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A term or phrase changes meaning within the argument.",
+                "lead": "A key word or phrase quietly changes meaning partway through the argument.",
                 "term": "Ambiguous",
               },
               "id": 6,
@@ -1837,10 +1837,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bp",
-              "hint": "Beside the point: The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+              "hint": "Beside the point: Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+                "lead": "Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
                 "term": "Beside the point",
               },
               "id": 7,
@@ -1848,10 +1848,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bw",
-              "hint": "Black and white: Oversimplifying by assuming that one or another of two extremes must be true.",
+              "hint": "Black and white: Oversimplifies by pretending one of two extremes must be true when there are options in between.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Oversimplifying by assuming that one or another of two extremes must be true.",
+                "lead": "Oversimplifies by pretending one of two extremes must be true when there are options in between.",
                 "term": "Black and white",
               },
               "id": 8,
@@ -1859,10 +1859,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ci",
-              "hint": "Circular: An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+              "hint": "Circular: Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+                "lead": "Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
                 "term": "Circular",
               },
               "id": 9,
@@ -1870,10 +1870,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "cq",
-              "hint": "Complex question: A question that assumes the truth of something false or doubtful.",
+              "hint": "Complex question: A question that smuggles in an assumption that’s false or still in doubt.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A question that assumes the truth of something false or doubtful.",
+                "lead": "A question that smuggles in an assumption that’s false or still in doubt.",
                 "term": "Complex question",
               },
               "id": 10,
@@ -1881,10 +1881,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "fs",
-              "hint": "False stereotype: Assuming that members of a certain group are more alike than they actually are.",
+              "hint": "False stereotype: Treats members of a group as more alike than they really are.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Assuming that members of a certain group are more alike than they actually are.",
+                "lead": "Treats members of a group as more alike than they really are.",
                 "term": "False stereotype",
               },
               "id": 11,
@@ -1892,10 +1892,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ge",
-              "hint": "Genetic fallacy: We can explain why you believe A. ∴ A is false.",
+              "hint": "Genetic fallacy: Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "We can explain why you believe A. ∴ A is false.",
+                "lead": "Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
                 "term": "Genetic fallacy",
               },
               "id": 12,
@@ -1903,10 +1903,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "op",
-              "hint": "Opposition fallacy: Our opponents believe A. ∴ A is false.",
+              "hint": "Opposition fallacy: Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Our opponents believe A. ∴ A is false.",
+                "lead": "Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
                 "term": "Opposition fallacy",
               },
               "id": 13,
@@ -1914,10 +1914,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pc",
-              "hint": "Pro-con fallacy: This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+              "hint": "Pro-con fallacy: Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+                "lead": "Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
                 "term": "Pro-con fallacy",
               },
               "id": 14,
@@ -1925,10 +1925,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ph",
-              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ B caused A.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "(“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+                "lead": "(“after this therefore because of this”) A happened after B. ∴ B caused A.",
                 "term": "Post hoc ergo propter hoc",
               },
               "id": 15,
@@ -1936,10 +1936,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pw",
-              "hint": "Part-whole: The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+              "hint": "Part-whole: Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+                "lead": "Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
                 "term": "Part-whole",
               },
               "id": 16,
@@ -1947,10 +1947,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "sm",
-              "hint": "Straw man: Misrepresenting the views of an opponent.",
+              "hint": "Straw man: Rewrites an opponent’s view into something weaker, then attacks that instead.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Misrepresenting the views of an opponent.",
+                "lead": "Rewrites an opponent’s view into something weaker, then attacks that instead.",
                 "term": "Straw man",
               },
               "id": 17,
@@ -1960,7 +1960,7 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "prompt": "We can’t take seriously Kim’s plea for lower tax rates for corporations. Kim is the head of a large company and thus he stands to gain from lower taxes.",
         },
         {
-          "answer": "This passage illustrates the black and white fallacy. Oversimplifying by assuming that one or another of two extremes must be true.",
+          "answer": "This passage illustrates the black and white fallacy. Oversimplifies by pretending one of two extremes must be true when there are options in between.",
           "correctId": [
             8,
           ],
@@ -1968,14 +1968,14 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "abbreviation": "aa",
-              "hint": "Appeal to authority: This is fallacious if: (1) the person isn’t an authority on the subject; (2) there’s no consensus of such authorities; (3) the argument concludes that the authority *must* be right (and isn’t just probably right).",
+              "hint": "Appeal to authority: Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when: (1) the person isn’t an expert on this subject; (2) the experts themselves don’t agree; (3) the conclusion claims the authority *must* be right (and isn’t just probably right).",
               "hintParts": {
                 "clauses": [
-                  "the person isn’t an authority on the subject",
-                  "there’s no consensus of such authorities",
-                  "the argument concludes that the authority *must* be right (and isn’t just probably right)",
+                  "the person isn’t an expert on this subject",
+                  "the experts themselves don’t agree",
+                  "the conclusion claims the authority *must* be right (and isn’t just probably right)",
                 ],
-                "lead": "This is fallacious if:",
+                "lead": "Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when:",
                 "term": "Appeal to authority",
               },
               "id": 0,
@@ -1983,10 +1983,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ac",
-              "hint": "Appeal to the crowd: Most people believe A. ∴ A is true.",
+              "hint": "Appeal to the crowd: Treats popularity as proof: most people believe A. ∴ A is true.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Most people believe A. ∴ A is true.",
+                "lead": "Treats popularity as proof: most people believe A. ∴ A is true.",
                 "term": "Appeal to the crowd",
               },
               "id": 1,
@@ -1994,10 +1994,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ae",
-              "hint": "Appeal to emotion: To stir up emotions instead of arguing in a logical manner.",
+              "hint": "Appeal to emotion: Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To stir up emotions instead of arguing in a logical manner.",
+                "lead": "Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.",
                 "term": "Appeal to emotion",
               },
               "id": 2,
@@ -2005,10 +2005,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "af",
-              "hint": "Appeal to force: To use threats or intimidation to get a conclusion accepted.",
+              "hint": "Appeal to force: Backs a claim with a threat: agree, or something bad happens to you.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "To use threats or intimidation to get a conclusion accepted.",
+                "lead": "Backs a claim with a threat: agree, or something bad happens to you.",
                 "term": "Appeal to force",
               },
               "id": 3,
@@ -2016,13 +2016,13 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ah",
-              "hint": "Ad hominem: (“personal attack”). This is fallacious if: (1) the grounds of the attack are irrelevant to the person’s rational competence; (2) the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).",
+              "hint": "Ad hominem: (“personal attack”). Attacking the person instead of the claim. It’s a fallacy when: (1) the grounds of the attack have nothing to do with the person’s ability to reason about the issue; (2) the argument concludes that the person’s belief must be false (and isn’t just poorly supported).",
               "hintParts": {
                 "clauses": [
-                  "the grounds of the attack are irrelevant to the person’s rational competence",
-                  "the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held)",
+                  "the grounds of the attack have nothing to do with the person’s ability to reason about the issue",
+                  "the argument concludes that the person’s belief must be false (and isn’t just poorly supported)",
                 ],
-                "lead": "(“personal attack”). This is fallacious if:",
+                "lead": "(“personal attack”). Attacking the person instead of the claim. It’s a fallacy when:",
                 "term": "Ad hominem",
               },
               "id": 4,
@@ -2030,10 +2030,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ai",
-              "hint": "Appeal to ignorance: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+              "hint": "Appeal to ignorance: Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "“No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.",
+                "lead": "Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.",
                 "term": "Appeal to ignorance",
               },
               "id": 5,
@@ -2041,10 +2041,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "am",
-              "hint": "Ambiguous: A term or phrase changes meaning within the argument.",
+              "hint": "Ambiguous: A key word or phrase quietly changes meaning partway through the argument.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A term or phrase changes meaning within the argument.",
+                "lead": "A key word or phrase quietly changes meaning partway through the argument.",
                 "term": "Ambiguous",
               },
               "id": 6,
@@ -2052,10 +2052,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bp",
-              "hint": "Beside the point: The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+              "hint": "Beside the point: Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.",
+                "lead": "Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.",
                 "term": "Beside the point",
               },
               "id": 7,
@@ -2063,10 +2063,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "bw",
-              "hint": "Black and white: Oversimplifying by assuming that one or another of two extremes must be true.",
+              "hint": "Black and white: Oversimplifies by pretending one of two extremes must be true when there are options in between.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Oversimplifying by assuming that one or another of two extremes must be true.",
+                "lead": "Oversimplifies by pretending one of two extremes must be true when there are options in between.",
                 "term": "Black and white",
               },
               "id": 8,
@@ -2074,10 +2074,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ci",
-              "hint": "Circular: An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+              "hint": "Circular: Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.",
+                "lead": "Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.",
                 "term": "Circular",
               },
               "id": 9,
@@ -2085,10 +2085,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "cq",
-              "hint": "Complex question: A question that assumes the truth of something false or doubtful.",
+              "hint": "Complex question: A question that smuggles in an assumption that’s false or still in doubt.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "A question that assumes the truth of something false or doubtful.",
+                "lead": "A question that smuggles in an assumption that’s false or still in doubt.",
                 "term": "Complex question",
               },
               "id": 10,
@@ -2096,10 +2096,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "fs",
-              "hint": "False stereotype: Assuming that members of a certain group are more alike than they actually are.",
+              "hint": "False stereotype: Treats members of a group as more alike than they really are.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Assuming that members of a certain group are more alike than they actually are.",
+                "lead": "Treats members of a group as more alike than they really are.",
                 "term": "False stereotype",
               },
               "id": 11,
@@ -2107,10 +2107,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ge",
-              "hint": "Genetic fallacy: We can explain why you believe A. ∴ A is false.",
+              "hint": "Genetic fallacy: Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "We can explain why you believe A. ∴ A is false.",
+                "lead": "Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.",
                 "term": "Genetic fallacy",
               },
               "id": 12,
@@ -2118,10 +2118,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "op",
-              "hint": "Opposition fallacy: Our opponents believe A. ∴ A is false.",
+              "hint": "Opposition fallacy: Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Our opponents believe A. ∴ A is false.",
+                "lead": "Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.",
                 "term": "Opposition fallacy",
               },
               "id": 13,
@@ -2129,10 +2129,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pc",
-              "hint": "Pro-con fallacy: This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+              "hint": "Pro-con fallacy: Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.",
+                "lead": "Weighs only one side — all advantages or all disadvantages — instead of both against each other.",
                 "term": "Pro-con fallacy",
               },
               "id": 14,
@@ -2140,10 +2140,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "ph",
-              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+              "hint": "Post hoc ergo propter hoc: (“after this therefore because of this”) A happened after B. ∴ B caused A.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "(“after this therefore because of this”) A happened after B. ∴ A was caused by B.",
+                "lead": "(“after this therefore because of this”) A happened after B. ∴ B caused A.",
                 "term": "Post hoc ergo propter hoc",
               },
               "id": 15,
@@ -2151,10 +2151,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "pw",
-              "hint": "Part-whole: The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+              "hint": "Part-whole: Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.",
+                "lead": "Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.",
                 "term": "Part-whole",
               },
               "id": 16,
@@ -2162,10 +2162,10 @@ exports[`setR generator — top-level > matches snapshot for seed 42 1`] = `
             },
             {
               "abbreviation": "sm",
-              "hint": "Straw man: Misrepresenting the views of an opponent.",
+              "hint": "Straw man: Rewrites an opponent’s view into something weaker, then attacks that instead.",
               "hintParts": {
                 "clauses": undefined,
-                "lead": "Misrepresenting the views of an opponent.",
+                "lead": "Rewrites an opponent’s view into something weaker, then attacks that instead.",
                 "term": "Straw man",
               },
               "id": 17,

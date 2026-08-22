@@ -553,7 +553,9 @@
    120–145% band, which suits a two-to-three line question. cqw, not vw:
    736px of container → 26px (clamped); 358px → the 20px floor. */
 .quiz-immersive .qprompt {
-  font-size: clamp(20px, 3.6cqw, 26px);
+  /* Floor 20 → 21px (Malik, 2026-08-22): the passage reads at the floor
+     on phones, and it earns a nudge — deliberately tiny. */
+  font-size: clamp(21px, 3.6cqw, 26px);
   line-height: 1.25;
   font-weight: 400;
   text-align: center;
@@ -821,17 +823,24 @@
    keep today's grays. NB the fallbacks live in var() — declaring
    --quiz-fg HERE would shadow the inherited ink (the documented
    custom-property trap). */
+/* Type audit 2026-08-22 (guide-lab; Butterick + Santa Maria pass,
+   confirmed by user testing's small-text complaint): the guide sat at
+   13px while the hint body is 15px — breaking its own "reference and
+   feedback are one system" doctrine, and below the web floor for read
+   content on phones. Every read tier moves up ~1.5px; the mono
+   micro-labels (already correctly tracked caps) stay. */
 .wff-guide {
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.55;
   color: color-mix(in srgb, var(--quiz-fg, #1f2937) 88%, transparent);
 }
 
 .wff-guide .qguide-h {
   margin: 0 0 10px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.35;
+  text-wrap: balance;
   color: var(--quiz-fg, #111827);
 }
 
@@ -841,9 +850,17 @@
 
 .wff-guide .qguide-p {
   margin: 0 0 14px;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.55;
   color: color-mix(in srgb, var(--quiz-fg, #1f2937) 88%, transparent);
+}
+
+/* The provenance credit line (Set Q examples, Set R descriptions are
+   original as of 2026-08-22; the framework is Gensler's). */
+.wff-guide .qguide-src {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 60%, transparent);
 }
 
 /* A row of chips and a label, never mixed running prose — the one place
@@ -884,7 +901,7 @@
 .wff-guide .qguide-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
   text-align: left;
 }
@@ -902,15 +919,58 @@
     color-mix(in srgb, var(--quiz-fg, #1f2937) 18%, transparent);
 }
 
+/* Zebra rows, DECIDED 2026-08-22 (guide-lab): the hairline row rules go;
+   alternate rows wash at ink-6% and the wash GROUPS — an entry's
+   example and why-lines read as one parcel. The washed rows round their
+   outer corners in the brand's idiom: rasterized stairs on the 4px
+   grid via per-td clips (left corners on the first cell, right on the
+   last — a <tr> can't carry a clip-path), never smooth radius. */
 .wff-guide .qguide-table td {
   vertical-align: top;
-  padding: 8px 10px 8px 0;
-  border-bottom: 1px solid
-    color-mix(in srgb, var(--quiz-fg, #1f2937) 12%, transparent);
+  padding: 8px 10px;
+  border-bottom: 0;
 }
 
-.wff-guide .qguide-table tr:last-child td {
-  border-bottom: 0;
+.wff-guide .qguide-table td:first-child {
+  padding-left: 10px;
+}
+
+.wff-guide .qguide-table tbody tr:nth-child(odd) td {
+  background: color-mix(in srgb, var(--quiz-fg, #1f2937) 6%, transparent);
+}
+
+.wff-guide .qguide-table tbody tr:nth-child(odd) td:first-child {
+  clip-path: polygon(
+    8px 0,
+    100% 0,
+    100% 100%,
+    8px 100%,
+    8px calc(100% - 4px),
+    4px calc(100% - 4px),
+    4px calc(100% - 8px),
+    0 calc(100% - 8px),
+    0 8px,
+    4px 8px,
+    4px 4px,
+    8px 4px
+  );
+}
+
+.wff-guide .qguide-table tbody tr:nth-child(odd) td:last-child {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 8px) 0,
+    calc(100% - 8px) 4px,
+    calc(100% - 4px) 4px,
+    calc(100% - 4px) 8px,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 4px) calc(100% - 8px),
+    calc(100% - 4px) calc(100% - 4px),
+    calc(100% - 8px) calc(100% - 4px),
+    calc(100% - 8px) 100%,
+    0 100%
+  );
 }
 
 /* A wff form is one object; `some A is not B` must not break after
@@ -918,7 +978,7 @@
 .wff-guide .qguide-mono {
   font-family:
     ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
-  font-size: 12px;
+  font-size: 13px;
   white-space: nowrap;
   color: var(--quiz-fg, #1f2937);
 }
@@ -928,6 +988,7 @@
   font-family:
     ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
   font-size: 12px;
+  font-variant-numeric: tabular-nums;
   color: color-mix(in srgb, var(--quiz-fg, #1f2937) 60%, transparent);
 }
 
@@ -937,9 +998,12 @@
 }
 
 .wff-guide .qguide-why {
+  /* 12px/65% was caption styling on READ content — lifted a tier
+     (type audit 2026-08-22). 72% keeps AA at this size on the shipped
+     surfaces; re-gate via lib/contrast if a palette moves. */
   margin-top: 2px;
-  font-size: 12px;
-  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 65%, transparent);
+  font-size: 13px;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 72%, transparent);
 }
 
 /* Numbered rules (Set L). Hanging number via absolute positioning, NOT
@@ -950,7 +1014,7 @@
   padding: 0;
   list-style: none;
   counter-reset: qgr;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.55;
 }
 
@@ -978,7 +1042,122 @@
 /* R's clause tails reuse the hint's own list treatment, at table scale. */
 .wff-guide .qguide-table .qhint-clauses {
   max-width: none;
-  font-size: 12px;
+  font-size: 13px;
+}
+
+/* The ∴ glyph inside inference chips — decided 2026-08-22 (guide-lab):
+   the symbol was hard to read at chip scale, so it steps up and
+   emboldens inside its chip. Applies in the guide AND the hints — the
+   chips are the same object. */
+.qchip .qtf {
+  font-size: 1.15em;
+  font-weight: 650;
+}
+
+/* ---- Mobile sheet: header morph, ✕ chip, guide reveal ----------------
+   The sheet-lab decisions (2026-08-21/22). The collapsed sheet is a
+   FOOTER, the expanded sheet is a READER — user testing found the CTA
+   riding up with the sheet confusing, so the CTA row and the reader
+   title share one grid cell and crossfade: opacity + 4px blur + a small
+   directional slide at 200ms in the sheet's own ease. The 4px blur
+   masks the identity swap; the grid stack keeps header height constant
+   so nothing animates layout. The hidden layer flips visibility AFTER
+   the fade (the delayed 4th transition slot) so the invisible CTA also
+   leaves the tab order. */
+.qsheet-head {
+  display: grid;
+}
+
+.qsheet-head > .qsheet-cta,
+.qsheet-head > .qsheet-reader {
+  grid-area: 1 / 1;
+  transition:
+    opacity 0.2s var(--ease-out-quart),
+    filter 0.2s var(--ease-out-quart),
+    transform 0.2s var(--ease-out-quart),
+    visibility 0s;
+}
+
+.qsheet-reader {
+  align-self: start;
+  justify-self: start;
+  padding: 14px 4px 12px;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: color-mix(in srgb, var(--quiz-fg, #374151) 72%, transparent);
+}
+
+.qsheet-head[data-head='cta'] > .qsheet-reader {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(6px);
+  pointer-events: none;
+  visibility: hidden;
+  transition-delay: 0s, 0s, 0s, 0.2s;
+}
+
+.qsheet-head[data-head='reader'] > .qsheet-cta {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(-6px);
+  pointer-events: none;
+  visibility: hidden;
+  transition-delay: 0s, 0s, 0s, 0.2s;
+}
+
+/* The explicit way down — M3 requires a collapse affordance at full
+   height, and the grabber cycle is forward-only. */
+.qsheet-x {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--quiz-fg, #374151) 10%, transparent);
+  color: var(--quiz-fg, #374151);
+  opacity: 0;
+  scale: 0.8;
+  pointer-events: none;
+  transition:
+    opacity 0.18s var(--ease-out-quart),
+    scale 0.18s var(--ease-out-quart);
+}
+
+.qsheet-x[data-visible] {
+  opacity: 1;
+  scale: 1;
+  pointer-events: auto;
+}
+
+/* The guide stays MOUNTED from question one (its measured height sizes
+   the content-fit snap) and reveals by opacity as the sheet expands. */
+.qsheet-guide {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease-out-quart);
+}
+
+.qsheet-guide[data-open] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qsheet-head > .qsheet-cta,
+  .qsheet-head > .qsheet-reader,
+  .qsheet-x,
+  .qsheet-guide {
+    transition: none;
+  }
 }
 
 /* Colour for hierarchy, not background (decision 7, resolved by Malik +

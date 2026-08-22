@@ -24,10 +24,11 @@ const SetRGuide = dynamic(() => import('./setRGuide'));
  */
 
 /**
- * Gensler's seven canonical flaws-of-a-definition, with one worked
- * example each. Lifted from the 2008 LCEXE Set Q `*H` ("Info"
- * button) block, which itself follows the textbook §3.2. Shown in
- * the right column of the Set Q quiz guide.
+ * Gensler's seven canonical flaw CATEGORIES with ORIGINAL worked
+ * examples (Malik approved 2026-08-22, guide-lab). The shipped set was
+ * lifted verbatim from the 2008 LCEXE Set Q `*H` block / textbook §3.2
+ * — replaced so the software stops reproducing Routledge's text. The
+ * framework and NUMBERING stay: the numbers mirror the answer options.
  */
 const SET_Q_FLAW_EXAMPLES: ReadonlyArray<{
   num: number;
@@ -38,44 +39,44 @@ const SET_Q_FLAW_EXAMPLES: ReadonlyArray<{
   {
     num: 1,
     name: 'Too broad',
-    example: '“Bachelor” means “man.”',
-    why: 'There are men who aren’t bachelors.',
+    example: '“Chair” means “furniture.”',
+    why: 'There is furniture that isn’t a chair.',
   },
   {
     num: 2,
     name: 'Too narrow',
-    example: '“Bachelor” means “unmarried male astronaut.”',
-    why: 'There are bachelors who aren’t astronauts.',
+    example: '“Book” means “hardcover volume.”',
+    why: 'There are books that aren’t hardcover.',
   },
   {
     num: 3,
     name: 'Circular',
-    example: '“True” means “known to be true.”',
-    why: 'This defines “true” using “true.”',
+    example: '“Art” means “whatever artists create.”',
+    why: '“Artist” is itself defined by “art.”',
   },
   {
     num: 4,
     name: 'Uses poorly understood terms',
-    example: '“Good” means “having positive aretaic value.”',
-    why: 'The latter is less clear than “good.”',
+    example: '“Sleep” means “periodic suspension of sensorimotor engagement.”',
+    why: 'The latter is less clear than “sleep.”',
   },
   {
     num: 5,
     name: 'Poor match in vagueness',
-    example: '“Bachelor” means “unmarried male over 18 years old.”',
-    why: 'The latter is much more precise than “bachelor.”',
+    example: '“Tall” means “at least 190.5 cm.”',
+    why: 'Far more precise than “tall” ever is.',
   },
   {
     num: 6,
     name: 'Poor match in emotional tone',
-    example: '“Bachelor” means “fortunate man who hasn’t married.”',
-    why: 'The latter has a different emotional tone.',
+    example: '“Politician” means “self-serving schemer seeking office.”',
+    why: 'Smuggles in a sneer that “politician” doesn’t have.',
   },
   {
     num: 7,
     name: 'Has non-essential properties',
-    example: '“Bachelor” means “unmarried man living on earth.”',
-    why: 'We could imagine a bachelor who lives on the moon.',
+    example: '“Human” means “animal that cooks its food.”',
+    why: 'Maybe true of all and only humans — but cooking isn’t what makes someone human.',
   },
 ];
 
@@ -216,48 +217,37 @@ export const WffGuide: React.FC<WffGuideProps> = ({ subSet }) => {
         </div>
       )}
 
+      {/* Table FIRST, and the "What is a definition?" prose is GONE from
+          the sheet (Malik, 2026-08-22, guide-lab): the sheet is a
+          mid-question reference and the prose was a lesson — that
+          teaching now belongs to the start screen or the companion book.
+          Single column on every width: with the prose removed there is
+          nothing left to columnize. */}
       {subSet.id === 3 && (
-        <div className={guideColumnsClassName}>
-          <div className='@3xl:flex-1'>
-            <h3 className='qguide-h'>What is a definition?</h3>
-            <p className='qguide-p'>
-              A definition is a rule of paraphrase designed to explain meaning.
-              More precisely, a definition of a word or phrase is a rule saying
-              how to eliminate this word or phrase in any sentence using it and
-              produce a second sentence that means the same thing — the purpose
-              of this being to explain or clarify the meaning of the word or
-              phrase.
-            </p>
-            <p className='qguide-p'>
-              Definitions may be stipulative (specifying your own usage) or
-              lexical (explaining current usage). A good lexical definition
-              should allow us to “paraphrase out” a term — to produce a second
-              sentence that means the same thing but doesn’t use the defined
-              term.
-            </p>
-          </div>
-          <div className='@3xl:flex-1'>
-            <h3 className='qguide-h'>Ways a definition can be flawed</h3>
-            <p className='qguide-p'>
-              One worked example per flaw, from Gensler §3.2.
-            </p>
-            <table className='qguide-table'>
-              <tbody>
-                {SET_Q_FLAW_EXAMPLES.map((flaw) => (
-                  <tr key={flaw.num}>
-                    <td className='qguide-code'>{flaw.num}</td>
-                    <td>
-                      <span className='qguide-name'>{flaw.name}</span>
-                      <div className='qguide-p' style={{ margin: '2px 0 0' }}>
-                        {flaw.example}
-                      </div>
-                      <div className='qguide-why'>{flaw.why}</div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div>
+          <h3 className='qguide-h'>Ways a definition can be flawed</h3>
+          <p className='qguide-p'>
+            One worked example per flaw — the numbers match the answer options.
+          </p>
+          <table className='qguide-table'>
+            <tbody>
+              {SET_Q_FLAW_EXAMPLES.map((flaw) => (
+                <tr key={flaw.num}>
+                  <td className='qguide-code'>{flaw.num}</td>
+                  <td>
+                    <span className='qguide-name'>{flaw.name}</span>
+                    <div className='qguide-p' style={{ margin: '2px 0 0' }}>
+                      {flaw.example}
+                    </div>
+                    <div className='qguide-why'>{flaw.why}</div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className='qguide-src'>
+            Original examples; framework after Gensler §3.2.
+          </p>
         </div>
       )}
 

@@ -72,46 +72,76 @@ const DrawerContent = React.forwardRef<
       ...props
     },
     ref
-  ) => (
-    <DrawerPortal>
-      <DrawerOverlay />
-      <DrawerPrimitive.Content
-        ref={ref}
-        className={cn(
-          side === 'bottom'
-            ? 'fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background'
-            : 'fixed inset-y-0 right-0 z-50 flex flex-col rounded-l-[10px] border bg-background',
-          'outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0',
-          !disableOpenAnimation &&
-            (side === 'bottom'
-              ? 'motion-panel duration-200 ease-[var(--ease-out-quart)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-bottom-6 data-[state=closed]:slide-out-to-bottom-5'
-              : 'duration-200 ease-[var(--ease-out-quart)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-right-6 data-[state=closed]:slide-out-to-right-5'),
-          className
-        )}
-        {...props}
-      >
-        {side === 'bottom' &&
-          (onGrabberClick ? (
-            // The BAR is 8px; the TARGET is 44 (HIG floor). The padding
-            // does the work and the negative margin gives the reclaimed
-            // space back, so the sheet's spacing is unchanged — a grab
-            // handle you have to aim at is the one control here that
-            // most needs to be forgiving.
-            <button
-              type='button'
-              onClick={onGrabberClick}
-              aria-label='Cycle drawer snap point'
-              className='group mx-auto -mb-[18px] mt-0 flex h-11 w-[100px] cursor-grab items-center justify-center focus-visible:outline-none'
-            >
-              <span className='block h-2 w-full rounded-full bg-muted transition-colors group-hover:bg-gray-300 group-focus-visible:bg-gray-400' />
-            </button>
-          ) : (
-            <div className='mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted cursor-grab' />
-          ))}
-        {children}
-      </DrawerPrimitive.Content>
-    </DrawerPortal>
-  )
+  ) => {
+    // A drag that ENDS on the grabber must not also fire its tap: the
+    // click event lands after pointerup, when any drag state on the
+    // button has already resolved — so the answer has to survive that
+    // gap in a ref. Without this, a downward fling released over the
+    // grabber snapped the sheet down and instantly cycled it back up
+    // (found in the sheet lab, 2026-08-21).
+    const grabberDownAt = React.useRef<{ x: number; y: number } | null>(null);
+    const grabberDragged = React.useRef(false);
+    return (
+      <DrawerPortal>
+        <DrawerOverlay />
+        <DrawerPrimitive.Content
+          ref={ref}
+          className={cn(
+            side === 'bottom'
+              ? 'fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background'
+              : 'fixed inset-y-0 right-0 z-50 flex flex-col rounded-l-[10px] border bg-background',
+            'outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0',
+            !disableOpenAnimation &&
+              (side === 'bottom'
+                ? 'motion-panel duration-200 ease-[var(--ease-out-quart)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-bottom-6 data-[state=closed]:slide-out-to-bottom-5'
+                : 'duration-200 ease-[var(--ease-out-quart)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-right-6 data-[state=closed]:slide-out-to-right-5'),
+            className
+          )}
+          {...props}
+        >
+          {side === 'bottom' &&
+            (onGrabberClick ? (
+              // The BAR is the iOS-system 36×5 (decided 2026-08-22 —
+              // the old 100×8 pill was ~3× the platform grabber); the
+              // TARGET stays 44×100 (HIG floor). The padding does the
+              // work and the negative margin gives the reclaimed space
+              // back, so the sheet's spacing is unchanged — a grab
+              // handle you have to aim at is the one control here that
+              // most needs to be forgiving.
+              <button
+                type='button'
+                onPointerDown={(e) => {
+                  grabberDownAt.current = { x: e.clientX, y: e.clientY };
+                  grabberDragged.current = false;
+                }}
+                onPointerUp={(e) => {
+                  const down = grabberDownAt.current;
+                  if (
+                    down &&
+                    Math.hypot(e.clientX - down.x, e.clientY - down.y) >= 6
+                  ) {
+                    grabberDragged.current = true;
+                  }
+                }}
+                onClick={() => {
+                  if (grabberDragged.current) return;
+                  onGrabberClick();
+                }}
+                aria-label='Cycle drawer snap point'
+                className='group mx-auto -mb-[18px] mt-0 flex h-11 w-[100px] cursor-grab items-center justify-center focus-visible:outline-none'
+              >
+                <span className='block h-[5px] w-9 rounded-full bg-muted transition-colors group-hover:bg-gray-300 group-focus-visible:bg-gray-400' />
+              </button>
+            ) : (
+              <div className='mx-auto mt-4 flex h-2 w-[100px] items-center justify-center cursor-grab'>
+                <span className='block h-[5px] w-9 rounded-full bg-muted' />
+              </div>
+            ))}
+          {children}
+        </DrawerPrimitive.Content>
+      </DrawerPortal>
+    );
+  }
 );
 DrawerContent.displayName = 'DrawerContent';
 
