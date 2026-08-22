@@ -14,9 +14,12 @@ export default function SetRGuide() {
   return (
     <div>
       <h3 className='qguide-h'>The eighteen informal fallacies</h3>
+      {/* The chapter-sourcing sentence left with the verbatim text: the
+          descriptions are original now (2026-08-22), so the source
+          credit moved to the qguide-src line at the end of the list. */}
       <p className='qguide-p'>
-        From Gensler’s “Fallacies and Argumentation” chapter. Some passages
-        commit more than one fallacy and so have more than one correct answer.
+        Some passages commit more than one fallacy and so have more than one
+        correct answer.
       </p>
       {/* The same hierarchy as a hint — code chip, weighted name, ink
           gloss, hanging-numeral clauses — so the reference and the
@@ -46,6 +49,10 @@ export default function SetRGuide() {
           ))}
         </tbody>
       </table>
+      <p className='qguide-src'>
+        Original descriptions; framework after Gensler’s “Fallacies and
+        Argumentation” chapter.
+      </p>
     </div>
   );
 }

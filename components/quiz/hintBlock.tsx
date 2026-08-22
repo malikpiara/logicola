@@ -72,13 +72,17 @@ export function HintProse({ text }: { text: string }) {
     <>
       {segments.map((seg, i) => {
         if (seg.type === 'chip') {
+          // The ∴ steps up inside its chip (guide-lab, 2026-08-22) — the
+          // glyph was hard to read at chip scale. textContent is
+          // unchanged; only the glyph's box grows.
           return (
             <code
               key={i}
               className='qchip'
               style={{ clipPath: NOTATION_CHIP_CLIP }}
             >
-              {seg.text}
+              <span className='qtf'>∴</span>
+              {seg.text.slice(1)}
             </code>
           );
         }

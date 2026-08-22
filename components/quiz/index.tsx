@@ -159,21 +159,27 @@ const COLLAPSED_SNAP_BASE_PX = 128;
  */
 type SnapKind = 'collapsed' | 'guide' | 'full';
 
-/** Read a vaul snap value back as its kind. */
-function snapKindOf(value: SnapValue | null): SnapKind {
+/**
+ * Read a vaul snap value back as its kind. The expanded snap is dynamic
+ * now (content-fit), so the collapsed point is the anchor: 1 is full,
+ * the collapsed string is collapsed, and any other px value is the
+ * expanded guide snap.
+ */
+function snapKindOf(value: SnapValue | null, collapsedPoint: string): SnapKind {
   if (value === 1) return 'full';
-  if (value === '460px') return 'guide';
-  return 'collapsed';
+  if (value == null || value === collapsedPoint) return 'collapsed';
+  return 'guide';
 }
 
 /**
  * Cycle the drawer forward (collapsed → guide → full → …). Used by the
  * grabber's `onGrabberClick` so users can tap it to progressively
- * expand the sheet.
+ * expand the sheet — HIG's own tap-to-cycle. Content-fit sheets have no
+ * full snap, so their cycle is collapsed → guide → collapsed.
  */
-function nextSnapKind(current: SnapKind): SnapKind {
+function nextSnapKind(current: SnapKind, hasFull: boolean): SnapKind {
   if (current === 'collapsed') return 'guide';
-  if (current === 'guide') return 'full';
+  if (current === 'guide') return hasFull ? 'full' : 'collapsed';
   return 'collapsed';
 }
 
@@ -363,11 +369,51 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   // there are no insets, which is why nothing else moves.
   const safeAreaBottom = useSafeAreaBottom();
   const collapsedSnapPoint = `${COLLAPSED_SNAP_BASE_PX + safeAreaBottom}px`;
-  const guideSnapPoints: readonly SnapValue[] = [
-    collapsedSnapPoint,
-    '460px',
-    1,
-  ];
+  /**
+   * Content-fit expanded snap (decided 2026-08-22, guide-lab). The old
+   * fixed ladder (460px, then 97%) opened Set A's one-table guide onto
+   * ~800px of empty surface at full. The guide now stays mounted (see
+   * the sheet's guide container) and reports its height; when the whole
+   * guide fits under the viewport the sheet gets ONE expanded snap
+   * sized to the content and no full snap at all — detents fit content
+   * (HIG), never the other way round. Q and R still earn 460px + full.
+   */
+  const [guideContentPx, setGuideContentPx] = useState<number | null>(null);
+  // CALLBACK ref, not useRef + screen-flag deps: the drawer's portal
+  // children attach a commit after the screen flags flip, so an effect
+  // keyed on those flags measures a null ref once and never again.
+  // State-as-ref re-fires the measurement effect on the actual attach.
+  const [guideScrollEl, setGuideScrollEl] = useState<HTMLDivElement | null>(
+    null
+  );
+  useEffect(() => {
+    if (!guideScrollEl) return;
+    const measure = () => setGuideContentPx(guideScrollEl.scrollHeight);
+    measure();
+    const observer = new ResizeObserver(measure);
+    // Observe the CONTENT wrapper: the container's own box is clamped
+    // by maxHeight, so it never resizes when its content does — fonts
+    // and KaTeX arriving late would go unseen.
+    observer.observe(guideScrollEl.firstElementChild ?? guideScrollEl);
+    return () => observer.disconnect();
+  }, [guideScrollEl]);
+  // Header (grabber + CTA row) above the guide inside the sheet, plus
+  // breathing room under the content.
+  const contentSnapPx =
+    guideContentPx != null
+      ? guideContentPx + DRAWER_HEADER_OFFSET_PX + 28
+      : null;
+  const guideFitsWithoutFull =
+    contentSnapPx != null &&
+    typeof window !== 'undefined' &&
+    contentSnapPx < window.innerHeight * 0.97 - 40;
+  const expandedSnapPoint: SnapValue = guideFitsWithoutFull
+    ? `${Math.max(280, Math.round(contentSnapPx))}px`
+    : '460px';
+  const hasFullSnap = !guideFitsWithoutFull;
+  const guideSnapPoints: readonly SnapValue[] = hasFullSnap
+    ? [collapsedSnapPoint, expandedSnapPoint, 1]
+    : [collapsedSnapPoint, expandedSnapPoint];
   const noGuideSnapPoints: readonly SnapValue[] = [collapsedSnapPoint];
   const drawerInitialTransform = `calc(100dvh - ${collapsedSnapPoint})`;
 
@@ -382,9 +428,120 @@ const QuizSession: React.FC<QuizSessionProps> = ({
    */
   const [snapKind, setSnapKind] = useState<SnapKind>('collapsed');
   const snapValueOf = (kind: SnapKind): SnapValue =>
-    kind === 'collapsed' ? collapsedSnapPoint : kind === 'guide' ? '460px' : 1;
+    kind === 'collapsed'
+      ? collapsedSnapPoint
+      : kind === 'guide' || !hasFullSnap
+        ? expandedSnapPoint
+        : 1;
   const snap = snapValueOf(snapKind);
   const isGuideExpanded = hasGuide && snapKind !== 'collapsed';
+
+  /**
+   * The flick zone (decided 2026-08-21, sheet-lab): a fast upward flick
+   * in the bottom 30% of the screen expands the sheet one snap — the
+   * guide reachable without aiming at the grabber. Honest findings from
+   * the lab: list-set question screens don't scroll, so the classic
+   * swipe-vs-scroll conflict mostly doesn't exist; where it does — the
+   * grid sets' internally-scrolling options region — the flick YIELDS
+   * (a touch starting in a scrollable options region is never claimed).
+   * Touch-only by construction: desktop's guide lives in the side pane
+   * and the bottom sheet is lg:hidden.
+   */
+  const quizCardRef = useRef<HTMLDivElement | null>(null);
+  // Latest values for the touch handlers without re-binding them —
+  // synced in an effect (writing refs during render trips
+  // react-hooks/refs, and rightly).
+  const snapKindRef = useRef(snapKind);
+  const hasFullSnapRef = useRef(hasFullSnap);
+  useEffect(() => {
+    snapKindRef.current = snapKind;
+    hasFullSnapRef.current = hasFullSnap;
+  }, [snapKind, hasFullSnap]);
+  useEffect(() => {
+    const card = quizCardRef.current;
+    if (!card || !hasGuide) return;
+    type FlickSample = { t: number; y: number };
+    let flick: {
+      t0: number;
+      x0: number;
+      y0: number;
+      samples: FlickSample[];
+      done: boolean;
+    } | null = null;
+    // px/ms over the last ~100ms of samples, positive = downward.
+    const velocityOf = (samples: FlickSample[]) => {
+      if (samples.length < 2) return 0;
+      const last = samples[samples.length - 1]!;
+      let i = samples.length - 2;
+      while (i > 0 && last.t - samples[i]!.t < 100) i--;
+      const first = samples[i]!;
+      const dt = last.t - first.t;
+      return dt ? (last.y - first.y) / dt : 0;
+    };
+    const onTouchStart = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      if (touch.clientY < window.innerHeight * 0.7) return;
+      const options = optionsGridRef.current;
+      if (
+        options &&
+        event.target instanceof Node &&
+        options.contains(event.target) &&
+        options.scrollHeight > options.clientHeight + 1
+      ) {
+        return; // the options region owns its scroll — never claim it
+      }
+      flick = {
+        t0: performance.now(),
+        x0: touch.clientX,
+        y0: touch.clientY,
+        samples: [{ t: performance.now(), y: touch.clientY }],
+        done: false,
+      };
+    };
+    const onTouchMove = (event: TouchEvent) => {
+      if (!flick || flick.done) return;
+      const touch = event.touches[0];
+      if (!touch) return;
+      const now = performance.now();
+      flick.samples.push({ t: now, y: touch.clientY });
+      if (flick.samples.length > 8) flick.samples.shift();
+      const rise = flick.y0 - touch.clientY;
+      const drift = Math.abs(touch.clientX - flick.x0);
+      const upwardVelocity = -velocityOf(flick.samples);
+      if (
+        now - flick.t0 <= 220 &&
+        rise >= 24 &&
+        upwardVelocity >= 0.55 &&
+        drift < rise
+      ) {
+        flick.done = true;
+        const current = snapKindRef.current;
+        const atTop =
+          current === 'full' ||
+          (current === 'guide' && !hasFullSnapRef.current);
+        if (!atTop) {
+          event.preventDefault();
+          setSnapKind(current === 'collapsed' ? 'guide' : 'full');
+        }
+      } else if (now - flick.t0 > 260) {
+        flick.done = true;
+      }
+    };
+    const onTouchEnd = () => {
+      flick = null;
+    };
+    card.addEventListener('touchstart', onTouchStart, { passive: true });
+    // Non-passive: the one preventDefault at the trigger moment stops
+    // the page scroll from double-responding to a claimed flick.
+    card.addEventListener('touchmove', onTouchMove, { passive: false });
+    card.addEventListener('touchend', onTouchEnd, { passive: true });
+    return () => {
+      card.removeEventListener('touchstart', onTouchStart);
+      card.removeEventListener('touchmove', onTouchMove);
+      card.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [hasGuide, showStartScreen, showEndScreen]);
 
   useKeyboardNavigation({
     currentQuestion,
@@ -736,6 +893,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
           className='quiz-pane-push'
         >
           <div
+            ref={quizCardRef}
             className={classNames(
               // `quiz-immersive` scopes the recolor rules in globals.css.
               // Same rounded canvas geometry as the start screen, filled
@@ -1205,7 +1363,9 @@ const QuizSession: React.FC<QuizSessionProps> = ({
           snapPoints={[...(hasGuide ? guideSnapPoints : noGuideSnapPoints)]}
           activeSnapPoint={hasGuide ? snap : collapsedSnapPoint}
           setActiveSnapPoint={(value) =>
-            setSnapKind(hasGuide ? snapKindOf(value) : 'collapsed')
+            setSnapKind(
+              hasGuide ? snapKindOf(value, collapsedSnapPoint) : 'collapsed'
+            )
           }
         >
           <DrawerContent
@@ -1231,9 +1391,29 @@ const QuizSession: React.FC<QuizSessionProps> = ({
               } as React.CSSProperties
             }
             onGrabberClick={
-              hasGuide ? () => setSnapKind(nextSnapKind(snapKind)) : undefined
+              hasGuide
+                ? () => setSnapKind(nextSnapKind(snapKind, hasFullSnap))
+                : undefined
             }
           >
+            {/* The explicit way DOWN (decided 2026-08-22): the grabber
+                cycle is forward-only — HIG's own tap-to-cycle — so
+                without this the only route back from the guide was a
+                drag. M3 requires a collapse affordance at full height;
+                Stocks' symbol card is the visual precedent. Same chip
+                grammar as the desktop pane's ✕. */}
+            {hasGuide && (
+              <button
+                type='button'
+                onClick={() => setSnapKind('collapsed')}
+                aria-label='Close the reference guide'
+                className='qsheet-x'
+                data-visible={isGuideExpanded || undefined}
+                style={{ clipPath: CLOSE_CHIP_CLIP }}
+              >
+                <TimesIcon className='h-[14px] w-[14px]' />
+              </button>
+            )}
             <DrawerHeader>
               <DrawerTitle className='sr-only'>
                 Quiz controls and reference guide
@@ -1242,95 +1422,121 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                 Keyboard shortcuts, quiz progress, answer actions, and the
                 well-formed formula guide.
               </DrawerDescription>
-              {/* Content-sized, not h-24: a fixed row height was half the
+              {/* The CTA↔title MORPH (decided 2026-08-22, sheet-lab):
+                  the collapsed sheet is a footer, the expanded sheet is
+                  a reader — user testing found the CTA riding up with
+                  the sheet confusing, so the two states swap in one
+                  grid cell (opacity + blur crossfade; see .qsheet-head
+                  in globals.css). Both layers stay mounted; the hidden
+                  one leaves the tab order via delayed visibility. */}
+              <div
+                className='qsheet-head'
+                data-head={isGuideExpanded ? 'reader' : 'cta'}
+              >
+                <div className='qsheet-reader'>Reference guide</div>
+                {/* Content-sized, not h-24: a fixed row height was half the
                   collapsed sheet's dead space. The bottom inset keeps the
                   CTA off the gesture pill — the sheet's surface still
                   runs under it, which is what colours the bar. */}
-              <div className='left-0 z-50 w-full flex items-center justify-center pb-[env(safe-area-inset-bottom)] md:justify-between'>
-                <div className='ml-0 md:ml-5'>
-                  {!showStartScreen && !showEndScreen && (
-                    <KeyboardKeys
-                      optionCount={currentQuestion?.options.length}
-                      hasAbbreviations={currentQuestion?.options.some(
-                        (option) => option.abbreviation
-                      )}
-                      twoDimensional={isGridLayout}
-                      multiSelect={multiSelect}
-                    />
-                  )}
-                </div>
-                <div className='flex justify-between gap-5 items-center h-full align-bottom font-medium flex-col md:flex-row w-full md:w-fit'>
-                  {!showStartScreen && !showEndScreen && (
-                    // On phones the sticky header row's bar is the progress
-                    // reading, so the number would crowd the full-width
-                    // CTA — but it stays in the accessibility tree as the
-                    // bar's accessible reading.
-                    <div className='sr-only tabular-nums md:not-sr-only md:flex'>
-                      {progressLabel(mode, questionCounter, scoreState.score)}
-                    </div>
-                  )}
-                  <div className='flex h-max w-full md:w-fit'>
-                    {/* Full-width gem CTA — the collapsed sheet models the
+                <div className='qsheet-cta left-0 z-50 w-full flex items-center justify-center pb-[env(safe-area-inset-bottom)] md:justify-between'>
+                  <div className='ml-0 md:ml-5'>
+                    {!showStartScreen && !showEndScreen && (
+                      <KeyboardKeys
+                        optionCount={currentQuestion?.options.length}
+                        hasAbbreviations={currentQuestion?.options.some(
+                          (option) => option.abbreviation
+                        )}
+                        twoDimensional={isGridLayout}
+                        multiSelect={multiSelect}
+                      />
+                    )}
+                  </div>
+                  <div className='flex justify-between gap-5 items-center h-full align-bottom font-medium flex-col md:flex-row w-full md:w-fit'>
+                    {!showStartScreen && !showEndScreen && (
+                      // On phones the sticky header row's bar is the progress
+                      // reading, so the number would crowd the full-width
+                      // CTA — but it stays in the accessibility tree as the
+                      // bar's accessible reading.
+                      <div className='sr-only tabular-nums md:not-sr-only md:flex'>
+                        {progressLabel(mode, questionCounter, scoreState.score)}
+                      </div>
+                    )}
+                    <div className='flex h-max w-full md:w-fit'>
+                      {/* Full-width gem CTA — the collapsed sheet models the
                         mobile footer, and the primary action fills the row
                         (Duolingo's CHECK, Brilliant's Continue). */}
-                    {/* Adaptive ink on the set-coloured sheet, same as
+                      {/* Adaptive ink on the set-coloured sheet, same as
                         the desktop footer CTAs. */}
-                    {!showSolution && !showStartScreen && !showEndScreen && (
-                      <GemButton
-                        containerClassName='w-full md:w-52'
-                        className='hover:opacity-90'
-                        disabled={
-                          multiSelect
-                            ? selectedOptionIds.length === 0
-                            : selectedOptionIndex == null
-                        }
-                        onClick={handleCheckAnswer}
-                        style={
-                          (
+                      {!showSolution && !showStartScreen && !showEndScreen && (
+                        <GemButton
+                          containerClassName='w-full md:w-52'
+                          className='hover:opacity-90'
+                          disabled={
                             multiSelect
                               ? selectedOptionIds.length === 0
                               : selectedOptionIndex == null
-                          )
-                            ? {
-                                backgroundColor:
-                                  'color-mix(in srgb, var(--quiz-fg) 18%, transparent)',
-                                color:
-                                  'color-mix(in srgb, var(--quiz-fg) 55%, transparent)',
-                              }
-                            : {
-                                backgroundColor: 'var(--quiz-fg)',
-                                color: 'var(--quiz-surface)',
-                              }
-                        }
-                      >
-                        Check Answer
-                      </GemButton>
-                    )}
-                    {showSolution && (
-                      <GemButton
-                        containerClassName='w-full md:w-52'
-                        className='hover:opacity-90'
-                        disabled={isQuestionLeaving}
-                        onClick={handleNextQuestionTransition}
-                        style={{
-                          backgroundColor: 'var(--quiz-fg)',
-                          color: 'var(--quiz-surface)',
-                        }}
-                      >
-                        Next Question
-                      </GemButton>
-                    )}
+                          }
+                          onClick={handleCheckAnswer}
+                          style={
+                            (
+                              multiSelect
+                                ? selectedOptionIds.length === 0
+                                : selectedOptionIndex == null
+                            )
+                              ? {
+                                  backgroundColor:
+                                    'color-mix(in srgb, var(--quiz-fg) 18%, transparent)',
+                                  color:
+                                    'color-mix(in srgb, var(--quiz-fg) 55%, transparent)',
+                                }
+                              : {
+                                  backgroundColor: 'var(--quiz-fg)',
+                                  color: 'var(--quiz-surface)',
+                                }
+                          }
+                        >
+                          Check Answer
+                        </GemButton>
+                      )}
+                      {showSolution && (
+                        <GemButton
+                          containerClassName='w-full md:w-52'
+                          className='hover:opacity-90'
+                          disabled={isQuestionLeaving}
+                          onClick={handleNextQuestionTransition}
+                          style={{
+                            backgroundColor: 'var(--quiz-fg)',
+                            color: 'var(--quiz-surface)',
+                          }}
+                        >
+                          Next Question
+                        </GemButton>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </DrawerHeader>
 
-            {isGuideExpanded && (
+            {/* Always MOUNTED, revealed by opacity (data-open): the
+                content-fit snap needs the guide's height before the
+                first expansion, so the old expand-gated render became a
+                chicken-and-egg. Set R's dynamic chunk now loads with
+                the page instead of on first expand — the same modules
+                are already warm from the set's own generator chunk
+                (see setRGuide.tsx). */}
+            {hasGuide && (
               <div
-                className='@container overflow-y-auto flex flex-col gap-10 mx-4 md:mx-8 pb-8 text-base leading-7 text-gray-600 select-text'
+                ref={setGuideScrollEl}
+                data-open={isGuideExpanded || undefined}
+                className='qsheet-guide @container overflow-y-auto flex flex-col gap-10 mx-4 md:mx-8 pb-8 text-base leading-7 text-gray-600 select-text'
                 style={{ maxHeight: guideContentMaxHeight(snap) }}
               >
-                <WffGuide subSet={subSet} />
+                {/* Plain wrapper = the measurable content box (see the
+                    ResizeObserver above). */}
+                <div>
+                  <WffGuide subSet={subSet} />
+                </div>
               </div>
             )}
           </DrawerContent>

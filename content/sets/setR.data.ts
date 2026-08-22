@@ -100,21 +100,32 @@ export interface FallacySection {
   variants: PassageVariant[];
 }
 
+/**
+ * Descriptions rewritten as ORIGINAL text (Malik approved 2026-08-22,
+ * guide-lab): the shipped wording was near-verbatim from the textbook's
+ * "Fallacies and Argumentation" chapter, which the Routledge companion
+ * relationship shouldn't reproduce. The ∴ schemas are kept deliberately
+ * (minimal logical forms), the clause COUNTS and numbering are load-
+ * bearing (answer notes cite "violates (1) and (2)"), and the two
+ * "isn't just…" guards survive in fresh wording — they fence off the
+ * near-miss readings the distractors depend on. These strings feed BOTH
+ * the reference guide and the hint leads (one-system doctrine).
+ */
 export const FALLACIES: Fallacy[] = [
   {
     code: 'aa',
     id: 0,
     name: 'Appeal to authority',
     label: 'Appeal to authority',
-    description: 'This is fallacious if:',
+    description:
+      'Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when:',
     clauses: [
-      'the person isn’t an authority on the subject, or',
-      'there’s no consensus of such authorities, or',
-      // `*must*` restores the source's 0xBD emphasis on this word (see the
-      // header note). The source marks `probably` too, but two marks in one
-      // clause fragment it, and `must` is the operative word: asserting
-      // necessity IS the fallacy (decided 2026-08-05, redesign-handoff.md).
-      'the argument concludes that the authority *must* be right (and isn’t just probably right).',
+      'the person isn’t an expert on this subject, or',
+      'the experts themselves don’t agree, or',
+      // `*must*` keeps the source's 0xBD emphasis on this word (decided
+      // 2026-08-05, redesign-handoff.md): asserting necessity IS the
+      // fallacy.
+      'the conclusion claims the authority *must* be right (and isn’t just probably right).',
     ],
   },
   {
@@ -122,31 +133,35 @@ export const FALLACIES: Fallacy[] = [
     id: 1,
     name: 'Appeal to the crowd',
     label: 'Appeal to crowd',
-    description: 'Most people believe A. ∴ A is true.',
+    description:
+      'Treats popularity as proof: most people believe A. ∴ A is true.',
   },
   {
     code: 'ae',
     id: 2,
     name: 'Appeal to emotion',
     label: 'Appeal to emotion',
-    description: 'To stir up emotions instead of arguing in a logical manner.',
+    description:
+      'Works on feelings instead of giving reasons — stirring outrage, pity, or flattery in place of an argument.',
   },
   {
     code: 'af',
     id: 3,
     name: 'Appeal to force',
     label: 'Appeal to force',
-    description: 'To use threats or intimidation to get a conclusion accepted.',
+    description:
+      'Backs a claim with a threat: agree, or something bad happens to you.',
   },
   {
     code: 'ah',
     id: 4,
     name: 'Ad hominem',
     label: 'Ad hominem',
-    description: '(“personal attack”). This is fallacious if:',
+    description:
+      '(“personal attack”). Attacking the person instead of the claim. It’s a fallacy when:',
     clauses: [
-      'the grounds of the attack are irrelevant to the person’s rational competence, or',
-      'the argument concludes that the person’s belief must be wrong (and isn’t just not rationally held).',
+      'the grounds of the attack have nothing to do with the person’s ability to reason about the issue, or',
+      'the argument concludes that the person’s belief must be false (and isn’t just poorly supported).',
     ],
   },
   {
@@ -155,14 +170,15 @@ export const FALLACIES: Fallacy[] = [
     name: 'Appeal to ignorance',
     label: 'Appeal to ignorance',
     description:
-      '“No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” Appeal to ignorance isn’t just where someone is talking in ignorance.',
+      'Treats missing evidence as evidence: “No one has proved A. ∴ A is false.” “No one has disproved A. ∴ A is true.” It isn’t just someone talking in ignorance.',
   },
   {
     code: 'am',
     id: 6,
     name: 'Ambiguous',
     label: 'Ambiguous',
-    description: 'A term or phrase changes meaning within the argument.',
+    description:
+      'A key word or phrase quietly changes meaning partway through the argument.',
   },
   {
     code: 'bp',
@@ -170,7 +186,7 @@ export const FALLACIES: Fallacy[] = [
     name: 'Beside the point',
     label: 'Beside the point',
     description:
-      'The person argues for a conclusion irrelevant to the issue at hand. Beside the point isn’t just where the premises don’t prove the conclusion.',
+      'Argues for a conclusion that isn’t the point at issue. It isn’t just premises failing to prove the conclusion.',
   },
   {
     code: 'bw',
@@ -178,7 +194,7 @@ export const FALLACIES: Fallacy[] = [
     name: 'Black and white',
     label: 'Black and white',
     description:
-      'Oversimplifying by assuming that one or another of two extremes must be true.',
+      'Oversimplifies by pretending one of two extremes must be true when there are options in between.',
   },
   {
     code: 'ci',
@@ -186,7 +202,7 @@ export const FALLACIES: Fallacy[] = [
     name: 'Circular',
     label: 'Circular',
     description:
-      'An argument is circular (or “question begging”) if it presumes the truth of what is to be proved. A series of arguments is circular if it uses a premise to prove a conclusion – and then uses that conclusion to prove the premise.',
+      'Assumes the very thing it’s trying to prove (“question begging”) — or uses a premise to prove a conclusion, then that conclusion to prove the premise.',
   },
   {
     code: 'cq',
@@ -194,7 +210,7 @@ export const FALLACIES: Fallacy[] = [
     name: 'Complex question',
     label: 'Complex question',
     description:
-      'A question that assumes the truth of something false or doubtful.',
+      'A question that smuggles in an assumption that’s false or still in doubt.',
   },
   {
     code: 'fs',
@@ -202,21 +218,23 @@ export const FALLACIES: Fallacy[] = [
     name: 'False stereotype',
     label: 'False stereotype',
     description:
-      'Assuming that members of a certain group are more alike than they actually are.',
+      'Treats members of a group as more alike than they really are.',
   },
   {
     code: 'ge',
     id: 12,
     name: 'Genetic fallacy',
     label: 'Genetic',
-    description: 'We can explain why you believe A. ∴ A is false.',
+    description:
+      'Explains your belief instead of addressing it: we can explain why you believe A. ∴ A is false.',
   },
   {
     code: 'op',
     id: 13,
     name: 'Opposition fallacy',
     label: 'Opposition',
-    description: 'Our opponents believe A. ∴ A is false.',
+    description:
+      'Rejects a claim because of who holds it: our opponents believe A. ∴ A is false.',
   },
   {
     code: 'pc',
@@ -224,7 +242,7 @@ export const FALLACIES: Fallacy[] = [
     name: 'Pro-con fallacy',
     label: 'Pro-con',
     description:
-      'This fallacy presents a one-sided view. It stresses only the advantages or only the disadvantages, instead of recognizing both and weighing one against the other.',
+      'Weighs only one side — all advantages or all disadvantages — instead of both against each other.',
   },
   {
     code: 'ph',
@@ -232,7 +250,7 @@ export const FALLACIES: Fallacy[] = [
     name: 'Post hoc ergo propter hoc',
     label: 'Post hoc',
     description:
-      '(“after this therefore because of this”) A happened after B. ∴ A was caused by B.',
+      '(“after this therefore because of this”) A happened after B. ∴ B caused A.',
   },
   {
     code: 'pw',
@@ -240,14 +258,15 @@ export const FALLACIES: Fallacy[] = [
     name: 'Part-whole',
     label: 'Part-whole',
     description:
-      'The fallacy of arguing that something true of the whole must be true of all the parts, or that something true of all the parts must be true of the whole.',
+      'Assumes that what’s true of the whole must hold for each part — or that what’s true of every part must hold for the whole.',
   },
   {
     code: 'sm',
     id: 17,
     name: 'Straw man',
     label: 'Straw man',
-    description: 'Misrepresenting the views of an opponent.',
+    description:
+      'Rewrites an opponent’s view into something weaker, then attacks that instead.',
   },
 ];
 
