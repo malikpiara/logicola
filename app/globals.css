@@ -1,6 +1,28 @@
 @config "../tailwind.config.mjs";
 @import 'tailwindcss';
 
+/* Tailwind v4's preflight DROPPED `button { cursor: pointer }` — v3 shipped
+   it, v4 hands buttons back to the UA arrow. So the pointer affordance was
+   missing app-wide, not in the handful of places an audit happens to catch;
+   only buttons that carried `.motion-button`/`.motion-option` (or a literal
+   `cursor-pointer`) still had it. Restoring it once, here, is what keeps the
+   next button written from losing it again.
+
+   The BASE layer is load-bearing. Base sits below `utilities`, so every
+   deliberate exception still outranks this: `cursor-grab` on the drawer
+   grabber (components/ui/drawer.tsx — a DRAG affordance, not a click one),
+   `disabled:cursor-not-allowed`, and the unlayered quiz rules that mark a
+   spent option (`.quiz-immersive .qopt.is-revealed`). Put this anywhere
+   above `utilities` and it would silently break all three.
+   Malik, 2026-08-22 (the nav pass). */
+@layer base {
+  button:not(:disabled):not([aria-disabled='true']),
+  [role='button']:not([aria-disabled='true']),
+  summary {
+    cursor: pointer;
+  }
+}
+
 .motion-enter {
   animation: animateIn var(--motion-page-enter) var(--ease-out-quart) 80ms both;
 }
