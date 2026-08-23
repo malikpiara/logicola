@@ -37,6 +37,31 @@ const MOBILE_WIDTH = 640;
 const MOBILE_SCALE = 0.6;
 
 /**
+ * How much bigger the quiz wears its pattern than the engine's own tuning
+ * (Malik, 2026-08-23 — "they look better when the scale is bigger").
+ *
+ * THIS IS THE PATTERN LAB'S SCALE SLIDER. `docs/pattern-lab.html` renders
+ * the field as `(px ? 1.7 : 1) * state.scale * mobileScale`, and the app
+ * now renders it as `PIXEL_FIELD_MACRO * QUIZ_PATTERN_SCALE * (mobile ?
+ * 0.6 : 1)`. Same three factors, same order — so whatever number the lab's
+ * slider lands on IS this constant, with no conversion.
+ *
+ * It lives here rather than in `PIXEL_FIELD_MACRO` on purpose. That
+ * constant is the engine's, and the engine has a second customer: the
+ * footer band in components/footer.tsx, drawn at its own scale 0.35 from
+ * the footer lab's recipe, plus the exported brand covers. Moving the
+ * engine's number to make the quiz screens chunkier would silently
+ * re-cut artwork that was judged at the old pitch.
+ *
+ * 1.25 was picked off a same-seed comparison at 1.00 / 1.15 / 1.25 / 1.40
+ * on both treatments. The ceiling is the FOOTER band, not the start
+ * screen: the band is a fixed 112px strip, so past ~1.4 it stops being a
+ * texture and becomes three or four separate shapes with gaps between
+ * them. On the start screen alone 1.4 still reads.
+ */
+const QUIZ_PATTERN_SCALE = 1.25;
+
+/**
  * Easy sets wear Camo · classic, hard sets Camo · giant. "Hard" is the
  * catalogue's own word: the subset's slug or title says so (Sets A and C
  * ship Easy/Hard pairs). Subsets outside an Easy/Hard pair — modal
@@ -92,7 +117,7 @@ export function PatternLayer({
           h,
           ink,
           pool,
-          scale: mobile ? MOBILE_SCALE : 1,
+          scale: (mobile ? MOBILE_SCALE : 1) * QUIZ_PATTERN_SCALE,
           seed,
           clear: clearRectFor(treatment, w, h, mobile),
         })
