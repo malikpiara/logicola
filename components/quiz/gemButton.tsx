@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import classNames from 'classnames';
 import { FOCUS_GAP, FOCUS_W, gemClip, ringBand } from '@/lib/pixel';
 
@@ -63,6 +64,61 @@ export function GemButton({
       >
         {children}
       </button>
+    </span>
+  );
+}
+
+/**
+ * The same silhouette, as a LINK.
+ *
+ * The end screen's onward action goes somewhere — another drill, or out —
+ * so it has to be an anchor, not a button with a `router.push` inside it.
+ * That is not pedantry about semantics: a button cannot be middle-clicked
+ * into a new tab, cannot be copied as a link, has no hover status in the
+ * browser chrome, and announces itself to a screen reader as "button"
+ * when the thing it does is navigate. Every one of those is a real loss
+ * on a screen whose whole job is "where to now?".
+ *
+ * Everything visual is shared with `GemButton` above — same clip, same
+ * focus band, same module constants — so the two can never drift apart.
+ */
+export interface GemLinkProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof Link>,
+  'className'
+> {
+  className?: string;
+  /** Layout classes for the unclipped wrapper (width, alignment, margins). */
+  containerClassName?: string;
+}
+
+export function GemLink({
+  className,
+  containerClassName,
+  style,
+  children,
+  ...props
+}: GemLinkProps) {
+  return (
+    <span
+      className={classNames(
+        'gem-button-wrap relative block',
+        containerClassName
+      )}
+      style={GEM_WRAP_STYLE}
+    >
+      <Link
+        className={classNames(
+          // `block` + `text-center`, where the button used `w-full`: an
+          // anchor is inline by default, so the wrapper's width would not
+          // reach it and the gem would shrink-wrap the label.
+          'motion-button block w-full cursor-pointer whitespace-nowrap px-7 py-2.5 text-center text-base font-semibold font-stretch focus-visible:outline-none',
+          className
+        )}
+        style={{ clipPath: GEM_CLIP, ...style }}
+        {...props}
+      >
+        {children}
+      </Link>
     </span>
   );
 }

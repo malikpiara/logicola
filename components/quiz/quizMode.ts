@@ -100,6 +100,33 @@ export function progressLabel(
     : `${score} / ${TARGET_SCORE} points`;
 }
 
+/**
+ * The compact total, for a 375px-wide chrome row — **DORMANT since
+ * 2026-08-23, and deliberately kept.**
+ *
+ * It shipped on the phone for one day. Malik replaced it the same day
+ * (docs/points-readout-lab.html, option D1) with a points DELTA, on the
+ * argument that the bar already IS the total — it is `progress(scoreState)`,
+ * distance to 100 — so a numeral beside it rendered one fact twice, while
+ * nothing rendered the economy. There is a pedagogical half to that too: a
+ * running total invites "where do I stand", a delta answers "what did that
+ * cost", and the second is the question about the work.
+ *
+ * Kept rather than deleted because Malik said he may revisit it, and because
+ * restoring it is exactly one call site. The denominator is the part worth
+ * preserving if it ever comes back: "45" beside a half-full bar is genuinely
+ * ambiguous — 45 points, percent, questions? — where "45/100" is not.
+ */
+export function compactProgressLabel(
+  mode: QuizMode,
+  questionCounter: number,
+  score: number
+): string {
+  return mode.kind === 'count'
+    ? `${questionCounter}/${mode.total}`
+    : `${score}/${TARGET_SCORE}`;
+}
+
 /** What the start screen promises before you begin. */
 export function modeBlurb(mode: QuizMode): string {
   return mode.kind === 'count'

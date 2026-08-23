@@ -3,6 +3,7 @@ import {
   DEFAULT_QUIZ_MODE,
   SHIPPED_FLOOR,
   SHIPPED_LEVEL,
+  compactProgressLabel,
   defaultModeForSet,
   modeBlurb,
   progressLabel,
@@ -71,6 +72,17 @@ describe('labels', () => {
       level: 0,
       floor: SHIPPED_FLOOR,
     });
+  });
+
+  it('the phone readout drops the words, never the denominator', () => {
+    expect(compactProgressLabel(scoreMode(), 7, 45)).toBe('45/100');
+    expect(compactProgressLabel(DEFAULT_QUIZ_MODE, 3, 0)).toBe('3/10');
+  });
+
+  it('survives a negative score — the run has no floor at zero', () => {
+    // SHIPPED_FLOOR bounds further debt; it does not clamp the score to 0,
+    // so the phone row has to hold a minus sign on one line.
+    expect(compactProgressLabel(scoreMode(), 4, -10)).toBe('-10/100');
   });
 
   it('takes an explicit floor — the seam a future “Gensler” mode uses', () => {
