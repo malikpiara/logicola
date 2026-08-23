@@ -720,6 +720,24 @@
     }
   },
   {
+    "id": "x-CN-up",
+    "label": "Set C surface ground, Set A/N ink can — maroon on chartreuse",
+    "can": "#4A1040",
+    "ground": "#E7F099",
+    "family": "6 · cross-set",
+    "bubbles": null,
+    "m": {
+      "contrast": 12.03,
+      "stim": 0.54,
+      "vib": 0,
+      "dL": 0.76,
+      "theta": 0.64,
+      "sameTemp": 1,
+      "blendC": 0.039,
+      "score": 0.929
+    }
+  },
+  {
     "id": "cover-avatar",
     "label": "The decided AVATAR pair — plum mark on mint (reference)",
     "can": "#3F0167",

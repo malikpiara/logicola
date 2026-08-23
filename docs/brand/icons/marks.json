@@ -45,6 +45,24 @@
     "ground": "#023318"
   },
   {
+    "id": "m-can-svg-maroon",
+    "mark": "can-svg",
+    "markLabel": "The favicon can (app/icon.svg)",
+    "pair": "maroon",
+    "pairLabel": "chartreuse on maroon",
+    "ink": "#E7F099",
+    "ground": "#4A1040"
+  },
+  {
+    "id": "m-can-svg-maroon-up",
+    "mark": "can-svg",
+    "markLabel": "The favicon can (app/icon.svg)",
+    "pair": "maroon-up",
+    "pairLabel": "maroon on chartreuse \u2014 upright",
+    "ink": "#4A1040",
+    "ground": "#E7F099"
+  },
+  {
     "id": "m-can-svg-today",
     "mark": "can-svg",
     "markLabel": "The favicon can (app/icon.svg)",
@@ -97,6 +115,24 @@
     "pairLabel": "bright green on deep green \u2014 today inverted",
     "ink": "#85FD9D",
     "ground": "#023318"
+  },
+  {
+    "id": "m-wordmark-maroon",
+    "mark": "wordmark",
+    "markLabel": "The new logo (the wordmark)",
+    "pair": "maroon",
+    "pairLabel": "chartreuse on maroon",
+    "ink": "#E7F099",
+    "ground": "#4A1040"
+  },
+  {
+    "id": "m-wordmark-maroon-up",
+    "mark": "wordmark",
+    "markLabel": "The new logo (the wordmark)",
+    "pair": "maroon-up",
+    "pairLabel": "maroon on chartreuse \u2014 upright",
+    "ink": "#4A1040",
+    "ground": "#E7F099"
   },
   {
     "id": "m-wordmark-today",
