@@ -786,11 +786,15 @@
    which WCAG 1.4.1 requires anyway — so a second colour would buy nothing it
    is obliged to buy. The LOSS is distinguished by motion instead. */
 .quiz-immersive .qdelta-line {
-  /* Reserved whether or not a delta is showing: a line that appears on the
-     verdict would reflow the sticky header on every check. 15px is the
-     rendered height of the 12px mono glyph, so the reservation is exact. */
-  display: block;
-  min-height: 15px;
+  /* OUT OF FLOW, under the bar's left end. In flow it made the bar's
+     wrapper a two-item column, so the row's `items-center` centred the
+     COLUMN and left the bar ~9px above the ✕ and the Guide chip — which
+     reads as a misalignment, because it is one. Absolute also means the
+     row cannot reflow when a verdict lands, so nothing has to be reserved.
+     4px below the track, which is the gap the in-flow version used. */
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
   line-height: 15px;
 }
 

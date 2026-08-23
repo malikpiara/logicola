@@ -1189,11 +1189,16 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                   column rather than the bar alone. */}
               <div
                 className={classNames(
-                  // COLUMN, and the bar below must be `w-full` rather than
-                  // `flex-1`: in a column container `flex-1` sets
-                  // flex-basis on the HEIGHT, which collapses a 12px bar to
-                  // nothing. Found in the lab; noted so it isn't found twice.
-                  'flex min-w-0 flex-1 flex-col gap-1 -ml-[13px]',
+                  // The bar is the ONLY in-flow child here, so this box is
+                  // exactly bar-height and centres against the ✕ and the
+                  // Guide chip. The delta hangs out of flow beneath it
+                  // (`.qdelta-line`, absolute) — an in-flow delta line made
+                  // this a two-item column, which centred the COLUMN and
+                  // therefore pushed the bar ~9px above both 44px glyphs.
+                  // Malik caught it on device: "jarring", and it was.
+                  // Out-of-flow also means the row cannot reflow when a
+                  // verdict lands, which is what the reserved line was for.
+                  'relative flex min-w-0 flex-1 items-center -ml-[13px]',
                   !hasGuide && 'mr-[13px]'
                 )}
               >
@@ -1223,13 +1228,14 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                     }
                   />
                 </div>
-                {/* The delta line, RESERVED whether or not it is showing —
-                    a line that appears on a verdict would reflow the sticky
-                    header on every check, where an always-present line pays
-                    its height once. `aria-hidden` like the bar: the sheet's
-                    sr-only sentence remains the accessible reading, so this
-                    adds a visual channel without giving a screen reader a
-                    second thing to announce over the hint's live region. */}
+                {/* The delta, OUT OF FLOW under the bar's left end. It
+                    paints into the clearance the sticky header already has
+                    below the row (pb-3 + the container's mb-3), so it costs
+                    the header no height and cannot move the bar.
+                    `aria-hidden` like the bar: the sheet's sr-only sentence
+                    remains the accessible reading, so this adds a visual
+                    channel without giving a screen reader a second thing to
+                    announce over the hint's live region. */}
                 <span aria-hidden className='qdelta-line'>
                   {liveDelta && (
                     <span
