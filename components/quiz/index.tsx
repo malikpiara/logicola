@@ -1050,8 +1050,6 @@ const QuizSession: React.FC<QuizSessionProps> = ({
     };
   }, []);
 
-
-
   return (
     <>
       {showStartScreen ? (
