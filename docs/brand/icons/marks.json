@@ -1,0 +1,110 @@
+[
+  {
+    "id": "m-can-svg-avatar",
+    "mark": "can-svg",
+    "markLabel": "The favicon can (app/icon.svg)",
+    "pair": "avatar",
+    "pairLabel": "plum on mint \u2014 the decided avatar pair",
+    "ink": "#3F0167",
+    "ground": "#CFF6DD"
+  },
+  {
+    "id": "m-can-svg-inv",
+    "mark": "can-svg",
+    "markLabel": "The favicon can (app/icon.svg)",
+    "pair": "inv",
+    "pairLabel": "mint on plum \u2014 inverted",
+    "ink": "#CFF6DD",
+    "ground": "#3F0167"
+  },
+  {
+    "id": "m-can-svg-cream",
+    "mark": "can-svg",
+    "markLabel": "The favicon can (app/icon.svg)",
+    "pair": "cream",
+    "pairLabel": "cream on plum",
+    "ink": "#EDEDE3",
+    "ground": "#3F0167"
+  },
+  {
+    "id": "m-can-svg-deep",
+    "mark": "can-svg",
+    "markLabel": "The favicon can (app/icon.svg)",
+    "pair": "deep",
+    "pairLabel": "mint on deep brand green",
+    "ink": "#CFF6DD",
+    "ground": "#023318"
+  },
+  {
+    "id": "m-can-svg-heritage",
+    "mark": "can-svg",
+    "markLabel": "The favicon can (app/icon.svg)",
+    "pair": "heritage",
+    "pairLabel": "bright green on deep green \u2014 today inverted",
+    "ink": "#85FD9D",
+    "ground": "#023318"
+  },
+  {
+    "id": "m-can-svg-today",
+    "mark": "can-svg",
+    "markLabel": "The favicon can (app/icon.svg)",
+    "pair": "today",
+    "pairLabel": "near-black on bright green \u2014 today",
+    "ink": "#231F20",
+    "ground": "#85FD9D"
+  },
+  {
+    "id": "m-wordmark-avatar",
+    "mark": "wordmark",
+    "markLabel": "The new logo (the wordmark)",
+    "pair": "avatar",
+    "pairLabel": "plum on mint \u2014 the decided avatar pair",
+    "ink": "#3F0167",
+    "ground": "#CFF6DD"
+  },
+  {
+    "id": "m-wordmark-inv",
+    "mark": "wordmark",
+    "markLabel": "The new logo (the wordmark)",
+    "pair": "inv",
+    "pairLabel": "mint on plum \u2014 inverted",
+    "ink": "#CFF6DD",
+    "ground": "#3F0167"
+  },
+  {
+    "id": "m-wordmark-cream",
+    "mark": "wordmark",
+    "markLabel": "The new logo (the wordmark)",
+    "pair": "cream",
+    "pairLabel": "cream on plum",
+    "ink": "#EDEDE3",
+    "ground": "#3F0167"
+  },
+  {
+    "id": "m-wordmark-deep",
+    "mark": "wordmark",
+    "markLabel": "The new logo (the wordmark)",
+    "pair": "deep",
+    "pairLabel": "mint on deep brand green",
+    "ink": "#CFF6DD",
+    "ground": "#023318"
+  },
+  {
+    "id": "m-wordmark-heritage",
+    "mark": "wordmark",
+    "markLabel": "The new logo (the wordmark)",
+    "pair": "heritage",
+    "pairLabel": "bright green on deep green \u2014 today inverted",
+    "ink": "#85FD9D",
+    "ground": "#023318"
+  },
+  {
+    "id": "m-wordmark-today",
+    "mark": "wordmark",
+    "markLabel": "The new logo (the wordmark)",
+    "pair": "today",
+    "pairLabel": "near-black on bright green \u2014 today",
+    "ink": "#231F20",
+    "ground": "#85FD9D"
+  }
+]
