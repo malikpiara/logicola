@@ -54,8 +54,36 @@ export const metadata: Metadata = {
       },
     ],
   },
+  /**
+   * Two marks, split by size (Malik, 2026-08-23 — docs/app-icon-lab.html).
+   *
+   *   the CAN       browser tab (this `icon`) and the iOS home screen
+   *   the WORDMARK  everything the manifest feeds — Android's launcher,
+   *                 an installed macOS or Windows app
+   *
+   * They are separate channels on purpose: `rel="icon"` and the manifest's
+   * `icons[]` are read by different consumers, which is what makes the
+   * split ordinary rather than a trick. iOS is a third channel again —
+   * `apple-touch-icon` — and it had NO entry at all before this, so iOS
+   * installed a screenshot of the page.
+   *
+   * What could NOT be split is macOS from Android: macOS Sonoma and later
+   * read the manifest's `maskable` entry, which is the same entry
+   * Android's launcher reads. So those two share a mark by construction,
+   * and Malik's call was the wordmark for both.
+   *
+   * `/icon.svg` keeps the brand magenta rather than the icons' new
+   * chartreuse-and-maroon, and that is deliberate: it is a BARE mark with
+   * no plate, so it has to survive a tab strip we do not control. Measured
+   * against light and dark chrome, maroon lands at 1.03:1 on dark and
+   * chartreuse at 1.09:1 on light — both invisible on one side. The
+   * magenta's worst case is 2.54:1. Giving the favicon a plate would fix
+   * that and is the open follow-up; it also means reworking
+   * `useQuizFavicon`, which today swaps the mark's single fill.
+   */
   icons: {
     icon: '/icon.svg',
+    apple: '/apple-touch-icon.png',
   },
 };
 

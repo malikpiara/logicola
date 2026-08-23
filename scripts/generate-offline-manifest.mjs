@@ -31,13 +31,21 @@ const QUIZ_CATALOG_PATH = path.join(
 const OUTPUT_PATH = path.join(projectRoot, 'public', 'offline-manifest.json');
 const QUIZ_MANIFEST_KEY = '/(quiz)/[...slugs]/page';
 
+// Everything the installed shell can ask for while offline. The icon list
+// tracks public/manifest.json plus the two channels that are NOT in it —
+// the bare favicon and the apple-touch-icon — so adding an icon there means
+// adding it here (Malik, 2026-08-23: the maskable pair and the iOS file
+// shipped a build before this line caught up with them).
 const STATIC_URLS = [
   '/',
   '/offline',
   '/manifest.json',
   '/icon.svg',
+  '/apple-touch-icon.png',
   '/icon-192.png',
   '/icon-512.png',
+  '/icon-192-maskable.png',
+  '/icon-512-maskable.png',
 ];
 
 async function readJson(filePath) {
