@@ -27,19 +27,27 @@ const NavigationMenu = React.forwardRef<
       typeof NavigationMenuPrimitive.Viewport
     >;
   }
->(({ className, children, viewportClassName, viewportProps, ...props }, ref) => (
-  <NavigationMenuPrimitive.Root
-    ref={ref}
-    className={cn(
-      'relative z-10 flex max-w-max flex-1 items-center justify-center',
-      className
-    )}
-    {...props}
-  >
-    {children}
-    <NavigationMenuViewport className={viewportClassName} {...viewportProps} />
-  </NavigationMenuPrimitive.Root>
-));
+>(
+  (
+    { className, children, viewportClassName, viewportProps, ...props },
+    ref
+  ) => (
+    <NavigationMenuPrimitive.Root
+      ref={ref}
+      className={cn(
+        'relative z-10 flex max-w-max flex-1 items-center justify-center',
+        className
+      )}
+      {...props}
+    >
+      {children}
+      <NavigationMenuViewport
+        className={viewportClassName}
+        {...viewportProps}
+      />
+    </NavigationMenuPrimitive.Root>
+  )
+);
 NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;
 
 const NavigationMenuList = React.forwardRef<
