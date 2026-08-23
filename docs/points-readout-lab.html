@@ -1,0 +1,956 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Phone points readout lab — LogiCola</title>
+    <style>
+      :root {
+        --paper: #101216;
+        --panel: #191c22;
+        --edge: #282d36;
+        --text: #e9ecef;
+        --dim: #98a0ab;
+        --acc: #8fd0a6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--text);
+        font:
+          15px/1.6 ui-sans-serif,
+          -apple-system,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+      }
+      header {
+        padding: 30px 32px 22px;
+        border-bottom: 1px solid var(--edge);
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: 22px;
+        letter-spacing: -0.015em;
+      }
+      header p {
+        margin: 0 0 10px;
+        color: var(--dim);
+        max-width: 90ch;
+        font-size: 14px;
+      }
+      .dials {
+        display: flex;
+        gap: 22px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        padding: 15px 32px 18px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--edge);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+      .dial {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .dial label {
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      select,
+      button.replay {
+        background: #0b0d10;
+        color: var(--text);
+        border: 1px solid var(--edge);
+        border-radius: 3px;
+        padding: 6px 9px;
+        font:
+          13px ui-monospace,
+          monospace;
+        cursor: pointer;
+      }
+      button.replay:hover {
+        border-color: #4b5561;
+      }
+      .sec {
+        padding: 24px 32px;
+        border-bottom: 1px solid var(--edge);
+      }
+      .sec > h2 {
+        margin: 0 0 5px;
+        font:
+          600 12px ui-monospace,
+          monospace;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--acc);
+      }
+      .sec > p {
+        margin: 0 0 18px;
+        color: var(--dim);
+        font-size: 13.5px;
+        max-width: 90ch;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
+        gap: 22px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--edge);
+        border-radius: 6px;
+        padding: 15px;
+      }
+      .card h3 {
+        margin: 0 0 4px;
+        font:
+          600 12px ui-monospace,
+          monospace;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--acc);
+      }
+      .card .why {
+        margin: 0 0 12px;
+        font-size: 13px;
+        color: #9aa2ad;
+        line-height: 1.5;
+        min-height: 4.2em;
+      }
+      .card .cost {
+        margin: 10px 0 0;
+        font:
+          11.5px ui-monospace,
+          monospace;
+        color: #e0b970;
+        line-height: 1.55;
+      }
+      .card.kill {
+        opacity: 0.62;
+      }
+      .card.kill h3 {
+        color: #ff9a9a;
+      }
+      .stage {
+        width: 390px;
+        padding: 0 8px;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .hrow {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 0;
+      }
+      .x {
+        width: 44px;
+        height: 44px;
+        flex: none;
+        display: grid;
+        place-items: center;
+        font-size: 19px;
+        opacity: 0.6;
+        margin-left: -13px;
+      }
+      .midcol {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .barwrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        min-width: 0;
+      }
+      /* flex:1 in a COLUMN container sets flex-basis:0 on the HEIGHT, which
+    collapsed the bar to 0px in the below/above variants. It must only
+    stretch inside .barwrap (a row); inside .midcol it is a fixed-height
+    block. This was a real bug in the first version of this sheet. */
+      .barwrap .bar {
+        flex: 1;
+      }
+      .midcol .bar {
+        flex: none;
+        width: 100%;
+      }
+      .bar {
+        height: 12px;
+        min-width: 0;
+        position: relative;
+        overflow: hidden;
+        clip-path: polygon(
+          4px 0,
+          calc(100% - 4px) 0,
+          100% 4px,
+          100% calc(100% - 4px),
+          calc(100% - 4px) 100%,
+          4px 100%,
+          0 calc(100% - 4px),
+          0 4px
+        );
+      }
+      .bar i {
+        position: absolute;
+        inset: 0 auto 0 0;
+        display: block;
+      }
+      .guide {
+        width: 44px;
+        height: 44px;
+        flex: none;
+        display: grid;
+        place-items: center;
+        font-size: 15px;
+        clip-path: polygon(
+          4px 0,
+          calc(100% - 4px) 0,
+          100% 4px,
+          100% calc(100% - 4px),
+          calc(100% - 4px) 100%,
+          4px 100%,
+          0 calc(100% - 4px),
+          0 4px
+        );
+      }
+      .num {
+        font:
+          600 11px ui-monospace,
+          monospace;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+      .num em {
+        font-style: normal;
+        font-weight: 400;
+      }
+      .num.big {
+        font-size: 13px;
+      }
+      .chip {
+        padding: 3px 8px;
+        font:
+          600 11px ui-monospace,
+          monospace;
+        white-space: nowrap;
+        clip-path: polygon(
+          3px 0,
+          calc(100% - 3px) 0,
+          100% 3px,
+          100% calc(100% - 3px),
+          calc(100% - 3px) 100%,
+          3px 100%,
+          0 calc(100% - 3px),
+          0 3px
+        );
+      }
+      .subrow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 14px;
+      }
+      .delta {
+        font:
+          700 12px ui-monospace,
+          monospace;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
+      }
+      .delta.word {
+        font-weight: 600;
+      }
+      .anim {
+        animation: deltaIn 1900ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1))
+          both;
+      }
+      .anim.loss {
+        animation-name: deltaLoss;
+      }
+      @keyframes deltaIn {
+        0% {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+        14% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        72% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-4px);
+        }
+      }
+      @keyframes deltaLoss {
+        0% {
+          opacity: 0;
+          transform: translateY(-4px);
+        }
+        10% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        16% {
+          transform: translateX(-2px);
+        }
+        22% {
+          transform: translateX(2px);
+        }
+        28% {
+          transform: translateX(-1px);
+        }
+        34% {
+          transform: translateX(0);
+        }
+        74% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(3px);
+        }
+      }
+      .content {
+        padding: 16px 0 20px;
+        font-size: 15px;
+        opacity: 0.85;
+      }
+      .content .q {
+        font-weight: 600;
+        font-size: 17px;
+        line-height: 1.3;
+      }
+      .fslot {
+        padding: 10px 0 0;
+        font-size: 13.5px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+      }
+      .notes {
+        padding: 26px 32px 70px;
+        max-width: 92ch;
+      }
+      .notes h3 {
+        margin: 24px 0 6px;
+        font: 600 14px ui-sans-serif;
+        color: var(--acc);
+      }
+      .notes p,
+      .notes li {
+        color: #c6cbd2;
+        font-size: 14px;
+      }
+      code {
+        background: #0b0d10;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font:
+          12.5px ui-monospace,
+          monospace;
+        color: #e0b970;
+      }
+      table {
+        border-collapse: collapse;
+        margin: 12px 0;
+        font-size: 13px;
+      }
+      th,
+      td {
+        border: 1px solid var(--edge);
+        padding: 6px 11px;
+        text-align: left;
+      }
+      th {
+        color: var(--dim);
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      td.n {
+        font:
+          12px ui-monospace,
+          monospace;
+        text-align: right;
+      }
+      .good {
+        color: #8fd0a6;
+      }
+      .bad {
+        color: #ff9a9a;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Phone points readout</h1>
+      <p>
+        <b>Round 2, after Malik&rsquo;s review.</b> <em>f</em> and
+        <em>g</em> are cut. <em>c</em>, <em>d</em> and <em>e</em> are the
+        keepers. And the real subject has changed:
+        <em
+          >&ldquo;instead of displaying the points, we could just display points
+          being gained/lost. The progress bar might already be enough, and from
+          a pedagogical point of view I think focusing too much on the points
+          might have negative effects on learning.&rdquo;</em
+        >
+      </p>
+      <p>
+        <b>That reframes the problem, and it is a better frame.</b> The bar
+        already encodes the total — it is literally
+        <code>progress(scoreState)</code>, distance to 100. A number beside it
+        is a second rendering of the same fact.
+        <b>The delta is not redundant with anything</b>: nothing in the product
+        currently tells a learner what an answer was <em>worth</em>, and under
+        the 2008 economy that is the one thing the level dial actually changes.
+      </p>
+      <p>
+        Section 1 keeps the three positions you liked, holding the total.
+        Section 2 is the delta idea in the same positions. Section 3 is the
+        delta&rsquo;s own grammar — the part that has to be got right, because
+        it joins an animation that already exists.
+      </p>
+    </header>
+    <div class="dials" id="dials"></div>
+    <div class="sec">
+      <h2>1 · The three you kept — holding the total</h2>
+      <p>
+        Plus the shipped version as control. <b>Retired:</b> <em>b</em> (left of
+        bar — you didn&rsquo;t pick it), <em>h</em> (filled chip — three objects
+        in a 44px row), <em>f</em> and <em>g</em> (cut).
+      </p>
+      <div class="grid" id="g1"></div>
+    </div>
+    <div class="sec">
+      <h2>2 · The delta idea — same positions, different content</h2>
+      <p>
+        Press <b>Replay</b> in the toolbar to see the motion. The delta is
+        transient: it appears on the verdict and leaves. Switch the outcome dial
+        to a miss to see the loss.
+      </p>
+      <div class="grid" id="g2"></div>
+    </div>
+    <div class="sec">
+      <h2>3 · The delta&rsquo;s own grammar</h2>
+      <p>
+        What it says, what colour it is, and when it must say nothing at all.
+      </p>
+      <div class="grid" id="g3"></div>
+    </div>
+    <div class="notes" id="notes"></div>
+    <script>
+      const SETS = {
+        A: { n: 'Set A', s: '#FFABC6', i: '#4A1040', a: '#674900', rew: 5 },
+        C: { n: 'Set C', s: '#E7F099', i: '#02302C', a: '#BD00AD', rew: 5 },
+        J: { n: 'Set J', s: '#E6ACF4', i: '#1C3601', a: '#674900', rew: 5 },
+        L: { n: 'Set L', s: '#CFF6DD', i: '#3F0167', a: '#BD00AD', rew: 5 },
+        N: { n: 'Set N', s: '#9EDAFF', i: '#4A1040', a: '#8D0381', rew: 5 },
+        Q: { n: 'Set Q', s: '#D9CCF9', i: '#3E1060', a: '#745400', rew: 7 },
+        R: { n: 'Set R', s: '#E4BDF7', i: '#751100', a: '#824616', rew: 8 },
+      };
+      const state = { set: 'L', out: 'hit', tick: 0 };
+      const OUT = {
+        hit: {
+          d: (x) => '+' + x.rew,
+          cls: '',
+          pct: 51,
+          label: 'correct, first try',
+        },
+        miss: {
+          d: () => '−10',
+          cls: 'loss',
+          pct: 39,
+          label: 'a miss at level 5',
+        },
+        zero: {
+          d: () => null,
+          cls: '',
+          pct: 39,
+          label: 'a miss that costs nothing',
+        },
+      };
+
+      const A = () =>
+        'anim' + (OUT[state.out].cls ? ' ' + OUT[state.out].cls : '');
+      const K = () => state.tick;
+      const total = (set, cls) =>
+        '<span class="num ' +
+        (cls || '') +
+        '" style="color:' +
+        set.a +
+        '"><b style="font-weight:600">45</b><em>/100</em></span>';
+      const bar = (set) =>
+        '<span class="bar" style="background:color-mix(in srgb,' +
+        set.i +
+        ' 12%,transparent)"><i style="background:' +
+        set.a +
+        ';width:' +
+        OUT[state.out].pct +
+        '%"></i></span>';
+      const guide = (set) =>
+        '<span class="guide" style="background:color-mix(in srgb,' +
+        set.i +
+        ' 14%,transparent);color:' +
+        set.i +
+        '">&#9829;</span>';
+      const X = '<span class="x">&#10005;</span>';
+      const body = () =>
+        '<div class="content"><div class="q">If Tyrion is defrauding you, then defraud Tyrion.</div></div>';
+      const delta = (set, opts) => {
+        const o = opts || {};
+        const v = OUT[state.out].d(set);
+        if (v === null) return '<span class="delta">&nbsp;</span>';
+        const col = o.colour === 'ink' ? set.i : set.a;
+        const txt = o.word ? v + ' points' : v;
+        return (
+          '<span class="delta ' +
+          (o.word ? 'word ' : '') +
+          A() +
+          '" key="' +
+          K() +
+          '" style="color:' +
+          col +
+          '">' +
+          txt +
+          '</span>'
+        );
+      };
+
+      const KEPT = [
+        {
+          id: 'a',
+          n: 'a · right of the bar (shipped)',
+          ctl: true,
+          why: 'The control. Persistent total between the bar and the Guide chip.',
+          cost: '✓ no height cost · takes ~46px from the bar',
+          r: (set) =>
+            '<div class="hrow">' +
+            X +
+            '<div class="barwrap">' +
+            bar(set) +
+            total(set) +
+            '</div>' +
+            guide(set) +
+            '</div>' +
+            body(),
+        },
+        {
+          id: 'c',
+          n: 'c · below the bar',
+          why: 'Your pick. Bar keeps full width; the number sits under its right end. Sanctioned by Carbon (“above, below, or beside”).',
+          cost: '⚠ header grows ~16px · bar gains ~46px of width',
+          r: (set) =>
+            '<div class="hrow">' +
+            X +
+            '<div class="midcol">' +
+            bar(set) +
+            '<span class="subrow"><span></span>' +
+            total(set) +
+            '</span></div>' +
+            guide(set) +
+            '</div>' +
+            body(),
+        },
+        {
+          id: 'd',
+          n: 'd · above the bar',
+          why: 'Read before the bar, and sits against the status-bar inset rather than against the content.',
+          cost: '⚠ header grows ~16px · pushes the bar toward the prompt',
+          r: (set) =>
+            '<div class="hrow">' +
+            X +
+            '<div class="midcol">' +
+            '<span class="subrow"><span></span>' +
+            total(set) +
+            '</span>' +
+            bar(set) +
+            '</div>' +
+            guide(set) +
+            '</div>' +
+            body(),
+        },
+        {
+          id: 'e',
+          n: 'e · riding the fill’s leading edge',
+          kill: true,
+          why: 'A chip pinned to where the fill ends. The prettiest option here — and holding the TOTAL it cannot ship.',
+          cost: '✗ at 0% there is no edge · at 100% it is pushed off the track · a negative score has no fill edge at all · nested in a role=progressbar it would leave the accessibility tree',
+          r: (set) =>
+            '<div class="hrow">' +
+            X +
+            '<div class="barwrap"><span class="bar" style="background:color-mix(in srgb,' +
+            set.i +
+            ' 12%,transparent);overflow:visible;height:18px"><i style="background:' +
+            set.a +
+            ';height:12px;top:3px;width:' +
+            OUT[state.out].pct +
+            '%"></i><span style="position:absolute;left:' +
+            OUT[state.out].pct +
+            '%;top:-4px;transform:translateX(-50%)"><span class="chip" style="background:' +
+            set.i +
+            ';color:' +
+            set.s +
+            '">45/100</span></span></span></div>' +
+            guide(set) +
+            '</div>' +
+            body(),
+        },
+      ];
+
+      const DELTAS = [
+        {
+          id: 'D1',
+          n: 'D1 · below the bar, left — delta only',
+          rec: true,
+          why: 'Malik’s proposal, literally. No total anywhere on the phone: the bar carries position, the delta carries what the answer was worth.',
+          cost: '✓ header grows ~16px, and only while a verdict is showing if the row reserves the line · the only variant that removes a number rather than adding one',
+          r: (set) =>
+            '<div class="hrow">' +
+            X +
+            '<div class="midcol">' +
+            bar(set) +
+            '<span class="subrow">' +
+            delta(set) +
+            '<span></span></span></div>' +
+            guide(set) +
+            '</div>' +
+            body(),
+        },
+        {
+          id: 'D2',
+          n: 'D2 · below the bar — delta left, total right',
+          why: 'The hybrid. Keeps the total for the learner who wants it and adds the economy for the learner who is trying to understand it.',
+          cost: '⚠ two numbers under a bar in a 44px chrome row · re-introduces exactly the fixation the delta was meant to reduce',
+          r: (set) =>
+            '<div class="hrow">' +
+            X +
+            '<div class="midcol">' +
+            bar(set) +
+            '<span class="subrow">' +
+            delta(set) +
+            total(set) +
+            '</span></div>' +
+            guide(set) +
+            '</div>' +
+            body(),
+        },
+        {
+          id: 'D3',
+          n: 'D3 · below the bar, left — with the word',
+          why: '“+5 points” rather than “+5”. Removes the last ambiguity about what the number counts, at the cost of width and of repeating a word every single problem.',
+          cost: '⚠ ~62px at the widest (−10 points) · the word is redundant after the first two problems',
+          r: (set) =>
+            '<div class="hrow">' +
+            X +
+            '<div class="midcol">' +
+            bar(set) +
+            '<span class="subrow">' +
+            delta(set, { word: true }) +
+            '<span></span></span></div>' +
+            guide(set) +
+            '</div>' +
+            body(),
+        },
+        {
+          id: 'D4',
+          n: 'D4 · riding the fill’s edge — as a delta',
+          rec: true,
+          why: 'Position e, rescued. Everything that killed e was about a PERSISTENT readout needing a valid position at every value. A transient delta only has to be right at the moment the fill moves — and that is exactly where the eye already is.',
+          cost: '⚠ still sits over two backgrounds (filled and unfilled) so it needs a fill of its own · at 0% and 100% it clamps to the cap rather than breaking',
+          r: (set) =>
+            '<div class="hrow">' +
+            X +
+            '<div class="barwrap"><span class="bar" style="background:color-mix(in srgb,' +
+            set.i +
+            ' 12%,transparent);overflow:visible;height:18px"><i style="background:' +
+            set.a +
+            ';height:12px;top:3px;width:' +
+            OUT[state.out].pct +
+            '%"></i><span style="position:absolute;left:' +
+            OUT[state.out].pct +
+            '%;top:-15px;transform:translateX(-50%)"><span class="' +
+            A() +
+            '" key="' +
+            K() +
+            '"><span class="chip" style="background:' +
+            set.i +
+            ';color:' +
+            set.s +
+            '">' +
+            (OUT[state.out].d(set) || '') +
+            '</span></span></span></span></div>' +
+            guide(set) +
+            '</div>' +
+            body(),
+        },
+        {
+          id: 'D5',
+          n: 'D5 · in the feedback slot, not the chrome',
+          why: 'The 2026-08-22 layout already has feedback rise above the question. The delta could join the sentence that is already appearing rather than open a second feedback channel in the header.',
+          cost: '✓ zero header cost · but it is a long way from the bar it explains, and the slot is already carrying the hint',
+          r: (set) =>
+            '<div class="hrow">' +
+            X +
+            '<div class="barwrap">' +
+            bar(set) +
+            '</div>' +
+            guide(set) +
+            '</div>' +
+            '<div class="fslot"><span class="' +
+            A() +
+            '" key="' +
+            K() +
+            '"><span class="delta" style="color:' +
+            set.a +
+            '">' +
+            (OUT[state.out].d(set) || '') +
+            '</span></span><span style="opacity:.8">“This scientist” is a single person.</span></div>' +
+            body(),
+        },
+        {
+          id: 'D6',
+          n: 'D6 · above the bar, left',
+          why: 'Same as D1 but on the other side of the track, so the delta never sits between the bar and the prompt.',
+          cost: '⚠ the delta appears against the status-bar inset, where nothing else in the app draws',
+          r: (set) =>
+            '<div class="hrow">' +
+            X +
+            '<div class="midcol">' +
+            '<span class="subrow">' +
+            delta(set) +
+            '<span></span></span>' +
+            bar(set) +
+            '</div>' +
+            guide(set) +
+            '</div>' +
+            body(),
+        },
+      ];
+
+      const GRAMMAR = [
+        {
+          id: 'G1',
+          n: 'G1 · the accent for both signs',
+          why: 'One colour, the sign does the work. WCAG 1.4.1 forbids colour as the only channel anyway, so the sign is not optional — which means a second colour is buying nothing it is required to buy.',
+          cost: 'accent on surface 4.55:1 (R) – 5.66:1 (N) · passes AA on all seven',
+          r: (set) =>
+            '<div class="hrow">' +
+            X +
+            '<div class="midcol">' +
+            bar(set) +
+            '<span class="subrow">' +
+            delta(set) +
+            '<span></span></span></div>' +
+            guide(set) +
+            '</div>' +
+            body(),
+        },
+        {
+          id: 'G2',
+          n: 'G2 · ink for a loss, accent for a gain',
+          why: 'Two colours, both already in the palette. The loss is heavier because the ink is darker — which is the closest this system has to a warning colour, since it has no red.',
+          cost: 'ink on surface 7.04:1 (R) – 12.67:1 (L) · passes · but it makes a MISS the visually loudest thing on the screen',
+          r: (set) =>
+            '<div class="hrow">' +
+            X +
+            '<div class="midcol">' +
+            bar(set) +
+            '<span class="subrow">' +
+            delta(set, { colour: state.out === 'miss' ? 'ink' : 'acc' }) +
+            '<span></span></span></div>' +
+            guide(set) +
+            '</div>' +
+            body(),
+        },
+        {
+          id: 'G3',
+          n: 'G3 · a miss that costs nothing must say nothing',
+          kill: false,
+          why: 'Set the outcome dial to “a miss that costs nothing”. chargeFor() returns 0 in two real cases — a run in the red under the no-deeper floor, and a penalty register the set’s own original program has already decayed to zero. The damage flicker ALREADY suppresses itself here; the delta must follow the same rule.',
+          cost: '✓ the rule already exists in index.tsx · showing “−0” would report damage that never happened',
+          r: (set) =>
+            '<div class="hrow">' +
+            X +
+            '<div class="midcol">' +
+            bar(set) +
+            '<span class="subrow">' +
+            delta(set) +
+            '<span></span></span></div>' +
+            guide(set) +
+            '</div>' +
+            body(),
+        },
+      ];
+
+      function render() {
+        const set = SETS[state.set];
+        const draw = (id, arr) =>
+          (document.getElementById(id).innerHTML = arr
+            .map(
+              (p) =>
+                '<div class="card' +
+                (p.kill ? ' kill' : '') +
+                '"><h3>' +
+                p.n +
+                '</h3><p class="why">' +
+                p.why +
+                '</p>' +
+                '<div class="stage" style="background:' +
+                set.s +
+                ';color:' +
+                set.i +
+                '">' +
+                p.r(set) +
+                '</div>' +
+                '<p class="cost">' +
+                p.cost +
+                '</p></div>'
+            )
+            .join(''));
+        draw('g1', KEPT);
+        draw('g2', DELTAS);
+        draw('g3', GRAMMAR);
+      }
+      function dials() {
+        const d = document.getElementById('dials');
+        const opt = (o, sel) =>
+          Object.entries(o)
+            .map(
+              ([k, v]) =>
+                '<option value="' +
+                k +
+                '"' +
+                (k === sel ? ' selected' : '') +
+                '>' +
+                v +
+                '</option>'
+            )
+            .join('');
+        d.innerHTML =
+          '<div class="dial"><label for="set">Set</label><select id="set">' +
+          opt(
+            Object.fromEntries(
+              Object.entries(SETS).map(([k, v]) => [
+                k,
+                v.n + ' · +' + v.rew + ' a solve',
+              ])
+            ),
+            state.set
+          ) +
+          '</select></div>' +
+          '<div class="dial"><label for="out">Outcome</label><select id="out">' +
+          opt(
+            {
+              hit: 'correct, first try',
+              miss: 'a miss at level 5',
+              zero: 'a miss that costs nothing',
+            },
+            state.out
+          ) +
+          '</select></div>' +
+          '<div class="dial"><label>&nbsp;</label><button class="replay" id="replay">▶ Replay the motion</button></div>';
+        d.querySelectorAll('select').forEach((s) =>
+          s.addEventListener('change', (e) => {
+            state[e.target.id] = e.target.value;
+            state.tick++;
+            render();
+          })
+        );
+        d.querySelector('#replay').addEventListener('click', () => {
+          state.tick++;
+          render();
+        });
+      }
+      document.getElementById('notes').innerHTML = `
+<h3>Why the delta is the better object, stated properly</h3>
+<p><b>The bar already is the total.</b> It is driven by <code>progress(scoreState)</code> — distance
+to 100, clamped at both ends. A numeral beside it is a second rendering of one fact, which is why
+every version in section 1 feels like it is competing with the bar rather than adding to it.</p>
+<p><b>Nothing renders the economy.</b> Under the 2008 model the scoring level does not change the
+problems at all — it scales the PENALTY, and only the penalty. A learner at level 5 who never sees
+&ldquo;−10&rdquo; has no way to discover that, which makes the level dial an invisible setting that
+silently changes the game. The delta is the only element proposed all night that teaches something
+the product does not already say.</p>
+<p><b>And the pedagogy points the same way.</b> The general finding here is robust even though none of
+it is measured on LogiCola: Kluger &amp; DeNisi&rsquo;s 1996 meta-analysis found feedback that directs
+attention to the <em>self</em> (&ldquo;where do I stand&rdquo;) can depress performance, while
+feedback directed at the <em>task</em> helps; Butler&rsquo;s 1988 study found students given grades
+attended to the grade and not to the comments, even when both were present. A running total is a
+standing invitation to ask &ldquo;where am I&rdquo;. A delta answers &ldquo;what did that cost&rdquo;,
+which is a question about the work. <b>Malik&rsquo;s instinct is the better-supported side of this.</b>
+Stated honestly: general findings from adjacent literature, not evidence about this app.</p>
+
+<h3>Two things the code already knows that the delta must respect</h3>
+<p><b>1 · The reward is not always +5.</b> It is <code>state.pointsAvailable</code>, and it differs by
+set and decays within a problem. Set&nbsp;Q pays 7, Set&nbsp;R pays 8 — and <b>Set R forfeits</b>:
+after one miss a problem can never pay out, so solving it awards <b>0</b>. Switch the set dial; the
+delta changes with it. That is the economy becoming visible, and it is the strongest argument for the
+feature — but it also means the design has to answer what &ldquo;+0&rdquo; looks like, because on Set
+R it is a real and frequent value.</p>
+<p><b>2 · A miss that costs nothing must show nothing.</b> <code>chargeFor()</code> returns 0 in two
+real cases: a run already in the red under the <code>no-deeper</code> floor, and a penalty register
+the set&rsquo;s own original program has decayed to zero (Set R&rsquo;s second miss on a problem, Set A&rsquo;s
+fifth). <b>The damage flicker already suppresses itself in exactly these cases</b> —
+<code>if (chargeFor(scoreState) === 0) return;</code> in <code>index.tsx</code> — and the delta has to
+inherit that rule verbatim, or it will report damage that never happened.</p>
+
+<h3>The motion has to join a grammar that already exists</h3>
+<p>A miss already has choreography, locked in <code>docs/damage-bar-lab.html</code> on 2026-08-12: the
+fill blinks off twice in hard cuts over 340ms (&ldquo;Direction A — hit flicker&rdquo;), and only then
+does the bar pay the penalty, because <code>transition-delay: 340ms</code> holds its 500ms advance
+until the flicker finishes. <b>A loss delta must be part of that beat, not a second one.</b> The
+replay button above runs a first approximation: the delta lands with the flicker, holds while the bar
+moves, then leaves. It should not out-last the bar&rsquo;s advance, and it must be inside
+<code>prefers-reduced-motion</code>&rsquo;s existing block, which already turns the flicker off and
+lets the bar simply be at its new length.</p>
+
+<h3>On e — and why the delta rescues it</h3>
+<p>You kept <b>e</b>, and holding the total it genuinely cannot ship: there is no fill edge at 0%, it
+is pushed off the track at 100%, and a negative score has no edge at all. <b>But every one of those
+objections is about a persistent readout needing a valid position at every value.</b> A transient
+delta only has to be right at the instant the fill moves — which is exactly where the eye already is,
+and the moment the flicker has just drawn attention to. That is <b>D4</b>, and it is the version of
+your favourite that survives. Its remaining cost is real but ordinary: it sits over two backgrounds,
+so it needs its own fill, and it should clamp to the cap rather than overhang at the extremes.</p>
+
+<h3>What I would ship</h3>
+<p><b>D1 — delta only, below the bar, left, and no total on the phone at all.</b> It is the only
+proposal tonight that <em>removes</em> a number instead of adding one, it is the only one that says
+something the product does not already say, and it is the one the pedagogy supports. Reserve the line
+height permanently so the header does not reflow when a verdict appears — that turns the ~16px cost
+into a fixed cost paid once rather than a layout shift on every check.</p>
+<p><b>D4 is the one to prototype against it</b>, because it costs no height at all and it puts the
+number where the change is happening. If it survives the two-backgrounds problem in the real
+component, it may well be better than D1.</p>
+<p>The total does not disappear from the product: the desktop footer keeps
+<code>45 / 100 points</code> in words, and the sheet keeps the <code>sr-only</code> sentence that is
+already the accessible reading below 768px. So screen-reader users lose nothing, and a learner who
+wants the number can still find it — just not on the glanceable surface where it would be the loudest
+thing on screen.</p>`;
+      dials();
+      render();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,3505 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>App icon lab — LogiCola</title>
+    <style>
+      :root {
+        --paper: #101216;
+        --panel: #191c22;
+        --edge: #282d36;
+        --text: #e9ecef;
+        --dim: #98a0ab;
+        --acc: #8fd0a6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--text);
+        font:
+          15px/1.6 ui-sans-serif,
+          -apple-system,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+      }
+      header {
+        padding: 30px 32px 24px;
+        border-bottom: 1px solid var(--edge);
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: 22px;
+        letter-spacing: -0.015em;
+      }
+      header p {
+        margin: 0 0 10px;
+        color: var(--dim);
+        max-width: 86ch;
+        font-size: 14px;
+      }
+      h2 {
+        margin: 0;
+        font:
+          600 12px ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--acc);
+      }
+      section {
+        padding: 26px 32px;
+        border-bottom: 1px solid var(--edge);
+      }
+      .sub {
+        color: var(--dim);
+        font-size: 13.5px;
+        margin: 6px 0 18px;
+        max-width: 86ch;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(262px, 1fr));
+        gap: 20px;
+      }
+      .card {
+        margin: 0;
+        background: var(--panel);
+        border: 1px solid var(--edge);
+        border-radius: 6px;
+        padding: 14px;
+        display: flex;
+        gap: 13px;
+        align-items: flex-start;
+      }
+      .card .big {
+        border-radius: 16px;
+        flex: none;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      }
+      figcaption {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 0;
+      }
+      figcaption b {
+        font-size: 12.5px;
+        font-weight: 600;
+        line-height: 1.35;
+      }
+      .nums {
+        font:
+          11px ui-monospace,
+          monospace;
+        color: var(--dim);
+      }
+      .nums em {
+        font-style: normal;
+        color: var(--text);
+        font-weight: 600;
+      }
+      .g-ok {
+        color: #8fd0a6;
+      }
+      .g-warn {
+        color: #e0b970;
+      }
+      .g-bad {
+        color: #ff9a9a;
+      }
+      .sw {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-wrap: wrap;
+        font:
+          10px ui-monospace,
+          monospace;
+        color: #7d858f;
+      }
+      .sw i {
+        width: 11px;
+        height: 11px;
+        display: inline-block;
+        border: 1px solid #3a3f48;
+      }
+      .shortlist .card {
+        background: #1e232b;
+        border-color: #39424e;
+      }
+      .mrow {
+        margin-bottom: 26px;
+      }
+      .mrow h3 {
+        margin: 0 0 10px;
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #c9ced5;
+      }
+      .mline {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+      .mcell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
+      }
+      .mcell > img {
+        border-radius: 18px;
+        display: block;
+      }
+      .mtiny {
+        display: flex;
+        gap: 9px;
+        align-items: flex-end;
+      }
+      .mtiny img {
+        border-radius: 4px;
+        display: block;
+      }
+      .mcap {
+        font:
+          10px ui-monospace,
+          monospace;
+        color: #7d858f;
+        text-align: center;
+        max-width: 110px;
+      }
+      .tinyrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+      .tinyrow span {
+        font:
+          10px ui-monospace,
+          monospace;
+        color: #000;
+        opacity: 0.55;
+        width: 74px;
+        flex: none;
+      }
+      .tinyrow.dk span {
+        color: #fff;
+      }
+      .tinyrow img {
+        border-radius: 3px;
+        image-rendering: auto;
+      }
+      .dock {
+        border-radius: 8px;
+        padding: 16px 18px;
+        margin-bottom: 14px;
+      }
+      .dock.light {
+        background: #eceef1;
+      }
+      .dock.dark {
+        background: #1b1f26;
+        border: 1px solid var(--edge);
+      }
+      .dock.ios {
+        background: linear-gradient(160deg, #5b4b8a, #2b3a67);
+      }
+      .dlabel {
+        display: block;
+        font:
+          10px ui-monospace,
+          monospace;
+        margin-bottom: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .dock.light .dlabel {
+        color: #6a717b;
+      }
+      .dock.dark .dlabel,
+      .dock.ios .dlabel {
+        color: #9aa2ad;
+      }
+      .drow {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .dic img {
+        border-radius: 13px;
+        display: block;
+      }
+      .notes {
+        padding: 26px 32px 70px;
+        max-width: 90ch;
+      }
+      .notes h3 {
+        margin: 24px 0 6px;
+        font: 600 14px ui-sans-serif;
+        color: var(--acc);
+      }
+      .notes p,
+      .notes li {
+        color: #c6cbd2;
+        font-size: 14px;
+      }
+      code {
+        background: #0b0d10;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font:
+          12.5px ui-monospace,
+          monospace;
+        color: #e0b970;
+      }
+      table {
+        border-collapse: collapse;
+        margin: 12px 0;
+        font-size: 13px;
+      }
+      th,
+      td {
+        border: 1px solid var(--edge);
+        padding: 6px 11px;
+        text-align: left;
+      }
+      th {
+        color: var(--dim);
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      td.n {
+        font:
+          12px ui-monospace,
+          monospace;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>App icon lab — 45 variations</h1>
+      <p>
+        Malik, 2026-08-23:
+        <em
+          >“let’s invert the colours and create way more variations based on the
+          sets and based on what you think might make sense. These things are
+          numbers games.”</em
+        >
+      </p>
+      <p>
+        <b
+          >Nothing is redrawn — that is what makes the numbers game
+          affordable.</b
+        >
+        <code>public/icon-512.png</code> is a two-colour mark, so every pixel is
+        read <em>once</em> as a position <code>t</code> between its ground
+        <code>#85FD9D</code> and its can <code>#231F20</code>, in linear light,
+        and each variation is that one <code>t</code>-map re-laid on a new pair.
+        Forty-five options cost the same authoring effort as one, and the
+        silhouette cannot drift between them. The twelve knocked-out bubbles are
+        labelled separately, which is what lets a variant paint each one a
+        different set’s colour.
+      </p>
+      <p>
+        <b>The decided social scheme is an input now, not a footnote</b> (Malik,
+        2026-08-23).
+        <code>Set&nbsp;L&nbsp;&middot;&nbsp;Sets&nbsp;&middot;&nbsp;full</code>:
+        cover ground <code>#CFF6DD</code>, dominant <code>#3F0167</code>, a
+        nine-colour pool, rate 75% &mdash; and an
+        <b>avatar that is a plum mark on a mint ground</b>. Family 8 below
+        reproduces that pool exactly and puts it in the icon; the recommendation
+        section is where the orientation question it raises gets argued out.
+      </p>
+      <p>
+        Ranked with the <b>Duru / ColorMoods stimulation model</b> —
+        <code>(4σ + 2ΔL + θ) / 7</code>, intensity weighted ×4 — folded together
+        with WCAG contrast, a vibration penalty, a shared-temperature bonus and
+        the halfway-blend check. Scoring code and the full method are in the
+        notes.
+      </p>
+    </header>
+
+    <section>
+      <h2>Three marks, compared &mdash; the same six colour pairs</h2>
+      <p class="sub">
+        Malik, 2026-08-23:
+        <em
+          >&ldquo;the colours on the bubbles doesn&rsquo;t work. I still think
+          we should try using the can from the favicon. And also our new logo,
+          so we can compare them.&rdquo;</em
+        >
+        Each row is one mark, each column one colour pair, each cell at 104px,
+        32px and 16px. The two new marks are vector, drawn from
+        <code>app/icon.svg</code> and <code>lib/wordmarkPaths.ts</code> &mdash;
+        the wordmark rendered exactly as <code>marketingTheme</code>&rsquo;s
+        <code>markSvg</code> does it, with the lettering as a
+        <em>knockout showing the ground</em> and never as white ink. The favicon
+        can is placed on the shipped can&rsquo;s own bounding box, so what
+        differs between rows one and two is the <em>drawing</em>, not the
+        sizing.
+      </p>
+      <div class="mrow">
+        <h3>The can we ship — twelve knocked-out bubbles</h3>
+        <div class="mline">
+          <div class="mcell">
+            <img
+              src="brand/icons/v-setl-up-512.png"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/v-setl-up-512.png"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/v-setl-up-512.png"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">plum on mint</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/v-setl-512.png"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/v-setl-512.png"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/v-setl-512.png"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">mint on plum</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/v-cream-plum-512.png"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/v-cream-plum-512.png"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/v-cream-plum-512.png"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">cream on plum</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/v-mint-deep-512.png"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/v-mint-deep-512.png"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/v-mint-deep-512.png"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">mint on deep green</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/v-inv-deep-512.png"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/v-inv-deep-512.png"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/v-inv-deep-512.png"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">bright green on deep</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/v-today-512.png"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/v-today-512.png"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/v-today-512.png"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">today</span>
+          </div>
+        </div>
+      </div>
+      <div class="mrow">
+        <h3>The favicon can — app/icon.svg, no bubbles</h3>
+        <div class="mline">
+          <div class="mcell">
+            <img
+              src="brand/icons/m-can-svg-avatar.svg"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/m-can-svg-avatar.svg"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/m-can-svg-avatar.svg"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">plum on mint</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/m-can-svg-inv.svg"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/m-can-svg-inv.svg"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/m-can-svg-inv.svg"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">mint on plum</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/m-can-svg-cream.svg"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/m-can-svg-cream.svg"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/m-can-svg-cream.svg"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">cream on plum</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/m-can-svg-deep.svg"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/m-can-svg-deep.svg"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/m-can-svg-deep.svg"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">mint on deep green</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/m-can-svg-heritage.svg"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/m-can-svg-heritage.svg"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/m-can-svg-heritage.svg"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">bright green on deep</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/m-can-svg-today.svg"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/m-can-svg-today.svg"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/m-can-svg-today.svg"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">today</span>
+          </div>
+        </div>
+      </div>
+      <div class="mrow">
+        <h3>The new logo — the wordmark</h3>
+        <div class="mline">
+          <div class="mcell">
+            <img
+              src="brand/icons/m-wordmark-avatar.svg"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/m-wordmark-avatar.svg"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/m-wordmark-avatar.svg"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">plum on mint</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/m-wordmark-inv.svg"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/m-wordmark-inv.svg"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/m-wordmark-inv.svg"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">mint on plum</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/m-wordmark-cream.svg"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/m-wordmark-cream.svg"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/m-wordmark-cream.svg"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">cream on plum</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/m-wordmark-deep.svg"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/m-wordmark-deep.svg"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/m-wordmark-deep.svg"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">mint on deep green</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/m-wordmark-heritage.svg"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/m-wordmark-heritage.svg"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/m-wordmark-heritage.svg"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">bright green on deep</span>
+          </div>
+          <div class="mcell">
+            <img
+              src="brand/icons/m-wordmark-today.svg"
+              width="104"
+              height="104"
+              alt=""
+            />
+            <div class="mtiny">
+              <img
+                src="brand/icons/m-wordmark-today.svg"
+                width="32"
+                height="32"
+                alt=""
+              /><img
+                src="brand/icons/m-wordmark-today.svg"
+                width="16"
+                height="16"
+                alt=""
+              />
+            </div>
+            <span class="mcap">today</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shortlist">
+      <h2>Shortlist — the twelve the model ranks highest</h2>
+      <p class="sub">
+        Duplicate colour pairs collapsed (Set L’s mint/plum arrives five ways;
+        it is one pair). Score is the composite; the contrast figure is the one
+        that decides whether it survives a 16px favicon.
+      </p>
+      <div class="grid">
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-setl-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set L — mint can on plum</b>
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3f0167"></i><code>#3F0167</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-setl-up-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set L upright — plum can on mint</b>
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #cff6dd"></i><code>#CFF6DD</code>
+              <i style="background: #3f0167"></i><code>#3F0167</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-cover-mini-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b
+              >The cover in miniature — plum can on mint, the nine in the
+              bubbles</b
+            >
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #cff6dd"></i><code>#CFF6DD</code>
+              <i style="background: #3f0167"></i><code>#3F0167</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-cover-inv-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b
+              >The cover inverted — mint can on plum, the nine in the bubbles</b
+            >
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3f0167"></i><code>#3F0167</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-x-NC-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set N ink ground, Set C surface can — maroon + chartreuse</b>
+            <span class="nums"
+              ><em>0.929</em> · 12.03:1 · stim 0.54 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #4a1040"></i><code>#4A1040</code>
+              <i style="background: #e7f099"></i><code>#E7F099</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inkmint-Q-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set Q ink ground, mint can</b>
+            <span class="nums"
+              ><em>0.909</em> · 12.35:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3e1060"></i><code>#3E1060</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inv-deep-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Today inverted, dark end pulled to brand green</b>
+            <span class="nums"
+              ><em>0.870</em> · 11.1:1 · stim 0.47 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #023318"></i><code>#023318</code>
+              <i style="background: #85fd9d"></i><code>#85FD9D</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inv-plum-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Today inverted on plum</b>
+            <span class="nums"
+              ><em>0.849</em> · 11.71:1 · stim 0.65 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3f0167"></i><code>#3F0167</code>
+              <i style="background: #85fd9d"></i><code>#85FD9D</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-today-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Today — near-black can on bright green</b>
+            <span class="nums"
+              ><em>0.833</em> · 12.83:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #85fd9d"></i><code>#85FD9D</code>
+              <i style="background: #231f20"></i><code>#231F20</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inv-today-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Today, literally inverted — bright-green can on near-black</b>
+            <span class="nums"
+              ><em>0.833</em> · 12.83:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #231f20"></i><code>#231F20</code>
+              <i style="background: #85fd9d"></i><code>#85FD9D</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-cream-plum-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Cream can on plum</b>
+            <span class="nums"
+              ><em>0.827</em> · 12.63:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3f0167"></i><code>#3F0167</code>
+              <i style="background: #edede3"></i><code>#EDEDE3</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-seven-tab-cream-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Seven sets — tab colours in the bubbles, cream can on plum</b>
+            <span class="nums"
+              ><em>0.827</em> · 12.63:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3f0167"></i><code>#3F0167</code>
+              <i style="background: #edede3"></i><code>#EDEDE3</code></span
+            >
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <h2>The 16px test — every variation, actual size</h2>
+      <p class="sub">
+        The only test that matters for a favicon, and the one a 512px preview
+        always flatters. Hover a mark for its name. Today’s icon is legible at
+        16px because it runs 12.83:1 — that number, not the hue, is the
+        constraint any replacement inherits.
+      </p>
+      <div class="tinyrow" style="background: #ffffff">
+        <span>on white</span
+        ><img
+          src="brand/icons/v-setl-512.png"
+          width="16"
+          height="16"
+          title="Set L — mint can on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-setl-up-512.png"
+          width="16"
+          height="16"
+          title="Set L upright — plum can on mint"
+          alt=""
+        /><img
+          src="brand/icons/v-set-L-512.png"
+          width="16"
+          height="16"
+          title="Set L — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-L-512.png"
+          width="16"
+          height="16"
+          title="Set L upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-L-512.png"
+          width="16"
+          height="16"
+          title="Set L ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-avatar-512.png"
+          width="16"
+          height="16"
+          title="The decided AVATAR pair — plum mark on mint (reference)"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-mini-512.png"
+          width="16"
+          height="16"
+          title="The cover in miniature — plum can on mint, the nine in the bubbles"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-mini-9-512.png"
+          width="16"
+          height="16"
+          title="The cover in miniature, all nine cycled"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-inv-512.png"
+          width="16"
+          height="16"
+          title="The cover inverted — mint can on plum, the nine in the bubbles"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-tab-plum-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — tab colours in the bubbles, mint can on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-surf-plum-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — surfaces in the bubbles, plum can on mint"
+          alt=""
+        /><img
+          src="brand/icons/v-x-NC-512.png"
+          width="16"
+          height="16"
+          title="Set N ink ground, Set C surface can — maroon + chartreuse"
+          alt=""
+        /><img
+          src="brand/icons/v-x-AC-512.png"
+          width="16"
+          height="16"
+          title="Set A ink ground, Set C surface can — maroon + chartreuse"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-Q-512.png"
+          width="16"
+          height="16"
+          title="Set Q ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-x-QL-512.png"
+          width="16"
+          height="16"
+          title="Set Q ink ground, Set L surface can — violet + mint"
+          alt=""
+        /><img
+          src="brand/icons/v-inv-deep-512.png"
+          width="16"
+          height="16"
+          title="Today inverted, dark end pulled to brand green"
+          alt=""
+        /><img
+          src="brand/icons/v-inv-plum-512.png"
+          width="16"
+          height="16"
+          title="Today inverted on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-today-512.png"
+          width="16"
+          height="16"
+          title="Today — near-black can on bright green"
+          alt=""
+        /><img
+          src="brand/icons/v-inv-today-512.png"
+          width="16"
+          height="16"
+          title="Today, literally inverted — bright-green can on near-black"
+          alt=""
+        /><img
+          src="brand/icons/v-cream-plum-512.png"
+          width="16"
+          height="16"
+          title="Cream can on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-tab-cream-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — tab colours in the bubbles, cream can on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-x-RC-512.png"
+          width="16"
+          height="16"
+          title="Set R ink ground, Set C surface can — rust + chartreuse"
+          alt=""
+        /><img
+          src="brand/icons/v-set-C-512.png"
+          width="16"
+          height="16"
+          title="Set C — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-C-512.png"
+          width="16"
+          height="16"
+          title="Set C upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-x-QC-512.png"
+          width="16"
+          height="16"
+          title="Set Q ink ground, Set C surface can — violet + chartreuse"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-A-512.png"
+          width="16"
+          height="16"
+          title="Set A ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-N-512.png"
+          width="16"
+          height="16"
+          title="Set N ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-mint-deep-512.png"
+          width="16"
+          height="16"
+          title="Mint can on deep green"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-inv-deep-512.png"
+          width="16"
+          height="16"
+          title="Cover palette, deep-green ground — mint can, the nine in the bubbles"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-tab-deep-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — tab colours in the bubbles, mint can on deep green"
+          alt=""
+        /><img
+          src="brand/icons/v-inv-teal-512.png"
+          width="16"
+          height="16"
+          title="Today inverted on deep teal"
+          alt=""
+        /><img
+          src="brand/icons/v-mint-black-512.png"
+          width="16"
+          height="16"
+          title="Mint can on near-black"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-tab-black-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — tab colours in the bubbles, mint can on near-black"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-R-512.png"
+          width="16"
+          height="16"
+          title="Set R ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-J-512.png"
+          width="16"
+          height="16"
+          title="Set J ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-C-512.png"
+          width="16"
+          height="16"
+          title="Set C ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-x-CL-512.png"
+          width="16"
+          height="16"
+          title="Set C ink ground, Set L surface can — teal + mint"
+          alt=""
+        /><img
+          src="brand/icons/v-cream-deep-512.png"
+          width="16"
+          height="16"
+          title="Cream can on deep green"
+          alt=""
+        /><img
+          src="brand/icons/v-set-N-512.png"
+          width="16"
+          height="16"
+          title="Set N — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-N-512.png"
+          width="16"
+          height="16"
+          title="Set N upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-set-A-512.png"
+          width="16"
+          height="16"
+          title="Set A — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-A-512.png"
+          width="16"
+          height="16"
+          title="Set A upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-x-LA-512.png"
+          width="16"
+          height="16"
+          title="Set L ink ground, Set A surface can — plum + blush"
+          alt=""
+        /><img
+          src="brand/icons/v-x-JA-512.png"
+          width="16"
+          height="16"
+          title="Set J ink ground, Set A surface can — forest + blush"
+          alt=""
+        /><img
+          src="brand/icons/v-set-Q-512.png"
+          width="16"
+          height="16"
+          title="Set Q — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-Q-512.png"
+          width="16"
+          height="16"
+          title="Set Q upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-set-R-512.png"
+          width="16"
+          height="16"
+          title="Set R — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-R-512.png"
+          width="16"
+          height="16"
+          title="Set R upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-set-J-512.png"
+          width="16"
+          height="16"
+          title="Set J — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-J-512.png"
+          width="16"
+          height="16"
+          title="Set J upright — its ink on its surface"
+          alt=""
+        />
+      </div>
+      <div class="tinyrow" style="background: #f2f3f5">
+        <span>light tab</span
+        ><img
+          src="brand/icons/v-setl-512.png"
+          width="16"
+          height="16"
+          title="Set L — mint can on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-setl-up-512.png"
+          width="16"
+          height="16"
+          title="Set L upright — plum can on mint"
+          alt=""
+        /><img
+          src="brand/icons/v-set-L-512.png"
+          width="16"
+          height="16"
+          title="Set L — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-L-512.png"
+          width="16"
+          height="16"
+          title="Set L upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-L-512.png"
+          width="16"
+          height="16"
+          title="Set L ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-avatar-512.png"
+          width="16"
+          height="16"
+          title="The decided AVATAR pair — plum mark on mint (reference)"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-mini-512.png"
+          width="16"
+          height="16"
+          title="The cover in miniature — plum can on mint, the nine in the bubbles"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-mini-9-512.png"
+          width="16"
+          height="16"
+          title="The cover in miniature, all nine cycled"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-inv-512.png"
+          width="16"
+          height="16"
+          title="The cover inverted — mint can on plum, the nine in the bubbles"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-tab-plum-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — tab colours in the bubbles, mint can on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-surf-plum-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — surfaces in the bubbles, plum can on mint"
+          alt=""
+        /><img
+          src="brand/icons/v-x-NC-512.png"
+          width="16"
+          height="16"
+          title="Set N ink ground, Set C surface can — maroon + chartreuse"
+          alt=""
+        /><img
+          src="brand/icons/v-x-AC-512.png"
+          width="16"
+          height="16"
+          title="Set A ink ground, Set C surface can — maroon + chartreuse"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-Q-512.png"
+          width="16"
+          height="16"
+          title="Set Q ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-x-QL-512.png"
+          width="16"
+          height="16"
+          title="Set Q ink ground, Set L surface can — violet + mint"
+          alt=""
+        /><img
+          src="brand/icons/v-inv-deep-512.png"
+          width="16"
+          height="16"
+          title="Today inverted, dark end pulled to brand green"
+          alt=""
+        /><img
+          src="brand/icons/v-inv-plum-512.png"
+          width="16"
+          height="16"
+          title="Today inverted on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-today-512.png"
+          width="16"
+          height="16"
+          title="Today — near-black can on bright green"
+          alt=""
+        /><img
+          src="brand/icons/v-inv-today-512.png"
+          width="16"
+          height="16"
+          title="Today, literally inverted — bright-green can on near-black"
+          alt=""
+        /><img
+          src="brand/icons/v-cream-plum-512.png"
+          width="16"
+          height="16"
+          title="Cream can on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-tab-cream-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — tab colours in the bubbles, cream can on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-x-RC-512.png"
+          width="16"
+          height="16"
+          title="Set R ink ground, Set C surface can — rust + chartreuse"
+          alt=""
+        /><img
+          src="brand/icons/v-set-C-512.png"
+          width="16"
+          height="16"
+          title="Set C — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-C-512.png"
+          width="16"
+          height="16"
+          title="Set C upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-x-QC-512.png"
+          width="16"
+          height="16"
+          title="Set Q ink ground, Set C surface can — violet + chartreuse"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-A-512.png"
+          width="16"
+          height="16"
+          title="Set A ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-N-512.png"
+          width="16"
+          height="16"
+          title="Set N ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-mint-deep-512.png"
+          width="16"
+          height="16"
+          title="Mint can on deep green"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-inv-deep-512.png"
+          width="16"
+          height="16"
+          title="Cover palette, deep-green ground — mint can, the nine in the bubbles"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-tab-deep-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — tab colours in the bubbles, mint can on deep green"
+          alt=""
+        /><img
+          src="brand/icons/v-inv-teal-512.png"
+          width="16"
+          height="16"
+          title="Today inverted on deep teal"
+          alt=""
+        /><img
+          src="brand/icons/v-mint-black-512.png"
+          width="16"
+          height="16"
+          title="Mint can on near-black"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-tab-black-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — tab colours in the bubbles, mint can on near-black"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-R-512.png"
+          width="16"
+          height="16"
+          title="Set R ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-J-512.png"
+          width="16"
+          height="16"
+          title="Set J ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-C-512.png"
+          width="16"
+          height="16"
+          title="Set C ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-x-CL-512.png"
+          width="16"
+          height="16"
+          title="Set C ink ground, Set L surface can — teal + mint"
+          alt=""
+        /><img
+          src="brand/icons/v-cream-deep-512.png"
+          width="16"
+          height="16"
+          title="Cream can on deep green"
+          alt=""
+        /><img
+          src="brand/icons/v-set-N-512.png"
+          width="16"
+          height="16"
+          title="Set N — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-N-512.png"
+          width="16"
+          height="16"
+          title="Set N upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-set-A-512.png"
+          width="16"
+          height="16"
+          title="Set A — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-A-512.png"
+          width="16"
+          height="16"
+          title="Set A upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-x-LA-512.png"
+          width="16"
+          height="16"
+          title="Set L ink ground, Set A surface can — plum + blush"
+          alt=""
+        /><img
+          src="brand/icons/v-x-JA-512.png"
+          width="16"
+          height="16"
+          title="Set J ink ground, Set A surface can — forest + blush"
+          alt=""
+        /><img
+          src="brand/icons/v-set-Q-512.png"
+          width="16"
+          height="16"
+          title="Set Q — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-Q-512.png"
+          width="16"
+          height="16"
+          title="Set Q upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-set-R-512.png"
+          width="16"
+          height="16"
+          title="Set R — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-R-512.png"
+          width="16"
+          height="16"
+          title="Set R upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-set-J-512.png"
+          width="16"
+          height="16"
+          title="Set J — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-J-512.png"
+          width="16"
+          height="16"
+          title="Set J upright — its ink on its surface"
+          alt=""
+        />
+      </div>
+      <div class="tinyrow dk" style="background: #20242b">
+        <span>dark tab</span
+        ><img
+          src="brand/icons/v-setl-512.png"
+          width="16"
+          height="16"
+          title="Set L — mint can on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-setl-up-512.png"
+          width="16"
+          height="16"
+          title="Set L upright — plum can on mint"
+          alt=""
+        /><img
+          src="brand/icons/v-set-L-512.png"
+          width="16"
+          height="16"
+          title="Set L — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-L-512.png"
+          width="16"
+          height="16"
+          title="Set L upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-L-512.png"
+          width="16"
+          height="16"
+          title="Set L ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-avatar-512.png"
+          width="16"
+          height="16"
+          title="The decided AVATAR pair — plum mark on mint (reference)"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-mini-512.png"
+          width="16"
+          height="16"
+          title="The cover in miniature — plum can on mint, the nine in the bubbles"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-mini-9-512.png"
+          width="16"
+          height="16"
+          title="The cover in miniature, all nine cycled"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-inv-512.png"
+          width="16"
+          height="16"
+          title="The cover inverted — mint can on plum, the nine in the bubbles"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-tab-plum-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — tab colours in the bubbles, mint can on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-surf-plum-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — surfaces in the bubbles, plum can on mint"
+          alt=""
+        /><img
+          src="brand/icons/v-x-NC-512.png"
+          width="16"
+          height="16"
+          title="Set N ink ground, Set C surface can — maroon + chartreuse"
+          alt=""
+        /><img
+          src="brand/icons/v-x-AC-512.png"
+          width="16"
+          height="16"
+          title="Set A ink ground, Set C surface can — maroon + chartreuse"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-Q-512.png"
+          width="16"
+          height="16"
+          title="Set Q ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-x-QL-512.png"
+          width="16"
+          height="16"
+          title="Set Q ink ground, Set L surface can — violet + mint"
+          alt=""
+        /><img
+          src="brand/icons/v-inv-deep-512.png"
+          width="16"
+          height="16"
+          title="Today inverted, dark end pulled to brand green"
+          alt=""
+        /><img
+          src="brand/icons/v-inv-plum-512.png"
+          width="16"
+          height="16"
+          title="Today inverted on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-today-512.png"
+          width="16"
+          height="16"
+          title="Today — near-black can on bright green"
+          alt=""
+        /><img
+          src="brand/icons/v-inv-today-512.png"
+          width="16"
+          height="16"
+          title="Today, literally inverted — bright-green can on near-black"
+          alt=""
+        /><img
+          src="brand/icons/v-cream-plum-512.png"
+          width="16"
+          height="16"
+          title="Cream can on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-tab-cream-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — tab colours in the bubbles, cream can on plum"
+          alt=""
+        /><img
+          src="brand/icons/v-x-RC-512.png"
+          width="16"
+          height="16"
+          title="Set R ink ground, Set C surface can — rust + chartreuse"
+          alt=""
+        /><img
+          src="brand/icons/v-set-C-512.png"
+          width="16"
+          height="16"
+          title="Set C — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-C-512.png"
+          width="16"
+          height="16"
+          title="Set C upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-x-QC-512.png"
+          width="16"
+          height="16"
+          title="Set Q ink ground, Set C surface can — violet + chartreuse"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-A-512.png"
+          width="16"
+          height="16"
+          title="Set A ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-N-512.png"
+          width="16"
+          height="16"
+          title="Set N ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-mint-deep-512.png"
+          width="16"
+          height="16"
+          title="Mint can on deep green"
+          alt=""
+        /><img
+          src="brand/icons/v-cover-inv-deep-512.png"
+          width="16"
+          height="16"
+          title="Cover palette, deep-green ground — mint can, the nine in the bubbles"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-tab-deep-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — tab colours in the bubbles, mint can on deep green"
+          alt=""
+        /><img
+          src="brand/icons/v-inv-teal-512.png"
+          width="16"
+          height="16"
+          title="Today inverted on deep teal"
+          alt=""
+        /><img
+          src="brand/icons/v-mint-black-512.png"
+          width="16"
+          height="16"
+          title="Mint can on near-black"
+          alt=""
+        /><img
+          src="brand/icons/v-seven-tab-black-512.png"
+          width="16"
+          height="16"
+          title="Seven sets — tab colours in the bubbles, mint can on near-black"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-R-512.png"
+          width="16"
+          height="16"
+          title="Set R ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-J-512.png"
+          width="16"
+          height="16"
+          title="Set J ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-inkmint-C-512.png"
+          width="16"
+          height="16"
+          title="Set C ink ground, mint can"
+          alt=""
+        /><img
+          src="brand/icons/v-x-CL-512.png"
+          width="16"
+          height="16"
+          title="Set C ink ground, Set L surface can — teal + mint"
+          alt=""
+        /><img
+          src="brand/icons/v-cream-deep-512.png"
+          width="16"
+          height="16"
+          title="Cream can on deep green"
+          alt=""
+        /><img
+          src="brand/icons/v-set-N-512.png"
+          width="16"
+          height="16"
+          title="Set N — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-N-512.png"
+          width="16"
+          height="16"
+          title="Set N upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-set-A-512.png"
+          width="16"
+          height="16"
+          title="Set A — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-A-512.png"
+          width="16"
+          height="16"
+          title="Set A upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-x-LA-512.png"
+          width="16"
+          height="16"
+          title="Set L ink ground, Set A surface can — plum + blush"
+          alt=""
+        /><img
+          src="brand/icons/v-x-JA-512.png"
+          width="16"
+          height="16"
+          title="Set J ink ground, Set A surface can — forest + blush"
+          alt=""
+        /><img
+          src="brand/icons/v-set-Q-512.png"
+          width="16"
+          height="16"
+          title="Set Q — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-Q-512.png"
+          width="16"
+          height="16"
+          title="Set Q upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-set-R-512.png"
+          width="16"
+          height="16"
+          title="Set R — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-R-512.png"
+          width="16"
+          height="16"
+          title="Set R upright — its ink on its surface"
+          alt=""
+        /><img
+          src="brand/icons/v-set-J-512.png"
+          width="16"
+          height="16"
+          title="Set J — its surface on its ink"
+          alt=""
+        /><img
+          src="brand/icons/v-setup-J-512.png"
+          width="16"
+          height="16"
+          title="Set J upright — its ink on its surface"
+          alt=""
+        />
+      </div>
+    </section>
+
+    <section>
+      <h2>In place — shortlist only</h2>
+      <p class="sub">
+        A macOS dock is light or dark depending on the wallpaper, and an iOS
+        home screen is whatever photo the user picked. A dark chromatic ground
+        survives all three; a pale ground disappears into the light one.
+      </p>
+      <div class="dock light">
+        <span class="dlabel">macOS dock · light</span>
+        <div class="drow">
+          <span class="dic"
+            ><img
+              src="brand/icons/v-setl-512.png"
+              width="56"
+              height="56"
+              title="Set L — mint can on plum"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-setl-up-512.png"
+              width="56"
+              height="56"
+              title="Set L upright — plum can on mint"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-cover-mini-512.png"
+              width="56"
+              height="56"
+              title="The cover in miniature — plum can on mint, the nine in the bubbles"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-cover-inv-512.png"
+              width="56"
+              height="56"
+              title="The cover inverted — mint can on plum, the nine in the bubbles"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-x-NC-512.png"
+              width="56"
+              height="56"
+              title="Set N ink ground, Set C surface can — maroon + chartreuse"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-inkmint-Q-512.png"
+              width="56"
+              height="56"
+              title="Set Q ink ground, mint can"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-inv-deep-512.png"
+              width="56"
+              height="56"
+              title="Today inverted, dark end pulled to brand green"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-inv-plum-512.png"
+              width="56"
+              height="56"
+              title="Today inverted on plum"
+              alt=""
+          /></span>
+        </div>
+      </div>
+      <div class="dock dark">
+        <span class="dlabel">macOS dock · dark</span>
+        <div class="drow">
+          <span class="dic"
+            ><img
+              src="brand/icons/v-setl-512.png"
+              width="56"
+              height="56"
+              title="Set L — mint can on plum"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-setl-up-512.png"
+              width="56"
+              height="56"
+              title="Set L upright — plum can on mint"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-cover-mini-512.png"
+              width="56"
+              height="56"
+              title="The cover in miniature — plum can on mint, the nine in the bubbles"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-cover-inv-512.png"
+              width="56"
+              height="56"
+              title="The cover inverted — mint can on plum, the nine in the bubbles"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-x-NC-512.png"
+              width="56"
+              height="56"
+              title="Set N ink ground, Set C surface can — maroon + chartreuse"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-inkmint-Q-512.png"
+              width="56"
+              height="56"
+              title="Set Q ink ground, mint can"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-inv-deep-512.png"
+              width="56"
+              height="56"
+              title="Today inverted, dark end pulled to brand green"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-inv-plum-512.png"
+              width="56"
+              height="56"
+              title="Today inverted on plum"
+              alt=""
+          /></span>
+        </div>
+      </div>
+      <div class="dock ios">
+        <span class="dlabel">iOS home screen</span>
+        <div class="drow">
+          <span class="dic"
+            ><img
+              src="brand/icons/v-setl-512.png"
+              width="56"
+              height="56"
+              title="Set L — mint can on plum"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-setl-up-512.png"
+              width="56"
+              height="56"
+              title="Set L upright — plum can on mint"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-cover-mini-512.png"
+              width="56"
+              height="56"
+              title="The cover in miniature — plum can on mint, the nine in the bubbles"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-cover-inv-512.png"
+              width="56"
+              height="56"
+              title="The cover inverted — mint can on plum, the nine in the bubbles"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-x-NC-512.png"
+              width="56"
+              height="56"
+              title="Set N ink ground, Set C surface can — maroon + chartreuse"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-inkmint-Q-512.png"
+              width="56"
+              height="56"
+              title="Set Q ink ground, mint can"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-inv-deep-512.png"
+              width="56"
+              height="56"
+              title="Today inverted, dark end pulled to brand green"
+              alt="" /></span
+          ><span class="dic"
+            ><img
+              src="brand/icons/v-inv-plum-512.png"
+              width="56"
+              height="56"
+              title="Today inverted on plum"
+              alt=""
+          /></span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>0 · control</h2>
+      <div class="grid">
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-today-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Today — near-black can on bright green</b>
+            <span class="nums"
+              ><em>0.833</em> · 12.83:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #85fd9d"></i><code>#85FD9D</code>
+              <i style="background: #231f20"></i><code>#231F20</code></span
+            >
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+    <section>
+      <h2>1 · today inverted</h2>
+      <div class="grid">
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inv-deep-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Today inverted, dark end pulled to brand green</b>
+            <span class="nums"
+              ><em>0.870</em> · 11.1:1 · stim 0.47 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #023318"></i><code>#023318</code>
+              <i style="background: #85fd9d"></i><code>#85FD9D</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inv-plum-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Today inverted on plum</b>
+            <span class="nums"
+              ><em>0.849</em> · 11.71:1 · stim 0.65 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3f0167"></i><code>#3F0167</code>
+              <i style="background: #85fd9d"></i><code>#85FD9D</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inv-today-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Today, literally inverted — bright-green can on near-black</b>
+            <span class="nums"
+              ><em>0.833</em> · 12.83:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #231f20"></i><code>#231F20</code>
+              <i style="background: #85fd9d"></i><code>#85FD9D</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inv-teal-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Today inverted on deep teal</b>
+            <span class="nums"
+              ><em>0.786</em> · 11.31:1 · stim 0.48 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #02302c"></i><code>#02302C</code>
+              <i style="background: #85fd9d"></i><code>#85FD9D</code></span
+            >
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+    <section>
+      <h2>2 · site scheme</h2>
+      <div class="grid">
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-setl-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set L — mint can on plum</b>
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3f0167"></i><code>#3F0167</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-setl-up-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set L upright — plum can on mint</b>
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #cff6dd"></i><code>#CFF6DD</code>
+              <i style="background: #3f0167"></i><code>#3F0167</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-cream-plum-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Cream can on plum</b>
+            <span class="nums"
+              ><em>0.827</em> · 12.63:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3f0167"></i><code>#3F0167</code>
+              <i style="background: #edede3"></i><code>#EDEDE3</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-mint-deep-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Mint can on deep green</b>
+            <span class="nums"
+              ><em>0.797</em> · 12.01:1 · stim 0.37 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #023318"></i><code>#023318</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-mint-black-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Mint can on near-black</b>
+            <span class="nums"
+              ><em>0.722</em> · 13.88:1 · stim 0.43 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #231f20"></i><code>#231F20</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-cream-deep-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Cream can on deep green</b>
+            <span class="nums"
+              ><em>0.697</em> · 11.97:1 · stim 0.39 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #023318"></i><code>#023318</code>
+              <i style="background: #edede3"></i><code>#EDEDE3</code></span
+            >
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+    <section>
+      <h2>3 · one per set</h2>
+      <div class="grid">
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-set-L-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set L — its surface on its ink</b>
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3f0167"></i><code>#3F0167</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-set-C-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set C — its surface on its ink</b>
+            <span class="nums"
+              ><em>0.814</em> · 11.85:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #02302c"></i><code>#02302C</code>
+              <i style="background: #e7f099"></i><code>#E7F099</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-set-N-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set N — its surface on its ink</b>
+            <span class="nums"
+              ><em>0.684</em> · 9.68:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #4a1040"></i><code>#4A1040</code>
+              <i style="background: #9edaff"></i><code>#9EDAFF</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-set-A-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set A — its surface on its ink</b>
+            <span class="nums"
+              ><em>0.670</em> · 8.26:1 · stim 0.43 ·
+              <span class="g-warn">thin at 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #4a1040"></i><code>#4A1040</code>
+              <i style="background: #ffabc6"></i><code>#FFABC6</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-set-Q-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set Q — its surface on its ink</b>
+            <span class="nums"
+              ><em>0.621</em> · 9.64:1 · stim 0.41 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3e1060"></i><code>#3E1060</code>
+              <i style="background: #d9ccf9"></i><code>#D9CCF9</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-set-R-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set R — its surface on its ink</b>
+            <span class="nums"
+              ><em>0.550</em> · 7.04:1 · stim 0.50 ·
+              <span class="g-warn">thin at 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #751100"></i><code>#751100</code>
+              <i style="background: #e4bdf7"></i><code>#E4BDF7</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-set-J-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set J — its surface on its ink</b>
+            <span class="nums"
+              ><em>0.528</em> · 7.34:1 · stim 0.51 ·
+              <span class="g-warn">thin at 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #1c3601"></i><code>#1C3601</code>
+              <i style="background: #e6acf4"></i><code>#E6ACF4</code></span
+            >
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+    <section>
+      <h2>4 · one per set, upright</h2>
+      <div class="grid">
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-setup-L-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set L upright — its ink on its surface</b>
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #cff6dd"></i><code>#CFF6DD</code>
+              <i style="background: #3f0167"></i><code>#3F0167</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-setup-C-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set C upright — its ink on its surface</b>
+            <span class="nums"
+              ><em>0.814</em> · 11.85:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #e7f099"></i><code>#E7F099</code>
+              <i style="background: #02302c"></i><code>#02302C</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-setup-N-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set N upright — its ink on its surface</b>
+            <span class="nums"
+              ><em>0.684</em> · 9.68:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #9edaff"></i><code>#9EDAFF</code>
+              <i style="background: #4a1040"></i><code>#4A1040</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-setup-A-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set A upright — its ink on its surface</b>
+            <span class="nums"
+              ><em>0.670</em> · 8.26:1 · stim 0.43 ·
+              <span class="g-warn">thin at 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #ffabc6"></i><code>#FFABC6</code>
+              <i style="background: #4a1040"></i><code>#4A1040</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-setup-Q-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set Q upright — its ink on its surface</b>
+            <span class="nums"
+              ><em>0.621</em> · 9.64:1 · stim 0.41 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #d9ccf9"></i><code>#D9CCF9</code>
+              <i style="background: #3e1060"></i><code>#3E1060</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-setup-R-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set R upright — its ink on its surface</b>
+            <span class="nums"
+              ><em>0.550</em> · 7.04:1 · stim 0.50 ·
+              <span class="g-warn">thin at 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #e4bdf7"></i><code>#E4BDF7</code>
+              <i style="background: #751100"></i><code>#751100</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-setup-J-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set J upright — its ink on its surface</b>
+            <span class="nums"
+              ><em>0.528</em> · 7.34:1 · stim 0.51 ·
+              <span class="g-warn">thin at 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #e6acf4"></i><code>#E6ACF4</code>
+              <i style="background: #1c3601"></i><code>#1C3601</code></span
+            >
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+    <section>
+      <h2>5 · set ink + constant can</h2>
+      <div class="grid">
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inkmint-L-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set L ink ground, mint can</b>
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3f0167"></i><code>#3F0167</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inkmint-Q-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set Q ink ground, mint can</b>
+            <span class="nums"
+              ><em>0.909</em> · 12.35:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3e1060"></i><code>#3E1060</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inkmint-A-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set A ink ground, mint can</b>
+            <span class="nums"
+              ><em>0.800</em> · 12.42:1 · stim 0.52 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #4a1040"></i><code>#4A1040</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inkmint-N-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set N ink ground, mint can</b>
+            <span class="nums"
+              ><em>0.800</em> · 12.42:1 · stim 0.52 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #4a1040"></i><code>#4A1040</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inkmint-R-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set R ink ground, mint can</b>
+            <span class="nums"
+              ><em>0.711</em> · 9.74:1 · stim 0.54 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #751100"></i><code>#751100</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inkmint-J-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set J ink ground, mint can</b>
+            <span class="nums"
+              ><em>0.703</em> · 11.33:1 · stim 0.42 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #1c3601"></i><code>#1C3601</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-inkmint-C-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set C ink ground, mint can</b>
+            <span class="nums"
+              ><em>0.702</em> · 12.23:1 · stim 0.39 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #02302c"></i><code>#02302C</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+    <section>
+      <h2>6 · cross-set</h2>
+      <div class="grid">
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-x-NC-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set N ink ground, Set C surface can — maroon + chartreuse</b>
+            <span class="nums"
+              ><em>0.929</em> · 12.03:1 · stim 0.54 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #4a1040"></i><code>#4A1040</code>
+              <i style="background: #e7f099"></i><code>#E7F099</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-x-AC-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set A ink ground, Set C surface can — maroon + chartreuse</b>
+            <span class="nums"
+              ><em>0.929</em> · 12.03:1 · stim 0.54 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #4a1040"></i><code>#4A1040</code>
+              <i style="background: #e7f099"></i><code>#E7F099</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-x-QL-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set Q ink ground, Set L surface can — violet + mint</b>
+            <span class="nums"
+              ><em>0.909</em> · 12.35:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3e1060"></i><code>#3E1060</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-x-RC-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set R ink ground, Set C surface can — rust + chartreuse</b>
+            <span class="nums"
+              ><em>0.823</em> · 9.43:1 · stim 0.54 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #751100"></i><code>#751100</code>
+              <i style="background: #e7f099"></i><code>#E7F099</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-x-QC-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set Q ink ground, Set C surface can — violet + chartreuse</b>
+            <span class="nums"
+              ><em>0.801</em> · 11.96:1 · stim 0.59 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3e1060"></i><code>#3E1060</code>
+              <i style="background: #e7f099"></i><code>#E7F099</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-x-CL-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set C ink ground, Set L surface can — teal + mint</b>
+            <span class="nums"
+              ><em>0.702</em> · 12.23:1 · stim 0.39 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #02302c"></i><code>#02302C</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-x-LA-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set L ink ground, Set A surface can — plum + blush</b>
+            <span class="nums"
+              ><em>0.666</em> · 8.43:1 · stim 0.52 ·
+              <span class="g-warn">thin at 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3f0167"></i><code>#3F0167</code>
+              <i style="background: #ffabc6"></i><code>#FFABC6</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-x-JA-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Set J ink ground, Set A surface can — forest + blush</b>
+            <span class="nums"
+              ><em>0.635</em> · 7.54:1 · stim 0.49 ·
+              <span class="g-warn">thin at 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #1c3601"></i><code>#1C3601</code>
+              <i style="background: #ffabc6"></i><code>#FFABC6</code></span
+            >
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+    <section>
+      <h2>7 · all seven sets</h2>
+      <div class="grid">
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-seven-tab-plum-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Seven sets — tab colours in the bubbles, mint can on plum</b>
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3f0167"></i><code>#3F0167</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-seven-surf-plum-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Seven sets — surfaces in the bubbles, plum can on mint</b>
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #cff6dd"></i><code>#CFF6DD</code>
+              <i style="background: #3f0167"></i><code>#3F0167</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-seven-tab-cream-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>Seven sets — tab colours in the bubbles, cream can on plum</b>
+            <span class="nums"
+              ><em>0.827</em> · 12.63:1 · stim 0.51 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3f0167"></i><code>#3F0167</code>
+              <i style="background: #edede3"></i><code>#EDEDE3</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-seven-tab-deep-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b
+              >Seven sets — tab colours in the bubbles, mint can on deep
+              green</b
+            >
+            <span class="nums"
+              ><em>0.797</em> · 12.01:1 · stim 0.37 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #023318"></i><code>#023318</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-seven-tab-black-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b
+              >Seven sets — tab colours in the bubbles, mint can on
+              near-black</b
+            >
+            <span class="nums"
+              ><em>0.722</em> · 13.88:1 · stim 0.43 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #231f20"></i><code>#231F20</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+    <section>
+      <h2>8 · the decided social scheme</h2>
+      <div class="grid">
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-cover-avatar-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>The decided AVATAR pair — plum mark on mint (reference)</b>
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #cff6dd"></i><code>#CFF6DD</code>
+              <i style="background: #3f0167"></i><code>#3F0167</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-cover-mini-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b
+              >The cover in miniature — plum can on mint, the nine in the
+              bubbles</b
+            >
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #cff6dd"></i><code>#CFF6DD</code>
+              <i style="background: #3f0167"></i><code>#3F0167</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-cover-mini-9-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b>The cover in miniature, all nine cycled</b>
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #cff6dd"></i><code>#CFF6DD</code>
+              <i style="background: #3f0167"></i><code>#3F0167</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-cover-inv-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b
+              >The cover inverted — mint can on plum, the nine in the bubbles</b
+            >
+            <span class="nums"
+              ><em>0.951</em> · 12.67:1 · stim 0.55 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #3f0167"></i><code>#3F0167</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+        <figure class="card">
+          <img
+            class="big"
+            src="brand/icons/v-cover-inv-deep-512.png"
+            width="104"
+            height="104"
+            alt=""
+          />
+          <figcaption>
+            <b
+              >Cover palette, deep-green ground — mint can, the nine in the
+              bubbles</b
+            >
+            <span class="nums"
+              ><em>0.797</em> · 12.01:1 · stim 0.37 ·
+              <span class="g-ok">holds 16px</span></span
+            >
+            <span class="sw"
+              ><i style="background: #023318"></i><code>#023318</code>
+              <i style="background: #cff6dd"></i><code>#CFF6DD</code></span
+            >
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <div class="notes">
+      <h3>The folklore that rules out a wordmark icon is mostly folklore</h3>
+      <p>
+        A research round with an adversarial check on every claim went after
+        &ldquo;never put type in an app icon&rdquo;, and most of it did not
+        survive:
+      </p>
+      <ul>
+        <li>
+          <b>Microsoft does not prohibit typography.</b> It says letters
+          &ldquo;should be avoided and only used when it&rsquo;s
+          essential&rdquo; &mdash; the carve-out is in the same sentence &mdash;
+          and Microsoft ships Word, Excel and PowerPoint as letter plates
+          through the October 2025 redesign.
+        </li>
+        <li>
+          <b>Apple does not cap icon text at a single letter.</b> The
+          first-letter example is illustrative; the prohibition is on
+          <em>nonessential</em> words. A wordmark that IS the brand is licensed
+          by the opening sentence.
+        </li>
+        <li>
+          <b>Apple has no stroke-weight rule about fine features dissolving.</b>
+          Its stroke guidance is about consistency with adjacent text; the
+          simplicity advice is advisory and qualified &ldquo;at lower
+          resolutions&rdquo;.
+        </li>
+        <li>
+          No controlled study shows wordmark icons underperform pictorial ones
+          on recognition.
+        </li>
+      </ul>
+      <p>
+        So the case against the wordmark is not guidance.
+        <b>It is arithmetic, and the arithmetic is enough.</b> The wordmark sits
+        at 74% of a 512px plate, which is a scale of 1.43 against its 265-unit
+        viewBox; at a 16px favicon that is 0.045 device pixels per viewBox unit,
+        so a ~10-unit letter stroke renders at <b>0.45 of one device pixel</b>.
+        The bubbles, at 25 units in a 512 tile, land at <b>0.78px</b> at the
+        same size. Sub-pixel features do not render &mdash; that is the whole
+        argument, and it applies to exactly one size.
+      </p>
+      <p>
+        Which points at a <b>size-tiered family</b> rather than a single winner:
+        the wordmark or the bubbled can where the canvas can hold them (512,
+        180), the plain favicon can at 32 and 16. One silhouette family, detail
+        dropped as the canvas shrinks. It costs nothing here because all three
+        are already generated, and it is what brands with a lettering mark
+        generally do.
+      </p>
+      <p>
+        Two things to settle before any of this ships, neither of which this
+        sheet tests:
+        <b
+          >dark mode, Safari&rsquo;s monochrome pinned tab, and iOS tinted/clear
+          icon variants</b
+        >
+        &mdash; a two-colour knockout mark can collapse when the system flattens
+        it to one ink &mdash; and the manifest split below.
+      </p>
+
+      <h3>Two whole families died on measurement, which is the useful part</h3>
+      <p>
+        <b>Tab-colour grounds fail.</b> Every “set tab colour as the ground”
+        variant lands at <b>2.6–4.3:1</b> against a mint or ink can. That is not
+        bad luck: the tab colours were engineered to sit at the
+        <em>balance point</em> where they clear ~3.5:1 against <em>both</em> a
+        light and a dark browser chrome. Being deliberately mid-value is exactly
+        what disqualifies them as an icon ground, where you want one extreme,
+        not the middle. They are still the right answer for the footer band —
+        see <code>docs/footer-band-lab.html</code> — because there they are
+        confetti on a ground, not the ground.
+      </p>
+      <p>
+        <b>Ink ground + that set’s own accent fails.</b> 1.5–3.0:1 across all
+        seven. The harmony method predicts it before you render anything:
+        <em
+          >pick accents for value contrast against the ink, not the
+          background</em
+        >
+        — two darks fight. Set R’s ink and accent are 1.54:1 apart, which is
+        invisible.
+      </p>
+      <p>
+        What survives is one structure:
+        <b>a dark chromatic ground with a pale can.</b> Every variant above 9:1
+        has that shape. It is also the right shape for the medium — a dark
+        ground holds its edge on a light dock, a dark dock and a photo
+        wallpaper, where today’s pale bright-green ground dissolves into the
+        first of those.
+      </p>
+
+      <h3>Inverting, precisely</h3>
+      <p>
+        “Invert the colours” has two readings and both are in the field. The
+        <b>literal</b> one keeps today’s two colours and swaps their roles —
+        <em>Today, literally inverted</em> and its three darker-ground siblings.
+        The <b>scheme</b> one re-lays the mark in Set L. They are not rivals:
+        the literal inversion keeps the green heritage (LogiCola has been green
+        since the Windows 3.1 build shipped a scheme named “Forest green”), and
+        the scheme inversion matches the product a tap on the icon opens.
+      </p>
+      <p>
+        Worth noticing that
+        <em>Today inverted, dark end pulled to brand green</em> scores 0.870 at
+        11.10:1 with a hue distance of <b>0.08</b> — a near-monochrome pair. The
+        model marks it slightly calm (stim 0.47) rather than wrong. It is the
+        most conservative real option on the sheet: nobody would say the brand
+        changed colour, and yet it reads as a 2026 icon rather than a 2019 one.
+      </p>
+
+      <h3>Which mark &mdash; and the bubbles verdict</h3>
+      <p>
+        <b>The coloured bubbles are out</b> (Malik&rsquo;s call, and the 16px
+        row shows why): twelve 25px knockouts in a 512px tile are sub-pixel by
+        the time the icon is a favicon, so the variant degrades to the plain
+        pair exactly where an icon is working hardest. Family&nbsp;7 and the
+        coloured half of family&nbsp;8 are kept as evidence, not as proposals.
+      </p>
+      <p>
+        That leaves a straight three-way comparison, and the three marks fail in
+        different directions:
+      </p>
+      <ul>
+        <li>
+          <b>The shipped can</b> carries the most character at 512px and loses
+          its bubbles first. Its silhouette survives 16px because the outline is
+          a single closed shape.
+        </li>
+        <li>
+          <b>The favicon can</b> is the most robust at 16px &mdash; no internal
+          detail to lose &mdash; and the least distinctive at 512px. Look at it
+          small before deciding: stripped of the bubbles and the clasp, a tall
+          rounded rectangle with two ribs is a shape a lot of apps already own.
+        </li>
+        <li>
+          <b>The wordmark</b> is unmistakable at 104px and unreadable at 16px,
+          which is the classic wordmark trade. It is also the mark the DECIDED
+          avatar already uses, so choosing it would make the app icon and the
+          social avatar the same object rather than siblings.
+        </li>
+      </ul>
+      <p>
+        The brand&rsquo;s own division of labour bears on this:
+        <em
+          >the avatar carries the logo, the cover carries the pattern, neither
+          ever does both</em
+        >
+        (<code>brand-decisions.md</code>, 2026-08-12). An app icon is an avatar
+        by that logic, which is an argument FOR the wordmark. The
+        counter-argument is purely the 16px row, and it is not small &mdash;
+        <code>useQuizFavicon</code> repaints <code>app/icon.svg</code> per set
+        during a run, so the 16px case is not incidental to this product, it is
+        a feature it already ships.
+      </p>
+      <p>
+        The honest resolution may be that these are two jobs: the
+        <b>wordmark</b> at 512/180 where it reads, and a <b>can</b> at 16px
+        where it must. That is what most brands with a lettering mark actually
+        do, and it costs nothing here because both are already generated.
+      </p>
+
+      <h3>All seven sets in one mark (retained as evidence)</h3>
+      <p>
+        The twelve bubbles are separately addressable, so they can carry the
+        palette instead of the ground.
+        <em>Seven sets — tab colours in the bubbles</em> puts the whole product
+        in the icon: the can is the app, the bubbles are the drills, and the
+        colours are the ones a student already associates with each set. It
+        costs nothing in contrast, because the can and ground pair is unchanged
+        underneath — the score is identical to plain Set L.
+      </p>
+      <p>
+        Its real cost is <b>scale</b>. At 512px it is the most characterful
+        thing here; at 16px the bubbles are sub-pixel and it degrades to the
+        plain mark. That is not a defect — it is the classic responsive icon
+        problem, and the honest fix is to ship the seven-bubble version at
+        512/180 and the plain pair as the favicon. The 16px row above is where
+        to judge whether the degradation is graceful.
+      </p>
+
+      <h3>
+        The orientation question, and the number that decides how to think about
+        it
+      </h3>
+      <p>
+        The decided avatar is a <b>plum mark on a mint ground</b> &mdash; a pale
+        ground with a dark mark, which is the <em>same</em> orientation
+        today&rsquo;s app icon already has. So &ldquo;invert the colours&rdquo;
+        moves the icon <em>away</em> from the avatar, not toward it. That is a
+        real tension and it is Malik&rsquo;s to resolve, but here is the
+        measurement that makes it decidable rather than a matter of taste.
+      </p>
+      <p>
+        <b>The can is 30.5% of the tile. The ground is 69.5%.</b> Whatever
+        colour the ground is, that is what the icon reads as from across a home
+        screen &mdash; the mark is a detail inside it. So the orientation choice
+        is not &ldquo;which colour is the star&rdquo;; it is
+        <em>&ldquo;is this app a pale tile or a dark tile?&rdquo;</em>, and the
+        honest answers differ by medium:
+      </p>
+      <ul>
+        <li>
+          <b>The avatar</b> sits on a white LinkedIn or X page, inside a white
+          ring the platform draws for it. A pale mint ground there is a
+          deliberate softness and the ring holds the edge.
+        </li>
+        <li>
+          <b>The app icon</b> sits in a dock over an arbitrary wallpaper and on
+          a home screen among saturated neighbours, with no ring. A 69.5% pale
+          ground has nothing holding its edge on a light dock &mdash; the
+          <em>macOS dock &middot; light</em> strip above is where to check that
+          claim rather than take it.
+        </li>
+      </ul>
+      <p>
+        The brand lab already licenses treating them differently, in the same
+        breath as it dropped the quilt&rsquo;s ground gate for covers:
+        <em>a rule earns its authority from the job it was written for.</em> Two
+        artefacts, two jobs, one palette.
+      </p>
+
+      <h3>
+        Recommendation &mdash; and it changed once the social decision landed
+      </h3>
+      <p>
+        <b>The cover in miniature</b> (family 8) is the answer if coherence is
+        the goal, and it is the only candidate that rhymes with
+        <em>both</em> social artefacts at once. The cover is a mint ground
+        carrying plum shapes and nine accent colours; this icon is a mint ground
+        carrying one plum shape with those same accents knocked into it. It is
+        the cover&rsquo;s colour logic at icon scale, and it keeps the
+        avatar&rsquo;s orientation for free. It costs nothing in contrast
+        &mdash; 12.67:1, identical to plain Set&nbsp;L &mdash; because the pair
+        underneath is unchanged.
+      </p>
+      <p>
+        <b>The cover inverted</b> is the answer if the medium argument wins:
+        same nine colours, same family, mint can on a plum ground, so it is a
+        dark tile that holds its edge anywhere. It reads as a sibling of the
+        covers rather than a copy of them.
+      </p>
+      <p>
+        Those two are the real choice. Everything else on this sheet is either
+        evidence for how they were arrived at (the sets, the cross-set pairs,
+        the two dead families) or a heritage option &mdash;
+        <em>Today inverted, dark end pulled to brand green</em>, which is the
+        one candidate that changes no brand colour at all and only swaps figure
+        for ground. If the answer to &ldquo;has the brand changed colour?&rdquo;
+        needs to be &ldquo;no&rdquo;, that is the one.
+      </p>
+      <p>
+        Whichever wins, note that the bubbles-carry-the-palette variants degrade
+        to the plain pair at 16px, so the honest shipping split is the coloured
+        version at 512/180 and the plain pair as the favicon.
+      </p>
+
+      <h3>Still true from the first pass</h3>
+      <p>
+        <b>The maskable icon is clipped today.</b>
+        <code>manifest.json</code> declares <code>icon-192.png</code> as
+        <code>"purpose": "any maskable"</code>, but the can’s furthest corner is
+        <b>227.3px</b> from centre against a safe radius of <b>204.8px</b>, and
+        the corners are transparent so the launcher shows through the mask.
+        <b>There is also no apple-touch-icon at all.</b> Both are fixed for
+        whichever candidate wins — the fitted maskable and the 180px iOS file
+        are generated by the same script.
+      </p>
+      <p>
+        <b>The product ships three different marks</b> — this can, the plainer
+        magenta can in <code>app/icon.svg</code>, and
+        <code>public/lc_logo.gif</code>. Whichever pair is chosen has to be
+        applied to <code>app/icon.svg</code> too, or the browser tab and the
+        installed app disagree. Note <code>useQuizFavicon</code> already
+        repaints that SVG in each set’s tab colour during a run, so the favicon
+        is <em>already</em> per-set — which is an argument for the app icon
+        being the one stable brand mark rather than another per-set thing.
+      </p>
+
+      <h3>How the ranking is computed</h3>
+      <p>
+        Per pair: perceptual intensity σ (HSL saturation corrected by a
+        30°-segment hue weight and eaten by extreme lightness), ΔL in CIELAB,
+        circular hue distance θ, then
+        <code>stimulation = (4σ + 2ΔL + θ)/7</code>. Vibration risk is
+        <code>1 − √((1−σ)² + (1−θ)² + (1−vL)²)</code> with
+        <code>vL</code> falling to zero by ΔL 0.5. The composite weights
+        contrast 0.42, distance from the mid-stimulation target 0.26, absence of
+        vibration 0.14, shared temperature 0.10, and a non-muddy halfway blend
+        0.08 — contrast dominating because a 16px favicon is the binding case.
+      </p>
+      <p>
+        One caveat on reading the table:
+        <b>the model is orientation-blind.</b> “Mint on plum” and “plum on mint”
+        score identically because they are the same pair. Which colour is the
+        ground is a separate judgement, made above on the medium: dark ground
+        wins.
+      </p>
+    </div>
+  </body>
+</html>

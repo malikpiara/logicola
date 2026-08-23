@@ -1,0 +1,1332 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>End screen lab — LogiCola</title>
+    <style>
+      :root {
+        --paper: #101216;
+        --panel: #191c22;
+        --edge: #282d36;
+        --text: #e9ecef;
+        --dim: #98a0ab;
+        --acc: #8fd0a6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--text);
+        font:
+          15px/1.6 ui-sans-serif,
+          -apple-system,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+      }
+      header {
+        padding: 30px 32px 22px;
+        border-bottom: 1px solid var(--edge);
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: 22px;
+        letter-spacing: -0.015em;
+      }
+      header p {
+        margin: 0 0 10px;
+        color: var(--dim);
+        max-width: 90ch;
+        font-size: 14px;
+      }
+      .dials {
+        display: flex;
+        gap: 22px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        padding: 15px 32px 18px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--edge);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+      .dial {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .dial label {
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      select {
+        background: #0b0d10;
+        color: var(--text);
+        border: 1px solid var(--edge);
+        border-radius: 3px;
+        padding: 6px 8px;
+        font:
+          13px ui-monospace,
+          monospace;
+        max-width: 290px;
+      }
+      h2 {
+        margin: 0 0 5px;
+        font:
+          600 12px ui-monospace,
+          monospace;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--acc);
+      }
+      .sec {
+        padding: 24px 32px;
+        border-bottom: 1px solid var(--edge);
+      }
+      .sec > p {
+        margin: 0 0 16px;
+        color: var(--dim);
+        font-size: 13.5px;
+        max-width: 90ch;
+      }
+      .stages {
+        display: flex;
+        gap: 26px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      .col {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+      }
+      .col h3 {
+        margin: 0;
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      .col .why {
+        font-size: 12.5px;
+        color: #868e99;
+        max-width: 34ch;
+        line-height: 1.5;
+        min-height: 4.4em;
+      }
+      .phone {
+        width: 390px;
+        height: 730px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 26px;
+        border: 1px solid #333;
+        isolation: isolate;
+        flex: none;
+      }
+      .phone .pat {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+      }
+      .stack {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        padding: 0 40px 34px;
+      }
+      .stack.mid {
+        justify-content: center;
+      }
+      .stack.split {
+        justify-content: space-between;
+        padding-top: 96px;
+      }
+      .msg {
+        font-weight: 700;
+        font-size: 36px;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        margin: 0 0 12px;
+        font-stretch: 125%;
+      }
+      .sub {
+        font-size: 18px;
+        font-weight: 300;
+        margin: 0;
+      }
+      .sub b {
+        font-weight: 400;
+      }
+      .hero {
+        font-weight: 700;
+        font-size: 104px;
+        line-height: 0.86;
+        letter-spacing: -0.045em;
+        margin: 0;
+        font-stretch: 125%;
+      }
+      .heroLbl {
+        font:
+          600 12px ui-monospace,
+          monospace;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        opacity: 0.85;
+        margin: 6px 0 16px;
+      }
+      .acts {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        margin-top: 30px;
+        width: 100%;
+      }
+      .gemw {
+        display: block;
+        width: 100%;
+        max-width: 240px;
+        clip-path: polygon(
+          8px 0,
+          calc(100% - 8px) 0,
+          calc(100% - 8px) 4px,
+          calc(100% - 4px) 4px,
+          calc(100% - 4px) 8px,
+          100% 8px,
+          100% calc(100% - 8px),
+          calc(100% - 4px) calc(100% - 8px),
+          calc(100% - 4px) calc(100% - 4px),
+          calc(100% - 8px) calc(100% - 4px),
+          calc(100% - 8px) 100%,
+          8px 100%,
+          8px calc(100% - 4px),
+          4px calc(100% - 4px),
+          4px calc(100% - 8px),
+          0 calc(100% - 8px),
+          0 8px,
+          4px 8px,
+          4px 4px,
+          8px 4px
+        );
+      }
+      .gemi {
+        display: block;
+        padding: 11px 24px;
+        font-weight: 600;
+        font-size: 16px;
+        font-stretch: 125%;
+        text-align: center;
+        clip-path: inherit;
+      }
+      .rimmed {
+        padding: 3px;
+      }
+      .quiet {
+        font-size: 14px;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        opacity: 0.8;
+      }
+      .row2 {
+        display: flex;
+        gap: 12px;
+        width: 100%;
+        max-width: 304px;
+      }
+      .row2 .gemw {
+        max-width: none;
+        flex: 1;
+      }
+      .row2 .gemi {
+        font-size: 14px;
+        padding: 11px 8px;
+      }
+      .stat {
+        display: flex;
+        width: 100%;
+        max-width: 290px;
+        margin: 18px auto 0;
+      }
+      .stat div {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .stat b {
+        font: 700 24px ui-sans-serif;
+        font-stretch: 125%;
+      }
+      .stat span {
+        font:
+          600 10px ui-monospace,
+          monospace;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        opacity: 0.72;
+      }
+      .rule {
+        height: 2px;
+        width: 100%;
+        margin: 0 0 16px;
+        opacity: 0.16;
+      }
+      /* the treatment comparison strip */
+      .tgrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+      }
+      .tcard {
+        background: var(--panel);
+        border: 1px solid var(--edge);
+        border-radius: 6px;
+        padding: 15px;
+      }
+      .tcard h3 {
+        margin: 0 0 4px;
+        font:
+          600 12px ui-monospace,
+          monospace;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--acc);
+      }
+      .tcard .why {
+        margin: 0 0 12px;
+        font-size: 13px;
+        color: #9aa2ad;
+        line-height: 1.5;
+        min-height: 4.2em;
+      }
+      .tstage {
+        padding: 22px 18px;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .tnums {
+        margin: 11px 0 0;
+        font:
+          11.5px ui-monospace,
+          monospace;
+        line-height: 1.6;
+      }
+      .pass {
+        color: #8fd0a6;
+      }
+      .fail {
+        color: #ff9a9a;
+      }
+      .notes {
+        padding: 26px 32px 70px;
+        max-width: 92ch;
+      }
+      .notes h3 {
+        margin: 24px 0 6px;
+        font: 600 14px ui-sans-serif;
+        color: var(--acc);
+      }
+      .notes p {
+        color: #c6cbd2;
+        font-size: 14px;
+      }
+      code {
+        background: #0b0d10;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font:
+          12.5px ui-monospace,
+          monospace;
+        color: #e0b970;
+      }
+      table {
+        border-collapse: collapse;
+        margin: 12px 0;
+        font-size: 13px;
+      }
+      th,
+      td {
+        border: 1px solid var(--edge);
+        padding: 6px 11px;
+        text-align: left;
+      }
+      th {
+        color: var(--dim);
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      td.n {
+        font:
+          12px ui-monospace,
+          monospace;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>End screen lab</h1>
+      <p>
+        Two questions here. <b>Composition</b> &mdash; tonight shipped one
+        arrangement without alternatives, and it is <em>centred</em>, which is
+        the model the QUESTION screen deliberately abandoned on 2026-08-22
+        (prompt top-anchored, answer group bottom-anchored, the 2008
+        window&rsquo;s posture). The last screen of a run re-introducing it
+        should be a decision, not an inheritance.
+      </p>
+      <p>
+        <b>Button hierarchy</b> &mdash; Malik, 2026-08-23:
+        <em
+          >&ldquo;it could make sense for the buttons to have different colors.
+          Try the hard set is definitely more important than try
+          again.&rdquo;</em
+        >
+        Agreed, and the treatments are more constrained than they look: a gem is
+        <code>clip-path</code>ed, so it can paint
+        <b>no outline and no box-shadow</b> &mdash; both are clipped away. Every
+        border below is therefore a real two-layer gem, the same construction
+        the focus band already uses (<code>ringBand</code> in
+        <code>lib/pixel.ts</code>).
+      </p>
+      <p>
+        Set both dials before judging. Set&nbsp;L flatters everything at
+        12.67:1; Set&nbsp;R at 7.04:1 and Set&nbsp;J at 7.34:1 are where a soft
+        secondary starts to fail.
+      </p>
+    </header>
+    <div class="dials" id="dials"></div>
+    <div class="sec">
+      <h2>Two buttons, six treatments</h2>
+      <p>
+        Primary is &ldquo;Try the hard set&rdquo; in every one; only the
+        secondary changes. Measured across all seven palettes &mdash; the number
+        shown is the <em>worst</em> set, which is the only honest one.
+      </p>
+      <div class="tgrid" id="tgrid"></div>
+    </div>
+    <div class="sec">
+      <h2>Six compositions</h2>
+      <p>
+        Same content, same actions, only the arrangement changing. The button
+        dial above feeds these too.
+      </p>
+      <div class="stages" id="stages"></div>
+    </div>
+    <div class="notes" id="notes"></div>
+    <script>
+      function mulberry32(seed) {
+        let a = seed;
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function hexTriple(hex) {
+        const c = hex.replace('#', '');
+        return [
+          parseInt(c.slice(0, 2), 16),
+          parseInt(c.slice(2, 4), 16),
+          parseInt(c.slice(4, 6), 16),
+        ];
+      }
+      const srgbToLinear = (c) =>
+        c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+
+      function hexToOklch(hex) {
+        const [R, G, B] = hexTriple(hex).map((v) => srgbToLinear(v / 255));
+        const l = Math.cbrt(
+          0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B
+        );
+        const m = Math.cbrt(
+          0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B
+        );
+        const s = Math.cbrt(
+          0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B
+        );
+        const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
+        const a = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
+        const b = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+        return {
+          L,
+          C: Math.hypot(a, b),
+          h: ((Math.atan2(b, a) * 180) / Math.PI + 360) % 360,
+        };
+      }
+
+      function perceptualDist(hexA, hexB) {
+        const A = hexToOklch(hexA);
+        const B = hexToOklch(hexB);
+        const ha = (A.h * Math.PI) / 180;
+        const hb = (B.h * Math.PI) / 180;
+        return Math.hypot(
+          A.L - B.L,
+          A.C * Math.cos(ha) - B.C * Math.cos(hb),
+          A.C * Math.sin(ha) - B.C * Math.sin(hb)
+        );
+      }
+
+      /** The lab's pool filter — surface > 0.17, ink > 0.09, sorted by ΔL vs ink. */
+      function quiltAccentPool(surface, ink, candidates) {
+        const inkL = hexToOklch(ink).L;
+        return candidates
+          .filter(
+            (c) =>
+              perceptualDist(c, surface) > 0.17 && perceptualDist(c, ink) > 0.09
+          )
+          .sort(
+            (a, b) =>
+              Math.abs(hexToOklch(b).L - inkL) -
+              Math.abs(hexToOklch(a).L - inkL)
+          );
+      }
+
+      /** Whole-cell clearing: a shape renders whole or not at all. */
+      function hidden(clear, x, y, ww, hh) {
+        if (!clear) return false;
+        const c = clear;
+        if (x >= c.x + c.w || x + ww <= c.x || y >= c.y + c.h || y + hh <= c.y)
+          return false;
+        if (!c.r) return true;
+        if (x + ww > c.x + c.r && x < c.x + c.w - c.r) return true;
+        if (y + hh > c.y + c.r && y < c.y + c.h - c.r) return true;
+        const ccx = x + ww <= c.x + c.r + 0.01 ? c.x + c.r : c.x + c.w - c.r;
+        const ccy = y + hh <= c.y + c.r + 0.01 ? c.y + c.r : c.y + c.h - c.r;
+        const nx = Math.max(x, Math.min(ccx, x + ww));
+        const ny = Math.max(y, Math.min(ccy, y + hh));
+        return (nx - ccx) ** 2 + (ny - ccy) ** 2 <= c.r * c.r;
+      }
+
+      /**
+       * Quilt · pixel — each cell is a 7×7 sprite grid, every shape rebuilt
+       * from whole pixels. The `rate` argument is the lab's one addition to
+       * the shipped signature: the app hard-codes 0.28, but a 1500×500 cover
+       * is a far bigger field than a quiz card and the rhythm wants tuning at
+       * that size. Everything else is byte-for-byte lib/patterns.ts.
+       */
+      function quiltPixBody(opts) {
+        const { w, h, ink, pool, scale, seed, clear, rate = 0.28 } = opts;
+        const rng = mulberry32(seed >>> 0);
+        const t = 62 * scale;
+        const pad = t * 0.09;
+        const cell = t - pad * 2;
+        const cols = Math.ceil(w / t) + 1;
+        const rows = Math.ceil(h / t) + 1;
+        const accent = Array.from({ length: rows }, () =>
+          Array(cols).fill(false)
+        );
+        const P = 7;
+        let out = '';
+        for (let i = 0; i < rows; i++) {
+          for (let j = 0; j < cols; j++) {
+            const left = j > 0 && accent[i][j - 1];
+            const up = i > 0 && accent[i - 1][j];
+            let fillCol = ink;
+            if (pool.length && !left && !up && rng() < rate) {
+              fillCol = pool[Math.floor(rng() * pool.length)];
+              accent[i][j] = true;
+            }
+            const x = j * t + pad;
+            const y = i * t + pad;
+            const q = cell / P;
+            const roll = rng();
+            const fill = new Array(P * P);
+            if (roll < 0.4) {
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++)
+                  fill[jj * P + ii] = !(
+                    (ii === 0 || ii === P - 1) &&
+                    (jj === 0 || jj === P - 1)
+                  );
+            } else if (roll < 0.7) {
+              const R = P / 2;
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++) {
+                  const dx = ii + 0.5 - P / 2;
+                  const dy = jj + 0.5 - P / 2;
+                  fill[jj * P + ii] = dx * dx + dy * dy <= R * R;
+                }
+            } else {
+              const o = Math.floor(rng() * 4);
+              const cx = o === 0 || o === 3 ? 0 : P;
+              const cy = o === 0 || o === 1 ? 0 : P;
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++) {
+                  const dx = ii + 0.5 - cx;
+                  const dy = jj + 0.5 - cy;
+                  fill[jj * P + ii] = dx * dx + dy * dy <= P * P;
+                }
+            }
+            let piece = `<g fill="${fillCol}" shape-rendering="crispEdges">`;
+            for (let jj = 0; jj < P; jj++) {
+              let ii = 0;
+              while (ii < P) {
+                if (!fill[jj * P + ii]) {
+                  ii++;
+                  continue;
+                }
+                let len = 0;
+                while (ii + len < P && fill[jj * P + ii + len]) len++;
+                piece += `<rect x="${x + ii * q}" y="${y + jj * q}" width="${len * q}" height="${q + 0.4}"/>`;
+                ii += len;
+              }
+            }
+            piece += '</g>';
+            if (!hidden(clear, x, y, cell, cell)) out += piece;
+          }
+        }
+        return out;
+      }
+
+      function pixHash(u, v, seed) {
+        let x = (u * 374761393 + v * 668265263 + (seed | 0) * 971) | 0;
+        x = Math.imul(x ^ (x >>> 13), 1274126177);
+        return ((x ^ (x >>> 16)) >>> 0) / 4294967296;
+      }
+
+      function valueNoise(u, v, seed, cell) {
+        const gx = Math.floor(u / cell);
+        const gy = Math.floor(v / cell);
+        const sm = (t) => t * t * (3 - 2 * t);
+        const fx = sm((((u % cell) + cell) % cell) / cell);
+        const fy = sm((((v % cell) + cell) % cell) / cell);
+        const n00 = pixHash(gx, gy, seed);
+        const n10 = pixHash(gx + 1, gy, seed);
+        const n01 = pixHash(gx, gy + 1, seed);
+        const n11 = pixHash(gx + 1, gy + 1, seed);
+        return (
+          n00 * (1 - fx) * (1 - fy) +
+          n10 * fx * (1 - fy) +
+          n01 * (1 - fx) * fy +
+          n11 * fx * fy
+        );
+      }
+
+      function pixelLattice(w, h, q, clear, colorAt) {
+        const cols = Math.ceil(w / q);
+        const rows = Math.ceil(h / q);
+        let out = '<g shape-rendering="crispEdges">';
+        for (let v = 0; v < rows; v++) {
+          let u = 0;
+          while (u < cols) {
+            const c = colorAt(u, v);
+            if (!c || hidden(clear, u * q, v * q, q, q)) {
+              u++;
+              continue;
+            }
+            let len = 1;
+            while (
+              u + len < cols &&
+              colorAt(u + len, v) === c &&
+              !hidden(clear, (u + len) * q, v * q, q, q)
+            )
+              len++;
+            out += `<rect x="${u * q}" y="${v * q}" width="${len * q}" height="${q + 0.4}" fill="${c}"/>`;
+            u += len;
+          }
+        }
+        return out + '</g>';
+      }
+
+      const PIXEL_FIELD_MACRO = 1.7;
+
+      function camoBody(kind, opts) {
+        const { w, h, ink, pool, scale, seed, clear } = opts;
+        const s = PIXEL_FIELD_MACRO * scale;
+        const c1 = pool[0] || ink;
+        if (kind === 'camo') {
+          const q = 10 * s;
+          return pixelLattice(w, h, q, clear, (u, v) => {
+            if (valueNoise(u, v, seed, 6) > 0.58) return ink;
+            if (valueNoise(u, v, seed + 31, 6) > 0.62) return c1;
+            return null;
+          });
+        }
+        const q = 12 * s;
+        return pixelLattice(w, h, q, clear, (u, v) => {
+          const n = valueNoise(u, v, seed, 9);
+          if (n > 0.63) return ink;
+          if (n < 0.37) return c1;
+          return null;
+        });
+      }
+
+      function patternBody(kind, opts) {
+        return kind === 'quilt' ? quiltPixBody(opts) : camoBody(kind, opts);
+      }
+
+      const SETS = {
+        A: { n: 'Set A', s: '#FFABC6', i: '#4A1040', a: '#674900' },
+        C: { n: 'Set C', s: '#E7F099', i: '#02302C', a: '#BD00AD' },
+        J: { n: 'Set J', s: '#E6ACF4', i: '#1C3601', a: '#674900' },
+        L: { n: 'Set L', s: '#CFF6DD', i: '#3F0167', a: '#BD00AD' },
+        N: { n: 'Set N', s: '#9EDAFF', i: '#4A1040', a: '#8D0381' },
+        Q: { n: 'Set Q', s: '#D9CCF9', i: '#3E1060', a: '#745400' },
+        R: { n: 'Set R', s: '#E4BDF7', i: '#751100', a: '#824616' },
+      };
+      const POOL = [
+        '#1C3601',
+        '#E7F099',
+        '#E6ACF4',
+        '#C8F0E3',
+        '#ADE2E9',
+        '#F2CDA6',
+        '#F233DF',
+      ];
+      const QUIZ_PATTERN_SCALE = 1.25;
+
+      /* ---- contrast, so the cards state measured numbers not adjectives ---- */
+      const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.substr(i, 2), 16));
+      const lin = (c) => (
+        (c /= 255),
+        c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+      );
+      const lum = (h) => {
+        const [r, g, b] = rgb(h).map(lin);
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      };
+      const cr = (a, b) => {
+        const [x, y] = [lum(a), lum(b)];
+        return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+      };
+      const mix = (fg, bg, al) =>
+        '#' +
+        rgb(fg)
+          .map((v, i) =>
+            Math.round(v * al + rgb(bg)[i] * (1 - al))
+              .toString(16)
+              .padStart(2, '0')
+          )
+          .join('');
+
+      /* The Duru/ColorMoods intensity dial, so the cards can say WHY a
+     lower-contrast accent can still out-shout a darker ink. Saturation,
+     corrected by a 30-degree hue weight, eaten by extreme lightness. */
+      const hsl = (h) => {
+        const [r, g, b] = rgb(h).map((v) => v / 255);
+        const mx = Math.max(r, g, b),
+          mn = Math.min(r, g, b),
+          d = mx - mn,
+          l = (mx + mn) / 2;
+        let hh = 0,
+          ss = 0;
+        if (d) {
+          ss = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+          hh =
+            mx === r
+              ? (g - b) / d + (g < b ? 6 : 0)
+              : mx === g
+                ? (b - r) / d + 2
+                : (r - g) / d + 4;
+          hh *= 60;
+        }
+        return { h: hh, s: ss, l };
+      };
+      const SEG = [
+        1.0, 1.05, 1.1, 1.05, 1.0, 0.95, 0.9, 0.9, 0.95, 1.05, 1.1, 1.05,
+      ];
+      const hueW = (h) => {
+        const x = (((h % 360) + 360) % 360) / 30,
+          i = Math.floor(x),
+          t = x - i;
+        const a = SEG[i % 12],
+          b = SEG[(i + 1) % 12];
+        return a + (b - a) * ((1 - Math.cos(t * Math.PI)) / 2);
+      };
+      const intensity = (h) => {
+        const { h: hh, s, l } = hsl(h);
+        return Math.max(
+          0,
+          Math.min(1, s * hueW(hh) * Math.pow(1 - Math.abs(l - 0.5) * 2, 0.7))
+        );
+      };
+      const labL = (h) => {
+        const y = lum(h);
+        const f = y > 0.008856 ? Math.cbrt(y) : (903.3 * y + 16) / 116;
+        return (116 * f - 16) / 100;
+      };
+
+      function clearRectFor(w, h, mobile) {
+        const pw = Math.min(760, w * 0.88),
+          ph = mobile ? Math.min(560, h * 0.74) : Math.min(560, h * 0.78);
+        return { x: (w - pw) / 2, y: h * 0.5 - ph / 2, w: pw, h: ph, r: 28 };
+      }
+      function patSvg(set, kind, w, h, seed) {
+        const body = patternBody(kind, {
+          w,
+          h,
+          ink: set.i,
+          pool: quiltAccentPool(set.s, set.i, POOL),
+          scale: 0.6 * QUIZ_PATTERN_SCALE,
+          seed,
+          clear: clearRectFor(w, h, true),
+        });
+        return (
+          '<svg width="' +
+          w +
+          '" height="' +
+          h +
+          '" viewBox="0 0 ' +
+          w +
+          ' ' +
+          h +
+          '" style="display:block">' +
+          body +
+          '</svg>'
+        );
+      }
+
+      /* ---- the treatments -------------------------------------------------- */
+      const TREATMENTS = {
+        link: {
+          n: 'a · quiet link (shipped tonight)',
+          why: 'Try again is not a button at all — an underlined link at 80% ink. Maximum hierarchy, and the only option with no second object competing for the thumb.',
+          fill: (x) => null,
+        },
+        accent: {
+          n: 'b · solid accent',
+          why: 'A real colour difference, which is what was asked for. The accent is also the colour the score is painted in, so the pair reads as one palette rather than two greys.',
+          fill: (x) => ({ bg: x.a, fg: x.s, rim: null }),
+        },
+        ghostRim: {
+          n: 'c · ghost — surface fill, ink rim',
+          why: 'The classic filled/outlined pair. The rim is a real two-layer gem, not a border, because a clipped element paints no border.',
+          fill: (x) => ({ bg: x.s, fg: x.i, rim: x.i }),
+        },
+        tonalRim: {
+          n: 'd · tonal — ink 18%, ink rim',
+          why: 'Material 3’s tonal button, plus the rim it needs here. Softer than a ghost, heavier than a link.',
+          fill: (x) => ({ bg: mix(x.i, x.s, 0.18), fg: x.i, rim: x.i }),
+        },
+        tonal: {
+          n: 'e · tonal, NO rim — the trap',
+          why: 'What a tonal secondary looks like if you trust the label contrast and forget the component boundary. Included because it is the one everybody reaches for first.',
+          fill: (x) => ({ bg: mix(x.i, x.s, 0.18), fg: x.i, rim: null }),
+        },
+        ghostAccent: {
+          n: 'f · ghost with an ACCENT rim',
+          why: 'The synthesis: the colours differ (ink vs accent, which is what was asked for) but the HIERARCHY is carried by fill-versus-no-fill, which cannot invert. Rim and label both in the accent.',
+          fill: (x) => ({ bg: x.s, fg: x.a, rim: x.a }),
+        },
+        swap: {
+          n: 'g · swapped — accent primary, ink secondary',
+          why: 'Tests the premise. If the accent is the achievement colour, maybe the onward action should wear it and Try again should be the heavy one.',
+          fill: (x) => ({ bg: x.i, fg: x.s, rim: null }),
+          primary: (x) => ({ bg: x.a, fg: x.s, rim: null }),
+        },
+      };
+
+      function measure(key) {
+        const ks = Object.keys(SETS);
+        let wl = Infinity,
+          we = Infinity,
+          wlk = '',
+          wek = '';
+        for (const k of ks) {
+          const x = SETS[k];
+          const f = TREATMENTS[key].fill(x);
+          if (!f) {
+            // the link tier: 80% ink on surface
+            const c = cr(mix(x.i, x.s, 0.8), x.s);
+            if (c < wl) {
+              wl = c;
+              wlk = k;
+            }
+            we = Infinity;
+            continue;
+          }
+          const l = cr(f.fg, f.bg);
+          const e = f.rim ? cr(f.rim, x.s) : cr(f.bg, x.s);
+          if (l < wl) {
+            wl = l;
+            wlk = k;
+          }
+          if (e < we) {
+            we = e;
+            wek = k;
+          }
+        }
+        return { label: wl, labelSet: wlk, edge: we, edgeSet: wek };
+      }
+
+      /* Does the PRIMARY out-weigh the secondary on every palette? Weight is
+     not contrast: the ink has more lightness separation on all seven sets,
+     the accent has more chroma-intensity on six of seven, and the two dials
+     disagree. A fill-vs-no-fill hierarchy sidesteps the argument entirely,
+     which is the whole point of measuring this. */
+      function weightOf(spec, x) {
+        if (!spec) return -1; // a link is always lighter
+        if (spec.bg === x.s) return 0.25 * intensity(spec.rim || spec.fg); // ghost: rim only
+        return (
+          0.5 * intensity(spec.bg) + 0.5 * Math.abs(labL(spec.bg) - labL(x.s))
+        );
+      }
+      function weightCheck(key) {
+        const save = state.treat;
+        state.treat = key;
+        const bad = [];
+        for (const k of Object.keys(SETS)) {
+          const x = SETS[k];
+          if (weightOf(primarySpec(x), x) <= weightOf(secondarySpec(x), x))
+            bad.push(k);
+        }
+        state.treat = save;
+        return { n: 7 - bad.length, bad };
+      }
+
+      const state = {
+        set: 'L',
+        st: 'next',
+        kind: 'camo',
+        seed: 7,
+        treat: 'accent',
+      };
+      const STATES = {
+        next: {
+          msg: 'Exercise complete.',
+          score: 100,
+          p: 'Try the hard set',
+          s: 'Try again',
+          t: 'All exercises',
+        },
+        done: {
+          msg: 'Exercise complete.',
+          score: 100,
+          p: 'All exercises',
+          s: 'Try again',
+          t: null,
+        },
+        short: {
+          msg: 'Out of problems.',
+          score: 61,
+          p: 'Try Again',
+          s: 'All exercises',
+          t: null,
+        },
+      };
+
+      function gem(label, spec, cls) {
+        if (!spec) return '<span class="quiet">' + label + '</span>';
+        const outer = spec.rim ? spec.rim : spec.bg;
+        const pad = spec.rim ? ' rimmed' : '';
+        return (
+          '<span class="gemw' +
+          pad +
+          '" style="background:' +
+          outer +
+          '">' +
+          '<span class="gemi" style="background:' +
+          spec.bg +
+          ';color:' +
+          spec.fg +
+          '">' +
+          label +
+          '</span></span>'
+        );
+      }
+      const inkSpec = (x) => ({ bg: x.i, fg: x.s, rim: null });
+      function primarySpec(x) {
+        const t = TREATMENTS[state.treat];
+        return t.primary ? t.primary(x) : inkSpec(x);
+      }
+      function secondarySpec(x) {
+        return TREATMENTS[state.treat].fill(x);
+      }
+
+      function acts(S, set, row) {
+        const p = gem(S.p, primarySpec(set));
+        const s = gem(S.s, secondarySpec(set));
+        const t = S.t ? '<span class="quiet">' + S.t + '</span>' : '';
+        if (row)
+          return (
+            '<div class="acts"><div class="row2">' +
+            p +
+            s +
+            '</div>' +
+            t +
+            '</div>'
+          );
+        return '<div class="acts">' + p + s + t + '</div>';
+      }
+      const summary = (S, set) =>
+        '<p class="sub"><b style="color:' +
+        set.a +
+        '">' +
+        S.score +
+        ' points</b> at level 5, in 22 problems.</p>';
+      const shell = (inner, set) =>
+        '<div class="phone" style="background:' +
+        set.s +
+        ';color:' +
+        set.i +
+        '"><div class="pat">' +
+        patSvg(set, state.kind, 390, 730, state.seed) +
+        '</div>' +
+        inner +
+        '</div>';
+
+      const COMPOSITIONS = [
+        {
+          n: '1 · Centred (shipped tonight)',
+          why: 'Message, score, then the action column, all centred as one block. The control.',
+          b: (S, set) =>
+            shell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                summary(S, set) +
+                acts(S, set) +
+                '</div>',
+              set
+            ),
+        },
+        {
+          n: '2 · Bottom-anchored',
+          why: 'The question screen’s own 2026-08-22 posture: the reading holds the top, the answer group sinks to the thumb. Makes the last two screens of a run agree.',
+          b: (S, set) =>
+            shell(
+              '<div class="stack split"><div><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                summary(S, set) +
+                '</div>' +
+                acts(S, set) +
+                '</div>',
+              set
+            ),
+        },
+        {
+          n: '3 · Score as the hero',
+          why: 'The number is the achievement, so it takes the display size and the message becomes its label. Loses the sentence rhythm; gains something worth screenshotting.',
+          b: (S, set) =>
+            shell(
+              '<div class="stack mid"><p class="hero" style="color:' +
+                set.a +
+                '">' +
+                S.score +
+                '</p><p class="heroLbl">points · level 5</p><h2 class="msg" style="font-size:26px">' +
+                S.msg +
+                '</h2>' +
+                acts(S, set) +
+                '</div>',
+              set
+            ),
+        },
+        {
+          n: '4 · The receipt',
+          why: 'Score, problems and level as three equal stats under a rule. The only composition that surfaces the LEVEL, which today hides inside a sentence.',
+          b: (S, set) =>
+            shell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                '<div class="rule" style="background:' +
+                set.i +
+                '"></div><div class="stat">' +
+                '<div><b style="color:' +
+                set.a +
+                '">' +
+                S.score +
+                '</b><span>points</span></div>' +
+                '<div><b>22</b><span>problems</span></div><div><b>5</b><span>level</span></div></div>' +
+                acts(S, set) +
+                '</div>',
+              set
+            ),
+        },
+        {
+          n: '5 · Two gems in a row',
+          why: 'Primary and secondary side by side as a pair rather than a stack. Fastest to parse; watch the label size at 390px.',
+          b: (S, set) =>
+            shell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                summary(S, set) +
+                acts(S, set, true) +
+                '</div>',
+              set
+            ),
+        },
+        {
+          n: '6 · Bottom-anchored + two gems',
+          why: 'The two ideas that are not in conflict, combined: thumb-reachable and side by side.',
+          b: (S, set) =>
+            shell(
+              '<div class="stack split"><div><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                summary(S, set) +
+                '</div>' +
+                acts(S, set, true) +
+                '</div>',
+              set
+            ),
+        },
+      ];
+
+      function renderTreatments() {
+        const set = SETS[state.set];
+        document.getElementById('tgrid').innerHTML = Object.entries(TREATMENTS)
+          .map(([k, t]) => {
+            const m = measure(k);
+            const save = state.treat;
+            state.treat = k;
+            const p = gem('Try the hard set', primarySpec(set));
+            const s = gem('Try again', secondarySpec(set));
+            state.treat = save;
+            const labOk = m.label >= 4.5;
+            const edgeOk = m.edge === Infinity || m.edge >= 3.0;
+            const edgeTxt =
+              m.edge === Infinity
+                ? '<span class="pass">n/a — a link has no component boundary to draw</span>'
+                : '<span class="' +
+                  (edgeOk ? 'pass' : 'fail') +
+                  '">' +
+                  m.edge.toFixed(2) +
+                  ':1 (worst ' +
+                  m.edgeSet +
+                  ') ' +
+                  (edgeOk ? '✓' : '✗ FAILS 1.4.11 — needs 3.0') +
+                  '</span>';
+            const w = weightCheck(k);
+            return (
+              '<div class="tcard"><h3>' +
+              t.n +
+              '</h3><p class="why">' +
+              t.why +
+              '</p>' +
+              '<div class="tstage" style="background:' +
+              set.s +
+              ';color:' +
+              set.i +
+              '">' +
+              p +
+              s +
+              '</div>' +
+              '<p class="tnums">label on fill · <span class="' +
+              (labOk ? 'pass' : 'fail') +
+              '">' +
+              m.label.toFixed(2) +
+              ':1 (worst ' +
+              m.labelSet +
+              ') ' +
+              (labOk ? '✓' : '✗ FAILS 1.4.3') +
+              '</span><br>' +
+              'boundary vs surface · ' +
+              edgeTxt +
+              '<br>' +
+              'hierarchy holds on · <span class="' +
+              (w.n === 7 ? 'pass' : 'fail') +
+              '">' +
+              w.n +
+              ' of 7 sets' +
+              (w.n === 7 ? ' ✓' : ' ✗ inverts on ' + w.bad.join(', ')) +
+              '</span></p></div>'
+            );
+          })
+          .join('');
+      }
+      function renderStages() {
+        const set = SETS[state.set],
+          S = STATES[state.st];
+        document.getElementById('stages').innerHTML = COMPOSITIONS.map(
+          (c) =>
+            '<div class="col"><h3>' +
+            c.n +
+            '</h3><p class="why">' +
+            c.why +
+            '</p>' +
+            c.b(S, set) +
+            '</div>'
+        ).join('');
+      }
+      const render = () => {
+        renderTreatments();
+        renderStages();
+      };
+
+      function dials() {
+        const d = document.getElementById('dials');
+        const opt = (o, sel) =>
+          Object.entries(o)
+            .map(
+              ([k, v]) =>
+                '<option value="' +
+                k +
+                '"' +
+                (k === sel ? ' selected' : '') +
+                '>' +
+                v +
+                '</option>'
+            )
+            .join('');
+        d.innerHTML =
+          '<div class="dial"><label for="set">Set</label><select id="set">' +
+          opt(
+            Object.fromEntries(Object.entries(SETS).map(([k, v]) => [k, v.n])),
+            state.set
+          ) +
+          '</select></div>' +
+          '<div class="dial"><label for="treat">Secondary treatment</label><select id="treat">' +
+          opt(
+            Object.fromEntries(
+              Object.entries(TREATMENTS).map(([k, v]) => [k, v.n])
+            ),
+            state.treat
+          ) +
+          '</select></div>' +
+          '<div class="dial"><label for="st">Run outcome</label><select id="st">' +
+          opt(
+            {
+              next: 'reached 100 · a next drill exists',
+              done: 'reached 100 · no next drill',
+              short: 'ran out of problems',
+            },
+            state.st
+          ) +
+          '</select></div>' +
+          '<div class="dial"><label for="kind">Pattern</label><select id="kind">' +
+          opt(
+            {
+              camo: 'camo · classic (easy sets)',
+              'camo-giant': 'camo · giant (hard sets)',
+            },
+            state.kind
+          ) +
+          '</select></div>' +
+          '<div class="dial"><label for="seed">Scatter</label><select id="seed">' +
+          opt(
+            { 7: 'seed 7', 11: 'seed 11', 23: 'seed 23', 42: 'seed 42' },
+            String(state.seed)
+          ) +
+          '</select></div>';
+        d.querySelectorAll('select').forEach((s) =>
+          s.addEventListener('change', (e) => {
+            state[e.target.id] =
+              e.target.id === 'seed' ? +e.target.value : e.target.value;
+            render();
+          })
+        );
+      }
+
+      document.getElementById('notes').innerHTML = `
+<h3>The measurement that decides the button question</h3>
+<p>Malik is right that the two buttons should differ, and the obvious way to do it is a soft
+&ldquo;tonal&rdquo; secondary. <b>It cannot be built here without a rim.</b> Measured across all
+seven palettes, a fill made by mixing the ink into the surface lands at
+<b>1.22&ndash;1.58:1 against that surface</b> — the label is legible but the BUTTON is not, which is
+a 1.4.11 failure, not a styling nit. Treatment <b>e</b> is that trap, shown so it is recognisable.</p>
+<table>
+<tr><th>secondary</th><th>label on fill</th><th>boundary vs surface</th><th></th></tr>
+<tr><td>solid accent</td><td class="n">4.55 (R)</td><td class="n">4.55 (R)</td><td class="pass">passes both</td></tr>
+<tr><td>ghost + ink rim</td><td class="n">7.04 (R)</td><td class="n">7.04 (R)</td><td class="pass">passes both</td></tr>
+<tr><td>tonal 18% + ink rim</td><td class="n">5.14 (R)</td><td class="n">7.04 (R)</td><td class="pass">passes both</td></tr>
+<tr><td>tonal 18%, no rim</td><td class="n">5.14 (R)</td><td class="n">1.35 (J)</td><td class="fail">fails 1.4.11</td></tr>
+<tr><td>accent fill, ink label</td><td class="n">1.54 (R)</td><td class="n">4.55 (R)</td><td class="fail">fails 1.4.3</td></tr>
+<tr><td>quiet link (shipped)</td><td class="n">4.86 (J)</td><td>n/a</td><td class="pass">passes</td></tr>
+</table>
+<p>So three secondaries are viable: <b>solid accent</b>, <b>ghost + rim</b>, <b>tonal + rim</b>. The
+accent is the only one that answers the note literally — a different <em>colour</em> rather than a
+different <em>weight</em> — and it is the one that ties the pair to the score, which is painted in
+the same accent two lines above. Its cost is that it sits at 4.55:1 on Set R, which passes AA for the
+16px semibold label with 0.05 to spare and nothing else.</p>
+<p>Note what a rim costs to build. A gem is <code>clip-path</code>ed, and clip-path removes outlines
+and box-shadows — this is the same fact that made the focus indicator a painted band rather than a
+ring. So &ldquo;outlined button&rdquo; here means a two-layer gem: an outer element filled with the
+rim colour, 3px of padding, an inner element in the fill. That is not a hack; it is what
+<code>ringBand</code> in <code>lib/pixel.ts</code> already does for focus.</p>
+
+<h3>Contrast is not visual weight, and that is what makes a colour-only hierarchy fragile</h3>
+<p>Look at treatment <b>b</b> on Set&nbsp;L. The magenta secondary has <em>lower</em> contrast than
+the plum primary (4.75:1 against 12.67:1) and yet it shouts louder. That is not an illusion; it is
+two dials pulling in opposite directions:</p>
+<table>
+<tr><th></th><th>the INK</th><th>the ACCENT</th></tr>
+<tr><td>lightness separation from its surface</td><td class="n">bigger on <b>7</b> of 7 sets</td><td class="n">smaller</td></tr>
+<tr><td>perceptual intensity (chroma, hue-weighted)</td><td class="n">lower on <b>6</b> of 7</td><td class="n">higher</td></tr>
+</table>
+<p>So &ldquo;which one reads as the primary&rdquo; depends on how you weight the two, and the answer
+genuinely differs by set — a 50/50 weighting puts the accent ahead on A, C, J, L and N, and the ink
+ahead on Q and R. <b>A hierarchy built on a colour swap therefore inverts on some palettes and not
+others</b>, and the product deliberately does not make per-set styling choices.</p>
+<p>A hierarchy built on <b>fill versus no fill</b> cannot invert, because a solid object always
+out-weighs a hollow one whatever colours they wear. That is why treatments <b>c</b>, <b>d</b> and
+<b>f</b> hold on 7 of 7 and <b>b</b> and <b>g</b> do not. <b>f · ghost with an accent rim</b> is the
+one that gets both things Malik asked for at once: the two buttons are visibly different
+<em>colours</em>, and the hierarchy is carried by weight, so it is stable.</p>
+
+<h3>Whether Try again should be a button at all</h3>
+<p>Tonight&rsquo;s rule demotes it to a quiet link after a completed run, because reaching 100 IS
+completion under the 2008 economy. Every treatment above except <b>a</b> promotes it back to a
+button, which is a real change of meaning and not only of styling: two gems say <em>choose</em>,
+a gem and a link say <em>go on, unless</em>. Switch the outcome dial to
+&ldquo;ran out of problems&rdquo; to see the case that matters most — there the primary IS Try Again
+and the secondary is the exit, and a two-gem row makes leaving look as expected as retrying.</p>
+
+<h3>The app already knows how well you got to 100 — and throws it away</h3>
+<p>Research round, verified against the source. <code>lib/scoring.ts</code> carries two fields on
+<code>ScoreState</code>:</p>
+<p><code>/** Problems solved first try — for the end screen. */ readonly solvedClean: number;</code><br>
+<code>/** Problems where at least one miss happened. */ readonly missed: number;</code></p>
+<p><b>&ldquo;For the end screen&rdquo; is in the docstring, and <code>solvedClean</code> appears
+nowhere else in the codebase.</b> The data was built for this screen and never wired to it. That
+matters because <em>&ldquo;graduated&rdquo; is not one thing</em>: under the shipped economy a
+translation set nets +5 for a clean solve and &minus;5 net for a problem missed once, so reaching 100
+means only <code>clean &minus; missed = 20</code>. A learner who went 20-for-20 and a learner who went
+40-for-60 land on the same headline and the same control hierarchy today.</p>
+<p>Two things follow. <b>Composition 4 · the receipt has real numbers to show</b> — it is currently
+padded with a hardcoded &ldquo;22 problems&rdquo; here, but <code>solvedClean</code> would make it
+&ldquo;18 of 22 first try&rdquo;, which is the only figure on the screen that says anything about
+skill. And <b>the primary could depend on run quality rather than on reaching the target</b>: clean
+run &rarr; the successor drill; marginal run &rarr; Try again, with the successor demoted but still
+visible. That is a genuine amendment to tonight&rsquo;s rule and it costs one prop.</p>
+<p>One more contradiction worth knowing before choosing &ldquo;All exercises&rdquo; as a primary: it
+routes to <code>/</code>, and <code>components/landing/resumeBanner.tsx</code> greets a returning
+learner with <em>&ldquo;Continue where you left off &mdash; you were at N points&rdquo;</em>. So the
+terminal screen&rsquo;s onward action currently hands a just-completed run to a surface that
+describes it as unfinished. Low severity &mdash; a wrong word in an 11px eyebrow &mdash; but the fix
+is a completion flag on <code>LastDrill</code>, not skipping the write.</p>
+
+<h3>Composition, and the inheritance worth questioning</h3>
+<p><b>1 · Centred</b> shipped. Its weakness is the one the question screen already found: on a tall
+phone the block floats mid-screen with the primary action far from the thumb, and the column&rsquo;s
+y position moves with the length of the message. <b>2 · Bottom-anchored</b> is the question
+screen&rsquo;s decided posture one screen later; judge it with the pattern on, because the cleared
+panel is what stops the empty middle reading as unfinished.</p>
+<p><b>3 · Score as the hero</b> is the biggest change and the most defensible on product grounds —
+the number is what the run produced, and it is the only version worth screenshotting, which is the
+only organic sharing surface a drill app has. The risk is tone: a 104px number reads as a game score,
+and this is a textbook companion used in graded courses.</p>
+<p><b>4 · The receipt</b> is closest to what the 2008 program did and the only one that shows the
+level. If the level dial ever returns to the start screen (one boolean in
+<code>startScreen.tsx</code>), this is the end screen that matches it.</p>
+<p><b>5 and 6</b> put the two gems in a row. Watch the 390px width — two gems side by side render
+&ldquo;Try the hard set&rdquo; at 14px, the smallest type any primary action in this product wears.</p>`;
+      dials();
+      render();
+    </script>
+  </body>
+</html>
