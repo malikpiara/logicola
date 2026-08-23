@@ -16,6 +16,7 @@ import useQuizState from './useQuizState';
 import { progressLabel, type QuizMode } from './quizMode';
 import { canScore, chargeFor, progress } from '@/lib/scoring';
 import { writeLastDrill } from '@/lib/lastDrill';
+import { nextDrillAfter } from '@/lib/nextDrill';
 import { haptic } from '@/lib/haptics';
 import classNames from 'classnames';
 import { SubSet } from '@/content/types';
@@ -258,6 +259,9 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   // (G/I/K/M/O) have no reward directive at all, so `canScore` returns false
   // for them rather than lending them Set R's numbers.
   const offerScoredRun = canScore(subSet.name);
+  // Where a completed run goes next — the next drill in THIS set, or
+  // nothing (see lib/nextDrill for why it never crosses into another).
+  const nextDrill = nextDrillAfter(subSet.slugs);
   const hasGuide = hasWffGuide(subSet);
   const isGridLayout = subSet.optionLayout === 'grid';
   const optionCount = currentQuestion?.options.length ?? 0;
@@ -739,6 +743,77 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   const liveAnswer =
     showSolution && !liveHintOption ? currentQuestion?.answer : undefined;
 
+  // How long a points delta stays on screen. It has to outlast the damage
+  // choreography it joins — the fill blinks for 340ms and only THEN pays the
+  // penalty over 500ms (docs/damage-bar-lab.html, Direction A) — and then
+  // leave before the next problem is read. 1600ms holds through the bar's
+  // advance with room to fade.
+  const POINTS_DELTA_MS = 1600;
+
+  /**
+   * The phone's points readout, decided 2026-08-23 (Malik, docs/points-
+   * readout-lab.html option D1): the row shows what an answer was WORTH,
+   * not what the score now is.
+   *
+   * The total left the phone on purpose. The bar already is the total —
+   * it is `progress(scoreState)`, distance to 100 — so a numeral beside
+   * it was a second rendering of one fact. Nothing rendered the ECONOMY,
+   * and under the 2008 model the scoring level changes nothing except the
+   * penalty, so a learner who never sees "−10" cannot discover what their
+   * level is doing. The delta is the only thing on this screen that says
+   * something the screen did not already say.
+   *
+   * The total is still in the product: the desktop footer keeps
+   * `45 / 100 points` in words, and the sheet keeps the `sr-only` sentence
+   * that is the accessible reading below `md`. So this change is invisible
+   * to screen readers — it removes a visual duplicate, not a fact.
+   */
+  const [pointsDelta, setPointsDelta] = useState<{
+    value: number;
+    key: number;
+    /** The problem it belongs to — see `liveDelta` below. */
+    forQuestion: SubSet['questions'][number]['id'] | undefined;
+  } | null>(null);
+  const deltaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function showPointsDelta(outcome: 'correct' | 'miss') {
+    if (mode.kind !== 'score') return;
+    // `scoreState` is the PRE-answer snapshot here (this runs in the render
+    // that graded it), which is exactly what both branches want: a solve
+    // pays `pointsAvailable` and a miss is charged `chargeFor` — the two
+    // values registerSolve/registerMiss are about to apply.
+    const value =
+      outcome === 'miss' ? -chargeFor(scoreState) : scoreState.pointsAvailable;
+    // A change of nothing shows nothing — the same rule the damage flicker
+    // already follows, for the same two real cases: a run in the red under
+    // the 'no-deeper' floor, and a penalty register the set's own DSL has
+    // decayed to 0. It also silences Set R's FORFEIT, where a solve after a
+    // miss awards 0 and "+0" would read as a bug. Showing the forfeit
+    // explicitly is the live alternative if the teaching is judged worth
+    // the oddity — see the lab's § 3.
+    if (value === 0) return;
+    if (deltaTimeoutRef.current) clearTimeout(deltaTimeoutRef.current);
+    setPointsDelta({
+      value,
+      key: Date.now(),
+      forQuestion: currentQuestion?.id,
+    });
+    deltaTimeoutRef.current = setTimeout(
+      () => setPointsDelta(null),
+      POINTS_DELTA_MS
+    );
+  }
+
+  // A delta belongs to the answer that produced it, so it never crosses into
+  // the next problem. DERIVED rather than cleared in an effect: the timeout
+  // usually gets there first, but a fast advance would otherwise carry a
+  // stale "+5" onto a fresh question, and gating on the id makes that
+  // impossible by construction instead of by racing a timer.
+  const liveDelta =
+    pointsDelta && pointsDelta.forQuestion === currentQuestion?.id
+      ? pointsDelta
+      : null;
+
   // The bar flashes only where it is health: scored mode, where the
   // penalty genuinely shrinks it. Count mode keeps its completion
   // reading — blinking it would threaten progress a miss doesn't
@@ -774,6 +849,9 @@ const QuizSession: React.FC<QuizSessionProps> = ({
     // Guide chip in the header already carries the affordance — the help
     // is offered, not pushed. The miss still flashes the damage.
     if (outcome === 'miss') flashBarDamage();
+    // Both verdicts move the score, so both get a delta — the hook stays
+    // the only grader and this just reads the verdict, like the flash does.
+    if (outcome) showPointsDelta(outcome);
   }
 
   function handleNextQuestionTransition() {
@@ -966,8 +1044,13 @@ const QuizSession: React.FC<QuizSessionProps> = ({
       if (missFlashTimeoutRef.current) {
         clearTimeout(missFlashTimeoutRef.current);
       }
+      if (deltaTimeoutRef.current) {
+        clearTimeout(deltaTimeoutRef.current);
+      }
     };
   }, []);
+
+
 
   return (
     <>
@@ -992,6 +1075,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
           score={scoreState.score}
           questionsTaken={questionCounter}
           offerScoredRun={offerScoredRun}
+          nextDrill={nextDrill}
           surfaceColor={quizScreenColors.surfaceColor}
           countColor={quizScreenColors.countColor}
           foregroundColor={quizScreenColors.foregroundColor}
@@ -1099,35 +1183,69 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                   a 44px box, so (44−18)/2 of invisible whitespace pads its
                   side — without this the gaps read unequal. The +13px
                   right margin mirrors the endpoints when the Guide chip
-                  is absent (Set N). */}
+                  is absent (Set N).
+
+                  The margins moved from the bar to this WRAPPER on
+                  2026-08-23: the optical correction belongs to whatever
+                  touches the row's edge, and that is now the bar-and-delta
+                  column rather than the bar alone. */}
               <div
-                aria-hidden
                 className={classNames(
-                  // h-3, up from h-2.5 — at 10px the bar read a touch
-                  // frail next to the 44px chrome (Malik, 2026-08-19);
-                  // the R=4 sprite caps still fit a 12px strip.
-                  'qbar relative h-3 min-w-0 flex-1 -ml-[13px]',
+                  // COLUMN, and the bar below must be `w-full` rather than
+                  // `flex-1`: in a column container `flex-1` sets
+                  // flex-basis on the HEIGHT, which collapses a 12px bar to
+                  // nothing. Found in the lab; noted so it isn't found twice.
+                  'flex min-w-0 flex-1 flex-col gap-1 -ml-[13px]',
                   !hasGuide && 'mr-[13px]'
                 )}
-                style={{ clipPath: MOBILE_BAR_CLIP }}
               >
-                {/* The 500ms advance lives in `.qbar-fill` (globals.css)
-                    as a --qp transition, not a width utility here: width
-                    transitions between round() endpoints don't
-                    interpolate — the property is what animates, and
-                    round() re-quantizes it every frame. */}
+                {/* h-3, up from h-2.5 — at 10px the bar read a touch frail
+                    next to the 44px chrome (Malik, 2026-08-19); the R=4
+                    sprite caps still fit a 12px strip. */}
                 <div
-                  className={classNames(
-                    'qbar-fill h-full',
-                    isMissFlashing && 'qbar-miss'
+                  aria-hidden
+                  className='qbar relative h-3 w-full min-w-0'
+                  style={{ clipPath: MOBILE_BAR_CLIP }}
+                >
+                  {/* The 500ms advance lives in `.qbar-fill` (globals.css)
+                      as a --qp transition, not a width utility here: width
+                      transitions between round() endpoints don't
+                      interpolate — the property is what animates, and
+                      round() re-quantizes it every frame. */}
+                  <div
+                    className={classNames(
+                      'qbar-fill h-full',
+                      isMissFlashing && 'qbar-miss'
+                    )}
+                    style={
+                      {
+                        '--qp': `${progressFraction * 100}%`,
+                        backgroundColor: 'var(--quiz-accent)',
+                      } as React.CSSProperties
+                    }
+                  />
+                </div>
+                {/* The delta line, RESERVED whether or not it is showing —
+                    a line that appears on a verdict would reflow the sticky
+                    header on every check, where an always-present line pays
+                    its height once. `aria-hidden` like the bar: the sheet's
+                    sr-only sentence remains the accessible reading, so this
+                    adds a visual channel without giving a screen reader a
+                    second thing to announce over the hint's live region. */}
+                <span aria-hidden className='qdelta-line'>
+                  {liveDelta && (
+                    <span
+                      key={liveDelta.key}
+                      className={classNames(
+                        'qdelta',
+                        liveDelta.value < 0 && 'qdelta-loss'
+                      )}
+                    >
+                      {liveDelta.value > 0 ? '+' : '\u2212'}
+                      {Math.abs(liveDelta.value)}
+                    </span>
                   )}
-                  style={
-                    {
-                      '--qp': `${progressFraction * 100}%`,
-                      backgroundColor: 'var(--quiz-accent)',
-                    } as React.CSSProperties
-                  }
-                />
+                </span>
               </div>
               {hasGuide && (
                 <button

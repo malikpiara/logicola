@@ -263,7 +263,13 @@
   opacity: 0;
 }
 
-.gem-button-wrap:has(button:focus-visible)::after {
+/* `:is(a, button)`, not `button` (Malik, 2026-08-23). The end screen's
+   onward action is a real anchor now (GemLink — it navigates, so it has
+   to be middle-clickable and copyable), and the band is the ONLY focus
+   mark a clipped gem can have: an <a> matched by nothing here would have
+   had no visible focus at all, which is a 2.4.7 failure rather than a
+   styling gap. */
+.gem-button-wrap:has(:is(a, button):focus-visible)::after {
   opacity: 1;
 }
 
@@ -762,6 +768,123 @@
   .quiz-immersive .qbar-miss {
     animation: none;
     transition-delay: 0ms;
+  }
+}
+
+/* ---- Phone points delta --------------------------------------------------
+   What an answer was WORTH, not what the score now is (Malik, 2026-08-23 —
+   docs/points-readout-lab.html option D1). The running total left the phone
+   because the bar already is the total; nothing rendered the economy, and
+   under the 2008 model the level changes nothing but the penalty.
+
+   Mono, like every other number in this product's chrome, and tabular so a
+   two-digit charge doesn't shift the line under a bar that is itself moving.
+
+   ONE COLOUR FOR BOTH SIGNS. A dimmed or reddened loss is not available:
+   the accents clear 4.5:1 on their own surface by as little as 0.05 (R 4.55,
+   J 4.57, C 4.60), and the palette has no red. The sign carries the meaning,
+   which WCAG 1.4.1 requires anyway — so a second colour would buy nothing it
+   is obliged to buy. The LOSS is distinguished by motion instead. */
+.quiz-immersive .qdelta-line {
+  /* Reserved whether or not a delta is showing: a line that appears on the
+     verdict would reflow the sticky header on every check. 15px is the
+     rendered height of the 12px mono glyph, so the reservation is exact. */
+  display: block;
+  min-height: 15px;
+  line-height: 15px;
+}
+
+.quiz-immersive .qdelta {
+  display: inline-block;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--quiz-accent);
+  animation: qdelta-in 1600ms var(--ease-out-quart) both;
+}
+
+/* The delta joins a choreography that already exists — it does not start a
+   second one. On a miss the fill blinks off twice over 340ms and only THEN
+   pays the penalty over 500ms (.qbar-miss above; docs/damage-bar-lab.html,
+   Direction A). So the gain fades out at 1600ms, after the bar has settled,
+   and the loss holds through the flicker with a short shake that ends before
+   the bar starts moving. Neither out-lasts the advance it annotates. */
+@keyframes qdelta-in {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  12% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  78% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes qdelta-loss {
+  0% {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  9% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  13% {
+    transform: translateX(-2px);
+  }
+  17% {
+    transform: translateX(2px);
+  }
+  21% {
+    transform: translateX(-1px);
+  }
+  25% {
+    transform: translateX(0);
+  }
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
+.quiz-immersive .qdelta-loss {
+  animation-name: qdelta-loss;
+}
+
+/* Reduced motion: the delta still APPEARS and still leaves — it is
+   information, not decoration — it simply stops sliding and shaking. Held to
+   a plain opacity hold so the element's lifetime is unchanged and the
+   1600ms timeout in index.tsx stays the single source of how long it lives.
+   Matches the block above, where the bar still moves and only stops being
+   animated. */
+@keyframes qdelta-hold {
+  0%,
+  99% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quiz-immersive .qdelta,
+  .quiz-immersive .qdelta-loss {
+    animation: qdelta-hold 1600ms step-end both;
   }
 }
 
