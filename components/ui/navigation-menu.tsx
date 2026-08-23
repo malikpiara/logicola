@@ -16,8 +16,18 @@ const NavigationMenu = React.forwardRef<
      * element).
      */
     viewportClassName?: string;
+    /**
+     * Escape hatch onto the shared Viewport for one menu instance. The
+     * exercises panel neutralises the Viewport's pointer-leave close
+     * through it (see components/navbar.tsx) — Content is portalled
+     * INTO the Viewport, so leaving the panel fires `onContentLeave` on
+     * both, and suppressing it on Content alone would not hold.
+     */
+    viewportProps?: React.ComponentPropsWithoutRef<
+      typeof NavigationMenuPrimitive.Viewport
+    >;
   }
->(({ className, children, viewportClassName, ...props }, ref) => (
+>(({ className, children, viewportClassName, viewportProps, ...props }, ref) => (
   <NavigationMenuPrimitive.Root
     ref={ref}
     className={cn(
@@ -27,7 +37,7 @@ const NavigationMenu = React.forwardRef<
     {...props}
   >
     {children}
-    <NavigationMenuViewport className={viewportClassName} />
+    <NavigationMenuViewport className={viewportClassName} {...viewportProps} />
   </NavigationMenuPrimitive.Root>
 ));
 NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;

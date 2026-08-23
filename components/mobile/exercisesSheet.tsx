@@ -35,8 +35,11 @@ import {
  *
  * vaul supplies the native sheet physics (drag-to-dismiss, scrim tap) —
  * per the lab's port note, never hand-rolled. HIG pass 2026-08-14:
- * ≥44pt targets, safe-area bottom padding, sr-only text beside the
- * colour-only NEW dot.
+ * ≥44pt targets, safe-area bottom padding, and an sr-only tail beside
+ * the NEW badge (2026-08-22 — the badge replaced the colour-only dot,
+ * so the mark now READS as well as signals; the tail keeps the
+ * topic-level "NEW exercises inside" distinct from a drill's own badge,
+ * which means that one drill is new).
  */
 const TYPE = '#3F0167'; // Set L plum · 12.67:1 on mint, 14.88:1 on white
 const MINT = '#CFF6DD'; // the scheme ground (quizColors L surface)
@@ -136,15 +139,6 @@ export function ExercisesSheet({
   );
 }
 
-function NewDot() {
-  return (
-    <span
-      className='h-1.5 w-1.5 shrink-0 rounded-full bg-[#BD00AD]'
-      aria-hidden='true'
-    />
-  );
-}
-
 /** 3d-f level 1 — white chip tiles on the mint chrome */
 function TileGrid({ onPick }: { onPick: (t: Topic) => void }) {
   return (
@@ -163,25 +157,32 @@ function TileGrid({ onPick }: { onPick: (t: Topic) => void }) {
           >
             <TopicIcon topicId={topic.id} color={topic.colors.ink} size={20} />
           </span>
-          <span className='flex items-center gap-1.5'>
+          <span
+            className='text-[15px] font-semibold leading-tight'
+            style={{ color: TYPE }}
+          >
+            {topic.name}
+          </span>
+          {/* The badge rides the SETS line, not the name (Malik,
+              2026-08-22). Desktop swapped the dot for the gem badge and
+              mobile follows, but a 2-up tile has 143px of inner width and
+              "Syllogistic Logic" alone is 113 — name + 38px badge is 157
+              and breaks to two lines while its neighbours stay on one.
+              Down here it costs nothing: 35 + 38 = 79px, and Informal's
+              longer "Sets Q · R" still only reaches 115. */}
+          <span className='mt-auto flex items-center gap-2'>
             <span
-              className='text-[15px] font-semibold leading-tight'
-              style={{ color: TYPE }}
+              className='font-mono text-[11px] font-semibold tracking-[0.04em]'
+              style={{ color: TAG }}
             >
-              {topic.name}
+              {topic.sets}
             </span>
             {topicIsNew(topic) && (
               <>
-                <NewDot />
-                <span className='sr-only'>— new exercises inside</span>
+                <NewBadge />
+                <span className='sr-only'> exercises inside</span>
               </>
             )}
-          </span>
-          <span
-            className='mt-auto font-mono text-[11px] font-semibold tracking-[0.04em]'
-            style={{ color: TAG }}
-          >
-            {topic.sets}
           </span>
         </button>
       ))}
@@ -210,13 +211,16 @@ function ChipRows({ onPick }: { onPick: (t: Topic) => void }) {
           <span className='text-[16px] font-semibold' style={{ color: TYPE }}>
             {topic.name}
           </span>
+          <span className='grow' />
+          {/* same rule as the tiles: the badge sits with the sets label.
+              A full-width row would fit it beside the name, but one
+              placement per surface beats one that moves with the layout. */}
           {topicIsNew(topic) && (
             <>
-              <NewDot />
-              <span className='sr-only'>— new exercises inside</span>
+              <NewBadge />
+              <span className='sr-only'> exercises inside</span>
             </>
           )}
-          <span className='grow' />
           <span
             className='font-mono text-[11px] font-semibold tracking-[0.04em]'
             style={{ color: TAG }}

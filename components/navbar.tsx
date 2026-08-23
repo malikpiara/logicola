@@ -65,16 +65,45 @@ const Navbar = () => {
       <div className='mx-auto max-w-screen-xl px-4 py-4 sm:px-6'>
         <div className='grid grid-cols-3 items-center'>
           <div>
-            <NavigationMenu viewportClassName='rounded-none border-0 bg-transparent shadow-none [filter:drop-shadow(0_1px_3px_rgba(0,0,0,0.10))_drop-shadow(0_8px_18px_rgba(0,0,0,0.10))]'>
+            {/* viewportProps: see the POINTER note below — leaving the
+                panel must not close it either. Content is portalled INTO
+                the Viewport, so this is the handler that actually fires. */}
+            <NavigationMenu
+              viewportClassName='rounded-none border-0 bg-transparent shadow-none [filter:drop-shadow(0_1px_3px_rgba(0,0,0,0.10))_drop-shadow(0_8px_18px_rgba(0,0,0,0.10))]'
+              viewportProps={{ onPointerLeave: (e) => e.preventDefault() }}
+            >
               <NavigationMenuList>
                 <NavigationMenuItem>
                   {/* bg-transparent: the shadcn trigger bakes in bg-background
                       (white) — invisible on the old white bar, a stray pill on
                       the mint one. The open/hover fill comes from --nav-hover. */}
-                  <NavigationMenuTrigger className='bg-transparent data-[state=open]:bg-[var(--nav-hover)] text-[#3F0167] hover:bg-[var(--nav-hover)] hover:text-[#3F0167] focus:bg-[var(--nav-hover)] font-mono font-semibold'>
+                  {/* POINTER: the menu is CLICK-ONLY since 2026-08-22 (Malik,
+                      from user testing). Radix opens the trigger on
+                      `pointermove` after 200 ms and closes it on
+                      `pointerleave`, so a 700×260 panel appeared over the page
+                      from mere transit toward the logo or Blog — the same
+                      error the rail's hover-switch caused one level down (see
+                      components/nav/exercisesMenu.tsx). `composeEventHandlers`
+                      runs the PROP handler first and bails when it sees
+                      `defaultPrevented`, so preventing here suppresses Radix's
+                      own handler without forking the primitive.
+
+                      Closing is deliberate too, and for the same reason: if
+                      committing is required to open, committing is required to
+                      close. Escape, a second click on the trigger, a click
+                      outside (Radix wraps Content in DismissableLayer) and
+                      following a drill all still close it. */}
+                  <NavigationMenuTrigger
+                    className='bg-transparent data-[state=open]:bg-[var(--nav-hover)] text-[#3F0167] hover:bg-[var(--nav-hover)] hover:text-[#3F0167] focus:bg-[var(--nav-hover)] font-mono font-semibold'
+                    onPointerMove={(e) => e.preventDefault()}
+                    onPointerLeave={(e) => e.preventDefault()}
+                  >
                     Exercises
                   </NavigationMenuTrigger>
-                  <NavigationMenuContent className='md:w-[780px] lg:w-[1000px] xl:w-[1120px]'>
+                  <NavigationMenuContent
+                    className='md:w-[780px] lg:w-[1000px] xl:w-[1120px]'
+                    onPointerLeave={(e) => e.preventDefault()}
+                  >
                     <div style={{ clipPath: spriteClip(0) }}>
                       <ExercisesMenu />
                     </div>
