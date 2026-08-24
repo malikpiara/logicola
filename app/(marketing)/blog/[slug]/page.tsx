@@ -11,9 +11,46 @@ import {
   SPRITE_CLIP,
 } from '@/lib/marketingTheme';
 import { SITE_URL } from '@/lib/site';
+import { QuizEmbed } from '@/components/blog/quizEmbed';
 
 interface PostPageProps {
   params: Promise<{ slug: string }>;
+}
+
+/**
+ * Quiz-embed markers (2026-08-24): posts stay plain markdown→HTML (the
+ * full-content-feed decision, 2026-08-13), and a post that wants a
+ * drill inline writes a marker div whose inner link is the RSS/degraded
+ * rendering. The page splits the compiled HTML at the markers and
+ * mounts the matching client island between the segments — hydration
+ * islands, not iframes, per the embed decision.
+ */
+const EMBED_MARKER =
+  /<div data-quiz-embed="([a-z0-9-]+)"(?: data-count="(\d+)")?>([\s\S]*?)<\/div>/g;
+
+type PostSegment =
+  | { kind: 'html'; html: string }
+  | { kind: 'embed'; embed: string; count: number; fallbackHtml: string };
+
+function splitEmbeds(html: string): PostSegment[] {
+  const segments: PostSegment[] = [];
+  let cursor = 0;
+  for (const match of html.matchAll(EMBED_MARKER)) {
+    if (match.index > cursor) {
+      segments.push({ kind: 'html', html: html.slice(cursor, match.index) });
+    }
+    segments.push({
+      kind: 'embed',
+      embed: match[1]!,
+      count: match[2] ? Number(match[2]) : 3,
+      fallbackHtml: match[3] ?? '',
+    });
+    cursor = match.index + match[0].length;
+  }
+  if (cursor < html.length) {
+    segments.push({ kind: 'html', html: html.slice(cursor) });
+  }
+  return segments;
 }
 
 export const dynamicParams = false;
@@ -152,8 +189,26 @@ export default async function BlogPostPage({ params }: PostPageProps) {
               color: t.type,
             } as React.CSSProperties
           }
-          dangerouslySetInnerHTML={{ __html: post.html }}
-        />
+        >
+          {/* display:contents segment wrappers keep the typography
+              plugin's descendant selectors matching across the split. */}
+          {splitEmbeds(post.html).map((segment, index) =>
+            segment.kind === 'html' ? (
+              <div
+                key={index}
+                style={{ display: 'contents' }}
+                dangerouslySetInnerHTML={{ __html: segment.html }}
+              />
+            ) : (
+              <QuizEmbed
+                key={index}
+                embed={segment.embed}
+                count={segment.count}
+                fallbackHtml={segment.fallbackHtml}
+              />
+            )
+          )}
+        </div>
       </article>
     </>
   );
