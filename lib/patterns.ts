@@ -147,6 +147,18 @@ export function clearRectFor(
 }
 
 /**
+ * One-decimal coordinate rounding for emitted markup. Fractional scales
+ * produce coordinates like 9.503714285714285 — 15 significant decimals
+ * where 0.1 is already below a device pixel — and at 757 rects per
+ * footer band that was ~176 KB of the landing page's HTML + flight
+ * payload. Nothing downstream reads the numbers back; only the string
+ * gets shorter. (2026-08-24)
+ */
+function r1(n: number): number {
+  return Math.round(n * 10) / 10;
+}
+
+/**
  * Exact rect vs rounded-rect intersection: a cell is hidden when it
  * overlaps the clearing's bounding box AND is not saved by sitting in a
  * square corner-notch beyond the corner arc.
@@ -276,7 +288,7 @@ export function quiltPixBody(opts: QuiltPixOptions): string {
           while (ii + len < P && fill[jj * P + ii + len]) len++;
           // +0.4 vertical overlap: same-fill rows may not meet exactly
           // after subpixel rounding, and a hairline seam breaks the sprite.
-          piece += `<rect x="${x + ii * q}" y="${y + jj * q}" width="${len * q}" height="${q + 0.4}"/>`;
+          piece += `<rect x="${r1(x + ii * q)}" y="${r1(y + jj * q)}" width="${r1(len * q)}" height="${r1(q + 0.4)}"/>`;
           ii += len;
         }
       }
@@ -361,7 +373,7 @@ function pixelLattice(
         !hidden(clear, (u + len) * q, v * q, q, q)
       )
         len++;
-      out += `<rect x="${u * q}" y="${v * q}" width="${len * q}" height="${q + 0.4}" fill="${c}"/>`;
+      out += `<rect x="${r1(u * q)}" y="${r1(v * q)}" width="${r1(len * q)}" height="${r1(q + 0.4)}" fill="${c}"/>`;
       u += len;
     }
   }

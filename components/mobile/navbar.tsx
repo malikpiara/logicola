@@ -2,11 +2,24 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import {
-  ExercisesSheet,
-  type SheetVariant,
-} from '@/components/mobile/exercisesSheet';
+import dynamic from 'next/dynamic';
+import { type SheetVariant } from '@/components/mobile/exercisesSheet';
 import { LogoMark } from '@/components/logoMark';
+
+// Lazy (2026-08-24): the sheet pulls vaul — a 61 KB chunk that desktop
+// visitors parsed for a nav that is md:hidden. It loads on the burger's
+// pointerdown (warm before the tap's click) and mounts on first open.
+const ExercisesSheet = dynamic(
+  () =>
+    import('@/components/mobile/exercisesSheet').then(
+      (m) => m.ExercisesSheet
+    ),
+  { ssr: false }
+);
+
+function preloadExercisesSheet(): void {
+  void import('@/components/mobile/exercisesSheet');
+}
 
 /**
  * Mobile nav: white bar, SET L inks (2026-08-17 — the landing decision
@@ -22,6 +35,9 @@ import { LogoMark } from '@/components/logoMark';
  */
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  // Once true, stays true: the sheet stays mounted after its first
+  // open so vaul's close animation and state survive later toggles.
+  const [sheetWanted, setSheetWanted] = useState(false);
   const pathname = usePathname();
 
   if (pathname.includes('quiz')) {
@@ -60,7 +76,12 @@ const Navbar = () => {
         <button
           type='button'
           className='motion-button inline-flex items-center p-2 w-11 h-11 justify-center text-sm text-[#3F0167] rounded-lg md:hidden hover:bg-[var(--nav-hover)] focus:outline-none focus:ring-2 focus:ring-[#0C8F4E]'
-          onClick={() => setOpen(true)}
+          onPointerDown={preloadExercisesSheet}
+          onFocus={preloadExercisesSheet}
+          onClick={() => {
+            setSheetWanted(true);
+            setOpen(true);
+          }}
           aria-expanded={open}
           aria-haspopup='dialog'
         >
@@ -82,7 +103,9 @@ const Navbar = () => {
           </svg>
         </button>
       </div>
-      <ExercisesSheet variant={variant} open={open} onOpenChange={setOpen} />
+      {sheetWanted && (
+        <ExercisesSheet variant={variant} open={open} onOpenChange={setOpen} />
+      )}
     </nav>
   );
 };

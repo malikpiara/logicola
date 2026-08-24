@@ -299,8 +299,18 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
         })}
         style={wrapStyle}
       >
-        {shortcutTip && !showSolution && !tipRetired ? (
-          <PixelTip tip={shortcutTip} side='top' hoverOnly>
+        {/* Always the same wrapper at this tree position: swapping
+            PixelTip in and out remounted the button DOM — 18 buttons
+            destroyed and rebuilt at every Set R reveal, killing
+            in-flight transitions. `suppressed` holds the tip closed
+            without changing the component type. (2026-08-24) */}
+        {shortcutTip ? (
+          <PixelTip
+            tip={shortcutTip}
+            side='top'
+            hoverOnly
+            suppressed={showSolution || tipRetired}
+          >
             {pill}
           </PixelTip>
         ) : (
@@ -313,4 +323,9 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
 
 Option.displayName = 'Option'; // Add display name here
 
-export default Option;
+// Memoized (2026-08-24): QuizSession is one large component, so every
+// state tick — cursor move, snap change, input-mode flip — re-rendered
+// all 18 of Set R's options through their KaTeX segmentation. Props are
+// primitives plus the parent's per-question-stable onClick, so memo can
+// actually bail out.
+export default React.memo(Option);

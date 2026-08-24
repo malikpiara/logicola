@@ -27,16 +27,31 @@ export function useSafeAreaBottom(): number {
       document.body.appendChild(probe);
       const height = probe.getBoundingClientRect().height;
       probe.remove();
+      // setInset bails on same value by React's Object.is, so the
+      // steady-state resize storm never re-renders the quiz tree.
       setInset(Math.round(height));
+    }
+
+    // rAF-coalesced (2026-08-24): mobile fires `resize` continuously as
+    // the URL bar collapses during scroll, and each raw call was an
+    // append + layout read + remove — a forced reflow per tick.
+    let raf = 0;
+    function scheduleMeasure() {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        measure();
+      });
     }
 
     measure();
     // Rotation and the browser's collapsing chrome both change it.
-    window.addEventListener('resize', measure);
-    window.addEventListener('orientationchange', measure);
+    window.addEventListener('resize', scheduleMeasure);
+    window.addEventListener('orientationchange', scheduleMeasure);
     return () => {
-      window.removeEventListener('resize', measure);
-      window.removeEventListener('orientationchange', measure);
+      if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener('resize', scheduleMeasure);
+      window.removeEventListener('orientationchange', scheduleMeasure);
     };
   }, []);
 
