@@ -506,6 +506,13 @@ const QuizSession: React.FC<QuizSessionProps> = ({
    * reverted. Terminates (writing 'auto' re-fires the observer, which
    * then does nothing) and is safe by construction: every layer this
    * screen can show is non-modal by decision.
+   *
+   * 2026-08-24: patches/vaul@1.1.2.patch now forwards `modal` to the
+   * Radix Root, which is what stops Radix aria-hiding the question
+   * from screen readers (the WCAG blocker) AND stops the body
+   * pointer-events writes this watchdog was built for. The watchdog
+   * stays as insurance — it costs one observer and it is the only
+   * guard if a dependency bump ever drops the patch.
    */
   useEffect(() => {
     if (showStartScreen || showEndScreen) return;
