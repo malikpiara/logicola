@@ -366,6 +366,10 @@ describe('Option selection and scoring', () => {
 });
 
 describe('useQuizState — multi-select (subset rule)', () => {
+  beforeEach(() => {
+    vi.mocked(captureAnalyticsEvent).mockClear();
+  });
+
   // 4 options; the passage genuinely commits fallacies 0, 1 and 2.
   function createMultiQuiz(maxWrongGuesses = 3) {
     return {
@@ -417,6 +421,51 @@ describe('useQuizState — multi-select (subset rule)', () => {
     act(() => result.current.onCheckAnswer());
     await waitFor(() => expect(result.current.showSolution).toBe(true));
     expect(result.current.correctQuestions).toStrictEqual(['multi-1']);
+  });
+
+  it('captures one question_answered per pick, in the single-select scalar shape', async () => {
+    const result = await renderMulti();
+    act(() => result.current.selectOption(0)); // genuine
+    act(() => result.current.selectOption(3)); // not accepted
+    act(() => result.current.onCheckAnswer());
+
+    const calls = vi
+      .mocked(captureAnalyticsEvent)
+      .mock.calls.filter(([eventName]) => eventName === 'question_answered');
+    // One event per picked option — the shape a single-select answer
+    // emits, so distractor-traffic breakdowns span every set.
+    expect(calls).toHaveLength(2);
+    expect(calls[0]![1]).toMatchObject({
+      question_id: 'multi-1',
+      option_id: 0,
+      correct: true,
+      pick_index: 0,
+      picks_in_submission: 2,
+      submission_correct: false,
+      guess_number: 1,
+      first_try: true,
+    });
+    expect(calls[1]![1]).toMatchObject({
+      option_id: 3,
+      correct: false,
+      pick_index: 1,
+      submission_correct: false,
+    });
+
+    // The retry: the retained genuine pick re-submits alone and passes.
+    act(() => result.current.onCheckAnswer());
+    const retryCalls = vi
+      .mocked(captureAnalyticsEvent)
+      .mock.calls.filter(([eventName]) => eventName === 'question_answered');
+    expect(retryCalls).toHaveLength(3);
+    expect(retryCalls[2]![1]).toMatchObject({
+      option_id: 0,
+      correct: true,
+      picks_in_submission: 1,
+      submission_correct: true,
+      guess_number: 2,
+      first_try: false,
+    });
   });
 
   it('is wrong if any pick is not a fallacy the passage commits', async () => {
