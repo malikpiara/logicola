@@ -60,98 +60,87 @@ const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> &
     DrawerContentExtraProps
->(
-  (
-    {
-      className,
-      children,
-      onGrabberClick,
-      side = 'bottom',
-      ...props
-    },
-    ref
-  ) => {
-    // A drag that ENDS on the grabber must not also fire its tap: the
-    // click event lands after pointerup, when any drag state on the
-    // button has already resolved — so the answer has to survive that
-    // gap in a ref. Without this, a downward fling released over the
-    // grabber snapped the sheet down and instantly cycled it back up
-    // (found in the sheet lab, 2026-08-21).
-    const grabberDownAt = React.useRef<{ x: number; y: number } | null>(null);
-    const grabberDragged = React.useRef(false);
-    return (
-      <DrawerPortal>
-        <DrawerOverlay />
-        <DrawerPrimitive.Content
-          ref={ref}
-          className={cn(
-            side === 'bottom'
-              ? 'fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background'
-              : 'fixed inset-y-0 right-0 z-50 flex flex-col rounded-l-[10px] border bg-background',
-            'outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0',
-            // The old `animate-in`/`slide-in-*`/`duration-200` motion
-            // classes were DEAD CSS and are gone (2026-08-24, plans/002):
-            // Tailwind emits utilities inside @layer utilities, while vaul
-            // injects an unlayered stylesheet whose animation/transition
-            // declarations outrank them — every sheet has always moved on
-            // vaul's 500ms cubic-bezier(0.32, 0.72, 0, 1) (`--ease-sheet`
-            // in globals.css). Sheet timing is tuned via unlayered rules
-            // there, never via utilities here. The old
-            // `disableOpenAnimation` prop gated only those dead classes
-            // and left with them.
-            className
-          )}
-          {...props}
-        >
-          {side === 'bottom' &&
-            (onGrabberClick ? (
-              // The BAR is the iOS-system 36×5 (decided 2026-08-22 —
-              // the old 100×8 pill was ~3× the platform grabber); the
-              // TARGET stays 44×100 (HIG floor). The padding does the
-              // work and the negative margin gives the reclaimed space
-              // back, so the sheet's spacing is unchanged — a grab
-              // handle you have to aim at is the one control here that
-              // most needs to be forgiving.
-              <button
-                type='button'
-                onPointerDown={(e) => {
-                  grabberDownAt.current = { x: e.clientX, y: e.clientY };
-                  grabberDragged.current = false;
-                }}
-                onPointerUp={(e) => {
-                  const down = grabberDownAt.current;
-                  if (
-                    down &&
-                    Math.hypot(e.clientX - down.x, e.clientY - down.y) >= 6
-                  ) {
-                    grabberDragged.current = true;
-                  }
-                }}
-                onClick={() => {
-                  if (grabberDragged.current) return;
-                  onGrabberClick();
-                }}
-                aria-label='Cycle drawer snap point'
-                className='group mx-auto -mb-[18px] mt-0 flex h-11 w-[100px] cursor-grab items-center justify-center focus-visible:outline-none'
-              >
-                {/* Pressed = darkest, the resize grip's ladder (motion
+>(({ className, children, onGrabberClick, side = 'bottom', ...props }, ref) => {
+  // A drag that ENDS on the grabber must not also fire its tap: the
+  // click event lands after pointerup, when any drag state on the
+  // button has already resolved — so the answer has to survive that
+  // gap in a ref. Without this, a downward fling released over the
+  // grabber snapped the sheet down and instantly cycled it back up
+  // (found in the sheet lab, 2026-08-21).
+  const grabberDownAt = React.useRef<{ x: number; y: number } | null>(null);
+  const grabberDragged = React.useRef(false);
+  return (
+    <DrawerPortal>
+      <DrawerOverlay />
+      <DrawerPrimitive.Content
+        ref={ref}
+        className={cn(
+          side === 'bottom'
+            ? 'fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background'
+            : 'fixed inset-y-0 right-0 z-50 flex flex-col rounded-l-[10px] border bg-background',
+          'outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0',
+          // The old `animate-in`/`slide-in-*`/`duration-200` motion
+          // classes were DEAD CSS and are gone (2026-08-24, plans/002):
+          // Tailwind emits utilities inside @layer utilities, while vaul
+          // injects an unlayered stylesheet whose animation/transition
+          // declarations outrank them — every sheet has always moved on
+          // vaul's 500ms cubic-bezier(0.32, 0.72, 0, 1) (`--ease-sheet`
+          // in globals.css). Sheet timing is tuned via unlayered rules
+          // there, never via utilities here. The old
+          // `disableOpenAnimation` prop gated only those dead classes
+          // and left with them.
+          className
+        )}
+        {...props}
+      >
+        {side === 'bottom' &&
+          (onGrabberClick ? (
+            // The BAR is the iOS-system 36×5 (decided 2026-08-22 —
+            // the old 100×8 pill was ~3× the platform grabber); the
+            // TARGET stays 44×100 (HIG floor). The padding does the
+            // work and the negative margin gives the reclaimed space
+            // back, so the sheet's spacing is unchanged — a grab
+            // handle you have to aim at is the one control here that
+            // most needs to be forgiving.
+            <button
+              type='button'
+              onPointerDown={(e) => {
+                grabberDownAt.current = { x: e.clientX, y: e.clientY };
+                grabberDragged.current = false;
+              }}
+              onPointerUp={(e) => {
+                const down = grabberDownAt.current;
+                if (
+                  down &&
+                  Math.hypot(e.clientX - down.x, e.clientY - down.y) >= 6
+                ) {
+                  grabberDragged.current = true;
+                }
+              }}
+              onClick={() => {
+                if (grabberDragged.current) return;
+                onGrabberClick();
+              }}
+              aria-label='Cycle drawer snap point'
+              className='group mx-auto -mb-[18px] mt-0 flex h-11 w-[100px] cursor-grab items-center justify-center focus-visible:outline-none'
+            >
+              {/* Pressed = darkest, the resize grip's ladder (motion
                     pass, 2026-08-24): this bar is TAPPED to cycle snap
                     points, never hovered on the devices that show it —
                     without group-active it was the one tap control with
                     no acknowledgement. */}
-                <span className='block h-[5px] w-9 rounded-full bg-muted transition-colors group-hover:bg-gray-300 group-focus-visible:bg-gray-400 group-active:bg-gray-400' />
-              </button>
-            ) : (
-              <div className='mx-auto mt-4 flex h-2 w-[100px] items-center justify-center cursor-grab'>
-                <span className='block h-[5px] w-9 rounded-full bg-muted' />
-              </div>
-            ))}
-          {children}
-        </DrawerPrimitive.Content>
-      </DrawerPortal>
-    );
-  }
-);
+              <span className='block h-[5px] w-9 rounded-full bg-muted transition-colors group-hover:bg-gray-300 group-focus-visible:bg-gray-400 group-active:bg-gray-400' />
+            </button>
+          ) : (
+            <div className='mx-auto mt-4 flex h-2 w-[100px] items-center justify-center cursor-grab'>
+              <span className='block h-[5px] w-9 rounded-full bg-muted' />
+            </div>
+          ))}
+        {children}
+      </DrawerPrimitive.Content>
+    </DrawerPortal>
+  );
+});
 DrawerContent.displayName = 'DrawerContent';
 
 const DrawerHeader = ({
