@@ -2530,6 +2530,78 @@
   .lx {
     background: var(--lx-ground);
   }
+
+  /* Blog quiz embed (2026-08-24): the island's card. Lives outside the
+     post's prose flow (`not-prose`) and speaks the marketing register —
+     mono eyebrow, plum ink, the house press grammar via .motion-button. */
+  .lx-embed {
+    margin: 28px 0;
+    padding: 18px 20px 20px;
+    background: #fff;
+    border: 2px solid #3f0167;
+    border-radius: 10px;
+  }
+  .lx-embed-eyebrow {
+    margin: 0 0 10px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #6b21a8;
+  }
+  .lx-embed-header {
+    margin: 0 0 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+  }
+  .lx-embed-prompt {
+    margin: 0 0 14px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #111827;
+  }
+  .lx-embed-score {
+    margin: 0 0 14px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+  }
+  .lx-embed-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .lx-embed-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .lx-embed-cta {
+    padding: 10px 18px;
+    background: #3f0167;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    border: 0;
+    border-radius: 8px;
+  }
+  .lx-embed-cta:disabled {
+    opacity: 0.5;
+  }
+  .lx-embed-ghost {
+    padding: 10px 14px;
+    background: transparent;
+    color: #3f0167;
+    font-size: 14px;
+    font-weight: 700;
+    border: 0;
+    border-radius: 8px;
+  }
+  .lx-embed-ghost:hover {
+    background: #f3f0f6;
+  }
   .lx-wrap {
     /* 1152px, not the chrome's 1280 (Malik, 2026-08-24: "are the
        elements too wide?" — they were; the lab judged this composition

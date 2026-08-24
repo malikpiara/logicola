@@ -29,7 +29,13 @@ const posts = defineCollection({
     content: z.string(),
   }),
   transform: async (doc, ctx) => {
-    const html = await compileMarkdown(ctx, doc);
+    // allowDangerousHtml (2026-08-24): the quiz-embed markers are raw
+    // <div data-quiz-embed> HTML in the markdown, and the default
+    // pipeline strips raw HTML. Our own committed content only — no
+    // user-generated markdown flows through here.
+    const html = await compileMarkdown(ctx, doc, {
+      allowDangerousHtml: true,
+    });
     const slug = doc._meta.path;
     return { ...doc, html, slug, url: `/blog/${slug}` };
   },
