@@ -1,12 +1,11 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 
-// First API route in the repo. Subscriptions land in the existing
-// Supabase `email_subscriptions` table (the one the never-shipped
-// emailForm.tsx targeted) so addresses are captured from day one; a
-// dedicated newsletter provider can drain that table later without a
-// frontend change. (Malik, 2026-08-13)
+// Loops.so is the newsletter backend (decided 2026-08-24, replacing the
+// 2026-08-13 Supabase stopgap outright — the Supabase project had
+// auto-paused, so that path was already dead). contacts/update is an
+// upsert: resubscribing is idempotent and never leaks whether an
+// address was already on the list. (Malik, 2026-08-24)
 
 const bodySchema = z.object({
   email: z.email().max(320),
@@ -29,23 +28,43 @@ export async function POST(request: Request) {
     );
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!supabaseUrl || !supabaseKey) {
+  const apiKey = process.env.LOOPS_API_KEY;
+  if (!apiKey) {
     return NextResponse.json(
       { error: 'Subscriptions are not configured.' },
       { status: 503 }
     );
   }
 
-  const supabase = createClient(supabaseUrl, supabaseKey);
-  const { error } = await supabase
-    .from('email_subscriptions')
-    .insert({ email: parsed.data.email });
+  const { email, source } = parsed.data;
+  const mailingListId = process.env.LOOPS_MAILING_LIST_ID;
 
-  // 23505 = unique violation: already subscribed, which is a success
-  // from the subscriber's point of view (and avoids address probing).
-  if (error && error.code !== '23505') {
+  try {
+    const response = await fetch(
+      'https://app.loops.so/api/v1/contacts/update',
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          subscribed: true,
+          source: source ?? 'logicola',
+          ...(mailingListId ? { mailingLists: { [mailingListId]: true } } : {}),
+        }),
+        signal: AbortSignal.timeout(8000),
+      }
+    );
+
+    if (!response.ok) {
+      return NextResponse.json(
+        { error: 'Could not subscribe right now.' },
+        { status: 500 }
+      );
+    }
+  } catch {
     return NextResponse.json(
       { error: 'Could not subscribe right now.' },
       { status: 500 }
