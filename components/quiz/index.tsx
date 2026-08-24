@@ -82,8 +82,6 @@ export default function Quiz({ subSet }: QuizProps) {
   );
 }
 
-const QUESTION_EXIT_MS = 90;
-
 // Mobile advance is a spatial push (old exercise slides off left, new one
 // arrives from the right — see .motion-quiz-question's width < 40rem block
 // in globals.css), and the longer travel needs a longer exit than the
@@ -531,7 +529,19 @@ const QuizSession: React.FC<QuizSessionProps> = ({
     const onPopState = () => {
       if (!sheetHistoryPushedRef.current) return;
       sheetHistoryPushedRef.current = false;
+      // Gesture-back folds INSTANTLY (2026-08-24, Malik's Android
+      // report): the OS's predictive-back peek has already animated by
+      // the time popstate fires, and vaul's 500ms travel starting
+      // after it read as two competing motions — the app looking like
+      // it lagged the gesture. A dismissal the gesture caused should
+      // land with the gesture. The attribute rides the unlayered
+      // !important rule in globals.css (the only thing that beats
+      // vaul's inline snap transition) and lifts after the fold.
+      document.documentElement.setAttribute('data-qsheet-back-collapse', '');
       setSnapKind('collapsed');
+      setTimeout(() => {
+        document.documentElement.removeAttribute('data-qsheet-back-collapse');
+      }, 350);
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
@@ -607,6 +617,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
    */
   const paneRegionRef = useRef<HTMLDivElement | null>(null);
   const guideToggleRef = useRef<HTMLButtonElement | null>(null);
+  const gripWrapRef = useRef<HTMLDivElement | null>(null);
   const prevGuideOpenRef = useRef(isGuideOpen);
   useEffect(() => {
     if (prevGuideOpenRef.current === isGuideOpen) return;
@@ -974,17 +985,28 @@ const QuizSession: React.FC<QuizSessionProps> = ({
       return;
     }
 
-    isQuestionLeavingRef.current = true;
-    setIsQuestionLeaving(true);
-    const exitMs = isMobileViewport()
-      ? QUESTION_EXIT_MOBILE_MS
-      : QUESTION_EXIT_MS;
-    questionExitTimeoutRef.current = setTimeout(() => {
-      handleNextQuestion();
-      isQuestionLeavingRef.current = false;
-      setIsQuestionLeaving(false);
-      questionExitTimeoutRef.current = null;
-    }, exitMs);
+    // Mobile without the View Transitions API: the sequential push
+    // fallback — the exit must finish before the keyed remount plays
+    // the entrance.
+    if (isMobileViewport()) {
+      isQuestionLeavingRef.current = true;
+      setIsQuestionLeaving(true);
+      questionExitTimeoutRef.current = setTimeout(() => {
+        handleNextQuestion();
+        isQuestionLeavingRef.current = false;
+        setIsQuestionLeaving(false);
+        questionExitTimeoutRef.current = null;
+      }, QUESTION_EXIT_MOBILE_MS);
+      return;
+    }
+
+    // Desktop advances instantly (2026-08-24, plans/003): Next is
+    // Enter — the app's most repeated keypress — and it was hiding an
+    // undocumented 90ms exit fade between the press and the new
+    // question. The incoming 150ms quizQuestionIn entrance stays: an
+    // entrance doesn't gate the state change, the question is already
+    // there and interactive.
+    handleNextQuestion();
   }
 
   /**
@@ -1050,15 +1072,54 @@ const QuizSession: React.FC<QuizSessionProps> = ({
     setIsPaneResizing(true);
     document.body.style.userSelect = 'none';
 
+    // Composite-budget drag (2026-08-24, plans/001): the old handler
+    // called setPaneWidth per pointermove — a full session-tree render
+    // per pointer event — and the width effect rewrote the inheritable
+    // --quiz-pane-offset on <html>, restyling every descendant. Now the
+    // drag writes the three nodes that actually change, coalesced to
+    // one write per frame; React state and the shared variable commit
+    // once, on release.
+    const paneNode = document.getElementById('quiz-reference-pane');
+    const gripNode = gripWrapRef.current;
+    const pushedNodes = Array.from(
+      document.querySelectorAll<HTMLElement>('.quiz-pane-push')
+    );
+    let liveWidth = startWidth;
+    let frame = 0;
+
+    function applyLiveWidth() {
+      frame = 0;
+      if (paneNode) paneNode.style.width = `${liveWidth}px`;
+      if (gripNode) gripNode.style.right = `${liveWidth - 8}px`;
+      for (const node of pushedNodes) {
+        node.style.marginRight = `${liveWidth}px`;
+      }
+    }
+
     function onPointerMove(moveEvent: PointerEvent) {
-      const width = Math.min(
+      liveWidth = Math.min(
         720,
         Math.max(384, startWidth + (startX - moveEvent.clientX))
       );
-      setPaneWidth(width);
+      if (!frame) frame = requestAnimationFrame(applyLiveWidth);
     }
 
     function onPointerUp() {
+      if (frame) cancelAnimationFrame(frame);
+      applyLiveWidth();
+      // Variable before inline: the pushed nodes fall back to
+      // --quiz-pane-offset the moment their inline margin clears, so
+      // it must already carry the final width or they'd jump a frame.
+      document.documentElement.style.setProperty(
+        '--quiz-pane-offset',
+        `${liveWidth}px`
+      );
+      for (const node of pushedNodes) {
+        node.style.removeProperty('margin-right');
+      }
+      // The pane and grip keep their inline values — React re-renders
+      // them from paneWidth with the identical numbers next commit.
+      setPaneWidth(liveWidth);
       setIsPaneResizing(false);
       document.body.style.userSelect = '';
       window.removeEventListener('pointermove', onPointerMove);
@@ -1276,7 +1337,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
               <Link
                 href='/'
                 aria-label='Exit quiz and return to the home page'
-                className='qexit flex h-11 w-11 shrink-0 items-center justify-center'
+                className='qexit motion-button flex h-11 w-11 shrink-0 items-center justify-center'
               >
                 <TimesIcon className='h-[18px] w-[18px]' />
               </Link>
@@ -1359,7 +1420,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                   type='button'
                   onClick={() => setSnapKind('guide')}
                   aria-label='Open the reference guide'
-                  className='qguide-btn h-11 w-11 shrink-0 justify-center !p-0'
+                  className='qguide-btn motion-button h-11 w-11 shrink-0 justify-center !p-0'
                   style={{ clipPath: GUIDE_CHIP_CLIP }}
                 >
                   <BookHeartIcon className='h-[18px] w-[18px]' />
@@ -1381,7 +1442,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                   onClick={() => setIsGuideOpen((open) => !open)}
                   aria-expanded={isGuideOpen}
                   aria-controls='quiz-reference-pane'
-                  className='qguide-btn'
+                  className='qguide-btn motion-button'
                   style={{ clipPath: GUIDE_CHIP_CLIP }}
                 >
                   <BookHeartIcon className='h-4 w-4' />
@@ -1651,6 +1712,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                       );
                     }}
                     data-resizing={isPaneResizing || undefined}
+                    ref={gripWrapRef}
                     className='qgrip-wrap group fixed inset-y-0 z-40 hidden w-4 cursor-col-resize items-center justify-center animate-in fade-in duration-300 focus-visible:outline-none lg:flex'
                     style={{ right: paneWidth - 8 }}
                   >
@@ -1739,7 +1801,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                           type='button'
                           onClick={() => setIsGuideOpen(false)}
                           aria-label='Close reference guide'
-                          className='qguide-close inline-flex h-8 w-8 shrink-0 items-center justify-center'
+                          className='qguide-close motion-button inline-flex h-8 w-8 shrink-0 items-center justify-center'
                           style={{ clipPath: CLOSE_CHIP_CLIP }}
                         >
                           <TimesIcon className='h-3 w-3' />
@@ -1783,7 +1845,6 @@ const QuizSession: React.FC<QuizSessionProps> = ({
         >
           <DrawerContent
             ref={drawerRef}
-            disableOpenAnimation
             data-expanded={isGuideExpanded || undefined}
             className='quiz-controls-drawer fixed flex flex-col overflow-hidden border-0 rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px] lg:hidden'
             style={

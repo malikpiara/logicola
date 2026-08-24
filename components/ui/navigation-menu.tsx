@@ -113,7 +113,18 @@ const NavigationMenuViewport = React.forwardRef<
   <div className={cn('absolute left-0 top-full flex justify-center')}>
     <NavigationMenuPrimitive.Viewport
       className={cn(
-        'motion-panel origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 md:w-[var(--radix-navigation-menu-viewport-width)]',
+        // Transition + @starting-style, not keyframes (2026-08-24,
+        // plans/004): this menu is click-only, so open/close is a
+        // toggle, and the old zoom keyframes restarted from scale(1)
+        // when re-clicked mid-flight. Three fixes on one line: the
+        // keyframes also never received a curve (no ease-* utility →
+        // browser-default `ease`), and origin-top-center grew the
+        // viewport from the middle of the bar instead of its trigger
+        // (Radix NavigationMenu publishes no transform-origin var, so
+        // top-left — the trigger's corner — is the honest anchor).
+        // Radix unmounts the viewport on close; there is no exit to
+        // animate, and that's fine — exits are shorter and simpler.
+        'nav-viewport-enter relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-lg md:w-[var(--radix-navigation-menu-viewport-width)]',
         className
       )}
       ref={ref}

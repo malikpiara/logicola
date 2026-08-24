@@ -53,10 +53,16 @@
   .motion-button {
     cursor: pointer;
     transform: translateZ(0);
-    transition-duration: 120ms;
+    /* Longhands aligned by index (2026-08-24, plans/005): colours keep
+       `ease` at 120ms — the right curve for colour — while the press
+       TRANSFORM gets a real curve at 150ms. One `ease` for both was
+       why every press in the app felt flat. */
     transition-property:
       color, background-color, border-color, box-shadow, opacity, transform;
-    transition-timing-function: var(--ease-ui);
+    transition-duration: 120ms, 120ms, 120ms, 120ms, 120ms, 150ms;
+    transition-timing-function:
+      var(--ease-ui), var(--ease-ui), var(--ease-ui), var(--ease-ui),
+      var(--ease-ui), var(--ease-press);
   }
 
   .motion-button:disabled,
@@ -76,12 +82,20 @@
   }
 
   /* Yields to the quiz's right-hand reference sheet. The Quiz component
-     writes the open sheet's live width to `--quiz-pane-offset` on <html>
+     writes the open sheet's width to `--quiz-pane-offset` on <html>
      (and removes it on close/unmount), so every surface tagged with this
      class — the navbar, the quiz body — shifts as one layer instead of
      the sheet sliding over some and pushing others. While the sheet is
      being drag-resized <html> carries `data-quiz-pane-resizing` and the
-     transition is suspended so the layout tracks the pointer 1:1. */
+     transition is suspended so the layout tracks the pointer 1:1.
+
+     Margin, not transform, ON PURPOSE (2026-08-24, plans/001 branch
+     decision): the pushed content must REWRAP to the remaining width —
+     a translateX would slide the card's text under the pane. The
+     layout cost is paid only on open/close (300ms, occasional) and
+     once on drag release; during the drag the resize handler writes
+     margin-right inline on these nodes, rAF-coalesced, with no React
+     render and no root-variable restyle. */
   .quiz-pane-push {
     margin-right: var(--quiz-pane-offset, 0px);
     transition: margin-right 300ms var(--ease-out-quart);
@@ -92,10 +106,26 @@
   }
 
   .motion-card {
+    position: relative;
     transform: translateZ(0);
     transition-duration: var(--motion-standard);
     transition-property: border-color, box-shadow, transform;
     transition-timing-function: var(--ease-out-cubic);
+  }
+
+  /* Hover-lift guard (2026-08-24, plans/005): the -2px lift raises the
+     card's bottom edge out from under a cursor resting there —
+     hover-out → drop → hover-in, an oscillation loop. The catalog's
+     move-lift-to-a-child fix would detach the content from the card's
+     own border here, so instead this invisible apron keeps the
+     original footprint hoverable while the card is lifted. Negative
+     z-index: painted behind everything, but still the parent's hit
+     region, and children stay clickable above it. */
+  .motion-card::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 -2px;
+    z-index: -1;
   }
 
   .motion-option {
@@ -116,18 +146,19 @@
     transform: scale(0.992);
   }
 
+  /* Desktop has no exit (2026-08-24, plans/003): the advance is Enter,
+     the app's most repeated keypress, and the old 90ms fade sat between
+     the press and the next question. The transition rules below back
+     ONLY the mobile no-View-Transitions fallback, which overrides the
+     duration in its own block. */
   .motion-quiz-question {
     animation: quizQuestionIn 150ms var(--ease-out-quart) both;
     transform-origin: center top;
-    transition-duration: 90ms;
     transition-property: opacity, transform;
-    transition-timing-function: var(--ease-out-cubic);
+    /* quart, matching the entrance (plans/006): one gesture, one curve
+       family — exits were on cubic while entrances ran quart. */
+    transition-timing-function: var(--ease-out-quart);
     will-change: opacity, transform;
-  }
-
-  .motion-quiz-question[data-motion='leaving'] {
-    opacity: 0;
-    transform: translateY(-4px) scale(0.998);
   }
 
   /* Mobile: advancing is a spatial push. The real thing is the layered
@@ -147,6 +178,9 @@
     }
 
     .motion-quiz-question[data-motion='leaving'] {
+      /* opacity lived on the deleted desktop-level leaving rule; the
+         fallback push keeps its fade here (plans/003). */
+      opacity: 0;
       transform: translateX(-40px);
     }
 
@@ -212,10 +246,13 @@
     transition-timing-function: var(--ease-in-out-cubic);
   }
 
+  /* One meter grammar (plans/006): matches the scored bar's documented
+     500ms/quart payment. Latent until /progress wires live values —
+     aligned now so nobody ships the drift later. */
   .motion-progress {
-    transition-duration: 420ms;
+    transition-duration: 500ms;
     transition-property: transform;
-    transition-timing-function: var(--ease-out-cubic);
+    transition-timing-function: var(--ease-out-quart);
     will-change: transform;
   }
 
@@ -341,7 +378,9 @@
    would delete the label along with the pill's interior. */
 .quiz-immersive .qopt-wrap {
   position: relative;
-  transition: transform 100ms ease;
+  /* The press curve, not built-in `ease` (plans/005). The 0.985 depth
+     is measured and documented below — only the curve changed. */
+  transition: transform 150ms var(--ease-press);
 }
 
 .quiz-immersive .qopt-wrap.is-compact {
@@ -457,6 +496,18 @@
 .quiz-immersive .qopt.is-selected {
   background: var(--qo-sbg);
   color: var(--qo-sfg);
+}
+
+/* Selection TRACKS the keypress (2026-08-24, plans/003): digits and
+   abbreviation keys flip these classes 100+ times a session, and the
+   base 120ms fades put the state a beat behind the finger — the same
+   rule the focus band has obeyed all along. State snaps IN; a removed
+   class falls back to the base fade, so a replaced selection fades out
+   BEHIND the new one — trailing decoration that delays nothing. Hover
+   keeps the base 120ms untouched. */
+.quiz-immersive .qopt.is-selected,
+.quiz-immersive .qopt-wrap.is-ringed::before {
+  transition-duration: 0s;
 }
 
 /* The revealed answer inverts, same adaptive ink as the CTA. */
@@ -1525,11 +1576,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* `.quiz-controls-drawer` left this list 2026-08-24 (plans/002): it
+     was dead — vaul writes the snap transition INLINE, which no
+     stylesheet rule without !important can beat. The working override
+     for every vaul surface is the unlayered [data-vaul-drawer] block
+     at the end of this file. */
   .qsheet-head > .qsheet-cta,
   .qsheet-head > .qsheet-reader,
   .qsheet-x,
-  .qsheet-guide,
-  .quiz-controls-drawer {
+  .qsheet-guide {
     transition: none;
   }
 }
@@ -1936,7 +1991,8 @@
 ::view-transition-old(quiz-question),
 ::view-transition-new(quiz-question) {
   animation-duration: 260ms;
-  animation-timing-function: var(--ease-out-cubic);
+  /* quart, matching the fallback entrance (plans/006). */
+  animation-timing-function: var(--ease-out-quart);
 }
 ::view-transition-old(quiz-question) {
   animation-name: vtQuestionOutLeft;
@@ -2009,12 +2065,45 @@
   border-radius: 60% 40% 50% 50% / 50% 60% 40% 50%;
 }
 
+/* Desktop Exercises menu viewport (2026-08-24, plans/004): enter via
+   @starting-style so the motion is a TRANSITION — interruptible when
+   the click-toggle closes it mid-flight — on the house curve, growing
+   from the trigger's corner. Radix unmounts the viewport on close, so
+   there is no exit; browsers without @starting-style show the menu
+   instantly, which is the correct degradation for a navigation surface. */
+.nav-viewport-enter {
+  transform-origin: top left;
+  transition:
+    opacity 200ms var(--ease-out-quart),
+    transform 200ms var(--ease-out-quart);
+
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-viewport-enter {
+    transition: none;
+  }
+}
+
 @layer base {
   :root {
     --ease-ui: ease;
     --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
     --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
     --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+    /* vaul's own iOS-sheet curve, extremely steep at the start — named
+       here because it IS the live sheet grammar (2026-08-24, plans/002:
+       the utilities that claimed 200ms/quart on the drawers were dead
+       CSS under vaul's unlayered stylesheet). Tune sheets via unlayered
+       rules on this token, never via utility classes. */
+    --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+    /* ease-out-quad — the button-press curve (plans/005): presses ride
+       this, colours stay on --ease-ui. */
+    --ease-press: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --motion-feedback: 140ms;
     --motion-standard: 190ms;
     --motion-page-enter: 220ms;
@@ -2106,9 +2195,7 @@
 
   .animate-in,
   .animate-out,
-  .animate-pulse,
-  .animate-accordion-down,
-  .animate-accordion-up {
+  .animate-pulse {
     animation: none;
     transition: none;
   }
@@ -2213,6 +2300,46 @@
     max-width: 1280px;
     margin-inline: auto;
     padding: 46px 16px 56px;
+  }
+
+  /* Accordion panels collapse by TRANSITION (2026-08-24, plans/004):
+     grid-template-rows 0fr→1fr retargets mid-flight when a row is
+     re-clicked, where the old height keyframes restarted from zero.
+     The transition sits on a CHILD (.faq-panel) of the Radix Content
+     (.faq-host) because Radix writes inline transitionDuration: 0s on
+     the Content itself while measuring — see accordion.tsx.
+     `visibility` transitions discretely after the collapse so closed
+     forceMounted content leaves focus order and the a11y tree. */
+  .faq-host {
+    display: block;
+  }
+
+  .faq-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition:
+      grid-template-rows 190ms var(--ease-out-quart),
+      visibility 0s 190ms;
+  }
+
+  .faq-host[data-state='open'] > .faq-panel {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition:
+      grid-template-rows 190ms var(--ease-out-quart),
+      visibility 0s;
+  }
+
+  .faq-panel > div {
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-panel {
+      transition: none;
+    }
   }
   @media (min-width: 640px) {
     .faq {
@@ -2507,6 +2634,14 @@
   .lx-drill:hover::before {
     background: var(--lx-hover);
   }
+  /* Press acknowledgement (2026-08-24, plans/005): these rows are the
+     landing's primary tap targets, and on touch — where hover never
+     fires — a tap got nothing before the route changed. The fill, not
+     a scale: a full-width row shrinking reads wrong. Ungated on
+     purpose; :active must work on touch. */
+  .lx-drill:active::before {
+    background: var(--lx-hover);
+  }
   .lx-drill:hover .lx-drill-t {
     text-decoration: underline;
     text-underline-offset: 3px;
@@ -2536,6 +2671,12 @@
   }
   .lx-resume {
     display: block;
+    transition: transform 150ms var(--ease-press);
+  }
+  /* Press give for the resume banner (plans/005): 0.99, not the house
+     0.97 — it's a wide surface, press is felt, not seen. */
+  .lx-resume:active {
+    transform: scale(0.99);
   }
   .lx-resume-in {
     display: block;
@@ -2583,4 +2724,58 @@
   .lx-drill::before {
     transition: none;
   }
+}
+
+/* ------------------------------------------------------------------ */
+/* UNLAYERED ON PURPOSE (2026-08-24, plans/002). vaul injects its own
+   unlayered stylesheet at runtime and writes snap transitions inline,
+   so it outranks everything this file declares inside @layer and every
+   utility class. These two rules are the only ones that need to win
+   against it — keep them at top level, after everything else.
+
+   Reduced motion: 1ms rather than `none` — vaul's close logic waits on
+   transition/animation end events, and `none` can strand a dismissing
+   sheet mounted. The overlay's fade still carries the state change:
+   reduced motion means gentler, not zero. The !important is the
+   documented exception (it has to beat inline styles), not a habit. */
+@media (prefers-reduced-motion: reduce) {
+  [data-vaul-drawer],
+  [data-vaul-overlay] {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* Android back-gesture fold (2026-08-24): while the popstate handler
+   collapses the guide sheet, the snap is instant — the OS peek already
+   animated, and a 500ms travel after it read as lag (Malik's device
+   report). Same inline-beating channel as the reduce block above. */
+html[data-qsheet-back-collapse] [data-vaul-drawer] {
+  transition-duration: 1ms !important;
+}
+
+/* 44px hitboxes on two sub-44 animated controls (plans/002): the pane
+   resize grip is a 16px strip, the sheet's collapse chip is 32px on a
+   TOUCH surface. Painted nothing, layout nothing — pure target. */
+.qgrip-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0 -14px;
+}
+.qsheet-x::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
+/* Toasts join the house grammar (2026-08-24, plans/006): Sonner ships
+   400ms on the built-in `ease` — the slowest, softest motion in the
+   product against 140/190ms quart everywhere else. Unlayered so it
+   outranks the library's own stylesheet. Sonner disables transitions
+   while a swipe tracks the pointer (data-swiping), so dismiss gestures
+   are unaffected. If 190ms reads clipped on /keyboard, 250ms is the
+   agreed compromise — judge on device. */
+[data-sonner-toast] {
+  transition-duration: 190ms;
+  transition-timing-function: var(--ease-out-quart);
 }
