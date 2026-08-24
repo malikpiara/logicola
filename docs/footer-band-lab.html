@@ -756,8 +756,26 @@
         '<span class="chip"></span><span class="chip"></span><span class="chip"></span>' +
         '<span class="chip"></span><span class="chip"></span></div>';
 
-      const state = { seed: 45, height: 56 };
-      const NAT = () => state.height / 62; // the band's natural quilt scale
+      const state = { seed: 45, height: 56, scale: 0.62 };
+      /* The uncropped scales are a FAMILY, not a single number (Malik,
+       * 2026-08-24 — my earlier "one exact answer" was wrong). A cell is
+       * `62 × scale` and rows lay from y=0, so ANY whole row count N
+       * divides the band evenly: scale = h / (62 × N). At 56px that is
+       * 0.90 for one row, 0.45 for two, 0.30 for three. More rows read
+       * as a quilt rather than as one row of marks — which is what a
+       * social cover shows, and the reason the cover recipe survives
+       * the shrink at all. */
+      const NAT_N = (n) => state.height / (62 * n);
+      const NAT = () => NAT_N(1); // the band's natural quilt scale, one row
+      /* Malik, 2026-08-24: the whole-row rule is a preference, not a law —
+       * "it can even cut the second or third row a bit". Releasing it opens
+       * the interval between one row (0.90) and two (0.45), where the cell
+       * stays big enough to read as a SHAPE while a second row still proves
+       * the field has two axes. Rows lay from y=0, so the top row is always
+       * whole and the crop always lands on the BOTTOM edge — which is the
+       * bottom of the page, where a pattern running off-canvas is what a
+       * cover does anyway. */
+      const ROWS = (s) => state.height / (62 * s); // rows the band carries
 
       const DIRECTIONS = [
         {
@@ -782,6 +800,66 @@
           rate: 0.75,
           v: ['v-rec', 'recommended'],
           b: 'Set L · Sets · full, exactly as decided for the covers, at the one scale that fits a 56px strip without cropping a row. Same ground and same dominant the footer already runs.',
+        },
+
+        {
+          t: '★ THE IN-BETWEEN — live scale dial, crop allowed',
+          kind: 'quilt',
+          scale: () => state.scale,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => DECIDED_POOL,
+          rate: 0.75,
+          v: ['v-rec', 'drive me'],
+          b: 'Drive the scale dial in the header. Between 0.90 and 0.45 the band carries a whole top row plus a cut one — the crop lands on the page’s bottom edge, which is where a cover crops anyway. Watch the cell size in the meta line: below ~24px the nine colours stop reading as shapes.',
+        },
+
+        {
+          t: 'The in-between at 0.62 — a row and a half',
+          kind: 'quilt',
+          scale: () => 0.62,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => DECIDED_POOL,
+          rate: 0.75,
+          v: ['v-rec', 'candidate'],
+          b: 'A 38px cell — two thirds of the verbatim row’s 56px, a third bigger than two rows’ 28px — and 1.46 rows, so the second row shows just under half its height. Closest thing to the profile cover’s proportions at 56px.',
+        },
+
+        {
+          t: 'The in-between at 0.72 — a row and a third',
+          kind: 'quilt',
+          scale: () => 0.72,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => DECIDED_POOL,
+          rate: 0.75,
+          v: ['v-rec', 'candidate'],
+          b: 'A 45px cell, 1.25 rows. Nearer the verbatim end: the shapes stay large, and the second row is a sliver that reads as the field continuing past the page rather than as a row of its own.',
+        },
+
+        {
+          t: 'THE COVER RECIPE — TWO ROWS · scale h/(62×2) = 0.45',
+          kind: 'quilt',
+          scale: () => NAT_N(2),
+          ground: MINT,
+          dom: PLUM,
+          pool: () => DECIDED_POOL,
+          rate: 0.75,
+          v: ['v-rec', 'Malik’s ask'],
+          b: 'The same nine-colour recipe, two whole rows instead of one. A single row reads as a border of discrete marks; two rows read as a QUILT — the thing the profile cover actually shows — because a quilt needs a second axis before the eye sees a field rather than a strip. Still uncropped, still the same 56px footprint.',
+        },
+
+        {
+          t: 'THE COVER RECIPE — THREE ROWS · scale h/(62×3) = 0.30',
+          kind: 'quilt',
+          scale: () => NAT_N(3),
+          ground: MINT,
+          dom: PLUM,
+          pool: () => DECIDED_POOL,
+          rate: 0.75,
+          v: ['v-rec', 'Malik’s ask'],
+          b: 'Three whole rows, at almost exactly the scale the band runs today (0.30 against the shipped 0.35) — so this is the closest of all the directions to the current footprint and weight, while being a quilt rather than camo. The risk at this size is the cell getting small enough that the nine colours read as noise instead of as shapes; judge it at 100% zoom, not scaled up.',
         },
 
         {
@@ -975,16 +1053,35 @@
           '<input type="range" id="h" min="32" max="120" step="2" value="56"></div>' +
           '<div class="dial"><label for="seed">Seed <output id="seedOut">45 · the cover’s</output></label>' +
           '<input type="range" id="seed" min="1" max="80" step="1" value="45"></div>' +
+          '<div class="dial"><label for="sc">★ In-between scale <output id="scOut">0.62 · 1.46 rows · 38px cell</output></label>' +
+          '<input type="range" id="sc" min="0.40" max="0.95" step="0.01" value="0.62"></div>' +
           '<div class="dial"><label>&nbsp;</label><span style="font:12px ui-monospace,monospace;color:#98a0ab">' +
-          'natural scale <output id="natOut">0.90</output> · a dimmed swatch was rejected by the gate</span></div>';
+          'uncropped scales · 1 row <output id="natOut">0.90</output> · 2 rows <output id="nat2Out">0.45</output> · 3 rows <output id="nat3Out">0.30</output></span></div>';
         document.querySelector('header').after(d);
         const nat = () => {
-          document.getElementById('natOut').textContent = NAT().toFixed(2);
+          document.getElementById('natOut').textContent = NAT_N(1).toFixed(2);
+          document.getElementById('nat2Out').textContent = NAT_N(2).toFixed(2);
+          document.getElementById('nat3Out').textContent = NAT_N(3).toFixed(2);
         };
         d.querySelector('#h').addEventListener('input', (e) => {
           state.height = +e.target.value;
           document.getElementById('hOut').textContent = state.height + 'px';
           nat();
+          scOut();
+          render();
+        });
+        const scOut = () => {
+          document.getElementById('scOut').textContent =
+            state.scale.toFixed(2) +
+            ' · ' +
+            ROWS(state.scale).toFixed(2) +
+            ' rows · ' +
+            Math.round(62 * state.scale) +
+            'px cell';
+        };
+        d.querySelector('#sc').addEventListener('input', (e) => {
+          state.scale = +e.target.value;
+          scOut();
           render();
         });
         d.querySelector('#seed').addEventListener('input', (e) => {
@@ -994,6 +1091,7 @@
           render();
         });
         nat();
+        scOut();
       }
       dials();
       render();

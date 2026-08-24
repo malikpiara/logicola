@@ -69,6 +69,27 @@ const ACCENTS = ['#674900', '#BD00AD', '#8D0381', '#745400', '#824616'];
 /** Everything the product owns — the lab's pinned pool. */
 const EVERYTHING = [...SURFACES, ...INKS, ...ACCENTS, '#FA6C5B', '#05A24B'];
 
+/**
+ * The covers' nine — `setsMix` ungated, as decided for the social
+ * artwork and mirrored from `scripts/brand-assets.mjs`'s UNGATED set.
+ *
+ * It keeps the INK gate (a tile the dominant's own colour has no edge,
+ * so it vanishes) and DROPS the ground gate. `quiltAccentPool`'s 0.17
+ * floor exists to stop a pattern muddying a surface a student reads
+ * against for twenty minutes; a cover and the footer band carry no
+ * text, and a quilt tile is a shape with an edge and a gap around it.
+ * Gated, seven of the nine fall out and the band reads impoverished —
+ * which is the study-surface rule being applied to decoration.
+ *
+ * Derived, not written out, so a new set joins the covers and the band
+ * by editing SETS alone (Malik, 2026-08-24).
+ */
+export function coverPool(ground: string, ink: string): string[] {
+  return [...SURFACES, ...INKS].filter(
+    (c) => c !== ink && c !== ground && perceptualDist(c, ink) > 0.09
+  );
+}
+
 function themePool(): string[] {
   const t = MARKETING_THEME;
   return quiltAccentPool(
