@@ -438,9 +438,27 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
     void captureAnalyticsEvent('quiz_completed', {
       ...buildQuizAnalyticsProperties(subSet, totalQuestionCount),
       correct_questions_count: correctQuestions.length,
-      score_percentage: (correctQuestions.length / totalQuestionCount) * 100,
+      questions_attempted: questionsAttempted(),
+      score_percentage: runScorePercentage(),
     });
     setShowEndScreen(true);
+  }
+
+  /**
+   * Problems actually resolved this run — the score denominator. A
+   * scored run visits far fewer questions than the bank holds, so
+   * dividing by `totalQuestionCount` called a flawless 20-problem run
+   * on a 118-question bank 17% (fixed 2026-08-24; earlier
+   * quiz_completed/quiz_retried rows carry the bank-relative number).
+   * solvedClean/missed count each problem once, whatever the mode.
+   */
+  function questionsAttempted(): number {
+    return scoreState.solvedClean + scoreState.missed;
+  }
+
+  function runScorePercentage(): number {
+    const attempted = questionsAttempted();
+    return attempted > 0 ? (correctQuestions.length / attempted) * 100 : 0;
   }
 
   /**
@@ -453,7 +471,8 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
     void captureAnalyticsEvent('quiz_retried', {
       ...buildQuizAnalyticsProperties(subSet, totalQuestionCount),
       correct_questions_count: correctQuestions.length,
-      score_percentage: (correctQuestions.length / totalQuestionCount) * 100,
+      questions_attempted: questionsAttempted(),
+      score_percentage: runScorePercentage(),
       source: 'quiz_end_screen',
       quiz_mode: nextMode.kind,
     });
