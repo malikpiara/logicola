@@ -60,3 +60,14 @@ Technical details and maintenance notes are documented in
   [docs/release-checks.md](docs/release-checks.md).
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to load Roboto Flex.
+
+## License
+
+LogiCola 3 is source-available under the
+[PolyForm Noncommercial License 1.0.0](LICENSE) (changed from MIT on
+2026-08-24): use, study, and share it freely for any noncommercial
+purpose — classroom and university use very much included — but
+commercial use, including selling access to a rebranded copy, is not
+permitted. Versions published while the project was MIT-licensed
+remain MIT. The Gensler drill material's rights are separate from the
+software license.
