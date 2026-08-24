@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { GemButton } from './gemButton';
 import { PatternLayer } from './patternLayer';
+import { ScreenExit } from './screenExit';
 import type { QuizPatternKind } from '@/lib/patterns';
 import { haptic } from '@/lib/haptics';
 import {
@@ -109,7 +110,15 @@ export function StartScreen({
     <>
       <section
         className='motion-enter max-w-7xl rounded-none lg:rounded-xl w-full h-dvh text-center p-0 text-white flex-col flex justify-center m-auto relative isolate overflow-hidden'
-        style={{ backgroundColor: surfaceColor, color: foregroundColor }}
+        style={
+          {
+            backgroundColor: surfaceColor,
+            color: foregroundColor,
+            // Published so the exit chip can paint an opaque ground of the
+            // set's own surface — see `.qexit-chip` in globals.css.
+            '--screen-surface': surfaceColor,
+          } as React.CSSProperties
+        }
       >
         {/* The pattern frames a clean panel — it never sits under text
             (docs/pixel-ui.md § Pattern placement). The scatter
@@ -121,6 +130,13 @@ export function StartScreen({
           treatment='panel'
           className='pointer-events-none absolute inset-0 -z-10'
         />
+        {/* The way out, added 2026-08-23 on Malik's call. This screen had
+            no exit at any width below `lg`, where the quiz page's navbar is
+            hidden — so arriving on the wrong drill from a shared link left
+            the browser's Back button as the only route, and on the first
+            page of a session there is nothing to go back TO. Same component
+            as the end screen's, so the two cannot drift. */}
+        <ScreenExit label='Leave this exercise and return to all exercises' />
         {/* 0.12em, the top of the 5–12% range caps want — 0.3em let the
             words disassemble (design audit finding 5). */}
         {eyebrow && (

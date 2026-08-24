@@ -829,6 +829,16 @@
   text-align: right;
 }
 
+/* The denominator of "18/22". Static from the first frame — it is the frame
+   the achievement climbs inside, not the achievement — and a weight back so
+   the earned number leads. Same colour, because the accents clear 4.5:1 on
+   their own surface by as little as 0.05 and any dimming drops below AA on
+   four of the seven sets. */
+.qreceipt .qratio {
+  font-weight: 400;
+  opacity: 0.72;
+}
+
 /* ---- End screen exit chip ------------------------------------------------
    A bare ✕ works on the QUESTION screen because that card's pattern is a
    112px footer band and the top of the card is clean surface. The end
@@ -843,7 +853,7 @@
    The ink stays at full strength here, unlike the question screen's 60%,
    because it has a lit ground to sit on and no bar beside it to defer to. */
 .qexit-chip {
-  background: var(--end-surface);
+  background: var(--screen-surface);
   clip-path: polygon(
     4px 0,
     calc(100% - 4px) 0,

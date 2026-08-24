@@ -149,6 +149,59 @@
         color: #7d858f;
         margin-top: 6px;
       }
+      .finishes {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+      }
+      .fin {
+        background: var(--panel);
+        border: 1px solid var(--edge);
+        border-radius: 6px;
+        padding: 14px;
+      }
+      .fin h3 {
+        margin: 0 0 4px;
+        font:
+          600 12px ui-monospace,
+          monospace;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--acc);
+      }
+      .fin p {
+        margin: 0 0 12px;
+        font-size: 12.5px;
+        color: #9aa2ad;
+        line-height: 1.5;
+        min-height: 4.4em;
+      }
+      .finpair {
+        display: flex;
+        gap: 0;
+      }
+      .finhalf {
+        flex: 1;
+        height: 96px;
+        position: relative;
+        display: grid;
+        place-items: center;
+      }
+      .finx {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        font-size: 19px;
+        line-height: 1;
+      }
+      .fincap {
+        font:
+          10px ui-monospace,
+          monospace;
+        color: #7d858f;
+        margin-top: 7px;
+      }
       .phone .pat {
         position: absolute;
         inset: 0;
@@ -543,7 +596,24 @@
     </div>
 
     <div class="sec">
-      <h2>2 &middot; The exit &mdash; six affordances</h2>
+      <h2>2 &middot; The exit &mdash; how it should be finished</h2>
+      <p>
+        Malik, 2026-08-23:
+        <em
+          >&ldquo;not super sure about your current finish/background for the
+          ✕.&rdquo;</em
+        >
+        Seven treatments, each shown twice &mdash; once over a DARK pattern blob
+        and once over clean surface. That pairing is the whole test: the
+        panel&rsquo;s scatter reshuffles every visit, so whatever ships has to
+        read in both places, and judging it on clean surface alone is exactly
+        how the bare glyph got shipped invisible on Set&nbsp;A.
+      </p>
+      <div class="finishes" id="finishes"></div>
+    </div>
+
+    <div class="sec">
+      <h2>2b &middot; The exit &mdash; six affordances</h2>
       <p>
         The fork I resolved without showing it. Every one of these gets a
         finished run out of the drill; they differ in what the learner has to
@@ -1560,6 +1630,116 @@
         },
       ];
 
+      /* ---- how the ✕ is finished ----------------------------------------- */
+      const CHIP_CLIP =
+        'polygon(4px 0,calc(100% - 4px) 0,100% 4px,100% calc(100% - 4px),' +
+        'calc(100% - 4px) 100%,4px 100%,0 calc(100% - 4px),0 4px)';
+
+      const FINISHES = [
+        {
+          n: 'a · bare glyph — the question screen’s',
+          why: 'No ground at all. Consistent with the question screen, and the reason this section exists: over a blob it is ink on ink.',
+          st: (set) => 'color:' + set.i,
+          bad: true,
+        },
+        {
+          n: 'b · opaque surface chip — SHIPPED',
+          why: 'The set’s own surface, 4px sprite chamfer. Ink-on-surface every time: 7.04:1 on Set R, 12.67:1 on Set L.',
+          st: (set) =>
+            'color:' +
+            set.i +
+            ';background:' +
+            set.s +
+            ';clip-path:' +
+            CHIP_CLIP,
+        },
+        {
+          n: 'c · inverted — ink chip, surface glyph',
+          why: 'The same contrast the other way up. Heavier: a solid dark square in the corner competes with the primary button for weight.',
+          st: (set) =>
+            'color:' +
+            set.s +
+            ';background:' +
+            set.i +
+            ';clip-path:' +
+            CHIP_CLIP,
+        },
+        {
+          n: 'd · surface chip, ink at 60%',
+          why: 'The chip with the question screen’s own glyph strength, which is deliberately subordinate there because a bar sits beside it.',
+          st: (set) =>
+            'color:color-mix(in srgb,' +
+            set.i +
+            ' 60%,transparent);background:' +
+            set.s +
+            ';clip-path:' +
+            CHIP_CLIP,
+        },
+        {
+          n: 'e · circular chip',
+          why: 'Same ground, round. Reads as a system control rather than a brand one — and the product’s whole shape grammar is chamfered, never round.',
+          st: (set) =>
+            'color:' + set.i + ';background:' + set.s + ';border-radius:50%',
+        },
+        {
+          n: 'f · translucent chip — surface at 70%',
+          why: 'Lets the pattern show through so the corner stays airy. The cost is that the contrast now depends on what is behind it, which is the thing the chip existed to fix.',
+          st: (set) =>
+            'color:' +
+            set.i +
+            ';background:color-mix(in srgb,' +
+            set.s +
+            ' 70%,transparent)' +
+            ';clip-path:' +
+            CHIP_CLIP,
+        },
+        {
+          n: 'g · no chip, surface halo',
+          why: 'A glyph with a surface-coloured outline drawn around it. Keeps the bare look and still separates from a blob — but a halo on a 2px pixel glyph thickens it, and the shape grammar is unforgiving about that.',
+          st: (set) =>
+            'color:' +
+            set.i +
+            ';text-shadow:0 0 3px ' +
+            set.s +
+            ',0 0 3px ' +
+            set.s +
+            ',0 0 3px ' +
+            set.s,
+        },
+      ];
+
+      function renderFinishes() {
+        const set = SETS[state.set];
+        // The darkest thing the pattern can put behind the glyph is the ink
+        // itself, which is exactly what it is drawn in — the failure case.
+        const dark = set.i,
+          clean = set.s;
+        document.getElementById('finishes').innerHTML = FINISHES.map(
+          (f) =>
+            '<div class="fin"><h3>' +
+            f.n +
+            '</h3><p>' +
+            f.why +
+            '</p>' +
+            '<div class="finpair">' +
+            '<div class="finhalf" style="background:' +
+            dark +
+            '"><span class="finx" style="' +
+            f.st(set) +
+            '">&#10005;</span></div>' +
+            '<div class="finhalf" style="background:' +
+            clean +
+            '"><span class="finx" style="' +
+            f.st(set) +
+            '">&#10005;</span></div>' +
+            '</div><div class="fincap">over a pattern blob &nbsp;·&nbsp; over clean surface' +
+            (f.bad
+              ? ' &nbsp;— <span style="color:#ff9a9a">invisible left</span>'
+              : '') +
+            '</div></div>'
+        ).join('');
+      }
+
       function renderExits() {
         const set = SETS[state.set],
           S = STATES[state.st];
@@ -1966,6 +2146,7 @@
         ).join('');
       }
       const render = () => {
+        renderFinishes();
         renderExits();
         renderTreatments();
         renderReceipts();

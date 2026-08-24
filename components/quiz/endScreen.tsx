@@ -1,13 +1,12 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
 import { TARGET_SCORE } from '@/lib/scoring';
 import { GemButton, GemLink } from './gemButton';
 import { PatternLayer } from './patternLayer';
 import { CountUp } from './countUp';
 import { praiseFor } from './praise';
-import { TimesIcon } from './pixelIcons';
+import { ScreenExit } from './screenExit';
 import type { QuizPatternKind } from '@/lib/patterns';
 import type { QuizCatalogEntry } from '@/lib/quizCatalog';
 import { nextDrillLabel } from '@/lib/nextDrill';
@@ -35,8 +34,9 @@ import { DEFAULT_QUIZ_MODE, scoreMode, type QuizMode } from './quizMode';
  * three-column version at 390px: the columns fit with nothing to spare —
  * "FIRST TRY" rendered 97px wide inside a 96.7px column — where a row has
  * 280px for its label. Rows also SCALE, which is what let the ambiguous
- * "18 of 22" become a labelled "PROBLEMS 22" and "SOLVED FIRST TRY 18" on
- * their own lines. And with the numbers counting, a right-aligned value is
+ * "18 of 22" become a labelled "SOLVED FIRST TRY 18/22" — the ambiguity was
+ * the bare label, not the ratio. And with the numbers counting, a
+ * right-aligned value is
  * the only stable one: centred, it grew in both directions and shimmied for
  * the whole animation (measured 3.6px left, 3.7px right; right-aligned, 0).
  *
@@ -130,7 +130,7 @@ export function EndScreen({
           color: foregroundColor,
           // Published so the exit chip can paint an OPAQUE surface ground
           // beneath itself — see `.qexit-chip` in globals.css.
-          '--end-surface': surfaceColor,
+          '--screen-surface': surfaceColor,
         } as React.CSSProperties
       }
     >
@@ -144,24 +144,7 @@ export function EndScreen({
         className='pointer-events-none absolute inset-0 -z-10'
       />
 
-      {/* The exit. Same glyph, same corner and the same 44px target as the
-          question screen's, so a run has one way out that never moves.
-
-          IT CARRIES ITS OWN GROUND, and that is not decoration. The question
-          screen can wear a bare ✕ because its pattern is a footer band and
-          the top of the card is clean surface. Here the pattern fills all
-          four corners AND reshuffles every visit, so a bare glyph in the
-          set's ink lands on an ink-coloured blob roughly as often as not —
-          caught in the real app on Set A, where it was plum on plum and
-          simply invisible. An opaque surface chip makes the contrast
-          ink-on-surface every time, which is 7.04:1 on the worst set. */}
-      <Link
-        href='/'
-        aria-label='Exit and return to all exercises'
-        className='qexit qexit-chip absolute left-2 top-[calc(0.5rem+env(safe-area-inset-top))] z-20 flex h-11 w-11 items-center justify-center'
-      >
-        <TimesIcon className='h-[18px] w-[18px]' />
-      </Link>
+      <ScreenExit label='Exit and return to all exercises' />
 
       {/* px-10 below md: the cleared panel is 88% of the canvas, so at 375px
           a text-4xl headline ran under the pattern frame and off both edges
@@ -179,26 +162,29 @@ export function EndScreen({
               <CountUp value={score} order={0} />
             </dd>
           </div>
-          <div>
-            <dt>Problems</dt>
-            <dd>
-              <CountUp value={questionsTaken} order={1} />
-            </dd>
-          </div>
-          {/* Two rows rather than "18 of 22" on one (Malik, 2026-08-23):
-              the ratio read ambiguously — first try at WHAT, and 22 of
-              what? — and rows are the layout that had the width to split
-              it, which is most of why rows won. */}
+          {/* ONE ratio row, not two separate figures (Malik, 2026-08-23).
+              Split, the two numbers made the reader do the arithmetic; as
+              "18/22" the shortfall is the thing you see, which is what
+              makes it an argument for going again rather than a tally.
+              The earlier ambiguity was never the ratio — it was the label
+              "FIRST TRY" leaving both halves unexplained. Named in full,
+              the denominator reads as what it is.
+
+              Only the NUMERATOR counts. The denominator is the frame the
+              achievement climbs inside, so it is there from the first
+              frame; animating it would make the target itself look
+              unsettled. */}
           <div>
             <dt>Solved first try</dt>
             <dd>
-              <CountUp value={solvedClean} order={2} />
+              <CountUp value={solvedClean} order={1} />
+              <span className='qratio'>/{questionsTaken}</span>
             </dd>
           </div>
           <div>
             <dt>Level</dt>
             <dd>
-              <CountUp value={mode.level} order={3} />
+              <CountUp value={mode.level} order={2} />
             </dd>
           </div>
         </dl>
