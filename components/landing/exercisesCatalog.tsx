@@ -139,7 +139,16 @@ export function ExercisesCatalog() {
             {topics.length} topics · {drillCount} drills
           </span>
         </h2>
-        <ResumeBanner />
+        {/* The slot always renders; the BANNER hydrates into it. A
+            pre-paint inline script on the page marks <html> when
+            logicola.last_drill exists, and CSS reserves the banner's
+            box under that mark — so returning drillers get zero shift
+            and first-time visitors get zero hole (2026-08-24, the CLS
+            audit's #1: the unreserved banner alone blew the 0.1
+            budget). */}
+        <div className='lx-resume-slot'>
+          <ResumeBanner />
+        </div>
         <ul className='lx-grid'>
           {topics.map((topic, i) => (
             <TopicCard

@@ -32,7 +32,19 @@ const KatexSpanImpl = React.lazy(() =>
 export type { KatexSpanProps };
 
 export function preloadKatex(): void {
-  void import('./katexSpanImpl');
+  void import('./katexSpanImpl').then(() => {
+    // Warm the faces too (2026-08-24, CLS audit #4): KaTeX declares 20
+    // font-display:block faces that only start downloading when first
+    // USED — so the first question's math measured in Times, then
+    // re-wrapped when KaTeX_Main landed. Loading the three faces every
+    // set actually reaches during the start screen removes that
+    // re-measure. FontFace API, so no coupling to hashed font URLs.
+    if (typeof document !== 'undefined' && 'fonts' in document) {
+      void document.fonts.load('1.21em KaTeX_Main');
+      void document.fonts.load('italic 1.21em KaTeX_Math');
+      void document.fonts.load('1.21em KaTeX_Size1');
+    }
+  });
 }
 
 export default function KatexSpan({

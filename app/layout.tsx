@@ -12,6 +12,17 @@ const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
   weight: 'variable',
   axes: ['wdth'],
+  // 'optional' guarantees zero font-swap layout shift (2026-08-24, CLS
+  // audit #3): the display headings run font-stretch 151%, and no
+  // fallback face has a width axis — the swap re-wrapped every heading
+  // and moved everything under it. With 'optional' the font is used
+  // when it's already there (warm cache, fast connection — the common
+  // case, since next/font preloads it) and the metric-adjusted
+  // fallback keeps the page still when it isn't; it then applies from
+  // the next navigation. The trade: a cold first paint can render
+  // headings without the stretch. Judged the right side of the
+  // stability/flash trade for a study tool.
+  display: 'optional',
 });
 
 export const metadata: Metadata = {
