@@ -124,15 +124,30 @@
         line-height: 1.5;
         min-height: 4.4em;
       }
-      .phone {
-        width: 390px;
-        height: 730px;
+      /* the stage renders at its TRUE pixel size and is scaled down to fit the
+    sheet, so the proportion between the cleared pattern panel and the
+    content is exactly what the device shows. */
+      .stagebox {
         position: relative;
+        flex: none;
+        overflow: hidden;
+      }
+      .phone {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: top left;
         overflow: hidden;
         border-radius: 26px;
         border: 1px solid #333;
         isolation: isolate;
-        flex: none;
+      }
+      .stagesize {
+        font:
+          10px ui-monospace,
+          monospace;
+        color: #7d858f;
+        margin-top: 6px;
       }
       .phone .pat {
         position: absolute;
@@ -515,7 +530,20 @@
     </header>
     <div class="dials" id="dials"></div>
     <div class="sec">
-      <h2>1 &middot; The exit &mdash; six affordances</h2>
+      <h2>1 &middot; The receipt &mdash; the live exploration</h2>
+      <p>
+        Six readings, all carrying the corner&nbsp;&times; and a ghost
+        secondary. <b>Run quality</b> is the dial that matters &mdash; a receipt
+        exists to tell a 20-for-20 run from a 40-for-60 one, which today&rsquo;s
+        end screen cannot. <b>Stage size</b> previews the same composition from
+        a 390px phone to a 1280px desktop; the figure under each stage is its
+        true size.
+      </p>
+      <div class="stages" id="receipts"></div>
+    </div>
+
+    <div class="sec">
+      <h2>2 &middot; The exit &mdash; six affordances</h2>
       <p>
         The fork I resolved without showing it. Every one of these gets a
         finished run out of the drill; they differ in what the learner has to
@@ -526,7 +554,7 @@
     </div>
 
     <div class="sec">
-      <h2>2 &middot; Two buttons, six treatments</h2>
+      <h2>3 &middot; Two buttons, six treatments</h2>
       <p>
         Primary is &ldquo;Try the hard set&rdquo; in every one; only the
         secondary changes. Measured across all seven palettes &mdash; the number
@@ -534,19 +562,6 @@
       </p>
       <div class="tgrid" id="tgrid"></div>
     </div>
-    <div class="sec">
-      <h2>3 &middot; The receipt &mdash; six readings</h2>
-      <p>
-        Malik, 2026-08-23: the most interesting composition, so it gets its own
-        exploration. All six carry the corner&nbsp;&times; (his exit pick) and a
-        GHOST secondary. The dial that matters most here is
-        <b>run quality</b> &mdash; the whole point of a receipt is that it can
-        tell a 20-for-20 run from a 40-for-60 one, and today&rsquo;s end screen
-        cannot.
-      </p>
-      <div class="stages" id="receipts"></div>
-    </div>
-
     <div class="sec">
       <h2>4 &middot; The other compositions</h2>
       <p>
@@ -897,15 +912,16 @@
           ph = mobile ? Math.min(560, h * 0.74) : Math.min(560, h * 0.78);
         return { x: (w - pw) / 2, y: h * 0.5 - ph / 2, w: pw, h: ph, r: 28 };
       }
-      function patSvg(set, kind, w, h, seed) {
+      function patSvg(set, kind, w, h, seed, mobile) {
+        const m = mobile === undefined ? true : mobile;
         const body = patternBody(kind, {
           w,
           h,
           ink: set.i,
           pool: quiltAccentPool(set.s, set.i, POOL),
-          scale: 0.6 * QUIZ_PATTERN_SCALE,
+          scale: (m ? 0.6 : 1) * QUIZ_PATTERN_SCALE,
           seed,
-          clear: clearRectFor(w, h, true),
+          clear: clearRectFor(w, h, m),
         });
         return (
           '<svg width="' +
@@ -1093,28 +1109,44 @@
         'Very nice',
       ];
 
+      /* DECIDED (Malik, 2026-08-23): the five person-directed lines, with an
+     exclamation mark. His reasoning, and it answers the objection I raised:
+     completing an exercise IS hard, so praising the person is proportionate
+     here in a way it would not be after a single correct answer. The
+     exclamation is the one edit to Gensler's text — 2008 set these without
+     one because they fired thirty times a run; once per completed exercise
+     they can afford it. He is revisiting the success screen in a later
+     release, so this is a resting state, not a conclusion. */
+      const PRAISE = [
+        'Logic whiz!',
+        'A logic brain!',
+        'Sharp student!',
+        'Pretty smart!',
+        'What a brain!',
+      ];
+
       const HEADS = {
+        praise: {
+          label: 'Gensler’s five, with a “!” — DECIDED',
+          pick: (seed) => PRAISE[seed % PRAISE.length],
+        },
         statement: {
-          label: '“Exercise complete.” — shipped',
+          label: '“Exercise complete.” — the old statement',
           pick: () => 'Exercise complete.',
         },
         fixed: {
-          label: '“Logic whiz” — one fixed line',
-          pick: () => 'Logic whiz',
-        },
-        random: {
-          label: 'A random 2008 line, per run',
-          pick: (seed) => PRAISE_2008[seed % PRAISE_2008.length],
+          label: '“Logic whiz!” — one fixed line',
+          pick: () => 'Logic whiz!',
         },
         work: {
-          label: 'Work-directed lines only',
+          label: 'Work-directed lines instead',
           pick: (seed) => WORK_PRAISE[seed % WORK_PRAISE.length],
         },
         earned: {
           label: 'Praise only on a CLEAN run',
           pick: (seed, r) =>
             r.clean === r.taken
-              ? PRAISE_2008[seed % PRAISE_2008.length]
+              ? PRAISE[seed % PRAISE.length]
               : 'Exercise complete.',
         },
       };
@@ -1126,7 +1158,8 @@
         seed: 7,
         treat: 'ghost',
         run: 'ordinary',
-        head: 'statement',
+        head: 'praise',
+        stage: 'phone',
       };
       const STATES = {
         next: {
@@ -1569,21 +1602,50 @@
         },
       };
 
-      function receiptShell(inner, set) {
+      const STAGES = {
+        phone: { w: 390, h: 730, label: 'Phone · 390×730' },
+        big: { w: 430, h: 800, label: 'Large phone · 430×800' },
+        tablet: { w: 768, h: 900, label: 'Tablet · 768×900' },
+        desktop: { w: 1280, h: 760, label: 'Desktop · 1280×760' },
+      };
+      // Render at true size, then scale to fit the sheet — so the ratio between
+      // the cleared pattern panel and the content is the device's, not the
+      // preview's. `mobile` is w < 640, which is the same test PatternLayer uses,
+      // so the panel geometry switches where the product switches.
+      function stageWrap(inner, set) {
+        const st = STAGES[state.stage];
+        const z = Math.min(1, 430 / st.w);
+        const mobile = st.w < 640;
         return (
-          '<div class="phone" style="background:' +
+          '<div><div class="stagebox" style="width:' +
+          Math.round(st.w * z) +
+          'px;height:' +
+          Math.round(st.h * z) +
+          'px">' +
+          '<div class="phone" style="width:' +
+          st.w +
+          'px;height:' +
+          st.h +
+          'px;transform:scale(' +
+          z +
+          ');background:' +
           set.s +
           ';color:' +
           set.i +
           '">' +
           '<div class="pat">' +
-          patSvg(set, state.kind, 390, 730, state.seed) +
+          patSvg(set, state.kind, st.w, st.h, state.seed, mobile) +
           '</div>' +
           cornerX(set) +
           inner +
-          '</div>'
+          '</div></div>' +
+          '<div class="stagesize">' +
+          st.label +
+          (z < 1 ? ' · shown at ' + Math.round(z * 100) + '%' : '') +
+          '</div></div>'
         );
       }
+      const receiptShell = (inner, set) => stageWrap(inner, set);
       const ghostSpec = (x) => ({
         bg: 'transparent',
         fg: x.i,
@@ -1616,7 +1678,9 @@
                 '<div><b>' +
                 counter(r.taken) +
                 '</b><span>problems</span></div>' +
-                '<div><b>5</b><span>level</span></div></div>' +
+                '<div><b>' +
+                counter(5) +
+                '</b><span>level</span></div></div>' +
                 receiptActs(S, set) +
                 '</div>',
               set
@@ -1642,7 +1706,9 @@
                 r.taken +
                 '</span></b>' +
                 '<span>first try</span></div>' +
-                '<div><b>5</b><span>level</span></div></div>' +
+                '<div><b>' +
+                counter(5) +
+                '</b><span>level</span></div></div>' +
                 receiptActs(S, set) +
                 '</div>',
               set
@@ -1700,7 +1766,9 @@
                 '</span></b></div>' +
                 '<div style="border-color:color-mix(in srgb,' +
                 set.i +
-                ' 18%,transparent)"><span>Level</span><b>5</b></div>' +
+                ' 18%,transparent)"><span>Level</span><b>' +
+                counter(5) +
+                '</b></div>' +
                 '</div>' +
                 receiptActs(S, set) +
                 '</div>',
@@ -1787,14 +1855,21 @@
        *          — progressive reduction — but a run is ~20 problems, so this is
        *          firmly in "occasional".
        */
-      // Sequential, not staggered (Malik, 2026-08-23): one figure at a time, in
-      // DOM order — which is reading order, left-to-right for R2's columns and
-      // top-to-bottom for R4's rows. Each is shorter than the old overlapping
-      // 700ms, because you now watch them in turn rather than at once: two
-      // figures settle in 480 + 90 + 480 ≈ 1.05s, and nothing is gated on it —
-      // the buttons are live from the first frame.
+      // A CASCADE, not a queue (Malik, 2026-08-23 — revised twice).
+      //
+      // First it was a 120ms overlapping stagger; then strictly sequential, one
+      // figure finishing before the next began. Sequential was wrong for a
+      // reason worth writing down: a figure that sits at 0 for the 480ms its
+      // neighbour is counting does not read as "waiting its turn", it reads as
+      // BROKEN. Nothing on screen explains why that number is dead.
+      //
+      // So the offset is measured start-to-start, not end-to-start: each figure
+      // begins 130ms after the one before it STARTS. Every number is visibly
+      // moving within a sixth of a second, the eye still gets the left-to-right
+      // and top-to-bottom cascade, and the whole receipt settles in
+      // 480 + 2x130 = 740ms instead of 1.14s.
       const COUNT_MS = 480;
-      const COUNT_GAP = 90;
+      const COUNT_OFFSET = 130;
       // ease-out-quart, the value is ENTERING — matches --ease-out-quart in
       // app/globals.css so the lab and the product share one curve.
       const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
@@ -1812,7 +1887,7 @@
       function countStage(stage) {
         [...stage.querySelectorAll('[data-count]')].forEach((el, i) => {
           const to = Number(el.dataset.count);
-          const delay = i * (COUNT_MS + COUNT_GAP);
+          const delay = i * COUNT_OFFSET;
           if (reduced()) {
             el.textContent = String(to);
             return;
@@ -1929,6 +2004,14 @@
           '</select></div>' +
           '<div class="dial"><label>&nbsp;</label>' +
           '<button class="replay" id="recount">▶ Replay the count</button></div>' +
+          '<div class="dial"><label for="stage">Stage size</label><select id="stage">' +
+          opt(
+            Object.fromEntries(
+              Object.entries(STAGES).map(([k, v]) => [k, v.label])
+            ),
+            state.stage
+          ) +
+          '</select></div>' +
           '<div class="dial"><label for="head">Headline</label><select id="head">' +
           opt(
             Object.fromEntries(
@@ -2030,6 +2113,18 @@ ring. So &ldquo;outlined button&rdquo; here means a two-layer gem: an outer elem
 rim colour, 3px of padding, an inner element in the fill. That is not a hack; it is what
 <code>ringBand</code> in <code>lib/pixel.ts</code> already does for focus.</p>
 
+<h3>What the desktop stage shows, and it is not flattering</h3>
+<p>Switch the stage dial to <b>Desktop &middot; 1280&times;760</b>. The receipt was designed against a
+390px phone and it shows: the stat block is ~290px of content adrift in a 1280px field, with the
+cleared pattern panel capping at 760px wide and the figures sitting small in the middle of it. The
+phone composition is not wrong on desktop, it is just <em>unscaled</em> — every element keeps its
+phone size while the canvas triples.</p>
+<p>That is a real open item and it is not solved by picking R2 or R4. The three obvious answers are
+to step the type up at <code>lg</code>, to cap the content column so the panel stops being so much
+wider than what it holds, or to accept that the end screen is a phone-first surface and let desktop
+be roomy. Worth deciding once, because it applies to the start screen too — that one was composed at
+the same width and has the same property.</p>
+
 <h3>R2 or R4 — and the count-up settles it</h3>
 <p>Malik&rsquo;s hypothesis was R4 on mobile and R2 on desktop. <b>Measured, the split is not needed
 and the direction is the other way round.</b></p>
@@ -2065,10 +2160,16 @@ overshoot and no bounce: an inflated score, even for 200ms, is dishonest feedbac
 exercise, and Saffer&rsquo;s ethical boundary on feedback is explicit that progress must not deceive.
 The denominator is static, because &ldquo;of 22&rdquo; is not an achievement. <b>The level never
 counts</b> — it is a setting the learner chose, and animating it would claim it was earned.</p>
-<p><b>Feedback</b> — scaled to significance. The score is the result and leads; first-try is the skill
-figure and follows 120ms later. Same easing and duration for both (the paired-elements rule), only
-offset. 700ms with <code>ease-out-quart</code>, the curve <code>--ease-out-quart</code> already
-carries in globals.css — the value is <em>entering</em>, which is what ease-out is for.</p>
+<p><b>Feedback</b> — a cascade, measured start-to-start. Points at 0ms, first try at 130ms, level at
+260ms, each running 480ms on <code>ease-out-quart</code> (the curve globals.css already carries; the
+value is <em>entering</em>, which is what ease-out is for). Everything is settled by <b>740ms</b>.</p>
+<p>It was strictly sequential for one revision and that was wrong, for a reason worth keeping: a
+figure sitting at 0 while its neighbour counts does not read as <em>waiting its turn</em>, it reads
+as <b>broken</b> — nothing on screen explains why that number is dead. Start-to-start offsets keep
+the left-to-right, top-to-bottom cascade while every figure is visibly moving within a sixth of a
+second. The level counts too (Malik, 2026-08-23), which also retires my earlier argument that a
+setting should not animate: among two counting neighbours, the one static figure looked like a
+failure rather than a distinction.</p>
 <p><b>Loop</b> — closed, once per end screen. Worth revisiting if a learner ever meets it dozens of
 times a session, where progressive reduction would say drop it; a run is ~20 problems, so this sits
 in &ldquo;occasional&rdquo;, which is where the frequency rule permits an animation at all.</p>
