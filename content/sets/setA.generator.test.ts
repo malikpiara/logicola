@@ -124,6 +124,29 @@ describe('setA generator — property tests', () => {
 describe('setA generator — Gensler fidelity', () => {
   const SWEEP_SEEDS = [1, 42, 99, 12345];
 
+  // Professor report, 2026-08-24: "I'm the smartest influencer in LA"
+  // keyed `i is i` — the pronoun subject is always i (u for "you"),
+  // and the profession pool carries i-words, so one letter named two
+  // individuals. The rule is Gensler's own (his name pool avoids every
+  // reserved initial): no option may carry the same letter on both
+  // sides of `is`, in either case.
+  it.each(SWEEP_SEEDS)(
+    'seed %i: no option pairs a letter with itself across `is`',
+    (seed) => {
+      for (const q of allQuestions(seed)) {
+        for (const o of q.options) {
+          const m = o.label.match(/\b([A-Za-z]) is (?:not )?([A-Za-z])\b/);
+          if (m) {
+            expect(
+              m[1]!.toLowerCase(),
+              `"${o.label}" (${q.id}: ${q.prompt})`
+            ).not.toBe(m[2]!.toLowerCase());
+          }
+        }
+      }
+    }
+  );
+
   /** Gensler's eight wff forms (Introduction to Logic, 3rd ed., §2.1):
    *  wffs beginning with a word use two capitals; wffs beginning with
    *  a letter begin with a small letter. */
