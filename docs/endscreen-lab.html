@@ -312,6 +312,12 @@
         font-weight: 400;
         opacity: 0.72;
       }
+      /* the counted figure: a fixed box, digits filling it from the right */
+      .cnt {
+        display: inline-block;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
       .sr {
         position: absolute;
         width: 1px;
@@ -1029,6 +1035,90 @@
         return { n: 7 - bad.length, bad };
       }
 
+      /* The 30 praise strings Gensler shipped in 2008, verbatim from
+     content/lexicons.ts. They were PER-ANSWER applause — one after each
+     correct answer, which is why there are thirty — and the file's own note
+     records that "the scored end screen replaced" them. Putting one on the
+     end screen is therefore a REPURPOSING, not a restoration. */
+      const PRAISE_2008 = [
+        'Wonderful',
+        'Logic whiz',
+        'Brilliant',
+        'Fabulous',
+        'Touchdown',
+        'What talent',
+        'A logic brain',
+        'Awesome',
+        'I am impressed',
+        'Tremendous',
+        'Marvelous',
+        'Home run',
+        'Fantastic',
+        'Very nice',
+        'What ability',
+        'Magnificent',
+        'Phenomenal',
+        'Pretty smart',
+        'Excellent',
+        'Good job',
+        'Incredible',
+        'Sharp student',
+        'Yes! Yes',
+        'Totally cool',
+        'Superb',
+        'What a brain',
+        'Good response',
+        'What insight',
+        'Accurate',
+        'Exactly',
+      ];
+      // Of those thirty, nine praise the PERSON rather than the work. That split
+      // matters here for the same reason it mattered to the points delta.
+      const PERSON_PRAISE = [
+        'Logic whiz',
+        'A logic brain',
+        'Sharp student',
+        'Pretty smart',
+        'What a brain',
+        'What talent',
+        'What ability',
+        'I am impressed',
+        'What insight',
+      ];
+      const WORK_PRAISE = [
+        'Accurate',
+        'Exactly',
+        'Good response',
+        'Good job',
+        'Very nice',
+      ];
+
+      const HEADS = {
+        statement: {
+          label: '“Exercise complete.” — shipped',
+          pick: () => 'Exercise complete.',
+        },
+        fixed: {
+          label: '“Logic whiz” — one fixed line',
+          pick: () => 'Logic whiz',
+        },
+        random: {
+          label: 'A random 2008 line, per run',
+          pick: (seed) => PRAISE_2008[seed % PRAISE_2008.length],
+        },
+        work: {
+          label: 'Work-directed lines only',
+          pick: (seed) => WORK_PRAISE[seed % WORK_PRAISE.length],
+        },
+        earned: {
+          label: 'Praise only on a CLEAN run',
+          pick: (seed, r) =>
+            r.clean === r.taken
+              ? PRAISE_2008[seed % PRAISE_2008.length]
+              : 'Exercise complete.',
+        },
+      };
+
       const state = {
         set: 'L',
         st: 'next',
@@ -1036,6 +1126,7 @@
         seed: 7,
         treat: 'ghost',
         run: 'ordinary',
+        head: 'statement',
       };
       const STATES = {
         next: {
@@ -1520,10 +1611,10 @@
                 '</h2>' +
                 rule(set) +
                 '<div class="stat"><div><b>' +
-                counter(S.score, 0, set.a) +
+                counter(S.score, set.a) +
                 '</b><span>points</span></div>' +
                 '<div><b>' +
-                counter(r.taken, COUNT_STAGGER) +
+                counter(r.taken) +
                 '</b><span>problems</span></div>' +
                 '<div><b>5</b><span>level</span></div></div>' +
                 receiptActs(S, set) +
@@ -1543,10 +1634,10 @@
                 '</h2>' +
                 rule(set) +
                 '<div class="stat"><div><b>' +
-                counter(S.score, 0, set.a) +
+                counter(S.score, set.a) +
                 '</b><span>points</span></div>' +
                 '<div><b>' +
-                counter(r.clean, COUNT_STAGGER) +
+                counter(r.clean) +
                 '<span class="den">/' +
                 r.taken +
                 '</span></b>' +
@@ -1570,10 +1661,10 @@
                 '</h2>' +
                 rule(set) +
                 '<div class="stat"><div><b>' +
-                counter(S.score, 0, set.a) +
+                counter(S.score, set.a) +
                 '</b><span>points</span></div>' +
                 '<div><b>' +
-                counter(r.clean, COUNT_STAGGER) +
+                counter(r.clean) +
                 '<span class="den">/' +
                 r.taken +
                 '</span></b>' +
@@ -1597,13 +1688,13 @@
                 set.i +
                 '">' +
                 '<div><span>Points</span><b>' +
-                counter(S.score, 0, set.a) +
+                counter(S.score, set.a) +
                 '</b></div>' +
                 '<div style="border-color:color-mix(in srgb,' +
                 set.i +
                 ' 18%,transparent)"><span>First try</span>' +
                 '<b>' +
-                counter(r.clean, COUNT_STAGGER) +
+                counter(r.clean) +
                 '<span class="den"> of ' +
                 r.taken +
                 '</span></b></div>' +
@@ -1696,8 +1787,14 @@
        *          — progressive reduction — but a run is ~20 problems, so this is
        *          firmly in "occasional".
        */
-      const COUNT_MS = 700;
-      const COUNT_STAGGER = 120;
+      // Sequential, not staggered (Malik, 2026-08-23): one figure at a time, in
+      // DOM order — which is reading order, left-to-right for R2's columns and
+      // top-to-bottom for R4's rows. Each is shorter than the old overlapping
+      // 700ms, because you now watch them in turn rather than at once: two
+      // figures settle in 480 + 90 + 480 ≈ 1.05s, and nothing is gated on it —
+      // the buttons are live from the first frame.
+      const COUNT_MS = 480;
+      const COUNT_GAP = 90;
       // ease-out-quart, the value is ENTERING — matches --ease-out-quart in
       // app/globals.css so the lab and the product share one curve.
       const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
@@ -1705,9 +1802,17 @@
         window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       function runCountUp(root) {
-        root.querySelectorAll('[data-count]').forEach((el) => {
+        // Per STAGE, so each phone counts its own figures in its own order —
+        // otherwise the sixth card would start counting a second after the first.
+        root.querySelectorAll('.phone').forEach((stage) => {
+          countStage(stage);
+        });
+      }
+
+      function countStage(stage) {
+        [...stage.querySelectorAll('[data-count]')].forEach((el, i) => {
           const to = Number(el.dataset.count);
-          const delay = Number(el.dataset.countDelay || 0);
+          const delay = i * (COUNT_MS + COUNT_GAP);
           if (reduced()) {
             el.textContent = String(to);
             return;
@@ -1727,21 +1832,35 @@
       // The counting node is aria-hidden and a static sr-only twin carries the
       // real value, so a screen reader hears "100 points" once instead of
       // hearing it recount sixty times.
-      const counter = (value, delay, colour) =>
-        '<span aria-hidden="true" data-count="' +
+      // The box is sized to the FINAL value up front — `min-width` in `ch`,
+      // which with tabular figures is exactly one digit advance. So "7" occupies
+      // the same box as "100" from the first frame and nothing reflows while the
+      // digits arrive. Right-aligned inside it, so the ones column is the anchor.
+      // (Malik, 2026-08-23: "the layout shift feels a bit off" — it was, and
+      // tabular-nums alone cannot fix it, because a count changes digit COUNT.)
+      const counter = (value, colour) =>
+        '<span class="cnt" aria-hidden="true" data-count="' +
         value +
-        '"' +
-        (delay ? ' data-count-delay="' + delay + '"' : '') +
-        (colour ? ' style="color:' + colour + '"' : '') +
-        '>0</span>' +
+        '" style="min-width:' +
+        String(value).length +
+        'ch' +
+        (colour ? ';color:' + colour : '') +
+        '">0</span>' +
         '<span class="sr">' +
         value +
         '</span>';
 
       function renderReceipts() {
-        const set = SETS[state.set],
-          S = STATES[state.st];
+        const set = SETS[state.set];
         const r = RUNS[state.run];
+        const base = STATES[state.st];
+        // Praise replaces the headline only where the run actually SUCCEEDED —
+        // "Logic whiz" over "Out of problems." would be the app congratulating
+        // someone for running out of questions.
+        const S =
+          base.score >= 100
+            ? { ...base, msg: HEADS[state.head].pick(state.seed, r) }
+            : base;
         document.getElementById('receipts').innerHTML = RECEIPTS.map(
           (x) =>
             '<div class="col"><h3>' +
@@ -1810,6 +1929,14 @@
           '</select></div>' +
           '<div class="dial"><label>&nbsp;</label>' +
           '<button class="replay" id="recount">▶ Replay the count</button></div>' +
+          '<div class="dial"><label for="head">Headline</label><select id="head">' +
+          opt(
+            Object.fromEntries(
+              Object.entries(HEADS).map(([k, v]) => [k, v.label])
+            ),
+            state.head
+          ) +
+          '</select></div>' +
           '<div class="dial"><label for="run">Run quality</label><select id="run">' +
           opt(
             Object.fromEntries(
