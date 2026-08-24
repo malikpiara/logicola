@@ -459,7 +459,12 @@ function template0(rng: Rng, counter: number): Question {
  *   the class of wild clowns).
  */
 function template2(rng: Rng, counter: number): Question {
-  const noun = pickFresh(rng, nounsProfessions);
+  // The subject "I" is ALWAYS the letter i, so the profession must not
+  // be — 'influencer' here rendered the class-as-lowercase distractor
+  // as `i is i`, one letter naming two individuals. Professor report,
+  // fixed 2026-08-24; RESERVED_NAME_INITIALS shields names from i/u
+  // the same way, but professions were never covered.
+  const noun = pickDifferentLetter(rng, nounsProfessions, 'i');
   const adjB = pickFresh(rng, adjectives);
   const place = placeForNoun(rng, noun);
   const A = noun[0]!.toUpperCase();
@@ -492,7 +497,9 @@ function template2(rng: Rng, counter: number): Question {
  *   (single referent — "the cheapest poet" picks out one person).
  */
 function template3(rng: Rng, counter: number): Question {
-  const noun = pickFresh(rng, nounsProfessions);
+  // Subject "I" → i; see template2. Here the collision hit the CORRECT
+  // answer: "I'm the smartest influencer in LA" keyed `i is i`.
+  const noun = pickDifferentLetter(rng, nounsProfessions, 'i');
   const adj = pickFresh(rng, adjectives);
   const place = placeForNoun(rng, noun);
   const A = noun[0]!.toUpperCase();
@@ -607,7 +614,9 @@ function template5(rng: Rng, counter: number): Question {
  * Predicate: "a $B $A" → CAPITAL (class).
  */
 function template6(rng: Rng, counter: number): Question {
-  const noun = pickFresh(rng, nounsProfessions);
+  // Subject "you" → u; same collision class as template2's `i is i`.
+  // No u-profession is in the pool today, but nothing polices that.
+  const noun = pickDifferentLetter(rng, nounsProfessions, 'u');
   const adjB = pickFresh(rng, adjectives);
   const A = noun[0]!.toUpperCase();
   const a = noun[0]!.toLowerCase();
@@ -638,7 +647,8 @@ function template6(rng: Rng, counter: number): Question {
  * Predicate: "the $Best $A" → lowercase (definite, single).
  */
 function template7(rng: Rng, counter: number): Question {
-  const noun = pickFresh(rng, nounsProfessions);
+  // Subject "you" → u; see template6.
+  const noun = pickDifferentLetter(rng, nounsProfessions, 'u');
   const adj = pickFresh(rng, adjectives);
   const A = noun[0]!.toUpperCase();
   const a = noun[0]!.toLowerCase();
