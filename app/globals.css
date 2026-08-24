@@ -2562,6 +2562,65 @@
     }
   }
 
+  /* Before/after slider (2026-08-24): the stage stacks the two
+     screenshots; the range input under it drives the clip line. The
+     aspect-ratio + intrinsic img sizes reserve the box before bytes
+     arrive. */
+  .ba-wrap {
+    margin: 28px 0;
+  }
+  .ba-stage {
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #3f0167;
+    border-radius: 10px;
+  }
+  .ba-stage img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    max-width: none;
+  }
+  .ba-before {
+    position: absolute;
+    inset: 0;
+  }
+  .ba-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #3f0167;
+    transform: translateX(-1px);
+  }
+  .ba-tag {
+    position: absolute;
+    top: 10px;
+    padding: 3px 8px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: #3f0167;
+    color: #fff;
+    border-radius: 6px;
+  }
+  .ba-tag-left {
+    left: 10px;
+  }
+  .ba-tag-right {
+    right: 10px;
+  }
+  .ba-range {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    accent-color: #3f0167;
+  }
+
   .lx-embed {
     margin: 28px 0;
     padding: 18px 20px 20px;
