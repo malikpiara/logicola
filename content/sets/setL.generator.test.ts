@@ -176,6 +176,31 @@ describe('setL generator — property tests', () => {
       }
     }
   );
+
+  /** Textbook §12.1 / original program *1 p=3: "Do A, only if you are doing
+   *  B" = (A̲ ⊃ B) — the underlined IMPERATIVE is the antecedent.
+   *  Keying the converse (Bu ⊃ A̲u) was a P0 (correct answer absent
+   *  from the options entirely). */
+  it('only-if prompts put the underlined imperative in the antecedent (all seeds)', () => {
+    const onlyIfQs = [1, 42, 99, 12345, 7, 314].flatMap((seed) =>
+      generateSetL(seed, 60)
+        .subSets.flatMap((s) => s.questions)
+        // Template-1 imperative only-if ("Do F, only if you E") —
+        // template 14's deontic "duty … only if possible" is a
+        // different, correctly non-underlined-antecedent form.
+        .filter((q) => /^Do \w+, only if you /.test(q.prompt))
+    );
+    expect(onlyIfQs.length).toBeGreaterThan(0);
+    for (const q of onlyIfQs) {
+      const correct = q.options.find((o) => q.correctId.includes(o.id))!;
+      // ($ (F\underline{u} \supset  Eu) $) — underline in the
+      // antecedent, plain descriptive u in the consequent.
+      expect(
+        /\([A-Z]\\underline\{u\} \\supset\s+[A-Z]u\)/.test(correct.label),
+        `"${correct.label}" (for "${q.prompt}") does not put the underlined imperative in the antecedent`
+      ).toBe(true);
+    }
+  });
 });
 
 describe('setL generator — streaming iterators', () => {

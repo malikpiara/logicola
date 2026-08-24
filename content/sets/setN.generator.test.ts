@@ -208,6 +208,33 @@ describe('setN generator — property tests', () => {
       expect(unique.size).toBeGreaterThanOrEqual(5);
     }
   );
+
+  /** 2008 *15 / feedback *37 ("Underline both parts."): the willing
+   *  don't-combine forbids combining two ATTITUDES — both conjuncts
+   *  are willing formulas with the u before the colon underlined:
+   *  ∼(u̲:OAu̲ · ∼u̲:Au̲). A descriptive second conjunct (∼Au) was a
+   *  fidelity bug that graded the textbook-taught answer wrong. */
+  it.each([1, 42, 99, 12345])(
+    'seed %i: willing don’t-combine underlines both attitude conjuncts',
+    (seed) => {
+      // Willing is subSets[1]; the gen.N.4.* id prefix alone is
+      // ambiguous (believingNoPosition also numbers 4).
+      const qs = generateSetN(seed, 30).subSets[1]!.questions.filter((q) =>
+        q.id.startsWith('gen.N.4.')
+      );
+      expect(qs.length).toBeGreaterThan(0);
+      for (const q of qs) {
+        const correct = q.options.find((o) => q.correctId.includes(o.id))!;
+        // ∼(u̲:OAu̲ · ∼u̲:Au̲) with both u-before-colon underlined.
+        expect(
+          /\\sim \(\\underline\{u\}:O[A-Z]\\underline\{u\} \\cdot\s+\\sim \\underline\{u\}:[A-Z]\\underline\{u\}\)/.test(
+            correct.label
+          ),
+          `"${correct.label}" (for "${q.prompt}") does not underline both attitude conjuncts`
+        ).toBe(true);
+      }
+    }
+  );
 });
 
 describe('setN generator — streaming iterators', () => {

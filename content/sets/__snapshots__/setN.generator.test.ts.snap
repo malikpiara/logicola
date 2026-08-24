@@ -365,28 +365,28 @@ Since the sentence DESCRIBES what you believe, the letter before ‘:’ should 
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim (\\underline{u}:S\\underline{u} \\cdot  \\sim Su) $",
+              "label": "$ \\sim (\\underline{u}:OS\\underline{u} \\cdot  \\sim \\underline{u}:S\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-‘Don’t combine A with B’ is the don’t-combine form \`∼(A · B)\`, not the if-then \`(A ⊃ ∼B)\`.",
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+‘Acting to sing’ is itself a willing formula — \`{u}:S{u}\`, not bare \`S{u}\`. Underline both parts, including the u before the second colon.",
               "id": 1,
-              "label": "$ (\\underline{u}:S\\underline{u} \\supset  Su) $",
+              "label": "$ \\sim (\\underline{u}:OS\\underline{u} \\cdot  \\sim S\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-The second conjunct is descriptive (you don’t actually sing) — don’t underline the u in Su.",
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+Use a formula that forbids a combination — the don’t-combine imperative is \`∼( · )\` with the u’s before the colons underlined.",
               "id": 2,
-              "label": "$ \\sim (\\underline{u}:S\\underline{u} \\cdot  \\sim S\\underline{u}) $",
+              "label": "$ (u:OS\\underline{u} \\cdot  \\sim \\underline{u}:S\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner S{u} is imperative — what you’re wanting yourself to do.)",
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+This describes you (a statement), it doesn’t forbid anything — the imperative is \`∼( · )\` with both parts underlined.",
               "id": 3,
-              "label": "$ \\sim (\\underline{u}:Su \\cdot  \\sim Su) $",
+              "label": "$ (u:OS\\underline{u} \\cdot  \\sim S\\underline{u}) $",
             },
           ],
-          "prompt": "Don’t combine wanting yourself to sing with not singing.",
+          "prompt": "Don’t combine believing that you ought to sing with not acting to sing.",
         },
         {
           "answer": "",
@@ -461,28 +461,28 @@ Since the sentence DESCRIBES what you believe, the letter before ‘:’ should 
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim (\\underline{u}:W\\underline{u} \\cdot  \\sim Wu) $",
+              "label": "$ \\sim (\\underline{u}:OW\\underline{u} \\cdot  \\sim \\underline{u}:W\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-‘Don’t combine A with B’ is the don’t-combine form \`∼(A · B)\`, not the if-then \`(A ⊃ ∼B)\`.",
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+‘Acting to wander’ is itself a willing formula — \`{u}:W{u}\`, not bare \`W{u}\`. Underline both parts, including the u before the second colon.",
               "id": 1,
-              "label": "$ (\\underline{u}:W\\underline{u} \\supset  Wu) $",
+              "label": "$ \\sim (\\underline{u}:OW\\underline{u} \\cdot  \\sim W\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-The second conjunct is descriptive (you don’t actually wander) — don’t underline the u in Wu.",
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+Use a formula that forbids a combination — the don’t-combine imperative is \`∼( · )\` with the u’s before the colons underlined.",
               "id": 2,
-              "label": "$ \\sim (\\underline{u}:W\\underline{u} \\cdot  \\sim W\\underline{u}) $",
+              "label": "$ (u:OW\\underline{u} \\cdot  \\sim \\underline{u}:W\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner W{u} is imperative — what you’re wanting yourself to do.)",
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+This describes you (a statement), it doesn’t forbid anything — the imperative is \`∼( · )\` with both parts underlined.",
               "id": 3,
-              "label": "$ \\sim (\\underline{u}:Wu \\cdot  \\sim Wu) $",
+              "label": "$ (u:OW\\underline{u} \\cdot  \\sim W\\underline{u}) $",
             },
           ],
-          "prompt": "Don’t combine wanting yourself to wander with not wandering.",
+          "prompt": "Don’t combine believing that you ought to wander with not acting to wander.",
         },
         {
           "answer": "",
@@ -557,28 +557,28 @@ Since the sentence DESCRIBES what you believe, the letter before ‘:’ should 
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim (\\underline{u}:S\\underline{u} \\cdot  \\sim Su) $",
+              "label": "$ \\sim (\\underline{u}:OS\\underline{u} \\cdot  \\sim \\underline{u}:S\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-‘Don’t combine A with B’ is the don’t-combine form \`∼(A · B)\`, not the if-then \`(A ⊃ ∼B)\`.",
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+‘Acting to sell’ is itself a willing formula — \`{u}:S{u}\`, not bare \`S{u}\`. Underline both parts, including the u before the second colon.",
               "id": 1,
-              "label": "$ (\\underline{u}:S\\underline{u} \\supset  Su) $",
+              "label": "$ \\sim (\\underline{u}:OS\\underline{u} \\cdot  \\sim S\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-The second conjunct is descriptive (you don’t actually sell) — don’t underline the u in Su.",
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+Use a formula that forbids a combination — the don’t-combine imperative is \`∼( · )\` with the u’s before the colons underlined.",
               "id": 2,
-              "label": "$ \\sim (\\underline{u}:S\\underline{u} \\cdot  \\sim S\\underline{u}) $",
+              "label": "$ (u:OS\\underline{u} \\cdot  \\sim \\underline{u}:S\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner S{u} is imperative — what you’re wanting yourself to do.)",
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+This describes you (a statement), it doesn’t forbid anything — the imperative is \`∼( · )\` with both parts underlined.",
               "id": 3,
-              "label": "$ \\sim (\\underline{u}:Su \\cdot  \\sim Su) $",
+              "label": "$ (u:OS\\underline{u} \\cdot  \\sim S\\underline{u}) $",
             },
           ],
-          "prompt": "Don’t both want yourself to sell and fail to sell.",
+          "prompt": "Don’t believe that you ought to sell without acting to sell.",
         },
         {
           "answer": "",
@@ -653,28 +653,28 @@ You underlined u (yourself) instead of m (Maya). The agent told to attack is May
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim (\\underline{u}:R\\underline{u} \\cdot  \\sim Ru) $",
+              "label": "$ \\sim (\\underline{u}:OR\\underline{u} \\cdot  \\sim \\underline{u}:R\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-‘Don’t combine A with B’ is the don’t-combine form \`∼(A · B)\`, not the if-then \`(A ⊃ ∼B)\`.",
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+‘Acting to repent’ is itself a willing formula — \`{u}:R{u}\`, not bare \`R{u}\`. Underline both parts, including the u before the second colon.",
               "id": 1,
-              "label": "$ (\\underline{u}:R\\underline{u} \\supset  Ru) $",
+              "label": "$ \\sim (\\underline{u}:OR\\underline{u} \\cdot  \\sim R\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-The second conjunct is descriptive (you don’t actually repent) — don’t underline the u in Ru.",
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+Use a formula that forbids a combination — the don’t-combine imperative is \`∼( · )\` with the u’s before the colons underlined.",
               "id": 2,
-              "label": "$ \\sim (\\underline{u}:R\\underline{u} \\cdot  \\sim R\\underline{u}) $",
+              "label": "$ (u:OR\\underline{u} \\cdot  \\sim \\underline{u}:R\\underline{u}) $",
             },
             {
-              "hint": "‘Don’t combine wanting yourself to do A with not doing A’ → \`∼({u}:A{u} · ∼Au)\`. The first conjunct is your accepting the imperative to act; the second is your not actually doing it.
-You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner R{u} is imperative — what you’re wanting yourself to do.)",
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+This describes you (a statement), it doesn’t forbid anything — the imperative is \`∼( · )\` with both parts underlined.",
               "id": 3,
-              "label": "$ \\sim (\\underline{u}:Ru \\cdot  \\sim Ru) $",
+              "label": "$ (u:OR\\underline{u} \\cdot  \\sim R\\underline{u}) $",
             },
           ],
-          "prompt": "Don’t want to repent without actually repenting.",
+          "prompt": "Don’t believe that you ought to repent without acting to repent.",
         },
       ],
       "shuffleOptions": true,
