@@ -169,6 +169,38 @@ function SocialChip({
   );
 }
 
+/**
+ * A footer entry that is named but not yet written (Malik, 2026-08-24:
+ * the legal pages).
+ *
+ * NOT A LINK, deliberately. These were `<Link href='#'>`, which is the
+ * worst of both: it announces as a link, takes focus and a click, and
+ * then does nothing — 3.2.4's "consistent identification" broken at the
+ * cheapest possible place. A span with `aria-disabled` is honest.
+ *
+ * THE TOOLTIP CANNOT BE THE ONLY CARRIER. PixelTip is desktop-only by
+ * construction — Radix never opens it on touch, and the content is
+ * hidden under `(hover: none)` besides — so its own docstring forbids
+ * putting anything essential in it. The state therefore travels three
+ * ways: the tip for pointers, a visually-hidden suffix for assistive
+ * tech, and the dimmed tier for everyone (HEAD, 5.16:1 on the mint —
+ * an already-measured token, so no new colour to justify).
+ */
+function ComingSoon({ children }: { children: React.ReactNode }) {
+  return (
+    <PixelTip tip='Coming soon' side='top'>
+      <span
+        aria-disabled='true'
+        className='cursor-not-allowed'
+        style={{ color: HEAD }}
+      >
+        {children}
+        <span className='sr-only'> — coming soon</span>
+      </span>
+    </PixelTip>
+  );
+}
+
 export function Footer() {
   return (
     <footer
@@ -280,7 +312,7 @@ export function Footer() {
                   href='/keyboard'
                   className='motion-colors hover:underline'
                 >
-                  Keyboard
+                  LaTeX Keyboard
                 </Link>
               </li>
             </ul>
@@ -347,14 +379,10 @@ export function Footer() {
               style={{ color: TYPE }}
             >
               <li>
-                <Link href='#' className='motion-colors hover:underline'>
-                  Privacy Policy
-                </Link>
+                <ComingSoon>Privacy Policy</ComingSoon>
               </li>
               <li>
-                <Link href='#' className='motion-colors hover:underline'>
-                  Terms &amp; Conditions
-                </Link>
+                <ComingSoon>Terms &amp; Conditions</ComingSoon>
               </li>
             </ul>
           </div>
