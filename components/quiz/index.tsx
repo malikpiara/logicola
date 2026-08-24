@@ -369,6 +369,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   const [isPaneResizing, setIsPaneResizing] = useState(false);
   const [isQuestionLeaving, setIsQuestionLeaving] = useState(false);
   const isQuestionLeavingRef = useRef(false);
+  const activeViewTransitionRef = useRef<ViewTransition | null>(null);
   // The current question block — after the keyed remount inside a view
   // transition this already points at the NEW node (flushSync commits it).
   const questionBlockRef = useRef<HTMLDivElement>(null);
@@ -939,7 +940,20 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   }
 
   function handleNextQuestionTransition() {
-    if (isQuestionLeavingRef.current) return;
+    if (isQuestionLeavingRef.current) {
+      // A second advance mid-flight skips the PAINT, never the press
+      // (2026-08-24): with the desktop advance also on View
+      // Transitions, an early return here would cap the advance rate
+      // at the animation's length — the frequency rule this code just
+      // stopped breaking. Skip the running transition and fall
+      // through; only the mobile no-VT timeout fallback still swallows
+      // the press, as it always did.
+      const active = activeViewTransitionRef.current;
+      if (!active) return;
+      active.skipTransition();
+      activeViewTransitionRef.current = null;
+      isQuestionLeavingRef.current = false;
+    }
 
     if (prefersReducedMotion()) {
       handleNextQuestion();
@@ -951,20 +965,17 @@ const QuizSession: React.FC<QuizSessionProps> = ({
     // capture 2026-08-19: header pinned, layers overlapping, ~230ms; same
     // spatial grammar as mindful's slide-forward). Both questions must be on
     // screen at once, which the keyed remount can't do — the View Transitions
-    // API's snapshot layers provide that without double-mounting. The
-    // choreography lives on ::view-transition-*(quiz-question) in
-    // globals.css.
+    // API's snapshot layers provide that without double-mounting. Desktop
+    // rides the same machinery since 2026-08-24 with its own calmer
+    // fade-drift pair — the choreography lives on
+    // ::view-transition-*(quiz-question) in globals.css, split by width.
     //
     // NOT on the run's last advance: the end screen replaces the whole
     // canvas, so there is no incoming pane — a push would strand the old
     // question sliding over the end screen's cross-fade (Malik, 2026-08-19).
-    // It falls through to the short exit below; the end screen then makes
-    // its own `motion-enter` entrance, same as the start screen.
-    if (
-      !willFinishOnNext &&
-      isMobileViewport() &&
-      'startViewTransition' in document
-    ) {
+    // It falls through below; the end screen then makes its own
+    // `motion-enter` entrance, same as the start screen.
+    if (!willFinishOnNext && 'startViewTransition' in document) {
       isQuestionLeavingRef.current = true;
       const transition = document.startViewTransition(() => {
         flushSync(() => handleNextQuestion());
@@ -973,6 +984,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
         // this node. Inline (not a class) so it can't restart on removal.
         questionBlockRef.current?.style.setProperty('animation', 'none');
       });
+      activeViewTransitionRef.current = transition;
       // A hidden document (backgrounded tab) skips the transition and
       // rejects these promises — the advance itself still committed, so
       // swallow the rejections instead of surfacing an uncaught error.
@@ -980,6 +992,9 @@ const QuizSession: React.FC<QuizSessionProps> = ({
       transition.finished
         .catch(() => {})
         .finally(() => {
+          if (activeViewTransitionRef.current === transition) {
+            activeViewTransitionRef.current = null;
+          }
           isQuestionLeavingRef.current = false;
         });
       return;

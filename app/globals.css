@@ -184,16 +184,20 @@
       transform: translateX(-40px);
     }
 
-    /* The push's named element is the CONTAINER, not the keyed question
-       block: question blocks differ in height and (being justify-centered)
-       vertical position, so naming them made the transition group
-       interpolate geometry — a diagonal drift + stretch on top of the
-       slide (Malik, 2026-08-19). The container's box is identical across
-       questions, leaving nothing to interpolate: a pure horizontal push
-       of the full pane, which is also exactly Duolingo's model. */
-    .quiz-immersive .qcontainer {
-      view-transition-name: quiz-question;
-    }
+  }
+
+  /* The push's named element is the CONTAINER, not the keyed question
+     block: question blocks differ in height and (being justify-centered)
+     vertical position, so naming them made the transition group
+     interpolate geometry — a diagonal drift + stretch on top of the
+     slide (Malik, 2026-08-19). The container's box is identical across
+     questions, leaving nothing to interpolate. Named at EVERY width
+     since 2026-08-24: mobile keeps the Duolingo push, desktop gets the
+     calm fade-drift pair (see the ::view-transition rules below) — the
+     DOM inside startViewTransition commits synchronously, so the
+     advance stays instant to the keypress and only the paint animates. */
+  .quiz-immersive .qcontainer {
+    view-transition-name: quiz-question;
   }
 
   /* The argument + question pin while a long option palette scrolls
@@ -1994,11 +1998,40 @@
   /* quart, matching the fallback entrance (plans/006). */
   animation-timing-function: var(--ease-out-quart);
 }
-::view-transition-old(quiz-question) {
-  animation-name: vtQuestionOutLeft;
+@media (width < 40rem) {
+  ::view-transition-old(quiz-question) {
+    animation-name: vtQuestionOutLeft;
+  }
+  ::view-transition-new(quiz-question) {
+    animation-name: vtQuestionInRight;
+  }
 }
-::view-transition-new(quiz-question) {
-  animation-name: vtQuestionInRight;
+/* Desktop advance (2026-08-24, Malik's ask): the fade-drift pair. The
+   old 90ms exit BLOCKED the keypress behind a timer and was removed
+   (plans/003); this is its replacement done right — the DOM advances
+   synchronously inside startViewTransition, the snapshots animate on
+   top. Old fades in place fast (the user has decided; get out of the
+   way); new drifts up 6px on the entrance grammar. A second Enter
+   mid-flight skips the paint (see handleNextQuestionTransition), so
+   the advance rate is never capped by the animation. */
+@media (width >= 40rem) {
+  ::view-transition-old(quiz-question) {
+    animation: vtQuestionFadeOut 90ms var(--ease-out-quart) both;
+  }
+  ::view-transition-new(quiz-question) {
+    animation: vtQuestionFadeIn 200ms var(--ease-out-quart) both;
+  }
+}
+@keyframes vtQuestionFadeOut {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vtQuestionFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
 }
 /* SHORT-TRAVEL drift, judged in the lab (Malik, 2026-08-19, superseding
    the 110%-travel late-fade push): 20% travel with a full-travel fade.
