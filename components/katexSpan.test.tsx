@@ -11,7 +11,9 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import KatexSpan from './katexSpan';
+// The impl, not the lazy boundary: these tests pin the delimiter
+// scanner's convention, and the boundary would suspend on first render.
+import KatexSpan from './katexSpanImpl';
 
 describe('KatexSpan — literal dollar amounts', () => {
   it('renders $\\$20$ as a dollar amount, leaving prose untouched', () => {

@@ -207,13 +207,16 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
       return;
     }
 
-    setQuestionIdx(questionIdx + 1);
+    // Functional updaters, not closure reads: the shell invokes this
+    // inside flushSync inside startViewTransition, exactly where a
+    // stale render closure could double-fire or skip an increment.
+    setQuestionIdx((i) => i + 1);
     setSelectedOptionIndex(null);
     setSelectedOptionIds([]);
     setWrongAttempts(0);
     setPreviousGuesses([]);
     setShowSolution(false);
-    setQuestionCounter(questionCounter + 1);
+    setQuestionCounter((c) => c + 1);
     // original program `*m`: q := level, r := 8 — re-arm both registers for the new
     // problem, so a miss never poisons the one after it.
     setScoreState(beginProblem);

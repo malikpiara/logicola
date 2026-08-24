@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { flushSync } from 'react-dom';
 import Link from 'next/link';
 import { GemButton } from './gemButton';
@@ -9,6 +15,7 @@ import { sheetLeftClip, spriteClip } from '@/lib/pixel';
 import { PixelTip } from '@/components/ui/pixelTip';
 import Option from '../option';
 import Prompt from '../prompt';
+import { preloadKatex } from '../katexSpan';
 import { EndScreen } from './endScreen';
 import { KeyboardKeys } from './keyboardKeys';
 import { StartScreen } from './startScreen';
@@ -53,6 +60,12 @@ export default function Quiz({ subSet }: QuizProps) {
   // initializers, so a newly added piece of state can never be forgotten
   // by an enumerated reset. The chosen mode rides along as initialMode.
   const [run, setRun] = useState<QuizRun>({ attempt: 0 });
+  // KaTeX lives in its own chunk (katexSpan.tsx, 2026-08-24); fetch it
+  // during the start screen's idle seconds so the first question's
+  // formulas never render through the raw-text fallback.
+  useEffect(() => {
+    preloadKatex();
+  }, []);
   return (
     <QuizSession
       key={`${subSet.id}:${run.attempt}`}
@@ -78,6 +91,21 @@ const QUESTION_EXIT_MOBILE_MS = 130;
 
 // Tailwind's `sm` breakpoint — below it the quiz uses the mobile push.
 const MOBILE_QUERY = '(width < 40rem)';
+
+// Lazily-created module-level MediaQueryLists (2026-08-24): the advance
+// handler was constructing up to three per press, two for the identical
+// query. Lazy so module evaluation stays SSR-safe; both are only read
+// inside event handlers.
+let mobileMql: MediaQueryList | null = null;
+function isMobileViewport(): boolean {
+  return (mobileMql ??= window.matchMedia(MOBILE_QUERY)).matches;
+}
+let reducedMotionMql: MediaQueryList | null = null;
+function prefersReducedMotion(): boolean {
+  return (reducedMotionMql ??= window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  )).matches;
+}
 
 // Direction A — "hit flicker" — locked from the damage lab
 // (docs/damage-bar-lab.html; Malik, 2026-08-12): on a scored miss the
@@ -296,11 +324,22 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   // — arriving at a drill you never started isn't "leaving off".
   useEffect(() => {
     if (showStartScreen) return;
-    writeLastDrill({
-      title: subSet.title,
-      path: window.location.pathname,
-      points: mode.kind === 'score' ? scoreState.score : null,
-    });
+    // Deferred off the grading frame (2026-08-24): with scoreState.score
+    // in the deps this synchronous stringify+setItem landed in the same
+    // commit as the miss flicker and bar animation. Idle callback with a
+    // 500ms cap — the banner's staleness window is one answer at worst.
+    const write = () =>
+      writeLastDrill({
+        title: subSet.title,
+        path: window.location.pathname,
+        points: mode.kind === 'score' ? scoreState.score : null,
+      });
+    if (typeof requestIdleCallback === 'function') {
+      const id = requestIdleCallback(write, { timeout: 500 });
+      return () => cancelIdleCallback(id);
+    }
+    const id = setTimeout(write, 200);
+    return () => clearTimeout(id);
   }, [showStartScreen, subSet.title, mode.kind, scoreState.score]);
 
   // Top progress bar. Count mode fills a tenth per completed question (a
@@ -864,7 +903,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   function handleNextQuestionTransition() {
     if (isQuestionLeavingRef.current) return;
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (prefersReducedMotion()) {
       handleNextQuestion();
       return;
     }
@@ -885,7 +924,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
     // its own `motion-enter` entrance, same as the start screen.
     if (
       !willFinishOnNext &&
-      window.matchMedia(MOBILE_QUERY).matches &&
+      isMobileViewport() &&
       'startViewTransition' in document
     ) {
       isQuestionLeavingRef.current = true;
@@ -910,7 +949,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
 
     isQuestionLeavingRef.current = true;
     setIsQuestionLeaving(true);
-    const exitMs = window.matchMedia(MOBILE_QUERY).matches
+    const exitMs = isMobileViewport()
       ? QUESTION_EXIT_MOBILE_MS
       : QUESTION_EXIT_MS;
     questionExitTimeoutRef.current = setTimeout(() => {
@@ -938,9 +977,35 @@ const QuizSession: React.FC<QuizSessionProps> = ({
     };
   }
 
-  function focusSelectedOption(node: HTMLButtonElement | null) {
-    if (lastInput === 'keyboard') node?.focus();
-  }
+  // useCallback, not a plain function: this is a CALLBACK REF, and React
+  // re-invokes a callback ref whenever its identity changes — so as an
+  // inline function every unrelated re-render re-focused the cursor
+  // option (visible during pane drags). Keyed on lastInput only; a
+  // selection move attaches it to a new node, which still fires it.
+  const focusSelectedOption = useCallback(
+    (node: HTMLButtonElement | null) => {
+      if (lastInput === 'keyboard') node?.focus();
+    },
+    [lastInput]
+  );
+
+  // Per-option click handlers, stable for the life of a question, so
+  // the memoized Option can bail out of unrelated re-renders. The ref
+  // indirection keeps them off useQuizState's per-render function
+  // identities. (2026-08-24)
+  const selectOptionRef = useRef(selectOption);
+  useEffect(() => {
+    selectOptionRef.current = selectOption;
+  });
+  const optionClickHandlers = useMemo(
+    () =>
+      (currentQuestion?.options ?? []).map((_, index) => () => {
+        haptic('selection');
+        setLastInput('pointer');
+        selectOptionRef.current(index);
+      }),
+    [currentQuestion]
+  );
 
   /**
    * Continuous width-resize for the desktop guide sheet — pointer-drag on
@@ -1428,11 +1493,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                             option.id
                           )}
                           label={option.label}
-                          onClick={() => {
-                            haptic('selection');
-                            setLastInput('pointer');
-                            selectOption(index);
-                          }}
+                          onClick={optionClickHandlers[index]!}
                         />
                       ))}
                     </div>
