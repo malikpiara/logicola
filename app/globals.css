@@ -771,6 +771,122 @@
   }
 }
 
+/* ---- End screen receipt --------------------------------------------------
+   Rows, not columns (docs/endscreen-lab.html R4, Malik 2026-08-23). Measured
+   against the three-column version at 390px: the columns fit with nothing to
+   spare — "FIRST TRY" rendered 97px wide inside a 96.7px column — where a row
+   gives its label 280px. Rows also SCALE, which is what let the ambiguous
+   "18 of 22" split into a labelled "Problems 22" and "Solved first try 18".
+
+   The VALUE IS RIGHT-ALIGNED and that is the animation's requirement, not a
+   preference: a counting number changes its digit COUNT, so centred it grows
+   in both directions and shimmies for the whole 480ms. Anchored to the right,
+   the ones column never moves — the reason every ledger ever printed right-
+   aligns its numerals. Measured: 3.6px of drift centred, 0 right-aligned. */
+.quiz-immersive .qreceipt,
+.qreceipt {
+  margin-top: 1.25rem;
+}
+
+.qreceipt > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+/* Hairlines BETWEEN rows only — a rule above the first would read as a
+   divider under the headline rather than as part of the list. */
+.qreceipt > div + div {
+  border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.qreceipt dt {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+.qreceipt dd {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  font-stretch: 125%;
+  /* Tabular so the glyph widths are equal; the count-up's own `min-width`
+     is what stops the BOX changing size as digits arrive. Both are needed
+     and neither is sufficient alone. */
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* The counted figure fills its reserved box from the right. */
+.qreceipt dd > span[aria-hidden] {
+  display: inline-block;
+  text-align: right;
+}
+
+/* ---- End screen exit chip ------------------------------------------------
+   A bare ✕ works on the QUESTION screen because that card's pattern is a
+   112px footer band and the top of the card is clean surface. The end
+   screen's pattern fills all four corners and its scatter reshuffles every
+   visit, so a glyph in the set's ink lands on an ink-coloured blob about as
+   often as not — found on Set A, plum on plum, completely invisible.
+
+   The chip gives it an opaque ground of the set's own surface, so the glyph
+   is always ink-on-surface: 7.04:1 on Set R, 12.67:1 on Set L. The 4px
+   chamfer is the same sprite corner the mobile progress bar and the guide
+   chip already wear, so it reads as the system's shape rather than a patch.
+   The ink stays at full strength here, unlike the question screen's 60%,
+   because it has a lit ground to sit on and no bar beside it to defer to. */
+.qexit-chip {
+  background: var(--end-surface);
+  clip-path: polygon(
+    4px 0,
+    calc(100% - 4px) 0,
+    100% 4px,
+    100% calc(100% - 4px),
+    calc(100% - 4px) 100%,
+    4px 100%,
+    0 calc(100% - 4px),
+    0 4px
+  );
+}
+
+.qexit-chip:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ---- Ghost secondary -----------------------------------------------------
+   A real ghost: no fill and no border, so there is no component boundary for
+   1.4.11 to measure and the control is identified by its label alone — which
+   only has to clear 1.4.3 against the surface, and the ink does that at
+   7.04:1 on the worst set. The version this replaced was an OUTLINE button
+   wearing the wrong name (Malik's catch, 2026-08-23).
+
+   It reuses the gem silhouette so the two buttons are the same object at two
+   weights, and the fill appears only on hover or press — which is what makes
+   a ghost a button rather than a link. */
+.quiz-immersive .qghost,
+.qghost {
+  background: transparent;
+  color: var(--quiz-fg, currentColor);
+}
+
+@media (hover: hover) {
+  .qghost:hover {
+    background: color-mix(in srgb, currentColor 10%, transparent);
+  }
+}
+
+.qghost:active {
+  background: color-mix(in srgb, currentColor 16%, transparent);
+}
+
 /* ---- Phone points delta --------------------------------------------------
    What an answer was WORTH, not what the score now is (Malik, 2026-08-23 —
    docs/points-readout-lab.html option D1). The running total left the phone

@@ -1,73 +1,63 @@
+'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
 import { TARGET_SCORE } from '@/lib/scoring';
 import { GemButton, GemLink } from './gemButton';
 import { PatternLayer } from './patternLayer';
+import { CountUp } from './countUp';
+import { praiseFor } from './praise';
+import { TimesIcon } from './pixelIcons';
 import type { QuizPatternKind } from '@/lib/patterns';
 import type { QuizCatalogEntry } from '@/lib/quizCatalog';
 import { nextDrillLabel } from '@/lib/nextDrill';
 import { DEFAULT_QUIZ_MODE, scoreMode, type QuizMode } from './quizMode';
 
 /**
- * The end screen — and, since 2026-08-23, the only screen in the quiz
- * flow that answers "now what?".
+ * The end screen — the receipt, decided in docs/endscreen-lab.html over
+ * several passes with Malik on 2026-08-23. The lab keeps every alternative
+ * that lost, and why.
  *
- * WHAT WAS WRONG. The screen offered Try Again and nothing else, and
- * ON PHONES that made a completed run a cul-de-sac. The quiz page
- * renders the site navbar inside `hidden lg:block`
- * (app/(quiz)/[...slugs]/page.tsx — deliberate: below lg the quiz is
- * full-bleed and the in-card ✕ is the exit), so a desktop learner can
- * always leave through the wordmark. A phone learner could not: the
- * ✕ lives in the question screen's sticky header, which the end screen
- * replaces, so reaching 100 points removed the only way out and left
- * the browser's Back button — which, on the first page of a session, is
- * no way out at all. Malik, 2026-08-23: give a finished quiz an exit,
- * and a way on to the harder one.
+ * WHAT WAS WRONG ORIGINALLY. The screen offered Try Again and nothing else,
+ * and ON PHONES that made a completed run a cul-de-sac: the quiz page
+ * renders the site navbar inside `hidden lg:block`, so a desktop learner
+ * can always leave through the wordmark, but the phone's only ✕ lives in
+ * the question screen's sticky header — which this screen replaces.
+ * Reaching 100 removed the only way out.
  *
- * The exit is rendered at EVERY width even though desktop has the
- * navbar. Two reasons: a terminal screen should state its own way
- * forward rather than make you go looking in the chrome for one, and
- * "All exercises" names the destination where the wordmark only implies
- * it. (The START screen still has the phone-width gap — it has no ✕
- * either. Out of scope for this pass; flagged in the handover.)
+ * THE EXIT IS THE CORNER ✕ (lab § 2, option b). The same glyph and the same
+ * corner as the question screen, so nothing new has to be learned and the
+ * exit never disappears at any point in a run. It also frees the action
+ * column to be about the DRILL only: the ✕ owns leaving, the column owns
+ * what to do next.
  *
- * THE HIERARCHY. One rule generates all four states: **the primary is
- * always the way forward, and "forward" is whatever is actually true.**
+ * THE RECEIPT IS ROWS, NOT COLUMNS (lab § 1, R4). Measured against the
+ * three-column version at 390px: the columns fit with nothing to spare —
+ * "FIRST TRY" rendered 97px wide inside a 96.7px column — where a row has
+ * 280px for its label. Rows also SCALE, which is what let the ambiguous
+ * "18 of 22" become a labelled "PROBLEMS 22" and "SOLVED FIRST TRY 18" on
+ * their own lines. And with the numbers counting, a right-aligned value is
+ * the only stable one: centred, it grew in both directions and shimmied for
+ * the whole animation (measured 3.6px left, 3.7px right; right-aligned, 0).
  *
- *   reached 100, a next drill exists   → primary: that drill
- *                                        quiet:   try again · all exercises
- *   reached 100, no next drill         → primary: all exercises
- *                                        quiet:   try again
- *   ran out of problems                → primary: try again
- *                                        quiet:   all exercises
- *   count mode (dormant)               → as above, plus the scored-run offer
+ * SOLVED FIRST TRY is the figure that makes this a receipt rather than a
+ * tally. `ScoreState.solvedClean` has carried the docstring "Problems
+ * solved first try — for the end screen" since the scoring port and was
+ * used nowhere until now: the app computed run quality and discarded it, so
+ * a 20-for-20 run and a 40-for-60 run produced identical screens.
  *
- * The graduated cases put Try Again in the quiet tier on purpose. Under
- * the 2008 economy reaching 100 IS completion — repeating the drill you
- * just completed is the lesser action, and making it the loudest thing
- * on the screen tells the learner the opposite of what the score says.
- * When the run fell short, the same rule puts it back on top.
- *
- * "All exercises" points at `/` because the homepage IS the catalogue
- * since 2026-08-17 — same destination as the question screen's ✕, so
- * the two exits cannot disagree about where out is.
- *
- * QUIET TIER = 80% INK, and that number is load-bearing (measured
- * 2026-08-23). The scored-run link shipped at `opacity-70`, which fails
- * WCAG AA on three of the seven sets — A 4.24:1, R 3.98:1, J 3.92:1
- * against the 4.5 floor. At 80% the worst set is J at 4.86:1 and every
- * other clears 4.9. Anything quieter than 80% has to be re-measured
- * against all seven inks, not eyeballed on Set L (which flatters at
- * 8.06:1 and would have hidden this).
+ * THE HEADLINE IS GENSLER'S (see ./praise). Only on a run that reached the
+ * target — praise over "Out of problems." would be congratulating someone
+ * for exhausting the question bank.
  */
 
 /**
- * The quiet tier. 80% ink (see the note above — it is a measured floor,
- * not a taste), underlined so it reads as a link at a glance, and an
- * explicit focus outline in `currentColor`: the set's ink is 7–12.7:1 on
- * its own surface, which clears 1.4.11 on every palette, where the UA's
- * default ring would be whatever the browser feels like painting on a
- * saturated background. Same shape as `.qexit:focus-visible` in
- * globals.css, so the two exits look focused the same way.
+ * The quiet tier. 80% ink, and that number is a measured floor rather than
+ * a taste: the previous "Ready for a scored run" link shipped at
+ * `opacity-70`, which fails WCAG AA on three of the seven sets (A 4.24:1,
+ * R 3.98, J 3.92). At 80% the worst set is J at 4.86. Anything quieter has
+ * to be re-measured against all seven inks, not eyeballed on Set L, which
+ * flatters at 12.67:1 and is exactly how the old failure survived.
  */
 const QUIET =
   'cursor-pointer text-sm underline underline-offset-4 opacity-80 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current';
@@ -78,6 +68,7 @@ export function EndScreen({
   mode = DEFAULT_QUIZ_MODE,
   score = 0,
   questionsTaken = 0,
+  solvedClean = 0,
   offerScoredRun = false,
   nextDrill,
   surfaceColor = '#431407',
@@ -91,6 +82,8 @@ export function EndScreen({
   mode?: QuizMode;
   score?: number;
   questionsTaken?: number;
+  /** Problems solved first try — `ScoreState.solvedClean`. */
+  solvedClean?: number;
   offerScoredRun?: boolean;
   /**
    * The next drill in THIS set, when there is one — see lib/nextDrill.
@@ -104,84 +97,125 @@ export function EndScreen({
   patternKind?: QuizPatternKind;
 }) {
   const reachedTarget = score >= TARGET_SCORE;
+  const graduated = mode.kind === 'score' && reachedTarget;
 
-  // A scored run has no "out of" — it ends at 100 points, whenever that
-  // lands. The only honest summary is the score, the level it was earned at,
-  // and how many problems it took.
-  const message =
-    mode.kind === 'score'
-      ? reachedTarget
-        ? 'Exercise complete.'
-        : 'Out of problems.'
+  // Rolled once per mount, like the pattern's scatter: a re-render must not
+  // swap the headline out from under someone mid-read.
+  const [praiseSeed] = useState(() => Math.floor(Math.random() * 0x100000));
+
+  const message = graduated
+    ? praiseFor(praiseSeed)
+    : mode.kind === 'score'
+      ? 'Out of problems.'
       : numOfCorrectQuestions >= 5
         ? 'Hurray! Keep going!'
         : 'Oh no! Try again.';
 
   // Only a completed run graduates. Offering the HARD set to someone who
-  // just exhausted the question bank without reaching 100 would be the
-  // app misreading its own scoreboard.
-  const graduated = mode.kind === 'score' && reachedTarget;
+  // just exhausted the question bank without reaching 100 would be the app
+  // misreading its own scoreboard.
   const onward = graduated ? nextDrill : undefined;
 
   // The gem's adaptive ink, shared by every primary in the flow: the set's
   // foreground becomes the fill and its surface the label, so the button
   // clears contrast on all seven palettes without a per-set value.
-  const primaryInk = {
-    backgroundColor: foregroundColor,
-    color: surfaceColor,
-  };
+  const primaryInk = { backgroundColor: foregroundColor, color: surfaceColor };
 
   return (
-    <>
-      <section
-        className='motion-enter max-w-7xl rounded-none lg:rounded-xl w-full h-dvh text-center m-auto p-0 flex-col flex justify-center relative isolate overflow-hidden'
-        style={{ backgroundColor: surfaceColor, color: foregroundColor }}
+    <section
+      className='motion-enter max-w-7xl rounded-none lg:rounded-xl w-full h-dvh text-center m-auto p-0 flex-col flex justify-center relative isolate overflow-hidden'
+      style={
+        {
+          backgroundColor: surfaceColor,
+          color: foregroundColor,
+          // Published so the exit chip can paint an OPAQUE surface ground
+          // beneath itself — see `.qexit-chip` in globals.css.
+          '--end-surface': surfaceColor,
+        } as React.CSSProperties
+      }
+    >
+      {/* The pattern frames a clean panel and never sits under text; the
+          scatter reshuffles per visit. */}
+      <PatternLayer
+        kind={patternKind}
+        surface={surfaceColor}
+        ink={foregroundColor}
+        treatment='panel'
+        className='pointer-events-none absolute inset-0 -z-10'
+      />
+
+      {/* The exit. Same glyph, same corner and the same 44px target as the
+          question screen's, so a run has one way out that never moves.
+
+          IT CARRIES ITS OWN GROUND, and that is not decoration. The question
+          screen can wear a bare ✕ because its pattern is a footer band and
+          the top of the card is clean surface. Here the pattern fills all
+          four corners AND reshuffles every visit, so a bare glyph in the
+          set's ink lands on an ink-coloured blob roughly as often as not —
+          caught in the real app on Set A, where it was plum on plum and
+          simply invisible. An opaque surface chip makes the contrast
+          ink-on-surface every time, which is 7.04:1 on the worst set. */}
+      <Link
+        href='/'
+        aria-label='Exit and return to all exercises'
+        className='qexit qexit-chip absolute left-2 top-[calc(0.5rem+env(safe-area-inset-top))] z-20 flex h-11 w-11 items-center justify-center'
       >
-        {/* Same panel treatment as the start screen; the scatter
-            reshuffles per visit. The end screen's fuller treatment pass
-            remains deferred (redesign-handoff.md). */}
-        <PatternLayer
-          kind={patternKind}
-          surface={surfaceColor}
-          ink={foregroundColor}
-          treatment='panel'
-          className='pointer-events-none absolute inset-0 -z-10'
-        />
-        {/* px-10 below md, matching the start screen's 2026-08-21 fix: the
-            cleared panel is 88% of the canvas, so at 375px the h1 ran under
-            the pattern frame and off both edges — and the section is
-            `overflow-hidden`, so it clipped rather than scrolled. "Exercise
-            complete." at text-4xl is 300px of glyphs on a 375px screen; it
-            only ever fit because nobody had reached the end screen on a
-            phone. (Malik, 2026-08-23.) */}
-        <h1 className='mb-3 px-10 text-4xl font-bold font-stretch md:px-6'>
-          {message}
-        </h1>
+        <TimesIcon className='h-[18px] w-[18px]' />
+      </Link>
 
-        {mode.kind === 'score' ? (
-          <div className='px-10 text-lg font-light md:px-6'>
-            <span className='font-normal' style={{ color: countColor }}>
-              {score} points
-            </span>{' '}
-            at level {mode.level}, in {questionsTaken}{' '}
-            {questionsTaken === 1 ? 'problem' : 'problems'}.
-          </div>
-        ) : (
-          <div className='px-10 text-lg font-light md:px-6'>
-            You got{' '}
-            <span className='font-normal' style={{ color: countColor }}>
-              {numOfCorrectQuestions}/{mode.total}
-            </span>{' '}
-            questions correctly.
-          </div>
-        )}
+      {/* px-10 below md: the cleared panel is 88% of the canvas, so at 375px
+          a text-4xl headline ran under the pattern frame and off both edges
+          — and the section is `overflow-hidden`, so it clipped rather than
+          scrolled. */}
+      <h1 className='mb-3 px-10 text-4xl font-bold font-stretch md:px-6'>
+        {message}
+      </h1>
 
-        {/* One action column, always in the same order: the gem, then the
-            quiet tier. The stack is centred rather than pinned to the
-            bottom — this screen is a full-height panel with a cleared
-            middle, and the pattern owns the edges. */}
-        <div className='mx-auto mt-8 flex w-full max-w-[15rem] flex-col items-center gap-5'>
-          {onward ? (
+      {mode.kind === 'score' ? (
+        <dl className='qreceipt mx-auto w-full max-w-[17.5rem] px-10 text-left md:px-6'>
+          <div>
+            <dt>Points</dt>
+            <dd style={{ color: countColor }}>
+              <CountUp value={score} order={0} />
+            </dd>
+          </div>
+          <div>
+            <dt>Problems</dt>
+            <dd>
+              <CountUp value={questionsTaken} order={1} />
+            </dd>
+          </div>
+          {/* Two rows rather than "18 of 22" on one (Malik, 2026-08-23):
+              the ratio read ambiguously — first try at WHAT, and 22 of
+              what? — and rows are the layout that had the width to split
+              it, which is most of why rows won. */}
+          <div>
+            <dt>Solved first try</dt>
+            <dd>
+              <CountUp value={solvedClean} order={2} />
+            </dd>
+          </div>
+          <div>
+            <dt>Level</dt>
+            <dd>
+              <CountUp value={mode.level} order={3} />
+            </dd>
+          </div>
+        </dl>
+      ) : (
+        <div className='px-10 text-lg font-light md:px-6'>
+          You got{' '}
+          <span className='font-normal' style={{ color: countColor }}>
+            {numOfCorrectQuestions}/{mode.total}
+          </span>{' '}
+          questions correctly.
+        </div>
+      )}
+
+      {/* One action column, about the DRILL — the ✕ above owns leaving. */}
+      <div className='mx-auto mt-8 flex w-full max-w-[15rem] flex-col items-center gap-3'>
+        {onward ? (
+          <>
             <GemLink
               href={onward.quizPath}
               containerClassName='w-full'
@@ -190,63 +224,42 @@ export function EndScreen({
             >
               {nextDrillLabel(onward)}
             </GemLink>
-          ) : graduated ? (
-            <GemLink
-              href='/'
-              containerClassName='w-full'
-              className='hover:opacity-90'
-              style={primaryInk}
-            >
-              All exercises
-            </GemLink>
-          ) : (
+            {/* A true GHOST — no fill and no border, so there is no
+                component boundary for 1.4.11 to measure and the control is
+                identified by its label, which clears 1.4.3 against every
+                set's surface at 7.04:1 or better. The outline version this
+                replaced was mislabelled a ghost (Malik, 2026-08-23). */}
             <GemButton
               containerClassName='w-full'
-              className='hover:opacity-90'
-              style={primaryInk}
+              className='qghost'
               onClick={() => onTryAgain(mode)}
-            >
-              Try Again
-            </GemButton>
-          )}
-
-          {/* Try Again keeps its place in the column whichever tier it is
-              in, so the button never moves between a graduated and a
-              fallen-short run. */}
-          {graduated && (
-            <button
-              type='button'
-              onClick={() => onTryAgain(mode)}
-              className={QUIET}
             >
               Try again
-            </button>
-          )}
+            </GemButton>
+          </>
+        ) : (
+          <GemButton
+            containerClassName='w-full'
+            className='hover:opacity-90'
+            style={primaryInk}
+            onClick={() => onTryAgain(mode)}
+          >
+            Try Again
+          </GemButton>
+        )}
 
-          {/* The exit. Present on every state — that is the whole point of
-              this screen's 2026-08-23 pass — and suppressed only where the
-              primary gem is already "All exercises", which would make this
-              the same link twice. */}
-          {!(graduated && !onward) && (
-            <Link href='/' className={QUIET}>
-              All exercises
-            </Link>
-          )}
-
-          {/* Graduation to the scored run: offered where someone has just
-              proved they can do it. Only reachable in count mode, which no
-              published set runs today (see quizMode). */}
-          {offerScoredRun && mode.kind === 'count' && (
-            <button
-              type='button'
-              onClick={() => onTryAgain(scoreMode())}
-              className={QUIET}
-            >
-              Ready for a scored run to {TARGET_SCORE}? →
-            </button>
-          )}
-        </div>
-      </section>
-    </>
+        {/* Graduation to the scored run: only reachable in count mode, which
+            no published set runs today (see quizMode). */}
+        {offerScoredRun && mode.kind === 'count' && (
+          <button
+            type='button'
+            onClick={() => onTryAgain(scoreMode())}
+            className={QUIET}
+          >
+            Ready for a scored run to {TARGET_SCORE}? →
+          </button>
+        )}
+      </div>
+    </section>
   );
 }

@@ -1072,6 +1072,10 @@ const QuizSession: React.FC<QuizSessionProps> = ({
           mode={mode}
           score={scoreState.score}
           questionsTaken={questionCounter}
+          // Run quality, computed since the scoring port and used nowhere
+          // until the receipt: `solvedClean` carries the docstring
+          // "Problems solved first try — for the end screen".
+          solvedClean={scoreState.solvedClean}
           offerScoredRun={offerScoredRun}
           nextDrill={nextDrill}
           surfaceColor={quizScreenColors.surfaceColor}
