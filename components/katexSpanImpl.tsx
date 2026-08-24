@@ -160,9 +160,22 @@ function splitAtDelimiters(text: string): Segment[] {
 /**
  * Rendered-HTML cache. The quiz re-renders every option on each
  * selection or arrow-key move, and KaTeX parsing is the expensive part
- * of that render — but the label strings themselves are a small, fixed
- * pool per session, so each formula only ever needs to be parsed once.
+ * of that render — but reuse is dominated by re-renders WITHIN one
+ * question. Generated sets draw fresh strings per mount, so both
+ * caches are bounded (2026-08-24): unbounded, a long session paging
+ * through subsets held every formula it had ever seen. FIFO eviction —
+ * the rotation pattern means old entries are write-once garbage.
  */
+const CACHE_CAP = 500;
+
+function setBounded<K, V>(map: Map<K, V>, key: K, value: V): void {
+  if (map.size >= CACHE_CAP) {
+    const oldest = map.keys().next().value;
+    if (oldest !== undefined) map.delete(oldest);
+  }
+  map.set(key, value);
+}
+
 const katexHtmlCache = new Map<string, string>();
 
 function katexToHtml(data: string, display: boolean): string {
@@ -175,7 +188,7 @@ function katexToHtml(data: string, display: boolean): string {
     displayMode: display,
     throwOnError: false,
   });
-  katexHtmlCache.set(key, html);
+  setBounded(katexHtmlCache, key, html);
   return html;
 }
 
@@ -183,8 +196,8 @@ function katexToHtml(data: string, display: boolean): string {
  * Full-result cache, in front of the per-formula HTML cache above: the
  * backtick rewrite, delimiter split and typography passes also re-ran
  * on every render of every option, and the rendered nodes are pure
- * functions of the input string. The pool of strings per session is
- * small and fixed, so this never grows past a few hundred entries.
+ * functions of the input string. Bounded like katexHtmlCache — the
+ * per-session string pool is small only within one subset visit.
  */
 const renderedNodesCache = new Map<string, React.ReactNode>();
 
@@ -219,7 +232,7 @@ function renderKatex(text: React.ReactNode): React.ReactNode {
     }
   });
 
-  renderedNodesCache.set(text, nodes);
+  setBounded(renderedNodesCache, text, nodes);
   return nodes;
 }
 

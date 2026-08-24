@@ -61,6 +61,30 @@ describe('generators dispatcher', () => {
     }
   });
 
+  // A duplicate label inside one question is always a defect: either a
+  // second correct answer (graded wrong) or an indistinguishable pair
+  // of distractors. Cross-set because the 2026-08-24 professor report
+  // ('i is i') showed per-set letter bugs can make previously distinct
+  // grid slots collide — this is the set-agnostic backstop for that
+  // whole class. (Per-set letter rules stay in each set's own tests.)
+  it('no question offers the same label twice', () => {
+    for (const key of registeredSetKeys()) {
+      const gen = getGenerator(key)!;
+      for (const seed of [1, 7, 42, 99, 12345, 2718]) {
+        const set = gen(seed, 20);
+        for (const subset of set.subSets) {
+          for (const q of subset.questions) {
+            const labels = q.options.map((o) => o.label);
+            expect(
+              new Set(labels).size,
+              `${key} seed ${seed}: duplicate label in "${q.prompt}": ${labels.join(' | ')}`
+            ).toBe(labels.length);
+          }
+        }
+      }
+    }
+  });
+
   // Regression guard for the setN `.replace('u', …)` bug: the underline
   // hint began with "You forgot…", so replacing the first "u" hit the one
   // in "You", rendering garbage like "Yo x forgot…". No hint should be

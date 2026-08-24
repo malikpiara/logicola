@@ -8,6 +8,7 @@ import {
   beginProblem,
   createScoreState,
   isComplete,
+  problemsResolved,
   profileForSet,
   registerCorrect,
   registerMiss,
@@ -453,10 +454,13 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
    * dividing by `totalQuestionCount` called a flawless 20-problem run
    * on a 118-question bank 17% (fixed 2026-08-24; earlier
    * quiz_completed/quiz_retried rows carry the bank-relative number).
-   * solvedClean/missed count each problem once, whatever the mode.
+   * `problemsResolved` counts each problem once whatever the mode —
+   * that guarantee lives in ScoreState.problemMissed, added the same
+   * day: the old pointsAvailable-derived tallies over-counted on every
+   * non-forfeiting set.
    */
   function questionsAttempted(): number {
-    return scoreState.solvedClean + scoreState.missed;
+    return problemsResolved(scoreState);
   }
 
   function runScorePercentage(): number {

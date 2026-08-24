@@ -152,10 +152,30 @@ export function clearRectFor(
  * where 0.1 is already below a device pixel — and at 757 rects per
  * footer band that was ~176 KB of the landing page's HTML + flight
  * payload. Nothing downstream reads the numbers back; only the string
- * gets shorter. (2026-08-24)
+ * gets shorter.
+ *
+ * EDGES are rounded, never extents: `r1(x) + r1(w)` can differ from
+ * `r1(x + w)` by 0.1, which would open a hairline seam between
+ * adjacent runs — the artifact the vertical +0.4 overlap exists to
+ * prevent, and the horizontal axis has no such slack. So emit sites
+ * round both edges and take the difference (see `rectAttrs`).
+ * Exported for lib/patterns.test.ts, whose fixture normalization must
+ * be THIS rounding, not a copy that can drift. (2026-08-24)
  */
-function r1(n: number): number {
+export function r1(n: number): number {
   return Math.round(n * 10) / 10;
+}
+
+/** x/y/width/height for a rect spanning [x0,x1)×[y0,y1), edge-rounded. */
+function rectAttrs(x0: number, x1: number, y0: number, y1: number): string {
+  const x = r1(x0);
+  const y = r1(y0);
+  // r1 of the difference again: float subtraction of one-decimal values
+  // can leave 5.800000000000001-style noise, and the true value is
+  // within 0.05 of the grid, so the second pass snaps it exactly.
+  const w = r1(r1(x1) - x);
+  const h = r1(r1(y1) - y);
+  return `x="${x}" y="${y}" width="${w}" height="${h}"`;
 }
 
 /**
@@ -288,7 +308,7 @@ export function quiltPixBody(opts: QuiltPixOptions): string {
           while (ii + len < P && fill[jj * P + ii + len]) len++;
           // +0.4 vertical overlap: same-fill rows may not meet exactly
           // after subpixel rounding, and a hairline seam breaks the sprite.
-          piece += `<rect x="${r1(x + ii * q)}" y="${r1(y + jj * q)}" width="${r1(len * q)}" height="${r1(q + 0.4)}"/>`;
+          piece += `<rect ${rectAttrs(x + ii * q, x + (ii + len) * q, y + jj * q, y + jj * q + q + 0.4)}/>`;
           ii += len;
         }
       }
@@ -373,7 +393,7 @@ function pixelLattice(
         !hidden(clear, (u + len) * q, v * q, q, q)
       )
         len++;
-      out += `<rect x="${r1(u * q)}" y="${r1(v * q)}" width="${r1(len * q)}" height="${r1(q + 0.4)}" fill="${c}"/>`;
+      out += `<rect ${rectAttrs(u * q, (u + len) * q, v * q, v * q + q + 0.4)} fill="${c}"/>`;
       u += len;
     }
   }

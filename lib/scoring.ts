@@ -233,6 +233,17 @@ export interface ScoreState {
   readonly solvedClean: number;
   /** Problems where at least one miss happened. */
   readonly missed: number;
+  /**
+   * The current problem has already been missed. This flag — not the
+   * points register — is what makes solvedClean/missed mean what their
+   * docstrings say: until 2026-08-24 both were derived from
+   * `pointsAvailable === pointsPerCorrect`, which only ever moves on
+   * the one forfeiting set (R), so on A/C/J/L/N/Q `missed` counted
+   * every repeat miss and `solvedClean` counted dirty solves. The
+   * ECONOMY (score/pointsAvailable/penaltyDue) is untouched: this flag
+   * feeds only the tallies.
+   */
+  readonly problemMissed: boolean;
 }
 
 /** The opening penalty for any set: `2 * level` (`t2*$s`, `-2*$s`, `-2*$q`). */
@@ -268,6 +279,7 @@ export function createScoreState(
     penaltyDue: openingPenalty(lvl),
     solvedClean: 0,
     missed: 0,
+    problemMissed: false,
   };
 }
 
@@ -277,6 +289,7 @@ export function beginProblem(state: ScoreState): ScoreState {
     ...state,
     pointsAvailable: state.profile.pointsPerCorrect,
     penaltyDue: openingPenalty(state.level),
+    problemMissed: false,
   };
 }
 
@@ -307,7 +320,6 @@ export function chargeFor(state: ScoreState): number {
 
 /** Record a miss: charge what's due, forfeit if this set forfeits, then decay. */
 export function registerMiss(state: ScoreState): ScoreState {
-  const firstMiss = state.pointsAvailable === state.profile.pointsPerCorrect;
   return {
     ...state,
     // Everything below the score is deliberately floor-blind: a free miss is
@@ -315,18 +327,28 @@ export function registerMiss(state: ScoreState): ScoreState {
     score: state.score - chargeFor(state),
     pointsAvailable: state.profile.forfeitOnMiss ? 0 : state.pointsAvailable,
     penaltyDue: decayed(state.penaltyDue, state.profile.decay),
-    missed: firstMiss ? state.missed + 1 : state.missed,
+    missed: state.problemMissed ? state.missed : state.missed + 1,
+    problemMissed: true,
   };
 }
 
 /** Record a correct answer: award whatever the problem has left. */
 export function registerCorrect(state: ScoreState): ScoreState {
-  const clean = state.pointsAvailable === state.profile.pointsPerCorrect;
   return {
     ...state,
     score: state.score + state.pointsAvailable,
-    solvedClean: clean ? state.solvedClean + 1 : state.solvedClean,
+    solvedClean: state.problemMissed ? state.solvedClean : state.solvedClean + 1,
   };
+}
+
+/**
+ * Problems this run has resolved — each counted once, clean or missed.
+ * The denominator for any per-run rate (analytics score_percentage,
+ * the end screen's ratio). Lives here so every consumer shares one
+ * definition.
+ */
+export function problemsResolved(state: ScoreState): number {
+  return state.solvedClean + state.missed;
 }
 
 /** Has the run reached the target? */

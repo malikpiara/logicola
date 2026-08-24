@@ -1,10 +1,15 @@
 'use client';
 
-import { useState, useRef } from 'react';
+// Static, not via the lazy chunk (2026-08-24): this page PRERENDERS
+// KaTeX markup, and with the stylesheet living only in katexSpanImpl's
+// chunk the first paint showed unstyled math with the MathML block
+// unhidden. Route-scoped, so only /keyboard carries the extra link.
+import 'katex/dist/katex.min.css';
+import { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import KatexSpan from '@/components/katexSpan';
+import KatexSpan, { preloadKatex } from '@/components/katexSpan';
 import { ClipboardCopy } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -103,6 +108,12 @@ function replaceShorthandsWithCursor(
 export default function LabelGeneratorPage() {
   const [input, setInput] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // The preview renders per keystroke — fetch the KaTeX chunk before
+  // the first key, not with it (same warm-up as the quiz shell).
+  useEffect(() => {
+    preloadKatex();
+  }, []);
 
   /**
    * Auto-closing parentheses. If user presses '(',

@@ -58,13 +58,23 @@ export async function POST(request: Request) {
       }
     );
 
-    if (!response.ok) {
-      return NextResponse.json(
-        { error: 'Could not subscribe right now.' },
-        { status: 500 }
+    // Always read the body: Loops can answer 200 with
+    // { success: false, message } (e.g. a stale LOOPS_MAILING_LIST_ID),
+    // which response.ok alone would wave through — the form would show
+    // success while every signup silently dropped. Reading it also
+    // releases the socket back to undici's pool.
+    const body: unknown = await response.json().catch(() => null);
+    const succeeded =
+      response.ok &&
+      (body as { success?: boolean } | null)?.success !== false;
+    if (!succeeded) {
+      throw new Error(
+        `Loops ${response.status}: ${JSON.stringify(body).slice(0, 300)}`
       );
     }
-  } catch {
+  } catch (error) {
+    // The one place newsletter failures become visible server-side.
+    console.error('newsletter subscribe failed:', error);
     return NextResponse.json(
       { error: 'Could not subscribe right now.' },
       { status: 500 }
