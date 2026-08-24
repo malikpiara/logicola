@@ -12,6 +12,7 @@ import {
 } from '@/lib/marketingTheme';
 import { SITE_URL } from '@/lib/site';
 import { QuizEmbed } from '@/components/blog/quizEmbed';
+import { BeforeAfter } from '@/components/blog/beforeAfter';
 
 interface PostPageProps {
   params: Promise<{ slug: string }>;
@@ -25,26 +26,44 @@ interface PostPageProps {
  * mounts the matching client island between the segments — hydration
  * islands, not iframes, per the embed decision.
  */
-const EMBED_MARKER =
-  /<div data-quiz-embed="([a-z0-9-]+)"(?: data-count="(\d+)")?>([\s\S]*?)<\/div>/g;
+const ISLAND_MARKER =
+  /<div (data-quiz-embed|data-island)="([a-z0-9-]+)"((?:\s+data-[a-z-]+="[^"]*")*)\s*>([\s\S]*?)<\/div>/g;
 
 type PostSegment =
   | { kind: 'html'; html: string }
-  | { kind: 'embed'; embed: string; count: number; fallbackHtml: string };
+  | { kind: 'embed'; embed: string; count: number; fallbackHtml: string }
+  | { kind: 'before-after'; attrs: Record<string, string> };
+
+function dataAttrs(raw: string): Record<string, string> {
+  const attrs: Record<string, string> = {};
+  for (const m of raw.matchAll(/data-([a-z-]+)="([^"]*)"/g)) {
+    attrs[m[1]!] = m[2]!;
+  }
+  return attrs;
+}
 
 function splitEmbeds(html: string): PostSegment[] {
   const segments: PostSegment[] = [];
   let cursor = 0;
-  for (const match of html.matchAll(EMBED_MARKER)) {
+  for (const match of html.matchAll(ISLAND_MARKER)) {
     if (match.index > cursor) {
       segments.push({ kind: 'html', html: html.slice(cursor, match.index) });
     }
-    segments.push({
-      kind: 'embed',
-      embed: match[1]!,
-      count: match[2] ? Number(match[2]) : 3,
-      fallbackHtml: match[3] ?? '',
-    });
+    const [, markerKind, key, rawAttrs, inner] = match;
+    if (markerKind === 'data-quiz-embed') {
+      const attrs = dataAttrs(rawAttrs ?? '');
+      segments.push({
+        kind: 'embed',
+        embed: key!,
+        count: attrs.count ? Number(attrs.count) : 3,
+        fallbackHtml: inner ?? '',
+      });
+    } else if (key === 'before-after') {
+      segments.push({ kind: 'before-after', attrs: dataAttrs(rawAttrs ?? '') });
+    } else {
+      // Unknown island key: pass the marker through untouched.
+      segments.push({ kind: 'html', html: match[0] });
+    }
     cursor = match.index + match[0].length;
   }
   if (cursor < html.length) {
@@ -199,12 +218,21 @@ export default async function BlogPostPage({ params }: PostPageProps) {
                 style={{ display: 'contents' }}
                 dangerouslySetInnerHTML={{ __html: segment.html }}
               />
-            ) : (
+            ) : segment.kind === 'embed' ? (
               <QuizEmbed
                 key={index}
                 embed={segment.embed}
                 count={segment.count}
                 fallbackHtml={segment.fallbackHtml}
+              />
+            ) : (
+              <BeforeAfter
+                key={index}
+                before={segment.attrs.before ?? ''}
+                after={segment.attrs.after ?? ''}
+                alt={segment.attrs.alt ?? 'Comparison'}
+                width={Number(segment.attrs.width ?? 1440)}
+                height={Number(segment.attrs.height ?? 900)}
               />
             )
           )}
