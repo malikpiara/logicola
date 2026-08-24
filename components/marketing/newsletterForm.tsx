@@ -68,19 +68,12 @@ export function NewsletterForm({
     }
   };
 
-  if (status === 'success') {
-    return (
-      <p
-        className={`motion-enter mt-5 font-semibold ${className}`}
-        role='status'
-        style={{ color: 'var(--mk-type)' }}
-      >
-        You&apos;re on the list — we&apos;ll email you when something worth
-        knowing ships.
-      </p>
-    );
-  }
-
+  // BOTH states render the same <form> → ring → pill skeleton
+  // (2026-08-24, motion pass): the old success branch returned a bare
+  // paragraph, so the sprite pill vanished and unrelated text faded up
+  // from nowhere. With the wrappers identical, React keeps the box's
+  // DOM across the swap — the pill reads as one object whose contents
+  // change, only the inside crossfades.
   return (
     <form onSubmit={handleSubmit} className={`mt-5 ${className}`}>
       <div
@@ -96,31 +89,51 @@ export function NewsletterForm({
           className='flex items-center gap-3 bg-white p-1.5 pl-[18px]'
           style={{ clipPath: theme.spriteClip }}
         >
-          <label htmlFor={`newsletter-email-${source}`} className='sr-only'>
-            Email address
-          </label>
-          <input
-            id={`newsletter-email-${source}`}
-            type='email'
-            required
-            autoComplete='email'
-            placeholder='you@university.edu'
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            className='w-full min-w-0 flex-1 border-none bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-500'
-          />
-          <button
-            type='submit'
-            disabled={status === 'pending'}
-            className='motion-button shrink-0 cursor-pointer border-none px-6 py-[11px] text-sm font-bold disabled:opacity-60'
-            style={{
-              background: theme.buttonBg,
-              color: theme.buttonFg,
-              clipPath: theme.spriteClip,
-            }}
-          >
-            {status === 'pending' ? 'Subscribing…' : 'Subscribe'}
-          </button>
+          {status === 'success' ? (
+            <p
+              className='motion-enter my-0 py-[11px] pr-4 text-sm font-semibold text-gray-900'
+              role='status'
+            >
+              You&apos;re on the list — we&apos;ll email you when something
+              worth knowing ships.
+            </p>
+          ) : (
+            <>
+              <label htmlFor={`newsletter-email-${source}`} className='sr-only'>
+                Email address
+              </label>
+              <input
+                id={`newsletter-email-${source}`}
+                type='email'
+                required
+                autoComplete='email'
+                placeholder='you@university.edu'
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className='w-full min-w-0 flex-1 border-none bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-500'
+              />
+              <button
+                type='submit'
+                disabled={status === 'pending'}
+                className='motion-button grid shrink-0 cursor-pointer place-items-center border-none px-6 py-[11px] text-sm font-bold disabled:opacity-60'
+                style={{
+                  background: theme.buttonBg,
+                  color: theme.buttonFg,
+                  clipPath: theme.spriteClip,
+                }}
+              >
+                {/* The longer label reserves the width invisibly, so
+                    Subscribe → Subscribing… never resizes the input
+                    mid-submit. */}
+                <span aria-hidden='true' className='invisible [grid-area:1/1]'>
+                  Subscribing…
+                </span>
+                <span className='[grid-area:1/1]'>
+                  {status === 'pending' ? 'Subscribing…' : 'Subscribe'}
+                </span>
+              </button>
+            </>
+          )}
         </div>
       </div>
       <p
@@ -130,7 +143,9 @@ export function NewsletterForm({
       >
         {status === 'error'
           ? 'That didn’t work — please try again in a moment.'
-          : 'No spam, and we never share your address.'}
+          : status === 'success'
+            ? ''
+            : 'No spam, and we never share your address.'}
       </p>
     </form>
   );

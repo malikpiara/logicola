@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scoring-loop demo lab</title>
+    <!--
+  LAB (2026-08-24, from the improve-animations audit's missed
+  opportunity #5): the scoring economy — a bar that PAYS for answers
+  and charges for misses — is the product's most distinctive mechanic,
+  and it is invisible until a visitor starts a drill. This is a
+  candidate looping demo for the LANDING page, replacing prose.
+  Marketing budget applies (rare surface, non-interactive, longer
+  timings allowed). Product code is untouched until Malik signs this
+  off; the loop deliberately reuses the app's real grammar: the 500ms
+  quart payment, the 340ms damage flicker BEFORE the penalty lands,
+  the ±delta that never outlives its beat.
+
+  One full cycle: 9s. Correct beat at 1s (+8, bar 24%→56%), miss beat
+  at 5s (flicker, then −4, bar 56%→40%), reset by fade at 8.5s.
+  Reduced motion: the animation pauses on a representative mid-frame
+  (negative delay), nothing moves.
+-->
+    <style>
+      :root {
+        --surface: #e7f099;
+        --ink: #02302c;
+        --accent: #0c8f4e;
+        --quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+      body {
+        margin: 0;
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        background: #cff6dd;
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+      }
+      .card {
+        width: min(420px, 90vw);
+        background: var(--surface);
+        color: var(--ink);
+        padding: 22px 24px 26px;
+        border-radius: 10px;
+      }
+      .prompt {
+        font-size: 14px;
+        font-weight: 700;
+        margin: 0 0 14px;
+        min-height: 1.4em;
+      }
+      .prompt span {
+        position: absolute;
+        opacity: 0;
+        animation: 9s infinite;
+      }
+      .prompt .p1 {
+        animation-name: prompt1;
+      }
+      .prompt .p2 {
+        animation-name: prompt2;
+      }
+      @keyframes prompt1 {
+        0%,
+        44% {
+          opacity: 1;
+        }
+        45%,
+        100% {
+          opacity: 0;
+        }
+      }
+      @keyframes prompt2 {
+        0%,
+        44% {
+          opacity: 0;
+        }
+        45%,
+        93% {
+          opacity: 1;
+        }
+        94%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .bar {
+        position: relative;
+        height: 12px;
+        flex: 1;
+        background: color-mix(in srgb, var(--ink) 14%, transparent);
+        overflow: hidden;
+      }
+      .fill {
+        position: absolute;
+        inset: 0;
+        transform-origin: left center;
+        background: var(--ink);
+        /* the app's real payment: 500ms quart, held back on a miss until
+       the flicker has finished (see qbar-flicker in globals.css) */
+        animation: fill 9s var(--quart) infinite;
+      }
+      @keyframes fill {
+        0%,
+        11% {
+          transform: scaleX(0.24);
+        }
+        17%,
+        59% {
+          transform: scaleX(0.56);
+        } /* +8 pays at the correct beat */
+        /* miss at 5s: flicker holds the value... */
+        64.5% {
+          transform: scaleX(0.56);
+        }
+        /* ...then the penalty lands */
+        70%,
+        92% {
+          transform: scaleX(0.4);
+        }
+        100% {
+          transform: scaleX(0.24);
+        }
+      }
+      .flick {
+        animation: flick 9s linear infinite;
+      }
+      @keyframes flick {
+        /* two blinks over ~340ms starting at the miss beat (55.5%) */
+        0%,
+        55.5% {
+          opacity: 1;
+        }
+        56.1% {
+          opacity: 0.25;
+        }
+        56.8% {
+          opacity: 1;
+        }
+        57.5% {
+          opacity: 0.25;
+        }
+        58.2%,
+        100% {
+          opacity: 1;
+        }
+      }
+      .delta {
+        width: 3.5ch;
+        font-size: 13px;
+        font-weight: 700;
+        text-align: right;
+        position: relative;
+      }
+      .delta span {
+        position: absolute;
+        right: 0;
+        opacity: 0;
+      }
+      .gain {
+        color: var(--accent);
+        animation: gain 9s var(--quart) infinite;
+      }
+      .loss {
+        color: #b3261e;
+        animation: loss 9s var(--quart) infinite;
+      }
+      @keyframes gain {
+        0%,
+        11% {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        13%,
+        26% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        30%,
+        100% {
+          opacity: 0;
+          transform: translateY(-3px);
+        }
+      }
+      @keyframes loss {
+        0%,
+        55% {
+          opacity: 0;
+          transform: translateY(-3px);
+        }
+        57% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        58% {
+          transform: translateX(-2px);
+        }
+        59% {
+          transform: translateX(2px);
+        }
+        60%,
+        72% {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        76%,
+        100% {
+          opacity: 0;
+          transform: translateY(3px);
+        }
+      }
+      .caption {
+        margin: 16px 0 0;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.7;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prompt span,
+        .fill,
+        .flick,
+        .delta span {
+          /* pause everything on a representative frame: mid-run, +8 just
+         paid — negative delay parks each animation at the 2s mark */
+          animation-play-state: paused;
+          animation-delay: -2s;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="card"
+      role="img"
+      aria-label="Demo of LogiCola scoring: a correct answer pays 8 points into the bar; a miss flickers the bar and charges a penalty."
+    >
+      <p class="prompt">
+        <span class="p1">“All logicians are careful.” → all L is C ✓</span>
+        <span class="p2">“Some tiger is not a mammal.” → ✗</span>
+      </p>
+      <div class="row">
+        <div class="bar"><div class="fill flick"></div></div>
+        <div class="delta">
+          <span class="gain">+8</span>
+          <span class="loss">−4</span>
+        </div>
+      </div>
+      <p class="caption">every answer pays — or costs. reach 100.</p>
+    </div>
+  </body>
+</html>

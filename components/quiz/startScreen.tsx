@@ -186,8 +186,12 @@ export function StartScreen({
           globals.css rather than bolting on an arbitrary transition that
           block wouldn't catch.
         */}
+        {/* No motion-enter here (plans/006): nested inside the screen's
+            own motion-enter it composed — 16px travel, curve-squared
+            fade — so the dial landed late and soft. One entrance per
+            container; the section already carries it. */}
         {showLevel && (
-          <div className='motion-enter mx-auto mt-6 w-full max-w-md px-6'>
+          <div className='mx-auto mt-6 w-full max-w-md px-6'>
             {/*
               Phase 2 (5): was three sentences — the densest text on the
               screen, explaining a control instead of being one. The stakes

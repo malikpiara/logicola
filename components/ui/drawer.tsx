@@ -46,7 +46,6 @@ interface DrawerContentExtraProps {
    * snap points without having to drag.
    */
   onGrabberClick?: () => void;
-  disableOpenAnimation?: boolean;
   /**
    * Which edge the sheet is attached to. Must match the `direction`
    * prop on the Drawer root. 'bottom' (the default) is the original
@@ -67,7 +66,6 @@ const DrawerContent = React.forwardRef<
       className,
       children,
       onGrabberClick,
-      disableOpenAnimation = false,
       side = 'bottom',
       ...props
     },
@@ -91,10 +89,16 @@ const DrawerContent = React.forwardRef<
               ? 'fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background'
               : 'fixed inset-y-0 right-0 z-50 flex flex-col rounded-l-[10px] border bg-background',
             'outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0',
-            !disableOpenAnimation &&
-              (side === 'bottom'
-                ? 'motion-panel duration-200 ease-[var(--ease-out-quart)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-bottom-6 data-[state=closed]:slide-out-to-bottom-5'
-                : 'duration-200 ease-[var(--ease-out-quart)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:slide-in-from-right-6 data-[state=closed]:slide-out-to-right-5'),
+            // The old `animate-in`/`slide-in-*`/`duration-200` motion
+            // classes were DEAD CSS and are gone (2026-08-24, plans/002):
+            // Tailwind emits utilities inside @layer utilities, while vaul
+            // injects an unlayered stylesheet whose animation/transition
+            // declarations outrank them — every sheet has always moved on
+            // vaul's 500ms cubic-bezier(0.32, 0.72, 0, 1) (`--ease-sheet`
+            // in globals.css). Sheet timing is tuned via unlayered rules
+            // there, never via utilities here. The old
+            // `disableOpenAnimation` prop gated only those dead classes
+            // and left with them.
             className
           )}
           {...props}
@@ -130,7 +134,12 @@ const DrawerContent = React.forwardRef<
                 aria-label='Cycle drawer snap point'
                 className='group mx-auto -mb-[18px] mt-0 flex h-11 w-[100px] cursor-grab items-center justify-center focus-visible:outline-none'
               >
-                <span className='block h-[5px] w-9 rounded-full bg-muted transition-colors group-hover:bg-gray-300 group-focus-visible:bg-gray-400' />
+                {/* Pressed = darkest, the resize grip's ladder (motion
+                    pass, 2026-08-24): this bar is TAPPED to cycle snap
+                    points, never hovered on the devices that show it —
+                    without group-active it was the one tap control with
+                    no acknowledgement. */}
+                <span className='block h-[5px] w-9 rounded-full bg-muted transition-colors group-hover:bg-gray-300 group-focus-visible:bg-gray-400 group-active:bg-gray-400' />
               </button>
             ) : (
               <div className='mx-auto mt-4 flex h-2 w-[100px] items-center justify-center cursor-grab'>

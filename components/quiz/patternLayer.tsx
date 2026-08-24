@@ -125,14 +125,18 @@ export function PatternLayer({
     };
 
     draw();
-    // Coalesce resize bursts (pane drags) to one regeneration per frame.
+    // Trailing debounce, not per-frame (2026-08-24, plans/001): a pane
+    // drag resizes this host continuously, and regenerating + re-parsing
+    // hundreds of rects per frame for an aria-hidden decoration was a
+    // measurable slice of the drag's jank. One redraw, 150ms after the
+    // last resize, covers drag-release and window resizes alike.
     const observer = new ResizeObserver(() => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(draw);
+      clearTimeout(frame);
+      frame = window.setTimeout(draw, 150);
     });
     observer.observe(host);
     return () => {
-      cancelAnimationFrame(frame);
+      clearTimeout(frame);
       observer.disconnect();
     };
   }, [ink, kind, pool, seed, treatment]);

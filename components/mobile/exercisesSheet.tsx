@@ -104,7 +104,7 @@ export function ExercisesSheet({
 
         <div className='flex-1 overflow-hidden'>
           <div
-            className={`flex h-full w-[200%] motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-out ${
+            className={`flex h-full w-[200%] motion-safe:transition-transform motion-safe:duration-[190ms] motion-safe:ease-[var(--ease-out-quart)] ${
               activeTopic ? '-translate-x-1/2' : ''
             }`}
           >
