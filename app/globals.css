@@ -21,6 +21,15 @@
   summary {
     cursor: pointer;
   }
+
+  /* The gutter is always reserved (2026-08-24, CLS audit #7): on
+     classic-scrollbar platforms, navigating between short and long
+     routes — and the quiz's own body scroll-lock — used to toggle the
+     scrollbar and slide every centred layout ~15px. Overlay-scrollbar
+     platforms (macOS default) are unaffected. */
+  html {
+    scrollbar-gutter: stable;
+  }
 }
 
 .motion-enter {
@@ -2534,6 +2543,25 @@
   /* Blog quiz embed (2026-08-24): the island's card. Lives outside the
      post's prose flow (`not-prose`) and speaks the marketing register —
      mono eyebrow, plum ink, the house press grammar via .motion-button. */
+  /* Resume-banner reservation (2026-08-24, CLS audit #1): the banner
+     hydrates from localStorage, so its ~76/108px used to shove the
+     whole catalogue down after first paint. The landing page's inline
+     script marks <html data-lx-resume> pre-paint when a drill exists;
+     these min-heights hold the slot for exactly that case. Measured
+     heights (one-line title desktop / two-line mobile) — a longer
+     title still grows by a line, which beats the whole banner popping. */
+  html[data-lx-resume] .lx-resume-slot {
+    /* flow-root keeps the banner's own margin-bottom INSIDE the slot,
+       so the reserved box equals banner + margin exactly. */
+    display: flow-root;
+    min-height: 128.5px;
+  }
+  @media (min-width: 640px) {
+    html[data-lx-resume] .lx-resume-slot {
+      min-height: 96.5px;
+    }
+  }
+
   .lx-embed {
     margin: 28px 0;
     padding: 18px 20px 20px;

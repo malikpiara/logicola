@@ -593,17 +593,19 @@ const QuizSession: React.FC<QuizSessionProps> = ({
    * patch removed that lock along with the aria-hiding, so the page
    * gained a few px of rubber-band scroll behind the sheet. The lock
    * was shipped behaviour; now it is OWNED here instead of inherited
-   * by accident. Padding compensates the scrollbar gap on desktop.
+   * by accident. No padding compensation any more (2026-08-24, CLS
+   * audit #6/#7): `html { scrollbar-gutter: stable }` in globals.css
+   * reserves the gutter at all times, so locking overflow changes
+   * nothing's width — including the FIXED drawer, which body padding
+   * never reached and which used to slide ~15px on classic-scrollbar
+   * platforms at every start→question boundary.
    */
   useEffect(() => {
     if (showStartScreen || showEndScreen) return;
-    const { overflow, paddingRight } = document.body.style;
-    const gap = window.innerWidth - document.documentElement.clientWidth;
+    const { overflow } = document.body.style;
     document.body.style.overflow = 'hidden';
-    if (gap > 0) document.body.style.paddingRight = `${gap}px`;
     return () => {
       document.body.style.overflow = overflow;
-      document.body.style.paddingRight = paddingRight;
     };
   }, [showStartScreen, showEndScreen]);
 

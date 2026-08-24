@@ -1,15 +1,18 @@
 'use client';
 
-// Static, not via the lazy chunk (2026-08-24): this page PRERENDERS
-// KaTeX markup, and with the stylesheet living only in katexSpanImpl's
-// chunk the first paint showed unstyled math with the MathML block
-// unhidden. Route-scoped, so only /keyboard carries the extra link.
+// The IMPL directly, not the lazy boundary (2026-08-24, CLS audit
+// #12): this page's whole purpose is rendering math — its prerendered
+// markup needs the CSS statically (the katex.min.css import), and
+// going through the Suspense boundary made the nine button previews
+// paint as raw `$…$` source before swapping. Importing the impl puts
+// KaTeX in this route's own chunk, which is exactly where /keyboard
+// wants it; the quiz routes keep the lazy boundary.
 import 'katex/dist/katex.min.css';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import KatexSpan, { preloadKatex } from '@/components/katexSpan';
+import KatexSpan from '@/components/katexSpanImpl';
 import { ClipboardCopy } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -108,12 +111,6 @@ function replaceShorthandsWithCursor(
 export default function LabelGeneratorPage() {
   const [input, setInput] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  // The preview renders per keystroke — fetch the KaTeX chunk before
-  // the first key, not with it (same warm-up as the quiz shell).
-  useEffect(() => {
-    preloadKatex();
-  }, []);
 
   /**
    * Auto-closing parentheses. If user presses '(',
