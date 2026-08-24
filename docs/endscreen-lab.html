@@ -277,6 +277,7 @@
       .stat b {
         font: 700 24px ui-sans-serif;
         font-stretch: 125%;
+        font-variant-numeric: tabular-nums;
       }
       .rows {
         width: 100%;
@@ -293,7 +294,7 @@
       .rows div + div {
         border-top: 1px solid;
       }
-      .rows span {
+      .rows > div > span {
         font:
           600 10px ui-monospace,
           monospace;
@@ -304,6 +305,31 @@
       .rows b {
         font: 700 17px ui-sans-serif;
         font-stretch: 125%;
+        font-variant-numeric: tabular-nums;
+      }
+      /* the denominator never counts — "of 22" is not an achievement */
+      .den {
+        font-weight: 400;
+        opacity: 0.72;
+      }
+      .sr {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+      button.replay {
+        background: #0b0d10;
+        color: var(--text);
+        border: 1px solid var(--edge);
+        border-radius: 3px;
+        padding: 6px 9px;
+        font:
+          13px ui-monospace,
+          monospace;
+        cursor: pointer;
       }
       .strip {
         display: flex;
@@ -336,7 +362,9 @@
         opacity: 0.8;
         margin: 0 0 10px;
       }
-      .stat span {
+      /* DIRECT child only: the counter puts spans inside <b>, and a loose
+    `.stat span` shrank the counted figure to label size. */
+      .stat > div > span {
         font:
           600 10px ui-monospace,
           monospace;
@@ -1491,13 +1519,11 @@
                 S.msg +
                 '</h2>' +
                 rule(set) +
-                '<div class="stat"><div><b style="color:' +
-                set.a +
-                '">' +
-                S.score +
+                '<div class="stat"><div><b>' +
+                counter(S.score, 0, set.a) +
                 '</b><span>points</span></div>' +
                 '<div><b>' +
-                r.taken +
+                counter(r.taken, COUNT_STAGGER) +
                 '</b><span>problems</span></div>' +
                 '<div><b>5</b><span>level</span></div></div>' +
                 receiptActs(S, set) +
@@ -1516,16 +1542,15 @@
                 S.msg +
                 '</h2>' +
                 rule(set) +
-                '<div class="stat"><div><b style="color:' +
-                set.a +
-                '">' +
-                S.score +
+                '<div class="stat"><div><b>' +
+                counter(S.score, 0, set.a) +
                 '</b><span>points</span></div>' +
                 '<div><b>' +
-                r.clean +
-                '/' +
+                counter(r.clean, COUNT_STAGGER) +
+                '<span class="den">/' +
                 r.taken +
-                '</b><span>first try</span></div>' +
+                '</span></b>' +
+                '<span>first try</span></div>' +
                 '<div><b>5</b><span>level</span></div></div>' +
                 receiptActs(S, set) +
                 '</div>',
@@ -1544,16 +1569,15 @@
                 S.msg +
                 '</h2>' +
                 rule(set) +
-                '<div class="stat"><div><b style="color:' +
-                set.a +
-                '">' +
-                S.score +
+                '<div class="stat"><div><b>' +
+                counter(S.score, 0, set.a) +
                 '</b><span>points</span></div>' +
                 '<div><b>' +
-                r.clean +
-                '/' +
+                counter(r.clean, COUNT_STAGGER) +
+                '<span class="den">/' +
                 r.taken +
-                '</b><span>first try</span></div></div>' +
+                '</span></b>' +
+                '<span>first try</span></div></div>' +
                 receiptActs(S, set) +
                 '</div>',
               set
@@ -1572,18 +1596,17 @@
                 '<div class="rows" style="color:' +
                 set.i +
                 '">' +
-                '<div><span>Points</span><b style="color:' +
-                set.a +
-                '">' +
-                S.score +
+                '<div><span>Points</span><b>' +
+                counter(S.score, 0, set.a) +
                 '</b></div>' +
                 '<div style="border-color:color-mix(in srgb,' +
                 set.i +
-                ' 18%,transparent)"><span>First try</span><b>' +
-                r.clean +
-                ' of ' +
+                ' 18%,transparent)"><span>First try</span>' +
+                '<b>' +
+                counter(r.clean, COUNT_STAGGER) +
+                '<span class="den"> of ' +
                 r.taken +
-                '</b></div>' +
+                '</span></b></div>' +
                 '<div style="border-color:color-mix(in srgb,' +
                 set.i +
                 ' 18%,transparent)"><span>Level</span><b>5</b></div>' +
@@ -1654,6 +1677,67 @@
         },
       ];
 
+      /* ---- the count-up -------------------------------------------------- */
+      /*
+       * TRIGGER  system, on mount. Nobody asks for this; the screen arriving is
+       *          the trigger (Saffer's system trigger).
+       * RULES    every animated figure starts at 0 and lands EXACTLY on its true
+       *          value. No overshoot and no bounce: an inflated score, even for
+       *          200ms, is dishonest feedback about a graded exercise. The
+       *          denominator is static — "of 22" is not an achievement. THE
+       *          LEVEL NEVER COUNTS: it is a setting the learner chose, and
+       *          animating it would claim it was earned.
+       * FEEDBACK scaled to significance — the score is the result and leads;
+       *          first-try is the skill figure and follows 120ms later. Same
+       *          easing and duration for both (the paired-elements rule), only
+       *          offset.
+       * LOOP     closed. Once per end screen, never repeated. If a learner ever
+       *          sees this dozens of times a session, a long loop should drop it
+       *          — progressive reduction — but a run is ~20 problems, so this is
+       *          firmly in "occasional".
+       */
+      const COUNT_MS = 700;
+      const COUNT_STAGGER = 120;
+      // ease-out-quart, the value is ENTERING — matches --ease-out-quart in
+      // app/globals.css so the lab and the product share one curve.
+      const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+      const reduced = () =>
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function runCountUp(root) {
+        root.querySelectorAll('[data-count]').forEach((el) => {
+          const to = Number(el.dataset.count);
+          const delay = Number(el.dataset.countDelay || 0);
+          if (reduced()) {
+            el.textContent = String(to);
+            return;
+          }
+          el.textContent = '0';
+          const start = performance.now() + delay;
+          // rAF + textContent on a ref'd node. NOT React state per frame — a
+          // re-render every frame is how a count-up drops frames.
+          const step = (now) => {
+            const t = Math.min(1, Math.max(0, (now - start) / COUNT_MS));
+            el.textContent = String(Math.round(easeOutQuart(t) * to));
+            if (t < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        });
+      }
+      // The counting node is aria-hidden and a static sr-only twin carries the
+      // real value, so a screen reader hears "100 points" once instead of
+      // hearing it recount sixty times.
+      const counter = (value, delay, colour) =>
+        '<span aria-hidden="true" data-count="' +
+        value +
+        '"' +
+        (delay ? ' data-count-delay="' + delay + '"' : '') +
+        (colour ? ' style="color:' + colour + '"' : '') +
+        '>0</span>' +
+        '<span class="sr">' +
+        value +
+        '</span>';
+
       function renderReceipts() {
         const set = SETS[state.set],
           S = STATES[state.st];
@@ -1670,6 +1754,7 @@
             x.cost +
             '</p></div>'
         ).join('');
+        runCountUp(document.getElementById('receipts'));
       }
 
       function renderStages() {
@@ -1723,6 +1808,8 @@
             state.treat
           ) +
           '</select></div>' +
+          '<div class="dial"><label>&nbsp;</label>' +
+          '<button class="replay" id="recount">▶ Replay the count</button></div>' +
           '<div class="dial"><label for="run">Run quality</label><select id="run">' +
           opt(
             Object.fromEntries(
@@ -1756,6 +1843,9 @@
             String(state.seed)
           ) +
           '</select></div>';
+        d.querySelector('#recount').addEventListener('click', () =>
+          runCountUp(document.getElementById('receipts'))
+        );
         d.querySelectorAll('select').forEach((s) =>
           s.addEventListener('change', (e) => {
             state[e.target.id] =
@@ -1812,6 +1902,56 @@ and box-shadows — this is the same fact that made the focus indicator a painte
 ring. So &ldquo;outlined button&rdquo; here means a two-layer gem: an outer element filled with the
 rim colour, 3px of padding, an inner element in the fill. That is not a hack; it is what
 <code>ringBand</code> in <code>lib/pixel.ts</code> already does for focus.</p>
+
+<h3>R2 or R4 — and the count-up settles it</h3>
+<p>Malik&rsquo;s hypothesis was R4 on mobile and R2 on desktop. <b>Measured, the split is not needed
+and the direction is the other way round.</b></p>
+<table>
+<tr><th></th><th>R2 · columns</th><th>R4 · rows</th></tr>
+<tr><td>block on a 390px stage</td><td class="n">290 &times; 43</td><td class="n">280 &times; 104</td></tr>
+<tr><td>whole composition height</td><td class="n">309px</td><td class="n">351px</td></tr>
+<tr><td>cleared panel, iPhone SE (390&times;667)</td><td class="n" colspan="2">494px — both fit, 143px spare</td></tr>
+<tr><td>widest label vs its column</td><td class="n bad">97px in 96.7px</td><td class="n good">64px in 280px</td></tr>
+<tr><td><b>number drift while counting</b></td><td class="n bad">left 3.6px · right 3.7px</td><td class="n good">left 7.1px · <b>right 0px</b></td></tr>
+</table>
+<p><b>The vertical argument against R4 does not hold.</b> It costs 42px more, against 143px of spare
+panel on the smallest phone the product supports. That was my worry and the measurement retires it.</p>
+<p><b>R2 is the fragile one.</b> Its &ldquo;FIRST TRY&rdquo; label measures 97px inside a 96.7px
+column — it fits today with nothing to spare, so a longer label, a larger type step or any
+translation breaks it. R4&rsquo;s labels have 280px of row to sit in.</p>
+<p><b>And the count-up decides it.</b> A counting number changes digit COUNT, not just glyphs, so
+tabular figures do not save you. Centred in a column, the number grows in both directions — measured
+at 3.6px left and 3.7px right, so the figure shimmies for the whole 700ms. Right-aligned in a row,
+<b>the right edge never moves</b>: the ones digit stays put and the number grows leftward, which is
+why every ledger ever printed right-aligns its numerals. If the numbers animate, <b>R4 is the correct
+container</b> and R2 is fighting the animation.</p>
+<p><b>So: R4 everywhere, not a split.</b> Two layouts would mean two things to maintain and test
+across seven palettes and three run-quality states, for a screen seen once per run — and the
+measurement says one layout serves both sizes. R4&rsquo;s one real cost is that it introduces a
+second alignment axis: everything else on this screen is centred and the rows are justified. That is
+a taste call, not a constraint, and it is the thing to look at before committing.</p>
+
+<h3>The count-up, as a microinteraction</h3>
+<p><b>Trigger</b> — system, on mount. Nobody asks for it; the screen arriving is the trigger.</p>
+<p><b>Rules</b> — every animated figure starts at 0 and lands <em>exactly</em> on its true value. No
+overshoot and no bounce: an inflated score, even for 200ms, is dishonest feedback about a graded
+exercise, and Saffer&rsquo;s ethical boundary on feedback is explicit that progress must not deceive.
+The denominator is static, because &ldquo;of 22&rdquo; is not an achievement. <b>The level never
+counts</b> — it is a setting the learner chose, and animating it would claim it was earned.</p>
+<p><b>Feedback</b> — scaled to significance. The score is the result and leads; first-try is the skill
+figure and follows 120ms later. Same easing and duration for both (the paired-elements rule), only
+offset. 700ms with <code>ease-out-quart</code>, the curve <code>--ease-out-quart</code> already
+carries in globals.css — the value is <em>entering</em>, which is what ease-out is for.</p>
+<p><b>Loop</b> — closed, once per end screen. Worth revisiting if a learner ever meets it dozens of
+times a session, where progressive reduction would say drop it; a run is ~20 problems, so this sits
+in &ldquo;occasional&rdquo;, which is where the frequency rule permits an animation at all.</p>
+<p><b>Two implementation notes that are not optional.</b> The count is driven by
+<code>requestAnimationFrame</code> writing <code>textContent</code> on a ref&rsquo;d node —
+<em>never</em> React state per frame, because a re-render every frame is exactly how a counter drops
+them. And the animating node is <code>aria-hidden</code> with a static <code>sr-only</code> twin
+carrying the real value, so a screen reader hears &ldquo;100&rdquo; once instead of hearing it
+recount sixty times. Under <code>prefers-reduced-motion</code> the figure is written at its final
+value immediately — verified in this sheet.</p>
 
 <h3>Contrast is not visual weight, and that is what makes a colour-only hierarchy fragile</h3>
 <p>Look at treatment <b>b</b> on Set&nbsp;L. The magenta secondary has <em>lower</em> contrast than
