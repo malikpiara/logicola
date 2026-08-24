@@ -408,7 +408,7 @@ function pickDifferentLetter<T extends string>(
 }
 
 // =============================================================
-// Easy templates: *0, *2, *3, *4, *5, *6, *7, *8, *9, *10, *11, *12
+// Easy templates: *0–*12 (LC3's All/Some *12) and LC3's *29
 // =============================================================
 
 /**
@@ -746,10 +746,13 @@ function template10(rng: Rng, counter: number): Question {
   const adjPred = pickDifferentLetter(rng, adjectives, noun);
   const adjSubj = pickDifferentLetter(rng, adjectives, adjPred);
   const A = noun[0]!.toUpperCase();
-  const a = noun[0]!.toLowerCase();
   const C = adjPred[0]!.toUpperCase();
   const c = adjPred[0]!.toLowerCase();
 
+  // Distractors follow 2008's *10 grid (`$h is $k`, `$h is $f`,
+  // `some $b`). A switched form (`some C is A`) must never appear
+  // here: Gensler treats `some A is B` and `some B is A` as the
+  // same wff, so it would be a correct answer marked wrong.
   return {
     id: qid('10', counter),
     prompt: `Some ${adjSubj} ${pluralize(noun)} are ${adjPred}.`,
@@ -757,14 +760,8 @@ function template10(rng: Rng, counter: number): Question {
       [
         { label: `some ${A} is ${C}` },
         { label: `${A} is ${C}`, layer2: HINT_NO_QUANTIFIER },
-        {
-          label: `some ${a} is ${c}`,
-          layer2:
-            classHint(`${adjSubj} ${pluralize(noun)}`) +
-            '\n' +
-            classHint(adjPred),
-        },
-        { label: `some ${C} is ${A}`, layer2: HINT_SWITCHED },
+        { label: `${A} is ${c}`, layer2: classHint(adjPred) },
+        { label: `some ${A} is ${c}`, layer2: classHint(adjPred) },
       ],
       0
     ),
@@ -816,6 +813,9 @@ function template11(rng: Rng, counter: number): Question {
  * the restored idiom now lives in template23 (hard), and this template
  * stays as a deliberate LC3 addition — it is the only template that
  * drills quantifier CHOICE (all vs some) rather than a fixed form.
+ * (main's e5c4a5e fixed the same loss by rewriting *12 itself; at the
+ * 2026-08-24 merge the branch's 12-easy/23-hard split won, so this
+ * function stays the All/Some variant. Malik, 2026-08-24)
  *
  *   "Some kind people are doctors." → some K is D
  *   "All cheerful people are scholars." → all C is S
@@ -1479,8 +1479,14 @@ function template32(rng: Rng, counter: number): Question {
   };
 }
 
+// 2008 split: easier = *0–*11, harder = *12–*23 (`C:wz%12 … Cm:ww+12`).
+// *1 re-seated here at the 2026-08-24 merge, porting main's e5c4a5e
+// (the port had mis-filed it as hard). *12 stays easy as LC3's
+// All/Some variant; 2008's *12 lesson is template23 in hard. *29 is an
+// LC3 addition.
 const easyTemplates = [
   template0,
+  template1,
   template2,
   template3,
   template4,
@@ -1496,7 +1502,9 @@ const easyTemplates = [
 ] as const;
 
 // =============================================================
-// Hard templates: *1, *13, *14, *15, *16, *17, *18, *19, *20, *21, *22
+// Hard templates: *13–*23 (2008's harder half, with *23 twice
+// covering the w=12/w=23 only/none-but slots) + LC3's *24–*28,
+// *30–*32
 // =============================================================
 
 /**
@@ -1847,7 +1855,6 @@ function template22(rng: Rng, counter: number): Question {
 }
 
 const hardTemplates = [
-  template1,
   template13,
   template14,
   template15,

@@ -305,39 +305,39 @@ You forgot to underline the imperative agent letter — descriptive \`Au\` and i
               "label": "$ (Pu \\cdot  B\\underline{u}) $",
             },
           ],
-          "prompt": "Do boast, only if you park.",
+          "prompt": "If you’re parking, then boast.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.L.0.9",
+          "id": "gen.L.6.9",
           "options": [
             {
               "id": 0,
-              "label": "$ L\\underline{u} $",
+              "label": "$ (x)V\\underline{x} $",
             },
             {
-              "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
-You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs.",
+              "hint": "‘Let everyone do A’ uses an imperative inside the quantifier — \`(x)A{x}\`. The underlined x marks the predicate as imperative.
+You forgot to underline the imperative agent letter — descriptive \`Au\` and imperative \`A{u}\` are different wffs. (The predicate is imperative.)",
               "id": 1,
-              "label": "$ Lu $",
+              "label": "$ (x)Vx $",
             },
             {
-              "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
-You dropped the agent — bare imperative addressed to you needs the underlined u.",
+              "hint": "‘Let everyone do A’ uses an imperative inside the quantifier — \`(x)A{x}\`. The underlined x marks the predicate as imperative.
+‘Let everyone’ is universal \`(x)\`, not existential \`(∃x)\`.",
               "id": 2,
-              "label": "$ L $",
+              "label": "$ (\\exists x)V\\underline{x} $",
             },
             {
-              "hint": "Imperatives: underline the agent letter — ‘sing!’ is \`S{u}\`, not \`Su\`. The underlined \`u\` marks the imperative addressed to ‘you’.
-There’s no ‘ought’ in the prompt — drop the \`O\`.",
+              "hint": "‘Let everyone do A’ uses an imperative inside the quantifier — \`(x)A{x}\`. The underlined x marks the predicate as imperative.
+There’s no ‘ought’ in the prompt — drop the \`O\`. Imperatives don’t need O — only ‘ought’ statements do.",
               "id": 3,
-              "label": "$ OL\\underline{u} $",
+              "label": "$ O(x)V\\underline{x} $",
             },
           ],
-          "prompt": "Look.",
+          "prompt": "Let everyone vent.",
         },
       ],
       "shuffleOptions": true,
