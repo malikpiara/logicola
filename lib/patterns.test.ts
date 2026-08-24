@@ -75,15 +75,16 @@ describe('lab parity', () => {
   it('open field: Set C, 800×600, seed 7, scale 1', () => {
     const pool = quiltAccentPool(SET_C.surface, SET_C.ink, POOL_CANDIDATES);
     expect(
-      normalizeCoords(quiltPixBody({
-        w: 800,
-        h: 600,
-        ink: SET_C.ink,
-        pool,
-        scale: 1,
-        seed: 7,
-        clear: null,
-      })
+      normalizeCoords(
+        quiltPixBody({
+          w: 800,
+          h: 600,
+          ink: SET_C.ink,
+          pool,
+          scale: 1,
+          seed: 7,
+          clear: null,
+        })
       )
     ).toBe(normalizeCoords(labFixtures.openField));
   });
@@ -91,15 +92,16 @@ describe('lab parity', () => {
   it('panel clearing: Set C, 800×600, seed 42 (desktop plate numbers)', () => {
     const pool = quiltAccentPool(SET_C.surface, SET_C.ink, POOL_CANDIDATES);
     expect(
-      normalizeCoords(quiltPixBody({
-        w: 800,
-        h: 600,
-        ink: SET_C.ink,
-        pool,
-        scale: 1,
-        seed: 42,
-        clear: clearRectFor('panel', 800, 600, false),
-      })
+      normalizeCoords(
+        quiltPixBody({
+          w: 800,
+          h: 600,
+          ink: SET_C.ink,
+          pool,
+          scale: 1,
+          seed: 42,
+          clear: clearRectFor('panel', 800, 600, false),
+        })
       )
     ).toBe(normalizeCoords(labFixtures.panel));
   });
@@ -107,15 +109,16 @@ describe('lab parity', () => {
   it('footer strip: Set R, 1000×700, seed 7, mobile 0.6 scale', () => {
     const pool = quiltAccentPool(SET_R.surface, SET_R.ink, POOL_CANDIDATES);
     expect(
-      normalizeCoords(quiltPixBody({
-        w: 1000,
-        h: 700,
-        ink: SET_R.ink,
-        pool,
-        scale: 0.6,
-        seed: 7,
-        clear: clearRectFor('footer', 1000, 700, false),
-      })
+      normalizeCoords(
+        quiltPixBody({
+          w: 1000,
+          h: 700,
+          ink: SET_R.ink,
+          pool,
+          scale: 0.6,
+          seed: 7,
+          clear: clearRectFor('footer', 1000, 700, false),
+        })
       )
     ).toBe(normalizeCoords(labFixtures.footer));
   });
@@ -123,15 +126,16 @@ describe('lab parity', () => {
   it('camo classic, open field: Set C, 800×600, seed 7', () => {
     const pool = quiltAccentPool(SET_C.surface, SET_C.ink, POOL_CANDIDATES);
     expect(
-      normalizeCoords(camoBody('camo', {
-        w: 800,
-        h: 600,
-        ink: SET_C.ink,
-        pool,
-        scale: 1,
-        seed: 7,
-        clear: null,
-      })
+      normalizeCoords(
+        camoBody('camo', {
+          w: 800,
+          h: 600,
+          ink: SET_C.ink,
+          pool,
+          scale: 1,
+          seed: 7,
+          clear: null,
+        })
       )
     ).toBe(normalizeCoords(labFixtures.camoOpen));
   });
@@ -139,15 +143,16 @@ describe('lab parity', () => {
   it('camo classic with the panel clearing: Set C, seed 42', () => {
     const pool = quiltAccentPool(SET_C.surface, SET_C.ink, POOL_CANDIDATES);
     expect(
-      normalizeCoords(camoBody('camo', {
-        w: 800,
-        h: 600,
-        ink: SET_C.ink,
-        pool,
-        scale: 1,
-        seed: 42,
-        clear: clearRectFor('panel', 800, 600, false),
-      })
+      normalizeCoords(
+        camoBody('camo', {
+          w: 800,
+          h: 600,
+          ink: SET_C.ink,
+          pool,
+          scale: 1,
+          seed: 42,
+          clear: clearRectFor('panel', 800, 600, false),
+        })
       )
     ).toBe(normalizeCoords(labFixtures.camoPanel));
   });
@@ -155,15 +160,16 @@ describe('lab parity', () => {
   it('camo giant with the footer strip: Set R, seed 99, mobile scale', () => {
     const pool = quiltAccentPool(SET_R.surface, SET_R.ink, POOL_CANDIDATES);
     expect(
-      normalizeCoords(camoBody('camo-giant', {
-        w: 1000,
-        h: 700,
-        ink: SET_R.ink,
-        pool,
-        scale: 0.6,
-        seed: 99,
-        clear: clearRectFor('footer', 1000, 700, false),
-      })
+      normalizeCoords(
+        camoBody('camo-giant', {
+          w: 1000,
+          h: 700,
+          ink: SET_R.ink,
+          pool,
+          scale: 0.6,
+          seed: 99,
+          clear: clearRectFor('footer', 1000, 700, false),
+        })
       )
     ).toBe(normalizeCoords(labFixtures.camoGiantFooter));
   });

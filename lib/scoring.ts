@@ -337,7 +337,9 @@ export function registerCorrect(state: ScoreState): ScoreState {
   return {
     ...state,
     score: state.score + state.pointsAvailable,
-    solvedClean: state.problemMissed ? state.solvedClean : state.solvedClean + 1,
+    solvedClean: state.problemMissed
+      ? state.solvedClean
+      : state.solvedClean + 1,
   };
 }
 
