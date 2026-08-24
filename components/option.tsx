@@ -221,6 +221,16 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
         type='button'
         ref={ref}
         onClick={onClick}
+        // A mouse click must not LEAVE focus on the pill (Malik,
+        // 2026-08-24). Chrome's :focus-visible heuristic PROMOTES the
+        // focused element the moment any key is pressed — so click an
+        // option, hit Enter to check, and the pill you picked by mouse
+        // sprouts the keyboard focus band. Cancelling mousedown stops
+        // the button acquiring focus from the click (click still
+        // fires); keyboard users are untouched — their focus arrives
+        // through the guarded programmatic .focus() in the quiz shell,
+        // which :focus-visible correctly bands.
+        onMouseDown={(event) => event.preventDefault()}
         aria-pressed={isSelected}
         data-solution={showSolution ? 'shown' : 'hidden'}
         style={{ clipPath: geo.clip[ringW] }}
