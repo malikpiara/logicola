@@ -278,6 +278,64 @@
         font: 700 24px ui-sans-serif;
         font-stretch: 125%;
       }
+      .rows {
+        width: 100%;
+        max-width: 280px;
+        margin: 16px auto 0;
+        text-align: left;
+      }
+      .rows div {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 7px 0;
+      }
+      .rows div + div {
+        border-top: 1px solid;
+      }
+      .rows span {
+        font:
+          600 10px ui-monospace,
+          monospace;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        opacity: 0.72;
+      }
+      .rows b {
+        font: 700 17px ui-sans-serif;
+        font-stretch: 125%;
+      }
+      .strip {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 250px;
+        margin: 16px auto 0;
+      }
+      .strip i {
+        width: 12px;
+        height: 12px;
+        display: block;
+      }
+      .striplbl {
+        font:
+          600 10px ui-monospace,
+          monospace;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        opacity: 0.72;
+        margin-top: 10px;
+      }
+      .eyebrow {
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        opacity: 0.8;
+        margin: 0 0 10px;
+      }
       .stat span {
         font:
           600 10px ui-monospace,
@@ -443,7 +501,20 @@
       <div class="tgrid" id="tgrid"></div>
     </div>
     <div class="sec">
-      <h2>3 &middot; Six compositions</h2>
+      <h2>3 &middot; The receipt &mdash; six readings</h2>
+      <p>
+        Malik, 2026-08-23: the most interesting composition, so it gets its own
+        exploration. All six carry the corner&nbsp;&times; (his exit pick) and a
+        GHOST secondary. The dial that matters most here is
+        <b>run quality</b> &mdash; the whole point of a receipt is that it can
+        tell a 20-for-20 run from a 40-for-60 one, and today&rsquo;s end screen
+        cannot.
+      </p>
+      <div class="stages" id="receipts"></div>
+    </div>
+
+    <div class="sec">
+      <h2>4 &middot; The other compositions</h2>
       <p>
         Same content, same actions, only the arrangement changing. The button
         dial above feeds these too.
@@ -829,28 +900,33 @@
           why: 'A real colour difference, which is what was asked for. The accent is also the colour the score is painted in, so the pair reads as one palette rather than two greys.',
           fill: (x) => ({ bg: x.a, fg: x.s, rim: null }),
         },
-        ghostRim: {
-          n: 'c · ghost — surface fill, ink rim',
-          why: 'The classic filled/outlined pair. The rim is a real two-layer gem, not a border, because a clipped element paints no border.',
+        ghost: {
+          n: 'c · GHOST — no fill, no border',
+          why: 'What a ghost button actually is, in shadcn and in M3’s text button: the label alone, with a fill appearing only on hover or press. Malik, 2026-08-23 — the treatment below was mislabelled “ghost” when it is an OUTLINE button, and this is the one he wants beside a primary.',
+          fill: (x) => ({ bg: 'transparent', fg: x.i, rim: null, ghost: true }),
+        },
+        outline: {
+          n: 'd · OUTLINE — surface fill, ink rim',
+          why: 'What the previous version of this sheet wrongly called a ghost. The classic filled/outlined pair. The rim is a real two-layer gem, not a border, because a clipped element paints no border.',
           fill: (x) => ({ bg: x.s, fg: x.i, rim: x.i }),
         },
         tonalRim: {
-          n: 'd · tonal — ink 18%, ink rim',
+          n: 'e · tonal — ink 18%, ink rim',
           why: 'Material 3’s tonal button, plus the rim it needs here. Softer than a ghost, heavier than a link.',
           fill: (x) => ({ bg: mix(x.i, x.s, 0.18), fg: x.i, rim: x.i }),
         },
         tonal: {
-          n: 'e · tonal, NO rim — the trap',
+          n: 'f · tonal, NO rim — the trap',
           why: 'What a tonal secondary looks like if you trust the label contrast and forget the component boundary. Included because it is the one everybody reaches for first.',
           fill: (x) => ({ bg: mix(x.i, x.s, 0.18), fg: x.i, rim: null }),
         },
         ghostAccent: {
-          n: 'f · ghost with an ACCENT rim',
+          n: 'g · outline with an ACCENT rim',
           why: 'The synthesis: the colours differ (ink vs accent, which is what was asked for) but the HIERARCHY is carried by fill-versus-no-fill, which cannot invert. Rim and label both in the accent.',
           fill: (x) => ({ bg: x.s, fg: x.a, rim: x.a }),
         },
         swap: {
-          n: 'g · swapped — accent primary, ink secondary',
+          n: 'h · swapped — accent primary, ink secondary',
           why: 'Tests the premise. If the accent is the achievement colour, maybe the onward action should wear it and Try again should be the heavy one.',
           fill: (x) => ({ bg: x.i, fg: x.s, rim: null }),
           primary: (x) => ({ bg: x.a, fg: x.s, rim: null }),
@@ -869,6 +945,16 @@
           if (!f) {
             // the link tier: 80% ink on surface
             const c = cr(mix(x.i, x.s, 0.8), x.s);
+            if (c < wl) {
+              wl = c;
+              wlk = k;
+            }
+            we = Infinity;
+            continue;
+          }
+          if (f.ghost) {
+            // no fill, no border — nothing for 1.4.11 to measure
+            const c = cr(f.fg, x.s);
             if (c < wl) {
               wl = c;
               wlk = k;
@@ -920,7 +1006,8 @@
         st: 'next',
         kind: 'camo',
         seed: 7,
-        treat: 'accent',
+        treat: 'ghost',
+        run: 'ordinary',
       };
       const STATES = {
         next: {
@@ -948,6 +1035,19 @@
 
       function gem(label, spec, cls) {
         if (!spec) return '<span class="quiet">' + label + '</span>';
+        if (spec.ghost) {
+          // No fill and no border, so nothing to clip and nothing for 1.4.11 to
+          // measure — the control is identified by its label, which only has to
+          // clear 1.4.3 against the surface. Ink does that on all seven sets.
+          return (
+            '<span class="gemw" style="background:transparent">' +
+            '<span class="gemi" style="background:transparent;color:' +
+            spec.fg +
+            '">' +
+            label +
+            '</span></span>'
+          );
+        }
         const outer = spec.rim ? spec.rim : spec.bg;
         const pad = spec.rim ? ' rimmed' : '';
         return (
@@ -1022,22 +1122,7 @@
             ),
         },
         {
-          n: '2 · Bottom-anchored',
-          why: 'The question screen’s own 2026-08-22 posture: the reading holds the top, the answer group sinks to the thumb. Makes the last two screens of a run agree.',
-          b: (S, set) =>
-            shell(
-              '<div class="stack split"><div><h2 class="msg">' +
-                S.msg +
-                '</h2>' +
-                summary(S, set) +
-                '</div>' +
-                acts(S, set) +
-                '</div>',
-              set
-            ),
-        },
-        {
-          n: '3 · Score as the hero',
+          n: '2 · Score as the hero',
           why: 'The number is the achievement, so it takes the display size and the message becomes its label. Loses the sentence rhythm; gains something worth screenshotting.',
           b: (S, set) =>
             shell(
@@ -1054,7 +1139,7 @@
             ),
         },
         {
-          n: '4 · The receipt',
+          n: '3 · The receipt',
           why: 'Score, problems and level as three equal stats under a rule. The only composition that surfaces the LEVEL, which today hides inside a sentence.',
           b: (S, set) =>
             shell(
@@ -1076,7 +1161,7 @@
             ),
         },
         {
-          n: '5 · Two gems in a row',
+          n: '4 · Two gems in a row',
           why: 'Primary and secondary side by side as a pair rather than a stack. Fastest to parse; watch the label size at 390px.',
           b: (S, set) =>
             shell(
@@ -1084,21 +1169,6 @@
                 S.msg +
                 '</h2>' +
                 summary(S, set) +
-                acts(S, set, true) +
-                '</div>',
-              set
-            ),
-        },
-        {
-          n: '6 · Bottom-anchored + two gems',
-          why: 'The two ideas that are not in conflict, combined: thumb-reachable and side by side.',
-          b: (S, set) =>
-            shell(
-              '<div class="stack split"><div><h2 class="msg">' +
-                S.msg +
-                '</h2>' +
-                summary(S, set) +
-                '</div>' +
                 acts(S, set, true) +
                 '</div>',
               set
@@ -1355,6 +1425,253 @@
         ).join('');
       }
 
+      /* ---- the receipt, explored --------------------------------------- */
+      // Run quality, which the app ALREADY computes and discards: ScoreState
+      // carries solvedClean ("Problems solved first try — for the end screen")
+      // and missed, and solvedClean appears nowhere else in the codebase.
+      const RUNS = {
+        clean: {
+          taken: 20,
+          clean: 20,
+          missed: 0,
+          label: '20 for 20 — flawless',
+        },
+        ordinary: {
+          taken: 22,
+          clean: 18,
+          missed: 4,
+          label: '18 of 22 first try',
+        },
+        scraped: {
+          taken: 60,
+          clean: 40,
+          missed: 20,
+          label: '40 of 60 — scraped to 100',
+        },
+      };
+
+      function receiptShell(inner, set) {
+        return (
+          '<div class="phone" style="background:' +
+          set.s +
+          ';color:' +
+          set.i +
+          '">' +
+          '<div class="pat">' +
+          patSvg(set, state.kind, 390, 730, state.seed) +
+          '</div>' +
+          cornerX(set) +
+          inner +
+          '</div>'
+        );
+      }
+      const ghostSpec = (x) => ({
+        bg: 'transparent',
+        fg: x.i,
+        rim: null,
+        ghost: true,
+      });
+      const receiptActs = (S, set) =>
+        '<div class="acts tight">' +
+        gem(S.p, inkSpec(set)) +
+        gem('Try again', ghostSpec(set)) +
+        '</div>';
+      const rule = (set) =>
+        '<div class="rule" style="background:' + set.i + '"></div>';
+      const pct = (r) => Math.round((r.clean / r.taken) * 100);
+
+      const RECEIPTS = [
+        {
+          n: 'R1 · three stats — as it stands',
+          why: 'Points, problems, level. What the lab already had. Every figure is about the RUN; none is about the learner.',
+          cost: '⚠ “problems” and “level” are context, not achievement — a receipt with no skill figure on it',
+          b: (S, set, r) =>
+            receiptShell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                rule(set) +
+                '<div class="stat"><div><b style="color:' +
+                set.a +
+                '">' +
+                S.score +
+                '</b><span>points</span></div>' +
+                '<div><b>' +
+                r.taken +
+                '</b><span>problems</span></div>' +
+                '<div><b>5</b><span>level</span></div></div>' +
+                receiptActs(S, set) +
+                '</div>',
+              set
+            ),
+        },
+
+        {
+          n: 'R2 · first try replaces problems',
+          why: 'The one change that makes it a receipt rather than a tally. solvedClean is the only figure on this screen that says anything about SKILL — and the app computes it already.',
+          cost: '✓ one prop to wire · ⚠ “18 / 22” needs the label to disambiguate it from the score',
+          b: (S, set, r) =>
+            receiptShell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                rule(set) +
+                '<div class="stat"><div><b style="color:' +
+                set.a +
+                '">' +
+                S.score +
+                '</b><span>points</span></div>' +
+                '<div><b>' +
+                r.clean +
+                '/' +
+                r.taken +
+                '</b><span>first try</span></div>' +
+                '<div><b>5</b><span>level</span></div></div>' +
+                receiptActs(S, set) +
+                '</div>',
+              set
+            ),
+        },
+
+        {
+          n: 'R3 · two stats, level as an eyebrow',
+          why: 'The level is a setting, not an outcome — so it moves above the headline where settings live, and the two figures that ARE outcomes get the width.',
+          cost: '✓ least crowded · ⚠ the eyebrow competes with the set name if that ever returns to this screen',
+          b: (S, set, r) =>
+            receiptShell(
+              '<div class="stack mid"><p class="eyebrow">Level 5</p>' +
+                '<h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                rule(set) +
+                '<div class="stat"><div><b style="color:' +
+                set.a +
+                '">' +
+                S.score +
+                '</b><span>points</span></div>' +
+                '<div><b>' +
+                r.clean +
+                '/' +
+                r.taken +
+                '</b><span>first try</span></div></div>' +
+                receiptActs(S, set) +
+                '</div>',
+              set
+            ),
+        },
+
+        {
+          n: 'R4 · rows, not columns',
+          why: 'A receipt is a list. Label left, value right, hairlines between — which is what the word actually describes, and it scales to a fourth line where three columns do not.',
+          cost: '✓ reads as a document · ⚠ taller than the column form · ⚠ left-aligned block inside a centred screen',
+          b: (S, set, r) =>
+            receiptShell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                '<div class="rows" style="color:' +
+                set.i +
+                '">' +
+                '<div><span>Points</span><b style="color:' +
+                set.a +
+                '">' +
+                S.score +
+                '</b></div>' +
+                '<div style="border-color:color-mix(in srgb,' +
+                set.i +
+                ' 18%,transparent)"><span>First try</span><b>' +
+                r.clean +
+                ' of ' +
+                r.taken +
+                '</b></div>' +
+                '<div style="border-color:color-mix(in srgb,' +
+                set.i +
+                ' 18%,transparent)"><span>Level</span><b>5</b></div>' +
+                '</div>' +
+                receiptActs(S, set) +
+                '</div>',
+              set
+            ),
+        },
+
+        {
+          n: 'R5 · the run, drawn',
+          why: 'One square per problem — filled for a first-try solve, hollow for one that took a second look. The receipt in the brand’s own pixel grammar, and the only version where a 20-for-20 and a 40-for-60 look different at a glance rather than differing by a numeral.',
+          cost: '⚠ solvedClean and missed are COUNTS, not a sequence — this can show how many, never in what order · ⚠ a 60-problem run wraps to five rows',
+          b: (S, set, r) =>
+            receiptShell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                '<p class="sub"><b style="color:' +
+                set.a +
+                '">' +
+                S.score +
+                ' points</b> at level 5.</p>' +
+                '<div class="strip">' +
+                Array.from(
+                  { length: Math.min(r.taken, 30) },
+                  (_, i) =>
+                    '<i style="background:' +
+                    (i < r.clean ? set.i : 'transparent') +
+                    ';box-shadow:inset 0 0 0 2px ' +
+                    set.i +
+                    '"></i>'
+                ).join('') +
+                '</div><p class="striplbl">' +
+                r.clean +
+                ' of ' +
+                r.taken +
+                ' first try</p>' +
+                receiptActs(S, set) +
+                '</div>',
+              set
+            ),
+        },
+
+        {
+          n: 'R6 · one sentence',
+          why: 'The receipt collapsed to prose. No stat furniture at all — the same three facts in the voice the rest of the screen already speaks.',
+          cost: '✓ nothing new to design · ⚠ nothing to screenshot, and the figures stop being scannable',
+          b: (S, set, r) =>
+            receiptShell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                '<p class="sub"><b style="color:' +
+                set.a +
+                '">' +
+                S.score +
+                ' points</b> at level 5, ' +
+                r.clean +
+                ' of ' +
+                r.taken +
+                ' first try.</p>' +
+                receiptActs(S, set) +
+                '</div>',
+              set
+            ),
+        },
+      ];
+
+      function renderReceipts() {
+        const set = SETS[state.set],
+          S = STATES[state.st];
+        const r = RUNS[state.run];
+        document.getElementById('receipts').innerHTML = RECEIPTS.map(
+          (x) =>
+            '<div class="col"><h3>' +
+            x.n +
+            '</h3><p class="why">' +
+            x.why +
+            '</p>' +
+            x.b(S, set, r) +
+            '<p class="why" style="color:#e0b970;font:11.5px ui-monospace,monospace;min-height:0">' +
+            x.cost +
+            '</p></div>'
+        ).join('');
+      }
+
       function renderStages() {
         const set = SETS[state.set],
           S = STATES[state.st];
@@ -1372,6 +1689,7 @@
       const render = () => {
         renderExits();
         renderTreatments();
+        renderReceipts();
         renderStages();
       };
 
@@ -1403,6 +1721,14 @@
               Object.entries(TREATMENTS).map(([k, v]) => [k, v.n])
             ),
             state.treat
+          ) +
+          '</select></div>' +
+          '<div class="dial"><label for="run">Run quality</label><select id="run">' +
+          opt(
+            Object.fromEntries(
+              Object.entries(RUNS).map(([k, v]) => [k, v.label])
+            ),
+            state.run
           ) +
           '</select></div>' +
           '<div class="dial"><label for="st">Run outcome</label><select id="st">' +
