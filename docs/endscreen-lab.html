@@ -154,6 +154,11 @@
         justify-content: space-between;
         padding-top: 96px;
       }
+      /* .msg is an <h2>, and the sheet's own h2 rule sets colour, family and
+    text-transform for section headings. Those are properties .msg never
+    declared, so they leaked in and rendered the headline mint-on-mint,
+    uppercase and monospace — a lab bug that made every phone stage lie.
+    Reset them explicitly rather than reordering the sheet. */
       .msg {
         font-weight: 700;
         font-size: 36px;
@@ -161,6 +166,9 @@
         letter-spacing: -0.02em;
         margin: 0 0 12px;
         font-stretch: 125%;
+        color: inherit;
+        font-family: inherit;
+        text-transform: none;
       }
       .sub {
         font-size: 18px;
@@ -415,7 +423,18 @@
     </header>
     <div class="dials" id="dials"></div>
     <div class="sec">
-      <h2>Two buttons, six treatments</h2>
+      <h2>1 &middot; The exit &mdash; six affordances</h2>
+      <p>
+        The fork I resolved without showing it. Every one of these gets a
+        finished run out of the drill; they differ in what the learner has to
+        recognise, and in whether the exit is something the end screen ADDS or
+        something the flow stops taking away. <b>(a) is what shipped.</b>
+      </p>
+      <div class="stages" id="exits"></div>
+    </div>
+
+    <div class="sec">
+      <h2>2 &middot; Two buttons, six treatments</h2>
       <p>
         Primary is &ldquo;Try the hard set&rdquo; in every one; only the
         secondary changes. Measured across all seven palettes &mdash; the number
@@ -424,7 +443,7 @@
       <div class="tgrid" id="tgrid"></div>
     </div>
     <div class="sec">
-      <h2>Six compositions</h2>
+      <h2>3 &middot; Six compositions</h2>
       <p>
         Same content, same actions, only the arrangement changing. The button
         dial above feeds these too.
@@ -1149,6 +1168,193 @@
           })
           .join('');
       }
+      /* ---- the exit affordances ------------------------------------------ */
+      const X_GLYPH = '&#10005;';
+      function headerRow(set, withGuide) {
+        return (
+          '<div style="display:flex;align-items:center;gap:14px;padding:12px 8px 0">' +
+          '<span style="width:44px;height:44px;margin-left:-13px;display:grid;place-items:center;' +
+          'font-size:19px;opacity:.6">' +
+          X_GLYPH +
+          '</span>' +
+          '<span style="height:12px;flex:1;background:color-mix(in srgb,' +
+          set.i +
+          ' 12%,transparent);' +
+          'clip-path:polygon(4px 0,calc(100% - 4px) 0,100% 4px,100% calc(100% - 4px),' +
+          'calc(100% - 4px) 100%,4px 100%,0 calc(100% - 4px),0 4px)">' +
+          '<span style="display:block;height:100%;width:100%;background:' +
+          set.a +
+          '"></span></span>' +
+          (withGuide
+            ? '<span style="width:44px;height:44px;display:grid;place-items:center;font-size:15px;' +
+              'background:color-mix(in srgb,' +
+              set.i +
+              ' 14%,transparent);color:' +
+              set.i +
+              '">&#9829;</span>'
+            : '') +
+          '</div>'
+        );
+      }
+      const cornerX = (set) =>
+        '<span style="position:absolute;top:14px;left:8px;width:44px;height:44px;display:grid;' +
+        'place-items:center;font-size:19px;opacity:.6;z-index:2">' +
+        X_GLYPH +
+        '</span>';
+
+      function exitShell(inner, set, extra) {
+        return (
+          '<div class="phone" style="background:' +
+          set.s +
+          ';color:' +
+          set.i +
+          '">' +
+          '<div class="pat">' +
+          patSvg(set, state.kind, 390, 730, state.seed) +
+          '</div>' +
+          (extra || '') +
+          inner +
+          '</div>'
+        );
+      }
+      const bodyStack = (S, set, actsHtml) =>
+        '<div class="stack mid"><h2 class="msg">' +
+        S.msg +
+        '</h2>' +
+        summary(S, set) +
+        actsHtml +
+        '</div>';
+
+      const EXITS = [
+        {
+          n: 'a · a quiet link, named — SHIPPED',
+          why: '“All exercises” under the action column. Names its destination where a glyph only implies one, and sits where the eye already is after the primary.',
+          cost: '✓ unambiguous · ⚠ one more line in a column that already has two · ⚠ nothing in the flow looks like this, so it is a new pattern',
+          b: (S, set) =>
+            exitShell(
+              bodyStack(
+                S,
+                set,
+                '<div class="acts">' +
+                  gem(S.p, primarySpec(set)) +
+                  '<span class="quiet">Try again</span>' +
+                  '<span class="quiet">All exercises</span></div>'
+              ),
+              set
+            ),
+        },
+
+        {
+          n: 'b · a corner ✕',
+          why: 'The exact affordance the QUESTION screen uses, kept in the same corner. Nothing new to learn, and the action column stays two items.',
+          cost: '✓ consistent with the flow · ✗ a bare ✕ on a terminal screen is ambiguous — close what? · ✗ no accessible name unless one is written',
+          b: (S, set) =>
+            exitShell(
+              bodyStack(
+                S,
+                set,
+                '<div class="acts">' +
+                  gem(S.p, primarySpec(set)) +
+                  '<span class="quiet">Try again</span></div>'
+              ),
+              set,
+              cornerX(set)
+            ),
+        },
+
+        {
+          n: 'c · both — ✕ and the link',
+          why: 'Covers both habits: the learner who reaches for the corner and the one who reads the column.',
+          cost: '⚠ two controls doing one job, on a screen with three actions already · the redundancy is the point, and also the objection',
+          b: (S, set) =>
+            exitShell(
+              bodyStack(
+                S,
+                set,
+                '<div class="acts">' +
+                  gem(S.p, primarySpec(set)) +
+                  '<span class="quiet">Try again</span>' +
+                  '<span class="quiet">All exercises</span></div>'
+              ),
+              set,
+              cornerX(set)
+            ),
+        },
+
+        {
+          n: 'd · the exit IS the primary',
+          why: 'Reads the run as over: the expected act is leaving, and going on to the next drill is the option. The inverse of what shipped.',
+          cost: '✗ contradicts the score — the screen says “complete” and then makes leaving the loudest thing · defensible only if drills are seen as one-offs',
+          b: (S, set) =>
+            exitShell(
+              bodyStack(
+                S,
+                set,
+                '<div class="acts">' +
+                  gem('All exercises', primarySpec(set)) +
+                  '<span class="quiet">' +
+                  S.p +
+                  '</span><span class="quiet">Try again</span></div>'
+              ),
+              set
+            ),
+        },
+
+        {
+          n: 'e · back to the TOPIC, not the catalogue',
+          why: '“Back to Syllogistic Logic” returns to the group the drill belongs to rather than the root. More specific, and it keeps the learner inside the thing they chose.',
+          cost: '⚠ needs a topic anchor on the landing page that does not exist yet · ⚠ longer label wraps at 390px on the longer topic names',
+          b: (S, set) =>
+            exitShell(
+              bodyStack(
+                S,
+                set,
+                '<div class="acts">' +
+                  gem(S.p, primarySpec(set)) +
+                  '<span class="quiet">Try again</span>' +
+                  '<span class="quiet">Back to Syllogistic Logic</span></div>'
+              ),
+              set
+            ),
+        },
+
+        {
+          n: 'f · never take the exit away',
+          why: 'The structural answer. The bug was that the end screen REPLACES the sticky header that holds the ✕ — so keep the header instead of adding an exit below. The bar reads full, which is its own completion signal.',
+          cost: '✓ no new pattern, and the exit never disappears at any point in a run · ⚠ a progress bar on a terminal screen may read as “still going” · ⚠ the header is chrome for a screen that has no content to scroll',
+          b: (S, set) =>
+            exitShell(
+              headerRow(set, true) +
+                '<div class="stack mid" style="padding-top:0">' +
+                '<h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                summary(S, set) +
+                '<div class="acts">' +
+                gem(S.p, primarySpec(set)) +
+                '<span class="quiet">Try again</span></div></div>',
+              set
+            ),
+        },
+      ];
+
+      function renderExits() {
+        const set = SETS[state.set],
+          S = STATES[state.st];
+        document.getElementById('exits').innerHTML = EXITS.map(
+          (e) =>
+            '<div class="col"><h3>' +
+            e.n +
+            '</h3><p class="why">' +
+            e.why +
+            '</p>' +
+            e.b(S, set) +
+            '<p class="why" style="color:#e0b970;font:11.5px ui-monospace,monospace;min-height:0">' +
+            e.cost +
+            '</p></div>'
+        ).join('');
+      }
+
       function renderStages() {
         const set = SETS[state.set],
           S = STATES[state.st];
@@ -1164,6 +1370,7 @@
         ).join('');
       }
       const render = () => {
+        renderExits();
         renderTreatments();
         renderStages();
       };
@@ -1233,6 +1440,27 @@
       }
 
       document.getElementById('notes').innerHTML = `
+<h3>The exit fork, and what it actually turns on</h3>
+<p>Three of these are the same idea at different volumes (<b>a</b>, <b>c</b>, <b>e</b>) and two are
+genuinely different claims about the screen.</p>
+<p><b>f · never take the exit away</b> is the one worth arguing with, because it fixes the cause
+rather than the symptom. The end screen has no exit precisely because it REPLACES the sticky header
+that carries the ✕ — so the alternative to adding an exit is not removing it in the first place. It
+introduces no new pattern, and the exit then exists at every moment of a run rather than at every
+moment except the last. Its cost is that a progress bar sitting above “Exercise complete.” has to be
+read as a full bar rather than as an unfinished one, and that is a real risk: the bar is the
+completion signal on the question screen and would be doing a second job here.</p>
+<p><b>d · the exit is the primary</b> is the one that contradicts the rest of the screen. The
+headline says “Exercise complete.” and the loudest control would say “leave”. That is coherent only
+if a drill is a one-off rather than a rung, and the catalogue's Easy → Hard pairs say it is a rung.</p>
+<p><b>b · a corner ✕</b> is the most consistent with the flow and the least self-explanatory. On the
+question screen the ✕ is unambiguous because there is obviously a thing in progress to close. On a
+terminal screen “close what?” is a real question, and the glyph carries no accessible name unless one
+is written for it — which is the moment it stops being cheaper than a word.</p>
+<p><b>What is NOT in dispute:</b> the destination. Every option lands on <code>/</code>, which has
+been the catalogue since 2026-08-17 and is where the question screen's own ✕ already goes. Option
+<b>e</b> is the one exception and it is blocked on an anchor that does not exist.</p>
+
 <h3>The measurement that decides the button question</h3>
 <p>Malik is right that the two buttons should differ, and the obvious way to do it is a soft
 &ldquo;tonal&rdquo; secondary. <b>It cannot be built here without a rim.</b> Measured across all
