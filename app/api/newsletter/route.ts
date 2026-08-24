@@ -65,8 +65,7 @@ export async function POST(request: Request) {
     // releases the socket back to undici's pool.
     const body: unknown = await response.json().catch(() => null);
     const succeeded =
-      response.ok &&
-      (body as { success?: boolean } | null)?.success !== false;
+      response.ok && (body as { success?: boolean } | null)?.success !== false;
     if (!succeeded) {
       throw new Error(
         `Loops ${response.status}: ${JSON.stringify(body).slice(0, 300)}`

@@ -11,9 +11,7 @@ import { LogoMark } from '@/components/logoMark';
 // pointerdown (warm before the tap's click) and mounts on first open.
 const ExercisesSheet = dynamic(
   () =>
-    import('@/components/mobile/exercisesSheet').then(
-      (m) => m.ExercisesSheet
-    ),
+    import('@/components/mobile/exercisesSheet').then((m) => m.ExercisesSheet),
   { ssr: false }
 );
 

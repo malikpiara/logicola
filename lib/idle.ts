@@ -24,7 +24,10 @@ export interface IdleTask {
 
 export function runWhenIdle(
   task: () => void,
-  { timeout = 1000, fallbackMs = 200 }: { timeout?: number; fallbackMs?: number } = {}
+  {
+    timeout = 1000,
+    fallbackMs = 200,
+  }: { timeout?: number; fallbackMs?: number } = {}
 ): IdleTask {
   let done = false;
   const run = () => {
