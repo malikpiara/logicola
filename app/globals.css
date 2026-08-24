@@ -2326,13 +2326,18 @@
     --faq-bleed: 16px;
   }
   .faq-wrap {
-    /* screen-xl + px-4/sm:px-6 — the footer's (and header's) container,
-       so the rail's left edge lines up with FOLLOW THE RELEASES below
-       (Malik's catch, 2026-08-15: the lab judged at 1128, but the app's
-       de-facto container is screen-xl — the FAQ follows the app) */
-    max-width: 1280px;
+    /* Follows .lx-wrap's 1152 (Malik, 2026-08-24) so the landing reads
+       as one measure — this reverses the 08-15 follow-the-app rule and
+       gives up the FOLLOW THE RELEASES edge alignment with the footer,
+       which stays on the chrome's 1280. */
+    max-width: 1152px;
     margin-inline: auto;
-    padding: 46px 16px 56px;
+    padding: 46px 20px 56px;
+  }
+  @media (min-width: 640px) {
+    .faq-wrap {
+      padding-inline: 32px;
+    }
   }
 
   /* Accordion panels collapse by TRANSITION (2026-08-24, plans/004):
@@ -2526,21 +2531,24 @@
     background: var(--lx-ground);
   }
   .lx-wrap {
-    /* screen-xl + px-4/sm:px-6 — the app's de-facto container (header,
-       footer, FAQ); a section port aligns to the app, not to its lab's
-       1128px drawing surface (the 08-15 carried rule) */
-    max-width: 1280px;
+    /* 1152px, not the chrome's 1280 (Malik, 2026-08-24: "are the
+       elements too wide?" — they were; the lab judged this composition
+       at 1128, and the 08-15 rule that widened it to follow the app's
+       container is superseded for the landing sections). Gutters grow
+       a step with it. The navbar/footer keep 1280 — landing content
+       edges no longer align with the footer's, accepted trade. */
+    max-width: 1152px;
     margin-inline: auto;
-    padding: 36px 16px 56px;
+    padding: 36px 20px 56px;
   }
   @media (min-width: 640px) {
     .lx-wrap {
-      padding-inline: 24px;
+      padding-inline: 32px;
     }
   }
   @media (min-width: 1024px) {
     .lx-wrap {
-      padding: 56px 24px 96px;
+      padding: 56px 32px 96px;
     }
   }
   .lx-display {
