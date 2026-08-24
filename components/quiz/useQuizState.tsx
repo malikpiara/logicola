@@ -334,6 +334,34 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
       const wrongPicks = selectedOptionIds.filter(
         (id) => !correctId.includes(id)
       );
+      // One event PER PICK, in the single-select scalar shape (decided
+      // Malik, 2026-08-24 — until then multi-select sets emitted no
+      // question_answered at all, having inherited a capture that sat
+      // below this branch's returns). Scalar option_id/option_label
+      // keep every distractor-traffic insight one breakdown across all
+      // sets; pick_index/picks_in_submission/submission_correct carry
+      // the per-press view. Note a retained genuine pick re-emits on
+      // the next press with a higher guess_number — filter first_try
+      // (or guess_number = 1) when counting unique pulls.
+      const submissionCorrect = wrongPicks.length === 0;
+      selectedOptionIds.forEach((id, pickIndex) => {
+        const picked = currentQuestion.options.find((o) => o.id === id);
+        if (!picked) return;
+        void captureAnalyticsEvent('question_answered', {
+          ...buildQuizAnalyticsProperties(subSet, totalQuestionCount),
+          question_id: currentQuestion.id,
+          question_template: questionTemplateKey(currentQuestion.id),
+          question_prompt: currentQuestion.prompt,
+          option_id: picked.id,
+          option_label: picked.label,
+          correct: correctId.includes(id),
+          pick_index: pickIndex,
+          picks_in_submission: selectedOptionIds.length,
+          submission_correct: submissionCorrect,
+          guess_number: wrongAttempts + 1,
+          first_try: wrongAttempts === 0,
+        });
+      });
       if (wrongPicks.length === 0) {
         if (wrongAttempts === 0) {
           setCorrectQuestions((prev) => [...prev, currentQuestion.id]);
@@ -370,7 +398,8 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
     // per-template aggregation key; `option_label` records which
     // distractor pulled the miss — the pair that makes content
     // bugs (a distractor drawing correct-answer-level traffic)
-    // visible in PostHog.
+    // visible in PostHog. The pick_* trio mirrors the multi-select
+    // branch above so per-submission queries read one schema.
     void captureAnalyticsEvent('question_answered', {
       ...buildQuizAnalyticsProperties(subSet, totalQuestionCount),
       question_id: currentQuestion.id,
@@ -379,6 +408,9 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
       option_id: chosenOption.id,
       option_label: chosenOption.label,
       correct,
+      pick_index: 0,
+      picks_in_submission: 1,
+      submission_correct: correct,
       guess_number: previousGuesses.length + 1,
       first_try: previousGuesses.length === 0,
     });
