@@ -32,11 +32,14 @@ async function getPostHogClient() {
   return postHogClientPromise;
 }
 
-export async function capturePageview() {
+export async function capturePageview(url?: string) {
   const posthog = await getPostHogClient();
 
+  // `url` lets a DEFERRED capture pin the page it was scheduled on:
+  // flushed during a route change, window.location already names the
+  // next page (2026-08-24).
   posthog?.capture('$pageview', {
-    $current_url: window.location.href,
+    $current_url: url ?? window.location.href,
   });
 }
 

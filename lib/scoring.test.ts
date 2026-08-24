@@ -136,6 +136,24 @@ describe('Set A — +5, penalty halves, no forfeit', () => {
     expect(isComplete(s)).toBe(false);
     expect(isComplete(clean(s))).toBe(true);
   });
+
+  // The tallies count PROBLEMS, not events — even on sets that never
+  // forfeit. Until 2026-08-24 both were derived from pointsAvailable,
+  // which only Set R ever moves, so a twice-missed Set A problem
+  // counted as two misses AND a clean solve (the end screen's ratio
+  // and score_percentage both lied). problemMissed pins the truth.
+  it('a problem missed twice then solved counts one miss, zero clean', () => {
+    let s = beginProblem(createScoreState(A, 7));
+    s = registerMiss(s);
+    s = registerMiss(s);
+    s = registerCorrect(s);
+    expect(s.missed).toBe(1);
+    expect(s.solvedClean).toBe(0);
+    // The next problem starts clean again.
+    s = registerCorrect(beginProblem(s));
+    expect(s.solvedClean).toBe(1);
+    expect(s.missed).toBe(1);
+  });
 });
 
 describe('Set Q — +7, decay reconstructed for LC3’s retries', () => {

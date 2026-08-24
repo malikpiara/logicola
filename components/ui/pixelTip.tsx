@@ -62,6 +62,14 @@ export function PixelTip({
   children: React.ReactElement;
 }) {
   const [open, setOpen] = React.useState(false);
+  // Suppression CLEARS the stored open, it doesn't just mask it: while
+  // the Root is held closed, Radix never fires onOpenChange(false) for
+  // a pointer that leaves, so a stale `open` would pop the tip with no
+  // hover the moment suppression lifts — e.g. the next question's
+  // option, now that Option keeps PixelTip mounted across questions.
+  // Adjusted during render (the sanctioned derive-state pattern), so
+  // no extra committed frame carries the stale value (2026-08-24).
+  if (suppressed && open) setOpen(false);
   return (
     <Tooltip.Root open={open && !suppressed} onOpenChange={setOpen}>
       {/* asChild: the child IS the trigger — Radix merges its handlers

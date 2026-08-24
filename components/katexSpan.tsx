@@ -16,7 +16,18 @@ import type { KatexSpanProps } from './katexSpanImpl';
  * SSG prerenders still carry the full KaTeX HTML (React renders lazy
  * components server-side), so crawlers and first paint lose nothing.
  */
-const KatexSpanImpl = React.lazy(() => import('./katexSpanImpl'));
+const KatexSpanImpl = React.lazy(() =>
+  import('./katexSpanImpl').catch(() => {
+    // A stale client after a deploy can 404 the old chunk hash. Raw
+    // text beats a blanked route: fall back to the same plain render
+    // the Suspense fallback shows, permanently for this page load.
+    return {
+      default: ({ as: Component = 'span', text, ...rest }: KatexSpanProps) => (
+        <Component {...rest}>{text}</Component>
+      ),
+    };
+  })
+);
 
 export type { KatexSpanProps };
 

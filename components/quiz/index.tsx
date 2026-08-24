@@ -23,6 +23,7 @@ import useQuizState from './useQuizState';
 import { progressLabel, type QuizMode } from './quizMode';
 import { canScore, chargeFor, progress } from '@/lib/scoring';
 import { writeLastDrill } from '@/lib/lastDrill';
+import { runWhenIdle, type IdleTask } from '@/lib/idle';
 import { nextDrillAfter } from '@/lib/nextDrill';
 import { haptic } from '@/lib/haptics';
 import classNames from 'classnames';
@@ -322,25 +323,29 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   // Malik 2026-08-17) — an OBSERVATION of the run, never a second
   // source of truth: the score stays the hook's. Start screen excluded
   // — arriving at a drill you never started isn't "leaving off".
+  // Deferred off the grading frame (2026-08-24): with scoreState.score
+  // in the deps this synchronous stringify+setItem landed in the same
+  // commit as the miss flicker and bar animation. A superseded write is
+  // CANCELLED (the next schedule carries fresher data — flushing here
+  // would put the write right back on the grading frame), but unmount
+  // FLUSHES the newest pending one: an exit or retry-remount inside the
+  // idle window must not leave the resume banner on the previous run.
+  const lastDrillTaskRef = useRef<IdleTask | null>(null);
   useEffect(() => {
     if (showStartScreen) return;
-    // Deferred off the grading frame (2026-08-24): with scoreState.score
-    // in the deps this synchronous stringify+setItem landed in the same
-    // commit as the miss flicker and bar animation. Idle callback with a
-    // 500ms cap — the banner's staleness window is one answer at worst.
-    const write = () =>
-      writeLastDrill({
-        title: subSet.title,
-        path: window.location.pathname,
-        points: mode.kind === 'score' ? scoreState.score : null,
-      });
-    if (typeof requestIdleCallback === 'function') {
-      const id = requestIdleCallback(write, { timeout: 500 });
-      return () => cancelIdleCallback(id);
-    }
-    const id = setTimeout(write, 200);
-    return () => clearTimeout(id);
+    const pending = runWhenIdle(
+      () =>
+        writeLastDrill({
+          title: subSet.title,
+          path: window.location.pathname,
+          points: mode.kind === 'score' ? scoreState.score : null,
+        }),
+      { timeout: 500 }
+    );
+    lastDrillTaskRef.current = pending;
+    return () => pending.cancel();
   }, [showStartScreen, subSet.title, mode.kind, scoreState.score]);
+  useEffect(() => () => lastDrillTaskRef.current?.flush(), []);
 
   // Top progress bar. Count mode fills a tenth per completed question (a
   // question counts once its solution is shown); scored mode tracks distance
@@ -567,6 +572,28 @@ const QuizSession: React.FC<QuizSessionProps> = ({
       attributeFilter: ['style'],
     });
     return () => observer.disconnect();
+  }, [showStartScreen, showEndScreen]);
+
+  /**
+   * Body scroll lock for the question flow (2026-08-24). Before the
+   * vaul patch, Radix treated the always-open controls sheet as modal
+   * and its RemoveScroll held the body still on every question screen,
+   * at every width — the drawer mounts even where CSS hides it. The
+   * patch removed that lock along with the aria-hiding, so the page
+   * gained a few px of rubber-band scroll behind the sheet. The lock
+   * was shipped behaviour; now it is OWNED here instead of inherited
+   * by accident. Padding compensates the scrollbar gap on desktop.
+   */
+  useEffect(() => {
+    if (showStartScreen || showEndScreen) return;
+    const { overflow, paddingRight } = document.body.style;
+    const gap = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = 'hidden';
+    if (gap > 0) document.body.style.paddingRight = `${gap}px`;
+    return () => {
+      document.body.style.overflow = overflow;
+      document.body.style.paddingRight = paddingRight;
+    };
   }, [showStartScreen, showEndScreen]);
 
   /**

@@ -34,10 +34,10 @@ function preloadExercisesSheet(): void {
  * Collapse to one variant once D13 is judged on-device.
  */
 const Navbar = () => {
-  const [open, setOpen] = useState(false);
-  // Once true, stays true: the sheet stays mounted after its first
-  // open so vaul's close animation and state survive later toggles.
-  const [sheetWanted, setSheetWanted] = useState(false);
+  // Three states in one value: null = never opened (sheet unmounted,
+  // vaul unfetched), true/false = the usual toggle. Once non-null the
+  // sheet stays mounted so vaul's close animation and state survive.
+  const [open, setOpen] = useState<boolean | null>(null);
   const pathname = usePathname();
 
   if (pathname.includes('quiz')) {
@@ -78,11 +78,8 @@ const Navbar = () => {
           className='motion-button inline-flex items-center p-2 w-11 h-11 justify-center text-sm text-[#3F0167] rounded-lg md:hidden hover:bg-[var(--nav-hover)] focus:outline-none focus:ring-2 focus:ring-[#0C8F4E]'
           onPointerDown={preloadExercisesSheet}
           onFocus={preloadExercisesSheet}
-          onClick={() => {
-            setSheetWanted(true);
-            setOpen(true);
-          }}
-          aria-expanded={open}
+          onClick={() => setOpen(true)}
+          aria-expanded={open === true}
           aria-haspopup='dialog'
         >
           <span className='sr-only'>Open exercises menu</span>
@@ -103,8 +100,12 @@ const Navbar = () => {
           </svg>
         </button>
       </div>
-      {sheetWanted && (
-        <ExercisesSheet variant={variant} open={open} onOpenChange={setOpen} />
+      {open !== null && (
+        <ExercisesSheet
+          variant={variant}
+          open={open === true}
+          onOpenChange={setOpen}
+        />
       )}
     </nav>
   );

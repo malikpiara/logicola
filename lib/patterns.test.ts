@@ -6,6 +6,7 @@ import {
   mulberry32,
   quiltAccentPool,
   quiltPixBody,
+  r1,
 } from './patterns';
 import labFixtures from './__fixtures__/patterns-lab.json';
 
@@ -36,18 +37,28 @@ const SET_R = { surface: '#F2CDA6', ink: '#190B45' };
  * the app's quilt has drifted from every composition judged in the lab.
  */
 /**
- * Coordinate-normalized comparison (2026-08-24): the app now rounds
- * emitted coordinates to one decimal (lib/patterns.ts `r1` — ~176 KB
- * off the landing page's HTML), while the lab fixtures carry full
- * float precision. Parity stays GEOMETRIC: every number on both sides
- * is rounded to the same 0.1 grid before comparing, so structure,
- * colours, ordering and any real geometry drift still fail the test —
- * only serialization length is forgiven.
+ * Rect-normalized comparison (2026-08-24): the app emits EDGE-rounded
+ * one-decimal rect coordinates (lib/patterns.ts `r1`/`rectAttrs` —
+ * ~176 KB off the landing page's HTML), while the lab fixtures carry
+ * full float precision. Parity stays GEOMETRIC: every rect on both
+ * sides is passed through the same edge-rounding (the imported `r1`,
+ * never a copy), so structure, colours, ordering and any real geometry
+ * drift still fail the test — only serialization precision is
+ * forgiven. Applied to BOTH sides; it is idempotent on the app output.
+ * Non-rect numbers (fill-opacity etc.) are left untouched.
  */
 function normalizeCoords(svg: string): string {
   return svg.replace(
-    /-?\d+\.\d+/g,
-    (n) => String(Math.round(Number(n) * 10) / 10)
+    /<rect x="([^"]+)" y="([^"]+)" width="([^"]+)" height="([^"]+)"/g,
+    (_, xs, ys, ws, hs) => {
+      const x0 = Number(xs);
+      const y0 = Number(ys);
+      const x = r1(x0);
+      const y = r1(y0);
+      const w = r1(r1(x0 + Number(ws)) - x);
+      const h = r1(r1(y0 + Number(hs)) - y);
+      return `<rect x="${x}" y="${y}" width="${w}" height="${h}"`;
+    }
   );
 }
 
@@ -64,7 +75,7 @@ describe('lab parity', () => {
   it('open field: Set C, 800×600, seed 7, scale 1', () => {
     const pool = quiltAccentPool(SET_C.surface, SET_C.ink, POOL_CANDIDATES);
     expect(
-      quiltPixBody({
+      normalizeCoords(quiltPixBody({
         w: 800,
         h: 600,
         ink: SET_C.ink,
@@ -73,13 +84,14 @@ describe('lab parity', () => {
         seed: 7,
         clear: null,
       })
+      )
     ).toBe(normalizeCoords(labFixtures.openField));
   });
 
   it('panel clearing: Set C, 800×600, seed 42 (desktop plate numbers)', () => {
     const pool = quiltAccentPool(SET_C.surface, SET_C.ink, POOL_CANDIDATES);
     expect(
-      quiltPixBody({
+      normalizeCoords(quiltPixBody({
         w: 800,
         h: 600,
         ink: SET_C.ink,
@@ -88,13 +100,14 @@ describe('lab parity', () => {
         seed: 42,
         clear: clearRectFor('panel', 800, 600, false),
       })
+      )
     ).toBe(normalizeCoords(labFixtures.panel));
   });
 
   it('footer strip: Set R, 1000×700, seed 7, mobile 0.6 scale', () => {
     const pool = quiltAccentPool(SET_R.surface, SET_R.ink, POOL_CANDIDATES);
     expect(
-      quiltPixBody({
+      normalizeCoords(quiltPixBody({
         w: 1000,
         h: 700,
         ink: SET_R.ink,
@@ -103,13 +116,14 @@ describe('lab parity', () => {
         seed: 7,
         clear: clearRectFor('footer', 1000, 700, false),
       })
+      )
     ).toBe(normalizeCoords(labFixtures.footer));
   });
 
   it('camo classic, open field: Set C, 800×600, seed 7', () => {
     const pool = quiltAccentPool(SET_C.surface, SET_C.ink, POOL_CANDIDATES);
     expect(
-      camoBody('camo', {
+      normalizeCoords(camoBody('camo', {
         w: 800,
         h: 600,
         ink: SET_C.ink,
@@ -118,13 +132,14 @@ describe('lab parity', () => {
         seed: 7,
         clear: null,
       })
+      )
     ).toBe(normalizeCoords(labFixtures.camoOpen));
   });
 
   it('camo classic with the panel clearing: Set C, seed 42', () => {
     const pool = quiltAccentPool(SET_C.surface, SET_C.ink, POOL_CANDIDATES);
     expect(
-      camoBody('camo', {
+      normalizeCoords(camoBody('camo', {
         w: 800,
         h: 600,
         ink: SET_C.ink,
@@ -133,13 +148,14 @@ describe('lab parity', () => {
         seed: 42,
         clear: clearRectFor('panel', 800, 600, false),
       })
+      )
     ).toBe(normalizeCoords(labFixtures.camoPanel));
   });
 
   it('camo giant with the footer strip: Set R, seed 99, mobile scale', () => {
     const pool = quiltAccentPool(SET_R.surface, SET_R.ink, POOL_CANDIDATES);
     expect(
-      camoBody('camo-giant', {
+      normalizeCoords(camoBody('camo-giant', {
         w: 1000,
         h: 700,
         ink: SET_R.ink,
@@ -148,6 +164,7 @@ describe('lab parity', () => {
         seed: 99,
         clear: clearRectFor('footer', 1000, 700, false),
       })
+      )
     ).toBe(normalizeCoords(labFixtures.camoGiantFooter));
   });
 });
