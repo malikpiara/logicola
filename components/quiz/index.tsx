@@ -678,6 +678,16 @@ const QuizSession: React.FC<QuizSessionProps> = ({
       card.querySelector<HTMLElement>('.qopt.is-selected') ??
       card.querySelector<HTMLElement>('.qopt.is-revealed');
     if (!target) return;
+    // ONLY when the options own their scroll (Malik, 2026-08-24: on
+    // desktop this moved the whole PAGE after every correct answer,
+    // which reads as the page yanking itself out from under you). The
+    // grid is its own scroller only below `lg`; where the page is the
+    // scroller, the answer is already in the flow the reader is
+    // reading and nothing should move on their behalf.
+    const scroller = optionsGridRef.current;
+    if (!scroller || scroller.scrollHeight <= scroller.clientHeight + 1) {
+      return;
+    }
     // One frame after the reveal commits, so the inserted hint has
     // already resized the scroller and the measurement is the real one.
     const raf = requestAnimationFrame(() => {
