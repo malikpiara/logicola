@@ -119,8 +119,17 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
     ref
   ) => {
     const isRevealedCorrect = showSolution && isCorrect;
-    const isRuledOut =
-      (showSolution && !isCorrect) || hasBeenIncorrectlyGuessed;
+    // The ERROR TONE is personal: it marks options the learner actually
+    // picked and got wrong. An option that merely isn't the answer
+    // SPENDS — same recede, neutral ink — which is the rule the ✕ glyph
+    // below has always followed ("the mark stays personal"). The colour
+    // didn't, so a clean win painted every other option in error red:
+    // six on Set Q, seventeen on Set R's phone grid, reading as "you got
+    // it wrong" at the exact moment you got it right (Malik, 2026-08-24).
+    const isMistake = hasBeenIncorrectlyGuessed;
+    const isSpent = showSolution && !isCorrect && !hasBeenIncorrectlyGuessed;
+    // Either kind is out of play: this gates cursor and interaction.
+    const isRuledOut = isMistake || isSpent;
 
     // Long loop (lib/shortcutTeaching.ts): once this device has selected
     // by key, the shortcut-tip scaffold retires. Hooks live ABOVE the
@@ -144,7 +153,7 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
             {
               'border-gray-200': !isSelected && !showSolution,
               'bg-[#1ad85f]': showSolution && isCorrect,
-              'border-rose-200 text-red-500': isRuledOut,
+              'border-rose-200 text-red-500': isMistake,
               'border-fuchsia-500 bg-fuchsia-50': !showSolution && isSelected,
               'border-fuchsia-300': !showSolution && !isSelected && isCursor,
               'hover:border-fuchsia-300 focus:border-fuchsia-400':
@@ -238,7 +247,8 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
           'is-compact': compact,
           'is-selected': isSelectedLive,
           'is-revealed': isRevealedCorrect,
-          'is-ruled': isRuledOut && !isRevealedCorrect,
+          'is-ruled': isMistake && !isRevealedCorrect,
+          'is-spent': isSpent && !isRevealedCorrect,
         })}
       >
         {showIndex && (
