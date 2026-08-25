@@ -125,7 +125,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    // suppressHydrationWarning is scoped to <html> and is the standard
+    // cost of a pre-paint attribute script (the theme-switcher pattern):
+    // the landing page's inline script stamps `data-lx-resume` before
+    // React hydrates, so the server HTML legitimately lacks an attribute
+    // the client element has. It suppresses the attribute diff on THIS
+    // element only — children still hydrate strictly (2026-08-24).
+    <html lang='en' suppressHydrationWarning>
       <head>
         <link rel='manifest' href='/manifest.json' />
       </head>
