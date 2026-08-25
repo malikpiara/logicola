@@ -2,11 +2,20 @@ import { Set } from '../types';
 
 const setL: Set = {
   name: 'Set L',
-  slugs: ['informal', 'definitions'],
+  // Was ['informal', 'definitions'] — Set Q's slugs, copied in with
+  // the header above (fixed 2026-08-24). Only scripts/transformContent
+  // reads the set-level object; routes come from the subSets and
+  // content/quiz-catalog.json, which is why a Deontic set claiming
+  // Set Q's path never collided with anything.
+  slugs: ['Deontic', 'translations', 'Imperative'],
   logicType: 'Deontic',
   id: 12,
   title: 'Deontic Translations: Imperative',
-  header: 'What is wrong with this definition?',
+  // Set-level default for a TRANSLATION set (fixed 2026-08-24: this
+  // read 'What is wrong with this definition?' — Set Q's question,
+  // copied in. Every subSet below overrides it, so no student ever saw
+  // it; the next subSet that forgets to override would have).
+  header: 'Translates into logic as:',
   subSets: [
     {
       name: 'Set L',

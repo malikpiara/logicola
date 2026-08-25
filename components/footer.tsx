@@ -222,7 +222,7 @@ export function Footer() {
           style={{ color: LINK }}
         >
           New exercise sets, new features, the occasional essay — straight to
-          your inbox when they ship.
+          your inbox when there&apos;s something new.
         </p>
         <NewsletterForm
           source='footer'
@@ -397,12 +397,15 @@ export function Footer() {
       <div style={{ borderTop: `1px solid ${HAIR}` }}>
         <div className='mx-auto flex max-w-screen-xl flex-wrap items-center gap-x-5 gap-y-3 px-4 pb-8 pt-4 sm:px-6'>
           <span className='text-sm' style={{ color: FINE }}>
+            {/* Points HOME, not to logicola.com (2026-08-24 copy
+                review): that domain is a squatter's parking page —
+                "Logicola.com is for sale | HugeDomains", HTTP 404 —
+                so every page of the site was sending readers to an
+                ad for a domain we do not own. Casing is LogiCola,
+                matching the brand two lines above. */}
             © <CurrentYear buildYear={new Date().getFullYear()} />{' '}
-            <Link
-              href='https://logicola.com'
-              className='motion-colors hover:underline'
-            >
-              Logicola
+            <Link href='/' className='motion-colors hover:underline'>
+              LogiCola
             </Link>
             . Some Rights Reserved.
           </span>
