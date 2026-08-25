@@ -3,8 +3,8 @@
  *
  * The variant-count table below is the original program's own per-section count
  * table, so these tests pin the port to the original —
- * including section 14 (op/pc), which the legacy parsed JSON in the
- * the original program repo silently drops.
+ * including section 14 (op/pc), which the legacy parsed JSON silently
+ * drops.
  */
 
 import { describe, expect, it } from 'vitest';

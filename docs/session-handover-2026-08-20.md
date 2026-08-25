@@ -7,8 +7,8 @@ is shipping broken English in production right now.
 
 ## 1. Set R — 124 → 191 passages
 
-Regenerated from the port. **Edit the port
-script, never `setR.data.ts`.** The port reproduces the committed file
+Regenerated from the Set R port.
+**Edit the port, never `setR.data.ts`.** The port reproduces the committed file
 byte-for-byte; that was not true when this session started and took a
 repair (the `label` tier, the doc comments and the `*must*` emphasis had
 all been hand-added and would have been destroyed on the next re-port).
@@ -115,8 +115,8 @@ template \*5 was converted from its hardcoded "most" to `superlative()` on
 that basis. **The original program is the source of truth for structure; the book
 outranks it for English.**
 
-Verified for the 2008 build only. The earliest binary
-is 2003 and its templates are not recoverable — do
+Verified for the 2008 build only. The earliest binary available is 2003
+and its templates are not recoverable — do
 not repeat this as "since 1985".
 
 ## 4. Three undocumented constraints, now enforced
@@ -206,8 +206,8 @@ The exploration of Gensler's sources found template \*12 was a MIS-PORT:
 answer (the §2.4 letters-switch idiom, drilled at 2× weight), which the
 port silently replaced with an unreversed All/Some sentence. Restored as
 template23 with Gensler's NFL hint; the All/Some variant stays as a
-deliberate LC3 quantifier-choice drill. The port notes audit docs that
-caused the mis-port are corrected available.
+deliberate LC3 quantifier-choice drill. The audit docs that caused the
+mis-port are corrected.
 
 Same audit: 23 of 69 wrong options rendered a BLANK feedback slot —
 filled (two Gensler-sourced hint texts, one ours, classHint/
