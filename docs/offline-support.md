@@ -58,7 +58,7 @@ The manifest was built only from `entryJSFiles`, which cannot see
 dynamic imports. On a cold cache, offline, every generated set 503'd
 at Start Quiz (its generator chunk was missing), and so did KaTeX
 (256 KB, lazy-loaded at Start) — so formula rendering broke for
-every set. It often *looked* fine in testing because Next.js link
+every set. It often _looked_ fine in testing because Next.js link
 prefetching had warmed the HTTP disk cache with the missing chunks;
 that cache is evictable and was never a guarantee. The release-check
 offline procedure in `docs/release-checks.md` exists to keep this

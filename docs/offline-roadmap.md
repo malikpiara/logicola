@@ -30,8 +30,8 @@ originally scoped for.
    (`components/quiz/generated/index.tsx`) — which is exactly what keeps
    them out of that list. Measured: all six missing.
 
-   | set | chunk | size |
-   |---|---|---|
+   | set  | chunk              | size    |
+   | ---- | ------------------ | ------- |
    | setA | `0lvracbvk04l8.js` | 31.5 KB |
    | setC | `1pxrq3zsc3gge.js` | 14.2 KB |
    | setJ | `3uljsfexhw1qt.js` | 22.5 KB |
@@ -47,7 +47,7 @@ originally scoped for.
    server and a cold profile — generated sets 503 at Start Quiz. But
    the miss was bigger than this table: **KaTeX (256 KB) and two more
    quiz-shell chunks** are also lazy-loaded at Start and were also
-   missing, so formula rendering broke for *every* set offline, Set Q
+   missing, so formula rendering broke for _every_ set offline, Set Q
    included. Two testing traps made this look healthier than it was:
    Next's link prefetch warms the HTTP disk cache with exactly the
    missing chunks (so warm-profile tests pass by luck), and DevTools
@@ -100,9 +100,9 @@ originally scoped for.
 
 10. **`public/manifest.json` locks `orientation: portrait`** and sets
     `start_url: "/"`. Both only bite once installed.
-    *(Orientation lock removed 2026-08-15; `start_url: "/"` kept
+    _(Orientation lock removed 2026-08-15; `start_url: "/"` kept
     deliberately — changing it complicates attribution for no
-    measured benefit yet.)*
+    measured benefit yet.)_
 
 11. **NEW (2026-08-15): deploys never refreshed the offline cache.**
     `sw.js`'s bytes are identical across builds, and browsers only
@@ -117,7 +117,7 @@ originally scoped for.
     cache.
 
 12. **Fact-check nuances (Aug 2026, all claims otherwise confirmed):**
-    the backdate timestamp is a capture *option*
+    the backdate timestamp is a capture _option_
     (`capture(name, props, { timestamp })`), not a property;
     exception capture is `capture_exceptions: true` at init, and
     PostHog error tracking has a free 100k/mo tier (not add-on
@@ -142,22 +142,22 @@ Everything after that is gated on a hypothesis.
 Blocks everything. Finding 1 is inference from a manifest diff, not an
 observation.
 
-| # | Task | Effort |
-|---|---|---|
-| 0.1 | `pnpm build && pnpm start`, DevTools offline, cold cache, load one quiz from each of sets A/C/J/L/N/R + Q | 1/10 |
-| 0.2 | Repeat via in-app client-side navigation to confirm the `?_rsc=` miss | 1/10 |
-| 0.3 | Repeat on a real Android Chrome and a real iOS Safari | 2/10 |
+| #   | Task                                                                                                      | Effort |
+| --- | --------------------------------------------------------------------------------------------------------- | ------ |
+| 0.1 | `pnpm build && pnpm start`, DevTools offline, cold cache, load one quiz from each of sets A/C/J/L/N/R + Q | 1/10   |
+| 0.2 | Repeat via in-app client-side navigation to confirm the `?_rsc=` miss                                     | 1/10   |
+| 0.3 | Repeat on a real Android Chrome and a real iOS Safari                                                     | 2/10   |
 
 The dev server unregisters the service worker
 (`components/providers/service-worker.tsx`), so none of this can be
 tested against `logicola-dev`.
 
 **H0 — generated sets fail offline on a cold cache.**
-*Test:* clear site data, load `/` online, go offline, hard-load
+_Test:_ clear site data, load `/` online, go offline, hard-load
 `/syllogistic/translations/basic/quiz`.
-*Confirms if:* the page shells but the quiz never renders, or falls
+_Confirms if:_ the page shells but the quiz never renders, or falls
 through to `/offline`.
-*Falsifier:* it works — the chunk arrived some other way, the chunk
+_Falsifier:_ it works — the chunk arrived some other way, the chunk
 analysis is wrong, and Phase 2.1 changes shape.
 
 ---
@@ -167,13 +167,13 @@ analysis is wrong, and Phase 2.1 changes shape.
 No dependencies. Ship first. All of it lives in `lib/analytics.ts`
 (~50 lines today). Event properties stay snake_case.
 
-| # | Task | Effort |
-|---|---|---|
-| 1.1 | Super properties via `posthog.register()`: `display_mode`, `sw_controlled`; async follow-up register for `offline_ready`, `storage_persisted` | 1/10 |
-| 1.2 | Offline tally in localStorage → one backdated `offline_session_summary` on next online load | 2/10 |
-| 1.3 | `beforeinstallprompt` → `pwa_install_available`; `appinstalled` → `pwa_installed` (Android only; iOS emits nothing) | 1/10 |
-| 1.4 | Enable `$exception` capture | 1/10 |
-| 1.5 | Let it run ~2 weeks for a baseline | — |
+| #   | Task                                                                                                                                          | Effort |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1.1 | Super properties via `posthog.register()`: `display_mode`, `sw_controlled`; async follow-up register for `offline_ready`, `storage_persisted` | 1/10   |
+| 1.2 | Offline tally in localStorage → one backdated `offline_session_summary` on next online load                                                   | 2/10   |
+| 1.3 | `beforeinstallprompt` → `pwa_install_available`; `appinstalled` → `pwa_installed` (Android only; iOS emits nothing)                           | 1/10   |
+| 1.4 | Enable `$exception` capture                                                                                                                   | 1/10   |
+| 1.5 | Let it run ~2 weeks for a baseline                                                                                                            | —      |
 
 Use an explicit `timestamp` on the summary event so offline activity
 lands on the day it happened rather than the day it was reported.
@@ -182,30 +182,30 @@ new instrumentation needed for the audience cut.
 
 **Known measurement trap:** on iOS, the installed app has a separate
 storage container and therefore a fresh `distinct_id`. The same person
-becomes two users. Read iOS installs as *share of sessions in standalone
-mode*, never as a conversion rate.
+becomes two users. Read iOS installs as _share of sessions in standalone
+mode_, never as a conversion rate.
 
 **H1 — a meaningful share of mobile users install to the home screen.**
-*Metric:* % of sessions with `display_mode: standalone`, split by OS.
-*Threshold:* >5% means install is a real behaviour worth designing for;
+_Metric:_ % of sessions with `display_mode: standalone`, split by OS.
+_Threshold:_ >5% means install is a real behaviour worth designing for;
 <1% means Phase 4 is speculative.
 
 **H2 — most returning users have a usable offline copy.**
-*Metric:* % of sessions with `offline_ready: true`.
-*Threshold:* if this is already >80%, the caching layer is healthier
+_Metric:_ % of sessions with `offline_ready: true`.
+_Threshold:_ if this is already >80%, the caching layer is healthier
 than Finding 1 suggests and Phase 2.1 is lower priority. If it is low,
 that is the strongest signal in the whole plan.
 
 **H3 — people actually use the app offline.**
-*Metric:* weekly sessions producing an `offline_session_summary`, as a
+_Metric:_ weekly sessions producing an `offline_session_summary`, as a
 share of all sessions.
-*Threshold:* <2% kills Phase 5 outright and probably Phase 3 too. >10%
+_Threshold:_ <2% kills Phase 5 outright and probably Phase 3 too. >10%
 makes offline a headline feature rather than a nicety.
 
 **H4 — iOS Safari users lose their cache to the 7-day cap.**
-*Metric:* returning iOS sessions where `storage_persisted: false` and
+_Metric:_ returning iOS sessions where `storage_persisted: false` and
 `offline_ready` has flipped `true → false`, versus the Android rate.
-*Threshold:* if the iOS rate materially exceeds Android's, Phase 4 is
+_Threshold:_ if the iOS rate materially exceeds Android's, Phase 4 is
 justified; if not, drop the install nudge entirely.
 
 ---
@@ -215,23 +215,23 @@ justified; if not, drop the install nudge entirely.
 These are bugs. Ship them whatever the data says. Depends on Phase 0
 only for confirmation of 2.1.
 
-| # | Task | Effort |
-|---|---|---|
-| 2.1 | Include per-set generator chunks in the offline manifest | 4/10 |
-| 2.2 | Fix the RSC navigation miss (`ignoreSearch`, or precache the RSC payloads explicitly) | 2/10 |
-| 2.3 | Call `navigator.storage.persist()` on registration | 1/10 |
-| 2.4 | Update `docs/offline-support.md` so its claim is true | 1/10 |
-| 2.5 | Add an offline smoke test to `docs/release-checks.md` so this cannot silently regress | 1/10 |
-| 2.6 | Drop `orientation: portrait` from `public/manifest.json`; reconsider `start_url` | 1/10 |
+| #   | Task                                                                                  | Effort |
+| --- | ------------------------------------------------------------------------------------- | ------ |
+| 2.1 | Include per-set generator chunks in the offline manifest                              | 4/10   |
+| 2.2 | Fix the RSC navigation miss (`ignoreSearch`, or precache the RSC payloads explicitly) | 2/10   |
+| 2.3 | Call `navigator.storage.persist()` on registration                                    | 1/10   |
+| 2.4 | Update `docs/offline-support.md` so its claim is true                                 | 1/10   |
+| 2.5 | Add an offline smoke test to `docs/release-checks.md` so this cannot silently regress | 1/10   |
+| 2.6 | Drop `orientation: portrait` from `public/manifest.json`; reconsider `start_url`      | 1/10   |
 
 **2.1 has two routes — decide before starting:**
 
-- *Build-time.* Teach `scripts/generate-offline-manifest.mjs` to resolve
+- _Build-time._ Teach `scripts/generate-offline-manifest.mjs` to resolve
   the dynamic-import chunk graph and emit `{ quizPath: [urls] }`.
   Sturdier, survives without a browser, and is the prerequisite for
   Phase 5. Cost: reverse-engineering Turbopack's chunk output, which is
   the single biggest unknown in this plan.
-- *Runtime.* `import()` the set from a client module and capture what
+- _Runtime._ `import()` the set from a client module and capture what
   the browser fetched via `performance.getEntriesByType('resource')`.
   Cheap, no build archaeology, but fragile and can only cache a set the
   user has already opened.
@@ -241,12 +241,12 @@ already-visited sets does not fix the bug for a first-time offline user
 — which is the whole failure mode.
 
 **H5 — fixing the manifest raises offline readiness.**
-*Metric:* `offline_ready` share before vs after the 2.1 deploy.
-*Test:* only possible because Phase 1 shipped first. Expect a step
+_Metric:_ `offline_ready` share before vs after the 2.1 deploy.
+_Test:_ only possible because Phase 1 shipped first. Expect a step
 change within a week as clients pick up the new SW.
-*Falsifier:* no movement — the caching was already working through some
+_Falsifier:_ no movement — the caching was already working through some
 path the manifest diff does not capture, and Finding 1 needs a rethink.
-*Note (2026-08-15):* `offline_ready` is defined as "this build's
+_Note (2026-08-15):_ `offline_ready` is defined as "this build's
 cache exists" (`caches.has(cacheName)`), so every deploy briefly dips
 the metric until clients re-install — read trends across deploys, not
 day-to-day. Because Phases 1 and 2 ship together, there is no true
@@ -261,12 +261,12 @@ existing users' caches).
 Depends on Phase 2 (do not advertise offline until it works) and reads
 Phase 1's H3 to decide whether it is worth the surface area.
 
-| # | Task | Effort |
-|---|---|---|
-| 3.1 | Lab prototype in `docs/` for sign-off, per project convention | 2/10 |
-| 3.2 | Durability-aware copy driven by `navigator.storage.persisted()`, not by display-mode | 2/10 |
-| 3.3 | Implement below the Start Quiz button in `components/quiz/startScreen.tsx` | 2/10 |
-| 3.4 | Accessibility pass — status text in a live region, contrast across every set surface | 2/10 |
+| #   | Task                                                                                 | Effort |
+| --- | ------------------------------------------------------------------------------------ | ------ |
+| 3.1 | Lab prototype in `docs/` for sign-off, per project convention                        | 2/10   |
+| 3.2 | Durability-aware copy driven by `navigator.storage.persisted()`, not by display-mode | 2/10   |
+| 3.3 | Implement below the Start Quiz button in `components/quiz/startScreen.tsx`           | 2/10   |
+| 3.4 | Accessibility pass — status text in a live region, contrast across every set surface | 2/10   |
 
 Not a `role="switch"`. It is a status line with, at most, a remove
 affordance. The interesting design question for the lab is what the
@@ -274,9 +274,9 @@ control says in the **stale-after-deploy** state, which is the state
 users will actually hit most often.
 
 **H6 — telling people the app works offline changes behaviour.**
-*Metric:* `offline_session_summary` rate and 7-day return rate, before
+_Metric:_ `offline_session_summary` rate and 7-day return rate, before
 vs after.
-*Threshold:* if offline usage does not move at all, offline is a
+_Threshold:_ if offline usage does not move at all, offline is a
 reliability property rather than a feature, and it should stop consuming
 roadmap.
 
@@ -286,10 +286,10 @@ roadmap.
 
 **Gated on H4.** Build only if iOS eviction is measurably real.
 
-| # | Task | Effort |
-|---|---|---|
-| 4.1 | Contextual copy tied to durability, not a generic install banner | 2/10 |
-| 4.2 | Handle the fresh-container cold start — silent re-download on first standalone launch | 2/10 |
+| #   | Task                                                                                  | Effort |
+| --- | ------------------------------------------------------------------------------------- | ------ |
+| 4.1 | Contextual copy tied to durability, not a generic install banner                      | 2/10   |
+| 4.2 | Handle the fresh-container cold start — silent re-download on first standalone launch | 2/10   |
 
 The nudge that works is the honest one: "may be cleared after a week of
 not opening LogiCola — add to Home Screen to keep it." A generic install
@@ -307,12 +307,12 @@ acceptable; do not show a progress UI for it.
 argues this is probably never justified. Documented so the decision is
 deliberate rather than forgotten.
 
-| # | Task | Effort |
-|---|---|---|
-| 5.1 | Per-quiz cache buckets keyed by set and build id | 3/10 |
-| 5.2 | Store *intent* in localStorage, derive *state* from `caches.has()`; reconcile on SW activate | 4/10 |
-| 5.3 | Download/remove UI with progress and failure states | 3/10 |
-| 5.4 | Quota display via `navigator.storage.estimate()` | 1/10 |
+| #   | Task                                                                                         | Effort |
+| --- | -------------------------------------------------------------------------------------------- | ------ |
+| 5.1 | Per-quiz cache buckets keyed by set and build id                                             | 3/10   |
+| 5.2 | Store _intent_ in localStorage, derive _state_ from `caches.has()`; reconcile on SW activate | 4/10   |
+| 5.3 | Download/remove UI with progress and failure states                                          | 3/10   |
+| 5.4 | Quota display via `navigator.storage.estimate()`                                             | 1/10   |
 
 The enabling mechanic: the Cache API is origin-scoped, not
 worker-scoped. The page can open and fill a cache itself, and
@@ -326,9 +326,9 @@ id and every chunk hash, so all downloads go stale at once and the
 Storing intent separately from state is what makes that survivable.
 
 **H7 — users want per-quiz control rather than all-or-nothing.**
-*Metric:* if 5.x ever ships behind a staged rollout, the share of users
+_Metric:_ if 5.x ever ships behind a staged rollout, the share of users
 who remove any individual quiz.
-*Threshold:* below ~5%, revert to automatic caching of everything and
+_Threshold:_ below ~5%, revert to automatic caching of everything and
 delete the feature.
 
 ---

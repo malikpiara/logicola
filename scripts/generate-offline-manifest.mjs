@@ -165,8 +165,7 @@ async function expandChunkClosure(urls) {
   // woff2 only: every service-worker-capable browser speaks woff2,
   // so the woff/ttf fallbacks would be dead bytes on a metered
   // connection (Malik, 2026-08-15).
-  const refPattern =
-    /static\/(chunks|media)\/[a-zA-Z0-9_.-]+\.(js|css|woff2)/g;
+  const refPattern = /static\/(chunks|media)\/[a-zA-Z0-9_.-]+\.(js|css|woff2)/g;
 
   let frontier = [...closure];
 
@@ -270,7 +269,10 @@ async function collectAllEmittedChunks() {
     }
 
     const absolute = path.join(entry.parentPath ?? entry.path, entry.name);
-    const relative = path.relative(chunksDir, absolute).split(path.sep).join('/');
+    const relative = path
+      .relative(chunksDir, absolute)
+      .split(path.sep)
+      .join('/');
 
     assets.add(`/_next/static/chunks/${relative}`);
   }
