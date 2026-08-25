@@ -14,10 +14,11 @@ import { ResumeBanner } from './resumeBanner';
  * The landing page: masthead + the exercises catalogue, ported from
  * docs/landing-lab.html — Malik's decided composition (2026-08-17, two
  * passes, LP-cards in the file): Set L mint ground · compact display
- * masthead (H1 words unchanged from the old hero, register changed) ·
- * topic cards at BOTH widths · neutral white cards with the set colour
- * in gem icon-chips and tags · drill rows · resume banner · no mascot ·
- * verbatim copy.
+ * masthead · topic cards at BOTH widths · neutral white cards with the
+ * set colour in gem icon-chips and tags · drill rows · resume banner ·
+ * no mascot. The masthead COPY is no longer the lab's verbatim line —
+ * it was rewritten 2026-08-24 around the student's outcome; see the H1
+ * constant below for why.
  *
  * The insight this ports (Malik, same day, from mobile testing): the
  * drills surface ON the frontpage — the exercises menu stays as global
@@ -66,11 +67,25 @@ const LX_VARS = {
 const CARD_CLIP: CSSProperties = { clipPath: spriteClip(0, 16) };
 const CHIP_CLIP = gemClip();
 
-// The old hero's copy, VERBATIM (Malik kept it over the lab's proposed
-// edit — LP6; the edit stays one dial away in the lab).
-const H1 = 'Master Formal Logic';
+// Rewritten 2026-08-24 around what the STUDENT achieves (Malik: "focused
+// on the value created for the users… many don't know Gensler, and many
+// don't use that textbook"). The old line — kept verbatim from the 2008-
+// era hero through LP6, where only a subhead compression was ever
+// offered — described our machinery: 'Generate' is our verb, 'smart' is
+// unfalsifiable, and 'error-free' is a claim about our own software that
+// one wrong answer key would break.
+//
+// The value is the loop, not the provenance: you can't learn logic
+// without doing problems, textbooks run out of them, and an answer key
+// tells you WHAT you got wrong but never WHY. Provenance still lives on
+// the page — the FAQ tells the Gensler story to whoever wants it — but
+// it is not the reason a stuck student stays.
+//
+// No counts here: the eyebrow immediately below renders
+// '6 topics · 13 drills'.
+const H1 = 'Practise logic until it clicks';
 const ONELINER =
-  'Generate endless, error-free exercises with smart step-by-step hints. Works offline, directly in your browser.';
+  'Fresh problems every time, checked the moment you answer — and when you miss, it tells you why. Free, and it works offline.';
 
 function TopicCard({
   topic,
