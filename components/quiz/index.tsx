@@ -47,6 +47,15 @@ import { hasWffGuide, WffGuide } from './wffGuide';
 
 export interface QuizProps {
   subSet: SubSet;
+  /**
+   * Render inside a page instead of owning the viewport (blog embeds,
+   * 2026-08-24). Same screens, same design, same engine — what changes
+   * is scope: the shell stops taking the OS chrome and the favicon,
+   * stops locking body scroll, and sizes to its container rather than
+   * min-h-dvh. Everything else, including the start screen and the
+   * scored run, is identical to the full-page drill.
+   */
+  embedded?: boolean;
 }
 
 interface QuizRun {
@@ -55,7 +64,7 @@ interface QuizRun {
   initialMode?: QuizMode;
 }
 
-export default function Quiz({ subSet }: QuizProps) {
+export default function Quiz({ subSet, embedded = false }: QuizProps) {
   // "Try again" is a REMOUNT, not a reset: bumping the attempt in the key
   // rebuilds QuizSession — and every atom in useQuizState — through the
   // initializers, so a newly added piece of state can never be forgotten
@@ -71,6 +80,7 @@ export default function Quiz({ subSet }: QuizProps) {
     <QuizSession
       key={`${subSet.id}:${run.attempt}`}
       subSet={subSet}
+      embedded={embedded}
       initialMode={run.initialMode}
       onRetry={(mode) =>
         setRun((previous) => ({
@@ -246,6 +256,7 @@ interface QuizSessionProps extends QuizProps {
 
 const QuizSession: React.FC<QuizSessionProps> = ({
   subSet,
+  embedded = false,
   initialMode,
   onRetry,
 }) => {
@@ -311,11 +322,14 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   // The OS chrome takes the set's surface for the whole session — start,
   // question and end screens all wear it, so it never has to change
   // mid-run.
-  useQuizChrome(quizSurface);
+  // Page-level side effects belong to the full-page drill only: an
+  // embed must not repaint the OS chrome or swap the tab's favicon on
+  // a blog post (2026-08-24).
+  useQuizChrome(embedded ? null : quizSurface);
 
   // …and the browser tab takes the set's tab colour, so a strip of open
   // drills says which set each one is.
-  useQuizFavicon(quizScreenColors.tabColor);
+  useQuizFavicon(embedded ? null : quizScreenColors.tabColor);
 
   // Remember the drill for the landing page's resume banner (lab LP7,
   // Malik 2026-08-17) — an OBSERVATION of the run, never a second
@@ -601,13 +615,14 @@ const QuizSession: React.FC<QuizSessionProps> = ({
    * platforms at every start→question boundary.
    */
   useEffect(() => {
-    if (showStartScreen || showEndScreen) return;
+    // An embed never locks the page it lives on.
+    if (embedded || showStartScreen || showEndScreen) return;
     const { overflow } = document.body.style;
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = overflow;
     };
-  }, [showStartScreen, showEndScreen]);
+  }, [embedded, showStartScreen, showEndScreen]);
 
   /**
    * Non-modal panel focus etiquette (2026-08-22): opening the desktop
@@ -1166,8 +1181,11 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   // The sheet only renders during the question flow, so the offset clears
   // on the start/end screens (and on unmount) rather than leaving the
   // navbar pushed beside a sheet that no longer exists.
+  // The desktop reference pane is FIXED to the viewport and pushes the
+  // page's other surfaces — both page-level behaviours, so an embed
+  // never opens it (2026-08-24).
   const isSheetVisible =
-    hasGuide && isGuideOpen && !showStartScreen && !showEndScreen;
+    !embedded && hasGuide && isGuideOpen && !showStartScreen && !showEndScreen;
   useEffect(() => {
     const root = document.documentElement;
     if (isSheetVisible) {
@@ -1267,7 +1285,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
           // globals.css. The navbar carries the same class, so the whole
           // page shifts as one layer; the width itself is published to
           // `--quiz-pane-offset` by the effect above.
-          className='quiz-pane-push'
+          className={embedded ? undefined : 'quiz-pane-push'}
         >
           <div
             ref={quizCardRef}
@@ -1287,7 +1305,15 @@ const QuizSession: React.FC<QuizSessionProps> = ({
               // Full-bleed below lg: no rounding, full viewport height —
               // the card IS the screen on phones (white margins were the
               // page frame showing through).
-              'quiz-immersive relative isolate overflow-clip flex flex-col motion-enter w-full max-w-7xl p-2 md:p-8 lg:pb-[152px] rounded-none lg:rounded-xl m-auto min-h-dvh lg:min-h-[calc(100dvh-9rem)]',
+              'quiz-immersive relative isolate overflow-clip flex flex-col motion-enter w-full max-w-7xl p-2 md:p-8 m-auto',
+              embedded && '@container/quizcard',
+              // Embedded: size to the container, keep the card's own
+              // rounding, and don't reserve the fixed sheet's strip —
+              // the embed renders its controls in-card at every width
+              // (2026-08-24). Full page: unchanged.
+              embedded
+                ? 'min-h-[640px] rounded-xl'
+                : 'lg:pb-[152px] rounded-none lg:rounded-xl min-h-dvh lg:min-h-[calc(100dvh-9rem)]',
               // Below `lg` the fixed vaul sheet reserves its collapsed
               // snap (128px), so grid subsets need extra clearance — as
               // PADDING, not margin: margin exposed a white strip of page
@@ -1315,20 +1341,29 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                 screens are CLEAN; the pattern's phone home is the start
                 screen). A fixed 112px strip at the card's foot: the
                 pattern frames the work, it never sits under text. */}
-            <PatternLayer
-              kind={patternKind}
-              surface={quizSurface}
-              ink={quizForeground}
-
-              treatment='footer'
-              className='pointer-events-none absolute inset-0 -z-10 hidden lg:block'
-            />
+            {/* The footer band is decoration sized for a full-page card.
+                In an embed it would eat a third of a post-width card and
+                sit under the controls, so the embed goes clean — the
+                pattern's job (framing the work) is already done there by
+                the post around it. (2026-08-24) */}
+            {!embedded && (
+              <PatternLayer
+                kind={patternKind}
+                surface={quizSurface}
+                ink={quizForeground}
+                treatment='footer'
+                className='pointer-events-none absolute inset-0 -z-10 hidden lg:block'
+              />
+            )}
             {/* Typeform-style progress line, desktop only (the mobile
                 header row below carries its own bar). aria-hidden: the
                 footer's numeric points label is the accessible reading. */}
             <div
               aria-hidden
-              className='absolute inset-x-0 top-0 hidden h-1.5 bg-[color-mix(in_srgb,var(--quiz-fg)_12%,transparent)] lg:block'
+              className={classNames(
+                'absolute inset-x-0 top-0 h-1.5 bg-[color-mix(in_srgb,var(--quiz-fg)_12%,transparent)]',
+                embedded ? 'block' : 'hidden lg:block'
+              )}
             >
               <div
                 className={classNames(
@@ -1350,7 +1385,12 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                 right, expanding the bottom sheet's guide snap. */}
             {/* pt clears the status bar: the page draws under it now, so
                 the row supplies its own inset (0 where there is none). */}
-            <div className='sticky top-0 z-20 -mx-2 -mt-2 mb-3 flex items-center gap-3.5 bg-[var(--quiz-surface)] px-2 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] md:-mx-8 md:-mt-8 lg:hidden'>
+            <div
+              className={classNames(
+                'sticky top-0 z-20 -mx-2 -mt-2 mb-3 items-center gap-3.5 bg-[var(--quiz-surface)] px-2 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] md:-mx-8 md:-mt-8',
+                embedded ? 'hidden' : 'flex lg:hidden'
+              )}
+            >
               <Link
                 href='/'
                 aria-label='Exit quiz and return to the home page'
@@ -1611,13 +1651,33 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                 whose own 2px top rule already divides them — this was a
                 second divider, and the scrolling one of the two (Malik,
                 2026-08-08; the lab found the same on its phone frame). */}
-            <hr className='hidden lg:block h-px my-4 bg-gray-200 border-0' />
+            <hr
+              className={classNames(
+                'h-px my-4 bg-gray-200 border-0',
+                embedded ? 'block' : 'hidden lg:block'
+              )}
+            />
             {/* Desktop controls, in the flow of the card itself: the primary
                 action lives with the content it acts on, so no fixed bottom
                 chrome is needed at this breakpoint. Below `lg` the vaul
                 bottom sheet (further down) owns these controls. */}
-            <div className='hidden items-center justify-between gap-6 px-4 pb-2 pt-2 lg:flex'>
-              <div className='min-w-0'>
+            <div
+              className={classNames(
+                'items-center justify-between gap-6 px-4 pb-2 pt-2',
+                embedded ? 'flex flex-wrap gap-y-3' : 'hidden lg:flex'
+              )}
+            >
+              <div
+                className={classNames(
+                  'min-w-0',
+                  // The shortcut legend is for the full-page drill,
+                  // where the keyboard is the primary input. In a post
+                  // the pointer is, and the narrower card made the
+                  // legend collide with the points readout — so it
+                  // appears only when the embed is genuinely wide.
+                  embedded && 'hidden @[900px]/quizcard:block'
+                )}
+              >
                 <KeyboardKeys
                   optionCount={currentQuestion?.options.length}
                   hasAbbreviations={currentQuestion?.options.some(
@@ -1840,8 +1900,11 @@ const QuizSession: React.FC<QuizSessionProps> = ({
         </div>
       )}
 
-      {/** If we're not on start/end screen, show the Drawer */}
-      {!showStartScreen && !showEndScreen && (
+      {/** If we're not on start/end screen, show the Drawer. Never in an
+           embed: a fixed, viewport-anchored sheet has no meaning inside
+           a blog post, and the in-card controls above cover every width
+           there instead (2026-08-24). */}
+      {!embedded && !showStartScreen && !showEndScreen && (
         <Drawer
           /**
            *  We keep the drawer always open by setting `open` to true.

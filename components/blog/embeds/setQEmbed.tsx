@@ -1,158 +1,40 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import useQuizState from '@/components/quiz/useQuizState';
-import Option from '@/components/option';
+import Quiz from '@/components/quiz';
 import { setQ } from '@/content/sets/setQ';
 import type { SubSet } from '@/content/types';
 
 /**
- * Set Q inside a blog post (Malik, 2026-08-24 — the Set Q announcement
- * wants the drill in the announcement). A small island over the real
- * engine: useQuizState grades, Option renders, nothing is re-derived —
- * the grading-truth rule holds because this component only reads the
- * hook's verdicts. No start screen (initialMode skips it, which also
- * keeps quiz_started analytics clean of embed noise), no scoring
- * economy, no sheet — a taste of the drill, then the CTA to the real
- * one.
+ * Set Q inside a blog post — the REAL quiz (Malik, 2026-08-24: "the
+ * quiz embed should essentially be the Quiz with the same design with
+ * the starting screen and everything"). Not a re-implementation: this
+ * renders `components/quiz` itself in its `embedded` mode, so the
+ * start screen, the scored run, the verdict choreography, the hints
+ * and the end screen are all the shipped ones, byte for byte. What
+ * `embedded` changes is scope only — no OS chrome takeover, no
+ * favicon swap, no body scroll lock, no viewport-fixed sheet — see
+ * QuizProps.
+ *
+ * The bank is trimmed to `count` questions so a post-sized taste ends
+ * somewhere; everything else is the product.
  */
 export function SetQEmbed({ count }: { count: number }) {
-  // One draw per mount, in a lazy initializer (the same shape
-  // generatedQuiz.tsx uses — the purity lint permits impurity there,
-  // not in useMemo). Math.random is safe: the island renders nothing
-  // on the server (next/dynamic client map), so there is no hydration
-  // text to mismatch.
+  // One draw per mount, in a lazy initializer (the shape
+  // generatedQuiz.tsx uses — the purity lint permits impurity there).
+  // Safe: the island is ssr:false, so no server draw exists to
+  // mismatch during hydration.
   const [subSet] = useState<SubSet>(() => {
     const bank = setQ.subSets[0]!;
     const questions = [...bank.questions]
       .sort(() => Math.random() - 0.5)
-      .slice(0, Math.max(1, Math.min(count, 10)));
-    return { ...bank, title: `${bank.title} — sample`, questions };
+      .slice(0, Math.max(1, Math.min(count, 20)));
+    return { ...bank, questions };
   });
 
-  const [attempt, setAttempt] = useState(0);
   return (
-    <SetQEmbedRun
-      key={attempt}
-      subSet={subSet}
-      onRetry={() => setAttempt((a) => a + 1)}
-    />
-  );
-}
-
-function SetQEmbedRun({
-  subSet,
-  onRetry,
-}: {
-  subSet: SubSet;
-  onRetry: () => void;
-}) {
-  const quiz = useQuizState(subSet, {
-    kind: 'count',
-    total: subSet.questions.length,
-  });
-  const {
-    currentQuestion,
-    questionCounter,
-    selectedOptionIndex,
-    selectedOptionIds,
-    showSolution,
-    showEndScreen,
-    correctQuestions,
-    selectOption,
-    onCheckAnswer,
-    handleNextQuestion,
-    willFinishOnNext,
-  } = quiz;
-  const isMulti = !!subSet.multiSelect;
-  const total = subSet.questions.length;
-
-  if (showEndScreen) {
-    return (
-      <div className='not-prose lx-embed'>
-        <p className='lx-embed-eyebrow'>SAMPLE DRILL</p>
-        <p className='lx-embed-score'>
-          {correctQuestions.length} of {total} first try.
-        </p>
-        <div className='lx-embed-row'>
-          <Link
-            href='/informal/definitions/quiz'
-            className='lx-embed-cta motion-button'
-          >
-            Take the full drill →
-          </Link>
-          <button
-            type='button'
-            onClick={onRetry}
-            className='lx-embed-ghost motion-button'
-          >
-            Try again
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (!currentQuestion) return null;
-
-  return (
-    <div className='not-prose lx-embed'>
-      <p className='lx-embed-eyebrow'>
-        SAMPLE DRILL · {questionCounter} OF {total}
-      </p>
-      <p className='lx-embed-header'>{subSet.header}</p>
-      <p className='lx-embed-prompt'>{currentQuestion.prompt}</p>
-      <div className='lx-embed-options'>
-        {currentQuestion.options.map((option, index) => (
-          <Option
-            key={option.id}
-            index={index}
-            showIndex
-            label={option.label}
-            isSelected={
-              isMulti
-                ? selectedOptionIds.includes(option.id)
-                : index === selectedOptionIndex
-            }
-            isCorrect={currentQuestion.correctId.includes(option.id)}
-            showSolution={showSolution}
-            hasBeenIncorrectlyGuessed={quiz.previousGuesses.includes(option.id)}
-            compact
-            onClick={() => selectOption(index)}
-          />
-        ))}
-      </div>
-      <div className='lx-embed-row'>
-        {showSolution ? (
-          <button
-            type='button'
-            onClick={handleNextQuestion}
-            className='lx-embed-cta motion-button'
-          >
-            {willFinishOnNext ? 'See result' : 'Next question'}
-          </button>
-        ) : (
-          <button
-            type='button'
-            onClick={onCheckAnswer}
-            className='lx-embed-cta motion-button'
-            disabled={
-              isMulti
-                ? selectedOptionIds.length === 0
-                : selectedOptionIndex == null
-            }
-          >
-            Check answer
-          </button>
-        )}
-        <Link
-          href='/informal/definitions/quiz'
-          className='lx-embed-ghost motion-button'
-        >
-          Full drill
-        </Link>
-      </div>
+    <div className='not-prose lx-quiz-embed'>
+      <Quiz subSet={subSet} embedded />
     </div>
   );
 }

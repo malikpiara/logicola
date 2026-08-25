@@ -2620,6 +2620,20 @@
     accent-color: #3f0167;
   }
 
+  /* Blog quiz embed (2026-08-24, revised): the island hosts the REAL
+     <Quiz embedded>, so this wrapper only gives it a bounded, rounded
+     stage inside the post — the quiz brings its own design. `contain:
+     paint` scopes the card's sticky descendants to the embed instead
+     of letting them stick to the page. */
+  .lx-quiz-embed {
+    margin: 32px 0;
+    border-radius: 12px;
+    overflow: clip;
+    contain: paint;
+  }
+
+  /* The bespoke card, now only the loading placeholder and the
+     unknown-key fallback. */
   .lx-embed {
     margin: 28px 0;
     padding: 18px 20px 20px;
