@@ -2,6 +2,7 @@ import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import React from 'react';
 import { formatTextTypography } from '@/lib/typography';
+import { glyphsToLatex, hugNegation } from '@/lib/notation';
 
 const DELIMITERS = [
   { left: '$$', right: '$$', display: true },
@@ -9,25 +10,18 @@ const DELIMITERS = [
 ];
 
 /**
- * Operator-glyph → LaTeX conversion table for backtick-delimited
- * inline-math regions. The generators write hint strings with
- * Unicode operator glyphs and a `{X}` shorthand for underlines (so
- * the TS code stays readable); this rewriter converts those
- * regions into `$…$` KaTeX delimiters with proper macros.
+ * The operator table moved to lib/notation.ts (2026-08-25) so the lazy
+ * boundary can reach it too: katexSpan.tsx runs the same table BACKWARDS
+ * to render its Suspense fallback in glyphs instead of raw LaTeX, and it
+ * cannot import this module without pulling KaTeX onto the critical path.
  *
- * Outside backticks, the same Unicode glyphs render as plain
- * Unicode — that's fine in prose context.
+ * The generators write hint strings with Unicode operator glyphs and a
+ * `{X}` shorthand for underlines (so the TS stays readable); the rewriter
+ * below turns those backtick regions into `$…$` KaTeX delimiters.
+ *
+ * Outside backticks, the same Unicode glyphs render as plain Unicode —
+ * that's fine in prose context.
  */
-const INLINE_MATH_OPS = [
-  ['☐', '\\square '],
-  ['◇', '\\lozenge '],
-  ['∼', '\\sim '],
-  ['·', '\\cdot '],
-  ['∨', '\\vee '],
-  ['⊃', '\\supset '],
-  ['≡', '\\equiv '],
-  ['∃', '\\exists '],
-] as const;
 
 interface TextSegment {
   type: 'text';
@@ -50,10 +44,7 @@ type Segment = TextSegment | MathSegment;
  */
 function rewriteBacktickedMath(text: string): string {
   return text.replace(/`([^`]+)`/g, (_, raw: string) => {
-    let math = raw;
-    for (const [glyph, latex] of INLINE_MATH_OPS) {
-      math = math.split(glyph).join(latex);
-    }
+    let math = glyphsToLatex(raw);
     math = math.replace(/\{([A-Za-z])\}/g, '\\underline{$1}');
     return `$${math}$`;
   });
@@ -184,7 +175,10 @@ function katexToHtml(data: string, display: boolean): string {
   if (cached !== undefined) {
     return cached;
   }
-  const html = katex.renderToString(data, {
+  // hugNegation runs here, at the single choke point every formula
+  // passes through — so the fix reaches generated sets, static sets and
+  // hint strings alike, and the cache stays keyed on the SOURCE.
+  const html = katex.renderToString(hugNegation(data), {
     displayMode: display,
     throwOnError: false,
   });

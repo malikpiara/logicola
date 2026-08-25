@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Notation spacing lab — negation vs conjunction</title>
+    <link rel="stylesheet" href="/node_modules/katex/dist/katex.min.css" />
+    <style>
+      :root {
+        --c-surface: #e7f099; /* Set C lime, verbatim from quizColors.ts */
+        --c-ink: #02302c;
+        --c-accent: #bd00ad;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 32px 24px 80px;
+        background: #f7f7f4;
+        color: #1a1a1a;
+        font:
+          15px/1.55 ui-sans-serif,
+          -apple-system,
+          system-ui,
+          sans-serif;
+      }
+      header {
+        max-width: 900px;
+        margin: 0 auto 28px;
+      }
+      h1 {
+        font-size: 20px;
+        margin: 0 0 6px;
+      }
+      .sub {
+        color: #555;
+        max-width: 62ch;
+        margin: 0;
+      }
+      .wrap {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .variant {
+        margin: 0 0 34px;
+      }
+      .vhead {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin: 0 0 10px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #ddd;
+      }
+      .vhead h2 {
+        font-size: 15px;
+        margin: 0;
+      }
+      .vhead code {
+        font:
+          12px/1 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        background: #ecece6;
+        padding: 3px 6px;
+        border-radius: 3px;
+      }
+      .verdict {
+        margin-left: auto;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .good {
+        color: #0a7d3c;
+      }
+      .bad {
+        color: #b3261e;
+      }
+
+      /* the quiz option card, close enough to read like the real thing */
+      .cards {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      }
+      .card {
+        background: var(--c-surface);
+        color: var(--c-ink);
+        padding: 20px 22px;
+        border-radius: 4px;
+        min-height: 74px;
+        display: flex;
+        align-items: center;
+      }
+      .card .katex {
+        font-size: 23px;
+      } /* measured on the live quiz */
+
+      .gaps {
+        margin: 8px 0 0;
+        font:
+          11px/1.5 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        color: #666;
+      }
+      .gaps b {
+        color: #b3261e;
+        font-weight: 700;
+      }
+      .gaps i {
+        color: #0a7d3c;
+        font-style: normal;
+        font-weight: 700;
+      }
+      .note {
+        max-width: 66ch;
+        margin: 10px 0 0;
+        font-size: 13px;
+        color: #444;
+      }
+      .legend {
+        max-width: 900px;
+        margin: 0 auto 30px;
+        padding: 14px 16px;
+        background: #fff;
+        border: 1px solid #e2e2dc;
+        border-radius: 4px;
+        font-size: 13px;
+      }
+      .legend p {
+        margin: 0 0 8px;
+      }
+      .legend p:last-child {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Notation spacing — negation vs conjunction</h1>
+      <p class="sub">
+        Malik, 2026-08-25: “the dot seems too close to the S and might not
+        register immediately.” It does, and the cause is measurable rather than
+        a matter of taste.
+      </p>
+    </header>
+
+    <div class="legend">
+      <p>
+        <strong>The inversion.</strong> LaTeX classes <code>\sim</code> as a
+        <em>relation</em> (like <code>=</code> or <code>&lt;</code>), so KaTeX
+        gives it <strong>thickspace, 5/18 em</strong> on both sides.
+        <code>\cdot</code> is a <em>binary operator</em>, which gets
+        <strong>medspace, 4/18 em</strong>.
+      </p>
+      <p>
+        So negation — which binds tightest — is drawn with
+        <strong>more</strong> air than conjunction, which binds loosest. The
+        spacing argues against the grouping, and the eye has to overrule it.
+        Worse, two adjacent relations merge into one atom: <code>⊃∼</code>
+        renders glued together, with the gap falling between the negation and
+        the letter it negates.
+      </p>
+      <p>
+        Fix candidates below. Gaps are measured live, in this page, at the
+        quiz's real 23px.
+      </p>
+    </div>
+
+    <div class="wrap" id="out"></div>
+
+    <script src="/node_modules/katex/dist/katex.min.js"></script>
+    <script>
+      // The four formulas that expose the problem. Each entry is the
+      // Gensler-notation source the generators emit today.
+      const FORMULAS = [
+        { label: 'neither S nor B', current: '\\sim S \\cdot \\sim B' },
+        { label: 'if I then not T', current: '(I \\supset \\sim T)' },
+        { label: 'not F implies not B', current: '(\\sim F \\supset \\sim B)' },
+        { label: 'C and (S or M)', current: '(C \\cdot (S \\vee M))' },
+      ];
+
+      const VARIANTS = [
+        {
+          name: 'A — current',
+          macro: '\\sim',
+          code: '\\sim S \\cdot \\sim B',
+          note: 'Negation is a relation: it takes thickspace on BOTH sides, so it floats away from its own operand and merges with any neighbouring relation.',
+          verdict: 'bad',
+          verdictText: 'spacing fights the grouping',
+        },
+        {
+          name: 'B — negation as an ordinary atom',
+          macro: '{\\sim}',
+          code: '{\\sim} S \\cdot {\\sim} B',
+          note: 'Wrapping in braces makes it \\mathord: zero space on either side, so it hugs its operand. Conjunction is then the widest gap in the formula, which is what the logic says.',
+          verdict: 'good',
+          verdictText: 'grouping reads correctly',
+        },
+        {
+          name: 'C — hugging negation, conjunction opened up',
+          macro: '{\\sim}',
+          spaceCdot: true,
+          code: '{\\sim} S \\;\\cdot\\; {\\sim} B',
+          note: 'As B, plus an explicit thickspace around the dot. Makes the conjunction unmistakable at a glance; costs a little width on long formulas.',
+          verdict: 'good',
+          verdictText: 'most separable, widest',
+        },
+      ];
+
+      function build(src, variant) {
+        let s = src;
+        if (variant.macro === '{\\sim}') s = s.replace(/\\sim/g, '{\\sim}');
+        if (variant.spaceCdot) s = s.replace(/\\cdot/g, '\\;\\cdot\\;');
+        return s;
+      }
+
+      // Measure the horizontal gap between adjacent painted glyphs.
+      function measure(host) {
+        const atoms = Array.from(host.querySelectorAll('span'))
+          .filter(
+            (s) =>
+              s.firstChild &&
+              s.firstChild.nodeType === 3 &&
+              s.textContent.trim()
+          )
+          .map((s) => {
+            const r = s.getBoundingClientRect();
+            return { ch: s.textContent.trim(), left: r.left, right: r.right };
+          })
+          .sort((a, b) => a.left - b.left);
+        const out = [];
+        for (let i = 1; i < atoms.length; i++) {
+          out.push({
+            pair: atoms[i - 1].ch + '→' + atoms[i].ch,
+            px: atoms[i].left - atoms[i - 1].right,
+          });
+        }
+        return out;
+      }
+
+      const out = document.getElementById('out');
+
+      for (const v of VARIANTS) {
+        const sec = document.createElement('section');
+        sec.className = 'variant';
+        sec.innerHTML =
+          '<div class="vhead"><h2>' +
+          v.name +
+          '</h2><code>' +
+          v.code.replace(/</g, '&lt;') +
+          '</code><span class="verdict ' +
+          v.verdict +
+          '">' +
+          v.verdictText +
+          '</span></div>' +
+          '<div class="cards"></div><p class="note">' +
+          v.note +
+          '</p>';
+        const cards = sec.querySelector('.cards');
+
+        for (const f of FORMULAS) {
+          const card = document.createElement('div');
+          const box = document.createElement('div');
+          box.className = 'card';
+          try {
+            katex.render(build(f.current, v), box, {
+              throwOnError: false,
+              displayMode: false,
+            });
+          } catch (e) {
+            box.textContent = 'render error';
+          }
+          const gaps = document.createElement('p');
+          gaps.className = 'gaps';
+          card.appendChild(box);
+          card.appendChild(gaps);
+          cards.appendChild(card);
+          // measure after layout
+          requestAnimationFrame(() => {
+            const m = measure(box);
+            gaps.innerHTML = m
+              .map((g) => {
+                const px = g.px.toFixed(1);
+                const isNeg = /∼/.test(g.pair);
+                const isConj = /⋅/.test(g.pair);
+                const tag = isNeg ? 'b' : isConj ? 'i' : 'span';
+                return '<' + tag + '>' + g.pair + ' ' + px + '</' + tag + '>';
+              })
+              .join('  ·  ');
+          });
+        }
+        out.appendChild(sec);
+      }
+    </script>
+  </body>
+</html>
