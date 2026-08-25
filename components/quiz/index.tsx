@@ -636,6 +636,53 @@ const QuizSession: React.FC<QuizSessionProps> = ({
   const paneRegionRef = useRef<HTMLDivElement | null>(null);
   const guideToggleRef = useRef<HTMLButtonElement | null>(null);
   const gripWrapRef = useRef<HTMLDivElement | null>(null);
+
+  /**
+   * Keep the verdict on screen (Malik's report, 2026-08-24). Set R's
+   * options are their own scroller — roughly two screens on a phone —
+   * and at reveal the answer + hint insert themselves into the flow
+   * (the deliberate mobile exception in globals.css, which trades the
+   * blank reservation band for a shrinking scroller). The option you
+   * just answered could therefore slide out of view at the exact
+   * moment it earns its mark, so the run reads as "nothing happened".
+   *
+   * Re-anchor instead of re-reserving: `block: 'nearest'` moves the
+   * minimum distance and does nothing when the option is already
+   * visible, so the common case is untouched. Prefer the learner's own
+   * pick over the revealed answer — the question they're asking is
+   * "was mine right?".
+   */
+  useEffect(() => {
+    if (!showSolution) return;
+    const card = quizCardRef.current;
+    if (!card) return;
+    const target =
+      card.querySelector<HTMLElement>('.qopt.is-selected') ??
+      card.querySelector<HTMLElement>('.qopt.is-revealed');
+    if (!target) return;
+    // One frame after the reveal commits, so the inserted hint has
+    // already resized the scroller and the measurement is the real one.
+    const raf = requestAnimationFrame(() => {
+      const rect = target.getBoundingClientRect();
+      // "On screen" is not the test — the collapsed controls sheet
+      // OVERLAYS the foot of the screen, and `block: 'nearest'` parks
+      // the option exactly at the scroller's bottom edge, i.e. under
+      // it (measured: answer at 683–744 with the sheet starting ~716).
+      // The answer has to clear the sheet to count as seen.
+      const sheetTop =
+        drawerRef.current?.getBoundingClientRect().top ?? window.innerHeight;
+      const floor = Math.min(window.innerHeight, sheetTop);
+      if (rect.top >= 0 && rect.bottom <= floor) return;
+      // Centre, not nearest: the minimum scroll is what put it under
+      // the sheet in the first place.
+      target.scrollIntoView({
+        block: 'center',
+        inline: 'nearest',
+        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+      });
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [showSolution, questionCounter]);
   const prevGuideOpenRef = useRef(isGuideOpen);
   useEffect(() => {
     if (prevGuideOpenRef.current === isGuideOpen) return;
