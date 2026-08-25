@@ -366,7 +366,7 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
         if (wrongAttempts === 0) {
           setCorrectQuestions((prev) => [...prev, currentQuestion.id]);
         }
-        // original program `ky:+$r` — awards 8 if clean, 0 if this problem was already
+        // the original awards 8 if clean, 0 if this problem was already
         // missed (r having been zeroed by registerMiss).
         setScoreState(registerCorrect);
         setShowSolution(true);

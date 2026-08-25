@@ -42,7 +42,7 @@ const JSON_PATH = process.env.SETQ_SOURCE_JSON;
 if (!JSON_PATH) {
   console.error(
     'SETQ_SOURCE_JSON is not set. Point it at the parsed Set Q definitions\n' +
-      'in the decode notes, e.g.\n' +
+      'in your local source notes, e.g.\n' +
       '  SETQ_SOURCE_JSON=../<notes>/set_Q_definitions.json npx tsx scripts/sync-setq-answers.ts'
   );
   process.exit(1);

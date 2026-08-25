@@ -17,7 +17,7 @@
  * original program for Set A.
  *
  * Letter convention (Gensler §2.1; verified against the original program
- * letter-binding block — dKJJ = lowercase name, dRJ = uppercase —
+ * letter conventions —
  * see the Set A fidelity audit in those notes):
  *
  *   Lowercase letter — singular term (picks out one individual)

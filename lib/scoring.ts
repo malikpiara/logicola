@@ -1,69 +1,49 @@
 /**
  * LogiCola scoring — a restoration of the original program's model, per set.
  *
- * Source of truth: the programs Gensler shipped
- * inside the original program, transcribed per set in the private port
- * notes.
- *
  * The single most important fact: THERE IS NO GLOBAL SCORING MODEL. Every
  * set scores differently, and the differences are not cosmetic — they are
- * different economies. Established set by set
- *:
+ * different economies. Observed set by set from the original software:
  *
- *   Set        reward          penalty on a miss              forfeit?
- *   ---------  --------------  -----------------------------  --------
- *   A C J L N  k:+5+q+q        k:-t, t := 2*level, C:tt/2     no
- *   Q          ky:+7           kn:-2*$s (ONE shot — see below) no
- *   R          ky:+$r  (r=8)   ky:-2*$q once, then q := 0      YES (r := 0)
+ *   Set        reward   penalty on a miss          forfeit?
+ *   ---------  -------  -------------------------  --------
+ *   A C J L N  +5       2 x level, halving after   no
+ *   Q          +7       2 x level, once only       no
+ *   R          +8       2 x level, once only       YES
  *
  * What's shared: everyone starts at 0, targets 100, and the level only ever
- * scales the PENALTY. The 2008 help says so twice — "The scoring level
+ * scales the PENALTY. The original's help says so twice — "The scoring level
  * doesn't influence how hard the problems are, but only how many points you
  * lose for wrong answers." The problems drawn are identical at level 1 and 9.
  *
  * What differs, and why it matters:
  *
- *   - `+5+q+q` is NOT "5 + 2*level". Bare `q` is an integer register, and in
- *     the translation sets it's the type-the-answer flag (`*y jq:q` jumps to
- *     the "Type the correct translation" routine). So the reward is 5 for
- *     multiple-choice and 7 for typing. LC3 has no type mode, so it's 5.
- *   - Set A resets `t := 2*level` per problem (`j:y` ends every template, and
- *     `*y` re-runs the init), then HALVES it on each miss: 2L, L, L/2, L/4…
- *     Set R instead zeroes its penalty after one miss. Same intent — don't
- *     punish grinding one problem — opposite implementation.
- *   - Only Set R forfeits. Its `r0` means a missed problem can never pay its
- *     8 out, so a level-9 miss is an 18-point charge PLUS 8 never earned: a
- *     26-point swing on a 100-point target. In Set A you still collect the
- *     full +5 after any number of misses.
- *   - SET Q HAS NO DECAY DIRECTIVE BECAUSE IT HAS NO SECOND ATTEMPT (traced
- *     2026-08-12). Its program is one shot per item: every problem ends
- *     `j:a` into the single present/accept/grade routine at `*a`, and there
- *     is no jump back to the accept anywhere in the file. Set A by contrast
- *     has an accept label `*d` and two wrong-answer routines (`*e` wrong
- *     translation, `*w` malformed wff) that both end `j:d` — back to re-ask.
- *     The wording tracks the structure: R says "Please try again", Q says
- *     only "Sorry, #x is wrong" and shows the violated rule. So Q was never
- *     "the full penalty every miss" — it was +7 or -2*level, once, and then
- *     the next item.
+ *   - The translation sets halve the penalty on each successive miss of the
+ *     same problem: 2L, L, L/2, L/4… Set R instead zeroes its penalty after
+ *     one miss. Same intent — don't punish grinding one problem — opposite
+ *     implementation.
+ *   - Only Set R forfeits. A missed problem there can never pay its 8 out,
+ *     so a level-9 miss is an 18-point charge PLUS 8 never earned: a
+ *     26-point swing on a 100-point target. In the translation sets you
+ *     still collect the full +5 after any number of misses.
+ *   - SET Q HAS NO DECAY BECAUSE IT HAS NO SECOND ATTEMPT (established
+ *     2026-08-12). One shot per item: a wrong answer is graded and the run
+ *     moves on. The wording tracks it — R says "Please try again", Q says
+ *     only "Sorry, #x is wrong" and shows the violated rule.
  *
- *     Reading the silence as `decay: 'none'` was faithful to the directive
- *     and wrong about the intent, and it cost real money: LC3 gives Q three
- *     attempts (`maxWrongGuesses`), so a botched item charged 3 x 2*level
- *     where Gensler charged one. At the shipped level that is -23 against
- *     his -10. `'halve'` is the honest reconstruction — see the profile.
+ *     Reading that silence as `decay: 'none'` was wrong about the intent,
+ *     and it cost real money: LC3 gives Q three attempts
+ *     (`maxWrongGuesses`), so a botched item charged 3 x 2*level where
+ *     Gensler charged one. At the shipped level that is -23 against his
+ *     -10. `'halve'` is the honest reconstruction — see the profile.
  *
  * Unpublished sets are deliberately absent. B/D/E/F/P are bespoke (five
- * different reward values in B alone), and the proofs sets (G/I/K/M/O) have
- * NO reward directive at all — only `-2*$s*q` and `-$s/2` penalties — which
- * needs its own investigation before anyone can claim to have ported them.
+ * different reward values in B alone), and the proofs sets (G/I/K/M/O)
+ * reward nothing at all — only penalties — which needs its own
+ * investigation before anyone can claim to have ported them.
  *
- * Deliberately faithful details that look like bugs:
- *   - No floor. The score can go negative; the original never clamps, and
- *     clamping would silently defuse high levels. See `ScoreFloor` — the
- *     shipped default now departs from this on purpose, and the departure
- *     is a run policy, not a change to any set's economy.
- *   - Completion is a threshold, not a length. There is no problem count.
- *   - Nothing is recorded on failure or abandonment ("no fault" scoring).
+ * These economies are pinned by lib/scoring.test.ts; that suite, not this
+ * comment, is what keeps the port honest.
  */
 
 /** Points needed to complete an exercise (2008 help: "only when you reach 100 points"). */

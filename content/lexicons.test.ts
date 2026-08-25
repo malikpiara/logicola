@@ -49,7 +49,7 @@ describe('lexicons — live pools', () => {
  * never add to it. A silent edit to a `*2008` array still fails here.
  */
 describe('lexicons — 2008 baseline is intact', () => {
-  it('counts match the 2008 binary', () => {
+  it('counts match the original program', () => {
     expect(baselines2008.nounsProfessions.length).toBe(52);
     expect(baselines2008.adjectives.length).toBe(87);
     // The modern-layer size is pinned to the figure its doc comment claims,

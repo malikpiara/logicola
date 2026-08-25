@@ -36,7 +36,7 @@ function missThenSolve(s: ScoreState, n = 1): ScoreState {
   return registerCorrect(out);
 }
 
-describe('profiles match each set’s own DSL', () => {
+describe('profiles match each set’s own scoring', () => {
   it('reads the set letter out of subSet.name', () => {
     expect(profileForSet('Set R')).toBe(R);
     expect(profileForSet('Set A')).toBe(A);
@@ -56,7 +56,7 @@ describe('profiles match each set’s own DSL', () => {
 
   it('pins the three rewards: translations 5, Q 7, R 8', () => {
     expect(A.pointsPerCorrect).toBe(5); // +5+q+q with q=0 (no type mode)
-    expect(Q.pointsPerCorrect).toBe(7); // ky:+7
+    expect(Q.pointsPerCorrect).toBe(7);
     expect(R.pointsPerCorrect).toBe(8); // r8
   });
 
@@ -120,7 +120,7 @@ describe('Set A — +5, penalty halves, no forfeit', () => {
     expect(charged).toEqual([14, 7, 3, 1, 0]); // C:tt/2 on an int register
   });
 
-  it('re-arms t to 2*level on the next problem (j:y re-runs *y)', () => {
+  it('re-arms the penalty to 2*level on the next problem', () => {
     let s = beginProblem(createScoreState(A, 9));
     s = registerMiss(s); // t: 18 -> 9
     expect(s.penaltyDue).toBe(9);
@@ -157,7 +157,7 @@ describe('Set A — +5, penalty halves, no forfeit', () => {
 });
 
 describe('Set Q — +7, decay reconstructed for LC3’s retries', () => {
-  it('charges the first miss at the full 2*level, as the DSL does', () => {
+  it('charges the first miss at the full 2*level, as the original does', () => {
     // The one charge Gensler's single-shot program ever made.
     expect(registerMiss(beginProblem(createScoreState(Q, 7))).score).toBe(-14);
   });
