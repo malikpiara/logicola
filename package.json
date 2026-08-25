@@ -1,7 +1,7 @@
 {
   "name": "logicola",
   "version": "0.1.0",
-  "license": "PolyForm-Noncommercial-1.0.0",
+  "license": "AGPL-3.0-or-later",
   "private": true,
   "packageManager": "pnpm@9.4.0",
   "scripts": {

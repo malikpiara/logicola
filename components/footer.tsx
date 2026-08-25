@@ -328,12 +328,17 @@ export function Footer() {
               className='space-y-3.5 text-[14.5px] font-medium'
               style={{ color: TYPE }}
             >
+              {/* The AGPL §13 source offer (2026-08-24): a network
+                  service running this code must offer its users the
+                  complete source. This link IS that offer — keep it
+                  reachable from every page for as long as the licence
+                  is AGPL. */}
               <li>
                 <Link
                   href={GITHUB_URL}
                   className='motion-colors hover:underline'
                 >
-                  GitHub
+                  Source code (AGPL)
                 </Link>
               </li>
               <li>
