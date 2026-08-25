@@ -85,6 +85,10 @@ const releaseNotes = defineCollection({
     // names like 'scoring'.
     kind: z.enum(['new-feature', 'improvement', 'fix']),
     platforms: z.array(z.enum(['web', 'mobile'])).default([]),
+    // Same unpublish switch the posts have (2026-08-24, Malik asked to
+    // unpublish every note): keeps the writing in the repo instead of
+    // deleting it, and `releaseEntries` filters on it.
+    draft: z.boolean().default(false),
     // The raw markdown body (explicit per content-collections >= 0.15).
     content: z.string(),
   }),

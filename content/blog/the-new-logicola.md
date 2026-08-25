@@ -3,6 +3,7 @@ title: 'The new LogiCola'
 dek: 'A colour system that gives every exercise set its own character, a scored run that keeps you honest, and drills that finally feel at home on your phone.'
 date: '2026-08-13'
 category: 'announcements'
+draft: true
 ---
 
 LogiCola 3 has a new face. Not a coat of paint — a redesign that started

@@ -109,6 +109,18 @@ export default function ReleaseNotesPage() {
       </section>
 
       <main className='mx-auto max-w-[1200px] px-6 pb-14 sm:px-10'>
+        {/* With nothing published the page was a masthead over a white
+            void, which reads as a failed load rather than an empty
+            shelf (2026-08-24, after Malik unpublished every note). */}
+        {releaseEntries.length === 0 && (
+          <p
+            className='py-16 text-center text-lg'
+            style={{ color: t.type, opacity: 0.75 }}
+          >
+            No release notes yet — subscribe above and the first one will reach
+            you when it ships.
+          </p>
+        )}
         {releaseEntries.map((entry, index) => (
           <section
             key={entry.anchor}

@@ -142,12 +142,18 @@ export default function BlogIndexPage() {
           </section>
         )}
 
-        <p
-          className='mb-4 mt-10 font-mono text-xs font-bold uppercase tracking-[.09em]'
-          style={{ color: t.type, opacity: 0.7 }}
-        >
-          Posts
-        </p>
+        {/* The eyebrow belongs to the list, not the page: with one
+            published post the featured slot takes it and this section
+            is empty, and a "Posts" label over nothing reads as a
+            failed load (2026-08-24). */}
+        {rest.length > 0 && (
+          <p
+            className='mb-4 mt-10 font-mono text-xs font-bold uppercase tracking-[.09em]'
+            style={{ color: t.type, opacity: 0.7 }}
+          >
+            Posts
+          </p>
+        )}
 
         <section className='grid gap-9 sm:grid-cols-2'>
           {rest.map((post) => (

@@ -3,6 +3,7 @@ title: 'Every exercise has its own address'
 date: '2026-07-16'
 kind: 'improvement'
 platforms: ['web']
+draft: true
 ---
 
 Every exercise set now lives at a stable, crawlable URL with its own
