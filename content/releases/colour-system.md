@@ -3,6 +3,7 @@ title: 'The redesign lands: a colour system per set'
 date: '2026-08-08'
 kind: 'new-feature'
 platforms: ['web']
+draft: true
 ---
 
 The quiz screens picked up the new design language:

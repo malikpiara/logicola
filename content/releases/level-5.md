@@ -3,6 +3,7 @@ title: 'Level 5 unlocked'
 date: '2026-08-09'
 kind: 'new-feature'
 platforms: ['web']
+draft: true
 ---
 
 The score ladder now goes to level 5, matching the classic program's

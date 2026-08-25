@@ -3,6 +3,7 @@ title: 'Set R: Informal Fallacies'
 dek: 'A new exercise set on the ways an argument goes wrong — and the first to use multi-option questions.'
 date: '2026-07-15'
 category: 'product'
+draft: true
 ---
 
 Informal fallacies are the most requested topic we'd never covered:

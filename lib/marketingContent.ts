@@ -9,9 +9,11 @@ export const publishedPosts = [...allPosts]
     (a, b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title)
   );
 
-export const releaseEntries = [...allReleaseNotes].sort(
-  (a, b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title)
-);
+export const releaseEntries = [...allReleaseNotes]
+  .filter((note) => !note.draft)
+  .sort(
+    (a, b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title)
+  );
 
 // Render '2026-08-13' as 'Aug 13, 2026'. Anchored to UTC so the date a
 // post declares is the date every reader sees, regardless of timezone.

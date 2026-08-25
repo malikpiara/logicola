@@ -3,6 +3,7 @@ title: 'Better on your phone'
 date: '2026-08-08'
 kind: 'improvement'
 platforms: ['mobile']
+draft: true
 ---
 
 A round of fixes from testing on real devices:

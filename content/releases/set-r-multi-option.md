@@ -3,6 +3,7 @@ title: 'Set R: Informal Fallacies'
 date: '2026-07-15'
 kind: 'new-feature'
 platforms: ['web']
+draft: true
 ---
 
 A brand-new exercise set on **informal fallacies** — ad hominem, straw

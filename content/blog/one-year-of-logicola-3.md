@@ -3,7 +3,7 @@ title: 'One year of LogiCola 3'
 dek: 'Three sliders and a live drill: what a year of work actually changed, and a Set Q exercise you can take without leaving this page.'
 date: '2026-08-24'
 category: 'essays'
-draft: false
+draft: true
 ---
 
 A year ago LogiCola 3 worked. It just didn't know what it wanted to

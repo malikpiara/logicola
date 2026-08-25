@@ -3,6 +3,7 @@ title: 'Scored runs hit harder, fairer'
 date: '2026-08-12'
 kind: 'improvement'
 platforms: ['web', 'mobile']
+draft: true
 ---
 
 Two tuning passes on the scored run:

@@ -3,6 +3,7 @@ title: 'Every set now loads only itself'
 date: '2026-08-10'
 kind: 'improvement'
 platforms: ['web']
+draft: true
 ---
 
 Each exercise set's question generator now ships in its own chunk.

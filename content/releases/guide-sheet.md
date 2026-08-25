@@ -3,6 +3,7 @@ title: 'The guide becomes a side sheet'
 date: '2026-07-18'
 kind: 'new-feature'
 platforms: ['web']
+draft: true
 ---
 
 On desktop, each set's reference guide now opens as a **resizable sheet
