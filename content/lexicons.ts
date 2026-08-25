@@ -14,7 +14,7 @@
  *
  * Per the source-of-truth policy in
  * the Phase 1 plan (Q3): the original program is authoritative.
- * The 2003 documented lexicon (the generator plan) is
+ * The 2003 documented lexicon (the question-generator notes) is
  * superseded where they differ; its catalog is recorded in the
  * "vs. 2003" comments below for traceability.
  *
@@ -1031,7 +1031,7 @@ export const verbsTransitive = live(
  *
  * `relations` is unexplained rather than explained. What is verified: no
  * ported generator draws it. What is NOT: which templates consumed it in
- * 2008. the generator plan attributes it to the translation
+ * 2008. the question-generator notes attributes it to the translation
  * drills (sets A, C, H, J, L, N) — of which H is still an empty skeleton
  * with 93 unbuilt templates — but that same note flags the template
  * combinatorics as unresolved pending a driver-function trace. So "it

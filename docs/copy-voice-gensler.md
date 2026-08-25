@@ -5,10 +5,9 @@ that "will reach you when it ships" reads as software-industry
 language rather than something written for a professor or a student.
 
 Everything quoted here is Gensler's, recovered from the 2008 program
-itself (the original program): the help screens are encoded in
-the help screens, and the UI strings are plain
-in the original program. This is not an impression of his style;
-it is his text.
+itself and transcribed: the help screens
+are stored encoded and the UI strings sit plain in the original program. This is
+not an impression of his style; it is his text.
 
 ## What he sounds like
 

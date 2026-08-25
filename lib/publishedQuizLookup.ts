@@ -127,8 +127,8 @@ const generatedRoutes: Record<
   // taxonomy (compact grid UI). One passage variant per fallacy
   // type per session, matching the original program's uniform-over-types
   // draw. All 18 fallacies drilled, including op/pc from original program
-  // section 14 (dropped by the legacy parsed JSON). See
-  // the Set R fidelity audit + tools/the Set R port.
+  // section 14 (dropped by the legacy parsed JSON). See the Set R
+  // audit and port script.
   [getQuizRouteKey(['informal', 'fallacies'])]: {
     setKey: 'setR',
     subsetIndex: 0,

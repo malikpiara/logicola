@@ -1,9 +1,9 @@
 /**
  * LogiCola scoring — a restoration of the original program's model, per set.
  *
- * Source of truth: the programs Gensler
- * shipped inside LCEXE_2008.exe, at
- * the original program*.txt.
+ * Source of truth: the programs Gensler shipped
+ * inside the original program, transcribed per set in the private port
+ * notes.
  *
  * The single most important fact: THERE IS NO GLOBAL SCORING MODEL. Every
  * set scores differently, and the differences are not cosmetic — they are

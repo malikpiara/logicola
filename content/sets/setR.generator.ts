@@ -6,8 +6,8 @@
  * commits. Goes with the "Fallacies and Argumentation" chapter (ch. 4)
  * of Gensler's Introduction to Logic.
  *
- * Fidelity notes (source: the original program for Set R,
- * ported by the port into ./setR.data.ts):
+ * Fidelity notes (source: the original program for Set R in the private
+ * port notes, ported by its Set R port script into ./setR.data.ts):
  *
  *   - The original engine draws a random fallacy *section* per problem
  *     (uniform over fallacy types, with recency avoidance), then a random

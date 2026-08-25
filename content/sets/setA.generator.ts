@@ -13,12 +13,12 @@
  * The 2008 per-template `m:` letter-pair line ("the first letters
  * in 'Sally' and 'humorous'") is NOT a wrong-answer hint — in the
  * original it's instruction text for type-the-answer mode
- * ("Symbolize using $m"), a mode LC3 hasn't built yet. Source:
- * the original program for Set A.
+ * ("Symbolize using $m"), a mode LC3 hasn't built yet. Source: the
+ * original program for Set A.
  *
  * Letter convention (Gensler §2.1; verified against the original program
  * letter-binding block — dKJJ = lowercase name, dRJ = uppercase —
- * see the Set A fidelity audit):
+ * see the Set A fidelity audit in those notes):
  *
  *   Lowercase letter — singular term (picks out one individual)
  *     proper names (Sally → s; "G is C" is Gensler's canonical
@@ -208,8 +208,8 @@ function placeForNoun(rng: Rng, noun: string): string {
 
 /**
  * Adjectives that take the inflected -est superlative cleanly.
- * Quick-win ported from 2008's `$Best` substitution; a full
- * port of the morphology rule is deferred (see the remaining template ports P2).
+ * Quick-win ported from 2008's `$Best` substitution; a fuller port of
+ * the morphology rule is deferred (see the remaining template ports, P2).
  * Adjectives outside this set fall through to "most X" form.
  */
 const ESTREGULARS: ReadonlySet<string> = new Set([
@@ -570,8 +570,8 @@ function template4(rng: Rng, counter: number): Question {
  *   referent).
  *
  * The original program hardcodes "most $C" here, but that was a workaround for
- * a parser that could not inflect ($Best was $B + literal "est" —
- * the original program 0121b7d), not authored style: Gensler's textbook
+ * a parser that could not inflect ($Best was $B + literal "est",
+ * confirmed in the original program), not authored style: Gensler's textbook
  * writes this exact sentence shape inflected ("David isn't the
  * nastiest person at the party", Intro to Logic Set B). This template
  * now uses superlative(), converging with the book (2026-08-20).
