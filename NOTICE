@@ -1,0 +1,64 @@
+LogiCola 3
+Copyright (C) 2025-2026 Malik Piara
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. See LICENSE for the full text.
+
+If you run a modified version of this program as a network service, AGPL
+section 13 requires you to offer its complete source code to that
+service's users.
+
+
+LICENCE HISTORY
+---------------
+
+This project was licensed under the MIT License until 2026-08-24. From
+that date forward — including all work on the color-system-exploration
+branch — it is licensed under AGPL-3.0-or-later.
+
+Copies distributed while the project was MIT-licensed remain available
+under MIT for those versions: a licence already granted cannot be
+revoked. The change is not, and cannot be, retroactive.
+
+Contributions received during the MIT period — from Mark Witt, Linus
+Bolls, and Ricardo Cipriano — were made under the MIT License and are
+incorporated here under its terms. Its notice is preserved:
+
+    MIT License
+
+    Copyright (c) 2025 Malik Piara
+
+    Permission is hereby granted, free of charge, to any person
+    obtaining a copy of this software and associated documentation files
+    (the "Software"), to deal in the Software without restriction,
+    including without limitation the rights to use, copy, modify, merge,
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+    BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+    ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+
+OTHER RIGHTS
+------------
+
+Malik Piara holds copyright in this work and may additionally license it
+on other terms, including commercially. The AGPL binds redistributors;
+it does not limit the copyright holder.
+
+The drill material derived from Harry Gensler's "Introduction to Logic"
+and the original LogiCola program is used to honour his legacy. Rights in
+that underlying material are separate from, and unaffected by, this
+software licence.

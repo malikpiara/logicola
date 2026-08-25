@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { NewBadge } from './newBadge';
 
 /* Improvements
 Since the title, chapter and path are binded, we only need
@@ -21,13 +22,9 @@ const NavTopic = ({ chapter, title, path, newLabel }: TableOfContentProps) => {
         href={path}
         className='motion-button block p-3 rounded-lg hover:bg-gray-200'
       >
-        <div className='flex items-baseline gap-3'>
+        <div className='flex items-center gap-2.5'>
           <div className='font-semibold'>{title}</div>
-          {newLabel && (
-            <span className='shrink-0 rounded-full bg-fuchsia-600 px-2.5 py-1 text-[0.6875rem] font-semibold tracking-[0.08em] text-fuchsia-50'>
-              NEW
-            </span>
-          )}
+          {newLabel && <NewBadge />}
         </div>
         <span className='font-medium text-gray-500'>{chapter}</span>
       </Link>

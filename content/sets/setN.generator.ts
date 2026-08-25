@@ -39,7 +39,7 @@
  */
 
 import type { Option, Question, Set } from '../types';
-import { rngFromSeed, pickFrom, type Rng } from '@/lib/rng';
+import { rngFromSeed, pickFresh, type Rng } from '@/lib/rng';
 import { names, verbsB, verbsTransitive } from '../lexicons';
 
 // =============================================================
@@ -180,10 +180,11 @@ function pickDifferentLetter<T extends string>(
   pool: readonly T[],
   avoid: string
 ): T {
-  const filtered = pool.filter(
-    (x) => x[0]!.toLowerCase() !== avoid[0]!.toLowerCase()
-  );
-  return pickFrom(rng, filtered.length > 0 ? filtered : pool);
+  // Reject predicate, not a filtered copy — see pickFresh in lib/rng.ts.
+  const initial = avoid[0]!.toLowerCase();
+  return pickFresh(rng, pool, {
+    reject: (x) => x[0]!.toLowerCase() === initial,
+  });
 }
 
 function qid(num: number, n: number): string {
@@ -225,7 +226,7 @@ function buildQuestion(
 /** Descriptive: "You believe that A is true" → u:A */
 function believingDescriptive(rng: Rng, counter: number): Question {
   const A = pickDistinctLetters(rng, 1)[0]!;
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `You believe that ${A} is true.`,
     `You believe ${A}.`,
     `You take ${A} to be true.`,
@@ -255,7 +256,7 @@ function believingDescriptive(rng: Rng, counter: number): Question {
 /** Imperative: "Believe that A is true" → {u}:A */
 function believingImperative(rng: Rng, counter: number): Question {
   const A = pickDistinctLetters(rng, 1)[0]!;
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `Believe that ${A} is true.`,
     `Believe ${A}.`,
     `Take ${A} to be true.`,
@@ -281,9 +282,9 @@ function believingImperative(rng: Rng, counter: number): Question {
 /** Negated descriptive: "You don't believe that A is true" → ∼u:A */
 function believingNegated(rng: Rng, counter: number): Question {
   const A = pickDistinctLetters(rng, 1)[0]!;
-  const variant = pickFrom(rng, ['descriptive-not', 'imperative-not']);
+  const variant = pickFresh(rng, ['descriptive-not', 'imperative-not']);
   if (variant === 'descriptive-not') {
-    const prompt = pickFrom(rng, [
+    const prompt = pickFresh(rng, [
       `You don’t believe that ${A} is true.`,
       `You don’t believe ${A}.`,
       `You don’t take ${A} to be true.`,
@@ -308,7 +309,7 @@ function believingNegated(rng: Rng, counter: number): Question {
       HINT_NEG_BELIEF
     );
   }
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `Don’t believe that ${A} is true.`,
     `Don’t believe ${A}.`,
     `Refuse to believe ${A}.`,
@@ -338,7 +339,7 @@ function believingNegated(rng: Rng, counter: number): Question {
 /** Believe that A is false: "Believe that A is false" → {u}:∼A */
 function believingFalse(rng: Rng, counter: number): Question {
   const A = pickDistinctLetters(rng, 1)[0]!;
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `Believe that ${A} is false.`,
     `Believe not-${A}.`,
     `Take ${A} to be false.`,
@@ -366,7 +367,7 @@ function believingFalse(rng: Rng, counter: number): Question {
 /** Take no position: "You take no position on A" → (∼u:A · ∼u:∼A) */
 function believingNoPosition(rng: Rng, counter: number): Question {
   const A = pickDistinctLetters(rng, 1)[0]!;
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `You don’t believe ${A} and you don’t believe not-${A}.`,
     `You take no position on ${A}.`,
     `You’re agnostic about ${A}.`,
@@ -401,7 +402,7 @@ function believingNoPosition(rng: Rng, counter: number): Question {
 /** Conditional belief: "If you believe A, then don't believe B" → (u:A ⊃ ∼{u}:B) */
 function believingConditional(rng: Rng, counter: number): Question {
   const [A, B] = pickDistinctLetters(rng, 2);
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `If you believe ${A}, then don’t believe ${B}.`,
     `Don’t believe ${B}, if you believe ${A}.`,
     `Refuse to believe ${B} if you believe ${A}.`,
@@ -439,7 +440,7 @@ function believingDontCombine(rng: Rng, counter: number): Question {
   const [A, B] = pickDistinctLetters(rng, 2);
   const negSecond = rng() < 0.5;
   if (negSecond) {
-    const prompt = pickFrom(rng, [
+    const prompt = pickFresh(rng, [
       `Don’t combine believing ${A} with believing not-${A}.`,
       `Don’t both believe ${A} and believe not-${A}.`,
       `Refuse to combine belief in ${A} with belief in not-${A}.`,
@@ -471,7 +472,7 @@ function believingDontCombine(rng: Rng, counter: number): Question {
       HINT_DONT_COMBINE_BELIEF
     );
   }
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `Don’t combine believing ${A} with believing ${B}.`,
     `Don’t both believe ${A} and believe ${B}.`,
     `Don’t hold both ${A} and ${B} as true.`,
@@ -506,9 +507,9 @@ function believingDontCombine(rng: Rng, counter: number): Question {
 
 /** Quantified believe: "Everyone believes that they ought to do A" → (x)x:OA{x} */
 function believingQuantified(rng: Rng, counter: number): Question {
-  const verb = pickFrom(rng, verbsB);
+  const verb = pickFresh(rng, verbsB);
   const V = verb[0]!.toUpperCase();
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `Everyone believes that they ought to ${verb}.`,
     `Each person believes that they ought to ${verb}.`,
     `Everyone holds that they ought to ${verb}.`,
@@ -548,11 +549,11 @@ function believingQuantified(rng: Rng, counter: number): Question {
 
 /** Want-someone-to: "You want X to harm you" → u:H{X}u */
 function willingWantSomeone(rng: Rng, counter: number): Question {
-  const verb = pickFrom(rng, verbsTransitive);
-  const name = pickFrom(rng, names);
+  const verb = pickFresh(rng, verbsTransitive);
+  const name = pickFresh(rng, names);
   const V = verb[0]!.toUpperCase();
   const n = name[0]!.toLowerCase();
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `You want ${name} to ${verb} you.`,
     `You wish ${name} would ${verb} you.`,
     `You’d like ${name} to ${verb} you.`,
@@ -598,9 +599,9 @@ function willingWantSomeone(rng: Rng, counter: number): Question {
 
 /** Want-everyone-to: "You want everyone to laugh" → u:(x)L{x} */
 function willingWantEveryone(rng: Rng, counter: number): Question {
-  const verb = pickFrom(rng, verbsB);
+  const verb = pickFresh(rng, verbsB);
   const V = verb[0]!.toUpperCase();
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `You want everyone to ${verb}.`,
     `You wish everyone would ${verb}.`,
     `You’d like everyone to ${verb}.`,
@@ -637,9 +638,9 @@ function willingWantEveryone(rng: Rng, counter: number): Question {
 
 /** Imperative-want: "Want everyone to laugh" → {u}:(x)L{x} */
 function willingImperative(rng: Rng, counter: number): Question {
-  const verb = pickFrom(rng, verbsB);
+  const verb = pickFresh(rng, verbsB);
   const V = verb[0]!.toUpperCase();
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `Want everyone to ${verb}.`,
     `Would that everyone ${verb}.`,
     `Wish that everyone would ${verb}.`,
@@ -678,11 +679,11 @@ function willingImperative(rng: Rng, counter: number): Question {
 
 /** Resolve-conditional: "If you are J, then you resolve to A" → (Ju ⊃ u:A{u}) */
 function willingResolve(rng: Rng, counter: number): Question {
-  const verb = pickFrom(rng, verbsB);
+  const verb = pickFresh(rng, verbsB);
   const V = verb[0]!.toUpperCase();
   // Use a single-letter J for state, distinct from V
   const J = pickDifferentLetter(rng, PROP_LETTERS, V);
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `If you are ${J}, then you resolve to ${verb}.`,
     `You’re resolved that if you are ${J} then you’ll ${verb}.`,
     `If you are ${J}, you commit yourself to ${verb}.`,
@@ -735,9 +736,12 @@ function willingResolve(rng: Rng, counter: number): Question {
  * c `(u:OAu̲ · ∼u̲:Au̲)`, d `(u:OAu̲ · ∼Au̲)`.
  */
 function willingDontCombine(rng: Rng, counter: number): Question {
-  const verb = pickFrom(rng, verbsB);
+  const verb = pickFresh(rng, verbsB);
   const V = verb[0]!.toUpperCase();
-  const prompt = pickFrom(rng, [
+  // Wording ported from main's e5c4a5e at the 2026-08-24 merge: the
+  // earlier "wanting yourself to" prompts described a different mental
+  // state than the ought-formula they were keyed to.
+  const prompt = pickFresh(rng, [
     `Don’t combine believing that you ought to ${verb} with not acting to ${verb}.`,
     `Don’t believe that you ought to ${verb} without acting to ${verb}.`,
   ]);
@@ -781,7 +785,7 @@ function willingDontCombine(rng: Rng, counter: number): Question {
 /** Ought-to-believe / evident: "You ought to believe A" → O{u}:A */
 function rationalityOughtBelieve(rng: Rng, counter: number): Question {
   const A = pickDistinctLetters(rng, 1)[0]!;
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `You ought to believe that ${A} is true.`,
     `You ought to believe ${A}.`,
     `It’s evident to you that ${A} is true.`,
@@ -820,7 +824,7 @@ function rationalityOughtBelieve(rng: Rng, counter: number): Question {
 /** Reasonable-to-believe: "It's reasonable for you to believe A" → R{u}:A */
 function rationalityReasonable(rng: Rng, counter: number): Question {
   const A = pickDistinctLetters(rng, 1)[0]!;
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `It’s reasonable for you to believe that ${A} is true.`,
     `${A} is reasonable for you to believe.`,
     `Believing ${A} is reasonable for you.`,
@@ -852,7 +856,7 @@ function rationalityReasonable(rng: Rng, counter: number): Question {
 /** Unreasonable: "It would be unreasonable for you to believe A" → ∼R{u}:A */
 function rationalityUnreasonable(rng: Rng, counter: number): Question {
   const A = pickDistinctLetters(rng, 1)[0]!;
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `It would be unreasonable for you to believe that ${A} is true.`,
     `It’s unreasonable for you to believe ${A}.`,
     `Believing ${A} is unreasonable for you.`,
@@ -887,7 +891,7 @@ function rationalityTakeNoPositionReasonable(
   counter: number
 ): Question {
   const A = pickDistinctLetters(rng, 1)[0]!;
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `It would be reasonable for you to take no position on ${A}.`,
     `Agnosticism about ${A} is reasonable for you.`,
     `It’s permissible for you to take no position on ${A}.`,
@@ -923,7 +927,7 @@ function rationalityTakeNoPositionReasonable(
 /** Evident-transitive: "If A is evident to you, then B is evident to you" → (O{u}:A ⊃ O{u}:B) */
 function rationalityEvidentTransitive(rng: Rng, counter: number): Question {
   const [A, B] = pickDistinctLetters(rng, 2);
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `If ${A} is evident to you, then ${B} is evident to you.`,
     `If you ought to believe ${A}, then you ought to believe ${B}.`,
     `If it’s evident to you that ${A}, then it’s evident to you that ${B}.`,
@@ -954,7 +958,7 @@ function rationalityEvidentTransitive(rng: Rng, counter: number): Question {
 /** Ought-not-combine-belief: "You ought not to combine believing A with believing not-A" → O∼({u}:A · {u}:∼A) */
 function rationalityOughtNotCombine(rng: Rng, counter: number): Question {
   const A = pickDistinctLetters(rng, 1)[0]!;
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `You ought not to combine believing ${A} with believing not-${A}.`,
     `You ought not to both believe ${A} and believe not-${A}.`,
     `It’s wrong to combine believing ${A} with believing not-${A}.`,
@@ -990,7 +994,7 @@ function rationalityOughtNotCombine(rng: Rng, counter: number): Question {
 /** Knowledge: "You know that A" → (O{u}:A · A · u:A) */
 function rationalityKnowledge(rng: Rng, counter: number): Question {
   const A = pickDistinctLetters(rng, 1)[0]!;
-  const prompt = pickFrom(rng, [
+  const prompt = pickFresh(rng, [
     `You know that ${A} is true.`,
     `You know ${A}.`,
     `You have knowledge that ${A} is true.`,
@@ -1074,7 +1078,7 @@ export function* believingQuestions(seed?: number): Generator<Question> {
   const rng = rngFromSeed(seed);
   let counter = 0;
   while (true) {
-    const renderer = pickFrom(rng, believingTemplates);
+    const renderer = pickFresh(rng, believingTemplates);
     yield renderer(rng, counter++);
   }
 }
@@ -1083,7 +1087,7 @@ export function* willingQuestions(seed?: number): Generator<Question> {
   const rng = rngFromSeed(seed);
   let counter = 0;
   while (true) {
-    const renderer = pickFrom(rng, willingTemplates);
+    const renderer = pickFresh(rng, willingTemplates);
     yield renderer(rng, counter++);
   }
 }
@@ -1092,7 +1096,7 @@ export function* rationalityQuestions(seed?: number): Generator<Question> {
   const rng = rngFromSeed(seed);
   let counter = 0;
   while (true) {
-    const renderer = pickFrom(rng, rationalityTemplates);
+    const renderer = pickFresh(rng, rationalityTemplates);
     yield renderer(rng, counter++);
   }
 }
@@ -1131,6 +1135,8 @@ export function generateSetN(seed?: number, perSubset = 10): Set {
         id: 14,
         title: 'Belief Translations: Believing',
         header: 'Translates into logic as:',
+        description:
+          'Translate claims about believing, not believing, and withholding belief into belief logic.',
         questions: take(believingQuestions(seedFor(1)), perSubset),
       },
       {
@@ -1142,6 +1148,8 @@ export function generateSetN(seed?: number, perSubset = 10): Set {
         id: 14,
         title: 'Belief Translations: Willing',
         header: 'Translates into logic as:',
+        description:
+          'Translate wanting, resolving, and acting — the willing side of belief logic — into formulas.',
         questions: take(willingQuestions(seedFor(2)), perSubset),
       },
       {
@@ -1153,6 +1161,8 @@ export function generateSetN(seed?: number, perSubset = 10): Set {
         id: 14,
         title: 'Belief Translations: Rationality',
         header: 'Translates into logic as:',
+        description:
+          'Translate what is evident, reasonable, and rational to believe into belief-logic formulas.',
         questions: take(rationalityQuestions(seedFor(3)), perSubset),
       },
     ],

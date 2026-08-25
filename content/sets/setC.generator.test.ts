@@ -116,6 +116,61 @@ describe('setC generator — property tests', () => {
     }
   );
 
+  it.each([1, 42, 99, 12345])(
+    'seed %i: no hint repeats a line (Layer-1 duplicated into Layer-2)',
+    (seed) => {
+      // Templates 21 and 32 shipped with their Layer-1 sentence also
+      // seated in Layer-2, printing e.g. the not-iff line twice in one
+      // hint. The 2008 `*e` block never does this — its conditions are
+      // mutually exclusive per option.
+      const set = generateSetC(seed, TEST_PER_SUBSET);
+      for (const subset of set.subSets) {
+        for (const q of subset.questions) {
+          for (const o of q.options) {
+            if (!o.hint) continue;
+            const lines = o.hint
+              .split('\n')
+              .map((l) => l.trim())
+              .filter(Boolean);
+            expect(new Set(lines).size).toBe(lines.length);
+          }
+        }
+      }
+    }
+  );
+
+  it.each([1, 42, 99, 12345])(
+    'seed %i: negation-mistake hints match the mistake anatomy (2008 *e block)',
+    (seed) => {
+      // Domain truth from the original program (set_C.txt `*e` block):
+      // "Why did you put in an extra ‘∼’?" is only ever attached to an
+      // option with MORE negations than the correct answer, and "You
+      // forgot the second ‘∼’!" only to an option missing one of a
+      // two-negation answer's ‘∼’s. Counting `\sim` in the rendered
+      // KaTeX makes this checkable without reference to template
+      // indices — a mis-seated hint fails here whatever slot it's in.
+      const simCount = (label: string) => label.split('\\sim').length - 1;
+      const set = generateSetC(seed, TEST_PER_SUBSET);
+      for (const subset of set.subSets) {
+        for (const q of subset.questions) {
+          const correct = q.options.find((o) => q.correctId.includes(o.id))!;
+          for (const o of q.options) {
+            if (!o.hint) continue;
+            if (o.hint.includes('extra ‘∼’')) {
+              expect(simCount(o.label)).toBeGreaterThan(
+                simCount(correct.label)
+              );
+            }
+            if (o.hint.includes('forgot the second ‘∼’')) {
+              expect(simCount(correct.label)).toBeGreaterThanOrEqual(2);
+              expect(simCount(o.label)).toBeLessThan(simCount(correct.label));
+            }
+          }
+        }
+      }
+    }
+  );
+
   it.each([1, 42, 99])('seed %i: all prompts are non-empty', (seed) => {
     const set = generateSetC(seed, TEST_PER_SUBSET);
     for (const subset of set.subSets) {

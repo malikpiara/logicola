@@ -7,20 +7,47 @@ import { cn } from '@/lib/utils';
 
 const NavigationMenu = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
->(({ className, children, ...props }, ref) => (
-  <NavigationMenuPrimitive.Root
-    ref={ref}
-    className={cn(
-      'relative z-10 flex max-w-max flex-1 items-center justify-center',
-      className
-    )}
-    {...props}
-  >
-    {children}
-    <NavigationMenuViewport />
-  </NavigationMenuPrimitive.Root>
-));
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root> & {
+    /**
+     * Restyles the shared Viewport for one menu instance — the exercises
+     * panel needs the chrome on its own clipped card, not on the
+     * Viewport (a clip-path would cut off the Viewport's box-shadow;
+     * the drop-shadow filter must sit on an ancestor of the clipped
+     * element).
+     */
+    viewportClassName?: string;
+    /**
+     * Escape hatch onto the shared Viewport for one menu instance. The
+     * exercises panel neutralises the Viewport's pointer-leave close
+     * through it (see components/navbar.tsx) — Content is portalled
+     * INTO the Viewport, so leaving the panel fires `onContentLeave` on
+     * both, and suppressing it on Content alone would not hold.
+     */
+    viewportProps?: React.ComponentPropsWithoutRef<
+      typeof NavigationMenuPrimitive.Viewport
+    >;
+  }
+>(
+  (
+    { className, children, viewportClassName, viewportProps, ...props },
+    ref
+  ) => (
+    <NavigationMenuPrimitive.Root
+      ref={ref}
+      className={cn(
+        'relative z-10 flex max-w-max flex-1 items-center justify-center',
+        className
+      )}
+      {...props}
+    >
+      {children}
+      <NavigationMenuViewport
+        className={viewportClassName}
+        {...viewportProps}
+      />
+    </NavigationMenuPrimitive.Root>
+  )
+);
 NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;
 
 const NavigationMenuList = React.forwardRef<
@@ -86,7 +113,18 @@ const NavigationMenuViewport = React.forwardRef<
   <div className={cn('absolute left-0 top-full flex justify-center')}>
     <NavigationMenuPrimitive.Viewport
       className={cn(
-        'motion-panel origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 md:w-[var(--radix-navigation-menu-viewport-width)]',
+        // Transition + @starting-style, not keyframes (2026-08-24,
+        // plans/004): this menu is click-only, so open/close is a
+        // toggle, and the old zoom keyframes restarted from scale(1)
+        // when re-clicked mid-flight. Three fixes on one line: the
+        // keyframes also never received a curve (no ease-* utility →
+        // browser-default `ease`), and origin-top-center grew the
+        // viewport from the middle of the bar instead of its trigger
+        // (Radix NavigationMenu publishes no transform-origin var, so
+        // top-left — the trigger's corner — is the honest anchor).
+        // Radix unmounts the viewport on close; there is no exit to
+        // animate, and that's fine — exits are shorter and simpler.
+        'nav-viewport-enter relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-lg md:w-[var(--radix-navigation-menu-viewport-width)]',
         className
       )}
       ref={ref}

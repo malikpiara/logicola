@@ -7,8 +7,9 @@ import { findQuizCatalogEntry, getQuizRouteKey } from '@/lib/quizCatalog';
  *   - `static`: existing pipeline. The full SubSet (with questions)
  *     is server-rendered and baked into the cached HTML.
  *   - `generated`: Pre.4 pipeline. The route returns a setKey +
- *     subsetIndex; `<QuizClient>` resolves the generator and draws
- *     questions client-side per page refresh.
+ *     subsetIndex; the page picks that set's client wrapper (see
+ *     components/quiz/generated/), which draws questions client-side
+ *     per page refresh.
  */
 export type LoadedQuiz =
   | { runtime: 'static'; subSet: SubSet }
@@ -38,7 +39,7 @@ const staticLoaders: Record<string, StaticLoader> = {
  * Generated-set route mapping: slug-path → (setKey, subsetIndex).
  * Empty until T1.2 lands the first generator. When a generator
  * ships, its routes move here from `staticLoaders` and the route
- * automatically dispatches via `<QuizClient>`.
+ * automatically dispatches via its per-set client wrapper.
  *
  * Set Q routes never live here — Set Q stays on the static path
  * forever (it's a flat list, not a template engine).
@@ -121,6 +122,17 @@ const generatedRoutes: Record<
     setKey: 'setN',
     subsetIndex: 2,
   },
+  // Phase 2 (Jul 15, 2026): Set R — Informal Fallacies
+  // Passage-identification drill against the full 18-fallacy
+  // taxonomy (compact grid UI). One passage variant per fallacy
+  // type per session, matching the original program's uniform-over-types
+  // draw. All 18 fallacies drilled, including op/pc from original program
+  // section 14 (dropped by the legacy parsed JSON). See
+  // the Set R fidelity audit + tools/the Set R port.
+  [getQuizRouteKey(['informal', 'fallacies'])]: {
+    setKey: 'setR',
+    subsetIndex: 0,
+  },
 };
 
 export async function loadPublishedQuizSubSet(
@@ -134,7 +146,7 @@ export async function loadPublishedQuizSubSet(
   const routeKey = getQuizRouteKey(publishedQuiz.slugs);
 
   // Generated sets win: if the slug path has been wired to a
-  // generator, route through QuizClient. This branch is empty until
+  // generator, route through its client wrapper. This branch is empty until
   // T1.2 ships.
   const generated = generatedRoutes[routeKey];
   if (generated) {

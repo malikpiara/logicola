@@ -71,11 +71,11 @@ const logicSections = [
   {
     title: 'Informal',
     icon: MessageSquare,
-    progress: 33,
+    progress: 66,
     items: [
       { label: 'P. Probability', href: '#' },
       { label: 'Q. Definitions', href: '#' },
-      { label: 'R. Fallacies', href: '#' },
+      { label: 'R. Fallacies', href: '/informal/fallacies/quiz' },
     ],
   },
 ];
@@ -85,7 +85,7 @@ export default function LogicDashboard() {
     <div className='motion-enter p-6 min-h-screen'>
       <div className='max-w-7xl mx-auto'>
         <h1 className='text-3xl font-bold text-green-900 mb-6'>
-          Migraton to Logicola 3
+          Migration to Logicola 3
         </h1>
 
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>

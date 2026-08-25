@@ -1,0 +1,1899 @@
+<!doctype html>
+<!--
+  LogiCola · brand lab — the social identity, built out of the product.
+
+  The doctype is load-bearing for the same reason it is in pattern-lab.html
+  (quirks mode changes real things); don't drop it.
+
+  WHY THIS EXISTS. The covers on LinkedIn and X were drawn BEFORE the pixel
+  work — a smooth rounded-rect quilt with pill merges, in colours that no
+  part of the product actually spends. The app has since grown a real
+  colour system (seven per-set palettes) and a real pattern engine
+  (lib/patterns.ts). This lab closes that gap: every pixel below comes out
+  of the shipped generator, at the real dimensions the platforms crop to.
+
+  THREE THINGS ALREADY DECIDED ELSEWHERE, honoured here rather than
+  re-litigated:
+
+  1. **No pill merges.** Malik cut them in the pattern lab's round 2 — they
+     were "the weird part of the cover". Every quilt variant here is
+     strictly one shape per cell.
+  2. **Straight edges stay ruler-straight; only curves rasterise**
+     (docs/pixel-ui.md, "the one rule").
+  3. **70/30 rhythm, accents never orthogonally adjacent** — the quilt
+     family's shared rules, inherited from the cover itself.
+
+  THE ONE THING THIS LAB DISCOVERED (2026-08-12). On a cream ground with
+  the brand green as the dominant, SIX OF THE SEVEN SET SURFACES FAIL the
+  quilt's own accent gate — they sit 0.045–0.157 from the cream in OKLab,
+  well under the 0.17 floor, so they read as a dirty ground rather than as
+  confetti. Only J's lilac squeaks through at 0.176. What survives is the
+  sets' INKS and ACCENTS — the deep register. So the inversion is forced,
+  not chosen: **the quiz screens spend surfaces; the brand spends inks.**
+  It is also why the old cover worked — its coral, violet and gold were
+  never pastels.
+-->
+<title>LogiCola · brand lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    --bg: #f3f1ec;
+    --panel: #ffffff;
+    --text: #1d1a20;
+    --muted: #6f6879;
+    --line: #e2ded6;
+    --accent: #c216ad;
+    --chip: #eae6df;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171419;
+      --panel: #201c24;
+      --text: #f0edf2;
+      --muted: #8d8791;
+      --line: #322d38;
+      --accent: #f233df;
+      --chip: #2a2530;
+    }
+  }
+  * {
+    box-sizing: border-box;
+  }
+  html,
+  body {
+    height: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Roboto Flex', 'Avenir Next', system-ui, sans-serif;
+  }
+  .mono {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  }
+  .app {
+    display: flex;
+    min-height: 100vh;
+  }
+  aside {
+    width: 292px;
+    flex: 0 0 292px;
+    border-right: 1px solid var(--line);
+    background: var(--panel);
+    padding: 22px 18px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    max-height: 100vh;
+    position: sticky;
+    top: 0;
+  }
+  h1 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    letter-spacing: 0.02em;
+  }
+  aside > .intro p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    margin: 0 0 8px;
+  }
+  .opts {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .opt {
+    text-align: left;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: 13px;
+    padding: 7px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .opt:hover {
+    background: var(--chip);
+  }
+  .opt[aria-pressed='true'] {
+    background: var(--chip);
+    font-weight: 700;
+  }
+  .opt small {
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 11px;
+  }
+  .swatches {
+    display: flex;
+    gap: 3px;
+  }
+  .sw {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12);
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .row input[type='range'] {
+    flex: 1;
+    accent-color: var(--accent);
+  }
+  .row output {
+    min-width: 34px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  textarea,
+  input[type='text'] {
+    width: 100%;
+    font: inherit;
+    font-size: 12px;
+    padding: 7px 9px;
+    border-radius: 7px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--text);
+    resize: vertical;
+  }
+  .btn {
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .btns {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .dial-note {
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--muted);
+    margin: 6px 0 0;
+  }
+  .row.is-off {
+    opacity: 0.45;
+  }
+  .row.is-off input {
+    pointer-events: none;
+  }
+  label.check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  main {
+    flex: 1;
+    padding: 34px 40px 80px;
+    min-width: 0;
+  }
+  .stage {
+    margin: 0 0 34px;
+  }
+  .stage h2 {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 10px;
+    font-weight: 600;
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .stage h2 span {
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 400;
+  }
+  .frame {
+    position: relative;
+    line-height: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.08);
+    max-width: 100%;
+  }
+  .frame svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  /* Platform chrome guides — where the avatar punches through and where
+     the sites' own UI lands. Never exported; judgement aid only. */
+  .guide {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .guide svg {
+    width: 100%;
+    height: 100%;
+  }
+  .note {
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--muted);
+    margin: 10px 0 0;
+    max-width: 78ch;
+  }
+
+  /* ---------- pinned comparisons ---------- */
+  .pins {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+  .pin {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--panel);
+  }
+  .pin.is-current {
+    border-color: var(--accent);
+  }
+  .pin-thumb {
+    position: relative;
+    line-height: 0;
+  }
+  .pin-thumb > svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .pin-av {
+    position: absolute;
+    aspect-ratio: 1;
+    border-radius: 999px;
+    overflow: hidden;
+    border: 2px solid #fff;
+    line-height: 0;
+  }
+  .pin-av svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .pin-meta {
+    padding: 10px 12px 12px;
+    font-size: 12px;
+  }
+  .pin-meta .t {
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .pin-meta .d {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .pin-acts {
+    display: flex;
+    gap: 6px;
+    margin-top: 9px;
+  }
+  .pin-acts button {
+    font: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .pin-acts button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .pin-empty {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.55;
+    max-width: 62ch;
+  }
+
+  /* ---------- composed previews ----------
+     The cover and the avatar are two files that are only ever seen as one
+     picture. Judging them apart is how you end up with a busy cover behind
+     a busy mark.
+
+     These mocks are drawn at the PLATFORM'S OWN CSS PIXEL SIZE, not at a
+     convenient preview width (Malik, 2026-08-12). X's profile column is
+     600px and its avatar is 133.33px: at that size the avatar covers 22%
+     of the header's width, which is a much larger object than a
+     scaled-down mock suggests. The earlier version guessed the ratios off
+     a screenshot and got them ~35% too small, which is exactly the error
+     that makes a cover look fine in the lab and crowded on the page. So
+     the geometry now comes from the platforms' published values and the
+     mock renders 1:1 — if it is wider than the page, it scrolls. */
+  .mock-scroll {
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .mock {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    font-family: 'Roboto Flex', system-ui, sans-serif;
+    background: #fff;
+    color: #0f1419;
+  }
+  .mock-cover {
+    position: relative;
+    line-height: 0;
+  }
+  .mock-cover svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .mock-avatar {
+    position: absolute;
+    line-height: 0;
+    overflow: hidden;
+    background: #fff;
+    box-sizing: content-box;
+  }
+  .mock-avatar svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  /* Reserves the avatar's overhang; the actions row is pinned into it
+     rather than flowed, which is where both sites put it. */
+  .mock-gutter {
+    position: relative;
+  }
+  .mock-body {
+    line-height: 1.35;
+  }
+  .mock-actions {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* X — 600px column, 15px body copy, #536471 for secondary text. */
+  .mock.x .nm {
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+  }
+  .mock.x .sub {
+    font-size: 15px;
+    color: #536471;
+    margin-top: 1px;
+  }
+  .mock.x .bio {
+    font-size: 15px;
+    margin-top: 12px;
+  }
+  .mock.x .mock-actions i {
+    display: block;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    border: 1px solid #cfd9de;
+  }
+  .mock.x .mock-actions i.solid {
+    width: 104px;
+    border: 1px solid #cfd9de;
+  }
+
+  /* LinkedIn — 1128px cover, 24px page name. */
+  .mock.li {
+    color: #1b1f23;
+  }
+  .mock.li .nm {
+    font-weight: 700;
+    font-size: 24px;
+  }
+  .mock.li .bio {
+    font-size: 16px;
+    margin-top: 6px;
+  }
+  .mock.li .sub {
+    font-size: 14px;
+    color: #666;
+    margin-top: 6px;
+  }
+  .mock.li .follows {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 14px;
+  }
+  .mock.li .pile {
+    display: flex;
+  }
+  .mock.li .pile i {
+    display: block;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    background: #d9d9d9;
+    box-shadow: 0 0 0 2px #fff;
+    margin-right: -7px;
+  }
+  /* LinkedIn's buttons sit UNDER the text, flush with the logo's left
+     edge — not pinned to the top-right the way X's do. */
+  .mock.li .cta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 16px 0 18px;
+  }
+  .mock.li .cta b {
+    font-size: 15px;
+    font-weight: 600;
+    padding: 7px 18px;
+    border-radius: 999px;
+    line-height: 1.2;
+  }
+  .mock.li .cta .solid {
+    background: #0a66c2;
+    color: #fff;
+  }
+  .mock.li .cta .ghost {
+    box-shadow: inset 0 0 0 2px #0a66c2;
+    color: #0a66c2;
+  }
+  .mock.li .cta .dots {
+    box-shadow: inset 0 0 0 1px #5f6b7a;
+    color: #5f6b7a;
+    padding: 7px 14px;
+    letter-spacing: 0.06em;
+  }
+  .mock-tabs {
+    display: flex;
+    gap: 26px;
+    padding: 0 24px;
+    border-top: 1px solid #e8e8e8;
+    font-size: 15px;
+    color: #5f6b7a;
+  }
+  .mock-tabs span {
+    padding: 13px 0;
+  }
+  .mock-tabs .on {
+    color: #01754f;
+    font-weight: 600;
+    box-shadow: inset 0 -2px 0 #01754f;
+  }
+</style>
+
+<div class="app">
+  <aside>
+    <div class="intro">
+      <h1>LogiCola · brand lab</h1>
+      <p>
+        Social covers generated by the app's own pattern engine (<code
+          class="mono"
+          >lib/patterns.ts</code
+        >), at the exact sizes the platforms crop to.
+      </p>
+    </div>
+
+    <div>
+      <p class="label">Pattern</p>
+      <div class="opts" id="patternOpts"></div>
+    </div>
+
+    <div>
+      <p class="label">Scheme</p>
+      <div class="opts" id="schemeOpts"></div>
+    </div>
+
+    <div>
+      <p class="label">Accent pool</p>
+      <div class="opts" id="poolOpts"></div>
+      <p id="poolNote" class="dial-note"></p>
+    </div>
+
+    <div>
+      <p class="label">Tuning</p>
+      <div class="row">
+        <span style="min-width: 40px">Scale</span>
+        <input id="scale" type="range" min="40" max="260" value="153" />
+        <output id="scaleOut">1.00</output>
+      </div>
+      <div class="row" style="margin-top: 8px">
+        <span style="min-width: 40px">Seed</span>
+        <input id="seed" type="range" min="1" max="60" value="7" />
+        <output id="seedOut">7</output>
+      </div>
+      <div class="row" style="margin-top: 8px" id="rateRow">
+        <span style="min-width: 40px">Accent</span>
+        <input id="rate" type="range" min="5" max="100" value="28" />
+        <output id="rateOut">28%</output>
+      </div>
+      <p id="rateNote" class="dial-note"></p>
+      <label class="check" style="margin-top: 12px">
+        <input type="checkbox" id="showGuides" checked />
+        Platform chrome guides
+      </label>
+    </div>
+
+    <div>
+      <p class="label">Pinned</p>
+      <div class="btns">
+        <button class="btn" id="pinAdd">Pin current</button>
+        <button class="btn" id="pinClear">Clear all</button>
+      </div>
+      <p
+        id="pinCount"
+        style="font-size: 11px; color: var(--muted); margin: 8px 0 0"
+      ></p>
+    </div>
+
+    <div>
+      <p class="label">Export</p>
+      <div class="btns" id="exportBtns"></div>
+      <p style="font-size: 11px; color: var(--muted); margin: 8px 0 0">
+        SVG is the master; PNG is the same artwork rasterised at full size.
+        Neither carries type.
+      </p>
+    </div>
+  </aside>
+
+  <main id="stages"></main>
+</div>
+
+<script>
+  /* ====================================================================
+     1 · THE ENGINE — ported VERBATIM from lib/patterns.ts.
+     Any divergence here is a bug: this is the same generator the quiz
+     screens run, which is the entire point of the exercise.
+     ==================================================================== */
+
+  function mulberry32(seed) {
+    let a = seed;
+    return function () {
+      a |= 0;
+      a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function hexTriple(hex) {
+    const c = hex.replace('#', '');
+    return [
+      parseInt(c.slice(0, 2), 16),
+      parseInt(c.slice(2, 4), 16),
+      parseInt(c.slice(4, 6), 16),
+    ];
+  }
+  const srgbToLinear = (c) =>
+    c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+
+  function hexToOklch(hex) {
+    const [R, G, B] = hexTriple(hex).map((v) => srgbToLinear(v / 255));
+    const l = Math.cbrt(0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B);
+    const m = Math.cbrt(0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B);
+    const s = Math.cbrt(0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B);
+    const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
+    const a = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
+    const b = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+    return {
+      L,
+      C: Math.hypot(a, b),
+      h: ((Math.atan2(b, a) * 180) / Math.PI + 360) % 360,
+    };
+  }
+
+  function perceptualDist(hexA, hexB) {
+    const A = hexToOklch(hexA);
+    const B = hexToOklch(hexB);
+    const ha = (A.h * Math.PI) / 180;
+    const hb = (B.h * Math.PI) / 180;
+    return Math.hypot(
+      A.L - B.L,
+      A.C * Math.cos(ha) - B.C * Math.cos(hb),
+      A.C * Math.sin(ha) - B.C * Math.sin(hb)
+    );
+  }
+
+  /** The lab's pool filter — surface > 0.17, ink > 0.09, sorted by ΔL vs ink. */
+  function quiltAccentPool(surface, ink, candidates) {
+    const inkL = hexToOklch(ink).L;
+    return candidates
+      .filter(
+        (c) =>
+          perceptualDist(c, surface) > 0.17 && perceptualDist(c, ink) > 0.09
+      )
+      .sort(
+        (a, b) =>
+          Math.abs(hexToOklch(b).L - inkL) - Math.abs(hexToOklch(a).L - inkL)
+      );
+  }
+
+  /** Whole-cell clearing: a shape renders whole or not at all. */
+  function hidden(clear, x, y, ww, hh) {
+    if (!clear) return false;
+    const c = clear;
+    if (x >= c.x + c.w || x + ww <= c.x || y >= c.y + c.h || y + hh <= c.y)
+      return false;
+    if (!c.r) return true;
+    if (x + ww > c.x + c.r && x < c.x + c.w - c.r) return true;
+    if (y + hh > c.y + c.r && y < c.y + c.h - c.r) return true;
+    const ccx = x + ww <= c.x + c.r + 0.01 ? c.x + c.r : c.x + c.w - c.r;
+    const ccy = y + hh <= c.y + c.r + 0.01 ? c.y + c.r : c.y + c.h - c.r;
+    const nx = Math.max(x, Math.min(ccx, x + ww));
+    const ny = Math.max(y, Math.min(ccy, y + hh));
+    return (nx - ccx) ** 2 + (ny - ccy) ** 2 <= c.r * c.r;
+  }
+
+  /**
+   * Quilt · pixel — each cell is a 7×7 sprite grid, every shape rebuilt
+   * from whole pixels. The `rate` argument is the lab's one addition to
+   * the shipped signature: the app hard-codes 0.28, but a 1500×500 cover
+   * is a far bigger field than a quiz card and the rhythm wants tuning at
+   * that size. Everything else is byte-for-byte lib/patterns.ts.
+   */
+  function quiltPixBody(opts) {
+    const { w, h, ink, pool, scale, seed, clear, rate = 0.28 } = opts;
+    const rng = mulberry32(seed >>> 0);
+    const t = 62 * scale;
+    const pad = t * 0.09;
+    const cell = t - pad * 2;
+    const cols = Math.ceil(w / t) + 1;
+    const rows = Math.ceil(h / t) + 1;
+    const accent = Array.from({ length: rows }, () => Array(cols).fill(false));
+    const P = 7;
+    let out = '';
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        const left = j > 0 && accent[i][j - 1];
+        const up = i > 0 && accent[i - 1][j];
+        let fillCol = ink;
+        if (pool.length && !left && !up && rng() < rate) {
+          fillCol = pool[Math.floor(rng() * pool.length)];
+          accent[i][j] = true;
+        }
+        const x = j * t + pad;
+        const y = i * t + pad;
+        const q = cell / P;
+        const roll = rng();
+        const fill = new Array(P * P);
+        if (roll < 0.4) {
+          for (let jj = 0; jj < P; jj++)
+            for (let ii = 0; ii < P; ii++)
+              fill[jj * P + ii] = !(
+                (ii === 0 || ii === P - 1) &&
+                (jj === 0 || jj === P - 1)
+              );
+        } else if (roll < 0.7) {
+          const R = P / 2;
+          for (let jj = 0; jj < P; jj++)
+            for (let ii = 0; ii < P; ii++) {
+              const dx = ii + 0.5 - P / 2;
+              const dy = jj + 0.5 - P / 2;
+              fill[jj * P + ii] = dx * dx + dy * dy <= R * R;
+            }
+        } else {
+          const o = Math.floor(rng() * 4);
+          const cx = o === 0 || o === 3 ? 0 : P;
+          const cy = o === 0 || o === 1 ? 0 : P;
+          for (let jj = 0; jj < P; jj++)
+            for (let ii = 0; ii < P; ii++) {
+              const dx = ii + 0.5 - cx;
+              const dy = jj + 0.5 - cy;
+              fill[jj * P + ii] = dx * dx + dy * dy <= P * P;
+            }
+        }
+        let piece = `<g fill="${fillCol}" shape-rendering="crispEdges">`;
+        for (let jj = 0; jj < P; jj++) {
+          let ii = 0;
+          while (ii < P) {
+            if (!fill[jj * P + ii]) {
+              ii++;
+              continue;
+            }
+            let len = 0;
+            while (ii + len < P && fill[jj * P + ii + len]) len++;
+            piece += `<rect x="${x + ii * q}" y="${y + jj * q}" width="${len * q}" height="${q + 0.4}"/>`;
+            ii += len;
+          }
+        }
+        piece += '</g>';
+        if (!hidden(clear, x, y, cell, cell)) out += piece;
+      }
+    }
+    return out;
+  }
+
+  function pixHash(u, v, seed) {
+    let x = (u * 374761393 + v * 668265263 + (seed | 0) * 971) | 0;
+    x = Math.imul(x ^ (x >>> 13), 1274126177);
+    return ((x ^ (x >>> 16)) >>> 0) / 4294967296;
+  }
+
+  function valueNoise(u, v, seed, cell) {
+    const gx = Math.floor(u / cell);
+    const gy = Math.floor(v / cell);
+    const sm = (t) => t * t * (3 - 2 * t);
+    const fx = sm((((u % cell) + cell) % cell) / cell);
+    const fy = sm((((v % cell) + cell) % cell) / cell);
+    const n00 = pixHash(gx, gy, seed);
+    const n10 = pixHash(gx + 1, gy, seed);
+    const n01 = pixHash(gx, gy + 1, seed);
+    const n11 = pixHash(gx + 1, gy + 1, seed);
+    return (
+      n00 * (1 - fx) * (1 - fy) +
+      n10 * fx * (1 - fy) +
+      n01 * (1 - fx) * fy +
+      n11 * fx * fy
+    );
+  }
+
+  function pixelLattice(w, h, q, clear, colorAt) {
+    const cols = Math.ceil(w / q);
+    const rows = Math.ceil(h / q);
+    let out = '<g shape-rendering="crispEdges">';
+    for (let v = 0; v < rows; v++) {
+      let u = 0;
+      while (u < cols) {
+        const c = colorAt(u, v);
+        if (!c || hidden(clear, u * q, v * q, q, q)) {
+          u++;
+          continue;
+        }
+        let len = 1;
+        while (
+          u + len < cols &&
+          colorAt(u + len, v) === c &&
+          !hidden(clear, (u + len) * q, v * q, q, q)
+        )
+          len++;
+        out += `<rect x="${u * q}" y="${v * q}" width="${len * q}" height="${q + 0.4}" fill="${c}"/>`;
+        u += len;
+      }
+    }
+    return out + '</g>';
+  }
+
+  const PIXEL_FIELD_MACRO = 1.7;
+
+  function camoBody(kind, opts) {
+    const { w, h, ink, pool, scale, seed, clear } = opts;
+    const s = PIXEL_FIELD_MACRO * scale;
+    const c1 = pool[0] || ink;
+    if (kind === 'camo') {
+      const q = 10 * s;
+      return pixelLattice(w, h, q, clear, (u, v) => {
+        if (valueNoise(u, v, seed, 6) > 0.58) return ink;
+        if (valueNoise(u, v, seed + 31, 6) > 0.62) return c1;
+        return null;
+      });
+    }
+    const q = 12 * s;
+    return pixelLattice(w, h, q, clear, (u, v) => {
+      const n = valueNoise(u, v, seed, 9);
+      if (n > 0.63) return ink;
+      if (n < 0.37) return c1;
+      return null;
+    });
+  }
+
+  function patternBody(kind, opts) {
+    return kind === 'quilt' ? quiltPixBody(opts) : camoBody(kind, opts);
+  }
+
+  /* ====================================================================
+     2 · THE COLOUR SYSTEM — the shipped palette, by role.
+     Surfaces / inks / accents lifted from components/quiz/quizColors.ts;
+     the brand pair from docs/color-system.md ("Crm", the social cover's
+     cream, flagged `brand: true` in the pattern lab's catalogue).
+     ==================================================================== */
+
+  const SETS = {
+    A: { surface: '#FFABC6', ink: '#4A1040', accent: '#674900' },
+    C: { surface: '#E7F099', ink: '#02302C', accent: '#BD00AD' },
+    J: { surface: '#E6ACF4', ink: '#1C3601', accent: '#674900' },
+    L: { surface: '#CFF6DD', ink: '#3F0167', accent: '#BD00AD' },
+    N: { surface: '#9EDAFF', ink: '#4A1040', accent: '#8D0381' },
+    Q: { surface: '#D9CCF9', ink: '#3E1060', accent: '#745400' },
+    R: { surface: '#E4BDF7', ink: '#751100', accent: '#824616' },
+  };
+
+  /* The brand green. THREE greens are currently in circulation and they
+     are not the same colour: #00A742 (app/icon.svg), #05A24B (the colour
+     system's Crm entry), and the mint plate baked into public/icon-512.png.
+     This lab commits to #05A24B — the one the colour system already
+     records — and treats the others as drift to be fixed at the source. */
+  const BRAND = {
+    cream: '#EDEDE3',
+    green: '#05A24B',
+    coral: '#FA6C5B',
+  };
+
+  /* Every colour the product owns, as candidate confetti. */
+  const ALL_CANDIDATES = [
+    ...Object.values(SETS).flatMap((s) => [s.surface, s.ink, s.accent]),
+    BRAND.coral,
+    BRAND.green,
+  ];
+
+  /* WHAT THE COVER IS ALLOWED TO SPEND — corrected 2026-08-12.
+     ---------------------------------------------------------------------
+     The first pass here reasoned toward the EXISTING cover's chord (coral,
+     magenta, indigo, gold, purple) and called that "continuity". Malik:
+     those colours are the pre-redesign palette, and replacing them is the
+     entire point of the exercise. So matching them was the exact wrong
+     objective — it optimised for the thing being retired.
+
+     What survives that correction is the measurement, which never depended
+     on the old cover: on cream with the green dominant, SIX OF THE SEVEN
+     SET SURFACES fail the quilt's own accent gate (0.045–0.157 against a
+     0.17 floor). The pale tier cannot carry a cream-ground cover no matter
+     which chord you want. So the pool has to come from the deep register —
+     and now it comes from the CURRENT one only. Nothing below is a
+     pre-legibility-pass value or a retired catalogue entry. */
+
+  /** The five shipped accents — every one a colour the app paints today. */
+  const ACCENTS = [
+    '#674900', // ochre   — A and J
+    '#BD00AD', // magenta — C and L
+    '#8D0381', // purple  — N
+    '#745400', // gold    — Q
+    '#824616', // rust    — R
+  ];
+
+  /**
+   * The seven set SURFACES — the colours a student actually associates
+   * with each set, because the surface is the whole screen while they
+   * drill it. The obvious pool, and for most of this lab's life an
+   * unusable one: on any PALE ground they fail the quilt's own gate.
+   * Measured, out of seven: cream ground 1/7, Set L's mint ground 3/7.
+   * They only read on a ground dark enough to clear them — see
+   * `brandField` below, where all 7/7 pass.
+   */
+  const SURFACES = Object.values(SETS).map((v) => v.surface);
+
+  /** The six shipped inks. Deeper, quieter, more editorial. */
+  const INKS = [
+    '#4A1040', // plum   — A and N
+    '#02302C', // teal   — C
+    '#1C3601', // forest — J
+    '#3F0167', // violet — L
+    '#3E1060', // indigo — Q
+    '#751100', // rust   — R
+  ];
+
+  const SCHEMES = {
+    brand: {
+      label: 'Brand · cream',
+      hint: 'green on cream',
+      ground: BRAND.cream,
+      ink: BRAND.green,
+      type: '#02302C',
+    },
+    brandInk: {
+      label: 'Brand · inverted',
+      hint: 'deep teal on cream',
+      ground: BRAND.cream,
+      ink: '#02302C',
+      type: '#02302C',
+    },
+    /* RETIRED THE DAY IT WAS BUILT — `brandField`, green ground, all
+       seven set surfaces reading as confetti (7/7, against 1/7 on cream).
+       It solved the measurement and broke the structure: every set surface
+       and every UI ground in this product is LIGHT, and the colour system
+       settled that deliberately — "with MD2 out, the light-surface rule is
+       now total rather than near-total; the catalogue has one structure,
+       not two" (color-system.md). MD2, the last dark ground, was cut as
+       "the most dissonant palette in the set, and user testing agreed."
+       Malik's word for the green ground was the same one: dissonant.
+
+       Kept here as a comment rather than a dial, the way retired palettes
+       are kept in the pattern lab's catalogue — and as the reminder that a
+       gate you can measure will happily lead you through a rule you
+       cannot:
+         brandField: { ground: '#05A24B', ink: '#02302C', type: cream }
+       If a dark mode ever ships, this is where it starts. */
+
+    /* THE ORIGINAL'S OWN PAIR, straight from the binaries (added
+       2026-08-13 when Malik raised going back to the original's colours).
+
+       Not an interpretation — these two hexes are observed evidence.
+       `#BBFFFF` is the ground of Gensler's own help HTML, embedded in the
+       2008 exe. `#000077` is his hand-picked link colour, and it lands on
+       264° to the degree, the same hue as VGA Blue and VGA Navy — three
+       independent sources agreeing, which is why color-system.md says the
+       original's blue "is not approximately blue; it is a specific hue the
+       system can be held to."
+
+       Worth knowing what this is NOT: it is not Set L. Set L's mint is 39°
+       off that aqua and its violet 41° off that blue — the closest of the
+       seven on both axes, and still a ~40° rotation of the original rather
+       than the original. Nothing in the catalogue sits on 264°; the docs
+       already flag that gap.
+
+       The reason this is even arguable now, when the same colours were
+       rejected in 2024 as "too old school": the pixel treatment did not
+       exist then. Period-accurate colour with no period-accurate form
+       reads as unrenovated. With the quilt carrying the retro, the colour
+       is free to be authentic. */
+    brandOriginal: {
+      label: 'Brand · original',
+      hint: 'Gensler’s own two',
+      ground: '#BBFFFF',
+      ink: '#000077',
+      type: '#000077',
+    },
+    /* The provenance pick. Set L's mint is the closest of the seven
+       surfaces to Gensler's own help-page ground #BBFFFF (ΔE 0.045 —
+       under this project's own 0.17 "too close to tell apart" floor), and
+       it sits 7° in hue from the brand green, which in turn descends from
+       the original's VGA "Forest green" (ΔE 0.106). Mint and the brand
+       green are one hue family at two lightnesses, so this is a
+       near-monochrome — the most conservative cover here, and the one
+       with the strongest claim to the original's colour world. */
+    brandMint: {
+      label: 'Brand · mint',
+      hint: 'Gensler’s ground',
+      ground: '#CFF6DD',
+      ink: BRAND.green,
+      type: '#02302C',
+    },
+  };
+  for (const [k, v] of Object.entries(SETS)) {
+    SCHEMES['set' + k] = {
+      label: 'Set ' + k,
+      hint: 'the set’s own three',
+      ground: v.surface,
+      ink: v.ink,
+      type: v.ink,
+      accent: v.accent,
+    };
+  }
+
+  /**
+   * THE GATE IS A STUDY-SURFACE RULE, and the cover is not a study surface
+   * (Malik, 2026-08-12/13).
+   *
+   * `quiltAccentPool` rejects anything within 0.17 of the ground. That
+   * exists so a pattern cannot muddy a surface a student is reading
+   * against for twenty minutes. It is why six of the seven set surfaces
+   * are unusable on cream — they are pale, cream is pale, and the rule
+   * cannot tell them apart.
+   *
+   * The 2024 cover is the counter-evidence: its cream tiles sit on a
+   * near-white ground at almost no separation, and it reads fine, because
+   * a quilt tile is a SHAPE with a hard edge and a gap around it. Edge
+   * does the work that contrast does on a text surface.
+   *
+   * So the ungated modes below keep the INK gate — a tile the same colour
+   * as the dominant really does vanish — and drop the ground gate. This is
+   * the same reasoning that let the brand palette ignore the accent tier's
+   * 4.5:1 floor: a rule earns its authority from the job it was written
+   * for, and neither job is this one.
+   */
+  const UNGATED = { sets: true, setsMix: true };
+
+  function poolFor(scheme, mode) {
+    const s = SCHEMES[scheme];
+    if (mode === 'mono') return [];
+    if (UNGATED[mode]) {
+      const base = mode === 'sets' ? SURFACES : [...SURFACES, ...INKS];
+      return base.filter(
+        (c) => c !== s.ink && c !== s.ground && perceptualDist(c, s.ink) > 0.09
+      );
+    }
+    const base =
+      mode === 'surfaces'
+        ? SURFACES
+        : mode === 'accents'
+          ? ACCENTS
+          : mode === 'inks'
+            ? INKS
+            : mode === 'both'
+              ? [...ACCENTS, ...INKS]
+              : [...new Set(ALL_CANDIDATES)];
+    return quiltAccentPool(
+      s.ground,
+      s.ink,
+      base.filter((c) => c !== s.ink && c !== s.ground)
+    );
+  }
+
+  /* ====================================================================
+     3 · THE PLATFORMS, then the canvases.
+
+     Each site is described ONCE, in its own CSS pixels, from its published
+     layout — not estimated off a screenshot. Everything else is derived:
+     the composed mock renders at these numbers 1:1, and each cover's
+     `chrome` rect (the guide overlay on the standalone canvas) is the same
+     geometry scaled into the upload's coordinate space.
+
+     Why one source and not two: the first version eyeballed the ratios off
+     a screenshot and put X's avatar at 14% of the header's width. It is
+     22%. A third of the object was missing, which is precisely the error
+     that lets a cover pass in the lab and crowd on the page.
+     ==================================================================== */
+
+  const PLATFORMS = {
+    x: {
+      // The primary column on desktop; the header renders at its full width.
+      column: 600,
+      cover: { w: 600, h: 200 },
+      // 133.33px photo, 4px ring in the page background, 16px gutter. Its
+      // centre sits on the header's bottom edge, so half of it is on the
+      // artwork and half on the page.
+      avatar: { size: 133.33, ring: 4, left: 16 },
+      gutterGap: 12,
+    },
+    li: {
+      column: 1128,
+      cover: { w: 1128, h: 191 },
+      // 200px rounded-square logo, hung from a fixed offset rather than
+      // centred — 115px of it sits on the cover, 85px below.
+      avatar: { size: 200, ring: 6, left: 24, top: 76, radius: 16 },
+      gutterGap: 16,
+    },
+  };
+
+  /** The platform's avatar, expressed in the upload's coordinate space. */
+  function chromeFor(kind, coverW) {
+    const P = PLATFORMS[kind];
+    const k = coverW / P.cover.w;
+    const a = P.avatar;
+    if (a.top == null) {
+      const r = (a.size / 2) * k;
+      return { kind: 'circle', cx: a.left * k + r, cy: P.cover.h * k, r };
+    }
+    return {
+      kind: 'rect',
+      x: a.left * k,
+      y: a.top * k,
+      w: a.size * k,
+      h: a.size * k,
+      r: (a.radius ?? 0) * k,
+    };
+  }
+
+  const CANVASES = [
+    {
+      id: 'x',
+      label: 'X · header',
+      w: 1500,
+      h: 500,
+      chrome: chromeFor('x', 1500),
+    },
+    {
+      id: 'li',
+      label: 'LinkedIn · page cover',
+      w: 1128,
+      h: 191,
+      chrome: chromeFor('li', 1128),
+    },
+    {
+      id: 'av',
+      label: 'Avatar',
+      w: 400,
+      h: 400,
+      // The crop, not a hole: both platforms round the avatar off.
+      chrome: { kind: 'circle', cx: 200, cy: 200, r: 200 },
+    },
+  ];
+
+  /* ====================================================================
+     4 · THE MARK — the real LogiCola wordmark (Malik, from the Figma
+     source, 2026-08-12). A CAN body with the lettering knocked out of it.
+
+     It is a can, not a cartridge (Malik, 2026-08-12). Worth saying twice
+     because the misnomer is already loose in the repo — `app/globals.css`
+     calls the `corner-notch` utility's shape "the Logicola cartridge's own
+     corner" — and a wrong name for the central object of a brand is how
+     you end up designing the wrong thing. Left unfixed at that source;
+     flagged in docs/brand-decisions.md.
+
+     `g` paths paint the body colour, `w` paths the knockout, and DOCUMENT
+     ORDER IS LOAD-BEARING — the counters inside the letters are
+     body-coloured paths painted back over the knockout, so re-sorting the
+     list by colour would fill in every 'o' and 'a'.
+
+     Recolouring goes through two roles rather than two literals, so the
+     mark survives a scheme whose ground is not cream. The green in the
+     source file is #00A842; the lab paints #05A24B (see BRAND above) and
+     treats the difference as the drift it is.
+
+     CANONICAL COPY: `public/logicola-wordmark.svg`. That file is what
+     `scripts/brand-assets.mjs` reads and what anything else should use;
+     the array below is inline ONLY so the lab keeps working over file://,
+     where a module import or a fetch would be blocked. Edit the SVG, then
+     mirror it here — never the other way round.
+     ==================================================================== */
+
+  const LOGO = [
+    [
+      'g',
+      'M46.6906 0.161408C57.5696 -0.164592 69.8788 0.103905 80.8853 0.104905L145.294 0.10991L192.186 0.108155C200.231 0.100405 208.401 0.0321546 216.451 0.137155C218.204 0.270405 220.751 0.609405 222.174 1.69116C226.361 4.87591 227.769 10.3359 224.689 14.7544C220.814 20.3117 216.991 18.2564 211.504 19.1112C204.589 20.1887 209.389 29.6969 205.761 33.7537C201.566 39.2404 198.519 37.1454 192.506 38.0452C191.284 38.2282 189.881 39.0922 189.256 40.1539C188.736 41.0349 188.631 43.5687 188.626 44.6802C188.594 52.5904 188.609 60.5202 188.609 68.4294L188.611 114.841L188.614 134.917C188.614 137.911 188.371 146.292 189.076 148.737L189.159 149.017C193.646 153.624 198.336 149.464 203.441 152.992C208.864 156.742 206.811 161.377 207.611 166.374C208.636 172.747 218.451 168.447 222.776 172.184C224.721 173.652 225.894 175.814 226.186 178.334C226.899 184.494 222.846 188.212 217.351 189.009C206.251 189.334 193.744 189.074 182.521 189.074L116.799 189.072L71.4336 189.079C63.6621 189.084 55.7211 189.154 47.9509 189.002C45.5939 188.954 43.1891 188.597 41.3261 187.147C36.8748 183.684 38.2761 178.894 37.6849 174.449C36.7366 167.319 27.4126 172.272 22.6956 168.369C17.7779 164.304 19.5241 160.712 18.8344 155.482C17.9114 148.484 8.23885 153.309 3.8656 149.467C1.8811 147.724 0.786605 146.782 0.448855 144.019C-0.208145 138.644 0.0503474 132.631 0.0490974 127.197L0.0421012 97.6994L0.0411018 63.6024C0.0418518 57.9299 -0.0501491 51.9744 0.174601 46.3057C0.235601 44.7617 1.2201 42.6354 2.1361 41.4264C5.31935 37.2247 9.88285 38.1274 14.4496 37.7237C21.9781 37.0579 16.7711 27.5629 20.7049 22.7587C24.6149 17.9834 28.3966 19.5624 33.3896 18.8894C40.8469 17.8844 35.6621 8.19541 39.7899 3.59566C41.9451 1.19391 43.5926 0.589908 46.6906 0.161408Z',
+    ],
+    [
+      'w',
+      'M145.744 54.0306C146.758 55.2444 146.463 57.0889 146.435 58.7701C143.725 58.6669 140.75 58.6934 138.019 58.6611C138.487 59.2931 138.903 59.9616 139.264 60.6606C145.296 72.2979 132.957 80.5394 122.517 78.4749C120.139 78.0046 118.923 77.8404 116.529 77.0431C116.476 83.3004 118.338 81.9321 123.33 83.1549C130.034 84.7974 145.484 84.8806 145.71 94.3509C145.981 105.723 134.142 108.63 125.053 109.083C125.049 114.704 124.456 145.962 125.585 148.892C125.988 149.937 127.528 150.469 128.464 150.937C128.68 151.099 128.574 150.979 128.661 151.377C127.513 151.804 112.349 151.622 109.903 151.644C111.559 150.549 114.077 149.589 114.196 147.394C114.424 143.184 114.33 138.918 114.326 134.695L114.294 107.601C105.002 103.166 107.952 95.5761 114.722 90.5934C106.606 86.4044 111.697 81.3381 115.578 76.4239C115.174 76.1754 114.766 75.9181 114.385 75.6366C112.102 73.9294 110.592 71.3846 110.188 68.5631C108.005 53.8986 127.686 50.7429 137.076 57.8364C141.077 56.8839 142.418 56.2011 145.744 54.0306Z',
+    ],
+    [
+      'g',
+      'M116.2 90.9899C117.76 91.4281 125.745 93.0781 127.29 93.0854C134.454 93.1184 143.813 98.9991 134.189 105.38C131.007 106.663 129.096 106.925 125.708 106.967C114.389 107.107 111.708 100.459 116.2 90.9899Z',
+    ],
+    [
+      'g',
+      'M124.002 55.8879C126.728 55.6792 129.194 56.3715 130.092 59.2965C131.55 64.0427 132.368 74.7399 126.688 76.9602C123.915 77.2542 121.597 76.6607 120.652 73.6412C119.244 69.1447 118.58 57.9889 124.002 55.8879Z',
+    ],
+    [
+      'w',
+      'M140.172 115.412C145.164 115.247 155.574 115.091 160.711 115.706C162.084 115.87 161.2 119.758 161.802 120.813C162.856 122.661 164.985 121.263 167.269 122.022C169.348 124.061 167.935 135.088 168.293 138.626C168.771 143.353 172.399 139.828 174.66 141.949C175.312 143.214 175.178 149.047 174.815 150.549C174.408 152.239 167.216 151.692 165.814 151.059C165.363 150.274 165.337 147.229 165.26 146.127C164.65 145.472 163.731 144.969 162.818 145.054C160.89 146.567 162.08 149.549 160.942 151.264C158.999 151.872 140.817 151.867 139.036 150.969C138.25 149.589 138.762 148.244 138.576 146.814C138.168 143.674 134.345 146.182 132.325 144.439C131.585 142.553 131.773 125.048 132.294 122.753C133.434 121.153 135.784 122.244 137.229 121.692C140.493 120.446 136.649 116.482 140.172 115.412Z',
+    ],
+    [
+      'g',
+      'M142.506 125.635C145.611 125.602 155.83 125.052 158.28 126.328C158.459 126.422 159.553 139.914 157.558 141.1C155.594 141.236 144.039 141.646 142.271 140.718C140.939 140.019 141.843 131.344 141.496 129.501C141.341 128.679 141.513 126.619 142.506 125.635Z',
+    ],
+    [
+      'w',
+      'M87.6493 114.222C98.2266 113.581 107.334 121.608 108.026 132.182C108.719 142.756 100.736 151.902 90.1656 152.647C79.5221 153.394 70.2993 145.347 69.6021 134.699C68.9048 124.052 76.9991 114.868 87.6493 114.222Z',
+    ],
+    [
+      'g',
+      'M87.6051 115.64C91.1858 115.462 93.8158 116.562 94.7626 120.329C96.4458 127.174 96.2288 134.775 95.6913 141.775C95.3798 145.832 94.4108 149.812 90.1056 151.072C87.9213 151.192 87.3593 151.082 85.3786 150.434C79.9796 144.937 81.2411 128.751 82.5146 121.417C83.0191 118.51 84.7506 116.547 87.6051 115.64Z',
+    ],
+    [
+      'w',
+      'M75.8353 55.5972C78.9531 55.4877 95.3841 55.1692 97.5043 55.8047C98.8873 57.1187 98.2178 58.7364 98.5258 60.5869C99.0198 63.5562 104.929 60.2897 104.932 63.7062C104.933 66.6654 105.625 83.3189 104.473 84.8199C103.471 85.2347 101.471 85.2812 100.272 85.3294C96.9941 85.4612 99.5154 89.1574 97.6356 91.5839C92.3839 91.8154 81.8616 91.9892 76.3201 91.3737C74.2291 91.1417 75.9893 87.9757 75.4893 86.5982C73.9578 85.0627 71.0589 85.1319 68.9384 84.9812C68.4756 82.2734 68.2748 65.0279 69.1058 62.8107C70.3718 61.3494 72.5066 62.4344 74.5611 61.5692C75.9576 60.4284 75.1283 57.9317 75.8353 55.5972Z',
+    ],
+    [
+      'g',
+      'M84.0741 65.704C86.6533 65.6705 92.7401 65.3034 94.7213 66.2237C95.7778 66.7144 95.7958 79.7117 94.7141 81.0284C93.5113 81.4519 91.8713 81.3484 90.5583 81.3467C88.2821 81.3339 80.2711 81.7977 78.8403 80.8132C78.0558 78.5265 78.0593 68.7002 78.6658 66.4334C79.6966 65.4397 82.5573 65.7017 84.0741 65.704Z',
+    ],
+    [
+      'w',
+      'M35.2156 102.184C40.8311 101.961 51.2843 101.577 56.6978 102.301C56.9878 104.036 56.9636 106.521 57.4668 107.82C59.9296 110.206 64.3493 105.662 63.8101 112.891C63.6133 115.529 64.1823 118.987 63.4916 121.682C63.2008 122.816 61.3743 122.535 60.4598 122.611C50.7743 123.274 55.0988 120.03 53.8518 113.517C53.5156 111.762 39.5586 112.472 37.7178 112.865C37.1446 112.988 37.0081 115.849 37.0596 116.376C37.4293 120.175 36.2961 138.243 37.6076 140.462C39.0141 141.256 51.2343 140.992 53.1746 140.708C53.9201 140.117 53.6828 140.345 53.9793 139.237C54.1758 133.566 52.1806 129.905 59.5968 130.539C60.9728 130.656 62.1843 130.347 63.3946 131.243C64.2068 133.198 63.8471 141.553 63.5173 144.053C63.3881 145.032 60.1221 144.722 59.3011 144.809C55.7763 145.182 57.0651 147.452 57.2978 149.609C57.0711 150.092 56.8761 150.504 56.3116 150.692C53.5161 151.614 36.7548 151.474 34.9288 150.892C33.7008 149.732 34.2196 147.734 33.7726 145.702C32.3471 143.968 30.1578 145.434 28.0303 144.362C27.1073 143.052 27.1433 112.791 27.6721 109.513C29.1261 107.826 31.6963 109.122 33.2783 108.291C35.1963 107.284 32.7873 103.305 35.2156 102.184Z',
+    ],
+    [
+      'w',
+      'M32.4663 41.9565C37.4778 41.8842 42.4901 41.916 47.5003 42.0517C45.5081 43.014 43.0056 43.8975 42.8923 46.4532C42.6823 51.2012 42.7793 55.985 42.7838 60.7425L42.7778 90.1955C47.0976 90.0672 53.9226 90.69 57.7653 89.4465C61.2078 86.1707 62.7786 79.663 64.1363 78.8775C64.8828 79.894 64.4173 84.0862 64.3298 85.5195C64.3056 87.529 64.1301 89.7645 64.0153 91.7872C60.2676 91.5422 55.5498 91.7435 51.7171 91.7407L26.5046 91.7437C28.0041 90.843 29.5531 89.9987 31.0823 89.0742C31.7453 85.8925 31.8086 46.5325 30.9683 44.6485C30.4396 43.4622 27.3481 42.6005 26.1658 42.15C28.1213 42.026 30.4836 42.0125 32.4663 41.9565Z',
+    ],
+    [
+      'w',
+      'M162.849 54.3854C164.46 55.3896 162.388 84.5729 163.607 88.6314C164.016 89.9934 166.297 91.0834 167.323 91.6921C161.724 91.7954 156.099 91.5649 150.476 91.7954C149.865 91.8529 149.69 91.9461 149.175 91.6351C149.771 90.4146 152.473 90.1571 152.543 87.8731C152.75 81.1159 152.589 74.3401 152.629 67.5779C152.641 65.5701 152.702 63.4151 152.422 61.4319C151.491 59.9329 149.912 59.7176 148.173 59.1636C153.025 57.4494 157.918 55.8561 162.849 54.3854Z',
+    ],
+    [
+      'w',
+      'M156.748 38.7834C159.938 38.1649 163.035 40.2194 163.705 43.3992C164.375 46.5789 162.371 49.7087 159.203 50.4304C157.107 50.9082 154.916 50.2184 153.472 48.6264C152.028 47.0342 151.554 44.7869 152.233 42.7474C152.912 40.7077 154.637 39.1924 156.748 38.7834Z',
+    ],
+    [
+      'g',
+      'M233.936 19.1349C251.789 17.7166 239.851 38.6129 250.379 37.8346C267.404 36.5761 264.041 50.1224 264.046 63.0414L264.051 91.2104V123.837C264.049 129.63 264.106 135.52 263.974 141.304C263.931 143.147 263.674 144.957 262.804 146.477C259.254 152.682 253.379 150.532 248.174 151.717C243.501 152.779 246.099 161.659 244.166 165.054C242.509 167.967 240.816 168.917 237.641 170.012C226.571 171.454 226.324 162.029 226.091 154.637C225.946 149.949 216.029 152.164 212.229 150.007C205.604 146.244 207.446 135.128 207.446 128.24V102.3L207.444 67.1759C207.439 60.8564 207.389 54.5269 207.509 48.1979C207.614 45.4284 207.969 43.0269 209.869 40.9321C213.554 36.8134 218.556 38.5514 223.106 37.5271C228.366 36.3426 225.146 27.3919 227.489 23.8069C229.366 20.9306 230.886 20.0861 233.936 19.1349Z',
+    ],
+    [
+      'w',
+      'M230.619 75.6939C234.654 75.6299 240.499 75.0077 243.824 76.8724C244.229 77.5092 244.676 78.1877 244.959 78.8882C245.599 80.4622 245.586 122.861 245.269 127.459C245.211 128.269 244.994 129.059 244.631 129.784C243.881 131.315 242.804 131.842 241.301 132.338C237.424 132.36 233.494 132.421 229.621 132.286C227.249 130.973 226.464 129.947 226.366 127.275C226.249 124.048 226.296 120.832 226.296 117.604L226.291 99.8182C226.291 95.8469 226.046 81.4009 226.661 78.2817C228.146 76.6649 228.519 76.2857 230.619 75.6939Z',
+    ],
+  ];
+  const MARK_W = 265;
+  const MARK_H = 190;
+
+  /* ====================================================================
+     6 · RENDERERS — one model, two outputs.
+
+     There is no composition or lockup machinery left here, and its absence
+     is a decision rather than an omission. The lab used to carry Panel /
+     Plate / Band clearings and a mark-plus-wordmark-plus-claim lockup, so
+     a cover could be judged with type on it. Once the covers were decided
+     as pattern-only (and once the Open Graph card — the only canvas that
+     genuinely wanted type — was cut, Malik 2026-08-12), every composition
+     resolved to full bleed and the lockup never rendered. Two dead dials
+     are worse than none: they advertise choices that do not exist.
+
+     Consequence: the model is now two shapes. A cover is a ground plus a
+     pattern. The avatar is a ground plus the mark. Nothing else.
+     If type on a cover is ever wanted again, the machinery is in git.
+     ==================================================================== */
+
+  const state = {
+    pattern: 'quilt',
+    scheme: 'brand',
+    pool: 'accents',
+    scale: 1.53,
+    seed: 7,
+    rate: 0.28,
+    guides: true,
+  };
+
+  function modelFor(canvas, cfg = state) {
+    const s = SCHEMES[cfg.scheme];
+
+    /* THE DIVISION OF LABOUR (Malik, 2026-08-12). The avatar carries the
+       logo and nothing else; the covers carry the pattern and nothing
+       else. Neither ever does both. That is what makes the pair compose:
+       at the size a feed renders them, an avatar with pattern in it and a
+       cover with a logo on it fight for the same job, and the reader gets
+       two half-legible marks instead of one mark and one field. See the
+       "Composed" previews below — the argument only becomes obvious when
+       the two are shown at the platforms' real sizes. */
+    if (canvas.id === 'av') {
+      // 0.50 of the height puts the wordmark at 66% of the width. The
+      // limit is the INSCRIBED CIRCLE, not the square: both platforms crop
+      // the avatar round, and at this size the mark's corners sit 163px
+      // from a 200px radius — margin enough that it never looks pressed
+      // against the crop.
+      const h = canvas.h * 0.5;
+      const w = (h * MARK_W) / MARK_H;
+      return {
+        canvas,
+        scheme: s,
+        body: '',
+        mark: { x: (canvas.w - w) / 2, y: (canvas.h - h) / 2, h },
+      };
+    }
+
+    // LinkedIn's strip is 191px tall against X's 500: at one scale the
+    // same cell reads as wallpaper on one and as a mosaic on the other.
+    const scale = canvas.id === 'li' ? cfg.scale * 0.6 : cfg.scale;
+
+    /* CENTRE THE LATTICE. The generators lay cells from (0,0) and run one
+       column and row past the canvas, so a quiz card ends with whatever
+       sliver of a cell happens to fall at its right edge. On a card nobody
+       notices; on a 1500px cover a 3px orphan column reads as a printing
+       error while a half-cell reads as a crop. Splitting the overflow
+       evenly is the whole fix — and it is a COVER-ONLY offset, applied as
+       a transform so the generators stay byte-identical to the shipped
+       ones. */
+    const t =
+      cfg.pattern === 'quilt' ? 62 * scale : 12 * PIXEL_FIELD_MACRO * scale;
+    const span = (len) => Math.ceil(len / t) * t + t;
+    const ox = -(span(canvas.w) - canvas.w) / 2;
+    const oy = -(span(canvas.h) - canvas.h) / 2;
+
+    const body =
+      `<g transform="translate(${ox} ${oy})">` +
+      patternBody(cfg.pattern, {
+        w: canvas.w - ox * 2,
+        h: canvas.h - oy * 2,
+        ink: s.ink,
+        pool: poolFor(cfg.scheme, cfg.pool),
+        scale,
+        seed: cfg.seed,
+        clear: null,
+        rate: cfg.rate,
+      }) +
+      '</g>';
+    return { canvas, scheme: s, body, mark: null, scale };
+  }
+
+  /**
+   * Mark colours for a scheme: body, then the lettering knocked out of it.
+   *
+   * The knockout is ALWAYS the ground. A white option was offered and cut
+   * (Malik, 2026-08-12): on the cream ground it is a barely-there
+   * off-white that reads as a printing fault rather than a decision, and on
+   * any set surface it puts a colour in the mark that the scheme does not
+   * own. Cutting to the ground is also what the source artwork means —
+   * the lettering is a hole, not white ink.
+   */
+  function markColors(scheme) {
+    return { body: scheme.ink, knock: scheme.ground };
+  }
+
+  function markSvg(x, y, height, scheme) {
+    const k = height / MARK_H;
+    const c = markColors(scheme);
+    return (
+      `<g transform="translate(${x} ${y}) scale(${k})">` +
+      LOGO.map(
+        ([role, d]) =>
+          `<path d="${d}" fill="${role === 'g' ? c.body : c.knock}"/>`
+      ).join('') +
+      '</g>'
+    );
+  }
+
+  function svgFor(m) {
+    const { canvas, scheme, body, mark } = m;
+    return (
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${canvas.w}" height="${canvas.h}" ` +
+      `viewBox="0 0 ${canvas.w} ${canvas.h}">` +
+      `<rect width="${canvas.w}" height="${canvas.h}" fill="${scheme.ground}"/>` +
+      body +
+      (mark ? markSvg(mark.x, mark.y, mark.h, scheme) : '') +
+      '</svg>'
+    );
+  }
+
+  /* ---- PNG export: the same model, rasterised. */
+  async function pngFor(m) {
+    const { canvas: cv, scheme, mark } = m;
+    const el = document.createElement('canvas');
+    el.width = cv.w;
+    el.height = cv.h;
+    const ctx = el.getContext('2d');
+    ctx.fillStyle = scheme.ground;
+    ctx.fillRect(0, 0, cv.w, cv.h);
+
+    // The pattern goes through an <img> so the run-length rects rasterise
+    // exactly as the browser paints them on screen.
+    if (m.body) {
+      const patternSvg =
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${cv.w}" height="${cv.h}" ` +
+        `viewBox="0 0 ${cv.w} ${cv.h}">${m.body}</svg>`;
+      const url = URL.createObjectURL(
+        new Blob([patternSvg], { type: 'image/svg+xml' })
+      );
+      await new Promise((res, rej) => {
+        const img = new Image();
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0);
+          URL.revokeObjectURL(url);
+          res();
+        };
+        img.onerror = rej;
+        img.src = url;
+      });
+    }
+
+    if (mark) {
+      const k = mark.h / MARK_H;
+      const c = markColors(scheme);
+      ctx.save();
+      ctx.translate(mark.x, mark.y);
+      ctx.scale(k, k);
+      for (const [role, d] of LOGO) {
+        ctx.fillStyle = role === 'g' ? c.body : c.knock;
+        ctx.fill(new Path2D(d));
+      }
+      ctx.restore();
+    }
+    return new Promise((res) => el.toBlob(res, 'image/png'));
+  }
+
+  /* ---- Platform chrome guides (screen only, never exported). */
+  function guideFor(canvas) {
+    const c = canvas.chrome;
+    if (!c) return '';
+    const stroke = '#f233df';
+    let shape;
+    if (c.kind === 'circle')
+      shape = `<circle cx="${c.cx}" cy="${c.cy}" r="${c.r}"/>`;
+    else
+      shape = `<rect x="${c.x}" y="${c.y}" width="${c.w}" height="${c.h}" rx="${c.r}"/>`;
+    return (
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${canvas.w} ${canvas.h}" preserveAspectRatio="none">` +
+      `<g fill="none" stroke="${stroke}" stroke-width="3" stroke-dasharray="12 9" opacity="0.85">${shape}</g></svg>`
+    );
+  }
+
+  /* ====================================================================
+     7 · CHROME
+     ==================================================================== */
+
+  /* Quilt · smooth (the old cover's construction) and Camo · classic were
+     both cut by Malik, 2026-08-12 — neither is a candidate. `camoBody`
+     keeps its 'camo' branch anyway because it is a verbatim port of
+     lib/patterns.ts and editing it would break that parity for nothing. */
+  const PATTERNS = [
+    { id: 'quilt', label: 'Quilt · pixel', hint: 'the port' },
+    { id: 'camo-giant', label: 'Camo · giant', hint: 'hard sets' },
+  ];
+  const POOLS = [
+    { id: 'setsMix', label: 'Sets · full', hint: 'surfaces + inks' },
+    { id: 'sets', label: 'Sets · surfaces', hint: 'all seven, ungated' },
+    { id: 'surfaces', label: 'Set surfaces', hint: 'gated — 1 survives' },
+    { id: 'accents', label: 'Shipped accents', hint: 'the five' },
+    { id: 'inks', label: 'Shipped inks', hint: 'the six, deeper' },
+    { id: 'both', label: 'Accents + inks', hint: 'the whole tier' },
+    { id: 'wide', label: 'Everything', hint: 'all that clear the gate' },
+    { id: 'mono', label: 'Mono', hint: 'no accents' },
+  ];
+  function buildOpts(host, items, key, extra) {
+    host.innerHTML = '';
+    for (const it of items) {
+      const b = document.createElement('button');
+      b.className = 'opt';
+      b.type = 'button';
+      b.setAttribute('aria-pressed', String(state[key] === it.id));
+      b.innerHTML =
+        `<span>${it.label}</span>` +
+        (extra ? extra(it) : it.hint ? `<small>${it.hint}</small>` : '');
+      b.onclick = () => {
+        state[key] = it.id;
+        render();
+      };
+      host.append(b);
+    }
+  }
+
+  function schemeSwatches(it) {
+    const s = SCHEMES[it.id];
+    const pool = poolFor(it.id, state.pool).slice(0, 3);
+    return (
+      '<span class="swatches">' +
+      [s.ground, s.ink, ...pool]
+        .map((c) => `<i class="sw" style="background:${c}"></i>`)
+        .join('') +
+      '</span>'
+    );
+  }
+
+  function buildChrome() {
+    buildOpts(document.getElementById('patternOpts'), PATTERNS, 'pattern');
+    buildOpts(
+      document.getElementById('schemeOpts'),
+      Object.keys(SCHEMES).map((id) => ({
+        id,
+        label: SCHEMES[id].label,
+        hint: SCHEMES[id].hint,
+      })),
+      'scheme',
+      schemeSwatches
+    );
+    buildOpts(document.getElementById('poolOpts'), POOLS, 'pool');
+  }
+
+  const stages = document.getElementById('stages');
+
+  /**
+   * The two artefacts as one picture. Geometry is percentage-of-cover so
+   * the mock stays true at any display width; the numbers come from the
+   * `chrome` rects on CANVASES, which were measured off live pages.
+   */
+  /**
+   * The page furniture under each cover, per platform.
+   *
+   * These were one shared template with an `isX` ternary, and LinkedIn
+   * inherited X's layout through it — action buttons pinned top-right,
+   * no nav tabs, no follows line. LinkedIn puts its buttons BELOW the
+   * text, left-aligned under the logo, and closes the card with a tab
+   * row. Sharing a template across two page designs quietly makes the
+   * second one wrong, so they are now separate functions that happen to
+   * take the same argument.
+   */
+  const PAGE = {
+    x: (P, gutterH) =>
+      `<div class="mock-gutter" style="height:${gutterH}px">` +
+      `<div class="mock-actions" style="right:${P.avatar.left}px;top:12px">` +
+      '<i></i><i></i><i></i><i></i><i class="solid"></i>' +
+      '</div></div>' +
+      `<div class="mock-body" style="padding:0 ${P.avatar.left}px 16px">` +
+      '<div class="nm">LogiCola 3</div>' +
+      '<div class="sub">@LogicolaThree</div>' +
+      '<div class="bio">Learn formal and informal logic.<br>Goes with Gensler\'s Introduction to Logic by @Routledgebooks</div>' +
+      '</div>',
+
+    li: (P, gutterH) =>
+      `<div class="mock-gutter" style="height:${gutterH}px"></div>` +
+      `<div class="mock-body" style="padding:0 ${P.avatar.left}px 0">` +
+      '<div class="nm">Logicola 3</div>' +
+      '<div class="bio">Learn logic with ease and play, for free. Goes with Gensler\'s Introduction to Logic.</div>' +
+      '<div class="sub">E-Learning Providers · 64 followers · 0-1 employees</div>' +
+      '<div class="follows"><span class="pile"><i></i><i></i><i></i></span>' +
+      'Marta &amp; 44 other connections follow this page</div>' +
+      '<div class="cta"><b class="solid">Message</b><b class="ghost">Following</b>' +
+      '<b class="dots">···</b></div>' +
+      '</div>' +
+      '<div class="mock-tabs"><span class="on">Home</span><span>About</span>' +
+      '<span>Posts</span><span>Jobs</span><span>People</span></div>',
+  };
+
+  /**
+   * What share of the painted artwork is actually an accent, measured by
+   * running the generator rather than by reading the dial. The dial is the
+   * probability of a cell TRYING to be an accent; the adjacency rule then
+   * rejects any whose left or upper neighbour already is one.
+   */
+  function measuredAccentShare() {
+    const sc = SCHEMES[state.scheme];
+    const svg = patternBody('quilt', {
+      w: 1500,
+      h: 500,
+      ink: sc.ink,
+      ground: sc.ground,
+      pool: poolFor(state.scheme, state.pool),
+      scale: state.scale,
+      seed: state.seed,
+      clear: null,
+      rate: state.rate,
+    });
+    let total = 0;
+    let dominant = 0;
+    for (const g of svg.matchAll(
+      /<g fill="(#[0-9A-Fa-f]{6})"[^>]*>([\s\S]*?)<\/g>/g
+    )) {
+      let a = 0;
+      for (const r of g[2].matchAll(/width="([\d.]+)" height="([\d.]+)"/g))
+        a += parseFloat(r[1]) * parseFloat(r[2]);
+      total += a;
+      if (g[1].toUpperCase() === sc.ink.toUpperCase()) dominant += a;
+    }
+    return total ? 1 - dominant / total : 0;
+  }
+
+  function composed(kind) {
+    const P = PLATFORMS[kind];
+    const cover = CANVASES.find((c) => c.id === kind);
+    const a = P.avatar;
+
+    // The avatar's top in page pixels. X centres it on the cover's bottom
+    // edge; LinkedIn hangs it from a fixed offset.
+    const top = a.top != null ? a.top : P.cover.h - a.size / 2;
+    const overhang = Math.max(0, top + a.size - P.cover.h);
+    const round = a.radius != null ? `${a.radius}px` : '999px';
+
+    // The gutter reserves the overhang so the page name never runs under
+    // the avatar. It comes from the same spec the artwork is judged
+    // against, so the two cannot drift apart.
+    const avatarStyle =
+      `left:${a.left}px;top:${top}px;width:${a.size}px;height:${a.size}px;` +
+      `border-radius:${round};border:${a.ring}px solid #fff;` +
+      `margin:${-a.ring}px 0 0 ${-a.ring}px;`;
+
+    return (
+      `<div class="mock-scroll"><div class="mock ${kind}" style="width:${P.column}px">` +
+      `<div class="mock-cover" style="height:${P.cover.h}px">` +
+      svgFor(modelFor(cover)) +
+      `<div class="mock-avatar" style="${avatarStyle}">` +
+      svgFor(modelFor(CANVASES.find((c) => c.id === 'av'))) +
+      '</div></div>' +
+      PAGE[kind](P, overhang + P.gutterGap) +
+      '</div></div>'
+    );
+  }
+
+  /* ====================================================================
+     PINNED COMPARISONS
+
+     A lab with six dials is only useful if two settings can be held side
+     by side. Flipping between them from memory is how you end up choosing
+     the one you saw last rather than the one you liked — the dials change
+     the picture faster than the eye can carry the previous one.
+
+     A pin is a snapshot of the six values that define a look, rendered as
+     the composed X cover (header plus avatar, at their real relative
+     positions) so pins are compared the way the thing is actually seen.
+     They persist in localStorage — with a fallback, because a page opened
+     over file:// can be refused storage entirely, and losing a session's
+     pins should not be a thrown error.
+     ==================================================================== */
+
+  const PIN_KEY = 'logicola-brand-pins';
+  const PIN_KEYS = ['pattern', 'scheme', 'pool', 'scale', 'seed', 'rate'];
+
+  let pins = (() => {
+    try {
+      const raw = JSON.parse(localStorage.getItem(PIN_KEY) || '[]');
+      return Array.isArray(raw) ? raw : [];
+    } catch {
+      return [];
+    }
+  })();
+
+  function savePins() {
+    try {
+      localStorage.setItem(PIN_KEY, JSON.stringify(pins));
+    } catch {
+      /* storage refused (file:// in some browsers) — pins stay in memory */
+    }
+  }
+
+  const snapshot = () => Object.fromEntries(PIN_KEYS.map((k) => [k, state[k]]));
+  const sameCfg = (a, b) => PIN_KEYS.every((k) => a[k] === b[k]);
+
+  function pinLabel(cfg) {
+    const pat = PATTERNS.find((p) => p.id === cfg.pattern);
+    const pool = POOLS.find((p) => p.id === cfg.pool);
+    return [
+      pat ? pat.label : cfg.pattern,
+      SCHEMES[cfg.scheme] ? SCHEMES[cfg.scheme].label : cfg.scheme,
+      pool ? pool.label : cfg.pool,
+    ].join(' · ');
+  }
+
+  /** The composed X cover at thumbnail size — cover plus avatar, in place. */
+  function pinThumb(cfg) {
+    const cover = CANVASES.find((c) => c.id === 'x');
+    const av = CANVASES.find((c) => c.id === 'av');
+    const c = cover.chrome;
+    const pct = (v, of) => (v / of) * 100 + '%';
+    return (
+      '<div class="pin-thumb">' +
+      svgFor(modelFor(cover, cfg)) +
+      `<div class="pin-av" style="left:${pct(c.cx - c.r, cover.w)};` +
+      `top:${pct(c.cy - c.r, cover.h)};width:${pct(c.r * 2, cover.w)}">` +
+      svgFor(modelFor(av, cfg)) +
+      '</div></div>'
+    );
+  }
+
+  function renderPins() {
+    const wrap = document.createElement('section');
+    wrap.className = 'stage';
+    const current = snapshot();
+    wrap.innerHTML =
+      '<h2>Pinned <span>saved settings, side by side</span></h2>' +
+      (pins.length
+        ? '<div class="pins">' +
+          pins
+            .map(
+              (cfg, i) =>
+                `<div class="pin${sameCfg(cfg, current) ? ' is-current' : ''}">` +
+                pinThumb(cfg) +
+                '<div class="pin-meta">' +
+                `<div class="t">${pinLabel(cfg)}</div>` +
+                `<div class="d mono">scale ${cfg.scale.toFixed(2)} · seed ${cfg.seed} · accent ${Math.round(cfg.rate * 100)}%</div>` +
+                '<div class="pin-acts">' +
+                `<button data-restore="${i}">Restore</button>` +
+                `<button data-remove="${i}">Remove</button>` +
+                '</div></div></div>'
+            )
+            .join('') +
+          '</div>'
+        : '<p class="pin-empty">Nothing pinned yet. Set the dials to ' +
+          'something worth keeping and press <strong>Pin current</strong> — ' +
+          'pins render as the composed X cover, so they are compared the ' +
+          'way the pair is actually seen, and they survive a reload.</p>');
+    stages.append(wrap);
+  }
+
+  document.getElementById('pinAdd').onclick = () => {
+    const cfg = snapshot();
+    // Pinning the same look twice is always a mistake, never an intent.
+    if (!pins.some((p) => sameCfg(p, cfg))) pins.push(cfg);
+    savePins();
+    render();
+  };
+  document.getElementById('pinClear').onclick = () => {
+    pins = [];
+    savePins();
+    render();
+  };
+  stages.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-restore],[data-remove]');
+    if (!el) return;
+    if (el.dataset.restore != null)
+      Object.assign(state, pins[+el.dataset.restore]);
+    else pins.splice(+el.dataset.remove, 1);
+    savePins();
+    syncInputs();
+    render();
+  });
+
+  /** Push `state` back into the range inputs after a Restore. */
+  function syncInputs() {
+    const set = (id, v, fmt) => {
+      const el = document.getElementById(id);
+      el.value = v;
+      document.getElementById(id + 'Out').textContent = fmt(v);
+    };
+    set('scale', Math.round(state.scale * 100), (v) => (v / 100).toFixed(2));
+    set('seed', state.seed, String);
+    set('rate', Math.round(state.rate * 100), (v) => v + '%');
+  }
+
+  function render() {
+    buildChrome();
+    stages.innerHTML = '';
+    for (const canvas of CANVASES) {
+      const m = modelFor(canvas);
+      const wrap = document.createElement('section');
+      wrap.className = 'stage';
+      const guide = state.guides ? guideFor(canvas) : '';
+      wrap.innerHTML =
+        `<h2>${canvas.label} <span class="mono">${canvas.w} × ${canvas.h}</span></h2>` +
+        `<div class="frame" style="max-width:${Math.min(canvas.w, 1180)}px">` +
+        svgFor(m) +
+        (guide ? `<div class="guide">${guide}</div>` : '') +
+        '</div>';
+      stages.append(wrap);
+    }
+    for (const kind of ['x', 'li']) {
+      const wrap = document.createElement('section');
+      wrap.className = 'stage';
+      wrap.innerHTML =
+        `<h2>Composed · ${kind === 'x' ? 'X profile' : 'LinkedIn page'} ` +
+        `<span>cover + avatar at their real relative sizes</span></h2>` +
+        composed(kind);
+      stages.append(wrap);
+    }
+
+    /* THE TWO DIALS THAT LIED (fixed 2026-08-12, after Malik pinned twelve
+       looks at Accent 55% — a setting that did nothing to nine of them).
+
+       `rate` is a quilt parameter. `camoBody` never destructures it: its
+       mix is set by the noise thresholds, not by a rate, so the slider was
+       inert under Camo and there is no honest value to wire it to. It now
+       greys out and says so.
+
+       And even under the quilt the number was not what it claimed. The
+       "accents never orthogonally adjacent" rule rejects a share of the
+       cells that pass the roll, so a requested 55% lands at ~26%. The note
+       reports the measured figure rather than the asked-for one.
+
+       The slider also stopped at 55, which was arbitrary and turned out to
+       be the binding constraint on "can this be more colourful?" — the
+       adjacency rule alone tops out near 52% measured, not 26%. Max is now
+       100. Note that anything past ~30% measured leaves the quilt family's
+       documented 70/30 rhythm, so the note says when you have. */
+    const isQuilt = state.pattern === 'quilt';
+    const rateRow = document.getElementById('rateRow');
+    rateRow.classList.toggle('is-off', !isQuilt);
+    document.getElementById('rate').disabled = !isQuilt;
+    const measured = Math.round(measuredAccentShare() * 100);
+    document.getElementById('rateNote').textContent = isQuilt
+      ? `≈${measured}% of the artwork is accent, once the no-touching rule ` +
+        `has rejected the rest.${measured > 30 ? ' Past the quilt family’s 70/30 rhythm.' : ''}`
+      : 'Quilt only — Camo’s mix comes from its noise thresholds.';
+
+    const poolNow = poolFor(state.scheme, state.pool);
+    const asked = {
+      sets: SURFACES,
+      setsMix: [...SURFACES, ...INKS],
+      surfaces: SURFACES,
+      accents: ACCENTS,
+      inks: INKS,
+      both: [...ACCENTS, ...INKS],
+      wide: [...new Set(ALL_CANDIDATES)],
+      mono: [],
+    }[state.pool].length;
+    document.getElementById('poolNote').textContent = isQuilt
+      ? UNGATED[state.pool]
+        ? `${poolNow.length} colours — ground gate off (cover, not a study ` +
+          'surface); tiles read by their edge.'
+        : `${poolNow.length} of ${asked} clear the gate on this ground.`
+      : `Camo spends only the first — ${poolNow[0] || 'none'}. The rest of ` +
+        'the pool is unused.';
+
+    renderPins();
+    document.getElementById('pinCount').textContent = pins.length
+      ? `${pins.length} pinned`
+      : 'Snapshot the dials to compare looks.';
+
+    const s = SCHEMES[state.scheme];
+    const pool = poolFor(state.scheme, state.pool);
+    const note = document.createElement('p');
+    note.className = 'note';
+    note.innerHTML =
+      `<strong>Ground</strong> <code class="mono">${s.ground}</code> · ` +
+      `<strong>dominant</strong> <code class="mono">${s.ink}</code> · ` +
+      `<strong>pool (${pool.length})</strong> ` +
+      pool.map((c) => `<code class="mono">${c}</code>`).join(' ');
+    stages.append(note);
+  }
+
+  /* ---- inputs */
+  const bind = (id, out, fn, fmt) => {
+    const el = document.getElementById(id);
+    const o = document.getElementById(out);
+    const sync = () => {
+      fn(+el.value);
+      o.textContent = fmt(+el.value);
+      render();
+    };
+    el.oninput = sync;
+    o.textContent = fmt(+el.value);
+  };
+  bind(
+    'scale',
+    'scaleOut',
+    (v) => (state.scale = v / 100),
+    (v) => (v / 100).toFixed(2)
+  );
+  bind(
+    'seed',
+    'seedOut',
+    (v) => (state.seed = v),
+    (v) => String(v)
+  );
+  bind(
+    'rate',
+    'rateOut',
+    (v) => (state.rate = v / 100),
+    (v) => v + '%'
+  );
+
+  document.getElementById('showGuides').onchange = (e) => {
+    state.guides = e.target.checked;
+    render();
+  };
+
+  function download(blob, name) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+
+  const exportBtns = document.getElementById('exportBtns');
+  for (const canvas of CANVASES) {
+    const svgBtn = document.createElement('button');
+    svgBtn.className = 'btn';
+    svgBtn.textContent = canvas.id.toUpperCase() + ' svg';
+    svgBtn.onclick = () =>
+      download(
+        new Blob([svgFor(modelFor(canvas))], { type: 'image/svg+xml' }),
+        `logicola-${canvas.id}-${state.scheme}-${state.pattern}.svg`
+      );
+    const pngBtn = document.createElement('button');
+    pngBtn.className = 'btn';
+    pngBtn.textContent = canvas.id.toUpperCase() + ' png';
+    pngBtn.onclick = async () =>
+      download(
+        await pngFor(modelFor(canvas)),
+        `logicola-${canvas.id}-${state.scheme}-${state.pattern}.png`
+      );
+    exportBtns.append(svgBtn, pngBtn);
+  }
+
+  document.fonts.ready.then(render);
+  render();
+</script>

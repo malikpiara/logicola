@@ -1,0 +1,1027 @@
+<title>Damage on the Bar — LogiCola Pattern Lab</title>
+<style>
+  :root {
+    --bg: #f7f2f4;
+    --ink: #231a20;
+    --muted: #6e5f68;
+    --card: #ffffff;
+    --line: color-mix(in srgb, #231a20 14%, transparent);
+    --acc: #bd00ad;
+    --mono:
+      ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Monaco, 'Courier New',
+      monospace;
+    --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #191216;
+      --ink: #f2e8ee;
+      --muted: #a9929e;
+      --card: #221a20;
+      --line: color-mix(in srgb, #f2e8ee 16%, transparent);
+      --acc: #f233df;
+    }
+  }
+  :root[data-theme='light'] {
+    --bg: #f7f2f4;
+    --ink: #231a20;
+    --muted: #6e5f68;
+    --card: #ffffff;
+    --line: color-mix(in srgb, #231a20 14%, transparent);
+    --acc: #bd00ad;
+  }
+  :root[data-theme='dark'] {
+    --bg: #191216;
+    --ink: #f2e8ee;
+    --muted: #a9929e;
+    --card: #221a20;
+    --line: color-mix(in srgb, #f2e8ee 16%, transparent);
+    --acc: #f233df;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 52px 24px 88px;
+  }
+
+  /* ---- Page voice ------------------------------------------------------ */
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--acc);
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(26px, 4.5vw, 38px);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin: 0 0 16px;
+    text-wrap: balance;
+  }
+  .intro {
+    max-width: 62ch;
+    color: var(--ink);
+    margin: 0;
+  }
+  .intro em {
+    font-style: normal;
+    color: var(--acc);
+    font-weight: 600;
+  }
+
+  /* ---- Control bar ----------------------------------------------------- */
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px 28px;
+    margin: 36px 0 28px;
+    padding: 16px 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+  }
+  .ctl-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ctl-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .chips {
+    display: flex;
+    gap: 6px;
+  }
+  .chip {
+    width: 30px;
+    height: 30px;
+    border: 0;
+    padding: 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .chip-ring {
+    padding: 2px;
+    background: transparent;
+    display: inline-flex;
+  }
+  .chip-ring.on {
+    background: var(--ink);
+  }
+  .seg {
+    display: flex;
+    border: 1px solid var(--line);
+  }
+  .seg button,
+  .btn {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  .seg button.on {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .btn {
+    border: 1px solid var(--line);
+  }
+  .btn:hover {
+    background: color-mix(in srgb, var(--ink) 8%, transparent);
+  }
+  .btn.primary {
+    background: var(--acc);
+    color: var(--bg);
+    border-color: var(--acc);
+  }
+  .btn.primary:hover {
+    filter: brightness(1.08);
+  }
+  button:focus-visible,
+  .chip:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+  .toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .toggle input {
+    accent-color: var(--acc);
+  }
+  .toggle span {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ---- Direction cards -------------------------------------------------- */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .dcard {
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 22px 22px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .dcard .eyebrow {
+    color: var(--muted);
+    margin: 0;
+  }
+  .dcard h2 {
+    font-family: var(--mono);
+    font-size: 17px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin: 2px 0 0;
+  }
+  .dcard h2 small {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--acc);
+    margin-left: 8px;
+    font-weight: 400;
+  }
+  .dcard p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 58ch;
+  }
+  .dcard .refs {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink);
+    line-height: 1.7;
+    border-left: 2px solid var(--acc);
+    padding-left: 10px;
+  }
+
+  /* The demo panel — a miniature of the real quiz card, worn in the
+     selected set's three colours. Sprite-clipped at R=24/u=4, exactly
+     the shipped card silhouette. */
+  .panel {
+    background: var(--s);
+    color: var(--i);
+    padding: 20px 18px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .hd {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .x {
+    font-size: 17px;
+    line-height: 1;
+    opacity: 0.9;
+    width: 18px;
+    text-align: center;
+  }
+  .barwrap {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+  }
+  .bar {
+    position: relative;
+    height: 10px;
+    background: color-mix(in srgb, var(--i) 12%, transparent);
+    overflow: hidden;
+  }
+  .hairline .bar {
+    height: 6px;
+    clip-path: none !important;
+  }
+  .seg-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--qp, 0%);
+    width: round(down, var(--qp, 0%), 4px);
+  }
+  .ghost {
+    background: var(--i);
+  }
+  .fill {
+    background: var(--a);
+    transition: width 500ms var(--quart);
+  }
+  .chunk {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: var(--i);
+  }
+  .gchip {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    background: color-mix(in srgb, var(--i) 9%, transparent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gchip svg {
+    width: 14px;
+    height: 14px;
+    stroke: var(--i);
+  }
+  .pts {
+    align-self: flex-end;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--a);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .qbtn {
+    appearance: none;
+    border: 0;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    cursor: pointer;
+  }
+  .qbtn.miss {
+    background: var(--a);
+    color: var(--s);
+  }
+  .qbtn.ok {
+    background: color-mix(in srgb, var(--i) 9%, transparent);
+    color: var(--i);
+  }
+  .qbtn.ok:hover {
+    background: color-mix(in srgb, var(--i) 15%, transparent);
+  }
+  .qbtn.miss:hover {
+    filter: brightness(1.1);
+  }
+  .qbtn:disabled {
+    opacity: 0.45;
+    cursor: default;
+    filter: none;
+  }
+  .spec {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ---- The six damage grammars ------------------------------------------ */
+
+  /* A · hit flicker: 2 hard off-pulses, then the width pays. */
+  @keyframes qflicker {
+    0%,
+    24% {
+      opacity: 1;
+    }
+    25%,
+    49% {
+      opacity: 0;
+    }
+    50%,
+    74% {
+      opacity: 1;
+    }
+    75%,
+    100% {
+      opacity: 0;
+    }
+  }
+  .anim-flicker {
+    animation: qflicker 340ms linear both;
+  }
+
+  /* C · knockback: the bar recoils; one ink pulse on the fill. */
+  @keyframes qshake {
+    0% {
+      transform: translateX(0);
+    }
+    15% {
+      transform: translateX(-5px);
+    }
+    40% {
+      transform: translateX(3px);
+    }
+    70% {
+      transform: translateX(-2px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  .anim-shake {
+    animation: qshake 260ms ease-out both;
+  }
+  @keyframes qpulse {
+    0%,
+    49% {
+      background-color: var(--i);
+    }
+    50%,
+    100% {
+      background-color: var(--a);
+    }
+  }
+  .anim-pulse {
+    animation: qpulse 200ms linear both;
+  }
+
+  /* D · ember tip: only the lost chunk blinks, then burns away. */
+  @keyframes qblink {
+    0%,
+    32% {
+      opacity: 1;
+    }
+    33%,
+    65% {
+      opacity: 0;
+    }
+    66%,
+    100% {
+      opacity: 1;
+    }
+  }
+  .anim-blink {
+    animation: qblink 280ms linear both;
+  }
+  .chunk.burn {
+    transition:
+      width 250ms var(--quart),
+      opacity 250ms var(--quart);
+  }
+
+  /* G · ink flicker: A's cadence, C's colour — palette-swap hit. */
+  @keyframes qinkflicker {
+    0%,
+    24% {
+      background-color: var(--i);
+    }
+    25%,
+    49% {
+      background-color: var(--a);
+    }
+    50%,
+    74% {
+      background-color: var(--i);
+    }
+    75%,
+    100% {
+      background-color: var(--a);
+    }
+  }
+  .anim-inkflicker {
+    animation: qinkflicker 340ms linear both;
+  }
+
+  /* E · track pulse: the empty track takes the hit. Hard cut in, decay out. */
+  @keyframes qtrack {
+    0% {
+      background-color: color-mix(in srgb, var(--i) 32%, transparent);
+    }
+    100% {
+      background-color: color-mix(in srgb, var(--i) 12%, transparent);
+    }
+  }
+  .anim-track {
+    animation: qtrack 300ms var(--quart) both;
+  }
+
+  /* ---- Guardrails footer ------------------------------------------------- */
+  .rails {
+    margin-top: 44px;
+    border-top: 1px solid var(--line);
+    padding-top: 28px;
+  }
+  .rails ul {
+    margin: 14px 0 0;
+    padding: 0 0 0 1.2em;
+    max-width: 70ch;
+  }
+  .rails li {
+    margin-bottom: 10px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .rails li strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .rails .eyebrow {
+    color: var(--acc);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fill,
+    .ghost,
+    .chunk {
+      transition: none;
+    }
+    .anim-flicker,
+    .anim-shake,
+    .anim-pulse,
+    .anim-blink,
+    .anim-track,
+    .anim-inkflicker {
+      animation: none;
+    }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">LogiCola · Pattern Lab · 2026-08-12</p>
+    <h1>Damage on the bar</h1>
+    <p class="intro">
+      Miss feedback for the scored run. Hypothesis: a wrong answer should be
+      <em>felt before it&rsquo;s read</em> — in scored mode a miss genuinely
+      subtracts points, so the bar can react like a health bar taking damage
+      instead of politely re-easing its width. Six directions below, each
+      borrowing a different retro damage idiom. Same three-colour system as the
+      shipped quiz — judge every direction against every set, because the flash
+      contrast changes with the surface.
+    </p>
+  </header>
+
+  <div class="controls">
+    <div class="ctl-group">
+      <span class="ctl-label">Set</span>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="ctl-group">
+      <span class="ctl-label">Bar</span>
+      <div class="seg" id="barseg">
+        <button class="on" data-bar="mobile">Mobile 10px</button>
+        <button data-bar="hairline">Desktop hairline</button>
+      </div>
+    </div>
+    <div class="ctl-group">
+      <button class="btn primary" id="missall">Miss all −12</button>
+      <button class="btn" id="okall">Correct all +8</button>
+      <button class="btn" id="resetall">Reset</button>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" id="rm" />
+      <span>Reduced motion</span>
+    </label>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer class="rails">
+    <p class="eyebrow">Guardrails</p>
+    <ul>
+      <li>
+        <strong>Flash budget.</strong> Every direction stays at two or fewer
+        flashes per event — inside WCAG 2.3.1&rsquo;s three-flashes-per-second
+        limit with margin, and the flashing area is a 10px strip, far below the
+        harmful-area threshold.
+      </li>
+      <li>
+        <strong>Reduced motion.</strong> All six collapse to an instant width
+        change with no flash — the toggle above previews it, and
+        <code>prefers-reduced-motion</code> is honoured for real.
+      </li>
+      <li>
+        <strong>The bar stays decorative.</strong> As shipped, the bar is
+        <code>aria-hidden</code>; the numeric points label is the accessible
+        reading. The animation may never become the only signal of a miss — the
+        verdict from <code>onCheckAnswer</code> already recolours the option and
+        the label.
+      </li>
+      <li>
+        <strong>Width, not <code>scaleX</code>.</strong> The shipped bar
+        animates <code>width</code> deliberately: a transform would stretch the
+        sprite caps and defeat the 4px fill quantisation. The element is tiny,
+        so the layout cost is noise — keep that trade in any port.
+      </li>
+      <li>
+        <strong>Continuous line, never cells.</strong> The scored bar&rsquo;s
+        standing rule. Every direction keeps the fill a single run — damage may
+        recolour or clip it, never segment it.
+      </li>
+      <li>
+        <strong>Follow-ups worth a second lab:</strong> floating damage numbers
+        (&minus;12 drifting off the bar tip), a paired sound tick, and whether
+        CORRECT deserves a mirrored micro-celebration or should stay calm so
+        damage keeps the spotlight.
+      </li>
+    </ul>
+  </footer>
+</div>
+
+<script>
+  // ---- Ports from lib/pixel.ts (verbatim geometry) ----------------------
+  function cornerProfile(R, u) {
+    const n = R / u,
+      prof = [];
+    for (let k = 0; k < n; k++) {
+      const dy = R - (k + 0.5) * u;
+      const hw = Math.sqrt(R * R - dy * dy);
+      prof.push(R - Math.min(R, Math.round(hw / u) * u));
+    }
+    return prof;
+  }
+  function spriteClip(R, u) {
+    const n = R / u,
+      prof = cornerProfile(R, u);
+    const L = (v) => v + 'px',
+      M = (v) => 'calc(100% - ' + v + 'px)';
+    const pts = [];
+    pts.push(L(0) + ' ' + L(R));
+    for (let k = n - 1; k >= 1; k--)
+      if (prof[k - 1] !== prof[k]) {
+        pts.push(L(prof[k]) + ' ' + L(k * u), L(prof[k - 1]) + ' ' + L(k * u));
+      }
+    pts.push(L(prof[0]) + ' ' + L(0));
+    pts.push(M(prof[0]) + ' ' + L(0));
+    for (let k = 1; k <= n - 1; k++)
+      if (prof[k - 1] !== prof[k]) {
+        pts.push(M(prof[k - 1]) + ' ' + L(k * u), M(prof[k]) + ' ' + L(k * u));
+      }
+    pts.push(M(0) + ' ' + L(R));
+    pts.push(M(0) + ' ' + M(R));
+    for (let k = n - 1; k >= 1; k--)
+      if (prof[k - 1] !== prof[k]) {
+        pts.push(M(prof[k]) + ' ' + M(k * u), M(prof[k - 1]) + ' ' + M(k * u));
+      }
+    pts.push(M(prof[0]) + ' ' + M(0));
+    pts.push(L(prof[0]) + ' ' + M(0));
+    for (let k = 1; k <= n - 1; k++)
+      if (prof[k - 1] !== prof[k]) {
+        pts.push(L(prof[k - 1]) + ' ' + M(k * u), L(prof[k]) + ' ' + M(k * u));
+      }
+    pts.push(L(0) + ' ' + M(R));
+    return 'polygon(' + pts.join(', ') + ')';
+  }
+  function gemClip(pu) {
+    const L = (v) => v + 'px',
+      M = (v) => 'calc(100% - ' + v + 'px)';
+    const p = pu,
+      q = pu * 2;
+    return (
+      'polygon(' +
+      [
+        L(0) + ' ' + L(q),
+        L(p) + ' ' + L(q),
+        L(p) + ' ' + L(p),
+        L(q) + ' ' + L(p),
+        L(q) + ' ' + L(0),
+        M(q) + ' ' + L(0),
+        M(q) + ' ' + L(p),
+        M(p) + ' ' + L(p),
+        M(p) + ' ' + L(q),
+        M(0) + ' ' + L(q),
+        M(0) + ' ' + M(q),
+        M(p) + ' ' + M(q),
+        M(p) + ' ' + M(p),
+        M(q) + ' ' + M(p),
+        M(q) + ' ' + M(0),
+        L(q) + ' ' + M(0),
+        L(q) + ' ' + M(p),
+        L(p) + ' ' + M(p),
+        L(p) + ' ' + M(q),
+        L(0) + ' ' + M(q),
+      ].join(', ') +
+      ')'
+    );
+  }
+
+  const BAR_CLIP = spriteClip(4, 2); // the mobile bar's sprite caps
+  const CARD_CLIP = spriteClip(24, 4); // the quiz card silhouette
+  const CHIP_CLIP = spriteClip(8, 4); // 30px chip scale
+  const GEM_CLIP = gemClip(4); // pixel-corner buttons
+
+  // ---- The shipped palette (components/quiz/quizColors.ts) ---------------
+  const SETS = {
+    A: { s: '#FFABC6', i: '#4A1040', a: '#674900' },
+    C: { s: '#E7F099', i: '#02302C', a: '#BD00AD' },
+    J: { s: '#E6ACF4', i: '#1C3601', a: '#674900' },
+    L: { s: '#CFF6DD', i: '#3F0167', a: '#BD00AD' },
+    N: { s: '#9EDAFF', i: '#4A1040', a: '#8D0381' },
+    Q: { s: '#D9CCF9', i: '#3E1060', a: '#745400' },
+    R: { s: '#E4BDF7', i: '#751100', a: '#824616' },
+  };
+  let currentSet = 'A';
+
+  const MISS_COST = 0.12,
+    HIT_GAIN = 0.08,
+    START = 0.64;
+  const rmMedia = matchMedia('(prefers-reduced-motion: reduce)');
+  const rmBox = document.getElementById('rm');
+  rmBox.checked = rmMedia.matches;
+  const reduced = () => rmBox.checked;
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  // ---- Directions ---------------------------------------------------------
+  const DIRECTIONS = [
+    {
+      id: 'A',
+      name: 'Hit flicker',
+      tag: 'Mega Man i-frames',
+      desc: 'The fill blinks off twice — hard cuts, no fades, the sprite \
+invulnerability flicker — then the width pays the penalty. The most \
+recognisably “retro” read.',
+      refs: 'Mega Man i-frames · Zelda — Link’s hit flicker · Castlevania · Sonic post-hit blink',
+      spec: '2 off-pulses · 340ms hard cuts → drop 500ms quart · rm: instant drop',
+      async miss(c, from, to) {
+        c.fill.classList.add('anim-flicker');
+        await wait(340);
+        c.fill.classList.remove('anim-flicker');
+        setW(c.fill, to);
+        await wait(500);
+      },
+    },
+    {
+      id: 'B',
+      name: 'Ghost drain',
+      tag: 'Street Fighter II',
+      desc: 'The bar takes the hit instantly — a hard cut, no easing — and a \
+dark ghost of the lost points lingers where health used to be, then drains \
+away. Damage is legible even if you blink through the moment.',
+      refs: 'Street Fighter II · Guilty Gear · Dark Souls boss bars · Persona 5 chip damage',
+      spec: 'snap drop · ghost holds 350ms → drains 400ms quart · rm: instant drop',
+      hasGhost: true,
+      async miss(c, from, to) {
+        snapW(c.ghost, from);
+        snapW(c.fill, to);
+        await wait(350);
+        c.ghost.style.transition = 'width 400ms var(--quart)';
+        setW(c.ghost, to);
+        await wait(400);
+        c.ghost.style.transition = 'none';
+      },
+    },
+    {
+      id: 'C',
+      name: 'Knockback',
+      tag: 'screen shake',
+      desc: 'The whole bar recoils from the hit while the fill pulses ink \
+once, then the width settles down with the standard easing. Reads as impact \
+rather than blinking — the juice option.',
+      refs: 'Nuclear Throne (Vlambeer’s screen-shake talk) · Celeste · DOOM’s damage kick · Undertale',
+      spec: 'shake 260ms ±5px · 1 ink pulse 200ms · drop 500ms quart · rm: instant drop',
+      async miss(c, from, to) {
+        c.barwrap.classList.add('anim-shake');
+        c.fill.classList.add('anim-pulse');
+        setW(c.fill, to);
+        await wait(500);
+        c.barwrap.classList.remove('anim-shake');
+        c.fill.classList.remove('anim-pulse');
+      },
+    },
+    {
+      id: 'D',
+      name: 'Ember tip',
+      tag: 'localised',
+      desc: 'Only the lost segment reacts: it turns ink, blinks twice, then \
+burns away toward the new tip. The rest of the bar stays calm — damage is \
+shown exactly where it happened.',
+      refs: 'Halo shield break · Dead Space RIG spine · Metroid Prime energy bar',
+      spec: 'fill snaps · chunk blinks ×2 280ms → burns 250ms · rm: instant drop',
+      async miss(c, from, to) {
+        const chunk = document.createElement('div');
+        chunk.className = 'chunk anim-blink';
+        chunk.style.left = to * 100 + '%';
+        chunk.style.width = (from - to) * 100 + '%';
+        c.bar.appendChild(chunk);
+        snapW(c.fill, to);
+        await wait(300);
+        chunk.classList.remove('anim-blink');
+        chunk.classList.add('burn');
+        chunk.style.width = '0%';
+        chunk.style.opacity = '0';
+        await wait(260);
+        chunk.remove();
+      },
+    },
+    {
+      id: 'E',
+      name: 'Track pulse',
+      tag: 'the quiet one',
+      desc: 'The empty track flashes once — ink jumps from 12% to 32% and \
+decays back — while the fill eases down. The only direction that stays \
+legible at the desktop hairline’s 6px; a strong candidate for the default.',
+      refs: 'Punch-Out!! screen flash · the FPS damage vignette (Halo, CoD), translated to a bar',
+      spec: 'track 32% → 12% ink · 300ms decay · drop 500ms quart · rm: instant drop',
+      async miss(c, from, to) {
+        c.bar.classList.add('anim-track');
+        setW(c.fill, to);
+        await wait(500);
+        c.bar.classList.remove('anim-track');
+      },
+    },
+    {
+      id: 'G',
+      name: 'Ink flicker',
+      tag: 'A × C hybrid',
+      desc: 'Direction A’s cadence wearing Direction C’s colour: the fill \
+hard-cuts to the set’s ink twice instead of blinking out — the classic \
+enemy palette-swap flash rather than player i-frames. Nothing ever \
+disappears, so it stays legible at the desktop hairline, where A’s \
+blink-off empties the whole bar.',
+      refs: 'NES/arcade palette-swap hits · Contra &amp; Metal Slug enemy flash · Cuphead boss flash',
+      spec: '2 ink pulses · 340ms hard cuts → drop 500ms quart · rm: instant drop',
+      async miss(c, from, to) {
+        c.fill.classList.add('anim-inkflicker');
+        await wait(340);
+        c.fill.classList.remove('anim-inkflicker');
+        setW(c.fill, to);
+        await wait(500);
+      },
+    },
+  ];
+
+  // ---- Card factory --------------------------------------------------------
+  const grid = document.getElementById('grid');
+  const cards = [];
+
+  function setW(el, p) {
+    el.style.setProperty('--qp', (p * 100).toFixed(2) + '%');
+  }
+  function snapW(el, p) {
+    const t = el.style.transition;
+    el.style.transition = 'none';
+    setW(el, p);
+    void el.offsetWidth;
+    el.style.transition = t || '';
+  }
+
+  const BOOK_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" ' +
+    'stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>' +
+    '<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>';
+
+  for (const d of DIRECTIONS) {
+    const card = document.createElement('section');
+    card.className = 'dcard';
+    card.innerHTML =
+      '<div>' +
+      '<p class="eyebrow">Direction ' +
+      d.id +
+      '</p>' +
+      '<h2>' +
+      d.name +
+      '<small>' +
+      d.tag +
+      '</small></h2>' +
+      '</div>' +
+      '<p>' +
+      d.desc +
+      '</p>' +
+      '<p class="refs">Refs — ' +
+      d.refs +
+      '</p>' +
+      '<div class="panel">' +
+      '  <div class="hd">' +
+      '    <span class="x" aria-hidden="true">&#10005;</span>' +
+      '    <div class="barwrap"><div class="bar">' +
+      (d.hasGhost ? '<div class="seg-fill ghost"></div>' : '') +
+      '      <div class="seg-fill fill"></div>' +
+      '    </div></div>' +
+      '    <span class="gchip" aria-hidden="true">' +
+      BOOK_SVG +
+      '</span>' +
+      '  </div>' +
+      '  <span class="pts"></span>' +
+      '</div>' +
+      '<div class="actions">' +
+      '  <button class="qbtn miss">Miss &minus;12</button>' +
+      '  <button class="qbtn ok">Correct +8</button>' +
+      '</div>' +
+      '<p class="spec">' +
+      d.spec +
+      '</p>';
+    grid.appendChild(card);
+
+    const c = {
+      dir: d,
+      p: START,
+      busy: false,
+      el: card,
+      panel: card.querySelector('.panel'),
+      barwrap: card.querySelector('.barwrap'),
+      bar: card.querySelector('.bar'),
+      fill: card.querySelector('.fill'),
+      ghost: card.querySelector('.ghost'),
+      pts: card.querySelector('.pts'),
+      missBtn: card.querySelector('.qbtn.miss'),
+      okBtn: card.querySelector('.qbtn.ok'),
+    };
+    c.panel.style.clipPath = CARD_CLIP;
+    c.bar.style.clipPath = BAR_CLIP;
+    card.querySelector('.gchip').style.clipPath = CHIP_CLIP;
+    card
+      .querySelectorAll('.qbtn')
+      .forEach((b) => (b.style.clipPath = GEM_CLIP));
+    c.missBtn.addEventListener('click', () => miss(c));
+    c.okBtn.addEventListener('click', () => correct(c));
+    cards.push(c);
+  }
+
+  function render(c) {
+    c.pts.textContent = Math.round(c.p * 100) + ' PTS';
+  }
+  function setBusy(c, v) {
+    c.busy = v;
+    c.missBtn.disabled = v;
+    c.okBtn.disabled = v;
+  }
+
+  async function miss(c) {
+    if (c.busy) return;
+    const from = c.p,
+      to = Math.max(0, c.p - MISS_COST);
+    c.p = to;
+    render(c);
+    if (reduced()) {
+      snapW(c.fill, to);
+      if (c.ghost) snapW(c.ghost, to);
+      return;
+    }
+    setBusy(c, true);
+    try {
+      await c.dir.miss(c, from, to);
+    } finally {
+      setW(c.fill, to);
+      if (c.ghost) snapW(c.ghost, to);
+      setBusy(c, false);
+    }
+  }
+  function correct(c) {
+    if (c.busy) return;
+    c.p = Math.min(1, c.p + HIT_GAIN);
+    render(c);
+    if (reduced()) {
+      snapW(c.fill, c.p);
+    } else {
+      setW(c.fill, c.p);
+    }
+    if (c.ghost) snapW(c.ghost, c.p);
+  }
+  function reset(c) {
+    c.p = START;
+    render(c);
+    snapW(c.fill, START);
+    if (c.ghost) snapW(c.ghost, START);
+  }
+
+  // ---- Palette switcher -----------------------------------------------------
+  const chipsBox = document.getElementById('chips');
+  function applySet(key) {
+    currentSet = key;
+    const { s, i, a } = SETS[key];
+    for (const c of cards) {
+      c.el.style.setProperty('--s', s);
+      c.el.style.setProperty('--i', i);
+      c.el.style.setProperty('--a', a);
+    }
+    chipsBox
+      .querySelectorAll('.chip-ring')
+      .forEach((r) => r.classList.toggle('on', r.dataset.set === key));
+  }
+  for (const key of Object.keys(SETS)) {
+    const ring = document.createElement('span');
+    ring.className = 'chip-ring';
+    ring.dataset.set = key;
+    const b = document.createElement('button');
+    b.className = 'chip';
+    b.textContent = key;
+    b.setAttribute('aria-label', 'Set ' + key + ' palette');
+    b.style.background = SETS[key].s;
+    b.style.color = SETS[key].i;
+    b.style.clipPath = CHIP_CLIP;
+    b.addEventListener('click', () => applySet(key));
+    ring.appendChild(b);
+    chipsBox.appendChild(ring);
+  }
+
+  // ---- Bar style toggle ------------------------------------------------------
+  document.getElementById('barseg').addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    document
+      .querySelectorAll('#barseg button')
+      .forEach((b) => b.classList.toggle('on', b === btn));
+    const hairline = btn.dataset.bar === 'hairline';
+    cards.forEach((c) => c.panel.classList.toggle('hairline', hairline));
+  });
+
+  // ---- Global triggers ---------------------------------------------------------
+  document
+    .getElementById('missall')
+    .addEventListener('click', () => cards.forEach((c) => miss(c)));
+  document
+    .getElementById('okall')
+    .addEventListener('click', () => cards.forEach((c) => correct(c)));
+  document
+    .getElementById('resetall')
+    .addEventListener('click', () => cards.forEach((c) => reset(c)));
+  rmMedia.addEventListener('change', (e) => {
+    rmBox.checked = e.matches;
+  });
+
+  // ---- Boot -------------------------------------------------------------------
+  applySet('A');
+  cards.forEach((c) => {
+    render(c);
+    snapW(c.fill, START);
+    if (c.ghost) snapW(c.ghost, START);
+  });
+</script>

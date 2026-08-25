@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="robots" content="noindex" />
+    <title>Transition lab — quiz advance push</title>
+    <!--
+  Transition lab v3 (Malik, 2026-08-19). Full-viewport stage that mimics
+  the real mobile quiz anatomy — pinned header row, centered question
+  column, footer sheet — because mini stages compress motion (same
+  percentage travel, fewer pixels) and the judgment is about the real
+  scale. Side-by-side is impossible at full screen, so comparison comes
+  from (a) three spec SLOTS hot-switchable between advances and (b) an
+  animation speed control (1x/half/quarter/tenth — the Android
+  "animation scale" trick): at quarter speed, motion memory spans
+  sequential advances easily. v2's side-by-side mini-stage lab lives in
+  git history (0ce0203) if it's ever wanted back.
+  Judged values go into ::view-transition-*(quiz-question) in
+  app/globals.css; the "Shipped" preset must track them.
+-->
+    <style>
+      :root {
+        --surface: #e9f0a5;
+        --ink: #12352b;
+        --accent: #b31ba0;
+        --chip: rgba(18, 53, 43, 0.1);
+        --sheet: #f2f6c8;
+      }
+      * {
+        margin: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background: #2a2a26;
+        color: var(--ink);
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        overflow: hidden;
+      }
+
+      /* == The stage: the phone IS the screen; framed only on wide screens == */
+      .stage {
+        position: fixed;
+        inset: 0;
+        background: var(--surface);
+        overflow: hidden;
+      }
+      @media (min-width: 520px) {
+        .stage {
+          inset: 50% auto auto 50%;
+          translate: -50% -50%;
+          width: 400px;
+          height: min(850px, 96vh);
+          border-radius: 20px;
+          box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+        }
+      }
+
+      .bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: calc(52px + env(safe-area-inset-top));
+        padding: calc(8px + env(safe-area-inset-top)) 16px 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        z-index: 3;
+      }
+      .bar .x {
+        font-size: 19px;
+        opacity: 0.65;
+        width: 28px;
+      }
+      .track {
+        flex: 1;
+        height: 10px;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.55);
+        overflow: hidden;
+      }
+      .fill {
+        height: 100%;
+        width: 12%;
+        background: var(--accent);
+        transition: width 300ms ease-out;
+      }
+      .bar .book {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.45);
+        display: grid;
+        place-items: center;
+        font-size: 17px;
+      }
+
+      .viewport {
+        position: absolute;
+        top: calc(52px + env(safe-area-inset-top));
+        bottom: calc(118px + env(safe-area-inset-bottom));
+        left: 0;
+        right: 0;
+        overflow: hidden;
+      }
+      .pane {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 22px;
+        padding: 16px;
+        will-change: transform, opacity, filter;
+      }
+      .prompt {
+        font-size: 22px;
+        font-weight: 600;
+        text-align: center;
+        text-wrap: balance;
+        line-height: 1.3;
+      }
+      .eyebrow {
+        font-family: ui-monospace, monospace;
+        font-size: 11.5px;
+        letter-spacing: 0.14em;
+        opacity: 0.6;
+      }
+      .opts {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .opt {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        background: var(--chip);
+        border-radius: 12px;
+        padding: 14px 15px;
+        font-size: 17px;
+        font-family: ui-serif, Georgia, serif;
+        font-style: italic;
+      }
+      .opt b {
+        font-family: ui-monospace, monospace;
+        font-style: normal;
+        font-size: 12px;
+        width: 24px;
+        height: 24px;
+        border-radius: 7px;
+        background: rgba(18, 53, 43, 0.14);
+        display: grid;
+        place-items: center;
+        flex: none;
+      }
+
+      /* == The control sheet, wearing the real footer sheet's anatomy ======== */
+      .sheet {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--sheet);
+        border-radius: 16px 16px 0 0;
+        padding: 8px 16px calc(12px + env(safe-area-inset-bottom));
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 4;
+        box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.08);
+      }
+      .grabber {
+        width: 48px;
+        height: 5px;
+        border-radius: 3px;
+        background: rgba(18, 53, 43, 0.2);
+        margin: 0 auto;
+        cursor: pointer;
+        flex: none;
+        /* generous tap zone */
+        box-shadow:
+          0 -10px 0 12px transparent,
+          0 10px 0 12px transparent;
+      }
+      .quick {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .slotchips {
+        display: flex;
+        gap: 5px;
+        flex: 1;
+        min-width: 0;
+      }
+      .slotchip {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+        padding: 6px 4px;
+        border-radius: 10px;
+        border: 1.5px solid rgba(18, 53, 43, 0.18);
+        background: transparent;
+        font-family: inherit;
+        color: inherit;
+      }
+      .slotchip[data-active] {
+        border-color: var(--ink);
+        background: rgba(18, 53, 43, 0.08);
+      }
+      .slotchip .k {
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .slotchip .v {
+        font-family: ui-monospace, monospace;
+        font-size: 9.5px;
+        opacity: 0.65;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .speed {
+        display: flex;
+        gap: 0;
+        border: 1.5px solid rgba(18, 53, 43, 0.18);
+        border-radius: 10px;
+        overflow: hidden;
+        flex: none;
+      }
+      .speed button {
+        font: inherit;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 8px 8px;
+        border: 0;
+        background: transparent;
+        color: inherit;
+      }
+      .speed button[data-on] {
+        background: var(--ink);
+        color: var(--surface);
+      }
+
+      .go {
+        height: 52px;
+        border: 0;
+        border-radius: 12px;
+        background: var(--ink);
+        color: var(--surface);
+        font-size: 16.5px;
+        font-weight: 600;
+        font-family: inherit;
+      }
+      .go:active {
+        transform: scale(0.98);
+      }
+
+      /* Expanded region — preset pickers + dials */
+      .more {
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        padding-top: 2px;
+      }
+      .sheet[data-open] .more {
+        display: flex;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+      }
+      .row label {
+        width: 76px;
+        flex: none;
+        font-weight: 500;
+      }
+      .row output {
+        width: 54px;
+        flex: none;
+        text-align: right;
+        font-family: ui-monospace, monospace;
+        font-size: 11.5px;
+      }
+      .row select {
+        flex: 1;
+        font: inherit;
+        font-size: 13px;
+        padding: 6px 8px;
+        border-radius: 8px;
+        border: 1px solid rgba(18, 53, 43, 0.25);
+        background: rgba(255, 255, 255, 0.6);
+        color: inherit;
+      }
+      input[type='range'] {
+        flex: 1;
+        accent-color: var(--accent);
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .actions button {
+        font: inherit;
+        font-size: 12px;
+        font-weight: 500;
+        color: inherit;
+        padding: 7px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(18, 53, 43, 0.25);
+        background: rgba(255, 255, 255, 0.6);
+      }
+      .actions button[data-on] {
+        background: var(--ink);
+        color: var(--surface);
+        border-color: var(--ink);
+      }
+      .hr {
+        height: 1px;
+        background: rgba(18, 53, 43, 0.12);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <div class="bar">
+        <span class="x">×</span>
+        <div class="track"><div class="fill" id="fill"></div></div>
+        <div class="book">📖</div>
+      </div>
+      <div class="viewport" id="viewport"></div>
+
+      <div class="sheet" id="sheet">
+        <div class="grabber" id="grabber"></div>
+        <div class="quick">
+          <div class="slotchips" id="slotchips"></div>
+          <div class="speed" id="speed">
+            <button data-v="1" data-on>1×</button>
+            <button data-v="0.5">½</button>
+            <button data-v="0.25">¼</button>
+            <button data-v="0.1">⅒</button>
+          </div>
+        </div>
+        <button class="go" id="go">Next Question</button>
+        <div class="more">
+          <div class="hr"></div>
+          <div class="row">
+            <label>Slot A</label
+            ><select data-slot="0"></select>
+          </div>
+          <div class="row">
+            <label>Slot B</label
+            ><select data-slot="1"></select>
+          </div>
+          <div class="row">
+            <label>Slot C</label
+            ><select data-slot="2"></select>
+          </div>
+          <div class="hr"></div>
+          <div class="row">
+            <label for="dur">Duration</label
+            ><input
+              type="range"
+              id="dur"
+              min="120"
+              max="450"
+              step="10"
+            /><output id="durOut"></output>
+          </div>
+          <div class="row">
+            <label for="ease">Easing</label
+            ><select id="ease"></select>
+          </div>
+          <div class="row">
+            <label for="fade">Fade</label
+            ><select id="fade">
+              <option value="travel">with travel</option>
+              <option value="through">through — out, then in</option>
+              <option value="late">late — opaque 60%</option>
+              <option value="none">none (opaque)</option>
+            </select>
+          </div>
+          <div class="row">
+            <label for="blur">Blur</label
+            ><input type="range" id="blur" min="0" max="12" step="1" /><output
+              id="blurOut"
+            ></output>
+          </div>
+          <div class="row">
+            <label for="travel">Travel</label
+            ><input
+              type="range"
+              id="travel"
+              min="5"
+              max="110"
+              step="5"
+            /><output id="travelOut"></output>
+          </div>
+          <div class="actions">
+            <button id="loop">Loop</button>
+            <div style="flex: 1"></div>
+            <button id="copy">Copy custom spec</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Alternating 1-line/2-line prompts on purpose — the resting-height
+      // variance is part of what's being judged.
+      const QUESTIONS = [
+        {
+          p: 'Not either C or L.',
+          o: ['(∼C ∨ ∼L)', '∼(C ∨ L)', '∼C ∨ L', '(∼C ∨ L)'],
+        },
+        {
+          p: 'If you aren’t courageous then you aren’t likeable.',
+          o: ['(∼C ⊃ ∼L)', '∼(C ⊃ ∼L)', '∼C ⊃ ∼L', '(∼C ⊃ L)'],
+        },
+        {
+          p: 'Both not F and R.',
+          o: ['(∼F · R)', '∼(F · R)', '∼F · R', '(∼F · ∼R)'],
+        },
+        {
+          p: 'You’re cheerful, and wild or generous.',
+          o: ['(C · (W ∨ G))', '((C · W) ∨ G)', 'C · W ∨ G', '(C · W) ∨ G'],
+        },
+        {
+          p: 'If T then F, or S.',
+          o: ['((T ⊃ F) ∨ S)', '(T ⊃ (F ∨ S))', 'T ⊃ F ∨ S', '(T ⊃ F) ∨ S'],
+        },
+        {
+          p: 'You’re either not demented or not selfish.',
+          o: ['(∼D ∨ ∼S)', '∼(D ∨ S)', '∼D ∨ ∼S', '(∼D · ∼S)'],
+        },
+      ];
+
+      const EASINGS = {
+        'ease-out-cubic': 'cubic-bezier(0.215, 0.61, 0.355, 1)',
+        'ease-out-quad': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        'ease-out-quart': 'cubic-bezier(0.165, 0.84, 0.44, 1)',
+        'ease-out-quint': 'cubic-bezier(0.23, 1, 0.32, 1)',
+        'ease-out-expo': 'cubic-bezier(0.19, 1, 0.22, 1)',
+        'ease-in-out-cubic': 'cubic-bezier(0.645, 0.045, 0.355, 1)',
+      };
+
+      // "Shipped" tracks ::view-transition-*(quiz-question) in app/globals.css.
+      const PRESETS = {
+        Shipped: {
+          dur: 260,
+          ease: 'ease-out-cubic',
+          fade: 'travel',
+          blur: 0,
+          travel: 20,
+        },
+        // The symmetric crossfade puts both layers at ~50% opacity while
+        // they sit only ~75px apart — the classic short-travel ghosting
+        // risk. Material's shared axis uses a fade-THROUGH (outgoing
+        // leaves before the incoming arrives) to avoid exactly that.
+        // Here to test whether ours needs it.
+        'Fade-through': {
+          dur: 260,
+          ease: 'ease-out-cubic',
+          fade: 'through',
+          blur: 0,
+          travel: 20,
+        },
+        'Drift 12': {
+          dur: 260,
+          ease: 'ease-out-cubic',
+          fade: 'travel',
+          blur: 0,
+          travel: 12,
+        },
+        Duolingo: {
+          dur: 230,
+          ease: 'ease-out-cubic',
+          fade: 'none',
+          blur: 0,
+          travel: 100,
+        },
+        'Late-fade push': {
+          dur: 260,
+          ease: 'ease-out-cubic',
+          fade: 'late',
+          blur: 4,
+          travel: 110,
+        },
+        Custom: null, // resolved from the dials at advance time
+      };
+
+      const $ = (id) => document.getElementById(id);
+      const custom = {
+        dur: 260,
+        ease: 'ease-out-cubic',
+        fade: 'travel',
+        blur: 0,
+        travel: 20,
+      };
+      const slots = ['Shipped', 'Fade-through', 'Drift 12'];
+      let active = 0,
+        speed = 1,
+        qIndex = 0,
+        busy = false,
+        progress = 12;
+
+      const specOf = (name) =>
+        name === 'Custom' ? { ...custom } : PRESETS[name];
+
+      function paneFor(q) {
+        const pane = document.createElement('div');
+        pane.className = 'pane';
+        pane.innerHTML = `
+      <p class="prompt">${q.p}</p>
+      <div>
+        <p class="eyebrow">TRANSLATES INTO LOGIC AS:</p>
+      </div>
+      <div class="opts">${q.o.map((t, i) => `<div class="opt"><b>${i + 1}</b>${t}</div>`).join('')}</div>`;
+        return pane;
+      }
+      const viewport = $('viewport');
+      viewport.appendChild(paneFor(QUESTIONS[0]));
+
+      // Keyframe builders — mirror the ::view-transition-old/new pairs.
+      function outFrames(s) {
+        const to = { transform: `translateX(-${s.travel}%)` };
+        if (s.fade === 'travel')
+          return [
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+            { ...to, opacity: 0, filter: `blur(${s.blur}px)` },
+          ];
+        if (s.fade === 'late')
+          return [
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+            { opacity: 1, filter: 'blur(0)', offset: 0.6 },
+            { ...to, opacity: 0, filter: `blur(${s.blur}px)` },
+          ];
+        // fade-THROUGH: the outgoing layer is gone by 35%, so the two
+        // never share the screen at partial opacity (no ghosting).
+        if (s.fade === 'through')
+          return [
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+            { opacity: 0, filter: `blur(${s.blur}px)`, offset: 0.35 },
+            { ...to, opacity: 0, filter: `blur(${s.blur}px)` },
+          ];
+        return [{ transform: 'translateX(0)' }, to];
+      }
+      function inFrames(s) {
+        const from = { transform: `translateX(${s.travel}%)` };
+        if (s.fade === 'travel')
+          return [
+            { ...from, opacity: 0, filter: `blur(${s.blur}px)` },
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+          ];
+        if (s.fade === 'late')
+          return [
+            { ...from, opacity: 0, filter: `blur(${s.blur}px)` },
+            { opacity: 1, filter: 'blur(0)', offset: 0.4 },
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+          ];
+        // fade-THROUGH: hold invisible until the outgoing has left.
+        if (s.fade === 'through')
+          return [
+            { ...from, opacity: 0, filter: `blur(${s.blur}px)` },
+            { opacity: 0, filter: `blur(${s.blur}px)`, offset: 0.35 },
+            { transform: 'translateX(0)', opacity: 1, filter: 'blur(0)' },
+          ];
+        return [from, { transform: 'translateX(0)' }];
+      }
+
+      function advance() {
+        if (busy) return;
+        busy = true;
+        qIndex = (qIndex + 1) % QUESTIONS.length;
+        progress = progress >= 88 ? 12 : progress + 9;
+        $('fill').style.width = progress + '%';
+
+        const spec = specOf(slots[active]);
+        const oldPane = viewport.querySelector('.pane');
+        const newPane = paneFor(QUESTIONS[qIndex]);
+        viewport.appendChild(newPane);
+        // The speed control divides time, not the spec — 1/4x plays the same
+        // 260ms choreography over 1040ms, like a dev-settings animation scale.
+        const opts = {
+          duration: spec.dur / speed,
+          easing: EASINGS[spec.ease],
+          fill: 'both',
+        };
+        oldPane.animate(outFrames(spec), opts);
+        const anim = newPane.animate(inFrames(spec), opts);
+        anim.finished
+          .then(() => {
+            oldPane.remove();
+            busy = false;
+          })
+          .catch(() => {
+            oldPane.remove();
+            busy = false;
+          });
+      }
+
+      // == Controls ==
+      const chipsBox = $('slotchips');
+      function renderChips() {
+        chipsBox.innerHTML = '';
+        slots.forEach((name, i) => {
+          const b = document.createElement('button');
+          b.className = 'slotchip';
+          if (i === active) b.setAttribute('data-active', '');
+          const s = specOf(name);
+          b.innerHTML = `<span class="k">${'ABC'[i]} · ${name}</span><span class="v">${s.dur}ms · ${s.travel}% · ${s.fade}</span>`;
+          b.onclick = () => {
+            active = i;
+            renderChips();
+          };
+          chipsBox.appendChild(b);
+        });
+        document
+          .querySelectorAll('.more select[data-slot]')
+          .forEach((sel, i) => {
+            sel.value = slots[i];
+          });
+      }
+
+      document.querySelectorAll('.more select[data-slot]').forEach((sel) => {
+        for (const name of Object.keys(PRESETS))
+          sel.add(new Option(name, name));
+        sel.addEventListener('change', () => {
+          slots[+sel.dataset.slot] = sel.value;
+          renderChips();
+        });
+      });
+
+      $('speed').addEventListener('click', (e) => {
+        const b = e.target.closest('button');
+        if (!b) return;
+        speed = +b.dataset.v;
+        document
+          .querySelectorAll('#speed button')
+          .forEach((x) => x.removeAttribute('data-on'));
+        b.setAttribute('data-on', '');
+      });
+
+      $('go').addEventListener('click', advance);
+      $('grabber').addEventListener('click', () => {
+        const sheet = $('sheet');
+        if (sheet.hasAttribute('data-open')) sheet.removeAttribute('data-open');
+        else sheet.setAttribute('data-open', '');
+      });
+
+      let loopTimer = null;
+      $('loop').addEventListener('click', () => {
+        if (loopTimer) {
+          clearInterval(loopTimer);
+          loopTimer = null;
+          $('loop').removeAttribute('data-on');
+        } else {
+          const period = () => Math.max(1400, 260 / speed + 1000);
+          loopTimer = setInterval(advance, period());
+          $('loop').setAttribute('data-on', '');
+        }
+      });
+
+      // Dials define the Custom spec.
+      const easeSel = $('ease');
+      for (const name of Object.keys(EASINGS))
+        easeSel.add(new Option(name, name));
+      function syncDials() {
+        $('dur').value = custom.dur;
+        $('durOut').value = custom.dur + ' ms';
+        easeSel.value = custom.ease;
+        $('fade').value = custom.fade;
+        $('blur').value = custom.blur;
+        $('blurOut').value = custom.blur + ' px';
+        $('travel').value = custom.travel;
+        $('travelOut').value = custom.travel + '%';
+        renderChips();
+      }
+      function bind(id, key) {
+        $(id).addEventListener('input', () => {
+          custom[key] = $(id).type === 'range' ? +$(id).value : $(id).value;
+          syncDials();
+        });
+      }
+      bind('dur', 'dur');
+      bind('ease', 'ease');
+      bind('fade', 'fade');
+      bind('blur', 'blur');
+      bind('travel', 'travel');
+
+      $('copy').addEventListener('click', async () => {
+        const spec = `custom → ${custom.dur}ms · ${custom.ease} · fade ${custom.fade} · blur ${custom.blur} · ${custom.travel}% (${EASINGS[custom.ease]})`;
+        try {
+          await navigator.clipboard.writeText(spec);
+          $('copy').textContent = 'Copied ✓';
+        } catch {
+          prompt('Copy the spec:', spec);
+        }
+        setTimeout(() => ($('copy').textContent = 'Copy custom spec'), 1400);
+      });
+
+      syncDials();
+    </script>
+  </body>
+</html>

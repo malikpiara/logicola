@@ -5,17 +5,16 @@ export default function OfflinePage() {
         <h1 className='text-3xl font-bold text-primaryColor'>
           You&apos;re offline
         </h1>
+        {/* Said in a student's words, not ours (2026-08-24 copy
+            review): 'route' and 'offline quiz bundle' are our nouns,
+            and 'published quizzes' is our internal one. */}
         <p className='text-lg text-gray-600'>
-          Published quizzes remain available after the app has been installed
-          and synced while online. This page appears when you open a route that
-          is not part of the offline quiz bundle.
+          The exercises you have already opened still work without a connection.
+          This page is not one of them.
         </p>
       </div>
       <div className='motion-card rounded-lg border border-gray-200 bg-white p-5 text-left text-sm text-gray-600 shadow-sm'>
-        <p>
-          To restore the full website experience, reconnect to the internet and
-          reload the page.
-        </p>
+        <p>Reconnect and reload, and the rest of the site comes back.</p>
       </div>
     </div>
   );

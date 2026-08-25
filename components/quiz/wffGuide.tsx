@@ -1,20 +1,34 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import KatexSpan from '../katexSpan';
 import { SubSet } from '@/content/types';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { spriteClip } from '@/lib/pixel';
+
+// Loaded on demand: the fallacy table drags the whole Set R corpus with
+// it (see setRGuide.tsx). Only mounts on Set R, so only Set R pays.
+const SetRGuide = dynamic(() => import('./setRGuide'));
 
 /**
- * Gensler's seven canonical flaws-of-a-definition, with one worked
- * example each. Lifted from the 2008 LCEXE Set Q `*H` ("Info"
- * button) block, which itself follows the textbook §3.2. Shown in
- * the right column of the Set Q quiz guide.
+ * The reference guide, in the lab panel's information hierarchy
+ * (docs/pattern-lab.html SET_GUIDES; styles in globals.css § Reference
+ * guide): 15px/600 headings, 13px body, chip rows for notation, dense
+ * tables with mono small-caps headers, hanging-numeral rule lists. Set
+ * R's eighteen fallacies read as the same structure as the hints — code
+ * chip, weighted name, ink gloss, numbered clause list — one hierarchy
+ * on the card and in the reference.
+ *
+ * Notation renders in KaTeX (the lab used plain text — its decisions on
+ * size and weight carry, the optical result was re-judged here), and
+ * every notation chip wears the keycaps' clip (Sprite 4px, decided
+ * 2026-08-06).
+ */
+
+/**
+ * Gensler's seven canonical flaw CATEGORIES with ORIGINAL worked
+ * examples (Malik approved 2026-08-22, guide-lab). The shipped set was
+ * lifted verbatim from the 2008 LCEXE Set Q `*H` block / textbook §3.2
+ * — replaced so the software stops reproducing Routledge's text. The
+ * framework and NUMBERING stay: the numbers mirror the answer options.
  */
 const SET_Q_FLAW_EXAMPLES: ReadonlyArray<{
   num: number;
@@ -25,44 +39,44 @@ const SET_Q_FLAW_EXAMPLES: ReadonlyArray<{
   {
     num: 1,
     name: 'Too broad',
-    example: '“Bachelor” means “man.”',
-    why: 'There are men who aren’t bachelors.',
+    example: '“Chair” means “furniture.”',
+    why: 'There is furniture that isn’t a chair.',
   },
   {
     num: 2,
     name: 'Too narrow',
-    example: '“Bachelor” means “unmarried male astronaut.”',
-    why: 'There are bachelors who aren’t astronauts.',
+    example: '“Book” means “hardcover volume.”',
+    why: 'There are books that aren’t hardcover.',
   },
   {
     num: 3,
     name: 'Circular',
-    example: '“True” means “known to be true.”',
-    why: 'This defines “true” using “true.”',
+    example: '“Art” means “whatever artists create.”',
+    why: '“Artist” is itself defined by “art.”',
   },
   {
     num: 4,
     name: 'Uses poorly understood terms',
-    example: '“Good” means “having positive aretaic value.”',
-    why: 'The latter is less clear than “good.”',
+    example: '“Sleep” means “periodic suspension of sensorimotor engagement.”',
+    why: 'The latter is less clear than “sleep.”',
   },
   {
     num: 5,
     name: 'Poor match in vagueness',
-    example: '“Bachelor” means “unmarried male over 18 years old.”',
-    why: 'The latter is much more precise than “bachelor.”',
+    example: '“Tall” means “at least 190.5 cm.”',
+    why: 'Far more precise than “tall” ever is.',
   },
   {
     num: 6,
     name: 'Poor match in emotional tone',
-    example: '“Bachelor” means “fortunate man who hasn’t married.”',
-    why: 'The latter has a different emotional tone.',
+    example: '“Politician” means “self-serving schemer seeking office.”',
+    why: 'Smuggles in a sneer that “politician” doesn’t have.',
   },
   {
     num: 7,
     name: 'Has non-essential properties',
-    example: '“Bachelor” means “unmarried man living on earth.”',
-    why: 'We could imagine a bachelor who lives on the moon.',
+    example: '“Human” means “animal that cooks its food.”',
+    why: 'Maybe true of all and only humans, but cooking isn’t what makes someone human.',
   },
 ];
 
@@ -70,18 +84,74 @@ interface WffGuideProps {
   subSet: SubSet;
 }
 
-const GUIDE_SUBSET_IDS = new Set([1, 2, 3, 4, 6, 12]);
+// Keyed by subSet.id — every registered subset needs a unique id for
+// this gating to stay sound (18 = Set R, Informal Fallacies).
+const GUIDE_SUBSET_IDS = new Set([1, 2, 3, 4, 6, 12, 18]);
+const SET_R_SUBSET_ID = 18;
 
-const guideHeadingClassName =
-  'text-xl md:text-2xl font-semibold leading-7 md:leading-8 text-gray-800';
-const guideColumnsClassName = 'flex flex-col gap-8 lg:flex-row lg:gap-10';
-const guideCodeClassName =
-  'rounded bg-muted px-1.5 py-0.5 text-lg leading-none text-gray-900';
-const capsLabelClassName =
-  'text-xs font-semibold tracking-[0.08em] text-gray-500';
+// Container-query driven (`@3xl` ≈ 768px) rather than viewport `lg:` so the
+// guide's two-column layouts follow the width of whatever slot they sit in —
+// the full-width bottom sheet vs. the ~430px desktop side pane — instead of
+// the screen. In the narrow rail the container never reaches `@3xl`, so the
+// columns stay stacked; the wide bottom sheet still gets two columns.
+const guideColumnsClassName = 'flex flex-col gap-8 @3xl:flex-row @3xl:gap-10';
+// Sprite 4px corners (the keycaps' clip) on every notation chip — decided
+// 2026-08-06, docs/pixel-ui.md § Notation chips.
+const CHIP_CLIP_STYLE: React.CSSProperties = { clipPath: spriteClip(0, 8) };
 
 export function hasWffGuide(subSet: SubSet) {
   return GUIDE_SUBSET_IDS.has(subSet.id);
+}
+
+/** A `symbol · caps label · example` notation row (the lab's guideRow). */
+function GuideRow({
+  symbol,
+  cap,
+  example,
+}: {
+  symbol: string;
+  cap: string;
+  example?: string;
+}) {
+  return (
+    <div className='qguide-row'>
+      <code className='qguide-chip' style={CHIP_CLIP_STYLE}>
+        <KatexSpan className='inline' text={symbol} />
+      </code>
+      <span className='qguide-cap'>{cap}</span>
+      {example && (
+        <code className='qguide-chip' style={CHIP_CLIP_STYLE}>
+          <KatexSpan className='inline' text={example} />
+        </code>
+      )}
+    </div>
+  );
+}
+
+/** The four binary connectives — shared by the C and J guides. */
+function ParenGroup() {
+  return (
+    <div>
+      <h3 className='qguide-h'>Use a pair of parentheses for each:</h3>
+      <GuideRow symbol={'$ \\cdot $'} cap='and' example={'$(P \\cdot Q)$'} />
+      <GuideRow symbol={'$ \\vee $'} cap='or' example={'$(P \\vee Q)$'} />
+      <GuideRow
+        symbol={'$ \\supset $'}
+        cap='if-then'
+        example={'$(P \\supset Q)$'}
+      />
+      <GuideRow symbol={'$ \\equiv $'} cap='iff' example={'$(P \\equiv Q)$'} />
+    </div>
+  );
+}
+
+/** An inline notation chip in guide prose (L's rules). */
+function Chip({ children }: { children: React.ReactNode }) {
+  return (
+    <code className='qchip' style={CHIP_CLIP_STYLE}>
+      {children}
+    </code>
+  );
 }
 
 export const WffGuide: React.FC<WffGuideProps> = ({ subSet }) => {
@@ -90,352 +160,157 @@ export const WffGuide: React.FC<WffGuideProps> = ({ subSet }) => {
   }
 
   return (
-    <>
+    <div className='wff-guide flex flex-col gap-10'>
       {[1, 2].includes(subSet.id) && (
-        <>
-          <div>
-            <h3 className={guideHeadingClassName}>
-              What makes a well-formed formula (wff)?
-            </h3>
-            <p className='mt-2'>
-              A wff must have one of these eight forms (where other capitals can
-              replace “A” and “B” and other small letters “c” and “d”):
-            </p>
-          </div>
-          <div className='rounded-md border border-gray-200'>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Class statements</TableHead>
-                  <TableHead>Individual statements</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell className='font-mono text-gray-800'>
-                    all A is B
-                  </TableCell>
-                  <TableCell className='font-mono text-gray-800'>
-                    c is A
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className='font-mono text-gray-800'>
-                    no A is B
-                  </TableCell>
-                  <TableCell className='font-mono text-gray-800'>
-                    c is not A
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className='font-mono text-gray-800'>
-                    some A is B
-                  </TableCell>
-                  <TableCell className='font-mono text-gray-800'>
-                    c is d
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className='font-mono text-gray-800'>
-                    some A is not B
-                  </TableCell>
-                  <TableCell className='font-mono text-gray-800'>
-                    c is not d
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </div>
-        </>
+        <div>
+          <h3 className='qguide-h'>What makes a well-formed formula (wff)?</h3>
+          <p className='qguide-p'>
+            A wff must have one of these eight forms (where other capitals can
+            replace “A” and “B” and other small letters “c” and “d”):
+          </p>
+          <table className='qguide-table'>
+            <thead>
+              <tr>
+                <th>Class statements</th>
+                <th>Individual statements</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(
+                [
+                  ['all A is B', 'c is A'],
+                  ['no A is B', 'c is not A'],
+                  ['some A is B', 'c is d'],
+                  ['some A is not B', 'c is not d'],
+                ] as const
+              ).map(([cls, ind]) => (
+                <tr key={cls}>
+                  <td className='qguide-mono'>{cls}</td>
+                  <td className='qguide-mono'>{ind}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {subSet.id === 6 && (
-        <div className='p-4 pb-0'>
-          <h3 className={guideHeadingClassName}>
-            What makes a well-formed formula (wff)?
-          </h3>
-          <div className={guideColumnsClassName}>
-            <div className='space-y-4'>
-              <h4 className='font-medium'>
-                Use a pair of parentheses for each:
-              </h4>
-              <div className='grid gap-2'>
-                <div className='flex items-center gap-2'>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$ \\cdot $'} />
-                  </code>
-                  <span className={capsLabelClassName}>AND</span>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$(P \\cdot Q)$'} />
-                  </code>
-                </div>
-
-                <div className='flex items-center gap-2'>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$ \\vee $'} />
-                  </code>
-                  <span className={capsLabelClassName}>OR</span>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$(P \\vee Q)$'} />
-                  </code>
-                </div>
-
-                <div className='flex items-center gap-2'>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$ \\supset $'} />
-                  </code>
-                  <span className={capsLabelClassName}>IF-THEN</span>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$(P \\supset Q)$'} />
-                  </code>
-                </div>
-
-                <div className='flex items-center gap-2'>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$ \\equiv $'} />
-                  </code>
-                  <span className={capsLabelClassName}>IFF</span>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$(P \\equiv Q)$'} />
-                  </code>
-                </div>
-              </div>
-            </div>
+        <div>
+          <h3 className='qguide-h'>What makes a well-formed formula (wff)?</h3>
+          <div className='qguide-group'>
+            <ParenGroup />
           </div>
         </div>
       )}
 
       {subSet.id === 4 && (
-        <div className='p-4 pb-0'>
-          <div className={guideColumnsClassName}>
-            <div className='space-y-4'>
-              <h4 className='font-medium'>
-                Use a pair of parentheses for each:
-              </h4>
-              <div className='grid gap-2'>
-                <div className='flex items-center gap-2'>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$ \\cdot $'} />
-                  </code>
-                  <span className={capsLabelClassName}>AND</span>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$ (P \\cdot Q) $'} />
-                  </code>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$ \\vee $'} />
-                  </code>
-                  <span className={capsLabelClassName}>OR</span>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$ (P \\vee Q) $'} />
-                  </code>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$ \\supset $'} />
-                  </code>
-                  <span className={capsLabelClassName}>IF-THEN</span>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$ (P \\supset Q) $'} />
-                  </code>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$ \\equiv $'} />
-                  </code>
-                  <span className={capsLabelClassName}>IFF</span>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$( P \\equiv Q) $'} />
-                  </code>
-                </div>
-              </div>
-            </div>
-            <div className='space-y-4'>
-              <h4 className='font-medium'>
-                Do not use additional grouping parentheses for:
-              </h4>
-              <div className='grid gap-2'>
-                <div className='flex items-center gap-2'>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$ \\sim $'} />
-                  </code>
-                  <span className={capsLabelClassName}>NOT</span>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$ \\square $'} />
-                  </code>
-                  <span className={capsLabelClassName}>NECESSARY</span>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <code className={guideCodeClassName}>
-                    <KatexSpan className='inline' text={'$ \\lozenge $'} />
-                  </code>
-                  <span className={capsLabelClassName}>POSSIBLE</span>
-                </div>
-              </div>
-            </div>
+        <div className={guideColumnsClassName}>
+          <ParenGroup />
+          <div>
+            <h3 className='qguide-h'>
+              Do not use additional grouping parentheses for:
+            </h3>
+            <GuideRow symbol={'$ \\sim $'} cap='not' />
+            <GuideRow symbol={'$ \\square $'} cap='necessary' />
+            <GuideRow symbol={'$ \\lozenge $'} cap='possible' />
           </div>
         </div>
       )}
 
+      {/* Table FIRST, and the "What is a definition?" prose is GONE from
+          the sheet (Malik, 2026-08-22, guide-lab): the sheet is a
+          mid-question reference and the prose was a lesson — that
+          teaching now belongs to the start screen or the companion book.
+          Single column on every width: with the prose removed there is
+          nothing left to columnize. */}
       {subSet.id === 3 && (
-        <div className={guideColumnsClassName}>
-          <div className='lg:flex-1'>
-            <h3 className={guideHeadingClassName}>What is a definition?</h3>
-            <p className='mt-2 max-w-prose'>
-              A definition is a rule of paraphrase designed to explain meaning.
-              More precisely, a definition of a word or phrase is a rule saying
-              how to eliminate this word or phrase in any sentence using it and
-              produce a second sentence that means the same thing—the purpose of
-              this being to explain or clarify the meaning of the word or
-              phrase.
-            </p>
-            <p className='mt-3 max-w-prose'>
-              Definitions may be stipulative (specifying your own usage) or
-              lexical (explaining current usage). A good lexical definition
-              should allow us to “paraphrase out” a term—to produce a second
-              sentence that means the same thing but doesn’t use the defined
-              term. A good lexical definition should: be neither too broad nor
-              too narrow, avoid circularity and poorly understood terms, match
-              in vagueness the term defined, match, as far as possible, the
-              emotional tone (positive or negative or neutral) of the term
-              defined, and include only properties essential to the term.
-            </p>
-          </div>
-          <div className='lg:flex-1'>
-            <h4 className='text-lg font-semibold text-gray-800'>
-              Ways a definition can be flawed
-            </h4>
-            <p className='mt-1 text-sm text-gray-500'>
-              One worked example per flaw, from Gensler §3.2.
-            </p>
-            <div className='mt-3 rounded-md border border-gray-200'>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className='w-10 text-center'>#</TableHead>
-                    <TableHead>Flaw</TableHead>
-                    <TableHead>Example &amp; why</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {SET_Q_FLAW_EXAMPLES.map((flaw) => (
-                    <TableRow key={flaw.num}>
-                      <TableCell className='text-center font-medium tabular-nums text-gray-500'>
-                        {flaw.num}
-                      </TableCell>
-                      <TableCell className='font-medium text-gray-800'>
-                        {flaw.name}
-                      </TableCell>
-                      <TableCell className='text-gray-700'>
-                        <div>{flaw.example}</div>
-                        <div className='mt-1 text-sm text-gray-500'>
-                          {flaw.why}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
+        <div>
+          <h3 className='qguide-h'>Ways a definition can be flawed</h3>
+          <p className='qguide-p'>
+            One worked example per flaw. The numbers match the answer options.
+          </p>
+          <table className='qguide-table'>
+            <tbody>
+              {SET_Q_FLAW_EXAMPLES.map((flaw) => (
+                <tr key={flaw.num}>
+                  <td className='qguide-code'>{flaw.num}</td>
+                  <td>
+                    <span className='qguide-name'>{flaw.name}</span>
+                    <div className='qguide-p' style={{ margin: '2px 0 0' }}>
+                      {flaw.example}
+                    </div>
+                    <div className='qguide-why'>{flaw.why}</div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className='qguide-src'>
+            Original examples; framework after Gensler §3.2.
+          </p>
         </div>
       )}
 
       {subSet.id === 12 && (
-        <div className='p-4 pb-0'>
-          <div className={guideColumnsClassName}>
-            {/* Left column: Basic formation rules */}
-            <div className='space-y-4'>
-              <h4 className='font-medium'>How to form an imperative wff:</h4>
-              <div className='grid gap-2'>
-                <div className='flex items-center gap-2'>
-                  <span className='font-semibold tabular-nums'>1.</span>
-                  <span>
-                    Any <u>underlined capital letter</u> is an imperative wff.
-                  </span>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <span className='font-semibold tabular-nums'>2.</span>
-                  <span>
-                    A capital letter followed by one or more small letters (with
-                    exactly one small letter underlined) is also an imperative
-                    wff.
-                    <br />
-                    <em>Example:</em> <code>A</code>,{' '}
-                    <code>
-                      A<u>x</u>
-                    </code>
-                    ,
-                    <code>
-                      A<u>x</u>y
-                    </code>
-                    , etc.
-                  </span>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <span className='font-semibold tabular-nums'>3.</span>
-                  <span>
-                    If <em>A</em> is an imperative wff, then <code>∼A</code> (do
-                    not do A) is also an imperative wff.
-                  </span>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <span className='font-semibold tabular-nums'>4.</span>
-                  <span>
-                    If <em>A</em> and <em>B</em> are imperative wffs, then
-                    <code>(A • B)</code> (“Do A and B”) is an imperative wff.
-                  </span>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <span className='font-semibold tabular-nums'>5.</span>
-                  <span>
-                    Similarly, <code>(A ⊃ B)</code> can be imperative if both
-                    <em>A</em> and <em>B</em> are imperative parts (e.g., “If
-                    you do A, then do B”).
-                  </span>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <span className='font-semibold tabular-nums'>6.</span>
-                  <span>
-                    We can also combine imperative forms with quantifiers.
-                    <code>(x)A</code> (“Let everyone do A”) or
-                    <code>(∃x)A</code> (“Let someone do A”) are imperative wffs
-                    if A is imperative (the underlined letter references the
-                    agent x).
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right column: Additional notes / examples */}
-            <div className='space-y-4'>
-              <h4 className='font-medium'>Additional notes:</h4>
-              <div className='grid gap-2'>
-                <div className='flex items-center gap-2'>
-                  <span>
-                    Underline <em>only</em> the imperative part(s). For
-                    instance, if
-                    <code>A</code> is factual and <code>B</code> is imperative,
-                    you might underline <code>B</code> but <em>not</em>{' '}
-                    <code>A</code>.
-                  </span>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <span>
-                    Deontic logic adds “ought,” “permissible,” and “forbidden”—
-                    but at this imperative level, we focus on “Do A,” “Don’t do
-                    A,” etc. You can treat them similarly, using underlined
-                    letters to indicate what must or must not be done.
-                  </span>
-                </div>
-              </div>
-            </div>
+        <div>
+          <h3 className='qguide-h'>How to form an imperative wff:</h3>
+          {/* <i>, not <em>, for the presentational italics ("Example:") —
+              the guide styles every <em> as the Rule emphasis mark, and
+              these are not the must/probably emphasis it exists for. */}
+          <ol className='qguide-rules'>
+            <li>
+              Any <u>underlined capital letter</u> is an imperative wff.
+            </li>
+            <li>
+              A capital letter followed by one or more small letters (with
+              exactly one small letter underlined) is also an imperative wff.{' '}
+              <i>Example:</i> <Chip>A</Chip>,{' '}
+              <Chip>
+                A<u>x</u>
+              </Chip>
+              ,{' '}
+              <Chip>
+                A<u>x</u>y
+              </Chip>
+              , etc.
+            </li>
+            <li>
+              If A is an imperative wff, then <Chip>∼A</Chip> (do not do A) is
+              also an imperative wff.
+            </li>
+            <li>
+              If A and B are imperative wffs, then <Chip>(A • B)</Chip> (“Do A
+              and B”) is an imperative wff.
+            </li>
+            <li>
+              Similarly, <Chip>(A ⊃ B)</Chip> can be imperative if both A and B
+              are imperative parts (e.g., “If you do A, then do B”).
+            </li>
+            <li>
+              We can also combine imperative forms with quantifiers.{' '}
+              <Chip>(x)A</Chip> (“Let everyone do A”) or <Chip>(∃x)A</Chip>{' '}
+              (“Let someone do A”) are imperative wffs if A is imperative (the
+              underlined letter references the agent x).
+            </li>
+          </ol>
+          <div className='qguide-group'>
+            <h3 className='qguide-h'>Additional notes:</h3>
+            <p className='qguide-p'>
+              Underline <i>only</i> the imperative part(s). For instance, if{' '}
+              <Chip>A</Chip> is factual and <Chip>B</Chip> is imperative, you
+              might underline <Chip>B</Chip> but <i>not</i> <Chip>A</Chip>.
+            </p>
+            <p className='qguide-p'>
+              Deontic logic adds “ought,” “permissible,” and “forbidden,” but at
+              this imperative level, we focus on “Do A,” “Don’t do A,” etc. You
+              can treat them similarly, using underlined letters to indicate
+              what must or must not be done.
+            </p>
           </div>
         </div>
       )}
-    </>
+
+      {subSet.id === SET_R_SUBSET_ID && <SetRGuide />}
+    </div>
   );
 };

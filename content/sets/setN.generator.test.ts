@@ -69,6 +69,37 @@ describe('setN generator — top-level', () => {
 
 describe('setN generator — property tests', () => {
   it.each([1, 42, 99, 12345])(
+    'seed %i: underline-direction hints match the option anatomy (2008 *30–*54)',
+    (seed) => {
+      // Domain truth from the 2008 feedback catalog: "should NOT be
+      // underlined" fires on options that wrongly underline (more
+      // `\underline`s than the answer); "SHOULD be underlined" on
+      // options that wrongly don't (fewer than the answer). A hint on
+      // an option violating its own accusation is mis-seated.
+      const underlines = (label: string) =>
+        label.split('\\underline').length - 1;
+      const set = generateSetN(seed, TEST_PER_SUBSET);
+      for (const subset of set.subSets) {
+        for (const q of subset.questions) {
+          const correct = q.options.find((o) => q.correctId.includes(o.id))!;
+          for (const o of q.options) {
+            if (!o.hint) continue;
+            if (o.hint.includes('should NOT be underlined')) {
+              expect(underlines(o.label)).toBeGreaterThan(
+                underlines(correct.label)
+              );
+            } else if (o.hint.includes('SHOULD be underlined')) {
+              expect(underlines(o.label)).toBeLessThan(
+                underlines(correct.label)
+              );
+            }
+          }
+        }
+      }
+    }
+  );
+
+  it.each([1, 42, 99, 12345])(
     'seed %i: every generated question has 4 unique-id options 0..3',
     (seed) => {
       const set = generateSetN(seed, TEST_PER_SUBSET);
