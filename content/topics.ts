@@ -46,7 +46,7 @@ const TOPIC_META: Array<Omit<Topic, 'drills'> & { colors: TopicColors }> = [
     id: 'syllogistic',
     name: 'Syllogistic Logic',
     sets: 'Set A',
-    blurb: 'All, no, some — the logic of categories.',
+    blurb: 'All, no, some: the logic of categories.',
     colors: {
       surface: '#FFABC6',
       ink: '#4A1040',
@@ -61,7 +61,7 @@ const TOPIC_META: Array<Omit<Topic, 'drills'> & { colors: TopicColors }> = [
     id: 'propositional',
     name: 'Propositional Logic',
     sets: 'Set C',
-    blurb: 'And, or, if-then — the logic of statements.',
+    blurb: 'And, or, if-then: the logic of statements.',
     colors: {
       surface: '#E7F099',
       ink: '#02302C',
@@ -76,7 +76,7 @@ const TOPIC_META: Array<Omit<Topic, 'drills'> & { colors: TopicColors }> = [
     id: 'modal',
     name: 'Modal Logic',
     sets: 'Set J',
-    blurb: 'Necessity and possibility — box and diamond.',
+    blurb: 'Necessity and possibility: box and diamond.',
     colors: {
       surface: '#E6ACF4',
       ink: '#1C3601',
@@ -91,7 +91,7 @@ const TOPIC_META: Array<Omit<Topic, 'drills'> & { colors: TopicColors }> = [
     id: 'deontic',
     name: 'Deontic Logic',
     sets: 'Set L',
-    blurb: 'Ought, permissible, forbidden — and commands.',
+    blurb: 'Ought, permissible, forbidden, and commands.',
     colors: {
       surface: '#CFF6DD',
       ink: '#3F0167',

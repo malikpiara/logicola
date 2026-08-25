@@ -7,7 +7,7 @@ export function GET() {
   const xml = buildRssFeed({
     title: 'LogiCola Blog',
     description:
-      'Announcements, product updates and essays from LogiCola — free logic practice exercises in your browser.',
+      'Announcements, product updates and essays from LogiCola. Free logic practice exercises in your browser.',
     pagePath: '/blog',
     feedPath: '/blog/feed.xml',
     items: publishedPosts.map((post) => ({
