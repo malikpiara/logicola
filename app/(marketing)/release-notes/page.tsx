@@ -19,7 +19,7 @@ import { SITE_URL } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Release Notes',
   description:
-    "What's new in LogiCola — every feature, improvement and fix as it ships, on one page.",
+    "What's new in LogiCola — every feature, improvement and fix, on one page.",
   alternates: {
     canonical: '/release-notes',
     types: {
@@ -117,8 +117,8 @@ export default function ReleaseNotesPage() {
             className='py-16 text-center text-lg'
             style={{ color: t.type, opacity: 0.75 }}
           >
-            No release notes yet — subscribe above and the first one will reach
-            you when it ships.
+            Nothing here yet. Subscribe above and you&apos;ll hear about the
+            first one.
           </p>
         )}
         {releaseEntries.map((entry, index) => (

@@ -94,8 +94,8 @@ export function NewsletterForm({
               className='motion-enter my-0 py-[11px] pr-4 text-sm font-semibold text-gray-900'
               role='status'
             >
-              You&apos;re on the list — we&apos;ll email you when something
-              worth knowing ships.
+              You&apos;re on the list. We&apos;ll write when there&apos;s
+              something worth your time.
             </p>
           ) : (
             <>

@@ -13,7 +13,11 @@ const setJ: Set = {
   slugs: ['modal', 'translations', 'basic'],
   id: 4,
   title: 'Modal Translations: Basic',
-  header: 'What is wrong with this definition?',
+  // Set-level default for a TRANSLATION set (fixed 2026-08-24: this
+  // read 'What is wrong with this definition?' — Set Q's question,
+  // copied in. Every subSet below overrides it, so no student ever saw
+  // it; the next subSet that forgets to override would have).
+  header: 'Translates into logic as:',
   subSets: [
     {
       name: 'Set J',
