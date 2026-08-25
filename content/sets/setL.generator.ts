@@ -3,13 +3,13 @@
  *
  * Phase 1 / T1.3. Ports Gensler's 2008 LCEXE Set L as a procedural
  * drill engine. Coverage: all 11 translation templates from
- * `notes/exercises/2008/decoded/set_L.txt`, split into Imperative
+ * the decoded 2008 DSL for Set L, split into Imperative
  * (`*0`, `*1`, `*3`, `*6`, `*9`) and Deontic (`*7`, `*8`, `*11`,
  * `*12`, `*13`, `*14`) subsets — matching Gensler's chapter 12
  * §12.1 / §12.3 boundary.
  *
  * Cross-checked against Gensler 3rd ed. §12.1 + §12.3 (see
- * `notes/textbook/setL.md`). Idiom rules from the textbook drive
+ * the Set L textbook notes). Idiom rules from the textbook drive
  * Layer-1 hints; per-mistake explanations in `*2`/`*4`/`*5`/`*10`/
  * `*13` (the auxiliary feedback labels in 2008's source) inform
  * Layer-2 hints.

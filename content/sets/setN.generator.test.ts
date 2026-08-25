@@ -8,7 +8,7 @@
  * letters), three-subset structure, and ID uniqueness.
  *
  * Set N specifically guards against the P0 prompt-truncation bug
- * documented in `notes/audits/setN.md` (where the static `setN.ts`
+ * documented in the Set N audit in the decode notes (where the static `setN.ts`
  * had all 6 Rationality questions sharing the same prompt with 6
  * different answers): the test "Rationality subset has unique
  * prompts within a draw" ensures the generator never reproduces
@@ -188,7 +188,7 @@ describe('setN generator — property tests', () => {
   );
 
   /**
-   * P0 regression guard. Per `notes/audits/setN.md`, the static
+   * P0 regression guard. Per the Set N audit in the decode notes, the static
    * `setN.ts` had all 6 Rationality questions sharing the same
    * prompt. The generator must never produce that pattern: across
    * a 30-question draw of the Rationality subset, distinct

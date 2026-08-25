@@ -4,7 +4,7 @@ import { Set } from '../types';
  * Set B — Syllogistic Arguments. Empty skeleton awaiting Phase 3
  * (T3.1) build: 37 argument templates from the 2008 source need to
  * be authored as MCQ "is this argument valid / which conclusion
- * follows?" questions. See notes/audits/setB.md for the full
+ * follows?" questions. See the Set B audit in the decode notes for the full
  * specification and template inventory.
  *
  * T1.7 (Phase 1 scaffolding fix): canonicalized `slugs`, `header`,

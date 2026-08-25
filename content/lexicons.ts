@@ -13,8 +13,8 @@
  * sequence matches Gensler's authoring intent.
  *
  * Per the source-of-truth policy in
- * notes/PHASE-1-WORKPLAN.md (Q3): the 2008 binary is authoritative.
- * The 2003 documented lexicon (notes/03-question-generators.md) is
+ * the Phase 1 workplan (Q3): the 2008 binary is authoritative.
+ * The 2003 documented lexicon (the question-generator notes) is
  * superseded where they differ; its catalog is recorded in the
  * "vs. 2003" comments below for traceability.
  *
@@ -1031,7 +1031,7 @@ export const verbsTransitive = live(
  *
  * `relations` is unexplained rather than explained. What is verified: no
  * ported generator draws it. What is NOT: which templates consumed it in
- * 2008. notes/03-question-generators.md attributes it to the translation
+ * 2008. the question-generator notes attributes it to the translation
  * drills (sets A, C, H, J, L, N) — of which H is still an empty skeleton
  * with 93 unbuilt templates — but that same note flags the template
  * combinatorics as unresolved pending a driver-function trace. So "it

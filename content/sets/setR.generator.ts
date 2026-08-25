@@ -6,8 +6,8 @@
  * commits. Goes with the "Fallacies and Argumentation" chapter (ch. 4)
  * of Gensler's Introduction to Logic.
  *
- * Fidelity notes (source: logicola-ghidra/notes/exercises/2008/decoded/set_R.txt,
- * ported by logicola-ghidra/tools/port_set_r.py into ./setR.data.ts):
+ * Fidelity notes (source: the decoded 2008 DSL for Set R in the private
+ * decode notes, ported by its Set R port script into ./setR.data.ts):
  *
  *   - The original engine draws a random fallacy *section* per problem
  *     (uniform over fallacy types, with recency avoidance), then a random

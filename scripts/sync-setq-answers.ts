@@ -14,18 +14,39 @@
  *      Otherwise, LC3's hand-edited richer version (em-dashes,
  *      restored apostrophes, etc.) is preserved.
  *
+ * The 2008 side lives in the private decode notes, which is not part of
+ * this repo — point SETQ_SOURCE_JSON at the parsed Set Q definitions
+ * there. Absolute paths used to be hardcoded here, which both broke the
+ * script for anyone else and published a private repo's layout
+ * (2026-08-25).
+ *
  * Usage:
- *   npx tsx scripts/sync-setq-answers.ts            # dry run, prints diff
- *   npx tsx scripts/sync-setq-answers.ts --apply    # writes proposed edits
+ *   SETQ_SOURCE_JSON=<path> npx tsx scripts/sync-setq-answers.ts
+ *   SETQ_SOURCE_JSON=<path> npx tsx scripts/sync-setq-answers.ts --apply
  */
 
 import { readFileSync, writeFileSync } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { setQ } from '../content/sets/setQ';
 
 const APPLY = process.argv.includes('--apply');
-const SETQ_PATH = '/Users/malik/Code/logicola/content/sets/setQ.ts';
-const JSON_PATH =
-  '/Users/malik/Code/logicola-ghidra/notes/exercises/2008/parsed/set_Q_definitions.json';
+
+const projectRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '..'
+);
+const SETQ_PATH = path.join(projectRoot, 'content', 'sets', 'setQ.ts');
+
+const JSON_PATH = process.env.SETQ_SOURCE_JSON;
+if (!JSON_PATH) {
+  console.error(
+    'SETQ_SOURCE_JSON is not set. Point it at the parsed Set Q definitions\n' +
+      'in the decode notes, e.g.\n' +
+      '  SETQ_SOURCE_JSON=../<notes>/set_Q_definitions.json npx tsx scripts/sync-setq-answers.ts'
+  );
+  process.exit(1);
+}
 
 interface Example {
   id: number;

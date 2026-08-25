@@ -3,12 +3,12 @@
  *
  * Phase 1 / T1.4. Ports Gensler's 2008 LCEXE Set J as a procedural
  * drill engine. Coverage: all 31 procedural templates from
- * `notes/exercises/2008/decoded/set_J.txt`, split into Basic
+ * the decoded 2008 DSL for Set J, split into Basic
  * (`*0`..`*21`) and Quantified (`*22`..`*30`) subsets matching
  * Gensler's chapter 10 / 11.2 boundary.
  *
  * Cross-checked against Gensler 3rd ed. §10.1 + §11.2 (see
- * `notes/textbook/setJ.md`). Idiom rules from the textbook drive
+ * the Set J textbook notes). Idiom rules from the textbook drive
  * Layer-1 hints; per-mistake explanations from the 2008 `*42`–`*70`
  * feedback block drive Layer-2 hints.
  *

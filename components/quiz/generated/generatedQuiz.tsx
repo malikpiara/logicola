@@ -4,7 +4,7 @@
  * Client-side quiz mount for generated sets — the shared half of the
  * per-set wrappers in this directory.
  *
- * Pre.4 architecture (notes/PHASE-1-WORKPLAN.md): generated sets
+ * Pre.4 architecture (the Phase 1 workplan): generated sets
  * (everything except Set Q) run their generator client-side at mount
  * time so questions are freshly drawn each session. The page chrome
  * is still server-rendered and cached; only the question content is

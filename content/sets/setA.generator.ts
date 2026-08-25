@@ -13,12 +13,12 @@
  * The 2008 per-template `m:` letter-pair line ("the first letters
  * in 'Sally' and 'humorous'") is NOT a wrong-answer hint — in the
  * original it's instruction text for type-the-answer mode
- * ("Symbolize using $m"), a mode LC3 hasn't built yet. Source:
- * logicola-ghidra/notes/exercises/2008/decoded/set_A.txt.
+ * ("Symbolize using $m"), a mode LC3 hasn't built yet. Source: the
+ * decoded 2008 DSL for Set A, in the private decode notes.
  *
  * Letter convention (Gensler §2.1; verified against the 2008 DSL
  * letter-binding block — dKJJ = lowercase name, dRJ = uppercase —
- * see logicola-ghidra/notes/audits/setA.md):
+ * see the Set A audit in those notes):
  *
  *   Lowercase letter — singular term (picks out one individual)
  *     proper names (Sally → s; "G is C" is Gensler's canonical
@@ -208,8 +208,8 @@ function placeForNoun(rng: Rng, noun: string): string {
 
 /**
  * Adjectives that take the inflected -est superlative cleanly.
- * Quick-win ported from 2008's `$Best` substitution; full Ghidra
- * decode of the morphology rule is deferred (see setA-work.md P2).
+ * Quick-win ported from 2008's `$Best` substitution; a full decode of
+ * the morphology rule is deferred (see the Set A work notes, P2).
  * Adjectives outside this set fall through to "most X" form.
  */
 const ESTREGULARS: ReadonlySet<string> = new Set([
@@ -338,8 +338,8 @@ function superlative(adj: string): string {
   // PROVENANCE (2026-08-20, settling whether the original's behaviour was
   // pedagogy or limitation): it was limitation. The 2008 engine's parser
   // reads ONE character after '$', so $Best was word($B) + literal "est" —
-  // it shipped "beautifulest" and "cheerfulest" (logicola-ghidra 0121b7d).
-  // Verified for the 2008 build ONLY. The earliest binary in that repo is
+  // it shipped "beautifulest" and "cheerfulest" (confirmed in the binary).
+  // Verified for the 2008 build ONLY. The earliest binary available is
   // 2003 and its LC.FIL does not yield templates to a strings dump, so how
   // far back this goes is unknown — do not repeat it as "since 1985". Gensler's hand-written textbook prose, where
   // no parser constrains him, inflects exactly as this function now does:
@@ -570,8 +570,8 @@ function template4(rng: Rng, counter: number): Question {
  *   referent).
  *
  * The 2008 DSL hardcodes "most $C" here, but that was a workaround for
- * a parser that could not inflect ($Best was $B + literal "est" —
- * logicola-ghidra 0121b7d), not authored style: Gensler's textbook
+ * a parser that could not inflect ($Best was $B + literal "est",
+ * confirmed in the binary), not authored style: Gensler's textbook
  * writes this exact sentence shape inflected ("David isn't the
  * nastiest person at the party", Intro to Logic Set B). This template
  * now uses superlative(), converging with the book (2026-08-20).

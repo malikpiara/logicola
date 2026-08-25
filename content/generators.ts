@@ -3,7 +3,7 @@
  * its `Set` procedurally.
  *
  * Phase-1 generator architecture (per
- * notes/PHASE-1-WORKPLAN.md / PORT-PLAN.md):
+ * the Phase 1 workplan / PORT-PLAN.md):
  *
  *   - Each set's generator lives in `content/sets/setX.generator.ts`
  *     and exports `generateSetX(seed?: number, perSubset = 10): Set`.

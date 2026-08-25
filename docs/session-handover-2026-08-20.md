@@ -7,8 +7,8 @@ is shipping broken English in production right now.
 
 ## 1. Set R — 124 → 191 passages
 
-Regenerated from `logicola-ghidra/tools/port_set_r.py`. **Edit the port
-script, never `setR.data.ts`.** The port reproduces the committed file
+Regenerated from the Set R port script in the private decode notes.
+**Edit the port script, never `setR.data.ts`.** The port reproduces the committed file
 byte-for-byte; that was not true when this session started and took a
 repair (the `label` tier, the doc comments and the `*must*` emphasis had
 all been hand-added and would have been destroyed on the next re-port).
@@ -108,15 +108,15 @@ are both 0.00 and are excluded via `NO_INFLECTION`.
 
 **Provenance, which settled whether this was faithful.** The 2008 engine's
 parser reads one character after `$`, so `$Best` was `$B` + the literal
-"est" — it shipped "beautifulest" (`logicola-ghidra` 0121b7d). Gensler's
+"est" — it shipped "beautifulest" (confirmed in the binary). Gensler's
 _textbook_, where no parser constrains him, writes "nastiest" and
 "biggest". So the engine's behaviour was a limitation, not a style, and
 template \*5 was converted from its hardcoded "most" to `superlative()` on
 that basis. **The binary is the source of truth for structure; the book
 outranks it for English.**
 
-Verified for the 2008 build only. The earliest binary in the ghidra repo
-is 2003 and its `LC.FIL` does not yield templates to a strings dump — do
+Verified for the 2008 build only. The earliest binary available is 2003
+and its `LC.FIL` does not yield templates to a strings dump — do
 not repeat this as "since 1985".
 
 ## 4. Three undocumented constraints, now enforced
@@ -206,8 +206,8 @@ The exploration of Gensler's sources found template \*12 was a MIS-PORT:
 answer (the §2.4 letters-switch idiom, drilled at 2× weight), which the
 port silently replaced with an unreversed All/Some sentence. Restored as
 template23 with Gensler's NFL hint; the All/Some variant stays as a
-deliberate LC3 quantifier-choice drill. The ghidra audit docs that
-caused the mis-port are corrected in that repo.
+deliberate LC3 quantifier-choice drill. The audit docs that caused the
+mis-port are corrected in the decode notes.
 
 Same audit: 23 of 69 wrong options rendered a BLANK feedback slot —
 filled (two Gensler-sourced hint texts, one ours, classHint/

@@ -4,8 +4,8 @@
  * The variant-count table below is the 2008 engine's own per-section count
  * table (the `R:gw...` digit string in the decoded DSL, with the `Cw=4:r11`
  * override for ad hominem), so these tests pin the port to the original —
- * including section *14 (op/pc), which the legacy parsed JSON in the
- * logicola-ghidra repo silently drops.
+ * including section *14 (op/pc), which the legacy parsed JSON silently
+ * drops.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -188,7 +188,7 @@ describe('setR data — original multi-answer (M-code) fidelity', () => {
 describe('setR data — substitution pools', () => {
   /**
    * These pools are layered the same way content/lexicons.ts is: the 2008
-   * header block is frozen in port_set_r.py as SURNAMES_2008 / CARS_2008, and
+   * header block is frozen in the Set R port script as SURNAMES_2008 / CARS_2008, and
    * the live pools are (baseline − retired) + modern additions. So the
    * assertion is no longer an exact count — it is that every 2008 entry
    * survived, minus the one deliberate retirement.
@@ -224,7 +224,7 @@ describe('setR data — substitution pools', () => {
     for (const car of ['Honda', 'Ford', 'Chevrolet', 'Toyota', 'Volkswagen']) {
       expect(CARS).toContain(car);
     }
-    // Two retirement criteria (port_set_r.py): Pontiac died as a marque
+    // Two retirement criteria (the Set R port script): Pontiac died as a marque
     // (2010); Buick and Dodge are alive but globally illegible — retired
     // 2026-08-21 on Malik's call. Mercedes and Lexus were considered as
     // replacements and excluded: "{d}s" pluralizes with a bare -s, and

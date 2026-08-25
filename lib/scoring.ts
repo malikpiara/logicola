@@ -1,9 +1,9 @@
 /**
  * LogiCola scoring — a restoration of the 2008 engine's model, per set.
  *
- * Source of truth: the XOR-0x11-decoded PILOT-dialect programs Gensler
- * shipped inside LCEXE_2008.exe, at
- * logicola-ghidra/notes/exercises/2008/decoded/set_*.txt.
+ * Source of truth: the decoded PILOT-dialect programs Gensler shipped
+ * inside the 2008 binary, transcribed per set in the private decode
+ * notes.
  *
  * The single most important fact: THERE IS NO GLOBAL SCORING MODEL. Every
  * set scores differently, and the differences are not cosmetic — they are

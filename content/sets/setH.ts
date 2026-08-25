@@ -4,7 +4,7 @@ import { Set } from '../types';
  * Set H — Quantificational Translations. Empty skeleton awaiting
  * Phase 3 (T3.2) build: 93 templates from the 2008 source make this
  * the **largest content opportunity in the catalog**. See
- * notes/audits/setH.md for the full template inventory and the
+ * the Set H audit in the decode notes for the full template inventory and the
  * recommended subset split (basic / identity / relational).
  *
  * T1.7 (Phase 1 scaffolding fix): canonicalized `slugs`, `header`,

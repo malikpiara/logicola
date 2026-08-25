@@ -581,7 +581,7 @@ Use it to describe, not to decide.
 
 ## The original LogiCola's colour world (extracted 2026-07-30)
 
-Evidence from `~/Code/logicola-ghidra` — the real binaries, not recollection.
+Evidence from the private decode notes — the real binaries, not recollection.
 
 **2008 `LCEXE_2008.exe`** ships a colour system that is _already a duotone
 system_. Its scheme list, in order:

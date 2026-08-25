@@ -3,7 +3,7 @@
  *
  * Set Q is the **only Phase-1 set without a generator** (flat list of
  * 60 hardcoded definitions, no template structure — see
- * notes/audits/setQ.md). The snapshot here pins the static export
+ * the Set Q audit in the decode notes). The snapshot here pins the static export
  * itself; future changes to setQ.ts must `vitest -u` to acknowledge
  * the change and surface a reviewable diff.
  *
@@ -85,7 +85,7 @@ describe('setQ', () => {
   });
 
   it('uses US English spelling (per Tier-1 polish)', () => {
-    // Per notes/audits/setQ.md, two questions had UK 'analyses' that
+    // Per the Set Q audit in the decode notes, two questions had UK 'analyses' that
     // were corrected to US 'analyzes' to match Gensler's textbook style.
     for (const q of setQ.subSets[0]!.questions) {
       expect(q.prompt, `question ${q.id} contains UK 'analyses'`).not.toMatch(

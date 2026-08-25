@@ -5,10 +5,9 @@ that "will reach you when it ships" reads as software-industry
 language rather than something written for a professor or a student.
 
 Everything quoted here is Gensler's, recovered from the 2008 program
-itself (`~/Code/logicola-ghidra`): the help screens are XOR-0x11 in
-`extracted/lcexe2008_full/*.decoded.txt`, and the UI strings are plain
-in `extracted/LCEXE_2008.exe`. This is not an impression of his style;
-it is his text.
+itself and transcribed in the private decode notes: the help screens
+are stored encoded and the UI strings sit plain in the binary. This is
+not an impression of his style; it is his text.
 
 ## What he sounds like
 

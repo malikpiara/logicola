@@ -15,7 +15,7 @@
  *     reasonable, take-no-position, knowledge.
  *
  * Cross-checked against Gensler 3rd ed. §13.1 + §13.5 (see
- * `notes/textbook/setN.md`). The 2008 source has 30 conditional
+ * the Set N textbook notes). The 2008 source has 30 conditional
  * feedback messages (`*30`–`*54` — the largest hint catalog of
  * any set); their pedagogical content is distilled into
  * Layer-1 + Layer-2 hints below.

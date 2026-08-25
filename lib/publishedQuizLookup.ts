@@ -50,7 +50,7 @@ const generatedRoutes: Record<
 > = {
   // T1.5 (May 9, 2026): Set A — Syllogistic Translations
   // Generator currently covers 8 of 23 templates; remaining 15 are
-  // being ported incrementally. See notes/sets/setA-work.md for
+  // being ported incrementally. See the Set A work notes for
   // the template-port checklist + richer-hints task.
   [getQuizRouteKey(['syllogistic', 'translations', 'basic'])]: {
     setKey: 'setA',
@@ -64,7 +64,7 @@ const generatedRoutes: Record<
   // Generator covers all 34 templates (`*0`..`*33`) with paired NL
   // and abstract prompt forms (50/50 random pick) plus Layer-1 +
   // Layer-2 hints from the 2008 `*e` block. See
-  // notes/audits/setC.md for the per-template inventory.
+  // the Set C audit in the decode notes for the per-template inventory.
   [getQuizRouteKey(['propositional', 'translations'])]: {
     setKey: 'setC',
     subsetIndex: 0,
@@ -79,7 +79,7 @@ const generatedRoutes: Record<
   // premise as too complex for v1; remaining 26 cover the entire
   // Gensler §10.1 + §11.2 idiom catalog including ambiguous
   // "If A, then it's necessary that B" → "Ambiguous between
-  // (A ⊃ ☐B) and ☐(A ⊃ B)" form. See notes/textbook/setJ.md.
+  // (A ⊃ ☐B) and ☐(A ⊃ B)" form. See the Set J textbook notes.
   [getQuizRouteKey(['modal', 'translations', 'basic'])]: {
     setKey: 'setJ',
     subsetIndex: 0,
@@ -94,7 +94,7 @@ const generatedRoutes: Record<
   // `*8`, `*11`, `*12`, `*13`, `*14`) subsets — Gensler §12.1 /
   // §12.3 boundary. Underline imperative-marker convention
   // preserved as `\underline{u}` in KaTeX. See
-  // notes/textbook/setL.md.
+  // the Set L textbook notes.
   [getQuizRouteKey(['deontic', 'translations', 'imperative'])]: {
     setKey: 'setL',
     subsetIndex: 0,
@@ -109,7 +109,7 @@ const generatedRoutes: Record<
   // P0 prompt-truncation bug — every prompt is freshly
   // generated to match its formula, so the static's
   // 6-questions-with-identical-prompt situation in Rationality
-  // can't recur. See notes/textbook/setN.md.
+  // can't recur. See the Set N textbook notes.
   [getQuizRouteKey(['belief', 'translations', 'basic'])]: {
     setKey: 'setN',
     subsetIndex: 0,
@@ -127,8 +127,8 @@ const generatedRoutes: Record<
   // taxonomy (compact grid UI). One passage variant per fallacy
   // type per session, matching the 2008 engine's uniform-over-types
   // draw. All 18 fallacies drilled, including op/pc from DSL
-  // section *14 (dropped by the legacy parsed JSON). See
-  // notes/audits/setR.md + tools/port_set_r.py in logicola-ghidra.
+  // section *14 (dropped by the legacy parsed JSON). See the Set R
+  // audit and port script in the private decode notes.
   [getQuizRouteKey(['informal', 'fallacies'])]: {
     setKey: 'setR',
     subsetIndex: 0,
