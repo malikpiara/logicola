@@ -18,7 +18,10 @@ import { describe, expect, it } from 'vitest';
  * Reads build output, so it only runs after `pnpm build`.
  */
 
-const projectRoot = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const projectRoot = path.resolve(
+  path.dirname(new URL(import.meta.url).pathname),
+  '..'
+);
 const chunksDir = path.join(projectRoot, '.next', 'static', 'chunks');
 const manifestPath = path.join(projectRoot, 'public', 'offline-manifest.json');
 
