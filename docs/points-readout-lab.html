@@ -788,7 +788,7 @@
           id: 'G3',
           n: 'G3 · a miss that costs nothing must say nothing',
           kill: false,
-          why: 'Set the outcome dial to “a miss that costs nothing”. chargeFor() returns 0 in two real cases — a run in the red under the no-deeper floor, and a penalty register the set’s own original program has already decayed to zero. The damage flicker ALREADY suppresses itself here; the delta must follow the same rule.',
+          why: 'Set the outcome dial to “a miss that costs nothing”. chargeFor() returns 0 in two real cases — a run in the red under the no-deeper floor, and a penalty register the set’s own scoring has already decayed to zero. The damage flicker ALREADY suppresses itself here; the delta must follow the same rule.',
           cost: '✓ the rule already exists in index.tsx · showing “−0” would report damage that never happened',
           r: (set) =>
             '<div class="hrow">' +
@@ -911,7 +911,7 @@ feature — but it also means the design has to answer what &ldquo;+0&rdquo; loo
 R it is a real and frequent value.</p>
 <p><b>2 · A miss that costs nothing must show nothing.</b> <code>chargeFor()</code> returns 0 in two
 real cases: a run already in the red under the <code>no-deeper</code> floor, and a penalty register
-the set&rsquo;s own original program has decayed to zero (Set R&rsquo;s second miss on a problem, Set A&rsquo;s
+the set&rsquo;s own scoring has decayed to zero (Set R&rsquo;s second miss on a problem, Set A&rsquo;s
 fifth). <b>The damage flicker already suppresses itself in exactly these cases</b> —
 <code>if (chargeFor(scoreState) === 0) return;</code> in <code>index.tsx</code> — and the delta has to
 inherit that rule verbatim, or it will report damage that never happened.</p>
