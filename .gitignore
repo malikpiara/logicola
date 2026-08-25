@@ -44,3 +44,7 @@ next-env.d.ts
 # Local agent config and scratch screenshots
 .claude/
 .mcp.json
+# Untracked 2026-08-25 (Malik): the project's agent instructions are a
+# private working note, not part of the published source. The file stays
+# on disk so it still loads locally.
+CLAUDE.md
