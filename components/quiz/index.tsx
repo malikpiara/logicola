@@ -274,6 +274,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
     multiSelect,
     showSolution,
     currentQuestion,
+    shuffledQuestions,
     willFinishOnNext,
     questionCounter,
     correctQuestions,
@@ -1677,7 +1678,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                         label. The slot is always present — see FeedbackSlot. */}
                       {currentQuestion && (
                         <FeedbackSlot
-                          question={currentQuestion}
+                          sizingQuestions={shuffledQuestions}
                           liveHint={liveHint}
                           liveAnswer={liveAnswer}
                           motionKey={`${currentQuestion.id}-${previousGuesses.length}-${
