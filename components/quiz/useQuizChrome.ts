@@ -55,7 +55,7 @@ const CARD_FLOATS = '(min-width: 64rem)';
  * over-drag at the top of the card silently destroys it. Nothing about
  * a drill wants a refresh gesture, and everywhere else keeps it.
  */
-export function useQuizChrome(color: string | undefined) {
+export function useQuizChrome(color: string | null | undefined) {
   useEffect(() => {
     if (!color) return;
 

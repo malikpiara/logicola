@@ -32,8 +32,9 @@ import type { ComponentType } from 'react';
  * ssr: false is load-bearing: each embed draws its questions with
  * Math.random, and an SSR'd draw hydrates against a different client
  * draw (seen live: a hydration error and a full client regen). The
- * loading placeholder reserves the card's box — Set Q's 7-option card
- * measures 600px — so the island doesn't become its own layout shift.
+ * loading placeholder reserves the embedded quiz's min-height (640px,
+ * matching QuizProps' embedded branch) so the island doesn't become
+ * its own layout shift.
  */
 const EMBEDS: Record<string, ComponentType<{ count: number }>> = {
   'informal-definitions': dynamic(
@@ -43,10 +44,10 @@ const EMBEDS: Record<string, ComponentType<{ count: number }>> = {
       loading: () => (
         <div
           className='not-prose lx-embed'
-          style={{ minHeight: 600 }}
+          style={{ minHeight: 640 }}
           aria-hidden='true'
         >
-          <p className='lx-embed-eyebrow'>SAMPLE DRILL</p>
+          <p className='lx-embed-eyebrow'>LOADING THE DRILL…</p>
         </div>
       ),
     }

@@ -63,7 +63,7 @@ export function tintedIcon(markSvg: string, color: string): string | null {
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
-export function useQuizFavicon(color: string | undefined) {
+export function useQuizFavicon(color: string | null | undefined) {
   useEffect(() => {
     if (!color) return;
 
