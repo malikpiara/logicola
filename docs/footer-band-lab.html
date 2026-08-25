@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Footer band lab — LogiCola</title>
+    <style>
+      :root {
+        --mint: #cff6dd;
+        --plum: #3f0167;
+        --fine: #6a4b8a;
+        --hair: #bbd4cc;
+        --paper: #101216;
+        --panel: #191c22;
+        --edge: #282d36;
+        --text: #e9ecef;
+        --dim: #98a0ab;
+        --acc: #8fd0a6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--text);
+        font:
+          15px/1.6 ui-sans-serif,
+          -apple-system,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+      }
+      header {
+        padding: 30px 32px 24px;
+        border-bottom: 1px solid var(--edge);
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: 22px;
+        letter-spacing: -0.015em;
+      }
+      header p {
+        margin: 0 0 10px;
+        color: var(--dim);
+        max-width: 90ch;
+        font-size: 14px;
+      }
+      section {
+        border-bottom: 1px solid var(--edge);
+      }
+      .lead {
+        padding: 22px 32px 12px;
+      }
+      h2 {
+        margin: 0 0 5px;
+        font:
+          600 12px ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--acc);
+      }
+      .lead p {
+        margin: 0;
+        color: var(--dim);
+        font-size: 13.5px;
+        max-width: 90ch;
+      }
+      .verdict {
+        display: flex;
+        gap: 9px;
+        align-items: center;
+        margin-top: 9px;
+        flex-wrap: wrap;
+      }
+      .v {
+        padding: 2px 9px;
+        border-radius: 2px;
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .v-ship {
+        background: #20303c;
+        color: #7fc4ff;
+      }
+      .v-rec {
+        background: #1e3524;
+        color: #8fd0a6;
+      }
+      .v-alt {
+        background: #332a1a;
+        color: #e0b970;
+      }
+      .v-bad {
+        background: #3a1f22;
+        color: #ff9a9a;
+      }
+      .pool {
+        display: flex;
+        gap: 3px;
+        align-items: center;
+        margin-left: 2px;
+      }
+      .pool i {
+        width: 13px;
+        height: 13px;
+        display: inline-block;
+        border: 1px solid #3a3f48;
+      }
+      .pool i.out {
+        opacity: 0.2;
+      }
+      .foot {
+        color: var(--plum);
+      }
+      .foot .bar {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 32px;
+        border-top: 1px solid var(--hair);
+        font-size: 13px;
+        color: var(--fine);
+      }
+      .foot .bar .grow {
+        flex: 1;
+      }
+      .foot .bar .chip {
+        width: 22px;
+        height: 22px;
+        background: #fff;
+        display: inline-block;
+      }
+      .band {
+        display: block;
+        line-height: 0;
+      }
+      .meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        padding: 10px 32px 20px;
+        font:
+          12px ui-monospace,
+          monospace;
+        color: var(--dim);
+      }
+      .meta b {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .dials {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        padding: 16px 32px 20px;
+        background: var(--panel);
+        border-top: 1px solid var(--edge);
+      }
+      .dial {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .dial label {
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      input[type='range'] {
+        background: #0b0d10;
+        border: 1px solid var(--edge);
+        border-radius: 3px;
+        padding: 0;
+        width: 190px;
+      }
+      output {
+        font:
+          600 12px ui-monospace,
+          monospace;
+        color: var(--acc);
+      }
+      .notes {
+        padding: 26px 32px 70px;
+        max-width: 92ch;
+      }
+      .notes h3 {
+        margin: 24px 0 6px;
+        font: 600 14px ui-sans-serif;
+        color: var(--acc);
+      }
+      .notes p,
+      .notes li {
+        color: #c6cbd2;
+        font-size: 14px;
+      }
+      .notes blockquote {
+        margin: 12px 0;
+        padding: 10px 16px;
+        border-left: 3px solid #3a4450;
+        color: #aab1ba;
+        font-size: 13.5px;
+        background: #161a20;
+      }
+      code {
+        background: #0b0d10;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font:
+          12.5px ui-monospace,
+          monospace;
+        color: #e0b970;
+      }
+      table {
+        border-collapse: collapse;
+        margin: 12px 0;
+        font-size: 13px;
+      }
+      th,
+      td {
+        border: 1px solid var(--edge);
+        padding: 6px 11px;
+        text-align: left;
+      }
+      th {
+        color: var(--dim);
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      td.n {
+        font:
+          12px ui-monospace,
+          monospace;
+        text-align: right;
+      }
+      .bad {
+        color: #ff9a9a;
+      }
+      .good {
+        color: #8fd0a6;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Footer band lab</h1>
+      <p>
+        Malik, 2026-08-23, in three notes:
+        <em
+          >rethink the footer illustration &mdash; a larger pattern, or the
+          quilt pixel we&rsquo;re using for social media</em
+        >; then
+        <em
+          >the quilt should feature the sets&rsquo; colours, like the social
+          media artifact</em
+        >; then
+        <em
+          >this is what was decided for social media, and it should inform the
+          footer and the icons.</em
+        >
+      </p>
+      <p>
+        <b
+          >Taken together those three collapse into one answer, and it needed no
+          new design decision at all.</b
+        >
+        The decided cover is
+        <code>Set&nbsp;L &middot; Sets &middot; full</code>: ground
+        <code>#CFF6DD</code>, dominant <code>#3F0167</code>, a nine-colour pool,
+        accent rate 75%. The footer already runs that exact ground and that
+        exact dominant &mdash; <code>GROUND</code> and <code>TYPE</code> in
+        <code>components/footer.tsx</code> are the same two hexes. So the band
+        can wear the cover&rsquo;s recipe <em>verbatim</em>; the only open
+        number is scale, because the band is 56px and the cover is not.
+      </p>
+      <p>
+        Two structural facts behind the rest of this sheet.
+        <b>Camo cannot do it</b> &mdash; <code>camoBody</code> reads exactly one
+        entry from its pool (<code>const c1 = pool[0] || ink</code>), so a camo
+        band is a two-colour object however you tune it; only
+        <code>quiltPixBody</code> samples the whole pool. And
+        <b>the nine-colour pool is ungated on purpose</b> &mdash; see the notes;
+        that call is the brand lab&rsquo;s, already made and already reasoned.
+      </p>
+    </header>
+    <div class="wrap" id="wrap"></div>
+
+    <section>
+      <div class="notes">
+        <h3>The gate, and why the cover drops it</h3>
+        <p>
+          I got this wrong on the first pass tonight and the correction is the
+          most useful thing on the page. Measuring the seven set surfaces
+          against the footer&rsquo;s mint with
+          <code>quiltAccentPool</code>&rsquo;s 0.17 floor, only two survive
+          &mdash; from which I concluded the surfaces could not carry the band
+          and proposed the tab colours instead.
+          <b
+            >The brand lab had already been here and reached the opposite
+            conclusion, for a better reason.</b
+          >
+          From <code>docs/brand-lab.html</code>, dated 2026-08-12/13:
+        </p>
+        <blockquote>
+          THE GATE IS A STUDY-SURFACE RULE, and the cover is not a study
+          surface&hellip; <code>quiltAccentPool</code> rejects anything within
+          0.17 of the ground. That exists so a pattern cannot muddy a surface a
+          student is reading against for twenty minutes&hellip; The 2024 cover
+          is the counter-evidence: its cream tiles sit on a near-white ground at
+          almost no separation, and it reads fine, because a quilt tile is a
+          SHAPE with a hard edge and a gap around it.
+          <b>Edge does the work that contrast does on a text surface.</b>
+        </blockquote>
+        <p>
+          The ungated modes keep the <em>ink</em> gate &mdash; a tile the same
+          colour as the dominant really does vanish, since there is no edge
+          between them &mdash; and drop the ground gate. That is what produces
+          the decided nine: six set surfaces (all but Set&nbsp;L&rsquo;s own
+          mint, which is the ground) plus three set inks. The other three inks
+          are rejected at <code>0.021</code>, <code>0.082</code> and &ldquo;is
+          the dominant&rdquo;. Reproduced here exactly &mdash; the swatch strip
+          on each direction is computed, not typed.
+        </p>
+        <p>
+          <b
+            >A footer band is the same kind of surface as a cover, not the same
+            kind as a quiz screen.</b
+          >
+          It is 56 decorative pixels at the very bottom of the document, below
+          the last link, carrying no text and sitting under nothing anyone
+          reads. The rule that protects a twenty-minute study surface has no
+          jurisdiction there, by the brand lab&rsquo;s own argument. So the band
+          gets the ungated nine.
+        </p>
+        <p>
+          <em>What my tab-colour proposal was actually worth:</em> the
+          measurement in it is still true &mdash; the tab colours are the only
+          tier where all seven sets are simultaneously gate-clearing and
+          mutually distinguishable (closest pair 0.101, against the
+          surfaces&rsquo; 0.041 and eight collapsing pairs). That matters if the
+          goal is <em>every set identifiable</em>. It is kept below as an
+          alternative. But it was solving a problem the brand work had already
+          dissolved, and &ldquo;like the social media artifact&rdquo; means the
+          artifact&rsquo;s own recipe, not a better one.
+        </p>
+
+        <h3>The one number that is genuinely open: scale</h3>
+        <p>
+          A quilt cell is <code>62 &times; scale</code> px and rows are laid
+          from y=0, so a band whose height is not a whole multiple of the pitch
+          ends in a cropped row. The strip therefore has one exact answer,
+          <b>scale = band height / 62</b>, which at the shipped 56px is
+          <b>0.90</b> and fills it with a single uncropped row. The
+          cover&rsquo;s own 1.53 puts a 95px cell in a 56px strip &mdash; one
+          sliver, shown below. So the band and the covers share the pattern and
+          the palette but not the number: the same object at two sizes, which is
+          what a mark does.
+        </p>
+        <p>
+          The band-height dial is live. If the band grows, the natural scale
+          grows with it: 0.90 at 56px, 1.16 at 72px, 1.42 at 88px. At
+          <b>95px</b> the band would wear the cover&rsquo;s literal 1.53 &mdash;
+          worth knowing, though a 95px band is nearly double the current
+          footprint and Malik&rsquo;s brief said the footprint stays.
+        </p>
+
+        <h3>Rate 75%, not 28%</h3>
+        <p>
+          The decided cover runs <code>rate: 0.75</code> where every quiz screen
+          runs 0.28. The number is not the share you get &mdash; cells whose
+          left or upper neighbour is already an accent are rejected, so the
+          rule&rsquo;s own ceiling is about 52% &mdash; but the difference
+          between 0.28 and 0.75 is the difference between a plum band with
+          colour in it and a band that <em>is</em> the sets. Since the point of
+          the change is to feature the sets&rsquo; colours, the cover&rsquo;s
+          rate is the right one to carry across, and the 0.28 version is shown
+          so the gap is visible rather than asserted.
+        </p>
+
+        <h3>Recommendation</h3>
+        <p>
+          <b>The cover recipe, verbatim, at scale 0.90.</b> Quilt &middot;
+          pixel, ground <code>#CFF6DD</code>, dominant <code>#3F0167</code>, the
+          decided nine-colour pool, rate 0.75. It satisfies all three of
+          Malik&rsquo;s notes at once, introduces no colour the brand has not
+          already approved, changes no ground, and keeps the band&rsquo;s 56px
+          footprint. The only thing it changes is register &mdash; the shipped
+          band is a texture you read as tone, this is a row of discrete marks
+          you read as a border &mdash; and that change is the point rather than
+          a side effect, because the border is what the covers look like.
+        </p>
+        <p>
+          The one edit is inside <code>bandSvg()</code> in
+          <code>components/footer.tsx</code>: swap
+          <code>camoBody('camo', &hellip;)</code> for
+          <code>patternBody('quilt', &hellip;)</code>, pass the nine as the pool
+          with the ungated filter, set <code>scale: 0.90</code> and
+          <code>rate: 0.75</code>.
+        </p>
+      </div>
+    </section>
+    <script>
+      function mulberry32(seed) {
+        let a = seed;
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function hexTriple(hex) {
+        const c = hex.replace('#', '');
+        return [
+          parseInt(c.slice(0, 2), 16),
+          parseInt(c.slice(2, 4), 16),
+          parseInt(c.slice(4, 6), 16),
+        ];
+      }
+      const srgbToLinear = (c) =>
+        c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+
+      function hexToOklch(hex) {
+        const [R, G, B] = hexTriple(hex).map((v) => srgbToLinear(v / 255));
+        const l = Math.cbrt(
+          0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B
+        );
+        const m = Math.cbrt(
+          0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B
+        );
+        const s = Math.cbrt(
+          0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B
+        );
+        const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
+        const a = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
+        const b = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+        return {
+          L,
+          C: Math.hypot(a, b),
+          h: ((Math.atan2(b, a) * 180) / Math.PI + 360) % 360,
+        };
+      }
+
+      function perceptualDist(hexA, hexB) {
+        const A = hexToOklch(hexA);
+        const B = hexToOklch(hexB);
+        const ha = (A.h * Math.PI) / 180;
+        const hb = (B.h * Math.PI) / 180;
+        return Math.hypot(
+          A.L - B.L,
+          A.C * Math.cos(ha) - B.C * Math.cos(hb),
+          A.C * Math.sin(ha) - B.C * Math.sin(hb)
+        );
+      }
+
+      /** The lab's pool filter — surface > 0.17, ink > 0.09, sorted by ΔL vs ink. */
+      function quiltAccentPool(surface, ink, candidates) {
+        const inkL = hexToOklch(ink).L;
+        return candidates
+          .filter(
+            (c) =>
+              perceptualDist(c, surface) > 0.17 && perceptualDist(c, ink) > 0.09
+          )
+          .sort(
+            (a, b) =>
+              Math.abs(hexToOklch(b).L - inkL) -
+              Math.abs(hexToOklch(a).L - inkL)
+          );
+      }
+
+      /** Whole-cell clearing: a shape renders whole or not at all. */
+      function hidden(clear, x, y, ww, hh) {
+        if (!clear) return false;
+        const c = clear;
+        if (x >= c.x + c.w || x + ww <= c.x || y >= c.y + c.h || y + hh <= c.y)
+          return false;
+        if (!c.r) return true;
+        if (x + ww > c.x + c.r && x < c.x + c.w - c.r) return true;
+        if (y + hh > c.y + c.r && y < c.y + c.h - c.r) return true;
+        const ccx = x + ww <= c.x + c.r + 0.01 ? c.x + c.r : c.x + c.w - c.r;
+        const ccy = y + hh <= c.y + c.r + 0.01 ? c.y + c.r : c.y + c.h - c.r;
+        const nx = Math.max(x, Math.min(ccx, x + ww));
+        const ny = Math.max(y, Math.min(ccy, y + hh));
+        return (nx - ccx) ** 2 + (ny - ccy) ** 2 <= c.r * c.r;
+      }
+
+      /**
+       * Quilt · pixel — each cell is a 7×7 sprite grid, every shape rebuilt
+       * from whole pixels. The `rate` argument is the lab's one addition to
+       * the shipped signature: the app hard-codes 0.28, but a 1500×500 cover
+       * is a far bigger field than a quiz card and the rhythm wants tuning at
+       * that size. Everything else is byte-for-byte lib/patterns.ts.
+       */
+      function quiltPixBody(opts) {
+        const { w, h, ink, pool, scale, seed, clear, rate = 0.28 } = opts;
+        const rng = mulberry32(seed >>> 0);
+        const t = 62 * scale;
+        const pad = t * 0.09;
+        const cell = t - pad * 2;
+        const cols = Math.ceil(w / t) + 1;
+        const rows = Math.ceil(h / t) + 1;
+        const accent = Array.from({ length: rows }, () =>
+          Array(cols).fill(false)
+        );
+        const P = 7;
+        let out = '';
+        for (let i = 0; i < rows; i++) {
+          for (let j = 0; j < cols; j++) {
+            const left = j > 0 && accent[i][j - 1];
+            const up = i > 0 && accent[i - 1][j];
+            let fillCol = ink;
+            if (pool.length && !left && !up && rng() < rate) {
+              fillCol = pool[Math.floor(rng() * pool.length)];
+              accent[i][j] = true;
+            }
+            const x = j * t + pad;
+            const y = i * t + pad;
+            const q = cell / P;
+            const roll = rng();
+            const fill = new Array(P * P);
+            if (roll < 0.4) {
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++)
+                  fill[jj * P + ii] = !(
+                    (ii === 0 || ii === P - 1) &&
+                    (jj === 0 || jj === P - 1)
+                  );
+            } else if (roll < 0.7) {
+              const R = P / 2;
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++) {
+                  const dx = ii + 0.5 - P / 2;
+                  const dy = jj + 0.5 - P / 2;
+                  fill[jj * P + ii] = dx * dx + dy * dy <= R * R;
+                }
+            } else {
+              const o = Math.floor(rng() * 4);
+              const cx = o === 0 || o === 3 ? 0 : P;
+              const cy = o === 0 || o === 1 ? 0 : P;
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++) {
+                  const dx = ii + 0.5 - cx;
+                  const dy = jj + 0.5 - cy;
+                  fill[jj * P + ii] = dx * dx + dy * dy <= P * P;
+                }
+            }
+            let piece = `<g fill="${fillCol}" shape-rendering="crispEdges">`;
+            for (let jj = 0; jj < P; jj++) {
+              let ii = 0;
+              while (ii < P) {
+                if (!fill[jj * P + ii]) {
+                  ii++;
+                  continue;
+                }
+                let len = 0;
+                while (ii + len < P && fill[jj * P + ii + len]) len++;
+                piece += `<rect x="${x + ii * q}" y="${y + jj * q}" width="${len * q}" height="${q + 0.4}"/>`;
+                ii += len;
+              }
+            }
+            piece += '</g>';
+            if (!hidden(clear, x, y, cell, cell)) out += piece;
+          }
+        }
+        return out;
+      }
+
+      function pixHash(u, v, seed) {
+        let x = (u * 374761393 + v * 668265263 + (seed | 0) * 971) | 0;
+        x = Math.imul(x ^ (x >>> 13), 1274126177);
+        return ((x ^ (x >>> 16)) >>> 0) / 4294967296;
+      }
+
+      function valueNoise(u, v, seed, cell) {
+        const gx = Math.floor(u / cell);
+        const gy = Math.floor(v / cell);
+        const sm = (t) => t * t * (3 - 2 * t);
+        const fx = sm((((u % cell) + cell) % cell) / cell);
+        const fy = sm((((v % cell) + cell) % cell) / cell);
+        const n00 = pixHash(gx, gy, seed);
+        const n10 = pixHash(gx + 1, gy, seed);
+        const n01 = pixHash(gx, gy + 1, seed);
+        const n11 = pixHash(gx + 1, gy + 1, seed);
+        return (
+          n00 * (1 - fx) * (1 - fy) +
+          n10 * fx * (1 - fy) +
+          n01 * (1 - fx) * fy +
+          n11 * fx * fy
+        );
+      }
+
+      function pixelLattice(w, h, q, clear, colorAt) {
+        const cols = Math.ceil(w / q);
+        const rows = Math.ceil(h / q);
+        let out = '<g shape-rendering="crispEdges">';
+        for (let v = 0; v < rows; v++) {
+          let u = 0;
+          while (u < cols) {
+            const c = colorAt(u, v);
+            if (!c || hidden(clear, u * q, v * q, q, q)) {
+              u++;
+              continue;
+            }
+            let len = 1;
+            while (
+              u + len < cols &&
+              colorAt(u + len, v) === c &&
+              !hidden(clear, (u + len) * q, v * q, q, q)
+            )
+              len++;
+            out += `<rect x="${u * q}" y="${v * q}" width="${len * q}" height="${q + 0.4}" fill="${c}"/>`;
+            u += len;
+          }
+        }
+        return out + '</g>';
+      }
+
+      const PIXEL_FIELD_MACRO = 1.7;
+
+      function camoBody(kind, opts) {
+        const { w, h, ink, pool, scale, seed, clear } = opts;
+        const s = PIXEL_FIELD_MACRO * scale;
+        const c1 = pool[0] || ink;
+        if (kind === 'camo') {
+          const q = 10 * s;
+          return pixelLattice(w, h, q, clear, (u, v) => {
+            if (valueNoise(u, v, seed, 6) > 0.58) return ink;
+            if (valueNoise(u, v, seed + 31, 6) > 0.62) return c1;
+            return null;
+          });
+        }
+        const q = 12 * s;
+        return pixelLattice(w, h, q, clear, (u, v) => {
+          const n = valueNoise(u, v, seed, 9);
+          if (n > 0.63) return ink;
+          if (n < 0.37) return c1;
+          return null;
+        });
+      }
+
+      function patternBody(kind, opts) {
+        return kind === 'quilt' ? quiltPixBody(opts) : camoBody(kind, opts);
+      }
+
+      /* ---- the decided social scheme, reproduced ---------------------- */
+      const MINT = '#CFF6DD',
+        PLUM = '#3F0167',
+        MAG = '#BD00AD';
+      const SURFACES = [
+        '#FFABC6',
+        '#E7F099',
+        '#E6ACF4',
+        '#CFF6DD',
+        '#9EDAFF',
+        '#D9CCF9',
+        '#E4BDF7',
+      ];
+      const INKS = [
+        '#4A1040',
+        '#02302C',
+        '#1C3601',
+        '#3F0167',
+        '#3E1060',
+        '#751100',
+      ];
+      const TABS = [
+        '#FF268F',
+        '#878E0B',
+        '#D001F4',
+        '#049C5F',
+        '#0791CA',
+        '#9B53FE',
+        '#D064FE',
+      ];
+      /* components/quiz/quizColors.ts — stale-by-design, never tidy it. This is
+     what the QUESTION screen's own footer band is drawn from. */
+      const QUIZ_SURFACE_POOL = [
+        '#1C3601',
+        '#E7F099',
+        '#E6ACF4',
+        '#C8F0E3',
+        '#ADE2E9',
+        '#F2CDA6',
+        '#F233DF',
+      ];
+      /* the quiz band's scale on desktop: PIXEL_FIELD_MACRO is inside camoBody,
+     so what the component passes is (mobile ? 0.6 : 1) * QUIZ_PATTERN_SCALE */
+      const QUIZ_SCALE = 1.25;
+
+      /* docs/brand-lab.html poolFor(), UNGATED branch — verbatim. Keeps the INK
+     gate (a tile the colour of the dominant has no edge, so it vanishes),
+     drops the GROUND gate (a quilt tile has a hard edge and a gap). */
+      function ungatedPool(base, ground, ink) {
+        return base.filter(
+          (c) => c !== ink && c !== ground && perceptualDist(c, ink) > 0.09
+        );
+      }
+      const DECIDED_POOL = ungatedPool([...SURFACES, ...INKS], MINT, PLUM); // the nine
+
+      function bandSvg(kind, scale, height, ground, dom, pool, seed, rate) {
+        const W = 1600;
+        const body = patternBody(kind, {
+          w: W,
+          h: height,
+          ink: dom,
+          pool,
+          scale,
+          seed,
+          clear: null,
+          rate,
+        });
+        return (
+          '<svg xmlns="http://www.w3.org/2000/svg" width="' +
+          W +
+          '" height="' +
+          height +
+          '" viewBox="0 0 ' +
+          W +
+          ' ' +
+          height +
+          '" preserveAspectRatio="xMidYMid slice" style="display:block;width:100%;height:' +
+          height +
+          'px"><rect width="' +
+          W +
+          '" height="' +
+          height +
+          '" fill="' +
+          ground +
+          '"/>' +
+          body +
+          '</svg>'
+        );
+      }
+      const blobPx = (kind, scale) =>
+        kind === 'quilt'
+          ? 62 * scale
+          : (kind === 'camo' ? 6 * 10 : 9 * 12) * 1.7 * scale;
+
+      const BAR =
+        '<div class="bar"><span>&copy; 2026 LogiCola</span><span class="grow"></span>' +
+        '<span class="chip"></span><span class="chip"></span><span class="chip"></span>' +
+        '<span class="chip"></span><span class="chip"></span></div>';
+
+      const state = { seed: 45, height: 56, scale: 0.62 };
+      /* The uncropped scales are a FAMILY, not a single number (Malik,
+       * 2026-08-24 — my earlier "one exact answer" was wrong). A cell is
+       * `62 × scale` and rows lay from y=0, so ANY whole row count N
+       * divides the band evenly: scale = h / (62 × N). At 56px that is
+       * 0.90 for one row, 0.45 for two, 0.30 for three. More rows read
+       * as a quilt rather than as one row of marks — which is what a
+       * social cover shows, and the reason the cover recipe survives
+       * the shrink at all. */
+      const NAT_N = (n) => state.height / (62 * n);
+      const NAT = () => NAT_N(1); // the band's natural quilt scale, one row
+      /* Malik, 2026-08-24: the whole-row rule is a preference, not a law —
+       * "it can even cut the second or third row a bit". Releasing it opens
+       * the interval between one row (0.90) and two (0.45), where the cell
+       * stays big enough to read as a SHAPE while a second row still proves
+       * the field has two axes. Rows lay from y=0, so the top row is always
+       * whole and the crop always lands on the BOTTOM edge — which is the
+       * bottom of the page, where a pattern running off-canvas is what a
+       * cover does anyway. */
+      const ROWS = (s) => state.height / (62 * s); // rows the band carries
+
+      const DIRECTIONS = [
+        {
+          t: 'Shipped — Camo · classic, scale 0.35, magenta only',
+          kind: 'camo',
+          scale: () => 0.35,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => [MAG],
+          rate: 0.28,
+          v: ['v-ship', 'control'],
+          b: 'What the site closes with today. Camo reads only pool[0], so two colours and a ground is the most it can ever show — this is not a tuning limit, it is the generator.',
+        },
+
+        {
+          t: 'THE COVER RECIPE, VERBATIM — quilt · nine-colour pool · rate 0.75 · natural scale',
+          kind: 'quilt',
+          scale: NAT,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => DECIDED_POOL,
+          rate: 0.75,
+          v: ['v-rec', 'recommended'],
+          b: 'Set L · Sets · full, exactly as decided for the covers, at the one scale that fits a 56px strip without cropping a row. Same ground and same dominant the footer already runs.',
+        },
+
+        {
+          t: '★ THE IN-BETWEEN — live scale dial, crop allowed',
+          kind: 'quilt',
+          scale: () => state.scale,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => DECIDED_POOL,
+          rate: 0.75,
+          v: ['v-rec', 'drive me'],
+          b: 'Drive the scale dial in the header. Between 0.90 and 0.45 the band carries a whole top row plus a cut one — the crop lands on the page’s bottom edge, which is where a cover crops anyway. Watch the cell size in the meta line: below ~24px the nine colours stop reading as shapes.',
+        },
+
+        {
+          t: 'The in-between at 0.62 — a row and a half',
+          kind: 'quilt',
+          scale: () => 0.62,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => DECIDED_POOL,
+          rate: 0.75,
+          v: ['v-rec', 'candidate'],
+          b: 'A 38px cell — two thirds of the verbatim row’s 56px, a third bigger than two rows’ 28px — and 1.46 rows, so the second row shows just under half its height. Closest thing to the profile cover’s proportions at 56px.',
+        },
+
+        {
+          t: 'The in-between at 0.72 — a row and a third',
+          kind: 'quilt',
+          scale: () => 0.72,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => DECIDED_POOL,
+          rate: 0.75,
+          v: ['v-rec', 'candidate'],
+          b: 'A 45px cell, 1.25 rows. Nearer the verbatim end: the shapes stay large, and the second row is a sliver that reads as the field continuing past the page rather than as a row of its own.',
+        },
+
+        {
+          t: 'THE COVER RECIPE — TWO ROWS · scale h/(62×2) = 0.45',
+          kind: 'quilt',
+          scale: () => NAT_N(2),
+          ground: MINT,
+          dom: PLUM,
+          pool: () => DECIDED_POOL,
+          rate: 0.75,
+          v: ['v-rec', 'Malik’s ask'],
+          b: 'The same nine-colour recipe, two whole rows instead of one. A single row reads as a border of discrete marks; two rows read as a QUILT — the thing the profile cover actually shows — because a quilt needs a second axis before the eye sees a field rather than a strip. Still uncropped, still the same 56px footprint.',
+        },
+
+        {
+          t: 'THE COVER RECIPE — THREE ROWS · scale h/(62×3) = 0.30',
+          kind: 'quilt',
+          scale: () => NAT_N(3),
+          ground: MINT,
+          dom: PLUM,
+          pool: () => DECIDED_POOL,
+          rate: 0.75,
+          v: ['v-rec', 'Malik’s ask'],
+          b: 'Three whole rows, at almost exactly the scale the band runs today (0.30 against the shipped 0.35) — so this is the closest of all the directions to the current footprint and weight, while being a quilt rather than camo. The risk at this size is the cell getting small enough that the nine colours read as noise instead of as shapes; judge it at 100% zoom, not scaled up.',
+        },
+
+        {
+          t: 'The cover recipe at the cover’s own scale 1.53',
+          kind: 'quilt',
+          scale: () => 1.53,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => DECIDED_POOL,
+          rate: 0.75,
+          v: ['v-bad', 'one sliver'],
+          b: 'The same recipe with the number carried across too. A 95px cell in a 56px strip: the band shows the top edge of one row and nothing else. This is why the band takes the pattern but not the scale.',
+        },
+
+        {
+          t: 'The cover recipe at the app’s rate (0.28)',
+          kind: 'quilt',
+          scale: NAT,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => DECIDED_POOL,
+          rate: 0.28,
+          v: ['v-alt', 'quieter'],
+          b: 'Same nine colours, the quiz screens’ accent rate instead of the cover’s. Shows what the 75% is actually buying: a band that is mostly plum with colour in it, versus a band that is the sets.',
+        },
+
+        {
+          t: 'The same pool, GATED — what the study-surface rule would do',
+          kind: 'quilt',
+          scale: NAT,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => quiltAccentPool(MINT, PLUM, [...SURFACES, ...INKS]),
+          rate: 0.75,
+          v: ['v-bad', 'the gate deletes six of nine'],
+          b: 'The identical direction run through quiltAccentPool’s 0.17 ground floor. This is the version I proposed as impossible earlier tonight — and the reason it looks impoverished is that the rule protecting a study surface is being applied to decoration.',
+        },
+
+        {
+          t: 'Alternative — the seven tab colours, gated',
+          kind: 'quilt',
+          scale: NAT,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => quiltAccentPool(MINT, PLUM, TABS),
+          rate: 0.75,
+          v: ['v-alt', 'every set identifiable'],
+          b: 'The only tier where all seven sets clear the gate AND stay mutually distinguishable (closest pair 0.101 vs the surfaces’ 0.041). Louder and more saturated than the covers. Use if the goal is “each set is identifiable” rather than “the same artefact as the covers”.',
+        },
+
+        {
+          t: 'Direction A″ — the QUESTION SCREEN’s own band, cropped to 56px',
+          kind: 'camo',
+          scale: () => QUIZ_SCALE,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => quiltAccentPool(MINT, PLUM, QUIZ_SURFACE_POOL),
+          rate: 0.28,
+          v: ['v-alt', 'Malik’s note — match the in-quiz size'],
+          b: 'Exactly what a quiz question wears at its foot: camo classic at the shipped QUIZ_PATTERN_SCALE of 1.25, drawn from QUIZ_SURFACE_POOL, which gives Set J’s lilac #E6ACF4 as the accent — the plum-and-lilac in Malik’s screenshot. The blob is ~128px, so a 56px strip shows a horizon of very large shapes rather than a texture.',
+        },
+
+        {
+          t: 'Direction A‴ — the question screen’s band, VERBATIM (112px)',
+          kind: 'camo',
+          scale: () => QUIZ_SCALE,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => quiltAccentPool(MINT, PLUM, QUIZ_SURFACE_POOL),
+          rate: 0.28,
+          height: 112,
+          v: ['v-alt', 'same size, same band'],
+          b: 'The same again at the quiz band’s own 112px, so the site footer and the question screen would close with literally the same object. Doubles the band’s footprint, which the original brief said should stay — included because “the same size as inside a quiz question” is exactly what was asked for, and this is what it means taken literally.',
+        },
+
+        {
+          t: 'Direction A — Camo · classic, scale 0.50',
+          kind: 'camo',
+          scale: () => 0.5,
+          ground: MINT,
+          dom: PLUM,
+          pool: () => [MAG],
+          rate: 0.28,
+          v: ['v-alt', 'the “just bigger” reading'],
+          b: 'If the register change is unwanted and the band should stay a texture. One number, no colour moves — but it cannot carry the sets.',
+        },
+      ];
+
+      function swatchStrip(all, kept) {
+        return (
+          '<span class="pool">' +
+          all
+            .map(
+              (c) =>
+                '<i class="' +
+                (kept.includes(c) ? '' : 'out') +
+                '" style="background:' +
+                c +
+                '" title="' +
+                c +
+                (kept.includes(c) ? '' : ' — rejected') +
+                '"></i>'
+            )
+            .join('') +
+          '</span>'
+        );
+      }
+
+      function render() {
+        document.getElementById('wrap').innerHTML = DIRECTIONS.map((d) => {
+          const pool = d.pool();
+          const scale = d.scale();
+          const h = d.height || state.height;
+          const blob = blobPx(d.kind, scale);
+          const carries =
+            d.kind === 'quilt' ? pool.length : Math.min(1, pool.length);
+          const all =
+            d.kind === 'camo'
+              ? pool.length
+                ? pool
+                : [MAG]
+              : pool === DECIDED_POOL
+                ? [...SURFACES, ...INKS]
+                : pool.every((c) => TABS.includes(c))
+                  ? TABS
+                  : [...SURFACES, ...INKS];
+          return (
+            '<section>' +
+            '<div class="lead"><h2>' +
+            d.t +
+            '</h2><p>' +
+            d.b +
+            '</p>' +
+            '<span class="verdict"><span class="v ' +
+            d.v[0] +
+            '">' +
+            d.v[1] +
+            '</span>' +
+            swatchStrip(all, pool) +
+            '</span></div>' +
+            '<div class="foot" style="background:' +
+            d.ground +
+            '">' +
+            BAR +
+            '<div class="band">' +
+            bandSvg(
+              d.kind,
+              scale,
+              h,
+              d.ground,
+              d.dom,
+              pool,
+              state.seed,
+              d.rate
+            ) +
+            '</div></div>' +
+            '<div class="meta"><span>kind <b>' +
+            d.kind +
+            '</b></span>' +
+            '<span>scale <b>' +
+            scale.toFixed(2) +
+            '</b></span>' +
+            '<span>rate <b>' +
+            d.rate +
+            '</b></span>' +
+            '<span>pool <b>' +
+            pool.length +
+            '</b> colour' +
+            (pool.length === 1 ? '' : 's') +
+            '</span>' +
+            '<span>the band can show <b>' +
+            carries +
+            '</b></span>' +
+            '<span>cell ≈ <b>' +
+            Math.round(blob) +
+            'px</b> in <b>' +
+            h +
+            'px</b>' +
+            (blob > h + 1 ? ' ⚠ crops' : ' ✓ fits') +
+            '</span>' +
+            '</div></section>'
+          );
+        }).join('');
+      }
+
+      function dials() {
+        const d = document.createElement('div');
+        d.className = 'dials';
+        d.innerHTML =
+          '<div class="dial"><label for="h">Band height <output id="hOut">56px</output></label>' +
+          '<input type="range" id="h" min="32" max="120" step="2" value="56"></div>' +
+          '<div class="dial"><label for="seed">Seed <output id="seedOut">45 · the cover’s</output></label>' +
+          '<input type="range" id="seed" min="1" max="80" step="1" value="45"></div>' +
+          '<div class="dial"><label for="sc">★ In-between scale <output id="scOut">0.62 · 1.46 rows · 38px cell</output></label>' +
+          '<input type="range" id="sc" min="0.40" max="0.95" step="0.01" value="0.62"></div>' +
+          '<div class="dial"><label>&nbsp;</label><span style="font:12px ui-monospace,monospace;color:#98a0ab">' +
+          'uncropped scales · 1 row <output id="natOut">0.90</output> · 2 rows <output id="nat2Out">0.45</output> · 3 rows <output id="nat3Out">0.30</output></span></div>';
+        document.querySelector('header').after(d);
+        const nat = () => {
+          document.getElementById('natOut').textContent = NAT_N(1).toFixed(2);
+          document.getElementById('nat2Out').textContent = NAT_N(2).toFixed(2);
+          document.getElementById('nat3Out').textContent = NAT_N(3).toFixed(2);
+        };
+        d.querySelector('#h').addEventListener('input', (e) => {
+          state.height = +e.target.value;
+          document.getElementById('hOut').textContent = state.height + 'px';
+          nat();
+          scOut();
+          render();
+        });
+        const scOut = () => {
+          document.getElementById('scOut').textContent =
+            state.scale.toFixed(2) +
+            ' · ' +
+            ROWS(state.scale).toFixed(2) +
+            ' rows · ' +
+            Math.round(62 * state.scale) +
+            'px cell';
+        };
+        d.querySelector('#sc').addEventListener('input', (e) => {
+          state.scale = +e.target.value;
+          scOut();
+          render();
+        });
+        d.querySelector('#seed').addEventListener('input', (e) => {
+          state.seed = +e.target.value;
+          document.getElementById('seedOut').textContent =
+            state.seed + (state.seed === 45 ? ' · the cover’s' : '');
+          render();
+        });
+        nat();
+        scOut();
+      }
+      dials();
+      render();
+    </script>
+  </body>
+</html>

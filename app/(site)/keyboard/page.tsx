@@ -1,10 +1,18 @@
 'use client';
 
+// The IMPL directly, not the lazy boundary (2026-08-24, CLS audit
+// #12): this page's whole purpose is rendering math — its prerendered
+// markup needs the CSS statically (the katex.min.css import), and
+// going through the Suspense boundary made the nine button previews
+// paint as raw `$…$` source before swapping. Importing the impl puts
+// KaTeX in this route's own chunk, which is exactly where /keyboard
+// wants it; the quiz routes keep the lazy boundary.
+import 'katex/dist/katex.min.css';
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import KatexSpan from '@/components/katexSpan';
+import KatexSpan from '@/components/katexSpanImpl';
 import { ClipboardCopy } from 'lucide-react';
 import { toast } from 'sonner';
 

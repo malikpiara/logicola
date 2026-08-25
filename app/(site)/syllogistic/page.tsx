@@ -1,18 +1,21 @@
 //import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import Head from 'next/head';
+import type { Metadata } from 'next';
 //import Link from 'next/link';
+
+// Was a `next/head` <Head> inside the component, which the App Router
+// ignores silently — the title and description below never reached the
+// document, so this page shipped the root layout's generic ones instead.
+export const metadata: Metadata = {
+  title: 'Syllogistic Translations — A Quick Guide',
+  description:
+    'A concise guide to syllogistic translation: how to turn all, no, some, and only into logical form, with worked easy and harder examples.',
+  alternates: { canonical: '/syllogistic' },
+};
 
 export default function SyllogisticLogicPage() {
   return (
     <>
-      <Head>
-        <title>Syllogistic Translations – A Quick Guide</title>
-        <meta
-          name='description'
-          content='A concise overview of Syllogistic Translations, including basic and harder examples.'
-        />
-      </Head>
       <div className='container mx-auto py-8 space-y-8 max-w-4xl motion-enter'>
         <h1 className='text-3xl font-bold mb-6 text-black'>
           Syllogistic Translations

@@ -61,36 +61,10 @@ const config = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
-      keyframes: {
-        'accordion-down': {
-          from: {
-            height: '0',
-            opacity: '0',
-            transform: 'translateY(-4px)',
-          },
-          to: {
-            height: 'var(--radix-accordion-content-height)',
-            opacity: '1',
-            transform: 'translateY(0)',
-          },
-        },
-        'accordion-up': {
-          from: {
-            height: 'var(--radix-accordion-content-height)',
-            opacity: '1',
-            transform: 'translateY(0)',
-          },
-          to: {
-            height: '0',
-            opacity: '0',
-            transform: 'translateY(-3px)',
-          },
-        },
-      },
-      animation: {
-        'accordion-down': 'accordion-down 190ms var(--ease-out-quart) both',
-        'accordion-up': 'accordion-up 150ms var(--ease-out-cubic) both',
-      },
+      // The accordion height keyframes left 2026-08-24 (plans/004): the
+      // FAQ collapses by grid-rows transition now (.faq-panel in
+      // globals.css) — transitions retarget mid-flight, keyframes
+      // restarted every re-click from zero.
     },
   },
   plugins: [tailwindcssAnimate, typography],

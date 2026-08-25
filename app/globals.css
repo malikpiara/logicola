@@ -1,6 +1,37 @@
 @config "../tailwind.config.mjs";
 @import 'tailwindcss';
 
+/* Tailwind v4's preflight DROPPED `button { cursor: pointer }` — v3 shipped
+   it, v4 hands buttons back to the UA arrow. So the pointer affordance was
+   missing app-wide, not in the handful of places an audit happens to catch;
+   only buttons that carried `.motion-button`/`.motion-option` (or a literal
+   `cursor-pointer`) still had it. Restoring it once, here, is what keeps the
+   next button written from losing it again.
+
+   The BASE layer is load-bearing. Base sits below `utilities`, so every
+   deliberate exception still outranks this: `cursor-grab` on the drawer
+   grabber (components/ui/drawer.tsx — a DRAG affordance, not a click one),
+   `disabled:cursor-not-allowed`, and the unlayered quiz rules that mark a
+   spent option (`.quiz-immersive .qopt.is-revealed`). Put this anywhere
+   above `utilities` and it would silently break all three.
+   Malik, 2026-08-22 (the nav pass). */
+@layer base {
+  button:not(:disabled):not([aria-disabled='true']),
+  [role='button']:not([aria-disabled='true']),
+  summary {
+    cursor: pointer;
+  }
+
+  /* The gutter is always reserved (2026-08-24, CLS audit #7): on
+     classic-scrollbar platforms, navigating between short and long
+     routes — and the quiz's own body scroll-lock — used to toggle the
+     scrollbar and slide every centred layout ~15px. Overlay-scrollbar
+     platforms (macOS default) are unaffected. */
+  html {
+    scrollbar-gutter: stable;
+  }
+}
+
 .motion-enter {
   animation: animateIn var(--motion-page-enter) var(--ease-out-quart) 80ms both;
 }
@@ -8,6 +39,16 @@
 @layer utilities {
   .font-stretch {
     font-stretch: ultra-expanded;
+  }
+
+  /* A shallow rounded notch at each corner, matched to the Logicola
+     cartridge's own corner. `corner-shape` is sized by `border-radius`,
+     so pair this with a rounded utility (e.g. rounded-[9px]) — the radius
+     sets how deep the step cuts. It's a pure enhancement: `corner-shape`
+     is Chrome-only for now, and everywhere else the plain rounded corner
+     from `border-radius` remains, so the button never looks broken. */
+  .corner-notch {
+    corner-shape: superellipse(-2.4);
   }
 
   .motion-colors {
@@ -21,10 +62,16 @@
   .motion-button {
     cursor: pointer;
     transform: translateZ(0);
-    transition-duration: 120ms;
+    /* Longhands aligned by index (2026-08-24, plans/005): colours keep
+       `ease` at 120ms — the right curve for colour — while the press
+       TRANSFORM gets a real curve at 150ms. One `ease` for both was
+       why every press in the app felt flat. */
     transition-property:
       color, background-color, border-color, box-shadow, opacity, transform;
-    transition-timing-function: var(--ease-ui);
+    transition-duration: 120ms, 120ms, 120ms, 120ms, 120ms, 150ms;
+    transition-timing-function:
+      var(--ease-ui), var(--ease-ui), var(--ease-ui), var(--ease-ui),
+      var(--ease-ui), var(--ease-press);
   }
 
   .motion-button:disabled,
@@ -43,11 +90,51 @@
     will-change: opacity, transform;
   }
 
+  /* Yields to the quiz's right-hand reference sheet. The Quiz component
+     writes the open sheet's width to `--quiz-pane-offset` on <html>
+     (and removes it on close/unmount), so every surface tagged with this
+     class — the navbar, the quiz body — shifts as one layer instead of
+     the sheet sliding over some and pushing others. While the sheet is
+     being drag-resized <html> carries `data-quiz-pane-resizing` and the
+     transition is suspended so the layout tracks the pointer 1:1.
+
+     Margin, not transform, ON PURPOSE (2026-08-24, plans/001 branch
+     decision): the pushed content must REWRAP to the remaining width —
+     a translateX would slide the card's text under the pane. The
+     layout cost is paid only on open/close (300ms, occasional) and
+     once on drag release; during the drag the resize handler writes
+     margin-right inline on these nodes, rAF-coalesced, with no React
+     render and no root-variable restyle. */
+  .quiz-pane-push {
+    margin-right: var(--quiz-pane-offset, 0px);
+    transition: margin-right 300ms var(--ease-out-quart);
+  }
+
+  html[data-quiz-pane-resizing] .quiz-pane-push {
+    transition: none;
+  }
+
   .motion-card {
+    position: relative;
     transform: translateZ(0);
     transition-duration: var(--motion-standard);
     transition-property: border-color, box-shadow, transform;
     transition-timing-function: var(--ease-out-cubic);
+  }
+
+  /* Hover-lift guard (2026-08-24, plans/005): the -2px lift raises the
+     card's bottom edge out from under a cursor resting there —
+     hover-out → drop → hover-in, an oscillation loop. The catalog's
+     move-lift-to-a-child fix would detach the content from the card's
+     own border here, so instead this invisible apron keeps the
+     original footprint hoverable while the card is lifted. Negative
+     z-index: painted behind everything, but still the parent's hit
+     region, and children stay clickable above it. */
+  .motion-card::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 -2px;
+    z-index: -1;
   }
 
   .motion-option {
@@ -68,18 +155,95 @@
     transform: scale(0.992);
   }
 
+  /* Desktop has no exit (2026-08-24, plans/003): the advance is Enter,
+     the app's most repeated keypress, and the old 90ms fade sat between
+     the press and the next question. The transition rules below back
+     ONLY the mobile no-View-Transitions fallback, which overrides the
+     duration in its own block. */
   .motion-quiz-question {
     animation: quizQuestionIn 150ms var(--ease-out-quart) both;
     transform-origin: center top;
-    transition-duration: 90ms;
     transition-property: opacity, transform;
-    transition-timing-function: var(--ease-out-cubic);
+    /* quart, matching the entrance (plans/006): one gesture, one curve
+       family — exits were on cubic while entrances ran quart. */
+    transition-timing-function: var(--ease-out-quart);
     will-change: opacity, transform;
   }
 
-  .motion-quiz-question[data-motion='leaving'] {
-    opacity: 0;
-    transform: translateY(-4px) scale(0.998);
+  /* Mobile: advancing is a spatial push. The real thing is the layered
+     View Transitions push below (::view-transition-*(quiz-question));
+     these rules are the FALLBACK for browsers without the API, where the
+     exit must finish before the keyed remount plays the entrance.
+     Sequential, so both travels stay short — full-width travel across a
+     seam you never see would read as a stutter, not a push. Exit
+     duration must match QUESTION_EXIT_MOBILE_MS in
+     components/quiz/index.tsx. */
+  @media (width < 40rem) {
+    .motion-quiz-question {
+      animation-name: quizQuestionInRight;
+      animation-duration: 200ms;
+      transition-duration: 130ms;
+      transition-property: opacity, transform;
+    }
+
+    .motion-quiz-question[data-motion='leaving'] {
+      /* opacity lived on the deleted desktop-level leaving rule; the
+         fallback push keeps its fade here (plans/003). */
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+  }
+
+  /* The push's named element is the CONTAINER, not the keyed question
+     block: question blocks differ in height and (being justify-centered)
+     vertical position, so naming them made the transition group
+     interpolate geometry — a diagonal drift + stretch on top of the
+     slide (Malik, 2026-08-19). The container's box is identical across
+     questions, leaving nothing to interpolate. Named at EVERY width
+     since 2026-08-24: mobile keeps the Duolingo push, desktop gets the
+     calm fade-drift pair (see the ::view-transition rules below) — the
+     DOM inside startViewTransition commits synchronously, so the
+     advance stays instant to the keypress and only the paint animates. */
+  .quiz-immersive .qcontainer {
+    view-transition-name: quiz-question;
+  }
+
+  /* The argument + question pin while a long option palette scrolls
+     (Set R's 18-fallacy grid runs ~2 screens on phones; the task means
+     re-reading the argument per option — Malik, 2026-08-19). On lg+ the
+     wrapper is display:contents so the question block's md:justify-between
+     still distributes three children; below lg it pins under the sticky
+     mobile header row. Sticky works because the canvas scrolls the BODY
+     (overflow-clip, not hidden — the porting trap in pixel-ui.md), and
+     it is inert wherever content fits the viewport. */
+  .qpin {
+    display: contents;
+  }
+
+  @media (width < 64rem) {
+    .quiz-immersive .qpin {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem; /* mirrors the question block's gap-5 */
+      position: sticky;
+      /* Clears the header row: 44px tap boxes + 12px paddings, plus the
+         status-bar inset the row absorbs. Tracks that row's geometry. */
+      top: calc(68px + env(safe-area-inset-top));
+      z-index: 10; /* under the z-20 header row, over the options */
+      background: var(--quiz-surface);
+    }
+
+    /* Scrolled options dissolve under the pinned block instead of being
+       cut by a hard edge. */
+    .quiz-immersive .qpin::after {
+      content: '';
+      position: absolute;
+      inset-inline: 0;
+      top: 100%;
+      height: 16px;
+      background: linear-gradient(var(--quiz-surface), transparent);
+      pointer-events: none;
+    }
   }
 
   .motion-answer-reveal {
@@ -94,10 +258,13 @@
     transition-timing-function: var(--ease-in-out-cubic);
   }
 
+  /* One meter grammar (plans/006): matches the scored bar's documented
+     500ms/quart payment. Latent until /progress wires live values —
+     aligned now so nobody ships the drift later. */
   .motion-progress {
-    transition-duration: 420ms;
+    transition-duration: 500ms;
     transition-property: transform;
-    transition-timing-function: var(--ease-out-cubic);
+    transition-timing-function: var(--ease-out-quart);
     will-change: transform;
   }
 
@@ -129,6 +296,1812 @@
   }
 }
 
+/* Gem CTA focus mark (components/quiz/gemButton.tsx). A clipped button
+   paints no outline and no ring — clip-path removes both — so the focus
+   indicator is a 2px band in the gem's own geometry on the UNCLIPPED
+   wrapper, standing 2px off the silhouette. `currentColor` resolves to
+   the set's ink on both quiz screens. No transition: focus marks appear
+   instantly. */
+.gem-button-wrap::after {
+  content: '';
+  position: absolute;
+  inset: var(--gem-finset);
+  background: currentColor;
+  clip-path: var(--gem-fband);
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* `:is(a, button)`, not `button` (Malik, 2026-08-23). The end screen's
+   onward action is a real anchor now (GemLink — it navigates, so it has
+   to be middle-clickable and copyable), and the band is the ONLY focus
+   mark a clipped gem can have: an <a> matched by nothing here would have
+   had no visible focus at all, which is a 2.4.7 failure rather than a
+   styling gap. */
+.gem-button-wrap:has(:is(a, button):focus-visible)::after {
+  opacity: 1;
+}
+
+/* Immersive quiz surface. The quiz screen is painted with the set's own
+   palette (--quiz-surface/--quiz-fg/--quiz-accent, set inline by the Quiz
+   component). These scoped rules repaint the shared chrome — keyboard hints,
+   headers, separators — that hardcodes grays for white surfaces. They are
+   deliberately UNLAYERED: unlayered CSS outranks Tailwind's layered
+   utilities, which is what lets them override text-gray-* etc. without
+   touching the components (which still render normally on white surfaces
+   like the bottom sheet and the guide pane). */
+.quiz-immersive :is(.text-gray-900, .text-gray-800, .text-gray-700) {
+  color: var(--quiz-fg);
+}
+
+.quiz-immersive :is(.text-gray-400, .text-gray-500, .text-gray-600) {
+  color: color-mix(in srgb, var(--quiz-fg) 72%, transparent);
+}
+
+.quiz-immersive hr {
+  background-color: color-mix(in srgb, var(--quiz-fg) 16%, transparent);
+}
+
+.quiz-immersive kbd {
+  background-color: color-mix(in srgb, var(--quiz-fg) 10%, transparent);
+  border-color: color-mix(in srgb, var(--quiz-fg) 28%, transparent);
+  color: var(--quiz-fg);
+}
+
+/* ---- Option pills: sprite silhouette + the Tint colour ladder ----------
+   Port of the pattern lab's decided answer treatment (docs/pixel-ui.md,
+   OPTION_TREATMENTS.tint in docs/pattern-lab.html). Not one literal colour
+   lives in these rules: every state reads a --qo-* token fed by the set's
+   own three colours, so the ladder ports to all seven sets without a new
+   decision. Token grammar — no prefix = idle, h = hover, s = selected,
+   r = revealed, x = ruled; bg / fg / bbg (badge fill) / bfg (badge ink).
+
+   The error tone is the shipped rose-mix (open decision 6 in
+   docs/redesign-handoff.md; `Tier brick` remains the alternative). */
+.quiz-immersive {
+  --quiz-error: color-mix(in srgb, #f43f5e 55%, var(--quiz-fg));
+
+  --qo-bg: color-mix(in srgb, var(--quiz-fg) 9%, transparent);
+  --qo-hbg: color-mix(in srgb, var(--quiz-fg) 15%, transparent);
+  --qo-fg: var(--quiz-fg);
+  --qo-bbg: color-mix(in srgb, var(--quiz-fg) 12%, transparent);
+  --qo-bfg: color-mix(in srgb, var(--quiz-fg) 85%, transparent);
+  --qo-sbg: color-mix(in srgb, var(--quiz-accent) 14%, var(--quiz-surface));
+  --qo-sfg: var(--quiz-fg);
+  --qo-sring: var(--quiz-accent);
+  --qo-sbbg: var(--quiz-accent);
+  --qo-sbfg: var(--quiz-surface);
+  --qo-rbg: var(--quiz-fg);
+  --qo-rfg: var(--quiz-surface);
+  --qo-rbbg: color-mix(in srgb, var(--quiz-surface) 18%, transparent);
+  --qo-rbfg: var(--quiz-surface);
+  --qo-xbg: color-mix(in srgb, var(--quiz-fg) 5%, transparent);
+  --qo-xfg: var(--quiz-error);
+  /* SPENT (2026-08-24): an option the learner never picked, once the
+     answer is shown. Same 5% ground as a mistake, but the set's own ink
+     at 70% instead of the error tone — error red is reserved for
+     options the learner actually got wrong, so a clean win no longer
+     paints the whole grid red. 85%, MEASURED not guessed: 70% read
+     nicely but failed 4.5:1 on five of the seven set surfaces (worst
+     3.60 on Set A's #E6ACF4/#1C3601); 85% is the first step that clears
+     AA on every set, worst 5.00. These labels are still content — the
+     learner reads them to see what the other answers were — so the
+     recede comes from the 5% ground, the quiet badge and the dead
+     cursor, never from making the words hard to read. Re-measure all
+     seven if the palette moves. */
+  --qo-dbg: color-mix(in srgb, var(--quiz-fg) 5%, transparent);
+  --qo-dfg: color-mix(in srgb, var(--quiz-fg) 85%, transparent);
+  --qo-dbbg: color-mix(in srgb, var(--quiz-fg) 8%, transparent);
+  --qo-dbfg: color-mix(in srgb, var(--quiz-fg) 85%, transparent);
+  --qo-xbbg: color-mix(in srgb, var(--quiz-error) 15%, transparent);
+  --qo-xbfg: var(--quiz-error);
+  /* Focus and the multi-select cursor share this colour — they mean the
+     same thing ("where I am") and separate by position. The ink, because
+     Tint leaves the ink unspent on selection (the accent owns it). */
+  --qo-focus: var(--quiz-fg);
+}
+
+/* The wrapper carries both marks as pseudo-element bands, so they must be
+   siblings of the clipped pill, never ancestors — a clip on the wrapper
+   would delete the label along with the pill's interior. */
+.quiz-immersive .qopt-wrap {
+  position: relative;
+  /* The press curve, not built-in `ease` (plans/005). The 0.985 depth
+     is measured and documented below — only the curve changed. */
+  transition: transform 150ms var(--ease-press);
+}
+
+.quiz-immersive .qopt-wrap.is-compact {
+  display: flex;
+}
+
+/* The ring, drawn as an actual BAND (ringBand() in lib/pixel.ts): the
+   wrapper's ::before is filled with the ring colour and clipped to the
+   outer silhouette minus the inner one, evenodd. Never a drop-shadow —
+   drop-shadow traces the alpha channel, not the silhouette. Always
+   rendered and faded with the fill so band and interior share one timing;
+   --qo-band is set on every wrapper so a band fading OUT keeps its
+   silhouette instead of collapsing to a rectangle mid-fade. */
+.quiz-immersive .qopt-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--qo-rc, transparent);
+  clip-path: var(--qo-band);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+/* `is-ringed`, not `ring` — that name is Tailwind's ring utility in the
+   app, and the collision painted a 1px currentColor rectangle around
+   every ringed wrapper. */
+.quiz-immersive .qopt-wrap.is-ringed::before {
+  opacity: 1;
+}
+
+/* The focus mark is a second band OUTSIDE the silhouette with a 2px
+   surface gap. The gap is load-bearing, not decoration: ink and accent
+   sit only 1.60–2.67:1 apart across the sets, so two marks in those
+   colours touching each other would fail WCAG 1.4.11's 3:1. Separated by
+   surface, each is measured against the surface instead. Never close it. */
+.quiz-immersive .qopt-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  background: var(--qo-focus);
+  clip-path: var(--qo-fband);
+  pointer-events: none;
+  display: none;
+}
+
+.quiz-immersive .qopt-wrap:has(.qopt:focus-visible)::after {
+  display: block;
+}
+
+/* Buttons that give a little under the press read as pressable. On the
+   wrapper so the band travels with the pill — on the pill alone the ring
+   would stay behind. 98.5%, not the button-standard 97%: these are
+   full-width rows, and scale is proportional — 97% moved a 375px row's
+   edges ~11px, which read as a cartoon squash rather than a press
+   (Malik, 2026-08-19). At 98.5% the give is felt, not watched. */
+.quiz-immersive
+  .qopt-wrap:has(.qopt:not(.is-ruled):not(.is-spent):not(.is-revealed):active) {
+  transform: scale(0.985);
+}
+
+/* A control is not a passage: a long-press on an option should feel
+   like pressing a button, not start selecting its label (the guide and
+   the prompt stay selectable — they're the readable content). */
+.quiz-immersive .qopt,
+.quiz-immersive .qkeys,
+.quiz-immersive .qcount {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.quiz-immersive .qopt {
+  appearance: none;
+  border: 0;
+  font: inherit;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  cursor: pointer;
+  padding: 15px 26px 15px 18px;
+  font-size: 19px;
+  line-height: 1.35;
+  background: var(--qo-bg, transparent);
+  color: var(--qo-fg, var(--quiz-fg));
+  transition:
+    background-color 0.12s,
+    color 0.12s;
+}
+
+/* The pill's own outline would trace the border-box, cutting straight
+   across the stairs. The wrapper's band replaces it. */
+.quiz-immersive .qopt:focus-visible {
+  outline: none;
+}
+
+/* Compact cells: eighteen have to fit on one card. Weight 500, because a
+   control should read as a control — the cells and the hint body are both
+   15px and the hint moved to ink, so weight is the separating lever. */
+.quiz-immersive .qopt.is-compact {
+  font-size: 15px;
+  font-weight: 500;
+  gap: 10px;
+  padding: 10px 16px 10px 10px;
+  height: 100%;
+}
+
+/* Selection completes the scheme in the ACCENT — the third colour already
+   paints the count label and the progress fill; now it marks the pick.
+   The :not(.is-selected) on the hover rule is load-bearing: without it
+   the hover tint outranks the selected rule by specificity and repaints a
+   selected option with the idle hover wash under the cursor. */
+.quiz-immersive .qopt.is-selected {
+  background: var(--qo-sbg);
+  color: var(--qo-sfg);
+}
+
+/* Selection TRACKS the keypress (2026-08-24, plans/003): digits and
+   abbreviation keys flip these classes 100+ times a session, and the
+   base 120ms fades put the state a beat behind the finger — the same
+   rule the focus band has obeyed all along. State snaps IN; a removed
+   class falls back to the base fade, so a replaced selection fades out
+   BEHIND the new one — trailing decoration that delays nothing. Hover
+   keeps the base 120ms untouched. */
+.quiz-immersive .qopt.is-selected,
+.quiz-immersive .qopt-wrap.is-ringed::before {
+  transition-duration: 0s;
+}
+
+/* The revealed answer inverts, same adaptive ink as the CTA. */
+.quiz-immersive .qopt.is-revealed {
+  background: var(--qo-rbg);
+  color: var(--qo-rfg);
+  cursor: default;
+}
+
+.quiz-immersive .qopt.is-ruled {
+  background: var(--qo-xbg);
+  color: var(--qo-xfg);
+  cursor: default;
+}
+
+.quiz-immersive .qopt.is-spent {
+  background: var(--qo-dbg);
+  color: var(--qo-dfg);
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .quiz-immersive
+    .qopt:hover:not(.is-revealed):not(.is-ruled):not(.is-spent):not(
+      .is-selected
+    ) {
+    background: var(--qo-hbg);
+  }
+}
+
+/* The badge: a filled square chip on the 4px stair grid (clip set inline),
+   echoing the original LogiCola's filled abbreviation box. No outline —
+   a clipped border loses its stroke on the stairs. */
+.quiz-immersive .qbadge {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--qo-bbg);
+  color: var(--qo-bfg);
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: lowercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.quiz-immersive .qopt.is-compact .qbadge {
+  width: 28px;
+  height: 28px;
+  font-size: 11px;
+}
+
+.quiz-immersive .qopt.is-selected .qbadge {
+  background: var(--qo-sbbg);
+  color: var(--qo-sbfg);
+}
+
+.quiz-immersive .qopt.is-revealed .qbadge {
+  background: var(--qo-rbbg);
+  color: var(--qo-rbfg);
+}
+
+.quiz-immersive .qopt.is-ruled .qbadge {
+  background: var(--qo-xbbg);
+  color: var(--qo-xbfg);
+}
+
+.quiz-immersive .qopt.is-spent .qbadge {
+  background: var(--qo-dbbg);
+  color: var(--qo-dbfg);
+}
+
+.quiz-immersive .qbadge svg {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+
+.quiz-immersive .qopt-label {
+  min-width: 0;
+}
+
+/* The number → ✕/✓ swap is the clearest state signal the component has.
+   The mark animates when it MOUNTS (one-shot by construction: React only
+   mounts it on the render where the state changed), never on re-renders. */
+@keyframes qbadge-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+.quiz-immersive .qbadge-mark {
+  display: block;
+  animation: qbadge-in 180ms var(--ease-out-quart) both;
+}
+
+/* ---- Question chrome ----------------------------------------------------
+   Same voice as the start screen's eyebrow — the question screen reads as
+   a continuation of the start card, not a different app. 0.12em tracking:
+   caps want 5–12%, and this is the top of the range (0.3em let the words
+   disassemble — audit finding 5). */
+.quiz-immersive .qheader {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.8;
+  margin-bottom: 18px;
+  color: var(--quiz-fg);
+}
+
+.quiz-immersive .qmulti {
+  margin: -10px 0 18px;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--quiz-fg) 72%, transparent);
+}
+
+/* The size container for the prompt's cqw type and the option grid's
+   container query. inline-size only: the card's height must stay
+   content-driven. NB layout containment makes this the containing block
+   for absolute descendants — keep absolutely-positioned chrome (the
+   progress line) OUTSIDE it. */
+.quiz-immersive .qcontainer {
+  container-type: inline-size;
+}
+
+/* Display sizes want tight leading; 1.25 is the top of Butterick's
+   120–145% band, which suits a two-to-three line question. cqw, not vw:
+   736px of container → 26px (clamped); 358px → the 20px floor. */
+.quiz-immersive .qprompt {
+  /* Floor 20 → 21px (Malik, 2026-08-22): the passage reads at the floor
+     on phones, and it earns a nudge — deliberately tiny. */
+  font-size: clamp(21px, 3.6cqw, 26px);
+  line-height: 1.25;
+  font-weight: 400;
+  text-align: center;
+  margin: 0 0 34px;
+  text-wrap: balance;
+}
+
+/* ---- Grid sets (Q, R) --------------------------------------------------
+   COLUMN-major: the options read DOWN each column — the 2008 answer
+   grid's order and the taxonomy the student learns, so it is never
+   shuffled. The row count has to change with the column count or the
+   grid spills into implicit columns; JS supplies both pairs
+   (optionGridVars) and the container query picks one. 640px is a
+   prototype threshold pending the mobile pass. */
+.quiz-immersive .qoptions-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(var(--qcols-sm), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--qrows-sm), auto);
+}
+
+@container (min-width: 640px) {
+  .quiz-immersive .qoptions-grid {
+    grid-template-columns: repeat(var(--qcols), minmax(0, 1fr));
+    grid-template-rows: repeat(var(--qrows), auto);
+  }
+}
+
+/* A FOURTH column on a genuinely wide card (2026-08-24, Malik's ask —
+   the Set R reach problem). Set R's 18 options go from 6 rows to 5,
+   which measured 348px → 288px at a 1728px viewport with NO label
+   wrapping: the fourth column pulls Check Answer 60px up the screen.
+   A CONTAINER query, like the tier above, because the guide pane
+   resizes the card — a viewport rule would leave four cramped columns
+   in a narrow card whenever the pane is open. 1100px is the card width
+   where four columns still clear the longest label ('Appeal to
+   authority') on one line; JS supplies the row count to match
+   (optionGridVars). */
+@container (min-width: 1100px) {
+  .quiz-immersive .qoptions-grid {
+    grid-template-columns: repeat(var(--qcols-xl), minmax(0, 1fr));
+    grid-template-rows: repeat(var(--qrows-xl), auto);
+  }
+}
+
+/* Same voice and colour as the start screen's points line — the same
+   information, one screen later. */
+.quiz-immersive .qcount {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: var(--quiz-accent);
+}
+
+/* ---- Keyboard hints -----------------------------------------------------
+   Pixel keycaps (22px sprite chips, R=8) in ink-glass with a 2px darker
+   bottom lip — the 8-bit reading of key depth in flat colour. The bottom
+   edge is straight, so the lip survives the clip everywhere except the
+   corner stairs, which shortens it pleasingly. */
+.quiz-immersive .qkeys {
+  align-items: center;
+  gap: 7px;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 11px;
+  opacity: 0.7;
+  color: var(--quiz-fg);
+}
+
+.quiz-immersive .qkey {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  font: inherit;
+  background: color-mix(in srgb, var(--quiz-fg) 9%, transparent);
+  border-bottom: 2px solid color-mix(in srgb, var(--quiz-fg) 35%, transparent);
+}
+
+.quiz-immersive .qkey svg {
+  width: 10px;
+  height: 10px;
+  display: block;
+}
+
+.quiz-immersive .qkeys-sep {
+  margin: 0 -3px;
+}
+
+.quiz-immersive .qkeys-label {
+  letter-spacing: 0.08em;
+}
+
+/* ---- Mobile header row ---------------------------------------------------
+   The bare exit glyph: no plate (it competed with the Guide chip; the
+   reference apps run a naked quiet ✕). The 44px tap box stays — only the
+   paint shrinks, never the target. Ink at 60% keeps it present but
+   subordinate to the bar. */
+.quiz-immersive .qexit {
+  color: color-mix(in srgb, var(--quiz-fg) 60%, transparent);
+}
+
+@media (hover: hover) {
+  .quiz-immersive .qexit:hover {
+    color: var(--quiz-fg);
+  }
+}
+
+.quiz-immersive .qexit:focus-visible {
+  outline: 2px solid var(--quiz-fg);
+  outline-offset: 2px;
+  color: var(--quiz-fg);
+}
+
+.quiz-immersive .qbar {
+  background: color-mix(in srgb, var(--quiz-fg) 12%, transparent);
+}
+
+/* The fill advances in whole 4px steps — a loading bar drawn in pixels,
+   so the leading edge never antialiases. Plain var() width first as the
+   fallback for engines without round().
+
+   The 500ms transition animates --qp, NOT width (2026-08-12): a width
+   transition between two round() endpoints has no smooth interpolation,
+   so the engine falls back to a discrete flip and the bar snapped once
+   mid-window instead of advancing. Registering --qp gives the
+   interpolation a home — width then re-quantizes every frame, and the
+   animated fill steps across the 4px grid, which is the motion this
+   bar always wanted. Engines without @property lose only the motion
+   (instant set), never the quantization. */
+@property --qp {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+.quiz-immersive .qbar-fill {
+  /* The fill was quantised to the 4px sprite grid (round(down, --qp,
+     4px)) so the bar advanced in pixel steps — but a correct answer's
+     500ms sweep rendered as ~6 visible snaps and read as CLUNK, not
+     pixels (Malik, 2026-08-19). The scored bar's doctrine is a
+     continuous line, never cells: the silhouette stays on the grid via
+     the sprite-cap clip; the MOTION is now continuous. */
+  width: var(--qp, 0%);
+  transition: --qp 500ms var(--ease-out-quart);
+}
+
+/* Direction A — "hit flicker" — locked from the damage lab
+   (docs/damage-bar-lab.html; Malik, 2026-08-12). On a scored miss the
+   fill blinks OFF twice in hard cuts (paired keyframes, no fades — the
+   sprite-i-frames read: Mega Man, Zelda), and only then does the bar
+   pay the penalty: transition-delay holds back each bar's own 500ms
+   advance — `width` on the desktop hairline, `--qp` on the mobile bar
+   (see above) — until the flicker has finished. Two off-pulses stay under
+   WCAG 2.3.1's three-flashes-per-second line, and the strip's area is
+   far below the harmful-flash threshold. The shell applies the class to
+   BOTH bars (desktop hairline, mobile sprite bar) off the grader's
+   verdict; it never re-derives correctness. */
+@keyframes qbar-flicker {
+  0%,
+  24% {
+    opacity: 1;
+  }
+  25%,
+  49% {
+    opacity: 0;
+  }
+  50%,
+  74% {
+    opacity: 1;
+  }
+  75%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.quiz-immersive .qbar-miss {
+  animation: qbar-flicker 340ms linear;
+  transition-delay: 340ms;
+}
+
+/* Reduced motion: the bar still MOVES (it has to — the width is the
+   score), it just stops being animated. No staircase, no blink, no
+   held-back transition — the fill is simply at its new length. The
+   quiz's other reduced-motion rules live in the block at the foot of
+   this file; these two sit here because they're the pair the damage
+   grammar is built from, and splitting them hid the relationship. */
+@media (prefers-reduced-motion: reduce) {
+  .quiz-immersive .qbar-fill {
+    transition: none;
+  }
+
+  .quiz-immersive .qbar-miss {
+    animation: none;
+    transition-delay: 0ms;
+  }
+}
+
+/* ---- End screen receipt --------------------------------------------------
+   Rows, not columns (docs/endscreen-lab.html R4, Malik 2026-08-23). Measured
+   against the three-column version at 390px: the columns fit with nothing to
+   spare — "FIRST TRY" rendered 97px wide inside a 96.7px column — where a row
+   gives its label 280px. Rows also SCALE, which is what let the ambiguous
+   "18 of 22" split into a labelled "Problems 22" and "Solved first try 18".
+
+   The VALUE IS RIGHT-ALIGNED and that is the animation's requirement, not a
+   preference: a counting number changes its digit COUNT, so centred it grows
+   in both directions and shimmies for the whole 480ms. Anchored to the right,
+   the ones column never moves — the reason every ledger ever printed right-
+   aligns its numerals. Measured: 3.6px of drift centred, 0 right-aligned. */
+.quiz-immersive .qreceipt,
+.qreceipt {
+  margin-top: 1.25rem;
+}
+
+.qreceipt > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+/* Hairlines BETWEEN rows only — a rule above the first would read as a
+   divider under the headline rather than as part of the list. */
+.qreceipt > div + div {
+  border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.qreceipt dt {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+.qreceipt dd {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  font-stretch: 125%;
+  /* Tabular so the glyph widths are equal; the count-up's own `min-width`
+     is what stops the BOX changing size as digits arrive. Both are needed
+     and neither is sufficient alone. */
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* The counted figure fills its reserved box from the right. */
+.qreceipt dd > span[aria-hidden] {
+  display: inline-block;
+  text-align: right;
+}
+
+/* The denominator of "18/22". Static from the first frame — it is the frame
+   the achievement climbs inside, not the achievement — and a weight back so
+   the earned number leads. Same colour, because the accents clear 4.5:1 on
+   their own surface by as little as 0.05 and any dimming drops below AA on
+   four of the seven sets. */
+.qreceipt .qratio {
+  font-weight: 400;
+  opacity: 0.72;
+}
+
+/* ---- End screen exit chip ------------------------------------------------
+   A bare ✕ works on the QUESTION screen because that card's pattern is a
+   112px footer band and the top of the card is clean surface. The end
+   screen's pattern fills all four corners and its scatter reshuffles every
+   visit, so a glyph in the set's ink lands on an ink-coloured blob about as
+   often as not — found on Set A, plum on plum, completely invisible.
+
+   The chip gives it an opaque ground of the set's own surface, so the glyph
+   is always ink-on-surface: 7.04:1 on Set R, 12.67:1 on Set L. The 4px
+   chamfer is the same sprite corner the mobile progress bar and the guide
+   chip already wear, so it reads as the system's shape rather than a patch.
+   The ink stays at full strength here, unlike the question screen's 60%,
+   because it has a lit ground to sit on and no bar beside it to defer to. */
+.qexit-chip {
+  background: var(--screen-surface);
+  clip-path: polygon(
+    4px 0,
+    calc(100% - 4px) 0,
+    100% 4px,
+    100% calc(100% - 4px),
+    calc(100% - 4px) 100%,
+    4px 100%,
+    0 calc(100% - 4px),
+    0 4px
+  );
+}
+
+.qexit-chip:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ---- Ghost secondary -----------------------------------------------------
+   A real ghost: no fill and no border, so there is no component boundary for
+   1.4.11 to measure and the control is identified by its label alone — which
+   only has to clear 1.4.3 against the surface, and the ink does that at
+   7.04:1 on the worst set. The version this replaced was an OUTLINE button
+   wearing the wrong name (Malik's catch, 2026-08-23).
+
+   It reuses the gem silhouette so the two buttons are the same object at two
+   weights, and the fill appears only on hover or press — which is what makes
+   a ghost a button rather than a link. */
+.quiz-immersive .qghost,
+.qghost {
+  background: transparent;
+  color: var(--quiz-fg, currentColor);
+}
+
+@media (hover: hover) {
+  .qghost:hover {
+    background: color-mix(in srgb, currentColor 10%, transparent);
+  }
+}
+
+.qghost:active {
+  background: color-mix(in srgb, currentColor 16%, transparent);
+}
+
+/* ---- Phone points delta --------------------------------------------------
+   What an answer was WORTH, not what the score now is (Malik, 2026-08-23 —
+   docs/points-readout-lab.html option D1). The running total left the phone
+   because the bar already is the total; nothing rendered the economy, and
+   under the 2008 model the level changes nothing but the penalty.
+
+   Mono, like every other number in this product's chrome, and tabular so a
+   two-digit charge doesn't shift the line under a bar that is itself moving.
+
+   ONE COLOUR FOR BOTH SIGNS. A dimmed or reddened loss is not available:
+   the accents clear 4.5:1 on their own surface by as little as 0.05 (R 4.55,
+   J 4.57, C 4.60), and the palette has no red. The sign carries the meaning,
+   which WCAG 1.4.1 requires anyway — so a second colour would buy nothing it
+   is obliged to buy. The LOSS is distinguished by motion instead. */
+.quiz-immersive .qdelta-line {
+  /* OUT OF FLOW, under the bar's left end. In flow it made the bar's
+     wrapper a two-item column, so the row's `items-center` centred the
+     COLUMN and left the bar ~9px above the ✕ and the Guide chip — which
+     reads as a misalignment, because it is one. Absolute also means the
+     row cannot reflow when a verdict lands, so nothing has to be reserved.
+     4px below the track, which is the gap the in-flow version used. */
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  line-height: 15px;
+}
+
+.quiz-immersive .qdelta {
+  display: inline-block;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--quiz-accent);
+  animation: qdelta-in 1600ms var(--ease-out-quart) both;
+}
+
+/* The delta joins a choreography that already exists — it does not start a
+   second one. On a miss the fill blinks off twice over 340ms and only THEN
+   pays the penalty over 500ms (.qbar-miss above; docs/damage-bar-lab.html,
+   Direction A). So the gain fades out at 1600ms, after the bar has settled,
+   and the loss holds through the flicker with a short shake that ends before
+   the bar starts moving. Neither out-lasts the advance it annotates. */
+@keyframes qdelta-in {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  12% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  78% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes qdelta-loss {
+  0% {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  9% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  13% {
+    transform: translateX(-2px);
+  }
+  17% {
+    transform: translateX(2px);
+  }
+  21% {
+    transform: translateX(-1px);
+  }
+  25% {
+    transform: translateX(0);
+  }
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
+.quiz-immersive .qdelta-loss {
+  animation-name: qdelta-loss;
+}
+
+/* Reduced motion: the delta still APPEARS and still leaves — it is
+   information, not decoration — it simply stops sliding and shaking. Held to
+   a plain opacity hold so the element's lifetime is unchanged and the
+   1600ms timeout in index.tsx stays the single source of how long it lives.
+   Matches the block above, where the bar still moves and only stops being
+   animated. */
+@keyframes qdelta-hold {
+  0%,
+  99% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quiz-immersive .qdelta,
+  .quiz-immersive .qdelta-loss {
+    animation: qdelta-hold 1600ms step-end both;
+  }
+}
+
+/* ---- Guide button --------------------------------------------------------
+   Ink-glass sprite chip (R=12), book-heart at 16px, mono eyebrow voice. */
+.quiz-immersive .qguide-btn {
+  appearance: none;
+  border: 0;
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  cursor: pointer;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--quiz-fg);
+  background: color-mix(in srgb, var(--quiz-fg) 9%, transparent);
+}
+
+.quiz-immersive .qguide-btn:hover {
+  background: color-mix(in srgb, var(--quiz-fg) 15%, transparent);
+}
+
+/* A clipped chip paints no outline (clip-path clips it), so focus is a
+   full state flip to the adaptive ink — unmissable, and in-system. */
+.quiz-immersive .qguide-btn:focus-visible {
+  outline: none;
+  background: var(--quiz-fg);
+  color: var(--quiz-surface);
+}
+
+/* ---- Notation chips -----------------------------------------------------
+   The tinted boxes holding logic — `∴ A is true`, `∼(A · B)`. DECIDED
+   (Malik, 2026-08-06): the keycaps' own clip, Sprite 4px, on all of them
+   (clip set inline from lib/pixel). Weight only, no size: these sit
+   INLINE in running prose, where a larger glyph would open the leading
+   around its own line. Ink tint — accent tint is open decision 7.
+   Scoped to the immersive card AND the reference guide: the guide's
+   notation is the same object as the hint's, so it takes the same chip
+   (on the white sheet the guide supplies neutral tokens — see
+   .wff-guide below). */
+:is(.quiz-immersive, .wff-guide) .qchip {
+  font-family: inherit;
+  padding: 1px 7px;
+  font-weight: 500;
+  white-space: nowrap;
+  background: color-mix(in srgb, var(--quiz-fg, #1f2937) 12%, transparent);
+  color: var(--quiz-fg, #1f2937);
+}
+
+/* The mobile controls sheet follows the set's colour scheme — its
+   grabber reads the ink the sheet carries instead of the drawer's
+   stock grays. */
+/* The BAR, not the button: the grabber's button is now a 44px tap
+   target (HIG floor) wrapping an 8px bar, so painting the button would
+   put a plate behind the handle. */
+.quiz-controls-drawer .cursor-grab > span {
+  background: color-mix(in srgb, var(--quiz-fg, #1f2937) 18%, transparent);
+}
+
+@media (hover: hover) {
+  .quiz-controls-drawer .cursor-grab:hover > span {
+    background: color-mix(in srgb, var(--quiz-fg, #1f2937) 30%, transparent);
+  }
+}
+
+/* ---- Reference guide (the lab panel's hierarchy) ------------------------
+   Port of the lab guide panel's information hierarchy (docs/pattern-lab
+   SET_GUIDES + .qguide-* styles): 15px/600 headings, 13px body, chip
+   rows, dense tables with mono small-caps headers, hanging-numeral rule
+   lists. The sheet is still white (the surface-colour question is
+   deferred), so the guide supplies NEUTRAL tokens for the shared chip /
+   clause-list / emphasis machinery it borrows from the hints. */
+/* Ink-driven with neutral fallbacks: on the branded desktop sheet the
+   set's tokens ride in on the DrawerContent, so everything recolours;
+   on the white mobile sheet (surface pass still deferred) the fallbacks
+   keep today's grays. NB the fallbacks live in var() — declaring
+   --quiz-fg HERE would shadow the inherited ink (the documented
+   custom-property trap). */
+/* Type audit 2026-08-22 (guide-lab; Butterick + Santa Maria pass,
+   confirmed by user testing's small-text complaint): the guide sat at
+   13px while the hint body is 15px — breaking its own "reference and
+   feedback are one system" doctrine, and below the web floor for read
+   content on phones. Every read tier moves up ~1.5px; the mono
+   micro-labels (already correctly tracked caps) stay. */
+.wff-guide {
+  font-size: 15px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 88%, transparent);
+}
+
+.wff-guide .qguide-h {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-wrap: balance;
+  color: var(--quiz-fg, #111827);
+}
+
+.wff-guide .qguide-group {
+  margin-top: 22px;
+}
+
+.wff-guide .qguide-p {
+  margin: 0 0 14px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 88%, transparent);
+}
+
+/* The provenance credit line (Set Q examples, Set R descriptions are
+   original as of 2026-08-22; the framework is Gensler's). */
+.wff-guide .qguide-src {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 60%, transparent);
+}
+
+/* A row of chips and a label, never mixed running prose — the one place
+   flex is safe in guide content. */
+.wff-guide .qguide-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+/* The notation is the SPECIMEN here; it outranks its own definition.
+   18px matches the option pills' 19px — a reference smaller than the
+   thing it references is the wrong way round. */
+.wff-guide .qguide-chip {
+  font-family: inherit;
+  flex: none;
+  min-width: 3.4em;
+  text-align: center;
+  padding: 2px 8px;
+  font-size: 18px;
+  font-weight: 500;
+  background: color-mix(in srgb, var(--quiz-fg, #1f2937) 9%, transparent);
+  color: var(--quiz-fg, #111827);
+}
+
+.wff-guide .qguide-cap {
+  flex: none;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 60%, transparent);
+}
+
+.wff-guide .qguide-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.wff-guide .qguide-table th {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 60%, transparent);
+  padding: 0 10px 6px 0;
+  border-bottom: 2px solid
+    color-mix(in srgb, var(--quiz-fg, #1f2937) 18%, transparent);
+}
+
+/* Zebra rows, DECIDED 2026-08-22 (guide-lab): the hairline row rules go;
+   alternate rows wash at ink-6% and the wash GROUPS — an entry's
+   example and why-lines read as one parcel. The washed rows round their
+   outer corners in the brand's idiom: rasterized stairs on the 4px
+   grid via per-td clips (left corners on the first cell, right on the
+   last — a <tr> can't carry a clip-path), never smooth radius. */
+.wff-guide .qguide-table td {
+  vertical-align: top;
+  padding: 8px 10px;
+  border-bottom: 0;
+}
+
+.wff-guide .qguide-table td:first-child {
+  padding-left: 10px;
+}
+
+.wff-guide .qguide-table tbody tr:nth-child(odd) td {
+  background: color-mix(in srgb, var(--quiz-fg, #1f2937) 6%, transparent);
+}
+
+.wff-guide .qguide-table tbody tr:nth-child(odd) td:first-child {
+  clip-path: polygon(
+    8px 0,
+    100% 0,
+    100% 100%,
+    8px 100%,
+    8px calc(100% - 4px),
+    4px calc(100% - 4px),
+    4px calc(100% - 8px),
+    0 calc(100% - 8px),
+    0 8px,
+    4px 8px,
+    4px 4px,
+    8px 4px
+  );
+}
+
+.wff-guide .qguide-table tbody tr:nth-child(odd) td:last-child {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 8px) 0,
+    calc(100% - 8px) 4px,
+    calc(100% - 4px) 4px,
+    calc(100% - 4px) 8px,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 4px) calc(100% - 8px),
+    calc(100% - 4px) calc(100% - 4px),
+    calc(100% - 8px) calc(100% - 4px),
+    calc(100% - 8px) 100%,
+    0 100%
+  );
+}
+
+/* A wff form is one object; `some A is not B` must not break after
+   `not`. */
+.wff-guide .qguide-mono {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 13px;
+  white-space: nowrap;
+  color: var(--quiz-fg, #1f2937);
+}
+
+/* The typeable two-letter code — same voice as the cell badges. */
+.wff-guide .qguide-code {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 60%, transparent);
+}
+
+.wff-guide .qguide-name {
+  font-weight: 600;
+  color: var(--quiz-fg, #111827);
+}
+
+.wff-guide .qguide-why {
+  /* 12px/65% was caption styling on READ content — lifted a tier
+     (type audit 2026-08-22). 72% keeps AA at this size on the shipped
+     surfaces; re-gate via lib/contrast if a palette moves. */
+  margin-top: 2px;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 72%, transparent);
+}
+
+/* Numbered rules (Set L). Hanging number via absolute positioning, NOT
+   flex — mixed inline content must stay in one inline formatting
+   context (the clause-list lesson, not re-learned). */
+.wff-guide .qguide-rules {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: qgr;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.wff-guide .qguide-rules li {
+  counter-increment: qgr;
+  position: relative;
+  padding-left: 22px;
+  margin-top: 8px;
+}
+
+.wff-guide .qguide-rules li::before {
+  content: counter(qgr);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 14px;
+  text-align: right;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1.8;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 55%, transparent);
+}
+
+/* R's clause tails reuse the hint's own list treatment, at table scale. */
+.wff-guide .qguide-table .qhint-clauses {
+  max-width: none;
+  font-size: 13px;
+}
+
+/* The ∴ glyph inside inference chips — decided 2026-08-22 (guide-lab):
+   the symbol was hard to read at chip scale, so it steps up and
+   emboldens inside its chip. Applies in the guide AND the hints — the
+   chips are the same object. */
+.qchip .qtf {
+  font-size: 1.15em;
+  font-weight: 650;
+}
+
+/* ---- Mobile sheet: header morph, ✕ chip, guide reveal ----------------
+   The sheet-lab decisions (2026-08-21/22). The collapsed sheet is a
+   FOOTER, the expanded sheet is a READER — user testing found the CTA
+   riding up with the sheet confusing, so the CTA row and the reader
+   title share one grid cell and crossfade: opacity + 4px blur + a small
+   directional slide at 200ms in the sheet's own ease. The 4px blur
+   masks the identity swap; the grid stack keeps header height constant
+   so nothing animates layout. The hidden layer flips visibility AFTER
+   the fade (the delayed 4th transition slot) so the invisible CTA also
+   leaves the tab order. */
+.qsheet-head {
+  display: grid;
+}
+
+.qsheet-head > .qsheet-cta,
+.qsheet-head > .qsheet-reader {
+  grid-area: 1 / 1;
+  transition:
+    opacity 0.2s var(--ease-out-quart),
+    filter 0.2s var(--ease-out-quart),
+    transform 0.2s var(--ease-out-quart),
+    visibility 0s;
+}
+
+.qsheet-reader {
+  align-self: start;
+  justify-self: start;
+  padding: 14px 4px 12px;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: color-mix(in srgb, var(--quiz-fg, #374151) 72%, transparent);
+}
+
+.qsheet-head[data-head='cta'] > .qsheet-reader {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(6px);
+  pointer-events: none;
+  visibility: hidden;
+  transition-delay: 0s, 0s, 0s, 0.2s;
+}
+
+.qsheet-head[data-head='reader'] > .qsheet-cta {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(-6px);
+  pointer-events: none;
+  visibility: hidden;
+  transition-delay: 0s, 0s, 0s, 0.2s;
+}
+
+/* Collapsed, the sheet FUSES with the page — same surface, no rule
+   (device finding 2026-08-22, first felt in the lab's below-CTA
+   variant). The ink-tint top rule surfaces only as the sheet expands.
+   Unlayered on purpose: it must outrank the border-0 utility. */
+.quiz-controls-drawer {
+  border-top: 2px solid transparent;
+  transition: border-color 0.25s var(--ease-out-quart);
+}
+
+.quiz-controls-drawer[data-expanded] {
+  border-top-color: color-mix(
+    in srgb,
+    var(--quiz-fg, #374151) 12%,
+    transparent
+  );
+}
+
+/* ---- Pixel tooltips (Radix Tooltip under a pixel chip; contract:
+   docs/pixel-ui.md § Tooltips) -------------------------------------------
+   Plain labels for icon-only DESKTOP controls, shortcut teaching as
+   "Close — Esc" / "Press 3". Chrome-ink chip. Positioning, delay
+   grouping, Esc and aria all belong to Radix (components/ui/pixelTip);
+   only the look and the motion live here. The reveal MOVES 3px in from
+   its side — feedback that points at what it belongs to. */
+.qtip {
+  z-index: 80;
+  padding: 4px 9px;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  background: #3f0167;
+  color: #ffffff;
+  animation: qtip-in 0.15s var(--ease-out-quart);
+}
+
+.qtip[data-side='top'] {
+  --qtip-dy: 3px;
+}
+.qtip[data-side='bottom'] {
+  --qtip-dy: -3px;
+}
+.qtip[data-side='left'] {
+  --qtip-dx: 3px;
+}
+.qtip[data-side='right'] {
+  --qtip-dx: -3px;
+}
+
+@keyframes qtip-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--qtip-dx, 0), var(--qtip-dy, 0));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A key inside a tip — the shortcut rendered as the thing you press.
+   Explicit colour: a portal already lifts the tip out of
+   .quiz-immersive's `kbd` rule (which paints keys in the set's ink —
+   the unreadable rust-on-plum Malik caught), but the chip's own
+   contract shouldn't depend on where it renders. */
+.qtip-kbd {
+  font: inherit;
+  padding: 0 5px;
+  margin: 0 1px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+/* Touch has no hover — tooltips are pointer hardware territory (HIG).
+   Radix never opens on touch; this is the belt to its braces. */
+@media (hover: none) {
+  .qtip {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qtip {
+    animation: none;
+  }
+}
+
+/* The grip darkens for the WHOLE drag (driven by isPaneResizing, not
+   :active — the cursor outruns the 16px handle constantly mid-drag).
+   Unlayered so it outranks the hover/focus utilities: pressed is the
+   top of the ladder. gray-500 — one step past the focus tone. */
+.qgrip-wrap[data-resizing] .qgrip-pill {
+  background: #6a7282;
+}
+
+/* The explicit way down — M3 requires a collapse affordance at full
+   height, and the grabber cycle is forward-only. */
+.qsheet-x {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--quiz-fg, #374151) 10%, transparent);
+  color: var(--quiz-fg, #374151);
+  opacity: 0;
+  scale: 0.8;
+  pointer-events: none;
+  transition:
+    opacity 0.18s var(--ease-out-quart),
+    scale 0.18s var(--ease-out-quart);
+}
+
+.qsheet-x[data-visible] {
+  opacity: 1;
+  scale: 1;
+  pointer-events: auto;
+}
+
+/* The guide stays MOUNTED from question one (its measured height sizes
+   the content-fit snap) and reveals by opacity as the sheet expands. */
+.qsheet-guide {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease-out-quart);
+}
+
+.qsheet-guide[data-open] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* `.quiz-controls-drawer` left this list 2026-08-24 (plans/002): it
+     was dead — vaul writes the snap transition INLINE, which no
+     stylesheet rule without !important can beat. The working override
+     for every vaul surface is the unlayered [data-vaul-drawer] block
+     at the end of this file. */
+  .qsheet-head > .qsheet-cta,
+  .qsheet-head > .qsheet-reader,
+  .qsheet-x,
+  .qsheet-guide {
+    transition: none;
+  }
+}
+
+/* Colour for hierarchy, not background (decision 7, resolved by Malik +
+   arithmetic 2026-08-08): in the REFERENCE the notation is the thing you
+   scan for, so chips take the set's ACCENT — text in the accent, plate
+   at accent-10% (every accent clears 4.5:1 over that plate on white;
+   the card's chips STAY INK, because on the set surfaces the accents
+   have no AA headroom over any darkened plate — measured 3.72–4.02:1).
+   Same object, adaptive ink per ground, like the CTA. */
+.wff-guide .qchip {
+  background: color-mix(in srgb, var(--quiz-accent, #4b5563) 10%, transparent);
+  color: var(--quiz-accent, #374151);
+}
+
+.wff-guide .qguide-chip {
+  background: color-mix(in srgb, var(--quiz-accent, #4b5563) 10%, transparent);
+  color: var(--quiz-accent, #111827);
+}
+
+/* The typeable codes (R's `aa`…`sm`, Q's flaw numbers) — the pointer
+   tier, bound to the accent the way the badges and keycaps bind to the
+   chrome. Full strength: every accent clears 4.5:1 on plain white. */
+.wff-guide .qguide-code {
+  color: var(--quiz-accent, #6b7280);
+}
+
+/* Emphasis inside guide prose (`*must*` through HintProse) — the decided
+   Rule mark, in the set's accent once the sheet carries the var (neutral
+   fallback otherwise). Presentational italics use <i>, which this
+   deliberately does not touch. */
+.wff-guide em {
+  font-style: normal;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--quiz-accent, #4b5563);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  text-decoration-skip-ink: none;
+}
+
+/* The reference panel's close control — the sprite-cornered ✕ chip from
+   the lab (32px scale, R=8 clip set inline). Reads the sheet's ink; a
+   clipped chip paints no outline, so focus is the fill flip. */
+.qguide-close {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--quiz-fg, #374151);
+  background: color-mix(in srgb, var(--quiz-fg, #1f2937) 9%, transparent);
+}
+
+@media (hover: hover) {
+  .qguide-close:hover {
+    background: color-mix(in srgb, var(--quiz-fg, #1f2937) 15%, transparent);
+  }
+}
+
+.qguide-close:focus-visible {
+  outline: none;
+  background: var(--quiz-fg, #1f2937);
+  color: var(--quiz-surface, #ffffff);
+}
+
+/* ---- The feedback slot (reserved placement) ----------------------------
+   See components/quiz/feedbackSlot.tsx. The ghost sets the height and is
+   invisible; the live content floats over it, so the options below never
+   move. Measure capped at 62ch (~70 characters) — this is the densest
+   prose on the screen. */
+.quiz-immersive .qfeed {
+  position: relative;
+  margin: 0 0 26px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* The reservation is CAPPED (2026-08-24, Malik's ask). The ghost sizes
+   the slot to the tallest hint the question could show, and on Set R
+   that is a constant 156px on EVERY question — because all 18 fallacy
+   options are shared, so one long hint sets the floor for the whole
+   set. Measured: only 2 of the 18 hints ('Appeal to authority', 'Ad
+   hominem', ~144px of clause list) are long; the other 16 run 24–48px.
+   So the old contract spent ~110px of blank space on every question to
+   accommodate two options, and on the 18-option grid that space is
+   exactly what pushed the answers and Check Answer off the screen.
+
+   4 lines at the slot's 15px/1.6 = 96px. The two outliers now scroll
+   inside the slot instead of the page — the live layer is absolutely
+   positioned, so it can never push the options no matter what it
+   holds, and the no-shift contract this slot exists for is unchanged. */
+.quiz-immersive .qfeed-ghost {
+  visibility: hidden;
+}
+
+/* DESKTOP ONLY — this cap belongs to the ghost contract, and below
+   `lg` there is no ghost: the slot sizes to its live content and the
+   live layer is `position: static` (the 2026-08-19 mobile exception
+   further down). Capping there made a 200px hint overflow a 96px box
+   and paint straight over the options — caught on a 390px phone
+   before it shipped. */
+@media (width >= 64rem) {
+  .quiz-immersive .qfeed {
+    max-height: 96px;
+  }
+
+  /* No `overscroll-behavior: contain` (2026-08-24, Malik: "when your
+     mouse is on the position where there will be a scrollable hint,
+     users can't scroll anymore"). The live layer covers the slot at
+     all times — including when it is EMPTY — so containing the scroll
+     chain meant the wheel died wherever the pointer happened to rest
+     over that band. Default chaining lets the page scroll when this
+     box has nothing left to scroll, which is every question but the
+     two long hints. */
+  .quiz-immersive .qfeed-live {
+    overflow-y: auto;
+  }
+}
+
+/* A "there is more" cue for the two hints that outgrow the cap. The
+   same scroll-timeline edge fade the options scroller uses, so the
+   last visible line softens while there is more below and reaches full
+   strength at the end — the fade must never dim the final line of the
+   very text being read. Enhancement only: without scroll timelines the
+   box simply scrolls with no fade. (2026-08-24) */
+@supports (animation-timeline: scroll(self)) {
+  @media (width >= 64rem) {
+    .quiz-immersive .qfeed-live {
+      --qhint-fade: 20px;
+      mask-image: linear-gradient(
+        to bottom,
+        black calc(100% - var(--qhint-fade)),
+        transparent 100%
+      );
+      animation: qhintEdgeFade linear both;
+      animation-timeline: scroll(self block);
+    }
+  }
+}
+
+@keyframes qhintEdgeFade {
+  0%,
+  94% {
+    --qhint-fade: 20px;
+  }
+  100% {
+    --qhint-fade: 0px;
+  }
+}
+
+@property --qhint-fade {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+.quiz-immersive .qfeed-live {
+  position: absolute;
+  inset: 0;
+}
+
+/* On phones the ghost reservation would hold a BLANK band the height of
+   the tallest hint — a third of a phone screen on Set R. Below lg the
+   slot sizes to its live content instead: a deliberate, dated exception
+   to the constant-height contract above (Malik, 2026-08-19). Since the
+   answer group is bottom-anchored (2026-08-22, below) the exception costs
+   nothing on list sets: a hint grows the group upward into the gap and
+   the options hold still anyway. Grid sets still shrink their scroller
+   on a miss — a reorientation moment, not mid-aim. Desktop keeps the
+   contract. Unlayered on purpose: the rules being amended are unlayered,
+   and layered overrides lose to them. */
+@media (width < 64rem) {
+  .quiz-immersive .qanswer .qfeed-ghost {
+    display: none;
+  }
+  .quiz-immersive .qanswer .qfeed-live {
+    position: static;
+    inset: auto;
+  }
+
+  /* The empty slot's 26px reservation margin read as dead space between
+     the question and the options (Malik, 2026-08-19); the live content
+     carries its own spacing to the drill question beneath it instead. */
+  .quiz-immersive .qanswer .qfeed {
+    margin-bottom: 0;
+  }
+  .quiz-immersive .qanswer .qfeed-live > * {
+    margin-bottom: 1.25rem;
+  }
+}
+
+/* == The question column on phones: prompt top, answer group bottom ======
+   Decided in docs/question-lab.html (Malik, 2026-08-22) after user
+   testing: the 2008 window's own model — the passage holds the top, the
+   palette holds the bottom, and the discourse (feedback) lands in the
+   space between. No reserved boxes: the gap IS the feedback's home. The
+   drill question belongs to the palette (it is the list's label), so it
+   rides in the group. List sets only: grid sets already fill the screen
+   with an internal scroller (below), where anchoring is moot. */
+@media (width < 64rem) {
+  .quiz-immersive:not(.quiz-grid-set) .motion-quiz-question {
+    flex: 1;
+  }
+  .quiz-immersive .qanswer {
+    margin-top: auto;
+  }
+  /* The collapsed sheet (128px + inset) overlays the canvas foot; the
+     group stops a breath above its top rule. Grid sets carry this
+     clearance inside their scroller instead. */
+  .quiz-immersive:not(.quiz-grid-set) .qanswer {
+    padding-bottom: calc(144px + env(safe-area-inset-bottom));
+  }
+}
+
+/* == Grid sets on phones: the options scroll, nothing else moves ==========
+   Sticky was the first cut, but the page still scrolled until the pin
+   engaged — the argument drifted before locking (Malik, 2026-08-19).
+   Grid sets (the only ones that overflow by construction) now cap the
+   canvas at the viewport and scroll the OPTIONS REGION internally: the
+   argument is fixed by construction, not pinned after a drift. The vaul
+   sheet's clearance moves inside the scroll region — its old home, the
+   canvas' pb-40, is neutralised here (unlayered beats the utility).
+   List sets keep the page-scroll + sticky model above. */
+@media (width < 64rem) {
+  .quiz-immersive.quiz-grid-set {
+    height: 100dvh;
+    padding-bottom: 0;
+  }
+  .quiz-immersive.quiz-grid-set .qcontainer {
+    min-height: 0;
+  }
+  .quiz-immersive.quiz-grid-set .motion-quiz-question {
+    flex: 1;
+    min-height: 0;
+    justify-content: flex-start; /* md:justify-between would strand a void
+                                    between question and options on tablets */
+  }
+  .quiz-immersive.quiz-grid-set .qpin {
+    position: static; /* fixed by construction — nothing scrolls above it */
+  }
+  /* The answer group hosts the scroller now (2026-08-22): it must be the
+     flex child that takes the slack, so the grid inside can overflow. */
+  .quiz-immersive.quiz-grid-set .qanswer {
+    flex: 1;
+    min-height: 0;
+  }
+  .quiz-immersive.quiz-grid-set .qoptions-grid {
+    flex: 1;
+    min-height: 6rem;
+    overflow-y: auto;
+    /* The flexed grid is now taller than its content when a set FITS
+       (Set Q's 7 options), and align-content's stretch default poured
+       the slack into the auto rows — options ballooned to fill the
+       screen (Malik, 2026-08-19). Rows keep their natural height; the
+       slack stays below, inside the scroller. */
+    align-content: start;
+    /* The collapsed sheet (128px + inset) overlays the canvas foot; this
+       keeps the last row clear of it, INSIDE the scroller where it
+       belongs — outside, it read as dead space under the options. */
+    padding-bottom: calc(128px + env(safe-area-inset-bottom));
+    /* The scroller reaches the SCREEN edge (canvas p-2 + qcontainer p-4
+       = 1.5rem per side) so its scrollbar rides the bezel, not the
+       options (Malik, 2026-08-19); the padding hands the gutter back to
+       the content. The bar is transparent until a scroll is actually
+       happening — the shell flips [data-scrolling] (see index.tsx). */
+    width: calc(100% + 3rem);
+    margin-inline: -1.5rem;
+    padding-inline: 1.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  /* The fade lives on [data-overflowing] ONLY (2026-08-24, Malik on a
+     phone: "on set Q there's a fade on top in a place where it doesn't
+     make sense because there's no overflow"). These static values were
+     unconditional, so a 7-option set that never scrolls still had 16px
+     of its FIRST ROW dissolved. The shell sets the attribute from a
+     real measurement (see index.tsx), and the scroll timeline below
+     modulates the fade only where there is something to scroll. */
+  .quiz-immersive.quiz-grid-set .qoptions-grid[data-overflowing] {
+    --qfade-top: 16px;
+    --qfade-bottom: 32px;
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black var(--qfade-top),
+      black
+        calc(
+          100% - 128px - env(safe-area-inset-bottom, 0px) - var(--qfade-bottom)
+        ),
+      transparent calc(100% - 128px - env(safe-area-inset-bottom, 0px))
+    );
+  }
+
+  .quiz-immersive.quiz-grid-set .qoptions-grid[data-scrolling] {
+    scrollbar-color: color-mix(in srgb, var(--quiz-fg) 35%, transparent)
+      transparent;
+  }
+
+  /* The mask's top fade replaces the pin's gradient strip on grid sets —
+     both at once double-dimmed the first row. */
+  .quiz-immersive.quiz-grid-set .qpin::after {
+    content: none;
+  }
+
+  /* The fade is gated on [data-overflowing] (2026-08-24, Malik on a
+     phone: "on set Q there's a fade on top in a place where it doesn't
+     make sense because there's no overflow"). A scroll timeline on a
+     container with NO scrollable range resolves to its end state, so
+     the mask sat at the 100% keyframe — top faded, bottom clear — and
+     ate the first row of a 7-option set that never scrolls. The shell
+     flips the attribute from a real measurement (see index.tsx), so
+     the mask exists only where there is something to scroll. */
+  @supports (animation-timeline: scroll(self)) {
+    .quiz-immersive.quiz-grid-set .qoptions-grid[data-overflowing] {
+      animation: qoptsEdgeFade linear both;
+      animation-timeline: scroll(self block);
+    }
+  }
+}
+
+/* On md (48–64rem) the canvas pads p-8, so the screen edge is 3rem out. */
+@media (48rem <= width < 64rem) {
+  .quiz-immersive.quiz-grid-set .qoptions-grid {
+    width: calc(100% + 6rem);
+    margin-inline: -3rem;
+    padding-inline: 3rem;
+  }
+}
+
+/* Typed registration so the mask's fade distances interpolate smoothly
+   along the scroll timeline instead of flipping at keyframe midpoints. */
+@property --qfade-top {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+@property --qfade-bottom {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes qoptsEdgeFade {
+  0% {
+    --qfade-top: 0px;
+    --qfade-bottom: 32px;
+  }
+  6% {
+    --qfade-top: 16px;
+    --qfade-bottom: 32px;
+  }
+  94% {
+    --qfade-top: 16px;
+    --qfade-bottom: 32px;
+  }
+  100% {
+    --qfade-top: 16px;
+    --qfade-bottom: 0px;
+  }
+}
+
+/* TWO TONES: the container is the error tone, but every structured block
+   inside states its own ink — so only the lamp (and any unstructured
+   flat hint) reads as "wrong", while the teaching material reads as
+   reference. */
+.quiz-immersive .qfeed-hint {
+  color: var(--quiz-error);
+}
+
+.quiz-immersive .qfeed-answer {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--quiz-fg);
+}
+
+/* NO FLEX in the head: it mixes an icon, a bolded name and running prose
+   in one line, and a flex container would turn each into its own
+   unwrappable box. Mixed inline content stays in one inline formatting
+   context. */
+.quiz-immersive .qhint-head {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--quiz-fg);
+}
+
+.quiz-immersive .qhint-lamp {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  vertical-align: -3px;
+  margin-right: 9px;
+  color: var(--quiz-error);
+}
+
+/* The subject of the sentence, so it takes weight rather than colour. */
+.quiz-immersive .qhint-term {
+  font-weight: 600;
+}
+
+/* The clauses ARE a list — separate conditions the flat string flattens
+   into a semicolon run-on. Hanging numbers, one per line, as the 2008
+   original set them. */
+:is(.quiz-immersive, .wff-guide) .qhint-clauses {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: qclause;
+  max-width: 62ch;
+}
+
+/* Hanging number via absolute positioning, NOT flex: a flex `li` makes
+   every inline child its own flex item, so a clause containing an <em>
+   breaks into gapped boxes and loses its word order. */
+:is(.quiz-immersive, .wff-guide) .qhint-clauses li {
+  counter-increment: qclause;
+  position: relative;
+  padding-left: 28px;
+  margin-top: 3px;
+  color: var(--quiz-fg, #1f2937);
+}
+
+:is(.quiz-immersive, .wff-guide) .qhint-clauses li::before {
+  content: counter(qclause);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 18px;
+  text-align: right;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.9;
+  color: color-mix(in srgb, var(--quiz-fg, #1f2937) 55%, transparent);
+}
+
+/* The clauses complete the lead sentence, which is why the source sets
+   them lowercase. As display list items they read as separate lines, and
+   sentence case suits that — done with ::first-letter so it stays a
+   PRESENTATION choice and the data keeps the source's own casing. */
+:is(.quiz-immersive, .wff-guide) .qhint-clauses li::first-letter {
+  text-transform: uppercase;
+}
+
+/* Emphasis: `Rule`, DECIDED 2026-08-05 — a hard 2px accent underline plus
+   weight, so it is never conveyed by colour alone. The system is flat and
+   rectilinear; a ruled line is what this grammar would draw, and it
+   survives at any text size. */
+.quiz-immersive .qfeed em {
+  font-style: normal;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--quiz-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  text-decoration-skip-ink: none;
+}
+
 @keyframes animateIn {
   from {
     opacity: 0;
@@ -151,6 +2124,98 @@
   }
 }
 
+/* == The mobile advance push (View Transitions API) =======================
+   Old exercise slides off left WHILE the new one arrives from the right —
+   Duolingo's model, measured off Malik's capture (2026-08-19): header
+   pinned, both layers travelling together, ~230ms. The JS only starts a
+   view transition under 40rem (see handleNextQuestionTransition), so
+   these need no media guard. Overriding animation-name drops the UA's
+   default cross-fade; 110% travel clears the container padding so each
+   layer fully leaves/enters the screen. */
+::view-transition-old(quiz-question),
+::view-transition-new(quiz-question) {
+  animation-duration: 260ms;
+  /* quart, matching the fallback entrance (plans/006). */
+  animation-timing-function: var(--ease-out-quart);
+}
+@media (width < 40rem) {
+  ::view-transition-old(quiz-question) {
+    animation-name: vtQuestionOutLeft;
+  }
+  ::view-transition-new(quiz-question) {
+    animation-name: vtQuestionInRight;
+  }
+}
+/* Desktop advance (2026-08-24, Malik's ask): the fade-drift pair. The
+   old 90ms exit BLOCKED the keypress behind a timer and was removed
+   (plans/003); this is its replacement done right — the DOM advances
+   synchronously inside startViewTransition, the snapshots animate on
+   top. Old fades in place fast (the user has decided; get out of the
+   way); new drifts up 6px on the entrance grammar. A second Enter
+   mid-flight skips the paint (see handleNextQuestionTransition), so
+   the advance rate is never capped by the animation. */
+@media (width >= 40rem) {
+  ::view-transition-old(quiz-question) {
+    animation: vtQuestionFadeOut 90ms var(--ease-out-quart) both;
+  }
+  ::view-transition-new(quiz-question) {
+    animation: vtQuestionFadeIn 200ms var(--ease-out-quart) both;
+  }
+}
+@keyframes vtQuestionFadeOut {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vtQuestionFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+/* SHORT-TRAVEL drift, judged in the lab (Malik, 2026-08-19, superseding
+   the 110%-travel late-fade push): 20% travel with a full-travel fade.
+   At this distance the fade IS the transition and the slide is its
+   accent — the late-fade hold existed to keep a FULL push legible, so
+   it no longer applies. This is Material's shared-axis X grammar, which
+   fits exercises better than a navigation push: siblings at one level,
+   not a descent.
+
+   NO BLUR. It rode along from the 110% push, where it masked the height
+   offset of two panes sliding past each other; the fade took that job
+   over at short travel. Measured before removing: blur and opacity sat
+   on the same keyframe pair, so blur peaked exactly where the layer was
+   invisible — peak VISIBLE blur was ~0.5px at 49% opacity, under the
+   perceptual threshold, while still forcing a compositing layer and a
+   per-pixel pass over the snapshot every frame. Cost without return
+   (Malik, 2026-08-19). */
+@keyframes vtQuestionOutLeft {
+  to {
+    transform: translateX(-20%);
+    opacity: 0;
+  }
+}
+@keyframes vtQuestionInRight {
+  from {
+    transform: translateX(20%);
+    opacity: 0;
+  }
+}
+
+/* Mobile entrance for .motion-quiz-question: in from the right, slightly
+   more travel than the exit so the arrival reads as the emphasised half.
+   Only reached by the no-view-transitions fallback (and first mount). */
+@keyframes quizQuestionInRight {
+  from {
+    opacity: 0;
+    transform: translateX(48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @keyframes quizAnswerReveal {
   from {
     opacity: 0;
@@ -162,12 +2227,56 @@
   }
 }
 
+/* The "new" pill in the quiz menu. An organic, off-round outline rather
+   than a symmetric pill, to sit in the same hand-painted register as the
+   watercolor blooms on the quiz start screens. The lists either side of
+   the slash are the horizontal and vertical radii, so every corner is an
+   ellipse rather than a circle — that mismatch is what keeps the silhouette
+   from settling back into a plain pill. Percentages, so it holds its shape
+   at any label width. */
+.flower-tag {
+  border-radius: 60% 40% 50% 50% / 50% 60% 40% 50%;
+}
+
+/* Desktop Exercises menu viewport (2026-08-24, plans/004): enter via
+   @starting-style so the motion is a TRANSITION — interruptible when
+   the click-toggle closes it mid-flight — on the house curve, growing
+   from the trigger's corner. Radix unmounts the viewport on close, so
+   there is no exit; browsers without @starting-style show the menu
+   instantly, which is the correct degradation for a navigation surface. */
+.nav-viewport-enter {
+  transform-origin: top left;
+  transition:
+    opacity 200ms var(--ease-out-quart),
+    transform 200ms var(--ease-out-quart);
+
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-viewport-enter {
+    transition: none;
+  }
+}
+
 @layer base {
   :root {
     --ease-ui: ease;
     --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
     --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
     --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+    /* vaul's own iOS-sheet curve, extremely steep at the start — named
+       here because it IS the live sheet grammar (2026-08-24, plans/002:
+       the utilities that claimed 200ms/quart on the drawers were dead
+       CSS under vaul's unlayered stylesheet). Tune sheets via unlayered
+       rules on this token, never via utility classes. */
+    --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+    /* ease-out-quad — the button-press curve (plans/005): presses ride
+       this, colours stay on --ease-ui. */
+    --ease-press: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --motion-feedback: 140ms;
     --motion-standard: 190ms;
     --motion-page-enter: 220ms;
@@ -236,24 +2345,40 @@
   .motion-colors,
   .motion-button,
   .motion-panel,
+  .quiz-pane-push,
   .motion-card,
   .motion-option,
   .motion-quiz-question,
   .motion-answer-reveal,
   .motion-chevron,
   .motion-progress,
+  .quiz-immersive .qopt,
+  .quiz-immersive .qopt-wrap,
+  .quiz-immersive .qopt-wrap::before,
+  .quiz-immersive .qbadge-mark,
   .mobile-menu {
     animation: none;
     transition: none;
   }
 
+  .quiz-immersive
+    .qopt-wrap:has(
+      .qopt:not(.is-ruled):not(.is-spent):not(.is-revealed):active
+    ) {
+    transform: none;
+  }
+
   .animate-in,
   .animate-out,
-  .animate-pulse,
-  .animate-accordion-down,
-  .animate-accordion-up {
+  .animate-pulse {
     animation: none;
     transition: none;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
   }
 
   .motion-button,
@@ -272,4 +2397,732 @@
   .mobile-menu[data-state='open'] {
     transform: none;
   }
+}
+
+/* == Marketing surfaces (blog + release notes) ==============================
+   Ported from docs/marketing-lab.html, 2026-08-14. Colour arrives via three
+   variables set inline by app/(marketing)/layout.tsx from
+   lib/marketingTheme.ts — the scheme decision is deferred, so nothing below
+   names a colour. Chips are the square "abbreviation box" (pixel-ui.md);
+   the gem/NewBadge stays app-only. No new motion classes are introduced,
+   so the reduced-motion block above needs no additions. */
+@layer components {
+  .mk-chip {
+    display: inline-flex;
+    height: 24px;
+    align-items: center;
+    padding: 0 10px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: color-mix(in srgb, var(--mk-ink) 14%, var(--mk-surface));
+    color: var(--mk-type);
+  }
+  .mk-chip--solid {
+    background: var(--mk-ink);
+    color: var(--mk-surface);
+  }
+  .mk-dash-top {
+    background-image: repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--mk-ink) 30%, transparent) 0 10px,
+      transparent 10px 20px
+    );
+    background-size: 100% 2px;
+    background-repeat: no-repeat;
+  }
+  .mk-ring {
+    position: relative;
+  }
+  .mk-ring::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+    pointer-events: none;
+    z-index: 2;
+    clip-path: var(--mk-ring-clip);
+  }
+  .mk-ring > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* == Homepage FAQ ============================================================
+   Ported from docs/faq-lab.html, 2026-08-15 (Malik's two feedback rounds are
+   the FQ-cards in that file). Colour arrives via --faq-* variables set inline
+   by components/faqSection.tsx — the D11 scheme switch edits that file's
+   token block, nothing below names a colour. The items are OPEN-FILL: every
+   item carries the sprite clip permanently (set via style.clipPath from
+   lib/pixel.ts), and only the open item paints the plate — which is why the
+   hairlines are ::before elements, not borders (a border loses its stroke on
+   the clip's corner stairs), and why two adjacent OPEN plates get a gap of
+   ground (figures never touch — the option marks' surface-gap rule at
+   section scale). */
+@layer components {
+  .faq {
+    /* the open plate bleeds by exactly the wrap gutter, never past it */
+    --faq-bleed: 16px;
+  }
+  .faq-wrap {
+    /* Follows .lx-wrap's 1152 (Malik, 2026-08-24) so the landing reads
+       as one measure — this reverses the 08-15 follow-the-app rule and
+       gives up the FOLLOW THE RELEASES edge alignment with the footer,
+       which stays on the chrome's 1280. */
+    max-width: 1152px;
+    margin-inline: auto;
+    padding: 46px 20px 56px;
+  }
+  @media (min-width: 640px) {
+    .faq-wrap {
+      padding-inline: 32px;
+    }
+  }
+
+  /* Accordion panels collapse by TRANSITION (2026-08-24, plans/004):
+     grid-template-rows 0fr→1fr retargets mid-flight when a row is
+     re-clicked, where the old height keyframes restarted from zero.
+     The transition sits on a CHILD (.faq-panel) of the Radix Content
+     (.faq-host) because Radix writes inline transitionDuration: 0s on
+     the Content itself while measuring — see accordion.tsx.
+     `visibility` transitions discretely after the collapse so closed
+     forceMounted content leaves focus order and the a11y tree. */
+  .faq-host {
+    display: block;
+  }
+
+  .faq-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition:
+      grid-template-rows 190ms var(--ease-out-quart),
+      visibility 0s 190ms;
+  }
+
+  .faq-host[data-state='open'] > .faq-panel {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition:
+      grid-template-rows 190ms var(--ease-out-quart),
+      visibility 0s;
+  }
+
+  .faq-panel > div {
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-panel {
+      transition: none;
+    }
+  }
+  @media (min-width: 640px) {
+    .faq {
+      --faq-bleed: 24px;
+    }
+    .faq-wrap {
+      padding-inline: 24px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .faq-wrap {
+      padding: 76px 24px 88px;
+      display: grid;
+      grid-template-columns: 0.85fr 1.35fr;
+      column-gap: 76px;
+      align-items: start;
+    }
+  }
+  .faq-display {
+    font-stretch: 151%;
+    font-weight: 800;
+    /* mixed case, not caps (Malik, 2026-08-17 — one rule for every
+       display title on the page) */
+    letter-spacing: -0.01em;
+    line-height: 1.04;
+    /* section register, not hero (56px was judged HUGE — lab FQ4) */
+    font-size: clamp(26px, 3.1vw, 42px);
+    color: var(--faq-type);
+    text-wrap: balance;
+  }
+  .faq-sub {
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--faq-body);
+    max-width: 44ch;
+  }
+  .faq-still {
+    margin: 28px 0 30px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--faq-body);
+    max-width: 36ch;
+  }
+  .faq-still a {
+    color: var(--faq-type);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  @media (min-width: 1024px) {
+    .faq-still {
+      margin-bottom: 0;
+    }
+  }
+  .faq-item {
+    position: relative;
+    margin-inline: calc(var(--faq-bleed) * -1);
+    padding-inline: var(--faq-bleed);
+    background-color: transparent;
+    transition:
+      background-color 180ms var(--ease-out-quart),
+      margin-top 240ms var(--ease-out-quart);
+  }
+  .faq-item[data-state='open'] {
+    background-color: var(--faq-plate);
+  }
+  .faq-item[data-state='open'] + .faq-item[data-state='open'] {
+    margin-top: 10px;
+  }
+  .faq-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: var(--faq-bleed);
+    right: var(--faq-bleed);
+    height: 1px;
+    background: var(--faq-hair);
+  }
+  .faq-item:first-child::before,
+  .faq-item[data-state='open']::before,
+  .faq-item[data-state='open'] + .faq-item::before {
+    display: none;
+  }
+  .faq-item:last-child:not([data-state='open'])::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: var(--faq-bleed);
+    right: var(--faq-bleed);
+    height: 1px;
+    background: var(--faq-hair);
+  }
+  .faq-trigger {
+    color: var(--faq-type);
+  }
+  /* the trigger can sit on white OR on the open plate — the derived
+     focus token clears 3:1 on both (the system green does not; see the
+     token block in faqSection.tsx) */
+  .faq-trigger:focus-visible {
+    outline: 2px solid var(--faq-focus);
+    outline-offset: 2px;
+    border-radius: 0;
+  }
+  .faq-idx {
+    display: inline-flex; /* atomic box — escapes the trigger's hover underline */
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--faq-index);
+    min-width: 2ch;
+    flex-shrink: 0;
+  }
+  .faq-answer {
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--faq-body-plate);
+    max-width: 62ch;
+  }
+  @media (min-width: 1024px) {
+    /* align answers under the question text; released below lg — 30px
+       is a fifth of a phone measure, too expensive there */
+    .faq-answer {
+      margin-left: 30px;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item {
+    transition: none;
+  }
+}
+
+/* == Landing exercises =======================================================
+   Ported from docs/landing-lab.html, 2026-08-17 (Malik's decided composition,
+   two passes — the LP-cards in that file): Set L mint ground · compact
+   display masthead · topic cards at BOTH widths · neutral white cards with
+   the set colour in gem icon-chips and tags · drill rows · resume banner.
+   Colour arrives via --lx-* variables set inline by
+   components/landing/exercisesCatalog.tsx — the D11 scheme switch edits that
+   file's token block; nothing below names a colour. The drill rows' hover
+   fill wears the gem silhouette on a ::before layer (clip always on, visible
+   only when the fill paints — the nav lab's hover construction); the row
+   itself stays UNCLIPPED so :focus-visible draws a complete rectangle (a
+   clipped element paints no outline — the pixel-ui ring rule). Card shadows
+   ride the wrapper as filter: drop-shadow for the same reason. */
+@layer components {
+  .lx {
+    background: var(--lx-ground);
+  }
+
+  /* Blog quiz embed (2026-08-24): the island's card. Lives outside the
+     post's prose flow (`not-prose`) and speaks the marketing register —
+     mono eyebrow, plum ink, the house press grammar via .motion-button. */
+  /* Resume-banner reservation (2026-08-24, CLS audit #1): the banner
+     hydrates from localStorage, so its ~76/108px used to shove the
+     whole catalogue down after first paint. The landing page's inline
+     script marks <html data-lx-resume> pre-paint when a drill exists;
+     these min-heights hold the slot for exactly that case. Measured
+     heights (one-line title desktop / two-line mobile) — a longer
+     title still grows by a line, which beats the whole banner popping. */
+  html[data-lx-resume] .lx-resume-slot {
+    /* flow-root keeps the banner's own margin-bottom INSIDE the slot,
+       so the reserved box equals banner + margin exactly. */
+    display: flow-root;
+    min-height: 128.5px;
+  }
+  @media (min-width: 640px) {
+    html[data-lx-resume] .lx-resume-slot {
+      min-height: 96.5px;
+    }
+  }
+
+  /* Before/after slider (2026-08-24): the stage stacks the two
+     screenshots; the range input under it drives the clip line. The
+     aspect-ratio + intrinsic img sizes reserve the box before bytes
+     arrive. */
+  .ba-wrap {
+    margin: 28px 0;
+  }
+  .ba-stage {
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #3f0167;
+    border-radius: 10px;
+  }
+  .ba-stage img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    max-width: none;
+  }
+  .ba-before {
+    position: absolute;
+    inset: 0;
+  }
+  .ba-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #3f0167;
+    transform: translateX(-1px);
+  }
+  .ba-tag {
+    position: absolute;
+    top: 10px;
+    padding: 3px 8px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: #3f0167;
+    color: #fff;
+    border-radius: 6px;
+  }
+  .ba-tag-left {
+    left: 10px;
+  }
+  .ba-tag-right {
+    right: 10px;
+  }
+  .ba-range {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    accent-color: #3f0167;
+  }
+
+  /* Blog quiz embed (2026-08-24, revised): the island hosts the REAL
+     <Quiz embedded>, so this wrapper only gives it a bounded, rounded
+     stage inside the post — the quiz brings its own design. `contain:
+     paint` scopes the card's sticky descendants to the embed instead
+     of letting them stick to the page. */
+  .lx-quiz-embed {
+    margin: 32px 0;
+    border-radius: 12px;
+    overflow: clip;
+    contain: paint;
+  }
+
+  /* The bespoke card, now only the loading placeholder and the
+     unknown-key fallback. */
+  .lx-embed {
+    margin: 28px 0;
+    padding: 18px 20px 20px;
+    background: #fff;
+    border: 2px solid #3f0167;
+    border-radius: 10px;
+  }
+  .lx-embed-eyebrow {
+    margin: 0 0 10px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #6b21a8;
+  }
+  .lx-embed-header {
+    margin: 0 0 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+  }
+  .lx-embed-prompt {
+    margin: 0 0 14px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #111827;
+  }
+  .lx-embed-score {
+    margin: 0 0 14px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+  }
+  .lx-embed-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .lx-embed-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .lx-embed-cta {
+    padding: 10px 18px;
+    background: #3f0167;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    border: 0;
+    border-radius: 8px;
+  }
+  .lx-embed-cta:disabled {
+    opacity: 0.5;
+  }
+  .lx-embed-ghost {
+    padding: 10px 14px;
+    background: transparent;
+    color: #3f0167;
+    font-size: 14px;
+    font-weight: 700;
+    border: 0;
+    border-radius: 8px;
+  }
+  .lx-embed-ghost:hover {
+    background: #f3f0f6;
+  }
+  .lx-wrap {
+    /* 1152px, not the chrome's 1280 (Malik, 2026-08-24: "are the
+       elements too wide?" — they were; the lab judged this composition
+       at 1128, and the 08-15 rule that widened it to follow the app's
+       container is superseded for the landing sections). Gutters grow
+       a step with it. The navbar/footer keep 1280 — landing content
+       edges no longer align with the footer's, accepted trade. */
+    max-width: 1152px;
+    margin-inline: auto;
+    padding: 36px 20px 56px;
+  }
+  @media (min-width: 640px) {
+    .lx-wrap {
+      padding-inline: 32px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .lx-wrap {
+      padding: 56px 32px 96px;
+    }
+  }
+  .lx-display {
+    font-stretch: 151%;
+    font-weight: 800;
+    /* mixed case, not caps (Malik, 2026-08-17) — the stretch alone is
+       the display voice; caps tracking (+0.01em) traded for a title
+       setting */
+    letter-spacing: -0.01em;
+    line-height: 1.02;
+    /* hero register — one step above the FAQ's 42px section cap */
+    font-size: clamp(30px, 4.2vw, 50px);
+    color: var(--lx-type);
+    text-wrap: balance;
+  }
+  .lx-oneliner {
+    margin-top: 14px;
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--lx-body);
+    max-width: 52ch;
+  }
+  .lx-eyebrow {
+    margin: 34px 0 16px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--lx-head);
+  }
+  .lx-count {
+    margin-left: 8px;
+    opacity: 0.75;
+  }
+  .lx-grid {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 1024px) {
+    .lx-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+  }
+  /* a clipped card's shadow lives on the wrapper (clip-path crops the
+     element's own shadow); values are the labs' lightened pair */
+  .lx-cardw,
+  .lx-resumew {
+    filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.05))
+      drop-shadow(0 3px 8px rgb(0 0 0 / 0.07));
+  }
+  .lx-card {
+    height: 100%;
+    background: #fff;
+    padding: 18px 20px 10px;
+  }
+  @media (min-width: 640px) {
+    .lx-card {
+      padding: 20px 24px 12px;
+    }
+  }
+  .lx-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .lx-chip {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .lx-card-name {
+    font-size: 17.5px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--lx-type);
+  }
+  .lx-card-set {
+    margin-left: auto;
+    flex-shrink: 0;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .lx-blurb {
+    margin: 8px 0 10px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--lx-blurb);
+    max-width: 44ch;
+  }
+  .lx-drillw {
+    border-top: 1px solid var(--lx-hair);
+  }
+  .lx-drill {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 46px;
+    padding: 5px 12px;
+    margin-inline: -12px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--lx-type);
+  }
+  .lx-drill::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    clip-path: var(--lx-gem);
+    background: transparent;
+    transition: background-color 120ms var(--ease-out-quart);
+  }
+  .lx-drill:hover::before {
+    background: var(--lx-hover);
+  }
+  /* Press acknowledgement (2026-08-24, plans/005): these rows are the
+     landing's primary tap targets, and on touch — where hover never
+     fires — a tap got nothing before the route changed. The fill, not
+     a scale: a full-width row shrinking reads wrong. Ungated on
+     purpose; :active must work on touch. */
+  .lx-drill:active::before {
+    background: var(--lx-hover);
+  }
+  .lx-drill:hover .lx-drill-t {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .lx-drill:focus-visible {
+    outline: 2px solid var(--lx-focus);
+    outline-offset: 0;
+    border-radius: 0;
+  }
+  .lx-dset {
+    flex-shrink: 0;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .lx-chev {
+    width: 14px;
+    height: 14px;
+    margin-left: auto;
+    flex-shrink: 0;
+    transform: rotate(-90deg);
+  }
+  .lx-resumew {
+    margin-bottom: 20px;
+  }
+  .lx-resume {
+    display: block;
+    transition: transform 150ms var(--ease-press);
+  }
+  /* Press give for the resume banner (plans/005): 0.99, not the house
+     0.97 — it's a wide surface, press is felt, not seen. */
+  .lx-resume:active {
+    transform: scale(0.99);
+  }
+  .lx-resume-in {
+    display: block;
+    background: #fff;
+    padding: 14px 20px 16px;
+  }
+  .lx-resume-eyebrow {
+    display: block;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--lx-head);
+    margin-bottom: 6px;
+  }
+  .lx-resume-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    color: var(--lx-type);
+  }
+  .lx-resume-title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .lx-resume-pts {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 12px;
+    color: var(--lx-blurb);
+  }
+  .lx-resume:hover .lx-resume-title {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .lx-resume:focus-visible {
+    outline: 2px solid var(--lx-focus);
+    outline-offset: 2px;
+    border-radius: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lx-drill::before {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* UNLAYERED ON PURPOSE (2026-08-24, plans/002). vaul injects its own
+   unlayered stylesheet at runtime and writes snap transitions inline,
+   so it outranks everything this file declares inside @layer and every
+   utility class. These two rules are the only ones that need to win
+   against it — keep them at top level, after everything else.
+
+   Reduced motion: 1ms rather than `none` — vaul's close logic waits on
+   transition/animation end events, and `none` can strand a dismissing
+   sheet mounted. The overlay's fade still carries the state change:
+   reduced motion means gentler, not zero. The !important is the
+   documented exception (it has to beat inline styles), not a habit. */
+@media (prefers-reduced-motion: reduce) {
+  [data-vaul-drawer],
+  [data-vaul-overlay] {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* Android back-gesture fold (2026-08-24): while the popstate handler
+   collapses the guide sheet, the snap is instant — the OS peek already
+   animated, and a 500ms travel after it read as lag (Malik's device
+   report). Same inline-beating channel as the reduce block above. */
+html[data-qsheet-back-collapse] [data-vaul-drawer] {
+  transition-duration: 1ms !important;
+}
+
+/* 44px hitboxes on two sub-44 animated controls (plans/002): the pane
+   resize grip is a 16px strip, the sheet's collapse chip is 32px on a
+   TOUCH surface. Painted nothing, layout nothing — pure target. */
+.qgrip-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0 -14px;
+}
+.qsheet-x::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
+/* Toasts join the house grammar (2026-08-24, plans/006): Sonner ships
+   400ms on the built-in `ease` — the slowest, softest motion in the
+   product against 140/190ms quart everywhere else. Unlayered so it
+   outranks the library's own stylesheet. Sonner disables transitions
+   while a swipe tracks the pointer (data-swiping), so dismiss gestures
+   are unaffected. If 190ms reads clipped on /keyboard, 250ms is the
+   agreed compromise — judge on device. */
+[data-sonner-toast] {
+  transition-duration: 190ms;
+  transition-timing-function: var(--ease-out-quart);
 }

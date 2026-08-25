@@ -18,7 +18,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "content-collections": ["./.content-collections/generated"]
     },
     "target": "ES2017"
   },
@@ -28,7 +29,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "components/katexSpan.jsx",
     ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]

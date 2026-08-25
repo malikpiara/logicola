@@ -1,54 +1,45 @@
-import { Header } from '@/components/header';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
+import type { Metadata, Viewport } from 'next';
+import { ExercisesCatalog } from '@/components/landing/exercisesCatalog';
+import { FaqSection } from '@/components/faqSection';
 
-const accordionData = [
-  {
-    title: 'What is LogiCola?',
-    content: `LogiCola is an instructional program that goes with Gensler's Introduction to Logic (Routledge Press). Since Harry Gensler, the original creator has passed away, I decided to create a new version to preserve an important learning resource and honour his legacy.`,
-  },
-  {
-    title: 'Do I have to pay anything to use it?',
-    content:
-      'This version of the software is open sourced and access to the learning content is and will always remain 100% free. With that in mind, any contribution can help keep the platform running and accelerate the process of adding content and exercises.',
-  },
-  {
-    title: "What's the difference between this and the original software?",
-    content:
-      'This version of LogiCola is a remake of the original, built with web software. You can use it in any device that has an internet connection, regardless of the operating system. It only has a couple of months, so, most chapters and exercises are missing.',
-  },
-  {
-    title: 'Is there also a new version of Logiskor?',
-    content:
-      "LogiSkor is a program for keeping track of student scores from LogiCola. I'm working on a way to let you see how your students are doing and to support your classroom. Please email me if you're interested in giving it a try.",
-  },
-];
+// Title and description come from the root layout — this is the page they
+// were written for. Only the canonical is page-specific: it can't live in the
+// layout, which would aim every route's canonical at the homepage.
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+};
+
+/**
+ * The Android status bar reads `theme-color`, and the root layout's
+ * viewport says white — so the bar sat white over the mint landing
+ * (Malik's catch, 2026-08-17). Mint here, on `/` only, matching the
+ * navbar's conditional ground. `viewportFit` restated because a leaf
+ * viewport wins per field — losing the root's edge-to-edge `cover`
+ * would break the installed app's transparent bars (see app/layout.tsx).
+ * The quiz keeps its own runtime swap (useQuizChrome).
+ */
+export const viewport: Viewport = {
+  themeColor: '#CFF6DD',
+  viewportFit: 'cover',
+};
 
 export default function Home() {
   return (
     <>
-      <div className='flex flex-col m-auto'>
-        <Header />
-
-        <section className='py-8 px-4 w-full max-w-screen-xl mx-auto'>
-          <h1 className='text-center mb-10 text-3xl font-bold tracking-tight leading-none text-gray-800 md:text-3xl lg:text-3xl font-stretch'>
-            Frequently Asked Questions
-          </h1>
-          <Accordion className='text-gray-800 text-lg' type='multiple'>
-            {accordionData.map((item) => (
-              <AccordionItem value={item.title} key={item.title}>
-                <AccordionTrigger>{item.title}</AccordionTrigger>
-                <AccordionContent className='text-lg text-gray-500'>
-                  {item.content}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </section>
+      {/* w-full is load-bearing: the (site) layout's <main> is display:flex,
+          so without it this div shrinks to fit-content and the coloured
+          sections stop short of the viewport edges (Malik's catch,
+          2026-08-17 — "white margins left and right"). */}
+      <div className='flex w-full flex-col'>
+        {/* The old hero (mascot + green H1, components/header.tsx) was
+            replaced 2026-08-17 by the masthead + exercises catalogue —
+            docs/landing-lab.html, Malik's decided composition. The drills
+            surface ON the frontpage; the exercises menu stays as global
+            chrome but the landing no longer depends on it. */}
+        <ExercisesCatalog />
+        {/* The FAQ was redesigned in docs/faq-lab.html (2026-08-15) — copy,
+            structure and tokens now live in components/faqSection.tsx. */}
+        <FaqSection />
       </div>
     </>
   );

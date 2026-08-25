@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <title>Question lab — LogiCola</title>
+    <style>
+      /* Lab page, not product (Malik, 2026-08-22). Two user-testing items
+         on the question screen, prototyped as DIRECTIONS for Malik to
+         call:
+           1. Feedback placement — shipped puts a wrong pick's hint between
+              the drill question (the eyebrow) and the options; one tester
+              wanted it ABOVE the question. Three placements on dial 2.
+           2. Stable regions on mobile — shipped centres the question block
+              (short prompts float over dead space: Set C) and, below lg,
+              sizes the feedback slot to its live content (a dated
+              2026-08-19 exception — options shift on a miss). Dials 3+4
+              put both reservations back, separately.
+         Honest values from index.tsx / globals.css: prompt
+         clamp(21px,3.6cqw,26px) centred; mono eyebrow 12px/.12em; feed
+         15px/1.6; list pills 19px, grid cells 15px. Open on the device:
+         LAN http.server + cache-buster. */
+      :root {
+        --ease-oq: cubic-bezier(0.165, 0.84, 0.44, 1);
+        --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace;
+        --lab-ink: #1a2333;
+        --lab-muted: #66708a;
+      }
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #dfe4dd;
+        font:
+          16px/1.5 system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      button {
+        font: inherit;
+        touch-action: manipulation;
+      }
+      .stage {
+        position: fixed;
+        inset: 0;
+        margin: 0 auto;
+        max-width: 430px;
+        background: var(--surface);
+        overflow: hidden;
+        user-select: none;
+        -webkit-user-select: none;
+        --error: color-mix(in srgb, #f43f5e 55%, var(--ink));
+      }
+      .stage[data-set='setC'] {
+        --surface: #e7f099;
+        --ink: #02302c;
+        --accent: #bd00ad;
+      }
+      .stage[data-set='setR'] {
+        --surface: #e4bdf7;
+        --ink: #751100;
+        --accent: #824616;
+      }
+      .stage[data-set='setQ'] {
+        --surface: #d9ccf9;
+        --ink: #3e1060;
+        --accent: #745400;
+      }
+
+      /* ---- the honest mobile chrome ---- */
+      .quiz {
+        position: absolute;
+        inset: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+        color: var(--ink);
+        padding: 0 20px calc(150px + env(safe-area-inset-bottom));
+        display: flex;
+        flex-direction: column;
+      }
+      .qtop {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: var(--surface);
+        margin: 0 -20px 12px;
+        padding: calc(48px + env(safe-area-inset-top)) 8px 12px;
+        flex: none;
+      }
+      .qexit {
+        width: 44px;
+        height: 44px;
+        flex: none;
+        display: grid;
+        place-items: center;
+        border: 0;
+        background: none;
+        font-size: 18px;
+        color: color-mix(in srgb, var(--ink) 60%, transparent);
+      }
+      .qbar3 {
+        flex: 1;
+        min-width: 0;
+        height: 12px;
+        margin-left: -13px;
+        background: color-mix(in srgb, var(--ink) 12%, transparent);
+      }
+      .qbar3 i {
+        display: block;
+        height: 100%;
+        width: 38%;
+        background: var(--accent);
+      }
+      .qguide-chip {
+        width: 44px;
+        height: 44px;
+        flex: none;
+        display: grid;
+        place-items: center;
+        border: 0;
+        color: var(--ink);
+        background: color-mix(in srgb, var(--ink) 9%, transparent);
+      }
+      .qguide-chip svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      /* The question column: flex-1 + justify-content is the dial
+         (centered = shipped). */
+      .qbody {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 48rem;
+        margin: 0 auto;
+        gap: 20px; /* the block's gap-5 */
+      }
+      .stage[data-anchor='center'] .qbody {
+        justify-content: center;
+      }
+      .stage[data-anchor='top'] .qbody {
+        justify-content: flex-start;
+        padding-top: 8px;
+      }
+      /* SPLIT (Malik, 2026-08-22): the question anchors to the top, the
+         options to the bottom — the 2008 window's own model (palette
+         pinned, discourse flowing above). No reserved box anywhere: the
+         gap between the two IS the feedback's home, so a hint fills it
+         without moving the options. Collapses to plain flow once the
+         content outgrows the viewport (Set R's grid), as it must. */
+      .stage[data-anchor='split'] .qbody {
+        justify-content: flex-start;
+        padding-top: 8px;
+      }
+      /* The drill question is the LABEL of the answer list (Malik,
+         2026-08-22 — hierarchy): it travels with the options, never
+         strands at the top with the prompt. Feedback joins the group
+         too, so on a miss the group grows UPWARD into the gap and the
+         options hold still. */
+      .qanswer {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .stage[data-anchor='split'] .qbody > .qanswer {
+        margin-top: auto;
+      }
+      .qprompt {
+        font-size: clamp(21px, 5.6vw, 26px);
+        line-height: 1.25;
+        text-align: center;
+        margin: 0 0 14px;
+      }
+      .qeyebrow {
+        font: 500 12px var(--mono);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        opacity: 0.8;
+        margin: 0;
+      }
+      .qmulti {
+        margin: 8px 0 0;
+        font-size: 14px;
+        color: color-mix(in srgb, var(--ink) 72%, transparent);
+      }
+
+      /* ---- the feedback slot (FeedbackSlot's ghost + live) ---- */
+      .qfeed {
+        position: relative;
+        font-size: 15px;
+        line-height: 1.6;
+        max-width: 62ch;
+      }
+      .qfeed-ghost {
+        visibility: hidden;
+      }
+      .qfeed-live {
+        position: absolute;
+        inset: 0;
+      }
+      /* Shipped MOBILE behaviour (the 2026-08-19 exception): no ghost,
+         live-sized slot — options move on a miss. */
+      .stage[data-feedres='live'] .qfeed-ghost {
+        display: none;
+      }
+      .stage[data-feedres='live'] .qfeed-live {
+        position: static;
+      }
+      .stage[data-feedres='live'] .qfeed:empty,
+      .stage[data-feedres='live'] .qfeed[data-empty] {
+        display: none;
+      }
+      .qfeed-hint {
+        color: var(--error);
+      }
+      .qfeed-answer {
+        margin: 0;
+        color: var(--ink);
+      }
+      .qhint-head {
+        margin: 0;
+      }
+      .qhint-lamp {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        margin: 0 9px -3px 0;
+        vertical-align: baseline;
+      }
+      .qhint-term {
+        font-weight: 650;
+      }
+      .qhint-clauses {
+        margin: 6px 0 0;
+        padding: 0 0 0 4px;
+        list-style: none;
+        counter-reset: cl;
+      }
+      .qhint-clauses li {
+        position: relative;
+        padding-left: 20px;
+        counter-increment: cl;
+      }
+      .qhint-clauses li::before {
+        content: counter(cl);
+        position: absolute;
+        left: 0;
+        top: 2px;
+        font: 500 11px var(--mono);
+        color: var(--accent);
+      }
+      .motion-reveal {
+        animation: reveal 160ms var(--ease-oq) both;
+      }
+      @keyframes reveal {
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+      }
+
+      /* ---- options ---- */
+      .qopts {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .qopts.grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-flow: column;
+        grid-template-rows: repeat(9, auto);
+        gap: 12px;
+      }
+      .qopt {
+        display: block;
+        width: 100%;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: var(--ink);
+        text-align: left;
+        cursor: pointer;
+      }
+      .qopt[aria-pressed='true'] {
+        background: var(--accent);
+      }
+      .qopt.ruled {
+        opacity: 0.55;
+      }
+      .qopt-in {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        padding: 15px 26px 15px 18px;
+        font-size: 19px;
+        line-height: 1.35;
+        background: color-mix(in srgb, var(--ink) 9%, var(--surface));
+      }
+      .grid .qopt-in {
+        gap: 10px;
+        padding: 10px 16px 10px 10px;
+        font-size: 15px;
+        font-weight: 500;
+      }
+      .qopt[aria-pressed='true'] .qopt-in {
+        background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+      }
+      .qbadge {
+        flex: none;
+        min-width: 32px;
+        height: 32px;
+        padding: 0 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font: 500 12px var(--mono);
+        background: color-mix(in srgb, var(--ink) 12%, transparent);
+        color: color-mix(in srgb, var(--ink) 85%, transparent);
+      }
+      .grid .qbadge {
+        min-width: 28px;
+        height: 28px;
+        font-size: 11px;
+      }
+      .qopt[aria-pressed='true'] .qbadge {
+        background: var(--accent);
+        color: var(--surface);
+      }
+      .formula {
+        font-family: var(--mono);
+        font-size: 18px;
+      }
+
+      /* ---- the collapsed sheet (static here; the decided one) ---- */
+      .sheet {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 20;
+        background: var(--surface);
+        color: var(--ink);
+        border-radius: 10px 10px 0 0;
+        padding: 0 16px calc(12px + env(safe-area-inset-bottom));
+      }
+      .grabber {
+        display: block;
+        height: 5px;
+        width: 36px;
+        margin: 14px auto 16px;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--ink) 30%, transparent);
+      }
+      .gem {
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 28px;
+        border: 0;
+        font-weight: 600;
+        font-size: 16px;
+        background: var(--ink);
+        color: var(--surface);
+        cursor: pointer;
+      }
+      .gem[disabled] {
+        background: color-mix(in srgb, var(--ink) 18%, transparent);
+        color: color-mix(in srgb, var(--ink) 55%, transparent);
+      }
+
+      /* ---- lab chrome ---- */
+      .labchip {
+        position: fixed;
+        top: calc(10px + env(safe-area-inset-top));
+        left: 10px;
+        z-index: 60;
+        border: 0;
+        border-radius: 999px;
+        padding: 8px 14px;
+        background: var(--lab-ink);
+        color: #fff;
+        font-weight: 600;
+        font-size: 13px;
+      }
+      .pill {
+        position: fixed;
+        top: calc(13px + env(safe-area-inset-top));
+        right: 12px;
+        z-index: 60;
+        background: rgba(26, 35, 51, 0.82);
+        color: #fff;
+        border-radius: 999px;
+        padding: 6px 10px;
+        font: 500 10px var(--mono);
+      }
+      /* Compact strip over the STATIC sheet (the one region not under
+         evaluation) and it closes itself on every pick, so the result is
+         always visible (Malik, 2026-08-22: the old card hid the subject). */
+      .panel {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0 auto;
+        max-width: 430px;
+        z-index: 70;
+        background: rgba(255, 255, 255, 0.97);
+        color: var(--lab-ink);
+        border-radius: 14px 14px 0 0;
+        padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+        box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.25);
+        font-size: 12px;
+      }
+      .phead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 6px;
+      }
+      /* Desktop (Malik, 2026-08-22): the strip covered the subject. Wide
+         viewports dock the dials BESIDE the 430px stage — always open,
+         never over the phone. The phone keeps the self-closing strip. */
+      @media (min-width: 900px) {
+        .panel,
+        .panel[hidden] {
+          display: block;
+          position: fixed;
+          left: calc(50% + 231px);
+          right: auto;
+          top: 56px; /* clears the status chip */
+          bottom: auto;
+          width: 380px;
+          max-height: calc(100vh - 72px);
+          overflow: auto;
+          border-radius: 14px;
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+          padding: 14px;
+        }
+        .panel .phead button,
+        .labchip {
+          display: none;
+        }
+        .pgrid {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+      }
+      .pgrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px 10px;
+      }
+      .phead button {
+        border: 0;
+        background: #eef0f4;
+        border-radius: 8px;
+        width: 32px;
+        height: 32px;
+      }
+      .pgroup {
+        margin: 0;
+      }
+      .pgroup h3 {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin: 0 0 4px;
+        color: var(--lab-muted);
+      }
+      .seg {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+      .seg button {
+        flex: 1 1 28%;
+        min-height: 34px;
+        border: 2px solid #d8dce4;
+        border-radius: 8px;
+        background: #fff;
+        color: var(--lab-ink);
+        font-weight: 600;
+        font-size: 11px;
+        line-height: 1.15;
+        padding: 3px 5px;
+      }
+      .seg button small {
+        display: block;
+        font-weight: 400;
+        font-size: 9px;
+        color: var(--lab-muted);
+      }
+      .seg button[aria-pressed='true'] {
+        border-color: var(--lab-ink);
+        background: var(--lab-ink);
+        color: #fff;
+      }
+      .seg button[aria-pressed='true'] small {
+        color: #c7cdd8;
+      }
+      .segnote {
+        font-size: 12px;
+        color: var(--lab-muted);
+        margin: 8px 0 0;
+      }
+      .toggles {
+        display: flex;
+        gap: 8px;
+      }
+      .toggles button {
+        flex: 1;
+        min-height: 34px;
+        border: 2px solid #d8dce4;
+        border-radius: 9px;
+        background: #fff;
+        font-weight: 600;
+        font-size: 12.5px;
+        color: var(--lab-ink);
+      }
+      .toggles button[aria-pressed='true'] {
+        border-color: #bd00ad;
+        color: #bd00ad;
+      }
+      .notes {
+        position: fixed;
+        inset: 0;
+        z-index: 80;
+        background: rgba(20, 26, 38, 0.97);
+        color: #eef1f6;
+        overflow: auto;
+        padding: calc(20px + env(safe-area-inset-top)) 22px 80px;
+        font-size: 15px;
+        line-height: 1.6;
+        user-select: text;
+        -webkit-user-select: text;
+      }
+      .notes h2 {
+        font-size: 18px;
+        margin: 0 0 4px;
+      }
+      .notes h3 {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: #9fb0cc;
+        margin: 24px 0 8px;
+      }
+      .notes p,
+      .notes li {
+        color: #ced6e4;
+        font-size: 14.5px;
+      }
+      .notes .close {
+        position: sticky;
+        top: 0;
+        float: right;
+        border: 0;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.14);
+        color: #fff;
+        width: 36px;
+        height: 36px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="stage"
+      id="stage"
+      data-set="setC"
+      data-feed="aboveq"
+      data-feedres="live"
+      data-anchor="split"
+    >
+      <div class="quiz" id="quiz">
+        <div class="qtop">
+          <button class="qexit" aria-label="Exit quiz">✕</button>
+          <div class="qbar3" aria-hidden="true"><i></i></div>
+          <button class="qguide-chip" aria-label="Open the reference guide">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 7v14" />
+              <path
+                d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="qbody" id="qbody"></div>
+      </div>
+      <div class="sheet">
+        <span class="grabber"></span>
+        <button class="gem" id="cta" disabled>Check Answer</button>
+      </div>
+    </div>
+
+    <button class="labchip" id="labChip">⚙ Question lab</button>
+    <div class="pill" id="statusPill">calm</div>
+
+    <div class="panel" id="panel" hidden>
+      <div class="phead">
+        <strong>Question lab dials</strong>
+        <button id="panelClose" aria-label="Close panel">✕</button>
+      </div>
+      <div class="pgrid">
+        <div class="pgroup">
+          <h3>Set</h3>
+          <div class="seg" data-dial="set">
+            <button data-val="setC">C<small>short</small></button>
+            <button data-val="setQ">Q<small>7 list</small></button>
+            <button data-val="setR">R<small>grid 18</small></button>
+          </div>
+        </div>
+        <div class="pgroup">
+          <h3>Anchor</h3>
+          <div class="seg" data-dial="anchor">
+            <button data-val="split">
+              Split<small>DECIDED · Q top, options bottom</small>
+            </button>
+            <button data-val="center">Centered<small>shipped</small></button>
+            <button data-val="top">Top</button>
+          </div>
+        </div>
+        <div class="pgroup">
+          <h3>Feedback placement</h3>
+          <div class="seg" data-dial="feed">
+            <button data-val="between">Between<small>shipped</small></button>
+            <button data-val="aboveq">Above Q<small>DECIDED</small></button>
+            <button data-val="abovep">Above prompt</button>
+          </div>
+        </div>
+        <div class="pgroup">
+          <h3>Feedback space</h3>
+          <div class="seg" data-dial="feedres">
+            <button data-val="live">
+              Live-sized<small>shipped · phones</small>
+            </button>
+            <button data-val="reserved">Reserved</button>
+          </div>
+        </div>
+        <div class="pgroup">
+          <h3>State</h3>
+          <div class="seg" data-dial="state">
+            <button data-val="calm">Calm</button>
+            <button data-val="miss">Miss</button>
+            <button data-val="solution">Solution</button>
+          </div>
+        </div>
+        <div class="pgroup">
+          <h3>&nbsp;</h3>
+          <div class="toggles">
+            <button id="notesBtn">Findings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes" id="notes" hidden>
+      <button class="close" id="notesClose" aria-label="Close notes">✕</button>
+      <h2>Question screen — two testing items, as directions</h2>
+      <p>
+        2026-08-22 · from user testing. Lenses: Norman (feedback, gulf of
+        evaluation, mappings) and Refactoring UI (layout, spacing, hierarchy).
+      </p>
+
+      <h3>Item 1 — feedback above the question (one tester)</h3>
+      <p>
+        The shipped order — prompt → drill question → feedback → options — is
+        the 2008 original's discourse order (decision 4, 2026-08-06): question,
+        attempt, response. Norman's argument for it is
+        <em>mapping</em>: feedback explains an OPTION, so it sits nearest the
+        options. The tester's argument for "above the question" is also Norman:
+        the eyebrow is the thing the hint is an answer TO ("what fallacy?" →
+        "not that one, because…"), and on Set R the hint often sends you back to
+        the PASSAGE — a hint adjacent to the passage shortens that re-read. Both
+        are real; which wins depends on what the learner re-reads after a miss —
+        the passage (argues above) or the options (argues between). That is a
+        thumbs-and-eyes call, and one data point doesn't make it. Feel it on Set
+        R especially.
+      </p>
+
+      <h3>Item 2 — reserve the question's and the answer's space</h3>
+      <p>Two separate mechanisms produce the instability the tester felt:</p>
+      <ul>
+        <li>
+          <strong>Vertical centering</strong> (justify-center on the column):
+          every prompt length lands the options at a different y, and a short
+          prompt (Set C) floats over a block of dead space. Refactoring UI's
+          rule — don't centre everything; left/top-anchor by default, centre
+          only short heroes — applies literally. A top-anchored column with a
+          reserved prompt region makes the options a fixed target across
+          questions (Norman: predictable mappings; the eye learns where things
+          are).
+        </li>
+        <li>
+          <strong>The mobile feedback exception</strong> (2026-08-19): on phones
+          the slot sizes to its live content, so a miss shifts the options down.
+          The rationale was honest — a reserved band is a third of a phone
+          screen on Set R — but the tester asked for the stability anyway. Dial
+          3 restores the desktop contract on phones so the cost is feelable
+          against the benefit. A middle path worth noting: reserve on list sets
+          (hints are short) and stay live-sized on the grid set (where the cost
+          is largest).
+        </li>
+      </ul>
+
+      <h3>What to feel for</h3>
+      <ul>
+        <li>
+          Set C, centered vs top+reserved: does the fixed layout read as calm or
+          as a page that forgot to centre?
+        </li>
+        <li>
+          Set R, between vs above-the-question, after a miss: where do your eyes
+          go next — passage or options?
+        </li>
+        <li>
+          Set R, reserved space: is the empty band on a first correct answer a
+          price worth paying?
+        </li>
+      </ul>
+    </div>
+
+    <script>
+      /* ---- pixel geometry (lib/pixel.ts pixelPts) ---- */
+      function pixelPts(inset, pu) {
+        const i0 = inset;
+        const L = (v) => `${v}px`;
+        const M = (v) => `calc(100% - ${v}px)`;
+        return [
+          `${L(i0)} ${L(i0 + pu * 2)}`,
+          `${L(i0 + pu)} ${L(i0 + pu * 2)}`,
+          `${L(i0 + pu)} ${L(i0 + pu)}`,
+          `${L(i0 + pu * 2)} ${L(i0 + pu)}`,
+          `${L(i0 + pu * 2)} ${L(i0)}`,
+          `${M(i0 + pu * 2)} ${L(i0)}`,
+          `${M(i0 + pu * 2)} ${L(i0 + pu)}`,
+          `${M(i0 + pu)} ${L(i0 + pu)}`,
+          `${M(i0 + pu)} ${L(i0 + pu * 2)}`,
+          `${M(i0)} ${L(i0 + pu * 2)}`,
+          `${M(i0)} ${M(i0 + pu * 2)}`,
+          `${M(i0 + pu)} ${M(i0 + pu * 2)}`,
+          `${M(i0 + pu)} ${M(i0 + pu)}`,
+          `${M(i0 + pu * 2)} ${M(i0 + pu)}`,
+          `${M(i0 + pu * 2)} ${M(i0)}`,
+          `${L(i0 + pu * 2)} ${M(i0)}`,
+          `${L(i0 + pu * 2)} ${M(i0 + pu)}`,
+          `${L(i0 + pu)} ${M(i0 + pu)}`,
+          `${L(i0 + pu)} ${M(i0 + pu * 2)}`,
+          `${L(i0)} ${M(i0 + pu * 2)}`,
+        ];
+      }
+      const stair = (inset, pu) => `polygon(${pixelPts(inset, pu).join(', ')})`;
+      const clipCss = document.createElement('style');
+      clipCss.textContent = `
+        .gem { clip-path: ${stair(0, 4)}; }
+        .qopt { clip-path: ${stair(0, 4)}; }
+        .qopt-in { clip-path: ${stair(2, 4)}; }
+        .qbadge { clip-path: ${stair(0, 2)}; }
+        .qbar3 { clip-path: ${stair(0, 2)}; }
+        .qguide-chip { clip-path: ${stair(0, 4)}; }
+      `;
+      document.head.appendChild(clipCss);
+
+      const LAMP = `<svg class="qhint-lamp" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 21h6v-2H9v2zm3-19a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>`;
+
+      /* ---- honest content per set ---- */
+      const SETS = {
+        setC: {
+          prompt: 'If it rains, then I’ll stay home.',
+          eyebrow: 'Which is the right translation?',
+          multi: false,
+          grid: false,
+          options: [
+            ['1', '(R ⊃ S)'],
+            ['2', '(S ⊃ R)'],
+            ['3', '(R · S)'],
+            ['4', '(R ∨ S)'],
+          ],
+          missOn: 1,
+          hint: {
+            term: 'Wrong direction',
+            lead: 'the “if” clause is the antecedent, so R comes first: if R, then S.',
+          },
+          answer:
+            'The antecedent is what follows “if”; the consequent is what follows “then.”',
+          promptRes: 96,
+        },
+        setQ: {
+          prompt: '“Crypto” means “money for criminals.”',
+          eyebrow: 'What is wrong with this definition?',
+          multi: true,
+          grid: false,
+          options: [
+            ['1', 'Too broad'],
+            ['2', 'Too narrow'],
+            ['3', 'Circular'],
+            ['4', 'Uses poorly understood terms'],
+            ['5', 'Poor match in vagueness'],
+            ['6', 'Poor match in emotional tone'],
+            ['7', 'Has non-essential properties'],
+          ],
+          missOn: 0,
+          hint: {
+            term: 'Too broad',
+            lead: 'would mean there is money for criminals that isn’t crypto — true, but that isn’t this definition’s failing.',
+          },
+          answer:
+            'Too narrow and poor match in emotional tone: most crypto isn’t criminal money, and the phrasing smuggles in a sneer.',
+          promptRes: 96,
+        },
+        setR: {
+          prompt:
+            'If I don’t get a good grade, Dr. Connolly, I’m going to talk to the dean about you. You recall that the dean is my father, don’t you?',
+          eyebrow: 'What fallacy does this illustrate?',
+          multi: true,
+          grid: true,
+          options: [
+            ['aa', 'Appeal to authority'],
+            ['ac', 'Appeal to crowd'],
+            ['ae', 'Appeal to emotion'],
+            ['af', 'Appeal to force'],
+            ['ah', 'Ad hominem'],
+            ['ai', 'Appeal to ignorance'],
+            ['am', 'Ambiguous'],
+            ['bp', 'Beside the point'],
+            ['bw', 'Black and white'],
+            ['ci', 'Circular'],
+            ['cq', 'Complex question'],
+            ['fs', 'False stereotype'],
+            ['ge', 'Genetic'],
+            ['op', 'Opposition'],
+            ['pc', 'Pro-con'],
+            ['ph', 'Post hoc'],
+            ['pw', 'Part-whole'],
+            ['sm', 'Straw man'],
+          ],
+          missOn: 0,
+          hint: {
+            term: 'Appeal to authority',
+            lead: 'Leaning on an authority counts as evidence only when the authority is real and relevant. It’s a fallacy when:',
+            clauses: [
+              'the person isn’t an expert on this subject',
+              'the experts themselves don’t agree',
+              'the conclusion claims the authority must be right, not just probably right',
+            ],
+          },
+          answer: 'Appeal to force — the dean is a threat, not a reason.',
+          promptRes: 150,
+        },
+      };
+
+      const $ = (id) => document.getElementById(id);
+      const stage = $('stage'),
+        qbody = $('qbody'),
+        cta = $('cta'),
+        panel = $('panel'),
+        notes = $('notes'),
+        statusPill = $('statusPill');
+      const DIAL_KEY = 'question-lab-dials-v3';
+      // 2026-08-22 decisions: feedback ABOVE the question; question top /
+      // options bottom (split). Both default; the alternatives stay as the
+      // comparison record.
+      let dials = {
+        set: 'setC',
+        feed: 'aboveq',
+        feedres: 'live',
+        anchor: 'split',
+        state: 'calm',
+      };
+      try {
+        const saved = JSON.parse(localStorage.getItem(DIAL_KEY));
+        if (saved && saved.set) dials = { ...dials, ...saved };
+      } catch {}
+
+      const hintHtml = (h) =>
+        `<div class="qfeed-hint"><p class="qhint-head">${LAMP}<b class="qhint-term">${h.term}</b>. ${h.lead}</p>${h.clauses ? `<ol class="qhint-clauses">${h.clauses.map((c) => `<li>${c}</li>`).join('')}</ol>` : ''}</div>`;
+
+      function feedSlot(set, live) {
+        const ghost = hintHtml(set.hint); // the tallest thing it could hold
+        let liveHtml = '';
+        if (dials.state === 'miss')
+          liveHtml = `<div class="motion-reveal">${hintHtml(set.hint)}</div>`;
+        if (dials.state === 'solution')
+          liveHtml = `<p class="qfeed-answer motion-reveal">${set.answer}</p>`;
+        const empty = liveHtml === '' ? ' data-empty' : '';
+        return `<div class="qfeed"${empty}><div class="qfeed-ghost" aria-hidden="true">${ghost}</div><div class="qfeed-live" aria-live="polite">${liveHtml}</div></div>`;
+      }
+
+      function render() {
+        const set = SETS[dials.set];
+        stage.dataset.set = dials.set;
+        stage.dataset.feed = dials.feed;
+        stage.dataset.feedres = dials.feedres;
+        stage.dataset.anchor = dials.anchor;
+        const feed = feedSlot(set);
+        const prompt = `<div class="qprompt-box"><p class="qprompt">${set.prompt}</p></div>`;
+        const eyebrow = `<div><h2 class="qeyebrow">${set.eyebrow}</h2>${set.multi ? '<p class="qmulti">More than one answer can be right — pick up to 3.</p>' : ''}</div>`;
+        const options = `<div class="qopts${set.grid ? ' grid' : ''}">${set.options
+          .map(
+            ([b, l], i) =>
+              `<button class="qopt${dials.state !== 'calm' && i === set.missOn ? ' ruled' : ''}" aria-pressed="${dials.state !== 'calm' && i === set.missOn}"><span class="qopt-in"><span class="qbadge">${b}</span><span class="${dials.set === 'setC' ? 'formula' : ''}">${l}</span></span></button>`
+          )
+          .join('')}</div>`;
+        // The answer GROUP = feedback · drill question · options, one
+        // unit (the question labels the list). Placement says where the
+        // feedback sits relative to that group.
+        const group = (parts) => `<div class="qanswer">${parts.join('')}</div>`;
+        const order =
+          dials.feed === 'abovep'
+            ? [feed, prompt, group([eyebrow, options])]
+            : dials.feed === 'aboveq'
+              ? [prompt, group([feed, eyebrow, options])]
+              : [prompt, group([eyebrow, feed, options])];
+        qbody.innerHTML = order.join('');
+        qbody.querySelectorAll('.qopt').forEach((opt, i) => {
+          opt.addEventListener('click', () => {
+            qbody
+              .querySelectorAll('.qopt')
+              .forEach((o) =>
+                o.setAttribute('aria-pressed', String(o === opt))
+              );
+            cta.disabled = false;
+          });
+        });
+        cta.disabled = dials.state !== 'calm';
+        statusPill.textContent = `${dials.set.replace('set', 'Set ')} · ${dials.feed} · ${dials.feedres} · ${dials.anchor} · ${dials.state}`;
+        document.querySelectorAll('.seg').forEach((seg) => {
+          seg
+            .querySelectorAll('button')
+            .forEach((b) =>
+              b.setAttribute(
+                'aria-pressed',
+                String(b.dataset.val === dials[seg.dataset.dial])
+              )
+            );
+        });
+        try {
+          localStorage.setItem(DIAL_KEY, JSON.stringify(dials));
+        } catch {}
+      }
+
+      // Check Answer in the lab = "you missed": the selected option is
+      // ruled and the hint lands, so the shift (or its absence) is felt
+      // on the real gesture, not only via the State dial.
+      cta.addEventListener('click', () => {
+        dials.state = 'miss';
+        render();
+      });
+
+      document.querySelectorAll('.seg').forEach((seg) => {
+        seg.addEventListener('click', (e) => {
+          const btn = e.target.closest('button');
+          if (!btn) return;
+          dials[seg.dataset.dial] = btn.dataset.val;
+          render();
+          // On phones the result, not the strip, is the point; on desktop
+          // the panel is docked beside the stage and stays.
+          if (!matchMedia('(min-width: 900px)').matches) panel.hidden = true;
+        });
+      });
+      $('labChip').addEventListener(
+        'click',
+        () => (panel.hidden = !panel.hidden)
+      );
+      $('panelClose').addEventListener('click', () => (panel.hidden = true));
+      $('notesBtn').addEventListener('click', () => {
+        notes.hidden = false;
+        panel.hidden = true;
+      });
+      $('notesClose').addEventListener('click', () => (notes.hidden = true));
+
+      const q = new URLSearchParams(location.search);
+      for (const k of ['set', 'feed', 'feedres', 'anchor', 'state'])
+        if (q.get(k)) dials[k] = q.get(k);
+      render();
+      if (q.get('panel') === '1') panel.hidden = false;
+      if (q.get('notes') === '1') notes.hidden = false;
+      window.__lab = { dials, render };
+    </script>
+  </body>
+</html>

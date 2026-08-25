@@ -1,0 +1,2412 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FAQ lab (PROPOSED 2026-08-15)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Roboto+Mono:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink-90: #111827;
+        --gray-500: #6b7280;
+        --gray-100: #f3f4f6;
+        --magenta: #bd00ad;
+        --quart: cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html {
+        font-feature-settings: 'kern' 1;
+        text-rendering: optimizeLegibility;
+      }
+      body {
+        background: #d9d9d2;
+        font-family: 'Roboto Flex', system-ui, sans-serif;
+        color: #111;
+        padding: 48px 24px 96px;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        background: none;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+        text-align: left;
+      }
+      :focus-visible {
+        outline: 2px solid #05a24b;
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+      .mono {
+        font-family: 'Roboto Mono', monospace;
+      }
+      .display {
+        font-stretch: 151%;
+        font-weight: 800;
+        letter-spacing: 0.01em;
+      }
+      .lab-head {
+        max-width: 1200px;
+        margin: 0 auto 12px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        line-height: 1.7;
+        color: #555;
+      }
+      .lab-head strong {
+        color: #111;
+      }
+      .screen-label {
+        max-width: 1200px;
+        margin: 56px auto 10px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #555;
+      }
+      .note {
+        max-width: 1200px;
+        margin: 10px auto 0;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        line-height: 1.7;
+        color: #555;
+      }
+      .note strong {
+        color: #111;
+      }
+      .frame {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: #fff;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+        overflow: hidden;
+      }
+      .controls {
+        max-width: 1200px;
+        margin: 0 auto 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .ctl-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        color: #555;
+      }
+      .ctl-row > span:first-child {
+        width: 84px;
+        flex-shrink: 0;
+      }
+      .seg {
+        display: inline-flex;
+        border: 1px solid #b9b9b0;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .seg button {
+        padding: 6px 12px;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        color: #555;
+      }
+      .seg button[aria-pressed='true'] {
+        background: #111;
+        color: #fff;
+      }
+      .page-end {
+        background: #fff;
+        padding: 34px 40px 40px;
+      }
+      .page-end .skel {
+        height: 12px;
+        border-radius: 6px;
+        background: var(--gray-100);
+        margin-top: 12px;
+      }
+      .page-end .cap {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #9ca3af;
+      }
+      .phoneframe {
+        width: 390px;
+        margin: 0 auto;
+        background: #fff;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+        overflow: hidden;
+      }
+      .b-audit {
+        max-width: 1200px;
+        margin: 8px auto 0;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        line-height: 1.7;
+        color: #555;
+        letter-spacing: 0.02em;
+      }
+      .b-audit .fail {
+        color: #b00020;
+        font-weight: 700;
+      }
+      .dcards {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        gap: 16px;
+      }
+      .dcard {
+        background: #fff;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+        padding: 18px 20px;
+      }
+      .dcard .id {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--gray-500);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+      }
+      .dcard .judge {
+        background: var(--magenta);
+        color: #fff;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+      }
+      .dcard .rec {
+        background: #05a24b;
+        color: #fff;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+      }
+      .dcard h3 {
+        font-size: 15.5px;
+        margin-bottom: 6px;
+        color: var(--ink-90);
+      }
+      .dcard p {
+        font-size: 13.5px;
+        line-height: 1.55;
+        color: #374151;
+      }
+      .dcard p + p {
+        margin-top: 6px;
+      }
+      .infobox {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: #fff;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+        padding: 22px 26px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #374151;
+      }
+      .infobox h3 {
+        font-size: 15px;
+        color: var(--ink-90);
+        margin-bottom: 8px;
+      }
+      .infobox ul {
+        padding-left: 20px;
+      }
+      .infobox li + li {
+        margin-top: 4px;
+      }
+      .infobox code {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        background: var(--gray-100);
+        padding: 1px 5px;
+        border-radius: 3px;
+      }
+      .infobox pre {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11.5px;
+        line-height: 1.6;
+        background: var(--gray-100);
+        padding: 12px 14px;
+        border-radius: 6px;
+        overflow-x: auto;
+        margin-top: 8px;
+      }
+
+      /* ————— the FAQ section ————— */
+      .fq {
+        background: var(--g);
+        --bleed: 24px; /* open-fill bleed = the wrap gutter, never past it */
+      }
+      .fq.m {
+        --bleed: 20px;
+      }
+      .fq-wrap {
+        max-width: 1128px;
+        margin: 0 auto;
+        padding: 76px 24px 88px;
+      }
+      .fq.m .fq-wrap {
+        padding: 46px 20px 56px;
+      }
+      .fq-col {
+        max-width: 720px;
+        margin: 0 auto;
+      }
+      .fq-split {
+        display: grid;
+        grid-template-columns: 0.85fr 1.35fr;
+        gap: 24px 76px;
+        align-items: start;
+      }
+      .fq.m .fq-split {
+        display: block;
+      }
+      .fq-cols2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 56px;
+        align-items: start;
+      }
+      .fq.m .fq-cols2 {
+        display: block;
+      }
+
+      .fq-h2-today {
+        text-align: center;
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        line-height: 1.1;
+        color: var(--headline);
+        margin-bottom: 42px;
+      }
+      .fq.m .fq-h2-today {
+        font-size: 26px;
+        margin-bottom: 30px;
+      }
+      .fq-eyebrow {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--head);
+        margin-bottom: 14px;
+      }
+      .fq-h2-display {
+        font-stretch: 151%;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+        line-height: 1.04;
+        /* section register, not hero — the 56px first cut was judged
+           HUGE (Malik, 2026-08-15); an h2 within a page, so it sits a
+           clear step below any hero display */
+        font-size: clamp(30px, 3.1vw, 42px);
+        /* --disp = the echo dial's display ink (defaults to the type
+           colour); coloured ink on display only — the role split */
+        color: var(--disp, var(--type));
+        text-wrap: balance;
+        hyphens: none;
+      }
+      .fq.m .fq-h2-display {
+        font-size: 26px;
+      }
+      .fq-sub {
+        margin-top: 16px;
+        font-size: 15px;
+        line-height: 1.55;
+        color: var(--body);
+        max-width: 44ch;
+      }
+      .fq-headblock {
+        margin-bottom: 44px;
+      }
+      .fq.m .fq-headblock {
+        margin-bottom: 30px;
+      }
+      .fq-still {
+        margin-top: 28px;
+        font-size: 14.5px;
+        line-height: 1.55;
+        color: var(--body);
+        max-width: 36ch;
+      }
+      .fq-still + .fq-still {
+        margin-top: 12px;
+      }
+      /* the instructor CTA as its own object — Malik's hierarchy call
+         (2026-08-15): not a second paragraph fused to the email line */
+      .fq-instr {
+        margin-top: 44px;
+      }
+      .fq-strip {
+        border-top: 1px solid var(--hair);
+        margin-top: 52px;
+        padding-top: 26px;
+      }
+      .fq.m .fq-strip {
+        margin-top: 36px;
+        padding-top: 22px;
+      }
+      .fq-instr .fq-eyebrow,
+      .fq-strip .fq-eyebrow {
+        margin-bottom: 8px;
+      }
+      .fq-instr p,
+      .fq-strip p {
+        font-size: 14.5px;
+        line-height: 1.55;
+        color: var(--body);
+        max-width: 62ch;
+      }
+      .fq-instr a,
+      .fq-strip a {
+        color: var(--type);
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .fq-still a {
+        color: var(--type);
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .fq.m .fq-still {
+        margin: 4px 0 30px;
+      }
+
+      .fq-itemw {
+        /* the shadow wrapper — a clipped card's shadow must live here,
+           as filter: drop-shadow (clip-path crops the element's own
+           shadow; the pixel-ui ring rule generalised) */
+      }
+      .mode-cards .fq-itemw {
+        filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.05))
+          drop-shadow(0 3px 8px rgba(0, 0, 0, 0.07));
+      }
+      .mode-cards .fq-itemw + .fq-itemw {
+        margin-top: 12px;
+      }
+      .mode-cards .fq-item {
+        background: var(--fig);
+        clip-path: var(--clip-card);
+        padding: 3px 24px;
+      }
+      .mode-hairlines .fq-item {
+        border-top: 1px solid var(--hair);
+      }
+      .mode-hairlines .fq-items > .fq-itemw:last-child .fq-item {
+        border-bottom: 1px solid var(--hair);
+      }
+      /* open-fill: the clip is ALWAYS on, visible only when the open fill
+         paints (the nav lab's hover-fill construction). The plate bleeds
+         past the text column; padding puts the text back on the grid. */
+      .mode-openfill .fq-item {
+        position: relative;
+        clip-path: var(--clip-card);
+        margin-inline: calc(var(--bleed) * -1);
+        padding-inline: var(--bleed);
+        background: transparent;
+        transition:
+          background-color 0.18s var(--quart),
+          margin-top 0.24s var(--quart);
+      }
+      /* two open plates never touch — a gap of ground separates them
+         (the option marks' surface-gap rule, at section scale; Malik's
+         catch 2026-08-15) */
+      .mode-openfill .fq-itemw:has(.open) + .fq-itemw .fq-item.open {
+        margin-top: 10px;
+      }
+      .mode-openfill .fq-item.open {
+        background: var(--fig);
+      }
+      .mode-openfill .fq-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: var(--bleed);
+        right: var(--bleed);
+        height: 1px;
+        background: var(--hair);
+      }
+      .mode-openfill .fq-itemw:first-child .fq-item::before,
+      .mode-openfill .fq-item.open::before,
+      .mode-openfill .fq-itemw:has(.open) + .fq-itemw .fq-item::before {
+        display: none;
+      }
+      .mode-openfill .fq-itemw:last-child .fq-item:not(.open)::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: var(--bleed);
+        right: var(--bleed);
+        height: 1px;
+        background: var(--hair);
+      }
+
+      .fq-h3 {
+        font-size: inherit;
+        font-weight: inherit;
+      }
+      .fq-trigger {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        padding: 17px 0;
+        font-size: 17px;
+        font-weight: 600;
+        line-height: 1.35;
+        color: var(--type);
+      }
+      .fq.m .fq-trigger {
+        font-size: 16px;
+        padding: 15px 0;
+      }
+      .fq-trigger:hover .fq-q {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .fq-trigger:focus-visible {
+        outline: 2px solid var(--focus);
+        outline-offset: 2px;
+        border-radius: 0;
+      }
+      .fq-idx {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        font-variant-numeric: tabular-nums;
+        color: var(--idx);
+        min-width: 2ch;
+        flex-shrink: 0;
+      }
+      .idx-off .fq-idx {
+        display: none;
+      }
+      .fq-chev {
+        width: 16px;
+        height: 16px;
+        margin-left: auto;
+        flex-shrink: 0;
+        transition: transform 0.2s var(--quart);
+      }
+      .fq-item.open .fq-chev {
+        transform: rotate(180deg);
+      }
+
+      .fq-panel {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.24s var(--quart);
+      }
+      .fq-item.open .fq-panel {
+        grid-template-rows: 1fr;
+      }
+      .fq-panel-in {
+        overflow: hidden;
+        min-height: 0;
+      }
+      .fq-answer {
+        font-size: 15.5px;
+        line-height: 1.6;
+        color: var(--body);
+        max-width: 62ch;
+        padding-bottom: 20px;
+        margin-left: var(--ans-indent, 0);
+      }
+      .idx-on .fq-answer {
+        --ans-indent: 30px;
+      }
+      /* .m and .idx-on sit on the SAME element — compound, not descendant */
+      .fq.m.idx-on .fq-answer {
+        --ans-indent: 0px;
+      }
+      .mode-cards .fq-answer,
+      .mode-openfill .fq-item.open .fq-answer {
+        color: var(--body-fig);
+      }
+      .mode-cards .fq-answer {
+        border-top: 1px solid var(--hair-fig);
+        padding-top: 15px;
+      }
+      .ans-plate .fq-answer-body {
+        background: var(--plate);
+        clip-path: var(--clip-plate);
+        padding: 15px 18px;
+        color: var(--plate-body);
+      }
+
+      /* ————— the footer simulation (context — decided in the footer
+         lab; structure = Malik's favourite state: subscribe-first ·
+         row pill · fine band at bottom · pixel icons · the can ·
+         mission on). Styles mirror docs/footer-lab.html. ————— */
+      .ftx {
+        position: relative;
+      }
+      .ftx-cap {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        opacity: 0.55;
+      }
+      .ftx-banner-inner {
+        max-width: 1128px;
+        margin: 0 auto;
+        padding: 44px 24px 40px;
+      }
+      .ftx.m .ftx-banner-inner {
+        padding: 36px 20px 30px;
+      }
+      .ftx-banner-head {
+        font-size: 26px;
+        margin-bottom: 6px;
+      }
+      .ftx.m .ftx-banner-head {
+        font-size: 22px;
+      }
+      .ftx-banner-body {
+        font-size: 14.5px;
+        max-width: 60ch;
+        line-height: 1.55;
+      }
+      .ftx-pill {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #fff;
+        padding: 6px 6px 6px 18px;
+        max-width: 560px;
+        margin-top: 16px;
+      }
+      .ftx-pill .ph {
+        flex: 1;
+        min-width: 0;
+        font-size: 14.5px;
+        color: #888;
+        height: 44px;
+        display: flex;
+        align-items: center;
+      }
+      .ftx-pill-btn {
+        flex-shrink: 0;
+        font-weight: 700;
+        font-size: 14px;
+        padding: 11px 26px;
+      }
+      .ftx-fine {
+        margin-top: 8px;
+        font-size: 12px;
+      }
+      .ftx-wrap {
+        max-width: 1128px;
+        margin: 0 auto;
+        padding: 36px 24px 40px;
+      }
+      .ftx.m .ftx-wrap {
+        padding: 30px 20px 26px;
+      }
+      .ftx-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr 1fr 1fr;
+        gap: 40px;
+      }
+      .ftx-colhead {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 14px;
+      }
+      .ftx-links {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .ftx-links span {
+        font-size: 14.5px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ftx-mission {
+        margin-top: 12px;
+        font-size: 14.5px;
+        line-height: 1.55;
+        max-width: 34ch;
+      }
+      .ftx.m .ftx-mission {
+        max-width: none;
+      }
+      .ftx-mcols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px 20px;
+        margin-top: 32px;
+      }
+      .ftx-newgem {
+        display: inline-flex;
+        height: 20px;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        background: var(--magenta);
+        padding: 0 10px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #fff;
+      }
+      .ftx-bottom {
+        border-top: 1px solid;
+      }
+      .ftx-bottom-inner {
+        max-width: 1128px;
+        margin: 0 auto;
+        padding: 18px 24px 34px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+        font-size: 13px;
+      }
+      .ftx.m .ftx-bottom-inner {
+        padding: 16px 20px 30px;
+      }
+      .ftx-socials {
+        margin-left: auto;
+        display: flex;
+        gap: 12px;
+      }
+      .ftx-chip-tap {
+        width: 44px;
+        height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: -7px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .fq-panel,
+        .fq-chev,
+        .mode-openfill .fq-item {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="lab-head">
+      <strong>FAQ lab.</strong> PROPOSED 2026-08-15 · branch
+      <strong>color-system-exploration</strong><br />
+      The homepage FAQ — the last section still wearing none of the new design —
+      rebuilt on the canon the other labs settled: scheme roles (ground / ink /
+      type; the coloured ink never carries small text), ensure-contrast derived
+      muted tiers, the pixel-silhouette card corners the nav decided (D12,
+      shadows lightened, on a wrapper — a clip crops the element&rsquo;s own
+      shadow), the mono eyebrow + display-stretch heading voice, and the shipped
+      pixel chevron (already live in
+      <span class="mono">components/ui/accordion.tsx</span> — not re-judged
+      here). Copy is the live homepage&rsquo;s (<span class="mono"
+        >app/(site)/page.tsx</span
+      >), with a proposed edit one dial away. Silhouettes are ported from
+      <span class="mono">lib/pixel.ts</span> verbatim.
+      <strong
+        >Direction from Malik (2026-08-15): the footer will be COLOURED, so the
+        FAQ (and the content region above it) leans WHITE.</strong
+      >
+      The default records that lean: white · split rail · open-fill · display
+      heading (ink echoing the footer) · numbered · six entries · edited copy ·
+      the favourite Set&nbsp;L footer simulated in full below the section. Still
+      a PROPOSAL, not a decision — the Echo dial is the new question (how much a
+      white FAQ anticipates the footer&rsquo;s colour), and the presets row
+      jumps between whole compositions. Deliberately absent: a pattern dial —
+      the footer&rsquo;s camo band closes the page right below, D14 killed the
+      desktop pattern surfaces beyond it, and two textures on one screen would
+      compete. Argue it back in deliberately if wanted.
+    </div>
+
+    <div class="screen-label">0 · The FAQ — play the dials</div>
+    <div class="controls" id="presets"></div>
+    <div class="controls" id="controls"></div>
+    <div class="frame">
+      <div class="page-end">
+        <div class="cap">… end of hero / content region (white, decided)</div>
+        <div class="skel" style="width: 52%"></div>
+        <div class="skel" style="width: 38%"></div>
+      </div>
+      <div id="fq-mount"></div>
+      <div id="ft-sim-mount"></div>
+    </div>
+    <p class="b-audit" id="audit"></p>
+
+    <div class="screen-label">
+      0b · The same state at 390&nbsp;px — one set of dials, two widths
+    </div>
+    <div class="phoneframe">
+      <div class="page-end" style="padding: 22px 20px 26px">
+        <div class="cap">… end of page</div>
+        <div class="skel" style="width: 70%"></div>
+      </div>
+      <div id="fq-mount-m"></div>
+      <div id="ft-sim-mount-m"></div>
+    </div>
+    <p class="note">
+      <strong>The mobile reflow:</strong> split collapses to eyebrow + heading +
+      intro above the items (the &ldquo;still curious&rdquo; line moves under
+      the heading block); two-column collapses to one stack in document order.
+      Triggers keep &ge;44&nbsp;px tap height (17&nbsp;px padding + line box);
+      the open-fill bleed stays inside the 20&nbsp;px page gutter; the answer
+      indent under numbered triggers is released at phone width — 30&nbsp;px is
+      a fifth of a 390&nbsp;px measure, too expensive there.
+    </p>
+    <p class="note">
+      <strong>What the dials cover.</strong> Ground: the D11 candidates plus
+      today&rsquo;s white (Brand&nbsp;· mint stays dead). Layout: today&rsquo;s
+      centered column, a split rail (heading left, questions right — the
+      homepage&rsquo;s first asymmetric section), and two columns of items.
+      Items: hairline rows (today&rsquo;s shape recoloured), pixel-cornered
+      cards, or hairline rows where the OPEN item paints a figure plate
+      (clip-path always on, visible only when the fill paints — the nav
+      lab&rsquo;s hover-fill construction). Answer: bare, or on its own small
+      plate (moot under open-fill, which already gives it a surface). Heading:
+      today&rsquo;s centered bold vs the mono eyebrow + display stretch.
+      Entries: today&rsquo;s four vs six (+&nbsp;support, +&nbsp;classroom — the
+      mission/donate story told without duplicating the header&rsquo;s Donate
+      gem). Copy: verbatim vs a proposed edit. <strong>Echo</strong> (new,
+      2026-08-15): with the footer coloured and the FAQ white, does the white
+      section anticipate the footer&rsquo;s colour — in the display
+      heading&rsquo;s ink, in the figure surfaces (plates/cards take the
+      footer&rsquo;s ground instead of cream), both, or not at all?
+      <strong>The footer below the section is now simulated in FULL</strong>
+      (subscribe-first banner → the can + mission + link columns → bottom bar
+      with the pixel icons in gem chips → the fine camo band): the favourite
+      footer-lab state, re-groundable to the shipped cream, at both widths.
+      CONTEXT only — the footer was decided in its own lab, and its own audit
+      lives there.
+    </p>
+
+    <div class="screen-label">1 · Decisions to take</div>
+    <div class="dcards">
+      <div class="dcard">
+        <div class="id">
+          FQ1 <span class="rec">Rec: white (direction 2026-08-15)</span>
+        </div>
+        <h3>Ground — white, per the coloured footer</h3>
+        <p>
+          Malik&rsquo;s direction: the footer takes the colour, so the FAQ (and
+          the content region, per the marketing lab&rsquo;s decided white) stays
+          white — the footer becomes the page&rsquo;s one colour moment,
+          arriving with full force. The scheme grounds stay one dial away for
+          honest comparison, and the simulated footer below shows the actual
+          hand-off either way. What remains of the old question is FQ9: how much
+          the white section may anticipate the footer&rsquo;s colour.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">FQ2 <span class="rec">Rec: open-fill</span></div>
+        <h3>Item treatment</h3>
+        <p>
+          Hairlines are today&rsquo;s shape and the quietest; cards spend the
+          nav&rsquo;s D12 corner grammar but make five closed boxes compete with
+          the footer below; open-fill keeps the closed list quiet and lets the
+          one OPEN answer become a figure — the same
+          clip-always-on/fill-on-paint move the nav hovers made, so it reads as
+          the system, not a new device. Recommended because it puts the emphasis
+          where the reading is.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">FQ3 <span class="judge">Judge</span></div>
+        <h3>Does an answer get a surface?</h3>
+        <p>
+          Under hairlines or cards the answer can sit bare (today) or on a small
+          sprite-cornered plate (R=12 — the hint-block register). The plate buys
+          scannability when several items are open at once (<span class="mono"
+            >type='multiple'</span
+          >
+          ships) at the cost of a second surface per item. Under open-fill the
+          question dissolves — the item IS the surface.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          FQ4 <span class="rec">Rec: eyebrow + display</span>
+        </div>
+        <h3>Heading voice</h3>
+        <p>
+          Today&rsquo;s centered 30&nbsp;px bold vs the established voice: mono
+          QUESTIONS eyebrow over the display stretch at up to 56&nbsp;px. The
+          section is the last one still speaking the old voice — after the nav,
+          the marketing pages and the footer banner, the display treatment here
+          is consistency, not novelty.
+          <strong>Scale corrected 2026-08-15:</strong> the first cut ran the
+          display to 56&nbsp;px and Malik called it HUGE — it now caps at
+          42&nbsp;px, the section register: an h2 inside a page, one clear step
+          below any hero display, still ~2.7× the answer text.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">FQ5 <span class="judge">Judge — lean split</span></div>
+        <h3>Layout</h3>
+        <p>
+          Centered is today&rsquo;s shape. The split rail (heading + intro +
+          &ldquo;still curious&rdquo; left, questions right) is the
+          homepage&rsquo;s first asymmetric section and keeps the heading in
+          view while reading; it also gives the mailto a natural home. Two
+          columns halve the scroll but pair badly with hairlines (two ragged
+          rules) and open answers shift only their own column — judge it with
+          cards.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">FQ6 <span class="rec">Rec: six</span></div>
+        <h3>Entries — does the FAQ gain the mission?</h3>
+        <p>
+          Today&rsquo;s four entries answer what/price/difference/LogiSkor. The
+          two proposed additions carry the mission and classroom story — the
+          donate case made in words, WITHOUT duplicating the header&rsquo;s gem
+          CTA (one oxygen mask per page level, the footer&rsquo;s F6 rule).
+          Teachers are the multiplier audience and currently unaddressed.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">FQ7 <span class="rec">Rec: edited</span></div>
+        <h3>The copy pass</h3>
+        <p>
+          The verbatim copy carries a stale age claim (&ldquo;It only has a
+          couple of months&rdquo; — written in 2023), a comma splice in the
+          first answer, and &ldquo;Logiskor&rdquo;/&ldquo;LogiSkor&rdquo;
+          disagreeing between title and body. The edit fixes those, tightens
+          each answer toward its first sentence, and keeps Malik&rsquo;s
+          first-person voice. Either way the port should get real apostrophes
+          (&rsquo; not ') — the strings in
+          <span class="mono">page.tsx</span> are typewriter-quoted today.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">FQ8 <span class="rec">Rec: ship it</span></div>
+        <h3>FAQPage JSON-LD</h3>
+        <p>
+          Valid <span class="mono">schema.org/FAQPage</span> markup on the
+          homepage — snippet in the port notes. Honest expectations: Google
+          restricted FAQ rich results to authoritative gov/health sites in 2023,
+          so no SERP accordion — but the markup is exactly what AI answer
+          engines read, and for &ldquo;LogiCola&rdquo; queries these six answers
+          are the canonical source. Cheap, harmless, one
+          <span class="mono">&lt;script&gt;</span> tag.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          FQ9 <span class="judge">Judge — the new question</span>
+        </div>
+        <h3>Echo — does the white FAQ anticipate the footer?</h3>
+        <p>
+          With the colour concentrated in the footer, the white FAQ can meet it
+          cold (Echo off — maximum contrast at the seam, the footer as a reveal)
+          or send it ahead: the display heading in the footer&rsquo;s ink (plum
+          before the mint arrives — coloured ink on display only, the role
+          split), the figure surfaces in the footer&rsquo;s ground (the open
+          plate turns mint — the page&rsquo;s colour story told twice), or both.
+          Every echo follows the Ft. dial, so if D11 lands elsewhere the echo
+          moves with it; heading ink is ensure-checked at the 3:1 large-text
+          floor and audited.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          FQ10 <span class="judge">Judge — Malik&rsquo;s 2026-08-15 note</span>
+        </div>
+        <h3>Contact — a name, and a calendar?</h3>
+        <p>
+          &ldquo;Email me&rdquo; vs the signed line (&ldquo;I&rsquo;m Malik, and
+          I read every message&rdquo;): the answers already speak in first
+          person, and the support entry says the project is run by one person —
+          naming that person makes the story concrete, and a named sender
+          promises a reply in a way an anonymous &ldquo;me&rdquo; doesn&rsquo;t.
+          Lean: named.
+        </p>
+        <p>
+          The booking variation adds ONE line aimed at professors only — the
+          multiplier audience — and doubles as the
+          <strong>LogiSkor discovery channel</strong>: every booked call is a
+          validated teacher lead, a signal a mailto can&rsquo;t measure. It also
+          reaches the classroom entry (&ldquo;or book a short call&rdquo;).
+          Caution: a second CTA dilutes the rail — it earns its place only while
+          teacher adoption is the active priority. Provider undecided (Cal.com /
+          Calendly); the link is inert here and the port should tag the booking
+          click as its own PostHog event (<span class="mono"
+            >book_call_click</span
+          >, <span class="mono">source: 'faq_rail'</span>) so the hypothesis is
+          measurable.
+        </p>
+        <p>
+          <strong>Placement (same-day follow-up):</strong> Malik judged the two
+          stacked rail paragraphs &ldquo;too much&rdquo; as a text block —
+          hierarchy, not content. The instructor CTA now defaults to its OWN
+          hairline-topped section under the list (FOR INSTRUCTORS eyebrow),
+          which also gives the non-split layouts a home for it; the rail-inline
+          draft and a rail-block variant stay on the dial for comparison.
+        </p>
+      </div>
+      <div class="dcard">
+        <div class="id">
+          FQ11 <span class="judge">Judge — Malik&rsquo;s catch</span>
+        </div>
+        <h3>The head pair — an eyebrow that repeats its heading</h3>
+        <p>
+          QUESTIONS over FREQUENTLY ASKED QUESTIONS said the same thing twice —
+          the eyebrow has to do work the heading doesn&rsquo;t, or go. Three
+          resolutions on the dial: <strong>no eyebrow</strong>
+          (the heading is its own label — the default; the mono voice survives
+          in the FOR INSTRUCTORS eyebrow and the index numbers),
+          <strong>SUPPORT</strong> (an adjacent register — names the job, not
+          the format), or <strong>the roles flipped</strong>: FAQ as the small
+          label, &ldquo;ASK AWAY&rdquo; as the display voice. The flip is the
+          only pair where both layers carry information; whether its tone fits
+          the site is the judgement.
+        </p>
+      </div>
+    </div>
+
+    <div class="screen-label">2 · Accessibility + port notes</div>
+    <div class="infobox">
+      <ul>
+        <li>
+          Every text/ground pairing is walked through the ensure-contrast loop
+          at render time and printed in the audit strip — muted tiers and the
+          numbered index are derived, never eyeballed. The index starts from the
+          scheme&rsquo;s accent and darkens toward the type colour until it
+          clears 4.5:1.
+        </li>
+        <li>
+          <strong>Focus finding:</strong> the site&rsquo;s green
+          <span class="mono">#05A24B</span> focus outline measures
+          <strong>2.85:1 on Set&nbsp;L&rsquo;s mint</strong> — under
+          1.4.11&rsquo;s 3:1 floor. The lab derives a per-scheme focus colour
+          (green mixed toward the type colour until &ge;3:1) and the audit strip
+          marks when the derived value is in play. The port should hoist this
+          into the token file that D11&rsquo;s switch will edit.
+        </li>
+        <li>
+          Structure is unchanged from the app: page
+          <span class="mono">h2</span>, trigger inside an
+          <span class="mono">h3</span> (Radix Header), button with
+          <span class="mono">aria-expanded</span>/<span class="mono"
+            >aria-controls</span
+          >, panel as <span class="mono">role="region"</span>.
+          <span class="mono">type='multiple'</span> is kept. Triggers exceed the
+          44&nbsp;px floor.
+        </li>
+        <li>
+          Motion: open/close is a 240&nbsp;ms quart-out height reveal, chevron
+          rotates in 200&nbsp;ms; both behind
+          <span class="mono">prefers-reduced-motion</span> here. Port check: the
+          app&rsquo;s <span class="mono">animate-accordion-up/down</span>
+          keyframes should sit behind the same guard.
+        </li>
+        <li>
+          Port shape: the visual change is classNames on the existing shadcn
+          wrapper plus (for open-fill) an always-on
+          <span class="mono">clip-path</span> from
+          <span class="mono">spriteClip(0, 16)</span> — generators from
+          <span class="mono">lib/pixel.ts</span>, never a re-implementation.
+          Card shadows go on a wrapper as
+          <span class="mono">filter: drop-shadow</span> (the Viewport rule). The
+          rail&rsquo;s mailto needs a real address decided; it is inert here.
+        </li>
+        <li>
+          FAQPage JSON-LD, mirroring whatever copy ships (Google requires the
+          markup to match the visible text):
+          <pre>
+&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is LogiCola?",
+      "acceptedAnswer": { "@type": "Answer", "text": "LogiCola is…" }
+    }
+    // … one entry per visible question
+  ]
+}
+&lt;/script&gt;</pre>
+        </li>
+      </ul>
+    </div>
+
+    <script>
+      // ————— canon: WCAG contrast + mixing (same math as lib/contrast.ts,
+      // mirrored from docs/footer-lab.html) —————
+      const hexRgb = (h) => {
+        const n = parseInt(h.slice(1), 16);
+        return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+      };
+      const chan = (v) => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+      };
+      const lum = (h) => {
+        const [r, g, b] = hexRgb(h).map(chan);
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      };
+      const contrastOf = (a, b) => {
+        const x = lum(a),
+          y = lum(b);
+        return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+      };
+      const mixHex = (a, b, t) => {
+        const A = hexRgb(a),
+          B = hexRgb(b);
+        return (
+          '#' +
+          A.map((v, i) =>
+            Math.round(v + (B[i] - v) * t)
+              .toString(16)
+              .padStart(2, '0')
+          ).join('')
+        );
+      };
+      const ensureContrast = (fg, bg, deep, target) => {
+        let c = fg;
+        for (let i = 0; i < 24 && contrastOf(c, bg) < target; i++)
+          c = mixHex(c, deep, 0.12);
+        return c;
+      };
+
+      // ————— canon: silhouette generators, ported VERBATIM from
+      // lib/pixel.ts (cornerProfile → spritePts → spriteClip). Edit the
+      // source, then the labs — never the other way round. —————
+      function cornerProfile(R, u) {
+        const n = R / u;
+        const prof = [];
+        for (let k = 0; k < n; k++) {
+          const dy = R - (k + 0.5) * u;
+          const hw = Math.sqrt(R * R - dy * dy);
+          prof.push(R - Math.min(R, Math.round(hw / u) * u));
+        }
+        return prof;
+      }
+      function spritePts(inset, R = 24, u = 4) {
+        const n = R / u;
+        const prof = cornerProfile(R, u);
+        const i0 = inset;
+        const L = (v) => v + 'px';
+        const M = (v) => 'calc(100% - ' + v + 'px)';
+        const pts = [];
+        pts.push(L(i0) + ' ' + L(i0 + R));
+        for (let k = n - 1; k >= 1; k--)
+          if (prof[k - 1] !== prof[k]) {
+            pts.push(L(i0 + prof[k]) + ' ' + L(i0 + k * u));
+            pts.push(L(i0 + prof[k - 1]) + ' ' + L(i0 + k * u));
+          }
+        pts.push(L(i0 + prof[0]) + ' ' + L(i0));
+        pts.push(M(i0 + prof[0]) + ' ' + L(i0));
+        for (let k = 1; k <= n - 1; k++)
+          if (prof[k - 1] !== prof[k]) {
+            pts.push(M(i0 + prof[k - 1]) + ' ' + L(i0 + k * u));
+            pts.push(M(i0 + prof[k]) + ' ' + L(i0 + k * u));
+          }
+        pts.push(M(i0) + ' ' + L(i0 + R));
+        pts.push(M(i0) + ' ' + M(i0 + R));
+        for (let k = n - 1; k >= 1; k--)
+          if (prof[k - 1] !== prof[k]) {
+            pts.push(M(i0 + prof[k]) + ' ' + M(i0 + k * u));
+            pts.push(M(i0 + prof[k - 1]) + ' ' + M(i0 + k * u));
+          }
+        pts.push(M(i0 + prof[0]) + ' ' + M(i0));
+        pts.push(L(i0 + prof[0]) + ' ' + M(i0));
+        for (let k = 1; k <= n - 1; k++)
+          if (prof[k - 1] !== prof[k]) {
+            pts.push(L(i0 + prof[k - 1]) + ' ' + M(i0 + k * u));
+            pts.push(L(i0 + prof[k]) + ' ' + M(i0 + k * u));
+          }
+        pts.push(L(i0) + ' ' + M(i0 + R));
+        return pts;
+      }
+      function spriteClip(inset, R = 24, u = 4) {
+        return 'polygon(' + spritePts(inset, R, u).join(', ') + ')';
+      }
+      const CLIP_CARD = spriteClip(0, 16, 4); // item cards + open-fill plate
+      const CLIP_PLATE = spriteClip(0, 12, 4); // the small answer plate
+      const CLIP_PILL = spriteClip(0); // the seam's subscribe pill (R=24)
+
+      // The shipped pixel chevron — polygon verbatim from
+      // components/ui/accordion.tsx ('angle-down-solid').
+      const CHEV =
+        '<svg class="fq-chev" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 13 12 13 11 14 11 14 10 15 10 15 9 16 9 16 8 17 8 17 7 19 7 19 8 20 8 20 10 19 10 19 11 18 11 18 12 17 12 17 13 16 13 16 14 15 14 15 15 14 15 14 16 13 16 13 17 11 17 11 16 10 16 10 15 9 15 9 14 8 14 8 13 7 13 7 12 6 12 6 11 5 11 5 10 4 10 4 8 5 8 5 7"/></svg>';
+
+      // ————— schemes: the D11 candidates + today's white baseline,
+      // verbatim from docs/footer-lab.html. Brand · mint stays dead. —————
+      const SCHEMES = {
+        white: {
+          label: 'White · as today',
+          ground: '#FFFFFF',
+          ink: '#05A24B',
+          type: '#02302C',
+          pool: ['#BD00AD'],
+        },
+        cream: {
+          label: 'Brand · cream',
+          ground: '#EDEDE3',
+          ink: '#05A24B',
+          type: '#02302C',
+          pool: ['#BD00AD'],
+        },
+        brandInk: {
+          label: 'Brand · inverted',
+          ground: '#EDEDE3',
+          ink: '#02302C',
+          type: '#02302C',
+          pool: ['#05A24B'],
+        },
+        setL: {
+          label: 'Set L — mint / plum',
+          ground: '#CFF6DD',
+          ink: '#3F0167',
+          type: '#3F0167',
+          pool: ['#BD00AD'],
+        },
+        original: {
+          label: 'Brand · original (2008)',
+          ground: '#BBFFFF',
+          ink: '#000077',
+          type: '#000077',
+          pool: ['#3F0167'],
+        },
+      };
+
+      // ————— copy. VERBATIM = app/(site)/page.tsx accordionData, words
+      // untouched (apostrophes set properly — the glyph fix ships either
+      // way, see FQ7). EDITED = the proposed pass. The two EXTRA entries
+      // are new either way (FQ6) — they exist only as proposed copy. —————
+      const COPY_VERBATIM = [
+        {
+          q: 'What is LogiCola?',
+          a: 'LogiCola is an instructional program that goes with Gensler’s Introduction to Logic (Routledge Press). Since Harry Gensler, the original creator has passed away, I decided to create a new version to preserve an important learning resource and honour his legacy.',
+        },
+        {
+          q: 'Do I have to pay anything to use it?',
+          a: 'This version of the software is open sourced and access to the learning content is and will always remain 100% free. With that in mind, any contribution can help keep the platform running and accelerate the process of adding content and exercises.',
+        },
+        {
+          q: 'What’s the difference between this and the original software?',
+          a: 'This version of LogiCola is a remake of the original, built with web software. You can use it in any device that has an internet connection, regardless of the operating system. It only has a couple of months, so, most chapters and exercises are missing.',
+        },
+        {
+          q: 'Is there also a new version of Logiskor?',
+          a: 'LogiSkor is a program for keeping track of student scores from LogiCola. I’m working on a way to let you see how your students are doing and to support your classroom. Please email me if you’re interested in giving it a try.',
+        },
+      ];
+      const COPY_EDITED = [
+        {
+          q: 'What is LogiCola?',
+          a: 'LogiCola is the practice companion to Harry Gensler’s Introduction to Logic (Routledge). After Gensler — the original creator — passed away, I rebuilt it for the web to keep an important learning resource alive and to honour his legacy.',
+        },
+        {
+          q: 'Do I have to pay anything to use it?',
+          a: 'No. LogiCola is open source, and the exercises are free — and will stay free. If it helps you, a contribution keeps the platform running and speeds up new content and exercises.',
+        },
+        {
+          q: 'How is this different from the original software?',
+          a: 'It’s a remake of the 2008 program, rebuilt for the browser — it runs on any device with an internet connection, whatever the operating system. Some chapters and exercises from the original are still missing; they’re being added set by set.',
+        },
+        {
+          q: 'Is there also a new version of LogiSkor?',
+          a: 'LogiSkor keeps track of student scores from LogiCola. I’m working on a way for teachers to see how their students are doing. Email me if you’d like to try an early version.',
+        },
+      ];
+      const COPY_EXTRA = [
+        {
+          q: 'How can I support the project?',
+          a: 'LogiCola is free, open source, and run by one person. A donation pays for hosting and buys development time — that’s the fastest way to help. Telling a logic teacher or student about it helps nearly as much.',
+        },
+        {
+          q: 'Can I use LogiCola in my classroom?',
+          a: 'Yes — that’s exactly what it’s for. The drills follow Gensler’s Introduction to Logic chapter by chapter, so you can assign sets alongside your syllabus. And LogiSkor will let you follow your students’ scores; email me if you’d like early access.',
+        },
+      ];
+
+      // The lab's PROPOSED default — not a decision. Updated 2026-08-15
+      // after Malik's direction: THE FOOTER TAKES THE COLOUR, the FAQ
+      // leans white; the display ink echoes the footer by default (the
+      // FQ9 question), and the favourite footer is simulated in full.
+      const state = {
+        scheme: 'white', // white | cream | brandInk | setL | original
+        layout: 'split', // centered | split | twocol
+        items: 'openfill', // hairlines | cards | openfill
+        answer: 'plain', // plain | plate (moot under openfill)
+        heading: 'display', // today | display (split always displays)
+        index: 'on', // on | off
+        entries: 'six', // four | six
+        copy: 'edited', // verbatim | edited
+        echo: 'heading', // off | heading | plate | both (follows footer)
+        headpair: 'label', // label | support | voice (FQ11)
+        contact: 'named', // me | named — the email line's voice (FQ10)
+        instructors: 'strip', // off | inline | block | strip (FQ10)
+        footer: 'setL', // setL (favourite) | cream (shipped) | hidden
+      };
+      const openSet = new Set([0]);
+
+      // Deep-linkable state: ?items=cards&echo=both&contact=call&open=0,1
+      // — any dial key overrides the default, `open` lists the expanded
+      // items. For sharing exact compositions (and headless capture).
+      (function applyQuery() {
+        const q = new URLSearchParams(location.search);
+        for (const k of Object.keys(state))
+          if (q.has(k) && q.get(k)) state[k] = q.get(k);
+        if (!SCHEMES[state.scheme]) state.scheme = 'white';
+        if (state.footer !== 'hidden' && !SCHEMES[state.footer])
+          state.footer = 'setL';
+        if (q.has('open')) {
+          openSet.clear();
+          q.get('open')
+            .split(',')
+            .filter(Boolean)
+            .forEach((v) => openSet.add(Number(v)));
+        }
+        // migrate the retired third contact state (pre-FQ10b links)
+        if (state.contact === 'call') {
+          state.contact = 'named';
+          state.instructors = 'inline';
+        }
+      })();
+
+      function entriesList() {
+        const base = state.copy === 'edited' ? COPY_EDITED : COPY_VERBATIM;
+        if (state.entries !== 'six') return base;
+        let extra = COPY_EXTRA;
+        // the booking variation reaches into the classroom answer too —
+        // the entry and the instructor CTA tell one story
+        if (state.instructors !== 'off')
+          extra = [
+            extra[0],
+            {
+              q: extra[1].q,
+              a:
+                extra[1].a +
+                ' Or book a short call and I’ll walk you through it.',
+            },
+          ];
+        return base.concat(extra);
+      }
+
+      function derive(s) {
+        const deep = s.type;
+        const g = s.ground;
+        // the Echo dial (FQ9): the white section anticipating the
+        // footer's colour. Both echoes FOLLOW the Ft. dial, so a D11
+        // change moves them automatically. Heading ink is display-only
+        // (the role split) and ensure-checked at the 3:1 large floor.
+        const ftS = state.footer !== 'hidden' ? SCHEMES[state.footer] : null;
+        const echoHead =
+          ftS && (state.echo === 'heading' || state.echo === 'both');
+        const echoPlate =
+          ftS && (state.echo === 'plate' || state.echo === 'both');
+        const fig =
+          echoPlate && ftS.ground !== g
+            ? ftS.ground
+            : g === '#FFFFFF'
+              ? '#EDEDE3'
+              : '#FFFFFF';
+        return {
+          head: ensureContrast(mixHex(deep, g, 0.35), g, deep, 4.5),
+          body: ensureContrast(mixHex(deep, g, 0.22), g, deep, 4.5),
+          bodyFig: ensureContrast(mixHex(deep, fig, 0.22), fig, deep, 4.5),
+          hair: mixHex(g, deep, 0.16),
+          hairFig: mixHex(fig, deep, 0.14),
+          fig,
+          plate: state.items === 'cards' ? mixHex(fig, deep, 0.06) : fig,
+          idx: ensureContrast(s.pool[0], g, deep, 4.5),
+          focus:
+            contrastOf('#05A24B', g) >= 3
+              ? '#05A24B'
+              : ensureContrast('#05A24B', g, deep, 3),
+          headline: g === '#FFFFFF' ? '#1F2937' : deep,
+          disp: echoHead ? ensureContrast(ftS.ink, g, deep, 3) : deep,
+        };
+      }
+
+      const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+      function itemHtml(entry, i, pre) {
+        const open = openSet.has(i);
+        const num = String(i + 1).padStart(2, '0');
+        return (
+          '<div class="fq-itemw"><div class="fq-item' +
+          (open ? ' open' : '') +
+          '" data-item="' +
+          i +
+          '">' +
+          '<h3 class="fq-h3"><button class="fq-trigger" data-idx="' +
+          i +
+          '" id="' +
+          pre +
+          '-t' +
+          i +
+          '" aria-expanded="' +
+          open +
+          '" aria-controls="' +
+          pre +
+          '-p' +
+          i +
+          '">' +
+          '<span class="fq-idx" aria-hidden="true">' +
+          num +
+          '</span>' +
+          '<span class="fq-q">' +
+          esc(entry.q) +
+          '</span>' +
+          CHEV +
+          '</button></h3>' +
+          '<div class="fq-panel" role="region" id="' +
+          pre +
+          '-p' +
+          i +
+          '" aria-labelledby="' +
+          pre +
+          '-t' +
+          i +
+          '"><div class="fq-panel-in">' +
+          '<div class="fq-answer"><div class="fq-answer-body">' +
+          esc(entry.a) +
+          '</div></div>' +
+          '</div></div>' +
+          '</div></div>'
+        );
+      }
+
+      function itemsHtml(list, pre) {
+        return (
+          '<div class="fq-items">' +
+          list.map((e) => itemHtml(e.entry, e.i, pre)).join('') +
+          '</div>'
+        );
+      }
+
+      // The head pair (FQ11, Malik's catch 2026-08-15): QUESTIONS over
+      // FREQUENTLY ASKED QUESTIONS said the same thing twice. The
+      // eyebrow must do work the heading doesn't — or go.
+      const HEAD_PAIRS = {
+        label: { eyebrow: '', heading: 'Frequently asked questions' },
+        support: { eyebrow: 'Support', heading: 'Frequently asked questions' },
+        voice: { eyebrow: 'FAQ', heading: 'Ask away' },
+      };
+
+      function headBlock(m) {
+        const voice = state.layout === 'split' ? 'display' : state.heading;
+        if (voice === 'today')
+          return '<h2 class="fq-h2-today">Frequently Asked Questions</h2>';
+        const hp = HEAD_PAIRS[state.headpair] || HEAD_PAIRS.label;
+        const sub =
+          '<p class="fq-sub">The project, the price (it’s free), and the classroom — in short answers.</p>';
+        return (
+          '<div class="fq-headblock">' +
+          (hp.eyebrow
+            ? '<div class="fq-eyebrow">' + hp.eyebrow + '</div>'
+            : '') +
+          '<h2 class="fq-h2-display">' +
+          hp.heading +
+          '</h2>' +
+          sub +
+          (state.layout === 'split' ? stillBlock(m) : '') +
+          '</div>'
+        );
+      }
+
+      // Contact (FQ10): the email line's voice. The instructor CTA is a
+      // separate object now (Malik's hierarchy call: two stacked
+      // paragraphs read as one dense block) — see instrPlacement().
+      // Booking link inert; provider undecided (Cal.com / Calendly).
+      const INSTR_LINE =
+        'Teaching with LogiCola? <a href="#" onclick="return false">Book a 15-minute call</a> and I’ll help you plan your course.';
+      function instrPlacement(m) {
+        if (state.instructors === 'off') return 'off';
+        if (
+          state.layout === 'split' &&
+          !m &&
+          (state.instructors === 'inline' || state.instructors === 'block')
+        )
+          return state.instructors;
+        return 'strip';
+      }
+      function stillBlock(m) {
+        const email =
+          state.contact === 'me'
+            ? '<p class="fq-still">Something the list doesn’t answer? <a href="#" onclick="return false">Email me</a> and I’ll get back to you.</p>'
+            : '<p class="fq-still">Something the list doesn’t answer? <a href="#" onclick="return false">Email me</a> — I’m Malik, and I read every message.</p>';
+        const placement = instrPlacement(m);
+        const call =
+          placement === 'inline'
+            ? '<p class="fq-still">' + INSTR_LINE + '</p>'
+            : placement === 'block'
+              ? '<div class="fq-instr"><div class="fq-eyebrow">For instructors</div><p>' +
+                INSTR_LINE +
+                '</p></div>'
+              : '';
+        return email + call;
+      }
+      function stripHtml(m) {
+        if (instrPlacement(m) !== 'strip') return '';
+        return (
+          '<div class="fq-strip"><div class="fq-eyebrow">For instructors</div><p>' +
+          INSTR_LINE +
+          '</p></div>'
+        );
+      }
+
+      function renderFaqInto(mount, m) {
+        const s = SCHEMES[state.scheme];
+        const d = derive(s);
+        const pre = m ? 'fq-m' : 'fq-d';
+        const list = entriesList().map((entry, i) => ({ entry, i }));
+        const ans = state.items === 'openfill' ? 'plain' : state.answer;
+
+        let inner;
+        if (state.layout === 'split' && !m) {
+          inner =
+            '<div class="fq-split"><div>' +
+            headBlock(m) +
+            '</div><div>' +
+            itemsHtml(list, pre) +
+            '</div></div>';
+        } else if (state.layout === 'twocol' && !m) {
+          const half = Math.ceil(list.length / 2);
+          inner =
+            headBlock(m) +
+            '<div class="fq-cols2">' +
+            itemsHtml(list.slice(0, half), pre) +
+            itemsHtml(list.slice(half), pre + 'b') +
+            '</div>';
+        } else {
+          // phone always stacks; centered wraps in the 720px column
+          const body = headBlock(m) + itemsHtml(list, pre);
+          inner = m ? body : '<div class="fq-col">' + body + '</div>';
+        }
+
+        const vars =
+          '--g:' +
+          s.ground +
+          ';--type:' +
+          s.type +
+          ';--head:' +
+          d.head +
+          ';--body:' +
+          d.body +
+          ';--body-fig:' +
+          d.bodyFig +
+          ';--hair:' +
+          d.hair +
+          ';--hair-fig:' +
+          d.hairFig +
+          ';--fig:' +
+          d.fig +
+          ';--plate:' +
+          d.plate +
+          ';--plate-body:' +
+          ensureContrast(mixHex(s.type, d.plate, 0.22), d.plate, s.type, 4.5) +
+          ';--idx:' +
+          d.idx +
+          ';--focus:' +
+          d.focus +
+          ';--headline:' +
+          d.headline +
+          ';--disp:' +
+          d.disp +
+          ';--clip-card:' +
+          CLIP_CARD +
+          ';--clip-plate:' +
+          CLIP_PLATE;
+
+        mount.innerHTML =
+          '<section class="fq mode-' +
+          state.items +
+          (ans === 'plate' ? ' ans-plate' : '') +
+          (state.index === 'on' ? ' idx-on' : ' idx-off') +
+          (m ? ' m' : '') +
+          '" style="' +
+          vars +
+          '"><div class="fq-wrap">' +
+          inner +
+          stripHtml(m) +
+          '</div></section>';
+      }
+
+      // ————— the footer SIMULATION: context only, requested by Malik
+      // 2026-08-15 ("simulate/show what will be below — subscription +
+      // footer"). Structure = the favourite footer-lab state, FIXED:
+      // subscribe-first banner · row pill · brand col (can + mission) ·
+      // link columns · pixel icons in white gem chips · fine camo band
+      // at bottom. Only the GROUND re-dials: 'setL' (favourite) or
+      // 'cream' (shipped, commit 0a872b1). Everything below is mirrored
+      // from docs/footer-lab.html / lib/patterns.ts / lib/pixel.ts —
+      // edit the source, then the labs, never the other way round. —————
+      function hiddenOne(c, x, y, ww, hh) {
+        if (x >= c.x + c.w || x + ww <= c.x || y >= c.y + c.h || y + hh <= c.y)
+          return false;
+        if (!c.r) return true;
+        if (x + ww > c.x + c.r && x < c.x + c.w - c.r) return true;
+        if (y + hh > c.y + c.r && y < c.y + c.h - c.r) return true;
+        const ccx = x + ww <= c.x + c.r + 0.01 ? c.x + c.r : c.x + c.w - c.r;
+        const ccy = y + hh <= c.y + c.r + 0.01 ? c.y + c.r : c.y + c.h - c.r;
+        const nx = Math.max(x, Math.min(ccx, x + ww));
+        const ny = Math.max(y, Math.min(ccy, y + hh));
+        return (nx - ccx) ** 2 + (ny - ccy) ** 2 <= c.r * c.r;
+      }
+      function hidden(clear, x, y, ww, hh) {
+        if (!clear) return false;
+        const list = Array.isArray(clear) ? clear : [clear];
+        return list.some((c) => hiddenOne(c, x, y, ww, hh));
+      }
+      function pixHash(u, v, seed) {
+        let x = (u * 374761393 + v * 668265263 + (seed | 0) * 971) | 0;
+        x = Math.imul(x ^ (x >>> 13), 1274126177);
+        return ((x ^ (x >>> 16)) >>> 0) / 4294967296;
+      }
+      function valueNoise(u, v, seed, cell) {
+        const gx = Math.floor(u / cell),
+          gy = Math.floor(v / cell);
+        const sm = (t) => t * t * (3 - 2 * t);
+        const fx = sm((((u % cell) + cell) % cell) / cell);
+        const fy = sm((((v % cell) + cell) % cell) / cell);
+        const n00 = pixHash(gx, gy, seed),
+          n10 = pixHash(gx + 1, gy, seed);
+        const n01 = pixHash(gx, gy + 1, seed),
+          n11 = pixHash(gx + 1, gy + 1, seed);
+        return (
+          n00 * (1 - fx) * (1 - fy) +
+          n10 * fx * (1 - fy) +
+          n01 * (1 - fx) * fy +
+          n11 * fx * fy
+        );
+      }
+      function pixelLattice(w, h, q, clear, colorAt) {
+        const cols = Math.ceil(w / q),
+          rows = Math.ceil(h / q);
+        let out = '<g shape-rendering="crispEdges">';
+        for (let v = 0; v < rows; v++) {
+          let u = 0;
+          while (u < cols) {
+            const c = colorAt(u, v);
+            if (!c || hidden(clear, u * q, v * q, q, q)) {
+              u++;
+              continue;
+            }
+            let len = 1;
+            while (
+              u + len < cols &&
+              colorAt(u + len, v) === c &&
+              !hidden(clear, (u + len) * q, v * q, q, q)
+            )
+              len++;
+            out +=
+              '<rect x="' +
+              u * q +
+              '" y="' +
+              v * q +
+              '" width="' +
+              len * q +
+              '" height="' +
+              (q + 0.4) +
+              '" fill="' +
+              c +
+              '"/>';
+            u += len;
+          }
+        }
+        return out + '</g>';
+      }
+      const PIXEL_FIELD_MACRO = 1.7;
+      function camoBody(kind, opts) {
+        const { w, h, ink, pool, scale, seed, clear } = opts;
+        const sc = PIXEL_FIELD_MACRO * scale;
+        const c1 = pool[0] || ink;
+        if (kind === 'camo') {
+          const q = 10 * sc;
+          return pixelLattice(w, h, q, clear, (u, v) => {
+            if (valueNoise(u, v, seed, 6) > 0.58) return ink;
+            if (valueNoise(u, v, seed + 31, 6) > 0.62) return c1;
+            return null;
+          });
+        }
+        const q = 12 * sc;
+        return pixelLattice(w, h, q, clear, (u, v) => {
+          const n = valueNoise(u, v, seed, 9);
+          if (n > 0.63) return ink;
+          if (n < 0.37) return c1;
+          return null;
+        });
+      }
+      function fieldSvgStr(w, h, opts) {
+        const body = camoBody(opts.kind, { ...opts, w, h });
+        return (
+          '<svg xmlns="http://www.w3.org/2000/svg" width="' +
+          w +
+          '" height="' +
+          h +
+          '" viewBox="0 0 ' +
+          w +
+          ' ' +
+          h +
+          '" preserveAspectRatio="xMidYMid slice" aria-hidden="true" style="display:block">' +
+          (opts.ground
+            ? '<rect width="' +
+              w +
+              '" height="' +
+              h +
+              '" fill="' +
+              opts.ground +
+              '"/>'
+            : '') +
+          body +
+          '</svg>'
+        );
+      }
+
+      // The gem silhouette — pixelPts ported VERBATIM from lib/pixel.ts
+      // (the NEW badge / icon-chip clip, pu=4).
+      function pixelPts(inset, pu = 8) {
+        const i0 = inset;
+        const L = (v) => v + 'px';
+        const M = (v) => 'calc(100% - ' + v + 'px)';
+        return [
+          L(i0) + ' ' + L(i0 + pu * 2),
+          L(i0 + pu) + ' ' + L(i0 + pu * 2),
+          L(i0 + pu) + ' ' + L(i0 + pu),
+          L(i0 + pu * 2) + ' ' + L(i0 + pu),
+          L(i0 + pu * 2) + ' ' + L(i0),
+          M(i0 + pu * 2) + ' ' + L(i0),
+          M(i0 + pu * 2) + ' ' + L(i0 + pu),
+          M(i0 + pu) + ' ' + L(i0 + pu),
+          M(i0 + pu) + ' ' + L(i0 + pu * 2),
+          M(i0) + ' ' + L(i0 + pu * 2),
+          M(i0) + ' ' + M(i0 + pu * 2),
+          M(i0 + pu) + ' ' + M(i0 + pu * 2),
+          M(i0 + pu) + ' ' + M(i0 + pu),
+          M(i0 + pu * 2) + ' ' + M(i0 + pu),
+          M(i0 + pu * 2) + ' ' + M(i0),
+          L(i0 + pu * 2) + ' ' + M(i0),
+          L(i0 + pu * 2) + ' ' + M(i0 + pu),
+          L(i0 + pu) + ' ' + M(i0 + pu),
+          L(i0 + pu) + ' ' + M(i0 + pu * 2),
+          L(i0) + ' ' + M(i0 + pu * 2),
+        ];
+      }
+      const GEM = 'polygon(' + pixelPts(0, 4).join(', ') + ')';
+
+      // The wordmark, paths verbatim from the nav/footer labs (which
+      // mirror public/logicola-wordmark.svg): body ink, knockout = the
+      // ground it sits on (the lettering is a hole, never white ink).
+      const MARK_PATHS = [
+        [
+          'g',
+          'M46.6906 0.161408C57.5696 -0.164592 69.8788 0.103905 80.8853 0.104905L145.294 0.10991L192.186 0.108155C200.231 0.100405 208.401 0.0321546 216.451 0.137155C218.204 0.270405 220.751 0.609405 222.174 1.69116C226.361 4.87591 227.769 10.3359 224.689 14.7544C220.814 20.3117 216.991 18.2564 211.504 19.1112C204.589 20.1887 209.389 29.6969 205.761 33.7537C201.566 39.2404 198.519 37.1454 192.506 38.0452C191.284 38.2282 189.881 39.0922 189.256 40.1539C188.736 41.0349 188.631 43.5687 188.626 44.6802C188.594 52.5904 188.609 60.5202 188.609 68.4294L188.611 114.841L188.614 134.917C188.614 137.911 188.371 146.292 189.076 148.737L189.159 149.017C193.646 153.624 198.336 149.464 203.441 152.992C208.864 156.742 206.811 161.377 207.611 166.374C208.636 172.747 218.451 168.447 222.776 172.184C224.721 173.652 225.894 175.814 226.186 178.334C226.899 184.494 222.846 188.212 217.351 189.009C206.251 189.334 193.744 189.074 182.521 189.074L116.799 189.072L71.4336 189.079C63.6621 189.084 55.7211 189.154 47.9509 189.002C45.5939 188.954 43.1891 188.597 41.3261 187.147C36.8748 183.684 38.2761 178.894 37.6849 174.449C36.7366 167.319 27.4126 172.272 22.6956 168.369C17.7779 164.304 19.5241 160.712 18.8344 155.482C17.9114 148.484 8.23885 153.309 3.8656 149.467C1.8811 147.724 0.786605 146.782 0.448855 144.019C-0.208145 138.644 0.0503474 132.631 0.0490974 127.197L0.0421012 97.6994L0.0411018 63.6024C0.0418518 57.9299 -0.0501491 51.9744 0.174601 46.3057C0.235601 44.7617 1.2201 42.6354 2.1361 41.4264C5.31935 37.2247 9.88285 38.1274 14.4496 37.7237C21.9781 37.0579 16.7711 27.5629 20.7049 22.7587C24.6149 17.9834 28.3966 19.5624 33.3896 18.8894C40.8469 17.8844 35.6621 8.19541 39.7899 3.59566C41.9451 1.19391 43.5926 0.589908 46.6906 0.161408Z',
+        ],
+        [
+          'w',
+          'M145.744 54.0306C146.758 55.2444 146.463 57.0889 146.435 58.7701C143.725 58.6669 140.75 58.6934 138.019 58.6611C138.487 59.2931 138.903 59.9616 139.264 60.6606C145.296 72.2979 132.957 80.5394 122.517 78.4749C120.139 78.0046 118.923 77.8404 116.529 77.0431C116.476 83.3004 118.338 81.9321 123.33 83.1549C130.034 84.7974 145.484 84.8806 145.71 94.3509C145.981 105.723 134.142 108.63 125.053 109.083C125.049 114.704 124.456 145.962 125.585 148.892C125.988 149.937 127.528 150.469 128.464 150.937C128.68 151.099 128.574 150.979 128.661 151.377C127.513 151.804 112.349 151.622 109.903 151.644C111.559 150.549 114.077 149.589 114.196 147.394C114.424 143.184 114.33 138.918 114.326 134.695L114.294 107.601C105.002 103.166 107.952 95.5761 114.722 90.5934C106.606 86.4044 111.697 81.3381 115.578 76.4239C115.174 76.1754 114.766 75.9181 114.385 75.6366C112.102 73.9294 110.592 71.3846 110.188 68.5631C108.005 53.8986 127.686 50.7429 137.076 57.8364C141.077 56.8839 142.418 56.2011 145.744 54.0306Z',
+        ],
+        [
+          'g',
+          'M116.2 90.9899C117.76 91.4281 125.745 93.0781 127.29 93.0854C134.454 93.1184 143.813 98.9991 134.189 105.38C131.007 106.663 129.096 106.925 125.708 106.967C114.389 107.107 111.708 100.459 116.2 90.9899Z',
+        ],
+        [
+          'g',
+          'M124.002 55.8879C126.728 55.6792 129.194 56.3715 130.092 59.2965C131.55 64.0427 132.368 74.7399 126.688 76.9602C123.915 77.2542 121.597 76.6607 120.652 73.6412C119.244 69.1447 118.58 57.9889 124.002 55.8879Z',
+        ],
+        [
+          'w',
+          'M140.172 115.412C145.164 115.247 155.574 115.091 160.711 115.706C162.084 115.87 161.2 119.758 161.802 120.813C162.856 122.661 164.985 121.263 167.269 122.022C169.348 124.061 167.935 135.088 168.293 138.626C168.771 143.353 172.399 139.828 174.66 141.949C175.312 143.214 175.178 149.047 174.815 150.549C174.408 152.239 167.216 151.692 165.814 151.059C165.363 150.274 165.337 147.229 165.26 146.127C164.65 145.472 163.731 144.969 162.818 145.054C160.89 146.567 162.08 149.549 160.942 151.264C158.999 151.872 140.817 151.867 139.036 150.969C138.25 149.589 138.762 148.244 138.576 146.814C138.168 143.674 134.345 146.182 132.325 144.439C131.585 142.553 131.773 125.048 132.294 122.753C133.434 121.153 135.784 122.244 137.229 121.692C140.493 120.446 136.649 116.482 140.172 115.412Z',
+        ],
+        [
+          'g',
+          'M142.506 125.635C145.611 125.602 155.83 125.052 158.28 126.328C158.459 126.422 159.553 139.914 157.558 141.1C155.594 141.236 144.039 141.646 142.271 140.718C140.939 140.019 141.843 131.344 141.496 129.501C141.341 128.679 141.513 126.619 142.506 125.635Z',
+        ],
+        [
+          'w',
+          'M87.6493 114.222C98.2266 113.581 107.334 121.608 108.026 132.182C108.719 142.756 100.736 151.902 90.1656 152.647C79.5221 153.394 70.2993 145.347 69.6021 134.699C68.9048 124.052 76.9991 114.868 87.6493 114.222Z',
+        ],
+        [
+          'g',
+          'M87.6051 115.64C91.1858 115.462 93.8158 116.562 94.7626 120.329C96.4458 127.174 96.2288 134.775 95.6913 141.775C95.3798 145.832 94.4108 149.812 90.1056 151.072C87.9213 151.192 87.3593 151.082 85.3786 150.434C79.9796 144.937 81.2411 128.751 82.5146 121.417C83.0191 118.51 84.7506 116.547 87.6051 115.64Z',
+        ],
+        [
+          'w',
+          'M75.8353 55.5972C78.9531 55.4877 95.3841 55.1692 97.5043 55.8047C98.8873 57.1187 98.2178 58.7364 98.5258 60.5869C99.0198 63.5562 104.929 60.2897 104.932 63.7062C104.933 66.6654 105.625 83.3189 104.473 84.8199C103.471 85.2347 101.471 85.2812 100.272 85.3294C96.9941 85.4612 99.5154 89.1574 97.6356 91.5839C92.3839 91.8154 81.8616 91.9892 76.3201 91.3737C74.2291 91.1417 75.9893 87.9757 75.4893 86.5982C73.9578 85.0627 71.0589 85.1319 68.9384 84.9812C68.4756 82.2734 68.2748 65.0279 69.1058 62.8107C70.3718 61.3494 72.5066 62.4344 74.5611 61.5692C75.9576 60.4284 75.1283 57.9317 75.8353 55.5972Z',
+        ],
+        [
+          'g',
+          'M84.0741 65.704C86.6533 65.6705 92.7401 65.3034 94.7213 66.2237C95.7778 66.7144 95.7958 79.7117 94.7141 81.0284C93.5113 81.4519 91.8713 81.3484 90.5583 81.3467C88.2821 81.3339 80.2711 81.7977 78.8403 80.8132C78.0558 78.5265 78.0593 68.7002 78.6658 66.4334C79.6966 65.4397 82.5573 65.7017 84.0741 65.704Z',
+        ],
+        [
+          'w',
+          'M35.2156 102.184C40.8311 101.961 51.2843 101.577 56.6978 102.301C56.9878 104.036 56.9636 106.521 57.4668 107.82C59.9296 110.206 64.3493 105.662 63.8101 112.891C63.6133 115.529 64.1823 118.987 63.4916 121.682C63.2008 122.816 61.3743 122.535 60.4598 122.611C50.7743 123.274 55.0988 120.03 53.8518 113.517C53.5156 111.762 39.5586 112.472 37.7178 112.865C37.1446 112.988 37.0081 115.849 37.0596 116.376C37.4293 120.175 36.2961 138.243 37.6076 140.462C39.0141 141.256 51.2343 140.992 53.1746 140.708C53.9201 140.117 53.6828 140.345 53.9793 139.237C54.1758 133.566 52.1806 129.905 59.5968 130.539C60.9728 130.656 62.1843 130.347 63.3946 131.243C64.2068 133.198 63.8471 141.553 63.5173 144.053C63.3881 145.032 60.1221 144.722 59.3011 144.809C55.7763 145.182 57.0651 147.452 57.2978 149.609C57.0711 150.092 56.8761 150.504 56.3116 150.692C53.5161 151.614 36.7548 151.474 34.9288 150.892C33.7008 149.732 34.2196 147.734 33.7726 145.702C32.3471 143.968 30.1578 145.434 28.0303 144.362C27.1073 143.052 27.1433 112.791 27.6721 109.513C29.1261 107.826 31.6963 109.122 33.2783 108.291C35.1963 107.284 32.7873 103.305 35.2156 102.184Z',
+        ],
+        [
+          'w',
+          'M32.4663 41.9565C37.4778 41.8842 42.4901 41.916 47.5003 42.0517C45.5081 43.014 43.0056 43.8975 42.8923 46.4532C42.6823 51.2012 42.7793 55.985 42.7838 60.7425L42.7778 90.1955C47.0976 90.0672 53.9226 90.69 57.7653 89.4465C61.2078 86.1707 62.7786 79.663 64.1363 78.8775C64.8828 79.894 64.4173 84.0862 64.3298 85.5195C64.3056 87.529 64.1301 89.7645 64.0153 91.7872C60.2676 91.5422 55.5498 91.7435 51.7171 91.7407L26.5046 91.7437C28.0041 90.843 29.5531 89.9987 31.0823 89.0742C31.7453 85.8925 31.8086 46.5325 30.9683 44.6485C30.4396 43.4622 27.3481 42.6005 26.1658 42.15C28.1213 42.026 30.4836 42.0125 32.4663 41.9565Z',
+        ],
+        [
+          'w',
+          'M162.849 54.3854C164.46 55.3896 162.388 84.5729 163.607 88.6314C164.016 89.9934 166.297 91.0834 167.323 91.6921C161.724 91.7954 156.099 91.5649 150.476 91.7954C149.865 91.8529 149.69 91.9461 149.175 91.6351C149.771 90.4146 152.473 90.1571 152.543 87.8731C152.75 81.1159 152.589 74.3401 152.629 67.5779C152.641 65.5701 152.702 63.4151 152.422 61.4319C151.491 59.9329 149.912 59.7176 148.173 59.1636C153.025 57.4494 157.918 55.8561 162.849 54.3854Z',
+        ],
+        [
+          'w',
+          'M156.748 38.7834C159.938 38.1649 163.035 40.2194 163.705 43.3992C164.375 46.5789 162.371 49.7087 159.203 50.4304C157.107 50.9082 154.916 50.2184 153.472 48.6264C152.028 47.0342 151.554 44.7869 152.233 42.7474C152.912 40.7077 154.637 39.1924 156.748 38.7834Z',
+        ],
+        [
+          'g',
+          'M233.936 19.1349C251.789 17.7166 239.851 38.6129 250.379 37.8346C267.404 36.5761 264.041 50.1224 264.046 63.0414L264.051 91.2104V123.837C264.049 129.63 264.106 135.52 263.974 141.304C263.931 143.147 263.674 144.957 262.804 146.477C259.254 152.682 253.379 150.532 248.174 151.717C243.501 152.779 246.099 161.659 244.166 165.054C242.509 167.967 240.816 168.917 237.641 170.012C226.571 171.454 226.324 162.029 226.091 154.637C225.946 149.949 216.029 152.164 212.229 150.007C205.604 146.244 207.446 135.128 207.446 128.24V102.3L207.444 67.1759C207.439 60.8564 207.389 54.5269 207.509 48.1979C207.614 45.4284 207.969 43.0269 209.869 40.9321C213.554 36.8134 218.556 38.5514 223.106 37.5271C228.366 36.3426 225.146 27.3919 227.489 23.8069C229.366 20.9306 230.886 20.0861 233.936 19.1349Z',
+        ],
+        [
+          'w',
+          'M230.619 75.6939C234.654 75.6299 240.499 75.0077 243.824 76.8724C244.229 77.5092 244.676 78.1877 244.959 78.8882C245.599 80.4622 245.586 122.861 245.269 127.459C245.211 128.269 244.994 129.059 244.631 129.784C243.881 131.315 242.804 131.842 241.301 132.338C237.424 132.36 233.494 132.421 229.621 132.286C227.249 130.973 226.464 129.947 226.366 127.275C226.249 124.048 226.296 120.832 226.296 117.604L226.291 99.8182C226.291 95.8469 226.046 81.4009 226.661 78.2817C228.146 76.6649 228.519 76.2857 230.619 75.6939Z',
+        ],
+      ];
+      function markSvg(height, body, knock) {
+        const k = height / 190;
+        const w = Math.round(265 * k);
+        let out =
+          '<svg xmlns="http://www.w3.org/2000/svg" width="' +
+          w +
+          '" height="' +
+          height +
+          '" viewBox="0 0 265 190" style="display:block" aria-hidden="true">';
+        for (const p of MARK_PATHS) {
+          out +=
+            '<path d="' +
+            p[1] +
+            '" fill="' +
+            (p[0] === 'g' ? body : knock) +
+            '"/>';
+        }
+        return out + '</svg>';
+      }
+
+      // The shipped pixel-grammar social icons, paths verbatim from
+      // components/footer.tsx — fill currentColor, in white gem chips.
+      const SOCIAL_ICONS = {
+        Reddit:
+          '<path d="m22,9v-2h-1v-2h-1v-1h-1v-1h-2v-1h-2v-1h-6v1h-2v1h-2v1h-1v1h-1v2h-1v2h-1v6h1v2h1v2h1v1h1v1h2v1h2v1h6v-1h2v-1h2v-1h1v-1h1v-2h1v-2h1v-6h-1Zm-3,5h-1v1h-1v2h-1v1h-2v1h-4v-1h-2v-1h-1v-3h-1v-1h-1v-2h1v-1h2v1h1v-1h3v-5h2v1h3v2h-2v-1h-2v3h2v1h1v-1h2v1h1v3Z"/>',
+        X: '<path d="m15.5,10v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h-3v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1h-1v-2h-1v-1h-1v-1H1.5v1h1v1h1v1h1v2h1v1h1v2h1v1h1v2h1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h3v-1h1v-1h1v-1h1v-1h1v-1h1v-1h2v1h1v1h1v2h1v1h1v1h7v-1h-1v-1h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h1Zm0,4v1h1v2h1v1h1v2h-3v-2h-1v-1h-1v-1h-1v-2h-1v-1h-1v-1h-1v-2h-1v-1h-1v-2h-1v-1h-1v-2h3v1h1v2h1v1h1v2h1v1h1v1h1v2h1Z"/>',
+        GitHub:
+          '<polygon points="23 9 23 15 22 15 22 17 21 17 21 19 20 19 20 20 19 20 19 21 18 21 18 22 16 22 16 23 15 23 15 18 14 18 14 17 15 17 15 16 17 16 17 15 18 15 18 14 19 14 19 9 18 9 18 6 16 6 16 7 15 7 15 8 14 8 14 7 10 7 10 8 9 8 9 7 8 7 8 6 6 6 6 9 5 9 5 14 6 14 6 15 7 15 7 16 9 16 9 18 7 18 7 17 6 17 6 16 4 16 4 17 5 17 5 19 6 19 6 20 9 20 9 23 8 23 8 22 6 22 6 21 5 21 5 20 4 20 4 19 3 19 3 17 2 17 2 15 1 15 1 9 2 9 2 7 3 7 3 5 4 5 4 4 5 4 5 3 7 3 7 2 9 2 9 1 15 1 15 2 17 2 17 3 19 3 19 4 20 4 20 5 21 5 21 7 22 7 22 9 23 9"/>',
+        LinkedIn:
+          '<path d="m22,2v-1H2v1h-1v20h1v1h20v-1h1V2h-1Zm-9,10v8h-3v-11h3v1h1v-1h4v1h1v10h-3v-8h-3Zm-9-4v-3h3v3h-3Zm3,1v11h-3v-11h3Z"/>',
+      };
+      function ftxIcon(name, color) {
+        return (
+          '<span class="ftx-chip-tap" style="color:' +
+          color +
+          '"><span style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:#fff;clip-path:' +
+          GEM +
+          '"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+          SOCIAL_ICONS[name] +
+          '</svg></span></span>'
+        );
+      }
+
+      // Footer content, verbatim from docs/footer-lab.html.
+      const FOOTER = {
+        resources: [
+          { label: 'Blog' },
+          { label: 'Release Notes' },
+          { label: 'Classic Logicola' },
+          { label: 'Get the Book' },
+          { label: 'Keyboard', isNew: true },
+        ],
+        follow: [
+          { label: 'GitHub' },
+          { label: 'X' },
+          { label: 'Reddit' },
+          { label: 'LinkedIn' },
+        ],
+        legal: [{ label: 'Privacy Policy' }, { label: 'Terms & Conditions' }],
+        copyright: '© 2026 Logicola. Some Rights Reserved.',
+        mission:
+          'Free logic practice in your browser — a remake of Harry Gensler’s LogiCola, kept alive to honour his legacy.',
+        newsBody:
+          'New exercise sets, new features, the occasional essay — straight to your inbox when they ship.',
+        newsFine: 'No spam, and we never share your address.',
+      };
+
+      function btnColors(s) {
+        let bg = s.ink;
+        let fg = s.type && s.type !== s.ink ? s.type : s.ground;
+        if (contrastOf(fg, bg) < 4.5) {
+          const best = [s.ground, '#FFFFFF', '#EDEDE3'].reduce((a, c) =>
+            contrastOf(c, bg) > contrastOf(a, bg) ? c : a
+          );
+          if (contrastOf(best, bg) >= 4.5) {
+            fg = best;
+          } else {
+            bg = s.type;
+            fg = ['#FFFFFF', s.ground, '#EDEDE3'].reduce((a, c) =>
+              contrastOf(c, bg) > contrastOf(a, bg) ? c : a
+            );
+          }
+        }
+        return { bg, fg };
+      }
+
+      // The footer lab's derive(), reduced to the tiers this sim needs.
+      function deriveFt(s) {
+        const deep = s.type;
+        const g = s.ground;
+        return {
+          head: ensureContrast(mixHex(deep, g, 0.35), g, deep, 4.5),
+          link: ensureContrast(mixHex(deep, g, 0.2), g, deep, 4.5),
+          fine: ensureContrast(mixHex(deep, g, 0.3), g, deep, 4.5),
+          hair: mixHex(g, deep, 0.14),
+        };
+      }
+
+      function ftxLinks(items, color) {
+        return (
+          '<ul class="ftx-links" style="color:' +
+          color +
+          '">' +
+          items
+            .map(
+              (it) =>
+                '<li><span>' +
+                esc(it.label) +
+                (it.isNew
+                  ? ' <span class="ftx-newgem" style="clip-path:' +
+                    GEM +
+                    '">NEW</span>'
+                  : '') +
+                '</span></li>'
+            )
+            .join('') +
+          '</ul>'
+        );
+      }
+
+      function renderFooterSim(mount, m) {
+        if (state.footer === 'hidden') {
+          mount.innerHTML = '';
+          return;
+        }
+        const s = SCHEMES[state.footer];
+        const d = deriveFt(s);
+        const btn = btnColors(s);
+        const brand =
+          markSvg(44, s.ink, s.ground) +
+          '<p class="ftx-mission" style="color:' +
+          d.link +
+          '">' +
+          esc(FOOTER.mission) +
+          '</p>';
+        const col = (head, items) =>
+          '<div><div class="ftx-colhead" style="color:' +
+          d.head +
+          '">' +
+          head +
+          '</div>' +
+          ftxLinks(items, s.type) +
+          '</div>';
+        const banner =
+          '<div class="ftx-banner-inner">' +
+          '<h2 class="ftx-banner-head display" style="color:' +
+          s.type +
+          '">FOLLOW THE RELEASES</h2>' +
+          '<p class="ftx-banner-body" style="color:' +
+          d.link +
+          '">' +
+          esc(FOOTER.newsBody) +
+          '</p>' +
+          '<div class="ftx-pill" style="clip-path:' +
+          CLIP_PILL +
+          '"><span class="ph">you@university.edu</span>' +
+          '<span class="ftx-pill-btn" style="clip-path:' +
+          CLIP_PILL +
+          ';background:' +
+          btn.bg +
+          ';color:' +
+          btn.fg +
+          '">Subscribe</span></div>' +
+          '<div class="ftx-fine" style="color:' +
+          d.fine +
+          '">' +
+          esc(FOOTER.newsFine) +
+          '</div></div>';
+        const body = m
+          ? '<div class="ftx-wrap">' +
+            brand +
+            '<div class="ftx-mcols">' +
+            col('Resources', FOOTER.resources) +
+            col('Follow us', FOOTER.follow) +
+            col('Legal', FOOTER.legal) +
+            '</div></div>'
+          : '<div class="ftx-wrap"><div class="ftx-grid">' +
+            '<div>' +
+            brand +
+            '</div>' +
+            col('Resources', FOOTER.resources) +
+            col('Follow us', FOOTER.follow) +
+            col('Legal', FOOTER.legal) +
+            '</div></div>';
+        const bar =
+          '<div class="ftx-bottom" style="border-color:' +
+          d.hair +
+          '"><div class="ftx-bottom-inner" style="color:' +
+          d.fine +
+          '"><span>' +
+          esc(FOOTER.copyright) +
+          '</span><span class="ftx-socials">' +
+          ['Reddit', 'X', 'GitHub', 'LinkedIn']
+            .map((n) => ftxIcon(n, s.type))
+            .join('') +
+          '</span></div></div>';
+        const band = fieldSvgStr(m ? 390 : 1200, 56, {
+          kind: 'camo',
+          ink: s.ink,
+          pool: s.pool,
+          scale: 0.35,
+          seed: 11,
+          ground: s.ground,
+        });
+        mount.innerHTML =
+          '<div class="ftx' +
+          (m ? ' m' : '') +
+          '" style="background:' +
+          s.ground +
+          '" aria-hidden="true">' +
+          '<span class="ftx-cap" style="color:' +
+          s.type +
+          '">Footer · context (decided in the footer lab)</span>' +
+          banner +
+          body +
+          bar +
+          band +
+          '</div>';
+      }
+
+      function render() {
+        const s = SCHEMES[state.scheme];
+        const d = derive(s);
+        renderFaqInto(document.getElementById('fq-mount'), false);
+        renderFaqInto(document.getElementById('fq-mount-m'), true);
+        renderFooterSim(document.getElementById('ft-sim-mount'), false);
+        renderFooterSim(document.getElementById('ft-sim-mount-m'), true);
+
+        // branded selection, per scheme (type ground, ground text)
+        let sel = document.getElementById('fq-dyn');
+        if (!sel) {
+          sel = document.createElement('style');
+          sel.id = 'fq-dyn';
+          document.head.appendChild(sel);
+        }
+        sel.textContent =
+          '.fq ::selection{background:' + s.type + ';color:' + s.ground + '}';
+
+        // audit — measured against the ground each run actually sits on
+        const ans = state.items === 'openfill' ? 'plain' : state.answer;
+        const trigGround = state.items === 'cards' ? d.fig : s.ground;
+        let ansGround, ansColor;
+        if (state.items === 'openfill') {
+          ansGround = d.fig;
+          ansColor = d.bodyFig;
+        } else if (ans === 'plate') {
+          ansGround = d.plate;
+          ansColor = ensureContrast(
+            mixHex(s.type, d.plate, 0.22),
+            d.plate,
+            s.type,
+            4.5
+          );
+        } else if (state.items === 'cards') {
+          ansGround = d.fig;
+          ansColor = d.bodyFig;
+        } else {
+          ansGround = s.ground;
+          ansColor = d.body;
+        }
+        const voice = state.layout === 'split' ? 'display' : state.heading;
+        const headColor = voice === 'today' ? d.headline : d.disp;
+        const fmt = (r) => r.toFixed(1) + ':1';
+        const cell = (label, r, floor) =>
+          r >= floor
+            ? label + ' ' + fmt(r) + ' ✓'
+            : '<span class="fail">' + label + ' ' + fmt(r) + ' ✗</span>';
+        document.getElementById('audit').innerHTML =
+          [
+            cell('heading (large)', contrastOf(headColor, s.ground), 3),
+            cell('eyebrow', contrastOf(d.head, s.ground), 4.5),
+            cell('triggers', contrastOf(s.type, trigGround), 4.5),
+            cell('answers', contrastOf(ansColor, ansGround), 4.5),
+            cell('index', contrastOf(d.idx, trigGround), 4.5),
+            cell('intro', contrastOf(d.body, s.ground), 4.5),
+            cell('focus ring', contrastOf(d.focus, s.ground), 3),
+          ].join(' · ') +
+          (d.focus === '#05A24B'
+            ? ' — focus = system green'
+            : ' — <strong>focus DERIVED</strong> (green fails 3:1 on this ground: ' +
+              contrastOf('#05A24B', s.ground).toFixed(2) +
+              ':1)') +
+          (d.disp !== s.type && voice === 'display'
+            ? ' · display ink ECHOES the footer (' +
+              (state.footer !== 'hidden' ? SCHEMES[state.footer].label : '') +
+              ')'
+            : '') +
+          (d.fig !== (s.ground === '#FFFFFF' ? '#EDEDE3' : '#FFFFFF')
+            ? ' · figure surfaces ECHO the footer ground'
+            : '') +
+          ' · hairlines decorative (no floor) · footer sim = context, audited in the footer lab';
+      }
+
+      // toggling never re-renders — classes flip in place so the height
+      // animation runs and keyboard focus survives (the lab equivalent of
+      // Radix keeping the trigger mounted)
+      function toggle(i) {
+        if (openSet.has(i)) openSet.delete(i);
+        else openSet.add(i);
+        for (const mount of [
+          document.getElementById('fq-mount'),
+          document.getElementById('fq-mount-m'),
+        ]) {
+          mount
+            .querySelectorAll('[data-item="' + i + '"]')
+            .forEach((el) => el.classList.toggle('open', openSet.has(i)));
+          mount
+            .querySelectorAll('[data-idx="' + i + '"]')
+            .forEach((b) =>
+              b.setAttribute('aria-expanded', String(openSet.has(i)))
+            );
+        }
+      }
+      document.addEventListener('click', (e) => {
+        const t = e.target.closest('.fq-trigger');
+        if (t) toggle(Number(t.dataset.idx));
+      });
+
+      // ————— dials —————
+      const DIALS = [
+        [
+          'Ground',
+          'scheme',
+          Object.entries(SCHEMES).map(([id, s]) => [id, s.label]),
+          '— direction 2026-08-15: the footer takes the colour → white lean',
+        ],
+        [
+          'Layout',
+          'layout',
+          [
+            ['centered', 'Centered (as today)'],
+            ['split', 'Split rail'],
+            ['twocol', 'Two columns'],
+          ],
+          '',
+        ],
+        [
+          'Items',
+          'items',
+          [
+            ['hairlines', 'Hairline rows'],
+            ['cards', 'Pixel cards'],
+            ['openfill', 'Open-fill'],
+          ],
+          '',
+        ],
+        [
+          'Answer',
+          'answer',
+          [
+            ['plain', 'Bare'],
+            ['plate', 'Plate'],
+          ],
+          '— moot under open-fill (the item is the surface)',
+        ],
+        [
+          'Heading',
+          'heading',
+          [
+            ['today', 'Centered bold (today)'],
+            ['display', 'Eyebrow + display'],
+          ],
+          '— split rail always displays',
+        ],
+        [
+          'Index',
+          'index',
+          [
+            ['on', 'Numbered'],
+            ['off', 'Off'],
+          ],
+          '',
+        ],
+        [
+          'Entries',
+          'entries',
+          [
+            ['four', 'Four (today)'],
+            ['six', 'Six (+ support, classroom)'],
+          ],
+          '',
+        ],
+        [
+          'Copy',
+          'copy',
+          [
+            ['verbatim', 'Verbatim'],
+            ['edited', 'Edited (proposed)'],
+          ],
+          '— the two added entries are proposed copy either way',
+        ],
+        [
+          'Echo',
+          'echo',
+          [
+            ['off', 'Off (cold seam)'],
+            ['heading', 'Heading ink'],
+            ['plate', 'Figure tint'],
+            ['both', 'Both'],
+          ],
+          '— FQ9: the white FAQ anticipating the footer; follows the Ft. dial',
+        ],
+        [
+          'Head pair',
+          'headpair',
+          [
+            ['label', 'No eyebrow — heading is the label'],
+            ['support', 'SUPPORT eyebrow'],
+            ['voice', 'FAQ eyebrow + “Ask away”'],
+          ],
+          '— FQ11: QUESTIONS over the FAQ heading read redundant (Malik)',
+        ],
+        [
+          'Contact',
+          'contact',
+          [
+            ['me', '“Email me” (as drafted)'],
+            ['named', 'Named — “I’m Malik”'],
+          ],
+          '— FQ10: the email line’s voice',
+        ],
+        [
+          'Instructors',
+          'instructors',
+          [
+            ['off', 'Off'],
+            ['inline', 'Line in the rail (the fused draft)'],
+            ['block', 'Own block in the rail'],
+            ['strip', 'Own section under the list'],
+          ],
+          '— FQ10: rail options are split-desktop only; elsewhere they fall back to the strip',
+        ],
+        [
+          'Ft. below',
+          'footer',
+          [
+            ['setL', 'Set L (favourite)'],
+            ['cream', 'Cream (shipped)'],
+            ['hidden', 'Hidden'],
+          ],
+          '— full simulation, context only',
+        ],
+      ];
+      // Whole compositions, one click — conveniences, not decisions.
+      const PRESETS = [
+        [
+          'A · White over Set L',
+          {
+            scheme: 'white',
+            layout: 'split',
+            items: 'openfill',
+            answer: 'plain',
+            heading: 'display',
+            index: 'on',
+            entries: 'six',
+            copy: 'edited',
+            contact: 'named',
+            headpair: 'label',
+            instructors: 'strip',
+            echo: 'heading',
+            footer: 'setL',
+          },
+        ],
+        [
+          'B · White, figures tinted',
+          {
+            scheme: 'white',
+            layout: 'split',
+            items: 'openfill',
+            answer: 'plain',
+            heading: 'display',
+            index: 'on',
+            entries: 'six',
+            copy: 'edited',
+            contact: 'named',
+            headpair: 'label',
+            instructors: 'strip',
+            echo: 'both',
+            footer: 'setL',
+          },
+        ],
+        [
+          'C · White cards, two columns',
+          {
+            scheme: 'white',
+            layout: 'twocol',
+            items: 'cards',
+            answer: 'plain',
+            heading: 'display',
+            index: 'on',
+            entries: 'six',
+            copy: 'edited',
+            contact: 'named',
+            headpair: 'label',
+            instructors: 'off',
+            echo: 'off',
+            footer: 'setL',
+          },
+        ],
+        [
+          'D · Quiet white (nearest today)',
+          {
+            scheme: 'white',
+            layout: 'centered',
+            items: 'hairlines',
+            answer: 'plain',
+            heading: 'today',
+            index: 'off',
+            entries: 'four',
+            copy: 'verbatim',
+            contact: 'me',
+            headpair: 'label',
+            instructors: 'off',
+            echo: 'off',
+            footer: 'setL',
+          },
+        ],
+        [
+          'E · Cream (the 08-15 morning proposal)',
+          {
+            scheme: 'cream',
+            layout: 'split',
+            items: 'openfill',
+            answer: 'plain',
+            heading: 'display',
+            index: 'on',
+            entries: 'six',
+            copy: 'edited',
+            contact: 'named',
+            headpair: 'label',
+            instructors: 'off',
+            echo: 'off',
+            footer: 'cream',
+          },
+        ],
+      ];
+      function buildPresets() {
+        const c = document.getElementById('presets');
+        const row = document.createElement('div');
+        row.className = 'ctl-row';
+        const lb = document.createElement('span');
+        lb.textContent = 'Presets:';
+        row.appendChild(lb);
+        const seg = document.createElement('span');
+        seg.className = 'seg';
+        seg.setAttribute('role', 'group');
+        seg.setAttribute('aria-label', 'Presets');
+        for (const [label, preset] of PRESETS) {
+          const b = document.createElement('button');
+          b.textContent = label;
+          b.addEventListener('click', () => {
+            Object.assign(state, preset);
+            buildControls();
+            render();
+          });
+          seg.appendChild(b);
+        }
+        row.appendChild(seg);
+        c.appendChild(row);
+      }
+      function buildControls() {
+        const c = document.getElementById('controls');
+        c.innerHTML = '';
+        for (const [label, key, opts, hint] of DIALS) {
+          const row = document.createElement('div');
+          row.className = 'ctl-row';
+          const lb = document.createElement('span');
+          lb.textContent = label + ':';
+          row.appendChild(lb);
+          const seg = document.createElement('span');
+          seg.className = 'seg';
+          seg.setAttribute('role', 'group');
+          seg.setAttribute('aria-label', label);
+          for (const [val, text] of opts) {
+            const b = document.createElement('button');
+            b.textContent = text;
+            b.setAttribute('aria-pressed', String(state[key] === val));
+            b.addEventListener('click', () => {
+              state[key] = val;
+              buildControls();
+              render();
+            });
+            seg.appendChild(b);
+          }
+          row.appendChild(seg);
+          if (hint) {
+            const h = document.createElement('span');
+            h.textContent = hint;
+            row.appendChild(h);
+          }
+          c.appendChild(row);
+        }
+      }
+
+      buildPresets();
+      buildControls();
+      render();
+    </script>
+  </body>
+</html>

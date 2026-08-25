@@ -68,6 +68,17 @@ export function Sidebar() {
             </li>
             <li>
               <Link
+                href='/informal/fallacies/quiz'
+                className='motion-button flex flex-col p-2 text-gray-900 rounded-lg hover:bg-gray-200 group'
+              >
+                <div className='text-xs'>CHAPTER 4</div>
+                <span className='flex-1 whitespace-nowrap'>
+                  Fallacies and Argumentation
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link
                 href='/basic-propositional-logic'
                 className='motion-button flex flex-col p-2 text-gray-900 rounded-lg hover:bg-gray-200 group'
               >

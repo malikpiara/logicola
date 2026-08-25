@@ -12,6 +12,7 @@ exports[`setN generator — top-level > matches snapshot for seed 42 1`] = `
   ],
   "subSets": [
     {
+      "description": "Translate claims about believing, not believing, and withholding belief into belief logic.",
       "header": "Translates into logic as:",
       "id": 14,
       "isNew": true,
@@ -27,28 +28,28 @@ exports[`setN generator — top-level > matches snapshot for seed 42 1`] = `
           "options": [
             {
               "id": 0,
-              "label": "$ (x)x:OS\\underline{x} $",
+              "label": "$ (x)x:OL\\underline{x} $",
             },
             {
               "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-The outer believer is descriptive (each person sings), don’t underline the first x.",
+The outer believer is descriptive (each person laughs), don’t underline the first x.",
               "id": 1,
-              "label": "$ (x)\\underline{x}:OS\\underline{x} $",
+              "label": "$ (x)\\underline{x}:OL\\underline{x} $",
             },
             {
               "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
 O scopes over a single imperative-believe wff, not the whole quantifier.",
               "id": 2,
-              "label": "$ O(x)x:S\\underline{x} $",
+              "label": "$ O(x)x:L\\underline{x} $",
             },
             {
               "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-‘Ought’ uses \`O\`. Don’t drop it. The prompt says ‘ought to sing’.",
+‘Ought’ uses \`O\`. Don’t drop it. The prompt says ‘ought to laugh’.",
               "id": 3,
-              "label": "$ (x)x:S\\underline{x} $",
+              "label": "$ (x)x:L\\underline{x} $",
             },
           ],
-          "prompt": "Each person believes that they ought to sing.",
+          "prompt": "Each person believes that they ought to laugh.",
         },
         {
           "answer": "",
@@ -87,39 +88,7 @@ That means ‘you DON’T believe B’ — wrong polarity.",
           "correctId": [
             0,
           ],
-          "id": "gen.N.0.2",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ u:B $",
-            },
-            {
-              "hint": "Descriptive belief: ‘You believe that A’ → \`u:A\`. The lowercase u (NOT underlined) plus colon plus the wff.
-Since the sentence DESCRIBES what you believe, the letter before ‘:’ should NOT be underlined.",
-              "id": 1,
-              "label": "$ \\underline{u}:B $",
-            },
-            {
-              "hint": "Descriptive belief: ‘You believe that A’ → \`u:A\`. The lowercase u (NOT underlined) plus colon plus the wff.
-That means ‘you believe B is FALSE’ — wrong polarity.",
-              "id": 2,
-              "label": "$ u:\\sim B $",
-            },
-            {
-              "hint": "Descriptive belief: ‘You believe that A’ → \`u:A\`. The lowercase u (NOT underlined) plus colon plus the wff.
-That means ‘you DON’T believe B’ — wrong polarity.",
-              "id": 3,
-              "label": "$ \\sim u:B $",
-            },
-          ],
-          "prompt": "You hold that B is true.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.N.1.3",
+          "id": "gen.N.1.2",
           "options": [
             {
               "id": 0,
@@ -151,192 +120,224 @@ The prompt doesn’t use ‘ought’ — drop the O. (Right now you’ve added a
           "correctId": [
             0,
           ],
-          "id": "gen.N.7.4",
+          "id": "gen.N.3.3",
           "options": [
             {
               "id": 0,
-              "label": "$ (x)x:OG\\underline{x} $",
-            },
-            {
-              "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-The outer believer is descriptive (each person guesss), don’t underline the first x.",
-              "id": 1,
-              "label": "$ (x)\\underline{x}:OG\\underline{x} $",
-            },
-            {
-              "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-O scopes over a single imperative-believe wff, not the whole quantifier.",
-              "id": 2,
-              "label": "$ O(x)x:G\\underline{x} $",
-            },
-            {
-              "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-‘Ought’ uses \`O\`. Don’t drop it. The prompt says ‘ought to guess’.",
-              "id": 3,
-              "label": "$ (x)x:G\\underline{x} $",
-            },
-          ],
-          "prompt": "Each person believes that they ought to guess.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.N.2.5",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ \\sim \\underline{u}:H $",
-            },
-            {
-              "hint": "‘You don’t believe A’ → \`∼u:A\`. Negation outside the colon. Different from ‘You believe not-A’ → \`u:∼A\`.
-Negation scope: \`∼u:A\` (you don’t believe A) ≠ \`u:∼A\` (you believe not-A). Different positions of ‘∼’ mean different things. Here it’s the IMPERATIVE form.",
-              "id": 1,
-              "label": "$ \\underline{u}:\\sim H $",
-            },
-            {
-              "hint": "‘You don’t believe A’ → \`∼u:A\`. Negation outside the colon. Different from ‘You believe not-A’ → \`u:∼A\`.
-Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be underlined.",
-              "id": 2,
-              "label": "$ \\sim u:H $",
-            },
-            {
-              "hint": "‘You don’t believe A’ → \`∼u:A\`. Negation outside the colon. Different from ‘You believe not-A’ → \`u:∼A\`.
-That describes (you believe not-A) instead of telling (don’t believe A).",
-              "id": 3,
-              "label": "$ u:\\sim H $",
-            },
-          ],
-          "prompt": "Refuse to believe H.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.N.7.6",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ (x)x:OD\\underline{x} $",
-            },
-            {
-              "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-The outer believer is descriptive (each person despairs), don’t underline the first x.",
-              "id": 1,
-              "label": "$ (x)\\underline{x}:OD\\underline{x} $",
-            },
-            {
-              "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-O scopes over a single imperative-believe wff, not the whole quantifier.",
-              "id": 2,
-              "label": "$ O(x)x:D\\underline{x} $",
-            },
-            {
-              "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-‘Ought’ uses \`O\`. Don’t drop it. The prompt says ‘ought to despair’.",
-              "id": 3,
-              "label": "$ (x)x:D\\underline{x} $",
-            },
-          ],
-          "prompt": "Everyone believes that they ought to despair.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.N.7.7",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ (x)x:OS\\underline{x} $",
-            },
-            {
-              "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-The outer believer is descriptive (each person sleeps), don’t underline the first x.",
-              "id": 1,
-              "label": "$ (x)\\underline{x}:OS\\underline{x} $",
-            },
-            {
-              "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-O scopes over a single imperative-believe wff, not the whole quantifier.",
-              "id": 2,
-              "label": "$ O(x)x:S\\underline{x} $",
-            },
-            {
-              "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
-‘Ought’ uses \`O\`. Don’t drop it. The prompt says ‘ought to sleep’.",
-              "id": 3,
-              "label": "$ (x)x:S\\underline{x} $",
-            },
-          ],
-          "prompt": "Each person believes that they ought to sleep.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.N.3.8",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ \\underline{u}:\\sim T $",
+              "label": "$ \\underline{u}:\\sim F $",
             },
             {
               "hint": "‘Believe that A is false’ → \`{u}:∼A\`. Underlined u (imperative) plus colon plus negated wff.
 Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be underlined.",
               "id": 1,
-              "label": "$ u:\\sim T $",
+              "label": "$ u:\\sim F $",
             },
             {
               "hint": "‘Believe that A is false’ → \`{u}:∼A\`. Underlined u (imperative) plus colon plus negated wff.
 Negation scope: \`∼u:A\` (you don’t believe A) ≠ \`u:∼A\` (you believe not-A). Different positions of ‘∼’ mean different things. This commands DON’T-believe rather than believe-not.",
               "id": 2,
-              "label": "$ \\sim \\underline{u}:T $",
+              "label": "$ \\sim \\underline{u}:F $",
             },
             {
               "hint": "‘Believe that A is false’ → \`{u}:∼A\`. Underlined u (imperative) plus colon plus negated wff.
 You forgot the negation.",
               "id": 3,
-              "label": "$ \\underline{u}:T $",
+              "label": "$ \\underline{u}:F $",
             },
           ],
-          "prompt": "Take T to be false.",
+          "prompt": "Believe not-F.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.N.4.9",
+          "id": "gen.N.5.4",
           "options": [
             {
               "id": 0,
-              "label": "$ (\\sim u:Z \\cdot  \\sim u:\\sim Z) $",
+              "label": "$ (u:P \\supset  \\sim \\underline{u}:W) $",
+            },
+            {
+              "hint": "‘If you believe A, then don’t believe B’ → \`(u:A ⊃ ∼{u}:B)\`. The antecedent is descriptive (you do believe), the consequent is imperative (don’t-believe-it!).
+Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be underlined. (The consequent is imperative.)",
+              "id": 1,
+              "label": "$ (u:P \\supset  \\sim u:W) $",
+            },
+            {
+              "hint": "‘If you believe A, then don’t believe B’ → \`(u:A ⊃ ∼{u}:B)\`. The antecedent is descriptive (you do believe), the consequent is imperative (don’t-believe-it!).
+Since the sentence DESCRIBES what you believe, the letter before ‘:’ should NOT be underlined. (The antecedent ‘if you believe A’ describes — don’t underline.)",
+              "id": 2,
+              "label": "$ (\\underline{u}:P \\supset  \\sim \\underline{u}:W) $",
+            },
+            {
+              "hint": "‘If you believe A, then don’t believe B’ → \`(u:A ⊃ ∼{u}:B)\`. The antecedent is descriptive (you do believe), the consequent is imperative (don’t-believe-it!).
+‘If A then B’ is \`(A ⊃ B)\`, not \`∼(A · B)\`. The latter is the don’t-combine form.",
+              "id": 3,
+              "label": "$ \\sim (u:P \\cdot  \\underline{u}:W) $",
+            },
+          ],
+          "prompt": "If you believe P, then don’t believe W.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.N.7.5",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ (x)x:OR\\underline{x} $",
+            },
+            {
+              "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
+The outer believer is descriptive (each person repents), don’t underline the first x.",
+              "id": 1,
+              "label": "$ (x)\\underline{x}:OR\\underline{x} $",
+            },
+            {
+              "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
+O scopes over a single imperative-believe wff, not the whole quantifier.",
+              "id": 2,
+              "label": "$ O(x)x:R\\underline{x} $",
+            },
+            {
+              "hint": "‘Everyone believes that they ought to do A’ → \`(x)x:OA{x}\`. The outer (x) binds the believer, and the inner OA{x} says ‘you ought to do A’ for each x.
+‘Ought’ uses \`O\`. Don’t drop it. The prompt says ‘ought to repent’.",
+              "id": 3,
+              "label": "$ (x)x:R\\underline{x} $",
+            },
+          ],
+          "prompt": "Each person believes that they ought to repent.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.N.6.6",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ \\sim (\\underline{u}:P \\cdot  \\underline{u}:M) $",
+            },
+            {
+              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+‘Don’t combine A with B’ ≠ ‘If A then ∼B’ — the don’t-combine form forbids the conjunction.",
+              "id": 1,
+              "label": "$ (\\underline{u}:P \\supset  \\sim \\underline{u}:M) $",
+            },
+            {
+              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be underlined. (Both inner u’s are imperative-believe.)",
+              "id": 2,
+              "label": "$ \\sim (u:P \\cdot  u:M) $",
+            },
+            {
+              "hint": "‘Don’t combine believing A with believing B’ → \`∼({u}:A · {u}:B)\`. Forbids the conjunction; both inner u’s are imperative.
+That says ‘don’t believe A AND don’t believe B’ separately — different from forbidding their combination.",
+              "id": 3,
+              "label": "$ (\\sim \\underline{u}:P \\cdot  \\sim \\underline{u}:M) $",
+            },
+          ],
+          "prompt": "Don’t combine believing P with believing M.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.N.4.7",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ (\\sim u:E \\cdot  \\sim u:\\sim E) $",
             },
             {
               "hint": "‘You take no position on A’ → \`(∼u:A · ∼u:∼A)\`: you don’t believe A AND you don’t believe not-A.
-That says ‘you don’t believe a contradiction’ — different claim. The original says you don’t believe Z AND don’t believe not-Z, as separate beliefs.",
+That says ‘you don’t believe a contradiction’ — different claim. The original says you don’t believe E AND don’t believe not-E, as separate beliefs.",
               "id": 1,
-              "label": "$ \\sim u:(Z \\cdot  \\sim Z) $",
+              "label": "$ \\sim u:(E \\cdot  \\sim E) $",
             },
             {
               "hint": "‘You take no position on A’ → \`(∼u:A · ∼u:∼A)\`: you don’t believe A AND you don’t believe not-A.
 Since the sentence DESCRIBES what you believe, the letter before ‘:’ should NOT be underlined.",
               "id": 2,
-              "label": "$ (\\sim \\underline{u}:Z \\cdot  \\sim \\underline{u}:\\sim Z) $",
+              "label": "$ (\\sim \\underline{u}:E \\cdot  \\sim \\underline{u}:\\sim E) $",
             },
             {
               "hint": "‘You take no position on A’ → \`(∼u:A · ∼u:∼A)\`: you don’t believe A AND you don’t believe not-A.
 You inverted the negations — the prompt says you DON’T believe both.",
               "id": 3,
-              "label": "$ (u:Z \\cdot  u:\\sim Z) $",
+              "label": "$ (u:E \\cdot  u:\\sim E) $",
             },
           ],
-          "prompt": "You don’t believe Z and you don’t believe not-Z.",
+          "prompt": "You don’t believe E and you don’t believe not-E.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.N.2.8",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ \\sim \\underline{u}:F $",
+            },
+            {
+              "hint": "‘You don’t believe A’ → \`∼u:A\`. Negation outside the colon. Different from ‘You believe not-A’ → \`u:∼A\`.
+Negation scope: \`∼u:A\` (you don’t believe A) ≠ \`u:∼A\` (you believe not-A). Different positions of ‘∼’ mean different things. Here it’s the IMPERATIVE form.",
+              "id": 1,
+              "label": "$ \\underline{u}:\\sim F $",
+            },
+            {
+              "hint": "‘You don’t believe A’ → \`∼u:A\`. Negation outside the colon. Different from ‘You believe not-A’ → \`u:∼A\`.
+Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be underlined.",
+              "id": 2,
+              "label": "$ \\sim u:F $",
+            },
+            {
+              "hint": "‘You don’t believe A’ → \`∼u:A\`. Negation outside the colon. Different from ‘You believe not-A’ → \`u:∼A\`.
+That describes (you believe not-A) instead of telling (don’t believe A).",
+              "id": 3,
+              "label": "$ u:\\sim F $",
+            },
+          ],
+          "prompt": "Don’t believe that F is true.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.N.5.9",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ (u:T \\supset  \\sim \\underline{u}:D) $",
+            },
+            {
+              "hint": "‘If you believe A, then don’t believe B’ → \`(u:A ⊃ ∼{u}:B)\`. The antecedent is descriptive (you do believe), the consequent is imperative (don’t-believe-it!).
+Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be underlined. (The consequent is imperative.)",
+              "id": 1,
+              "label": "$ (u:T \\supset  \\sim u:D) $",
+            },
+            {
+              "hint": "‘If you believe A, then don’t believe B’ → \`(u:A ⊃ ∼{u}:B)\`. The antecedent is descriptive (you do believe), the consequent is imperative (don’t-believe-it!).
+Since the sentence DESCRIBES what you believe, the letter before ‘:’ should NOT be underlined. (The antecedent ‘if you believe A’ describes — don’t underline.)",
+              "id": 2,
+              "label": "$ (\\underline{u}:T \\supset  \\sim \\underline{u}:D) $",
+            },
+            {
+              "hint": "‘If you believe A, then don’t believe B’ → \`(u:A ⊃ ∼{u}:B)\`. The antecedent is descriptive (you do believe), the consequent is imperative (don’t-believe-it!).
+‘If A then B’ is \`(A ⊃ B)\`, not \`∼(A · B)\`. The latter is the don’t-combine form.",
+              "id": 3,
+              "label": "$ \\sim (u:T \\cdot  \\underline{u}:D) $",
+            },
+          ],
+          "prompt": "Refuse to believe D if you believe T.",
         },
       ],
       "shuffleOptions": true,
@@ -348,6 +349,7 @@ You inverted the negations — the prompt says you DON’T believe both.",
       "title": "Belief Translations: Believing",
     },
     {
+      "description": "Translate wanting, resolving, and acting — the willing side of belief logic — into formulas.",
       "header": "Translates into logic as:",
       "id": 14,
       "isNew": true,
@@ -363,316 +365,316 @@ You inverted the negations — the prompt says you DON’T believe both.",
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim (\\underline{u}:OC\\underline{u} \\cdot  \\sim \\underline{u}:C\\underline{u}) $",
+              "label": "$ \\sim (\\underline{u}:OS\\underline{u} \\cdot  \\sim \\underline{u}:S\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
-‘Acting to conform’ is itself a willing formula — \`{u}:C{u}\`, not bare \`C{u}\`. Underline both parts, including the u before the second colon.",
+‘Acting to sing’ is itself a willing formula — \`{u}:S{u}\`, not bare \`S{u}\`. Underline both parts, including the u before the second colon.",
               "id": 1,
-              "label": "$ \\sim (\\underline{u}:OC\\underline{u} \\cdot  \\sim C\\underline{u}) $",
+              "label": "$ \\sim (\\underline{u}:OS\\underline{u} \\cdot  \\sim S\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
 Use a formula that forbids a combination — the don’t-combine imperative is \`∼( · )\` with the u’s before the colons underlined.",
               "id": 2,
-              "label": "$ (u:OC\\underline{u} \\cdot  \\sim \\underline{u}:C\\underline{u}) $",
+              "label": "$ (u:OS\\underline{u} \\cdot  \\sim \\underline{u}:S\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
 This describes you (a statement), it doesn’t forbid anything — the imperative is \`∼( · )\` with both parts underlined.",
               "id": 3,
-              "label": "$ (u:OC\\underline{u} \\cdot  \\sim C\\underline{u}) $",
+              "label": "$ (u:OS\\underline{u} \\cdot  \\sim S\\underline{u}) $",
             },
           ],
-          "prompt": "Don’t combine believing that you ought to conform with not acting to conform.",
+          "prompt": "Don’t combine believing that you ought to sing with not acting to sing.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.N.4.1",
+          "id": "gen.N.3.1",
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim (\\underline{u}:OP\\underline{u} \\cdot  \\sim \\underline{u}:P\\underline{u}) $",
-            },
-            {
-              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
-‘Acting to pray’ is itself a willing formula — \`{u}:P{u}\`, not bare \`P{u}\`. Underline both parts, including the u before the second colon.",
-              "id": 1,
-              "label": "$ \\sim (\\underline{u}:OP\\underline{u} \\cdot  \\sim P\\underline{u}) $",
-            },
-            {
-              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
-Use a formula that forbids a combination — the don’t-combine imperative is \`∼( · )\` with the u’s before the colons underlined.",
-              "id": 2,
-              "label": "$ (u:OP\\underline{u} \\cdot  \\sim \\underline{u}:P\\underline{u}) $",
-            },
-            {
-              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
-This describes you (a statement), it doesn’t forbid anything — the imperative is \`∼( · )\` with both parts underlined.",
-              "id": 3,
-              "label": "$ (u:OP\\underline{u} \\cdot  \\sim P\\underline{u}) $",
-            },
-          ],
-          "prompt": "Don’t combine believing that you ought to pray with not acting to pray.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.N.2.2",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ \\underline{u}:(x)S\\underline{x} $",
-            },
-            {
-              "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be underlined. (Outer u: is imperative — the prompt is a command to want.)",
-              "id": 1,
-              "label": "$ u:(x)S\\underline{x} $",
-            },
-            {
-              "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Sx is also imperative.)",
-              "id": 2,
-              "label": "$ \\underline{u}:(x)Sx $",
-            },
-            {
-              "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-‘Ought’ uses \`O\`. Don’t drop it. — wait, the prompt doesn’t say ‘ought’, just ‘want’. Drop the O.",
-              "id": 3,
-              "label": "$ O\\underline{u}:(x)S\\underline{x} $",
-            },
-          ],
-          "prompt": "Would that everyone sleep.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.N.3.3",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ (Au \\supset  u:S\\underline{u}) $",
+              "label": "$ (Lu \\supset  u:F\\underline{u}) $",
             },
             {
               "hint": "‘You resolve to do A’ = ‘You accept the imperative for you to do A’ → \`u:A{u}\`. The outer u: is your accepting the imperative; the inner A{u} is the imperative addressed to you.
-You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Su is the imperative ‘sing!’.)",
+You forgot to underline the u — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Fu is the imperative ‘forfeit!’.)",
               "id": 1,
-              "label": "$ (Au \\supset  u:Su) $",
+              "label": "$ (Lu \\supset  u:Fu) $",
             },
             {
               "hint": "‘You resolve to do A’ = ‘You accept the imperative for you to do A’ → \`u:A{u}\`. The outer u: is your accepting the imperative; the inner A{u} is the imperative addressed to you.
-Since the sentence DESCRIBES what you believe, the letter before ‘:’ should NOT be underlined. (The antecedent ‘you ARE A’ describes — don’t underline.)",
+Since the sentence DESCRIBES what you believe, the letter before ‘:’ should NOT be underlined. (The antecedent ‘you ARE L’ describes — don’t underline.)",
               "id": 2,
-              "label": "$ (A\\underline{u} \\supset  u:S\\underline{u}) $",
+              "label": "$ (L\\underline{u} \\supset  u:F\\underline{u}) $",
             },
             {
               "hint": "‘You resolve to do A’ = ‘You accept the imperative for you to do A’ → \`u:A{u}\`. The outer u: is your accepting the imperative; the inner A{u} is the imperative addressed to you.
 Since the sentence DESCRIBES what you believe, the letter before ‘:’ should NOT be underlined. (Outer u: is descriptive — you DO resolve, you’re not commanded to.)",
               "id": 3,
-              "label": "$ (Au \\supset  \\underline{u}:S\\underline{u}) $",
+              "label": "$ (Lu \\supset  \\underline{u}:F\\underline{u}) $",
             },
           ],
-          "prompt": "If you are A, you commit yourself to sing.",
+          "prompt": "You’re resolved that if you are L then you’ll forfeit.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.N.4.4",
+          "id": "gen.N.1.2",
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim (\\underline{u}:OF\\underline{u} \\cdot  \\sim \\underline{u}:F\\underline{u}) $",
+              "label": "$ u:(x)C\\underline{x} $",
+            },
+            {
+              "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
+You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Cx is imperative.)",
+              "id": 1,
+              "label": "$ u:(x)Cx $",
+            },
+            {
+              "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
+Since the sentence DESCRIBES what you believe, the letter before ‘:’ should NOT be underlined. (The outer u: describes you DOING the wanting.)",
+              "id": 2,
+              "label": "$ \\underline{u}:(x)C\\underline{x} $",
+            },
+            {
+              "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
+‘Everyone’ is universal \`(x)\`, not existential \`(∃x)\`.",
+              "id": 3,
+              "label": "$ u:(\\exists x)C\\underline{x} $",
+            },
+          ],
+          "prompt": "You’d like everyone to complain.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.N.4.3",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ \\sim (\\underline{u}:OW\\underline{u} \\cdot  \\sim \\underline{u}:W\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
-‘Acting to forfeit’ is itself a willing formula — \`{u}:F{u}\`, not bare \`F{u}\`. Underline both parts, including the u before the second colon.",
+‘Acting to wander’ is itself a willing formula — \`{u}:W{u}\`, not bare \`W{u}\`. Underline both parts, including the u before the second colon.",
               "id": 1,
-              "label": "$ \\sim (\\underline{u}:OF\\underline{u} \\cdot  \\sim F\\underline{u}) $",
+              "label": "$ \\sim (\\underline{u}:OW\\underline{u} \\cdot  \\sim W\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
 Use a formula that forbids a combination — the don’t-combine imperative is \`∼( · )\` with the u’s before the colons underlined.",
               "id": 2,
-              "label": "$ (u:OF\\underline{u} \\cdot  \\sim \\underline{u}:F\\underline{u}) $",
+              "label": "$ (u:OW\\underline{u} \\cdot  \\sim \\underline{u}:W\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
 This describes you (a statement), it doesn’t forbid anything — the imperative is \`∼( · )\` with both parts underlined.",
               "id": 3,
-              "label": "$ (u:OF\\underline{u} \\cdot  \\sim F\\underline{u}) $",
+              "label": "$ (u:OW\\underline{u} \\cdot  \\sim W\\underline{u}) $",
             },
           ],
-          "prompt": "Don’t combine believing that you ought to forfeit with not acting to forfeit.",
+          "prompt": "Don’t combine believing that you ought to wander with not acting to wander.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.N.2.5",
+          "id": "gen.N.2.4",
           "options": [
             {
               "id": 0,
-              "label": "$ \\underline{u}:(x)P\\underline{x} $",
+              "label": "$ \\underline{u}:(x)A\\underline{x} $",
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
 Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be underlined. (Outer u: is imperative — the prompt is a command to want.)",
               "id": 1,
-              "label": "$ u:(x)P\\underline{x} $",
+              "label": "$ u:(x)A\\underline{x} $",
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Px is also imperative.)",
+You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Ax is also imperative.)",
               "id": 2,
-              "label": "$ \\underline{u}:(x)Px $",
+              "label": "$ \\underline{u}:(x)Ax $",
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
 ‘Ought’ uses \`O\`. Don’t drop it. — wait, the prompt doesn’t say ‘ought’, just ‘want’. Drop the O.",
               "id": 3,
-              "label": "$ O\\underline{u}:(x)P\\underline{x} $",
+              "label": "$ O\\underline{u}:(x)A\\underline{x} $",
             },
           ],
-          "prompt": "Would that everyone pray.",
+          "prompt": "Would that everyone argue.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.N.2.6",
+          "id": "gen.N.1.5",
           "options": [
             {
               "id": 0,
-              "label": "$ \\underline{u}:(x)S\\underline{x} $",
+              "label": "$ u:(x)M\\underline{x} $",
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be underlined. (Outer u: is imperative — the prompt is a command to want.)",
+You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Mx is imperative.)",
               "id": 1,
-              "label": "$ u:(x)S\\underline{x} $",
+              "label": "$ u:(x)Mx $",
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Sx is also imperative.)",
+Since the sentence DESCRIBES what you believe, the letter before ‘:’ should NOT be underlined. (The outer u: describes you DOING the wanting.)",
               "id": 2,
-              "label": "$ \\underline{u}:(x)Sx $",
+              "label": "$ \\underline{u}:(x)M\\underline{x} $",
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-‘Ought’ uses \`O\`. Don’t drop it. — wait, the prompt doesn’t say ‘ought’, just ‘want’. Drop the O.",
+‘Everyone’ is universal \`(x)\`, not existential \`(∃x)\`.",
               "id": 3,
-              "label": "$ O\\underline{u}:(x)S\\underline{x} $",
+              "label": "$ u:(\\exists x)M\\underline{x} $",
             },
           ],
-          "prompt": "Want everyone to steal.",
+          "prompt": "You want everyone to meditate.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.N.4.7",
+          "id": "gen.N.4.6",
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim (\\underline{u}:OI\\underline{u} \\cdot  \\sim \\underline{u}:I\\underline{u}) $",
+              "label": "$ \\sim (\\underline{u}:OS\\underline{u} \\cdot  \\sim \\underline{u}:S\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
-‘Acting to invest’ is itself a willing formula — \`{u}:I{u}\`, not bare \`I{u}\`. Underline both parts, including the u before the second colon.",
+‘Acting to sell’ is itself a willing formula — \`{u}:S{u}\`, not bare \`S{u}\`. Underline both parts, including the u before the second colon.",
               "id": 1,
-              "label": "$ \\sim (\\underline{u}:OI\\underline{u} \\cdot  \\sim I\\underline{u}) $",
+              "label": "$ \\sim (\\underline{u}:OS\\underline{u} \\cdot  \\sim S\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
 Use a formula that forbids a combination — the don’t-combine imperative is \`∼( · )\` with the u’s before the colons underlined.",
               "id": 2,
-              "label": "$ (u:OI\\underline{u} \\cdot  \\sim \\underline{u}:I\\underline{u}) $",
+              "label": "$ (u:OS\\underline{u} \\cdot  \\sim \\underline{u}:S\\underline{u}) $",
             },
             {
               "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
 This describes you (a statement), it doesn’t forbid anything — the imperative is \`∼( · )\` with both parts underlined.",
               "id": 3,
-              "label": "$ (u:OI\\underline{u} \\cdot  \\sim I\\underline{u}) $",
+              "label": "$ (u:OS\\underline{u} \\cdot  \\sim S\\underline{u}) $",
             },
           ],
-          "prompt": "Don’t combine believing that you ought to invest with not acting to invest.",
+          "prompt": "Don’t believe that you ought to sell without acting to sell.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.N.4.8",
+          "id": "gen.N.2.7",
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim (\\underline{u}:OG\\underline{u} \\cdot  \\sim \\underline{u}:G\\underline{u}) $",
-            },
-            {
-              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
-‘Acting to groan’ is itself a willing formula — \`{u}:G{u}\`, not bare \`G{u}\`. Underline both parts, including the u before the second colon.",
-              "id": 1,
-              "label": "$ \\sim (\\underline{u}:OG\\underline{u} \\cdot  \\sim G\\underline{u}) $",
-            },
-            {
-              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
-Use a formula that forbids a combination — the don’t-combine imperative is \`∼( · )\` with the u’s before the colons underlined.",
-              "id": 2,
-              "label": "$ (u:OG\\underline{u} \\cdot  \\sim \\underline{u}:G\\underline{u}) $",
-            },
-            {
-              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
-This describes you (a statement), it doesn’t forbid anything — the imperative is \`∼( · )\` with both parts underlined.",
-              "id": 3,
-              "label": "$ (u:OG\\underline{u} \\cdot  \\sim G\\underline{u}) $",
-            },
-          ],
-          "prompt": "Don’t believe that you ought to groan without acting to groan.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.N.2.9",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ \\underline{u}:(x)P\\underline{x} $",
+              "label": "$ \\underline{u}:(x)A\\underline{x} $",
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
 Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be underlined. (Outer u: is imperative — the prompt is a command to want.)",
               "id": 1,
-              "label": "$ u:(x)P\\underline{x} $",
+              "label": "$ u:(x)A\\underline{x} $",
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
-You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Px is also imperative.)",
+You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (The inner Ax is also imperative.)",
               "id": 2,
-              "label": "$ \\underline{u}:(x)Px $",
+              "label": "$ \\underline{u}:(x)Ax $",
             },
             {
               "hint": "‘You want everyone to do A’ → \`u:(x)A{x}\`. Outer u: is descriptive (you do want this); inner (x)A{x} is the universal imperative ‘let everyone do A’.
 ‘Ought’ uses \`O\`. Don’t drop it. — wait, the prompt doesn’t say ‘ought’, just ‘want’. Drop the O.",
               "id": 3,
-              "label": "$ O\\underline{u}:(x)P\\underline{x} $",
+              "label": "$ O\\underline{u}:(x)A\\underline{x} $",
             },
           ],
-          "prompt": "Want everyone to pray.",
+          "prompt": "Want everyone to apologize.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.N.0.8",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ u:A\\underline{m}u $",
+            },
+            {
+              "hint": "‘You want X to do A’ → \`u:A{X}\`. Outer u: is descriptive (you do want this); inner A{X} is the imperative ‘X, do A!’ (X is the agent told to do A — so X gets underlined).
+You forgot to underline Maya’s letter m — descriptive \`u:A\` and imperative \`{u}:A\` are different wffs. (Maya is the imperative agent.)",
+              "id": 1,
+              "label": "$ u:Amu $",
+            },
+            {
+              "hint": "‘You want X to do A’ → \`u:A{X}\`. Outer u: is descriptive (you do want this); inner A{X} is the imperative ‘X, do A!’ (X is the agent told to do A — so X gets underlined).
+Since the sentence DESCRIBES what you believe, the letter before ‘:’ should NOT be underlined. (The outer u: describes you DOING the wanting.)",
+              "id": 2,
+              "label": "$ \\underline{u}:A\\underline{m}u $",
+            },
+            {
+              "hint": "‘You want X to do A’ → \`u:A{X}\`. Outer u: is descriptive (you do want this); inner A{X} is the imperative ‘X, do A!’ (X is the agent told to do A — so X gets underlined).
+You underlined u (yourself) instead of m (Maya). The agent told to attack is Maya, not you.",
+              "id": 3,
+              "label": "$ u:Am\\underline{u} $",
+            },
+          ],
+          "prompt": "You wish Maya would attack you.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.N.4.9",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ \\sim (\\underline{u}:OR\\underline{u} \\cdot  \\sim \\underline{u}:R\\underline{u}) $",
+            },
+            {
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+‘Acting to repent’ is itself a willing formula — \`{u}:R{u}\`, not bare \`R{u}\`. Underline both parts, including the u before the second colon.",
+              "id": 1,
+              "label": "$ \\sim (\\underline{u}:OR\\underline{u} \\cdot  \\sim R\\underline{u}) $",
+            },
+            {
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+Use a formula that forbids a combination — the don’t-combine imperative is \`∼( · )\` with the u’s before the colons underlined.",
+              "id": 2,
+              "label": "$ (u:OR\\underline{u} \\cdot  \\sim \\underline{u}:R\\underline{u}) $",
+            },
+            {
+              "hint": "‘Don’t combine believing that you ought to do A with not acting to do A’ → \`∼({u}:OA{u} · ∼{u}:A{u})\`. Forbid the combination and underline both parts — believing and acting are both accepted with an imperative ‘u’.
+This describes you (a statement), it doesn’t forbid anything — the imperative is \`∼( · )\` with both parts underlined.",
+              "id": 3,
+              "label": "$ (u:OR\\underline{u} \\cdot  \\sim R\\underline{u}) $",
+            },
+          ],
+          "prompt": "Don’t believe that you ought to repent without acting to repent.",
         },
       ],
       "shuffleOptions": true,
@@ -684,6 +686,7 @@ You forgot to underline the x — descriptive \`u:A\` and imperative \`{u}:A\` a
       "title": "Belief Translations: Willing",
     },
     {
+      "description": "Translate what is evident, reasonable, and rational to believe into belief-logic formulas.",
       "header": "Translates into logic as:",
       "id": 14,
       "isNew": true,
@@ -759,135 +762,103 @@ That says ‘you ought to believe NOT-A’ — different claim. ‘Unreasonable 
           "correctId": [
             0,
           ],
-          "id": "gen.N.0.2",
+          "id": "gen.N.5.2",
           "options": [
             {
               "id": 0,
-              "label": "$ O\\underline{u}:Q $",
-            },
-            {
-              "hint": "‘You ought to believe A’ / ‘A is evident to you’ → \`O{u}:A\`. The O attaches to the imperative-believe wff; cannot attach to descriptive \`u:A\`.
-‘O’ must attach to an imperative wff — write \`O{u}:A\`, not \`Ou:A\`.",
-              "id": 1,
-              "label": "$ Ou:Q $",
-            },
-            {
-              "hint": "‘You ought to believe A’ / ‘A is evident to you’ → \`O{u}:A\`. The O attaches to the imperative-believe wff; cannot attach to descriptive \`u:A\`.
-Wrong scope — O attaches to the BELIEF wff, not to the inner proposition.",
-              "id": 2,
-              "label": "$ \\underline{u}:OQ $",
-            },
-            {
-              "hint": "‘You ought to believe A’ / ‘A is evident to you’ → \`O{u}:A\`. The O attaches to the imperative-believe wff; cannot attach to descriptive \`u:A\`.
-You dropped the believer — \`OQ\` is ‘Q is obligatory’, not ‘you ought to believe Q’.",
-              "id": 3,
-              "label": "$ OQ $",
-            },
-          ],
-          "prompt": "It’s evident to you that Q is true.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.N.5.3",
-          "options": [
-            {
-              "id": 0,
-              "label": "$ O\\sim (\\underline{u}:P \\cdot  \\underline{u}:\\sim P) $",
+              "label": "$ O\\sim (\\underline{u}:M \\cdot  \\underline{u}:\\sim M) $",
             },
             {
               "hint": "‘You ought not to combine believing A with believing not-A’ → \`O∼({u}:A · {u}:∼A)\`. The O wraps the negation of the conjunction.
 Use ONE O outside the negated conjunction; ‘ought not to (do both)’, not ‘ought not to do A AND ought not to do not-A’.",
               "id": 1,
-              "label": "$ (O\\sim \\underline{u}:P \\cdot  O\\sim \\underline{u}:\\sim P) $",
+              "label": "$ (O\\sim \\underline{u}:M \\cdot  O\\sim \\underline{u}:\\sim M) $",
             },
             {
               "hint": "‘You ought not to combine believing A with believing not-A’ → \`O∼({u}:A · {u}:∼A)\`. The O wraps the negation of the conjunction.
 Wrong scope — \`∼O…\` says ‘not obligatory to combine’; the prompt says ‘ought not to combine’ which is \`O∼…\`.",
               "id": 2,
-              "label": "$ \\sim O(\\underline{u}:P \\cdot  \\underline{u}:\\sim P) $",
+              "label": "$ \\sim O(\\underline{u}:M \\cdot  \\underline{u}:\\sim M) $",
             },
             {
               "hint": "‘You ought not to combine believing A with believing not-A’ → \`O∼({u}:A · {u}:∼A)\`. The O wraps the negation of the conjunction.
 ‘O’ must attach to an imperative wff — write \`O{u}:A\`, not \`Ou:A\`. (The inner believing here is what you’re obligated NOT to do — imperative.)",
               "id": 3,
-              "label": "$ O\\sim (u:P \\cdot  u:\\sim P) $",
+              "label": "$ O\\sim (u:M \\cdot  u:\\sim M) $",
             },
           ],
-          "prompt": "It’s wrong to combine believing P with believing not-P.",
+          "prompt": "It’s wrong to combine believing M with believing not-M.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.N.2.4",
+          "id": "gen.N.4.3",
           "options": [
             {
               "id": 0,
-              "label": "$ \\sim R\\underline{u}:C $",
+              "label": "$ (O\\underline{u}:W \\supset  O\\underline{u}:G) $",
             },
             {
-              "hint": "‘It would be unreasonable for you to believe A’ → \`∼R{u}:A\` (= \`O∼{u}:A\`). Saying it’s NOT permissible to believe.
-Wrong scope — ‘unreasonable’ negates R (NOT permissible to believe), not the believing.",
+              "hint": "‘If it’s evident to you that A, then it’s evident to you that B’ → \`(O{u}:A ⊃ O{u}:B)\`. Each side has its own imperative-believe operator.
+Wrong scope — that says ‘the conditional A⊃B is evident to you’, different from ‘if-A-evident then B-evident’.",
               "id": 1,
-              "label": "$ R\\sim \\underline{u}:C $",
+              "label": "$ O\\underline{u}:(W \\supset  G) $",
             },
             {
-              "hint": "‘It would be unreasonable for you to believe A’ → \`∼R{u}:A\` (= \`O∼{u}:A\`). Saying it’s NOT permissible to believe.
-‘R’ must attach to an imperative wff — write \`R{u}:A\`, not \`Ru:A\`.",
+              "hint": "‘If it’s evident to you that A, then it’s evident to you that B’ → \`(O{u}:A ⊃ O{u}:B)\`. Each side has its own imperative-believe operator.
+You dropped the second O — both sides are about evidence/ought-to-believe.",
               "id": 2,
-              "label": "$ \\sim Ru:C $",
+              "label": "$ (O\\underline{u}:W \\supset  \\underline{u}:G) $",
             },
             {
-              "hint": "‘It would be unreasonable for you to believe A’ → \`∼R{u}:A\` (= \`O∼{u}:A\`). Saying it’s NOT permissible to believe.
-That says ‘you ought to believe NOT-A’ — different claim. ‘Unreasonable to believe A’ doesn’t entail ‘ought to believe not-A’.",
+              "hint": "‘If it’s evident to you that A, then it’s evident to you that B’ → \`(O{u}:A ⊃ O{u}:B)\`. Each side has its own imperative-believe operator.
+‘O’ must attach to an imperative wff — write \`O{u}:A\`, not \`Ou:A\`.",
               "id": 3,
-              "label": "$ O\\underline{u}:\\sim C $",
+              "label": "$ (Ou:W \\supset  Ou:G) $",
             },
           ],
-          "prompt": "Believing C is unreasonable for you.",
+          "prompt": "If W is evident to you, then G is evident to you.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.N.6.5",
+          "id": "gen.N.3.4",
           "options": [
             {
               "id": 0,
-              "label": "$ (O\\underline{u}:N \\cdot  N \\cdot  u:N) $",
+              "label": "$ R(\\sim \\underline{u}:Z \\cdot  \\sim \\underline{u}:\\sim Z) $",
             },
             {
-              "hint": "Gensler’s knowledge-as-evident-true-belief: “you know A” ≈ \`(O{u}:A · A · u:A)\` — A is evident to you, A is true, AND you actually believe A.
-You dropped the truth condition — knowledge requires that N actually be true.",
+              "hint": "‘It would be reasonable for you to take no position on A’ → \`R(∼{u}:A · ∼{u}:∼A)\`. R wraps the don’t-believe-A AND don’t-believe-not-A imperative conjunction.
+Use ONE R outside the conjunction; ‘reasonable to (X and Y)’, not ‘(reasonable X) and (reasonable Y)’.",
               "id": 1,
-              "label": "$ (O\\underline{u}:N \\cdot  u:N) $",
+              "label": "$ (R\\sim \\underline{u}:Z \\cdot  R\\sim \\underline{u}:\\sim Z) $",
             },
             {
-              "hint": "Gensler’s knowledge-as-evident-true-belief: “you know A” ≈ \`(O{u}:A · A · u:A)\` — A is evident to you, A is true, AND you actually believe A.
-You dropped the evidence condition — true belief alone isn’t knowledge per Gensler §13.5.",
+              "hint": "‘It would be reasonable for you to take no position on A’ → \`R(∼{u}:A · ∼{u}:∼A)\`. R wraps the don’t-believe-A AND don’t-believe-not-A imperative conjunction.
+Since the sentence TELLS what to believe, the letter before ‘:’ SHOULD be underlined. (R applies to imperative believing, so both inner u’s are underlined.)",
               "id": 2,
-              "label": "$ (N \\cdot  u:N) $",
+              "label": "$ R(\\sim u:Z \\cdot  \\sim u:\\sim Z) $",
             },
             {
-              "hint": "Gensler’s knowledge-as-evident-true-belief: “you know A” ≈ \`(O{u}:A · A · u:A)\` — A is evident to you, A is true, AND you actually believe A.
-Evidence alone isn’t knowledge — you also need N to be true and you to actually believe N.",
+              "hint": "‘It would be reasonable for you to take no position on A’ → \`R(∼{u}:A · ∼{u}:∼A)\`. R wraps the don’t-believe-A AND don’t-believe-not-A imperative conjunction.
+That says ‘not permissible to (believe A AND believe not-A)’ — about combining beliefs, not taking no position.",
               "id": 3,
-              "label": "$ O\\underline{u}:N $",
+              "label": "$ \\sim R(\\underline{u}:Z \\cdot  \\underline{u}:\\sim Z) $",
             },
           ],
-          "prompt": "You have knowledge that N is true.",
+          "prompt": "Agnosticism about Z is reasonable for you.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.N.1.6",
+          "id": "gen.N.1.5",
           "options": [
             {
               "id": 0,
@@ -919,7 +890,7 @@ Wrong scope — R attaches to the BELIEF wff, not to the inner proposition.",
           "correctId": [
             0,
           ],
-          "id": "gen.N.5.7",
+          "id": "gen.N.5.6",
           "options": [
             {
               "id": 0,
@@ -951,7 +922,7 @@ Wrong scope — \`∼O…\` says ‘not obligatory to combine’; the prompt say
           "correctId": [
             0,
           ],
-          "id": "gen.N.2.8",
+          "id": "gen.N.2.7",
           "options": [
             {
               "id": 0,
@@ -983,7 +954,7 @@ That says ‘you ought to believe NOT-A’ — different claim. ‘Unreasonable 
           "correctId": [
             0,
           ],
-          "id": "gen.N.0.9",
+          "id": "gen.N.0.8",
           "options": [
             {
               "id": 0,
@@ -1009,6 +980,38 @@ You dropped the believer — \`OK\` is ‘K is obligatory’, not ‘you ought t
             },
           ],
           "prompt": "You ought to believe that K is true.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.N.6.9",
+          "options": [
+            {
+              "id": 0,
+              "label": "$ (O\\underline{u}:G \\cdot  G \\cdot  u:G) $",
+            },
+            {
+              "hint": "Gensler’s knowledge-as-evident-true-belief: “you know A” ≈ \`(O{u}:A · A · u:A)\` — A is evident to you, A is true, AND you actually believe A.
+You dropped the truth condition — knowledge requires that G actually be true.",
+              "id": 1,
+              "label": "$ (O\\underline{u}:G \\cdot  u:G) $",
+            },
+            {
+              "hint": "Gensler’s knowledge-as-evident-true-belief: “you know A” ≈ \`(O{u}:A · A · u:A)\` — A is evident to you, A is true, AND you actually believe A.
+You dropped the evidence condition — true belief alone isn’t knowledge per Gensler §13.5.",
+              "id": 2,
+              "label": "$ (G \\cdot  u:G) $",
+            },
+            {
+              "hint": "Gensler’s knowledge-as-evident-true-belief: “you know A” ≈ \`(O{u}:A · A · u:A)\` — A is evident to you, A is true, AND you actually believe A.
+Evidence alone isn’t knowledge — you also need G to be true and you to actually believe G.",
+              "id": 3,
+              "label": "$ O\\underline{u}:G $",
+            },
+          ],
+          "prompt": "You know that G is true.",
         },
       ],
       "shuffleOptions": true,

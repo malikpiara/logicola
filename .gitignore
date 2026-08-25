@@ -15,6 +15,9 @@
 /out/
 /public/offline-manifest.json
 
+# content-collections (generated; also keeps it out of prettier --ignore-path .gitignore)
+/.content-collections/
+
 # production
 /build
 
@@ -37,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local agent config and scratch screenshots
+.claude/
+.mcp.json

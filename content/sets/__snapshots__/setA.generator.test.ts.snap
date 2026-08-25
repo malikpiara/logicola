@@ -12,6 +12,7 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
   ],
   "subSets": [
     {
+      "description": "Translate everyday English — all, no, some — into syllogistic logic without losing the structure of the claim.",
       "header": "Translates into logic as:",
       "id": 1,
       "logicType": "Basic Translations",
@@ -22,277 +23,291 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "correctId": [
             0,
           ],
-          "id": "gen.A.11.0",
+          "id": "gen.A.29.0",
           "options": [
             {
               "id": 0,
-              "label": "no D is N",
+              "label": "all C is I",
             },
             {
+              "hint": "Why did you switch the letters around?",
               "id": 1,
-              "label": "all D is not N",
+              "label": "all I is C",
             },
             {
+              "hint": "‘A is B’ with two capital letters isn’t a wff — start with ‘all,’ ‘no,’ or ‘some.’",
               "id": 2,
-              "label": "D is not N",
+              "label": "C is I",
             },
             {
-              "hint": "The term “clean druggist” could describe many persons, and so translates into a capital letter.",
+              "hint": "“customers” could describe many persons, and so translates into a capital letter.",
               "id": 3,
-              "label": "d is not N",
+              "label": "all c is I",
             },
           ],
-          "prompt": "No clean druggist is notorious.",
+          "prompt": "All customers invest.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.0.1",
+          "id": "gen.A.10.1",
           "options": [
             {
               "id": 0,
-              "label": "d is T",
+              "label": "some B is D",
             },
             {
-              "hint": "“A tall person in London” could describe many persons, and so translates into a capital letter.",
+              "hint": "‘A is B’ with two capital letters isn’t a wff — start with ‘all,’ ‘no,’ or ‘some.’",
               "id": 1,
-              "label": "d is t",
+              "label": "B is D",
             },
             {
-              "hint": "“Donna” stands for a single person, and so translates into a small letter.",
+              "hint": "“dull” could describe many persons, and so translates into a capital letter.",
               "id": 2,
-              "label": "D is T",
+              "label": "B is d",
             },
             {
-              "hint": "“Donna” stands for a single person, and so translates into a small letter.
-“A tall person in London” could describe many persons, and so translates into a capital letter.",
+              "hint": "“dull” could describe many persons, and so translates into a capital letter.",
               "id": 3,
-              "label": "D is t",
+              "label": "some B is d",
             },
           ],
-          "prompt": "Donna is a tall person in London.",
+          "prompt": "Some jealous biologists are dull.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.10.2",
+          "id": "gen.A.2.2",
           "options": [
             {
               "id": 0,
-              "label": "some D is C",
+              "label": "i is P",
             },
             {
+              "hint": "“An energetic plumber” could describe many persons, and so translates into a capital letter.",
               "id": 1,
-              "label": "D is C",
+              "label": "i is p",
             },
             {
-              "hint": "“careful” could describe many persons, and so translates into a capital letter.",
+              "hint": "“I” stands for a single person, and so translates into a small letter.",
               "id": 2,
-              "label": "D is c",
+              "label": "I is P",
             },
             {
-              "hint": "“careful” could describe many persons, and so translates into a capital letter.",
+              "hint": "“An energetic plumber” could describe many persons, and so translates into a capital letter.",
               "id": 3,
-              "label": "some D is c",
+              "label": "I is p",
             },
           ],
-          "prompt": "Some poetic dentists are careful.",
+          "prompt": "I'm an energetic plumber in Metropolis.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.11.3",
+          "id": "gen.A.0.3",
           "options": [
             {
               "id": 0,
-              "label": "no P is R",
+              "label": "p is R",
             },
             {
+              "hint": "“A remarkable person in Dallas” could describe many persons, and so translates into a capital letter.",
               "id": 1,
-              "label": "all P is not R",
+              "label": "p is r",
             },
             {
+              "hint": "“Priya” stands for a single person, and so translates into a small letter.",
               "id": 2,
-              "label": "P is not R",
+              "label": "P is R",
             },
             {
-              "hint": "The term “talented professor” could describe many persons, and so translates into a capital letter.",
+              "hint": "“Priya” stands for a single person, and so translates into a small letter.
+“A remarkable person in Dallas” could describe many persons, and so translates into a capital letter.",
               "id": 3,
-              "label": "p is not R",
+              "label": "P is r",
             },
           ],
-          "prompt": "No talented professor is remarkable.",
+          "prompt": "Priya is a remarkable person in Dallas.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.4.4",
+          "id": "gen.A.9.4",
           "options": [
             {
               "id": 0,
-              "label": "p is not F",
-            },
-            {
-              "hint": "“A fortunate person” could describe many persons, and so translates into a capital letter.",
-              "id": 1,
-              "label": "p is not f",
-            },
-            {
-              "id": 2,
-              "label": "P is not F",
-            },
-            {
-              "hint": "“A fortunate person” could describe many persons, and so translates into a capital letter.",
-              "id": 3,
-              "label": "P is not f",
-            },
-          ],
-          "prompt": "This pessimist isn't a fortunate person.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.A.11.5",
-          "options": [
-            {
-              "id": 0,
-              "label": "no D is C",
-            },
-            {
-              "id": 1,
-              "label": "all D is not C",
-            },
-            {
-              "id": 2,
-              "label": "D is not C",
-            },
-            {
-              "hint": "The term “romantic diabetic” could describe many persons, and so translates into a capital letter.",
-              "id": 3,
-              "label": "d is not C",
-            },
-          ],
-          "prompt": "No romantic diabetic is clean.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.A.4.6",
-          "options": [
-            {
-              "id": 0,
-              "label": "p is not B",
-            },
-            {
-              "hint": "“A boastful person” could describe many persons, and so translates into a capital letter.",
-              "id": 1,
-              "label": "p is not b",
-            },
-            {
-              "id": 2,
-              "label": "P is not B",
-            },
-            {
-              "hint": "“A boastful person” could describe many persons, and so translates into a capital letter.",
-              "id": 3,
-              "label": "P is not b",
-            },
-          ],
-          "prompt": "This prisoner isn't a boastful person.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.A.9.7",
-          "options": [
-            {
-              "id": 0,
-              "label": "some N is not H",
+              "label": "some G is not S",
             },
             {
               "hint": "You forgot the ‘not.’",
               "id": 1,
-              "label": "some N is H",
+              "label": "some G is S",
             },
             {
+              "hint": "‘A is B’ with two capital letters isn’t a wff — start with ‘all,’ ‘no,’ or ‘some.’",
               "id": 2,
-              "label": "N is not H",
+              "label": "G is not S",
             },
             {
+              "hint": "“gamers” could describe many persons, and so translates into a capital letter.",
               "id": 3,
-              "label": "some n is not H",
+              "label": "some g is not S",
             },
           ],
-          "prompt": "Some novelists don't help any virtuous people.",
+          "prompt": "Some gamers don't support any prosperous people.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.3.8",
+          "id": "gen.A.5.5",
           "options": [
             {
               "id": 0,
-              "label": "i is j",
+              "label": "a is not f",
             },
             {
-              "hint": "“The most sociable judge” stands for a single person, and so translates into a small letter.",
+              "hint": "“The most fortunate person” stands for a single person, and so translates into a small letter.",
               "id": 1,
-              "label": "i is J",
+              "label": "a is not F",
             },
             {
+              "hint": "“This architect” stands for a single person, and so translates into a small letter.",
               "id": 2,
-              "label": "I is j",
+              "label": "A is not f",
             },
             {
-              "hint": "“The most sociable judge” stands for a single person, and so translates into a small letter.",
+              "hint": "“The most fortunate person” stands for a single person, and so translates into a small letter.",
               "id": 3,
-              "label": "I is J",
+              "label": "A is not F",
             },
           ],
-          "prompt": "I'm the most sociable judge in Berlin.",
+          "prompt": "This architect isn't the most fortunate person.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.9.9",
+          "id": "gen.A.11.6",
           "options": [
             {
               "id": 0,
-              "label": "some S is not I",
+              "label": "no F is V",
             },
             {
-              "hint": "You forgot the ‘not.’",
+              "hint": "Never use ‘all A is not B’ — besides not being a wff, it’s ambiguous: it could mean ‘no A is B’ or ‘some A is not B.’",
               "id": 1,
-              "label": "some S is I",
+              "label": "all F is not V",
             },
             {
+              "hint": "‘A is B’ with two capital letters isn’t a wff — start with ‘all,’ ‘no,’ or ‘some.’",
               "id": 2,
-              "label": "S is not I",
+              "label": "F is not V",
             },
             {
+              "hint": "The term “witty founder” could describe many persons, and so translates into a capital letter.",
               "id": 3,
-              "label": "some s is not I",
+              "label": "f is not V",
             },
           ],
-          "prompt": "Some senators don't injure any persistent people.",
+          "prompt": "No witty founder is virtuous.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.3.7",
+          "options": [
+            {
+              "id": 0,
+              "label": "i is t",
+            },
+            {
+              "hint": "“The most gentle teacher” stands for a single person, and so translates into a small letter.",
+              "id": 1,
+              "label": "i is T",
+            },
+            {
+              "hint": "“I” stands for a single person, and so translates into a small letter.",
+              "id": 2,
+              "label": "I is t",
+            },
+            {
+              "hint": "“The most gentle teacher” stands for a single person, and so translates into a small letter.",
+              "id": 3,
+              "label": "I is T",
+            },
+          ],
+          "prompt": "I'm the most gentle teacher in Berlin.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.7.8",
+          "options": [
+            {
+              "id": 0,
+              "label": "u is not o",
+            },
+            {
+              "hint": "“The most stressed optician” stands for a single person, and so translates into a small letter.",
+              "id": 1,
+              "label": "u is not O",
+            },
+            {
+              "hint": "“You” stands for a single person, and so translates into a small letter.",
+              "id": 2,
+              "label": "U is not o",
+            },
+            {
+              "hint": "“The most stressed optician” stands for a single person, and so translates into a small letter.",
+              "id": 3,
+              "label": "U is not O",
+            },
+          ],
+          "prompt": "You aren't the most stressed optician.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.29.9",
+          "options": [
+            {
+              "id": 0,
+              "label": "all P is L",
+            },
+            {
+              "hint": "Why did you switch the letters around?",
+              "id": 1,
+              "label": "all L is P",
+            },
+            {
+              "hint": "‘A is B’ with two capital letters isn’t a wff — start with ‘all,’ ‘no,’ or ‘some.’",
+              "id": 2,
+              "label": "P is L",
+            },
+            {
+              "hint": "“pickpockets” could describe many persons, and so translates into a capital letter.",
+              "id": 3,
+              "label": "all p is L",
+            },
+          ],
+          "prompt": "All pickpockets listen.",
         },
       ],
       "shuffleOptions": true,
@@ -304,6 +319,7 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
       "title": "Syllogistic Translations: Easy",
     },
     {
+      "description": "Tackle the trickier idioms — only, every, and sentences that reorder subject and predicate.",
       "header": "Translates into logic as:",
       "id": 1,
       "logicType": "Syllogistic",
@@ -314,92 +330,65 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
           "correctId": [
             0,
           ],
-          "id": "gen.A.21.0",
+          "id": "gen.A.28.0",
           "options": [
             {
               "id": 0,
-              "label": "some S is M",
+              "label": "all C is P",
             },
             {
-              "hint": "Why did you switch the letters around?",
+              "hint": "You only switch the parts around with ‘only’ and ‘none but.’",
               "id": 1,
-              "label": "M is S",
+              "label": "all P is C",
             },
             {
+              "hint": "This is an ‘all’-sentence.",
               "id": 2,
-              "label": "S is M",
+              "label": "no C is P",
             },
             {
-              "hint": "Why did you put in the ‘not’?",
+              "hint": "This is an ‘all’-sentence.",
               "id": 3,
-              "label": "some S is not M",
+              "label": "C is not P",
             },
           ],
-          "prompt": "One or more soldiers are mean.",
+          "prompt": "No one is careful without being poor.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.20.1",
+          "id": "gen.A.24.1",
           "options": [
             {
               "id": 0,
-              "label": "no L is C",
+              "label": "some S is not D",
             },
             {
-              "hint": "Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
+              "hint": "You forgot the ‘It’s false that.’",
               "id": 1,
-              "label": "all L is not C",
+              "label": "all S is D",
             },
             {
-              "hint": "Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
+              "hint": "Denying ‘all A is B’ gives ‘some A is not B’ — one exception is enough to refute an ‘all.’",
               "id": 2,
-              "label": "L is not C",
+              "label": "no S is D",
             },
             {
-              "hint": "Logicians take ‘As are not Bs’ to mean ‘no A is B.’",
+              "hint": "‘A is B’ with two capital letters isn’t a wff — start with ‘all,’ ‘no,’ or ‘some.’",
               "id": 3,
-              "label": "some L is not C",
+              "label": "S is not D",
             },
           ],
-          "prompt": "People who are logicians aren't cowardly.",
+          "prompt": "It's false that all scholars are disgusting.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.17.2",
-          "options": [
-            {
-              "id": 0,
-              "label": "no F is C",
-            },
-            {
-              "hint": "‘Not some’ means ‘none.’",
-              "id": 1,
-              "label": "all F is C",
-            },
-            {
-              "id": 2,
-              "label": "F is not C",
-            },
-            {
-              "hint": "‘Not some’ means ‘none.’",
-              "id": 3,
-              "label": "some F is not C",
-            },
-          ],
-          "prompt": "It isn't true that some fugitives are confused.",
-        },
-        {
-          "answer": "",
-          "correctId": [
-            0,
-          ],
-          "id": "gen.A.20.3",
+          "id": "gen.A.20.2",
           "options": [
             {
               "id": 0,
@@ -421,178 +410,210 @@ exports[`setA generator — top-level > matches snapshot for seed 42 1`] = `
               "label": "some D is not S",
             },
           ],
-          "prompt": "People who are druggists aren't slow.",
+          "prompt": "People who are democrats aren't stressed.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.22.4",
+          "id": "gen.A.13.3",
           "options": [
             {
               "id": 0,
-              "label": "all C is L",
+              "label": "all S is E",
             },
             {
-              "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "hint": "You only switch the parts around with ‘only’ and ‘none but.’",
               "id": 1,
-              "label": "not some C is L",
+              "label": "all E is S",
             },
             {
-              "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "hint": "‘A is B’ with two capital letters isn’t a wff — start with ‘all,’ ‘no,’ or ‘some.’",
               "id": 2,
-              "label": "some C is L",
+              "label": "S is E",
             },
             {
-              "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "hint": "You only switch the parts around with ‘only’ and ‘none but.’",
               "id": 3,
-              "label": "C is L",
+              "label": "E is S",
             },
           ],
-          "prompt": "It is false that some Canadians aren't logical.",
+          "prompt": "Whoever is stubborn is easygoing.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.12.5",
+          "id": "gen.A.21.4",
           "options": [
             {
               "id": 0,
-              "label": "all P is G",
+              "label": "some W is L",
             },
             {
-              "hint": "You have to switch the parts around with ‘none but.’ ‘None but men are NFL football players’ doesn’t mean ‘all men are NFL football players’ — it means ‘all NFL football players are men.’",
+              "hint": "Why did you switch the letters around?",
               "id": 1,
-              "label": "all G is P",
+              "label": "L is W",
             },
             {
-              "hint": "‘Only’ isn’t part of the wff language — translate it as an ‘all’-sentence with the parts switched around.",
+              "hint": "‘A is B’ with two capital letters isn’t a wff — start with ‘all,’ ‘no,’ or ‘some.’",
               "id": 2,
-              "label": "only G is P",
+              "label": "W is L",
             },
             {
+              "hint": "Why did you put in the ‘not’?",
               "id": 3,
-              "label": "G is P",
+              "label": "some W is not L",
             },
           ],
-          "prompt": "None but greedy people are plumbers.",
+          "prompt": "At least some wrestlers are likeable.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.17.6",
+          "id": "gen.A.22.5",
           "options": [
             {
               "id": 0,
-              "label": "no C is F",
+              "label": "all P is R",
             },
             {
-              "hint": "‘Not some’ means ‘none.’",
+              "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
               "id": 1,
-              "label": "all C is F",
+              "label": "not some P is R",
             },
             {
+              "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
               "id": 2,
-              "label": "C is not F",
+              "label": "some P is R",
             },
             {
-              "hint": "‘Not some’ means ‘none.’",
+              "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
               "id": 3,
-              "label": "some C is not F",
+              "label": "P is R",
             },
           ],
-          "prompt": "It isn't true that some customers are frivolous.",
+          "prompt": "It is false that some pilots aren't reliable.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.22.7",
+          "id": "gen.A.14.6",
           "options": [
             {
               "id": 0,
-              "label": "all C is G",
+              "label": "no B is W",
             },
             {
-              "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "hint": "Never use ‘all A is not B’ — besides not being a wff, it’s ambiguous: it could mean ‘no A is B’ or ‘some A is not B.’",
               "id": 1,
-              "label": "not some C is G",
+              "label": "all B is not W",
             },
             {
-              "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "hint": "‘A is B’ with two capital letters isn’t a wff — start with ‘all,’ ‘no,’ or ‘some.’",
               "id": 2,
-              "label": "some C is G",
+              "label": "B is not W",
             },
             {
-              "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "hint": "You only switch the parts around with ‘only’ and ‘none but.’",
               "id": 3,
-              "label": "C is G",
+              "label": "all W is not B",
             },
           ],
-          "prompt": "It is false that some carpenters aren't generous.",
+          "prompt": "Whoever is bitter isn't witty.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.22.8",
+          "id": "gen.A.32.7",
           "options": [
             {
               "id": 0,
-              "label": "all P is V",
+              "label": "some H is not W",
             },
             {
-              "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "hint": "Denying ‘all A is B’ gives ‘some A is not B’ — one exception is enough to refute an ‘all.’",
               "id": 1,
-              "label": "not some P is V",
+              "label": "no H is W",
             },
             {
-              "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "hint": "Never use ‘all A is not B’ — besides not being a wff, it’s ambiguous: it could mean ‘no A is B’ or ‘some A is not B.’",
               "id": 2,
-              "label": "some P is V",
+              "label": "all H is not W",
             },
             {
-              "hint": "‘Not a single one isn’t’ is the same as ‘Every one is.’",
+              "hint": "‘A is B’ with two capital letters isn’t a wff — start with ‘all,’ ‘no,’ or ‘some.’",
               "id": 3,
-              "label": "P is V",
+              "label": "H is not W",
             },
           ],
-          "prompt": "It is false that some plumbers aren't virtuous.",
+          "prompt": "Not all heroes wear capes.",
         },
         {
           "answer": "",
           "correctId": [
             0,
           ],
-          "id": "gen.A.16.9",
+          "id": "gen.A.18.8",
           "options": [
             {
               "id": 0,
-              "label": "some L is not C",
+              "label": "all V is B",
             },
             {
-              "hint": "You forgot the ‘not.’",
+              "hint": "Why did you switch the letters around?",
               "id": 1,
-              "label": "some L is C",
+              "label": "all B is V",
             },
             {
+              "hint": "This is an ‘all’-sentence.",
               "id": 2,
-              "label": "L is not C",
+              "label": "no V is B",
             },
             {
-              "hint": "People often get this one wrong.",
+              "hint": "This is an ‘all’-sentence.",
               "id": 3,
-              "label": "all L is not C",
+              "label": "V is not B",
             },
           ],
-          "prompt": "Not all librarians are careful.",
+          "prompt": "A person isn't vicious unless they are beautiful.",
+        },
+        {
+          "answer": "",
+          "correctId": [
+            0,
+          ],
+          "id": "gen.A.19.9",
+          "options": [
+            {
+              "id": 0,
+              "label": "all L is S",
+            },
+            {
+              "hint": "Why did you switch the letters around?",
+              "id": 1,
+              "label": "S is L",
+            },
+            {
+              "hint": "Logicians take ‘As are Bs’ to mean ‘all A is B.’",
+              "id": 2,
+              "label": "L is S",
+            },
+            {
+              "hint": "Logicians take ‘As are Bs’ to mean ‘all A is B.’",
+              "id": 3,
+              "label": "some L is S",
+            },
+          ],
+          "prompt": "Each librarian is slow.",
         },
       ],
       "shuffleOptions": true,

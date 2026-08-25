@@ -1,0 +1,2435 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>End screen lab — LogiCola</title>
+    <style>
+      :root {
+        --paper: #101216;
+        --panel: #191c22;
+        --edge: #282d36;
+        --text: #e9ecef;
+        --dim: #98a0ab;
+        --acc: #8fd0a6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--text);
+        font:
+          15px/1.6 ui-sans-serif,
+          -apple-system,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+      }
+      header {
+        padding: 30px 32px 22px;
+        border-bottom: 1px solid var(--edge);
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: 22px;
+        letter-spacing: -0.015em;
+      }
+      header p {
+        margin: 0 0 10px;
+        color: var(--dim);
+        max-width: 90ch;
+        font-size: 14px;
+      }
+      .dials {
+        display: flex;
+        gap: 22px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        padding: 15px 32px 18px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--edge);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+      .dial {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .dial label {
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      select {
+        background: #0b0d10;
+        color: var(--text);
+        border: 1px solid var(--edge);
+        border-radius: 3px;
+        padding: 6px 8px;
+        font:
+          13px ui-monospace,
+          monospace;
+        max-width: 290px;
+      }
+      h2 {
+        margin: 0 0 5px;
+        font:
+          600 12px ui-monospace,
+          monospace;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--acc);
+      }
+      .sec {
+        padding: 24px 32px;
+        border-bottom: 1px solid var(--edge);
+      }
+      .sec > p {
+        margin: 0 0 16px;
+        color: var(--dim);
+        font-size: 13.5px;
+        max-width: 90ch;
+      }
+      .stages {
+        display: flex;
+        gap: 26px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      .col {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+      }
+      .col h3 {
+        margin: 0;
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      .col .why {
+        font-size: 12.5px;
+        color: #868e99;
+        max-width: 34ch;
+        line-height: 1.5;
+        min-height: 4.4em;
+      }
+      /* the stage renders at its TRUE pixel size and is scaled down to fit the
+    sheet, so the proportion between the cleared pattern panel and the
+    content is exactly what the device shows. */
+      .stagebox {
+        position: relative;
+        flex: none;
+        overflow: hidden;
+      }
+      .phone {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: top left;
+        overflow: hidden;
+        border-radius: 26px;
+        border: 1px solid #333;
+        isolation: isolate;
+      }
+      .stagesize {
+        font:
+          10px ui-monospace,
+          monospace;
+        color: #7d858f;
+        margin-top: 6px;
+      }
+      .finishes {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+      }
+      .fin {
+        background: var(--panel);
+        border: 1px solid var(--edge);
+        border-radius: 6px;
+        padding: 14px;
+      }
+      .fin h3 {
+        margin: 0 0 4px;
+        font:
+          600 12px ui-monospace,
+          monospace;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--acc);
+      }
+      .fin p {
+        margin: 0 0 12px;
+        font-size: 12.5px;
+        color: #9aa2ad;
+        line-height: 1.5;
+        min-height: 4.4em;
+      }
+      .finpair {
+        display: flex;
+        gap: 0;
+      }
+      .finhalf {
+        flex: 1;
+        height: 96px;
+        position: relative;
+        display: grid;
+        place-items: center;
+      }
+      .finx {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        font-size: 19px;
+        line-height: 1;
+      }
+      .fincap {
+        font:
+          10px ui-monospace,
+          monospace;
+        color: #7d858f;
+        margin-top: 7px;
+      }
+      .phone .pat {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+      }
+      .stack {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        padding: 0 40px 34px;
+      }
+      .stack.mid {
+        justify-content: center;
+      }
+      .stack.split {
+        justify-content: space-between;
+        padding-top: 96px;
+      }
+      /* .msg is an <h2>, and the sheet's own h2 rule sets colour, family and
+    text-transform for section headings. Those are properties .msg never
+    declared, so they leaked in and rendered the headline mint-on-mint,
+    uppercase and monospace — a lab bug that made every phone stage lie.
+    Reset them explicitly rather than reordering the sheet. */
+      .msg {
+        font-weight: 700;
+        font-size: 36px;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        margin: 0 0 12px;
+        font-stretch: 125%;
+        color: inherit;
+        font-family: inherit;
+        text-transform: none;
+      }
+      .sub {
+        font-size: 18px;
+        font-weight: 300;
+        margin: 0;
+      }
+      .sub b {
+        font-weight: 400;
+      }
+      .hero {
+        font-weight: 700;
+        font-size: 104px;
+        line-height: 0.86;
+        letter-spacing: -0.045em;
+        margin: 0;
+        font-stretch: 125%;
+      }
+      .heroLbl {
+        font:
+          600 12px ui-monospace,
+          monospace;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        opacity: 0.85;
+        margin: 6px 0 16px;
+      }
+      .acts {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        margin-top: 30px;
+        width: 100%;
+      }
+      .gemw {
+        display: block;
+        width: 100%;
+        max-width: 240px;
+        clip-path: polygon(
+          8px 0,
+          calc(100% - 8px) 0,
+          calc(100% - 8px) 4px,
+          calc(100% - 4px) 4px,
+          calc(100% - 4px) 8px,
+          100% 8px,
+          100% calc(100% - 8px),
+          calc(100% - 4px) calc(100% - 8px),
+          calc(100% - 4px) calc(100% - 4px),
+          calc(100% - 8px) calc(100% - 4px),
+          calc(100% - 8px) 100%,
+          8px 100%,
+          8px calc(100% - 4px),
+          4px calc(100% - 4px),
+          4px calc(100% - 8px),
+          0 calc(100% - 8px),
+          0 8px,
+          4px 8px,
+          4px 4px,
+          8px 4px
+        );
+      }
+      .gemi {
+        display: block;
+        padding: 11px 24px;
+        font-weight: 600;
+        font-size: 16px;
+        font-stretch: 125%;
+        text-align: center;
+        clip-path: inherit;
+      }
+      .rimmed {
+        padding: 3px;
+      }
+      .quiet {
+        font-size: 14px;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        opacity: 0.8;
+      }
+      .row2 {
+        display: flex;
+        gap: 12px;
+        width: 100%;
+        max-width: 304px;
+      }
+      .row2 .gemw {
+        max-width: none;
+        flex: 1;
+      }
+      .row2 .gemi {
+        font-size: 14px;
+        padding: 11px 8px;
+      }
+      .stat {
+        display: flex;
+        width: 100%;
+        max-width: 290px;
+        margin: 18px auto 0;
+      }
+      .stat div {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .stat b {
+        font: 700 24px ui-sans-serif;
+        font-stretch: 125%;
+        font-variant-numeric: tabular-nums;
+      }
+      .rows {
+        width: 100%;
+        max-width: 280px;
+        margin: 16px auto 0;
+        text-align: left;
+      }
+      .rows div {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 7px 0;
+      }
+      .rows div + div {
+        border-top: 1px solid;
+      }
+      .rows > div > span {
+        font:
+          600 10px ui-monospace,
+          monospace;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        opacity: 0.72;
+      }
+      .rows b {
+        font: 700 17px ui-sans-serif;
+        font-stretch: 125%;
+        font-variant-numeric: tabular-nums;
+      }
+      /* the denominator never counts — "of 22" is not an achievement */
+      .den {
+        font-weight: 400;
+        opacity: 0.72;
+      }
+      /* the counted figure: a fixed box, digits filling it from the right */
+      .cnt {
+        display: inline-block;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .sr {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+      button.replay {
+        background: #0b0d10;
+        color: var(--text);
+        border: 1px solid var(--edge);
+        border-radius: 3px;
+        padding: 6px 9px;
+        font:
+          13px ui-monospace,
+          monospace;
+        cursor: pointer;
+      }
+      .strip {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 250px;
+        margin: 16px auto 0;
+      }
+      .strip i {
+        width: 12px;
+        height: 12px;
+        display: block;
+      }
+      .striplbl {
+        font:
+          600 10px ui-monospace,
+          monospace;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        opacity: 0.72;
+        margin-top: 10px;
+      }
+      .eyebrow {
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        opacity: 0.8;
+        margin: 0 0 10px;
+      }
+      /* DIRECT child only: the counter puts spans inside <b>, and a loose
+    `.stat span` shrank the counted figure to label size. */
+      .stat > div > span {
+        font:
+          600 10px ui-monospace,
+          monospace;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        opacity: 0.72;
+      }
+      .rule {
+        height: 2px;
+        width: 100%;
+        margin: 0 0 16px;
+        opacity: 0.16;
+      }
+      /* the treatment comparison strip */
+      .tgrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+      }
+      .tcard {
+        background: var(--panel);
+        border: 1px solid var(--edge);
+        border-radius: 6px;
+        padding: 15px;
+      }
+      .tcard h3 {
+        margin: 0 0 4px;
+        font:
+          600 12px ui-monospace,
+          monospace;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--acc);
+      }
+      .tcard .why {
+        margin: 0 0 12px;
+        font-size: 13px;
+        color: #9aa2ad;
+        line-height: 1.5;
+        min-height: 4.2em;
+      }
+      .tstage {
+        padding: 22px 18px;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .tnums {
+        margin: 11px 0 0;
+        font:
+          11.5px ui-monospace,
+          monospace;
+        line-height: 1.6;
+      }
+      .pass {
+        color: #8fd0a6;
+      }
+      .fail {
+        color: #ff9a9a;
+      }
+      .notes {
+        padding: 26px 32px 70px;
+        max-width: 92ch;
+      }
+      .notes h3 {
+        margin: 24px 0 6px;
+        font: 600 14px ui-sans-serif;
+        color: var(--acc);
+      }
+      .notes p {
+        color: #c6cbd2;
+        font-size: 14px;
+      }
+      code {
+        background: #0b0d10;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font:
+          12.5px ui-monospace,
+          monospace;
+        color: #e0b970;
+      }
+      table {
+        border-collapse: collapse;
+        margin: 12px 0;
+        font-size: 13px;
+      }
+      th,
+      td {
+        border: 1px solid var(--edge);
+        padding: 6px 11px;
+        text-align: left;
+      }
+      th {
+        color: var(--dim);
+        font:
+          600 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      td.n {
+        font:
+          12px ui-monospace,
+          monospace;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>End screen lab</h1>
+      <p>
+        Two questions here. <b>Composition</b> &mdash; tonight shipped one
+        arrangement without alternatives, and it is <em>centred</em>, which is
+        the model the QUESTION screen deliberately abandoned on 2026-08-22
+        (prompt top-anchored, answer group bottom-anchored, the 2008
+        window&rsquo;s posture). The last screen of a run re-introducing it
+        should be a decision, not an inheritance.
+      </p>
+      <p>
+        <b>Button hierarchy</b> &mdash; Malik, 2026-08-23:
+        <em
+          >&ldquo;it could make sense for the buttons to have different colors.
+          Try the hard set is definitely more important than try
+          again.&rdquo;</em
+        >
+        Agreed, and the treatments are more constrained than they look: a gem is
+        <code>clip-path</code>ed, so it can paint
+        <b>no outline and no box-shadow</b> &mdash; both are clipped away. Every
+        border below is therefore a real two-layer gem, the same construction
+        the focus band already uses (<code>ringBand</code> in
+        <code>lib/pixel.ts</code>).
+      </p>
+      <p>
+        Set both dials before judging. Set&nbsp;L flatters everything at
+        12.67:1; Set&nbsp;R at 7.04:1 and Set&nbsp;J at 7.34:1 are where a soft
+        secondary starts to fail.
+      </p>
+    </header>
+    <div class="dials" id="dials"></div>
+    <div class="sec">
+      <h2>1 &middot; The receipt &mdash; the live exploration</h2>
+      <p>
+        Six readings, all carrying the corner&nbsp;&times; and a ghost
+        secondary. <b>Run quality</b> is the dial that matters &mdash; a receipt
+        exists to tell a 20-for-20 run from a 40-for-60 one, which today&rsquo;s
+        end screen cannot. <b>Stage size</b> previews the same composition from
+        a 390px phone to a 1280px desktop; the figure under each stage is its
+        true size.
+      </p>
+      <div class="stages" id="receipts"></div>
+    </div>
+
+    <div class="sec">
+      <h2>2 &middot; The exit &mdash; how it should be finished</h2>
+      <p>
+        Malik, 2026-08-23:
+        <em
+          >&ldquo;not super sure about your current finish/background for the
+          ✕.&rdquo;</em
+        >
+        Seven treatments, each shown twice &mdash; once over a DARK pattern blob
+        and once over clean surface. That pairing is the whole test: the
+        panel&rsquo;s scatter reshuffles every visit, so whatever ships has to
+        read in both places, and judging it on clean surface alone is exactly
+        how the bare glyph got shipped invisible on Set&nbsp;A.
+      </p>
+      <div class="finishes" id="finishes"></div>
+    </div>
+
+    <div class="sec">
+      <h2>2b &middot; The exit &mdash; six affordances</h2>
+      <p>
+        The fork I resolved without showing it. Every one of these gets a
+        finished run out of the drill; they differ in what the learner has to
+        recognise, and in whether the exit is something the end screen ADDS or
+        something the flow stops taking away. <b>(a) is what shipped.</b>
+      </p>
+      <div class="stages" id="exits"></div>
+    </div>
+
+    <div class="sec">
+      <h2>3 &middot; Two buttons, six treatments</h2>
+      <p>
+        Primary is &ldquo;Try the hard set&rdquo; in every one; only the
+        secondary changes. Measured across all seven palettes &mdash; the number
+        shown is the <em>worst</em> set, which is the only honest one.
+      </p>
+      <div class="tgrid" id="tgrid"></div>
+    </div>
+    <div class="sec">
+      <h2>4 &middot; The other compositions</h2>
+      <p>
+        Same content, same actions, only the arrangement changing. The button
+        dial above feeds these too.
+      </p>
+      <div class="stages" id="stages"></div>
+    </div>
+    <div class="notes" id="notes"></div>
+    <script>
+      function mulberry32(seed) {
+        let a = seed;
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function hexTriple(hex) {
+        const c = hex.replace('#', '');
+        return [
+          parseInt(c.slice(0, 2), 16),
+          parseInt(c.slice(2, 4), 16),
+          parseInt(c.slice(4, 6), 16),
+        ];
+      }
+      const srgbToLinear = (c) =>
+        c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+
+      function hexToOklch(hex) {
+        const [R, G, B] = hexTriple(hex).map((v) => srgbToLinear(v / 255));
+        const l = Math.cbrt(
+          0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B
+        );
+        const m = Math.cbrt(
+          0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B
+        );
+        const s = Math.cbrt(
+          0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B
+        );
+        const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
+        const a = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
+        const b = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+        return {
+          L,
+          C: Math.hypot(a, b),
+          h: ((Math.atan2(b, a) * 180) / Math.PI + 360) % 360,
+        };
+      }
+
+      function perceptualDist(hexA, hexB) {
+        const A = hexToOklch(hexA);
+        const B = hexToOklch(hexB);
+        const ha = (A.h * Math.PI) / 180;
+        const hb = (B.h * Math.PI) / 180;
+        return Math.hypot(
+          A.L - B.L,
+          A.C * Math.cos(ha) - B.C * Math.cos(hb),
+          A.C * Math.sin(ha) - B.C * Math.sin(hb)
+        );
+      }
+
+      /** The lab's pool filter — surface > 0.17, ink > 0.09, sorted by ΔL vs ink. */
+      function quiltAccentPool(surface, ink, candidates) {
+        const inkL = hexToOklch(ink).L;
+        return candidates
+          .filter(
+            (c) =>
+              perceptualDist(c, surface) > 0.17 && perceptualDist(c, ink) > 0.09
+          )
+          .sort(
+            (a, b) =>
+              Math.abs(hexToOklch(b).L - inkL) -
+              Math.abs(hexToOklch(a).L - inkL)
+          );
+      }
+
+      /** Whole-cell clearing: a shape renders whole or not at all. */
+      function hidden(clear, x, y, ww, hh) {
+        if (!clear) return false;
+        const c = clear;
+        if (x >= c.x + c.w || x + ww <= c.x || y >= c.y + c.h || y + hh <= c.y)
+          return false;
+        if (!c.r) return true;
+        if (x + ww > c.x + c.r && x < c.x + c.w - c.r) return true;
+        if (y + hh > c.y + c.r && y < c.y + c.h - c.r) return true;
+        const ccx = x + ww <= c.x + c.r + 0.01 ? c.x + c.r : c.x + c.w - c.r;
+        const ccy = y + hh <= c.y + c.r + 0.01 ? c.y + c.r : c.y + c.h - c.r;
+        const nx = Math.max(x, Math.min(ccx, x + ww));
+        const ny = Math.max(y, Math.min(ccy, y + hh));
+        return (nx - ccx) ** 2 + (ny - ccy) ** 2 <= c.r * c.r;
+      }
+
+      /**
+       * Quilt · pixel — each cell is a 7×7 sprite grid, every shape rebuilt
+       * from whole pixels. The `rate` argument is the lab's one addition to
+       * the shipped signature: the app hard-codes 0.28, but a 1500×500 cover
+       * is a far bigger field than a quiz card and the rhythm wants tuning at
+       * that size. Everything else is byte-for-byte lib/patterns.ts.
+       */
+      function quiltPixBody(opts) {
+        const { w, h, ink, pool, scale, seed, clear, rate = 0.28 } = opts;
+        const rng = mulberry32(seed >>> 0);
+        const t = 62 * scale;
+        const pad = t * 0.09;
+        const cell = t - pad * 2;
+        const cols = Math.ceil(w / t) + 1;
+        const rows = Math.ceil(h / t) + 1;
+        const accent = Array.from({ length: rows }, () =>
+          Array(cols).fill(false)
+        );
+        const P = 7;
+        let out = '';
+        for (let i = 0; i < rows; i++) {
+          for (let j = 0; j < cols; j++) {
+            const left = j > 0 && accent[i][j - 1];
+            const up = i > 0 && accent[i - 1][j];
+            let fillCol = ink;
+            if (pool.length && !left && !up && rng() < rate) {
+              fillCol = pool[Math.floor(rng() * pool.length)];
+              accent[i][j] = true;
+            }
+            const x = j * t + pad;
+            const y = i * t + pad;
+            const q = cell / P;
+            const roll = rng();
+            const fill = new Array(P * P);
+            if (roll < 0.4) {
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++)
+                  fill[jj * P + ii] = !(
+                    (ii === 0 || ii === P - 1) &&
+                    (jj === 0 || jj === P - 1)
+                  );
+            } else if (roll < 0.7) {
+              const R = P / 2;
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++) {
+                  const dx = ii + 0.5 - P / 2;
+                  const dy = jj + 0.5 - P / 2;
+                  fill[jj * P + ii] = dx * dx + dy * dy <= R * R;
+                }
+            } else {
+              const o = Math.floor(rng() * 4);
+              const cx = o === 0 || o === 3 ? 0 : P;
+              const cy = o === 0 || o === 1 ? 0 : P;
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++) {
+                  const dx = ii + 0.5 - cx;
+                  const dy = jj + 0.5 - cy;
+                  fill[jj * P + ii] = dx * dx + dy * dy <= P * P;
+                }
+            }
+            let piece = `<g fill="${fillCol}" shape-rendering="crispEdges">`;
+            for (let jj = 0; jj < P; jj++) {
+              let ii = 0;
+              while (ii < P) {
+                if (!fill[jj * P + ii]) {
+                  ii++;
+                  continue;
+                }
+                let len = 0;
+                while (ii + len < P && fill[jj * P + ii + len]) len++;
+                piece += `<rect x="${x + ii * q}" y="${y + jj * q}" width="${len * q}" height="${q + 0.4}"/>`;
+                ii += len;
+              }
+            }
+            piece += '</g>';
+            if (!hidden(clear, x, y, cell, cell)) out += piece;
+          }
+        }
+        return out;
+      }
+
+      function pixHash(u, v, seed) {
+        let x = (u * 374761393 + v * 668265263 + (seed | 0) * 971) | 0;
+        x = Math.imul(x ^ (x >>> 13), 1274126177);
+        return ((x ^ (x >>> 16)) >>> 0) / 4294967296;
+      }
+
+      function valueNoise(u, v, seed, cell) {
+        const gx = Math.floor(u / cell);
+        const gy = Math.floor(v / cell);
+        const sm = (t) => t * t * (3 - 2 * t);
+        const fx = sm((((u % cell) + cell) % cell) / cell);
+        const fy = sm((((v % cell) + cell) % cell) / cell);
+        const n00 = pixHash(gx, gy, seed);
+        const n10 = pixHash(gx + 1, gy, seed);
+        const n01 = pixHash(gx, gy + 1, seed);
+        const n11 = pixHash(gx + 1, gy + 1, seed);
+        return (
+          n00 * (1 - fx) * (1 - fy) +
+          n10 * fx * (1 - fy) +
+          n01 * (1 - fx) * fy +
+          n11 * fx * fy
+        );
+      }
+
+      function pixelLattice(w, h, q, clear, colorAt) {
+        const cols = Math.ceil(w / q);
+        const rows = Math.ceil(h / q);
+        let out = '<g shape-rendering="crispEdges">';
+        for (let v = 0; v < rows; v++) {
+          let u = 0;
+          while (u < cols) {
+            const c = colorAt(u, v);
+            if (!c || hidden(clear, u * q, v * q, q, q)) {
+              u++;
+              continue;
+            }
+            let len = 1;
+            while (
+              u + len < cols &&
+              colorAt(u + len, v) === c &&
+              !hidden(clear, (u + len) * q, v * q, q, q)
+            )
+              len++;
+            out += `<rect x="${u * q}" y="${v * q}" width="${len * q}" height="${q + 0.4}" fill="${c}"/>`;
+            u += len;
+          }
+        }
+        return out + '</g>';
+      }
+
+      const PIXEL_FIELD_MACRO = 1.7;
+
+      function camoBody(kind, opts) {
+        const { w, h, ink, pool, scale, seed, clear } = opts;
+        const s = PIXEL_FIELD_MACRO * scale;
+        const c1 = pool[0] || ink;
+        if (kind === 'camo') {
+          const q = 10 * s;
+          return pixelLattice(w, h, q, clear, (u, v) => {
+            if (valueNoise(u, v, seed, 6) > 0.58) return ink;
+            if (valueNoise(u, v, seed + 31, 6) > 0.62) return c1;
+            return null;
+          });
+        }
+        const q = 12 * s;
+        return pixelLattice(w, h, q, clear, (u, v) => {
+          const n = valueNoise(u, v, seed, 9);
+          if (n > 0.63) return ink;
+          if (n < 0.37) return c1;
+          return null;
+        });
+      }
+
+      function patternBody(kind, opts) {
+        return kind === 'quilt' ? quiltPixBody(opts) : camoBody(kind, opts);
+      }
+
+      const SETS = {
+        A: { n: 'Set A', s: '#FFABC6', i: '#4A1040', a: '#674900' },
+        C: { n: 'Set C', s: '#E7F099', i: '#02302C', a: '#BD00AD' },
+        J: { n: 'Set J', s: '#E6ACF4', i: '#1C3601', a: '#674900' },
+        L: { n: 'Set L', s: '#CFF6DD', i: '#3F0167', a: '#BD00AD' },
+        N: { n: 'Set N', s: '#9EDAFF', i: '#4A1040', a: '#8D0381' },
+        Q: { n: 'Set Q', s: '#D9CCF9', i: '#3E1060', a: '#745400' },
+        R: { n: 'Set R', s: '#E4BDF7', i: '#751100', a: '#824616' },
+      };
+      const POOL = [
+        '#1C3601',
+        '#E7F099',
+        '#E6ACF4',
+        '#C8F0E3',
+        '#ADE2E9',
+        '#F2CDA6',
+        '#F233DF',
+      ];
+      const QUIZ_PATTERN_SCALE = 1.25;
+
+      /* ---- contrast, so the cards state measured numbers not adjectives ---- */
+      const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.substr(i, 2), 16));
+      const lin = (c) => (
+        (c /= 255),
+        c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+      );
+      const lum = (h) => {
+        const [r, g, b] = rgb(h).map(lin);
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      };
+      const cr = (a, b) => {
+        const [x, y] = [lum(a), lum(b)];
+        return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+      };
+      const mix = (fg, bg, al) =>
+        '#' +
+        rgb(fg)
+          .map((v, i) =>
+            Math.round(v * al + rgb(bg)[i] * (1 - al))
+              .toString(16)
+              .padStart(2, '0')
+          )
+          .join('');
+
+      /* The Duru/ColorMoods intensity dial, so the cards can say WHY a
+     lower-contrast accent can still out-shout a darker ink. Saturation,
+     corrected by a 30-degree hue weight, eaten by extreme lightness. */
+      const hsl = (h) => {
+        const [r, g, b] = rgb(h).map((v) => v / 255);
+        const mx = Math.max(r, g, b),
+          mn = Math.min(r, g, b),
+          d = mx - mn,
+          l = (mx + mn) / 2;
+        let hh = 0,
+          ss = 0;
+        if (d) {
+          ss = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+          hh =
+            mx === r
+              ? (g - b) / d + (g < b ? 6 : 0)
+              : mx === g
+                ? (b - r) / d + 2
+                : (r - g) / d + 4;
+          hh *= 60;
+        }
+        return { h: hh, s: ss, l };
+      };
+      const SEG = [
+        1.0, 1.05, 1.1, 1.05, 1.0, 0.95, 0.9, 0.9, 0.95, 1.05, 1.1, 1.05,
+      ];
+      const hueW = (h) => {
+        const x = (((h % 360) + 360) % 360) / 30,
+          i = Math.floor(x),
+          t = x - i;
+        const a = SEG[i % 12],
+          b = SEG[(i + 1) % 12];
+        return a + (b - a) * ((1 - Math.cos(t * Math.PI)) / 2);
+      };
+      const intensity = (h) => {
+        const { h: hh, s, l } = hsl(h);
+        return Math.max(
+          0,
+          Math.min(1, s * hueW(hh) * Math.pow(1 - Math.abs(l - 0.5) * 2, 0.7))
+        );
+      };
+      const labL = (h) => {
+        const y = lum(h);
+        const f = y > 0.008856 ? Math.cbrt(y) : (903.3 * y + 16) / 116;
+        return (116 * f - 16) / 100;
+      };
+
+      function clearRectFor(w, h, mobile) {
+        const pw = Math.min(760, w * 0.88),
+          ph = mobile ? Math.min(560, h * 0.74) : Math.min(560, h * 0.78);
+        return { x: (w - pw) / 2, y: h * 0.5 - ph / 2, w: pw, h: ph, r: 28 };
+      }
+      function patSvg(set, kind, w, h, seed, mobile) {
+        const m = mobile === undefined ? true : mobile;
+        const body = patternBody(kind, {
+          w,
+          h,
+          ink: set.i,
+          pool: quiltAccentPool(set.s, set.i, POOL),
+          scale: (m ? 0.6 : 1) * QUIZ_PATTERN_SCALE,
+          seed,
+          clear: clearRectFor(w, h, m),
+        });
+        return (
+          '<svg width="' +
+          w +
+          '" height="' +
+          h +
+          '" viewBox="0 0 ' +
+          w +
+          ' ' +
+          h +
+          '" style="display:block">' +
+          body +
+          '</svg>'
+        );
+      }
+
+      /* ---- the treatments -------------------------------------------------- */
+      const TREATMENTS = {
+        link: {
+          n: 'a · quiet link (shipped tonight)',
+          why: 'Try again is not a button at all — an underlined link at 80% ink. Maximum hierarchy, and the only option with no second object competing for the thumb.',
+          fill: (x) => null,
+        },
+        accent: {
+          n: 'b · solid accent',
+          why: 'A real colour difference, which is what was asked for. The accent is also the colour the score is painted in, so the pair reads as one palette rather than two greys.',
+          fill: (x) => ({ bg: x.a, fg: x.s, rim: null }),
+        },
+        ghost: {
+          n: 'c · GHOST — no fill, no border',
+          why: 'What a ghost button actually is, in shadcn and in M3’s text button: the label alone, with a fill appearing only on hover or press. Malik, 2026-08-23 — the treatment below was mislabelled “ghost” when it is an OUTLINE button, and this is the one he wants beside a primary.',
+          fill: (x) => ({ bg: 'transparent', fg: x.i, rim: null, ghost: true }),
+        },
+        outline: {
+          n: 'd · OUTLINE — surface fill, ink rim',
+          why: 'What the previous version of this sheet wrongly called a ghost. The classic filled/outlined pair. The rim is a real two-layer gem, not a border, because a clipped element paints no border.',
+          fill: (x) => ({ bg: x.s, fg: x.i, rim: x.i }),
+        },
+        tonalRim: {
+          n: 'e · tonal — ink 18%, ink rim',
+          why: 'Material 3’s tonal button, plus the rim it needs here. Softer than a ghost, heavier than a link.',
+          fill: (x) => ({ bg: mix(x.i, x.s, 0.18), fg: x.i, rim: x.i }),
+        },
+        tonal: {
+          n: 'f · tonal, NO rim — the trap',
+          why: 'What a tonal secondary looks like if you trust the label contrast and forget the component boundary. Included because it is the one everybody reaches for first.',
+          fill: (x) => ({ bg: mix(x.i, x.s, 0.18), fg: x.i, rim: null }),
+        },
+        ghostAccent: {
+          n: 'g · outline with an ACCENT rim',
+          why: 'The synthesis: the colours differ (ink vs accent, which is what was asked for) but the HIERARCHY is carried by fill-versus-no-fill, which cannot invert. Rim and label both in the accent.',
+          fill: (x) => ({ bg: x.s, fg: x.a, rim: x.a }),
+        },
+        swap: {
+          n: 'h · swapped — accent primary, ink secondary',
+          why: 'Tests the premise. If the accent is the achievement colour, maybe the onward action should wear it and Try again should be the heavy one.',
+          fill: (x) => ({ bg: x.i, fg: x.s, rim: null }),
+          primary: (x) => ({ bg: x.a, fg: x.s, rim: null }),
+        },
+      };
+
+      function measure(key) {
+        const ks = Object.keys(SETS);
+        let wl = Infinity,
+          we = Infinity,
+          wlk = '',
+          wek = '';
+        for (const k of ks) {
+          const x = SETS[k];
+          const f = TREATMENTS[key].fill(x);
+          if (!f) {
+            // the link tier: 80% ink on surface
+            const c = cr(mix(x.i, x.s, 0.8), x.s);
+            if (c < wl) {
+              wl = c;
+              wlk = k;
+            }
+            we = Infinity;
+            continue;
+          }
+          if (f.ghost) {
+            // no fill, no border — nothing for 1.4.11 to measure
+            const c = cr(f.fg, x.s);
+            if (c < wl) {
+              wl = c;
+              wlk = k;
+            }
+            we = Infinity;
+            continue;
+          }
+          const l = cr(f.fg, f.bg);
+          const e = f.rim ? cr(f.rim, x.s) : cr(f.bg, x.s);
+          if (l < wl) {
+            wl = l;
+            wlk = k;
+          }
+          if (e < we) {
+            we = e;
+            wek = k;
+          }
+        }
+        return { label: wl, labelSet: wlk, edge: we, edgeSet: wek };
+      }
+
+      /* Does the PRIMARY out-weigh the secondary on every palette? Weight is
+     not contrast: the ink has more lightness separation on all seven sets,
+     the accent has more chroma-intensity on six of seven, and the two dials
+     disagree. A fill-vs-no-fill hierarchy sidesteps the argument entirely,
+     which is the whole point of measuring this. */
+      function weightOf(spec, x) {
+        if (!spec) return -1; // a link is always lighter
+        if (spec.bg === x.s) return 0.25 * intensity(spec.rim || spec.fg); // ghost: rim only
+        return (
+          0.5 * intensity(spec.bg) + 0.5 * Math.abs(labL(spec.bg) - labL(x.s))
+        );
+      }
+      function weightCheck(key) {
+        const save = state.treat;
+        state.treat = key;
+        const bad = [];
+        for (const k of Object.keys(SETS)) {
+          const x = SETS[k];
+          if (weightOf(primarySpec(x), x) <= weightOf(secondarySpec(x), x))
+            bad.push(k);
+        }
+        state.treat = save;
+        return { n: 7 - bad.length, bad };
+      }
+
+      /* The 30 praise strings Gensler shipped in 2008, verbatim from
+     content/lexicons.ts. They were PER-ANSWER applause — one after each
+     correct answer, which is why there are thirty — and the file's own note
+     records that "the scored end screen replaced" them. Putting one on the
+     end screen is therefore a REPURPOSING, not a restoration. */
+      const PRAISE_2008 = [
+        'Wonderful',
+        'Logic whiz',
+        'Brilliant',
+        'Fabulous',
+        'Touchdown',
+        'What talent',
+        'A logic brain',
+        'Awesome',
+        'I am impressed',
+        'Tremendous',
+        'Marvelous',
+        'Home run',
+        'Fantastic',
+        'Very nice',
+        'What ability',
+        'Magnificent',
+        'Phenomenal',
+        'Pretty smart',
+        'Excellent',
+        'Good job',
+        'Incredible',
+        'Sharp student',
+        'Yes! Yes',
+        'Totally cool',
+        'Superb',
+        'What a brain',
+        'Good response',
+        'What insight',
+        'Accurate',
+        'Exactly',
+      ];
+      // Of those thirty, nine praise the PERSON rather than the work. That split
+      // matters here for the same reason it mattered to the points delta.
+      const PERSON_PRAISE = [
+        'Logic whiz',
+        'A logic brain',
+        'Sharp student',
+        'Pretty smart',
+        'What a brain',
+        'What talent',
+        'What ability',
+        'I am impressed',
+        'What insight',
+      ];
+      const WORK_PRAISE = [
+        'Accurate',
+        'Exactly',
+        'Good response',
+        'Good job',
+        'Very nice',
+      ];
+
+      /* DECIDED (Malik, 2026-08-23): the five person-directed lines, with an
+     exclamation mark. His reasoning, and it answers the objection I raised:
+     completing an exercise IS hard, so praising the person is proportionate
+     here in a way it would not be after a single correct answer. The
+     exclamation is the one edit to Gensler's text — 2008 set these without
+     one because they fired thirty times a run; once per completed exercise
+     they can afford it. He is revisiting the success screen in a later
+     release, so this is a resting state, not a conclusion. */
+      const PRAISE = [
+        'Logic whiz!',
+        'A logic brain!',
+        'Sharp student!',
+        'Pretty smart!',
+        'What a brain!',
+      ];
+
+      const HEADS = {
+        praise: {
+          label: 'Gensler’s five, with a “!” — DECIDED',
+          pick: (seed) => PRAISE[seed % PRAISE.length],
+        },
+        statement: {
+          label: '“Exercise complete.” — the old statement',
+          pick: () => 'Exercise complete.',
+        },
+        fixed: {
+          label: '“Logic whiz!” — one fixed line',
+          pick: () => 'Logic whiz!',
+        },
+        work: {
+          label: 'Work-directed lines instead',
+          pick: (seed) => WORK_PRAISE[seed % WORK_PRAISE.length],
+        },
+        earned: {
+          label: 'Praise only on a CLEAN run',
+          pick: (seed, r) =>
+            r.clean === r.taken
+              ? PRAISE[seed % PRAISE.length]
+              : 'Exercise complete.',
+        },
+      };
+
+      const state = {
+        set: 'L',
+        st: 'next',
+        kind: 'camo',
+        seed: 7,
+        treat: 'ghost',
+        run: 'ordinary',
+        head: 'praise',
+        stage: 'phone',
+      };
+      const STATES = {
+        next: {
+          msg: 'Exercise complete.',
+          score: 100,
+          p: 'Try the hard set',
+          s: 'Try again',
+          t: 'All exercises',
+        },
+        done: {
+          msg: 'Exercise complete.',
+          score: 100,
+          p: 'All exercises',
+          s: 'Try again',
+          t: null,
+        },
+        short: {
+          msg: 'Out of problems.',
+          score: 61,
+          p: 'Try Again',
+          s: 'All exercises',
+          t: null,
+        },
+      };
+
+      function gem(label, spec, cls) {
+        if (!spec) return '<span class="quiet">' + label + '</span>';
+        if (spec.ghost) {
+          // No fill and no border, so nothing to clip and nothing for 1.4.11 to
+          // measure — the control is identified by its label, which only has to
+          // clear 1.4.3 against the surface. Ink does that on all seven sets.
+          return (
+            '<span class="gemw" style="background:transparent">' +
+            '<span class="gemi" style="background:transparent;color:' +
+            spec.fg +
+            '">' +
+            label +
+            '</span></span>'
+          );
+        }
+        const outer = spec.rim ? spec.rim : spec.bg;
+        const pad = spec.rim ? ' rimmed' : '';
+        return (
+          '<span class="gemw' +
+          pad +
+          '" style="background:' +
+          outer +
+          '">' +
+          '<span class="gemi" style="background:' +
+          spec.bg +
+          ';color:' +
+          spec.fg +
+          '">' +
+          label +
+          '</span></span>'
+        );
+      }
+      const inkSpec = (x) => ({ bg: x.i, fg: x.s, rim: null });
+      function primarySpec(x) {
+        const t = TREATMENTS[state.treat];
+        return t.primary ? t.primary(x) : inkSpec(x);
+      }
+      function secondarySpec(x) {
+        return TREATMENTS[state.treat].fill(x);
+      }
+
+      function acts(S, set, row) {
+        const p = gem(S.p, primarySpec(set));
+        const s = gem(S.s, secondarySpec(set));
+        const t = S.t ? '<span class="quiet">' + S.t + '</span>' : '';
+        if (row)
+          return (
+            '<div class="acts"><div class="row2">' +
+            p +
+            s +
+            '</div>' +
+            t +
+            '</div>'
+          );
+        return '<div class="acts">' + p + s + t + '</div>';
+      }
+      const summary = (S, set) =>
+        '<p class="sub"><b style="color:' +
+        set.a +
+        '">' +
+        S.score +
+        ' points</b> at level 5, in 22 problems.</p>';
+      const shell = (inner, set) =>
+        '<div class="phone" style="background:' +
+        set.s +
+        ';color:' +
+        set.i +
+        '"><div class="pat">' +
+        patSvg(set, state.kind, 390, 730, state.seed) +
+        '</div>' +
+        inner +
+        '</div>';
+
+      const COMPOSITIONS = [
+        {
+          n: '1 · Centred (shipped tonight)',
+          why: 'Message, score, then the action column, all centred as one block. The control.',
+          b: (S, set) =>
+            shell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                summary(S, set) +
+                acts(S, set) +
+                '</div>',
+              set
+            ),
+        },
+        {
+          n: '2 · Score as the hero',
+          why: 'The number is the achievement, so it takes the display size and the message becomes its label. Loses the sentence rhythm; gains something worth screenshotting.',
+          b: (S, set) =>
+            shell(
+              '<div class="stack mid"><p class="hero" style="color:' +
+                set.a +
+                '">' +
+                S.score +
+                '</p><p class="heroLbl">points · level 5</p><h2 class="msg" style="font-size:26px">' +
+                S.msg +
+                '</h2>' +
+                acts(S, set) +
+                '</div>',
+              set
+            ),
+        },
+        {
+          n: '3 · The receipt',
+          why: 'Score, problems and level as three equal stats under a rule. The only composition that surfaces the LEVEL, which today hides inside a sentence.',
+          b: (S, set) =>
+            shell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                '<div class="rule" style="background:' +
+                set.i +
+                '"></div><div class="stat">' +
+                '<div><b style="color:' +
+                set.a +
+                '">' +
+                S.score +
+                '</b><span>points</span></div>' +
+                '<div><b>22</b><span>problems</span></div><div><b>5</b><span>level</span></div></div>' +
+                acts(S, set) +
+                '</div>',
+              set
+            ),
+        },
+        {
+          n: '4 · Two gems in a row',
+          why: 'Primary and secondary side by side as a pair rather than a stack. Fastest to parse; watch the label size at 390px.',
+          b: (S, set) =>
+            shell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                summary(S, set) +
+                acts(S, set, true) +
+                '</div>',
+              set
+            ),
+        },
+      ];
+
+      function renderTreatments() {
+        const set = SETS[state.set];
+        document.getElementById('tgrid').innerHTML = Object.entries(TREATMENTS)
+          .map(([k, t]) => {
+            const m = measure(k);
+            const save = state.treat;
+            state.treat = k;
+            const p = gem('Try the hard set', primarySpec(set));
+            const s = gem('Try again', secondarySpec(set));
+            state.treat = save;
+            const labOk = m.label >= 4.5;
+            const edgeOk = m.edge === Infinity || m.edge >= 3.0;
+            const edgeTxt =
+              m.edge === Infinity
+                ? '<span class="pass">n/a — a link has no component boundary to draw</span>'
+                : '<span class="' +
+                  (edgeOk ? 'pass' : 'fail') +
+                  '">' +
+                  m.edge.toFixed(2) +
+                  ':1 (worst ' +
+                  m.edgeSet +
+                  ') ' +
+                  (edgeOk ? '✓' : '✗ FAILS 1.4.11 — needs 3.0') +
+                  '</span>';
+            const w = weightCheck(k);
+            return (
+              '<div class="tcard"><h3>' +
+              t.n +
+              '</h3><p class="why">' +
+              t.why +
+              '</p>' +
+              '<div class="tstage" style="background:' +
+              set.s +
+              ';color:' +
+              set.i +
+              '">' +
+              p +
+              s +
+              '</div>' +
+              '<p class="tnums">label on fill · <span class="' +
+              (labOk ? 'pass' : 'fail') +
+              '">' +
+              m.label.toFixed(2) +
+              ':1 (worst ' +
+              m.labelSet +
+              ') ' +
+              (labOk ? '✓' : '✗ FAILS 1.4.3') +
+              '</span><br>' +
+              'boundary vs surface · ' +
+              edgeTxt +
+              '<br>' +
+              'hierarchy holds on · <span class="' +
+              (w.n === 7 ? 'pass' : 'fail') +
+              '">' +
+              w.n +
+              ' of 7 sets' +
+              (w.n === 7 ? ' ✓' : ' ✗ inverts on ' + w.bad.join(', ')) +
+              '</span></p></div>'
+            );
+          })
+          .join('');
+      }
+      /* ---- the exit affordances ------------------------------------------ */
+      const X_GLYPH = '&#10005;';
+      function headerRow(set, withGuide) {
+        return (
+          '<div style="display:flex;align-items:center;gap:14px;padding:12px 8px 0">' +
+          '<span style="width:44px;height:44px;margin-left:-13px;display:grid;place-items:center;' +
+          'font-size:19px;opacity:.6">' +
+          X_GLYPH +
+          '</span>' +
+          '<span style="height:12px;flex:1;background:color-mix(in srgb,' +
+          set.i +
+          ' 12%,transparent);' +
+          'clip-path:polygon(4px 0,calc(100% - 4px) 0,100% 4px,100% calc(100% - 4px),' +
+          'calc(100% - 4px) 100%,4px 100%,0 calc(100% - 4px),0 4px)">' +
+          '<span style="display:block;height:100%;width:100%;background:' +
+          set.a +
+          '"></span></span>' +
+          (withGuide
+            ? '<span style="width:44px;height:44px;display:grid;place-items:center;font-size:15px;' +
+              'background:color-mix(in srgb,' +
+              set.i +
+              ' 14%,transparent);color:' +
+              set.i +
+              '">&#9829;</span>'
+            : '') +
+          '</div>'
+        );
+      }
+      const cornerX = (set) =>
+        '<span style="position:absolute;top:14px;left:8px;width:44px;height:44px;display:grid;' +
+        'place-items:center;font-size:19px;opacity:.6;z-index:2">' +
+        X_GLYPH +
+        '</span>';
+
+      function exitShell(inner, set, extra) {
+        return (
+          '<div class="phone" style="background:' +
+          set.s +
+          ';color:' +
+          set.i +
+          '">' +
+          '<div class="pat">' +
+          patSvg(set, state.kind, 390, 730, state.seed) +
+          '</div>' +
+          (extra || '') +
+          inner +
+          '</div>'
+        );
+      }
+      const bodyStack = (S, set, actsHtml) =>
+        '<div class="stack mid"><h2 class="msg">' +
+        S.msg +
+        '</h2>' +
+        summary(S, set) +
+        actsHtml +
+        '</div>';
+
+      const EXITS = [
+        {
+          n: 'a · a quiet link, named — SHIPPED',
+          why: '“All exercises” under the action column. Names its destination where a glyph only implies one, and sits where the eye already is after the primary.',
+          cost: '✓ unambiguous · ⚠ one more line in a column that already has two · ⚠ nothing in the flow looks like this, so it is a new pattern',
+          b: (S, set) =>
+            exitShell(
+              bodyStack(
+                S,
+                set,
+                '<div class="acts">' +
+                  gem(S.p, primarySpec(set)) +
+                  '<span class="quiet">Try again</span>' +
+                  '<span class="quiet">All exercises</span></div>'
+              ),
+              set
+            ),
+        },
+
+        {
+          n: 'b · a corner ✕',
+          why: 'The exact affordance the QUESTION screen uses, kept in the same corner. Nothing new to learn, and the action column stays two items.',
+          cost: '✓ consistent with the flow · ✗ a bare ✕ on a terminal screen is ambiguous — close what? · ✗ no accessible name unless one is written',
+          b: (S, set) =>
+            exitShell(
+              bodyStack(
+                S,
+                set,
+                '<div class="acts">' +
+                  gem(S.p, primarySpec(set)) +
+                  '<span class="quiet">Try again</span></div>'
+              ),
+              set,
+              cornerX(set)
+            ),
+        },
+
+        {
+          n: 'c · both — ✕ and the link',
+          why: 'Covers both habits: the learner who reaches for the corner and the one who reads the column.',
+          cost: '⚠ two controls doing one job, on a screen with three actions already · the redundancy is the point, and also the objection',
+          b: (S, set) =>
+            exitShell(
+              bodyStack(
+                S,
+                set,
+                '<div class="acts">' +
+                  gem(S.p, primarySpec(set)) +
+                  '<span class="quiet">Try again</span>' +
+                  '<span class="quiet">All exercises</span></div>'
+              ),
+              set,
+              cornerX(set)
+            ),
+        },
+
+        {
+          n: 'd · the exit IS the primary',
+          why: 'Reads the run as over: the expected act is leaving, and going on to the next drill is the option. The inverse of what shipped.',
+          cost: '✗ contradicts the score — the screen says “complete” and then makes leaving the loudest thing · defensible only if drills are seen as one-offs',
+          b: (S, set) =>
+            exitShell(
+              bodyStack(
+                S,
+                set,
+                '<div class="acts">' +
+                  gem('All exercises', primarySpec(set)) +
+                  '<span class="quiet">' +
+                  S.p +
+                  '</span><span class="quiet">Try again</span></div>'
+              ),
+              set
+            ),
+        },
+
+        {
+          n: 'e · back to the TOPIC, not the catalogue',
+          why: '“Back to Syllogistic Logic” returns to the group the drill belongs to rather than the root. More specific, and it keeps the learner inside the thing they chose.',
+          cost: '⚠ needs a topic anchor on the landing page that does not exist yet · ⚠ longer label wraps at 390px on the longer topic names',
+          b: (S, set) =>
+            exitShell(
+              bodyStack(
+                S,
+                set,
+                '<div class="acts">' +
+                  gem(S.p, primarySpec(set)) +
+                  '<span class="quiet">Try again</span>' +
+                  '<span class="quiet">Back to Syllogistic Logic</span></div>'
+              ),
+              set
+            ),
+        },
+
+        {
+          n: 'f · never take the exit away',
+          why: 'The structural answer. The bug was that the end screen REPLACES the sticky header that holds the ✕ — so keep the header instead of adding an exit below. The bar reads full, which is its own completion signal.',
+          cost: '✓ no new pattern, and the exit never disappears at any point in a run · ⚠ a progress bar on a terminal screen may read as “still going” · ⚠ the header is chrome for a screen that has no content to scroll',
+          b: (S, set) =>
+            exitShell(
+              headerRow(set, true) +
+                '<div class="stack mid" style="padding-top:0">' +
+                '<h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                summary(S, set) +
+                '<div class="acts">' +
+                gem(S.p, primarySpec(set)) +
+                '<span class="quiet">Try again</span></div></div>',
+              set
+            ),
+        },
+      ];
+
+      /* ---- how the ✕ is finished ----------------------------------------- */
+      const CHIP_CLIP =
+        'polygon(4px 0,calc(100% - 4px) 0,100% 4px,100% calc(100% - 4px),' +
+        'calc(100% - 4px) 100%,4px 100%,0 calc(100% - 4px),0 4px)';
+
+      const FINISHES = [
+        {
+          n: 'a · bare glyph — the question screen’s',
+          why: 'No ground at all. Consistent with the question screen, and the reason this section exists: over a blob it is ink on ink.',
+          st: (set) => 'color:' + set.i,
+          bad: true,
+        },
+        {
+          n: 'b · opaque surface chip — SHIPPED',
+          why: 'The set’s own surface, 4px sprite chamfer. Ink-on-surface every time: 7.04:1 on Set R, 12.67:1 on Set L.',
+          st: (set) =>
+            'color:' +
+            set.i +
+            ';background:' +
+            set.s +
+            ';clip-path:' +
+            CHIP_CLIP,
+        },
+        {
+          n: 'c · inverted — ink chip, surface glyph',
+          why: 'The same contrast the other way up. Heavier: a solid dark square in the corner competes with the primary button for weight.',
+          st: (set) =>
+            'color:' +
+            set.s +
+            ';background:' +
+            set.i +
+            ';clip-path:' +
+            CHIP_CLIP,
+        },
+        {
+          n: 'd · surface chip, ink at 60%',
+          why: 'The chip with the question screen’s own glyph strength, which is deliberately subordinate there because a bar sits beside it.',
+          st: (set) =>
+            'color:color-mix(in srgb,' +
+            set.i +
+            ' 60%,transparent);background:' +
+            set.s +
+            ';clip-path:' +
+            CHIP_CLIP,
+        },
+        {
+          n: 'e · circular chip',
+          why: 'Same ground, round. Reads as a system control rather than a brand one — and the product’s whole shape grammar is chamfered, never round.',
+          st: (set) =>
+            'color:' + set.i + ';background:' + set.s + ';border-radius:50%',
+        },
+        {
+          n: 'f · translucent chip — surface at 70%',
+          why: 'Lets the pattern show through so the corner stays airy. The cost is that the contrast now depends on what is behind it, which is the thing the chip existed to fix.',
+          st: (set) =>
+            'color:' +
+            set.i +
+            ';background:color-mix(in srgb,' +
+            set.s +
+            ' 70%,transparent)' +
+            ';clip-path:' +
+            CHIP_CLIP,
+        },
+        {
+          n: 'g · no chip, surface halo',
+          why: 'A glyph with a surface-coloured outline drawn around it. Keeps the bare look and still separates from a blob — but a halo on a 2px pixel glyph thickens it, and the shape grammar is unforgiving about that.',
+          st: (set) =>
+            'color:' +
+            set.i +
+            ';text-shadow:0 0 3px ' +
+            set.s +
+            ',0 0 3px ' +
+            set.s +
+            ',0 0 3px ' +
+            set.s,
+        },
+      ];
+
+      function renderFinishes() {
+        const set = SETS[state.set];
+        // The darkest thing the pattern can put behind the glyph is the ink
+        // itself, which is exactly what it is drawn in — the failure case.
+        const dark = set.i,
+          clean = set.s;
+        document.getElementById('finishes').innerHTML = FINISHES.map(
+          (f) =>
+            '<div class="fin"><h3>' +
+            f.n +
+            '</h3><p>' +
+            f.why +
+            '</p>' +
+            '<div class="finpair">' +
+            '<div class="finhalf" style="background:' +
+            dark +
+            '"><span class="finx" style="' +
+            f.st(set) +
+            '">&#10005;</span></div>' +
+            '<div class="finhalf" style="background:' +
+            clean +
+            '"><span class="finx" style="' +
+            f.st(set) +
+            '">&#10005;</span></div>' +
+            '</div><div class="fincap">over a pattern blob &nbsp;·&nbsp; over clean surface' +
+            (f.bad
+              ? ' &nbsp;— <span style="color:#ff9a9a">invisible left</span>'
+              : '') +
+            '</div></div>'
+        ).join('');
+      }
+
+      function renderExits() {
+        const set = SETS[state.set],
+          S = STATES[state.st];
+        document.getElementById('exits').innerHTML = EXITS.map(
+          (e) =>
+            '<div class="col"><h3>' +
+            e.n +
+            '</h3><p class="why">' +
+            e.why +
+            '</p>' +
+            e.b(S, set) +
+            '<p class="why" style="color:#e0b970;font:11.5px ui-monospace,monospace;min-height:0">' +
+            e.cost +
+            '</p></div>'
+        ).join('');
+      }
+
+      /* ---- the receipt, explored --------------------------------------- */
+      // Run quality, which the app ALREADY computes and discards: ScoreState
+      // carries solvedClean ("Problems solved first try — for the end screen")
+      // and missed, and solvedClean appears nowhere else in the codebase.
+      const RUNS = {
+        clean: {
+          taken: 20,
+          clean: 20,
+          missed: 0,
+          label: '20 for 20 — flawless',
+        },
+        ordinary: {
+          taken: 22,
+          clean: 18,
+          missed: 4,
+          label: '18 of 22 first try',
+        },
+        scraped: {
+          taken: 60,
+          clean: 40,
+          missed: 20,
+          label: '40 of 60 — scraped to 100',
+        },
+      };
+
+      const STAGES = {
+        phone: { w: 390, h: 730, label: 'Phone · 390×730' },
+        big: { w: 430, h: 800, label: 'Large phone · 430×800' },
+        tablet: { w: 768, h: 900, label: 'Tablet · 768×900' },
+        desktop: { w: 1280, h: 760, label: 'Desktop · 1280×760' },
+      };
+      // Render at true size, then scale to fit the sheet — so the ratio between
+      // the cleared pattern panel and the content is the device's, not the
+      // preview's. `mobile` is w < 640, which is the same test PatternLayer uses,
+      // so the panel geometry switches where the product switches.
+      function stageWrap(inner, set) {
+        const st = STAGES[state.stage];
+        const z = Math.min(1, 430 / st.w);
+        const mobile = st.w < 640;
+        return (
+          '<div><div class="stagebox" style="width:' +
+          Math.round(st.w * z) +
+          'px;height:' +
+          Math.round(st.h * z) +
+          'px">' +
+          '<div class="phone" style="width:' +
+          st.w +
+          'px;height:' +
+          st.h +
+          'px;transform:scale(' +
+          z +
+          ');background:' +
+          set.s +
+          ';color:' +
+          set.i +
+          '">' +
+          '<div class="pat">' +
+          patSvg(set, state.kind, st.w, st.h, state.seed, mobile) +
+          '</div>' +
+          cornerX(set) +
+          inner +
+          '</div></div>' +
+          '<div class="stagesize">' +
+          st.label +
+          (z < 1 ? ' · shown at ' + Math.round(z * 100) + '%' : '') +
+          '</div></div>'
+        );
+      }
+      const receiptShell = (inner, set) => stageWrap(inner, set);
+      const ghostSpec = (x) => ({
+        bg: 'transparent',
+        fg: x.i,
+        rim: null,
+        ghost: true,
+      });
+      const receiptActs = (S, set) =>
+        '<div class="acts tight">' +
+        gem(S.p, inkSpec(set)) +
+        gem('Try again', ghostSpec(set)) +
+        '</div>';
+      const rule = (set) =>
+        '<div class="rule" style="background:' + set.i + '"></div>';
+      const pct = (r) => Math.round((r.clean / r.taken) * 100);
+
+      const RECEIPTS = [
+        {
+          n: 'R1 · three stats — as it stands',
+          why: 'Points, problems, level. What the lab already had. Every figure is about the RUN; none is about the learner.',
+          cost: '⚠ “problems” and “level” are context, not achievement — a receipt with no skill figure on it',
+          b: (S, set, r) =>
+            receiptShell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                rule(set) +
+                '<div class="stat"><div><b>' +
+                counter(S.score, set.a) +
+                '</b><span>points</span></div>' +
+                '<div><b>' +
+                counter(r.taken) +
+                '</b><span>problems</span></div>' +
+                '<div><b>' +
+                counter(5) +
+                '</b><span>level</span></div></div>' +
+                receiptActs(S, set) +
+                '</div>',
+              set
+            ),
+        },
+
+        {
+          n: 'R2 · first try replaces problems',
+          why: 'The one change that makes it a receipt rather than a tally. solvedClean is the only figure on this screen that says anything about SKILL — and the app computes it already.',
+          cost: '✓ one prop to wire · ⚠ “18 / 22” needs the label to disambiguate it from the score',
+          b: (S, set, r) =>
+            receiptShell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                rule(set) +
+                '<div class="stat"><div><b>' +
+                counter(S.score, set.a) +
+                '</b><span>points</span></div>' +
+                '<div><b>' +
+                counter(r.clean) +
+                '<span class="den">/' +
+                r.taken +
+                '</span></b>' +
+                '<span>first try</span></div>' +
+                '<div><b>' +
+                counter(5) +
+                '</b><span>level</span></div></div>' +
+                receiptActs(S, set) +
+                '</div>',
+              set
+            ),
+        },
+
+        {
+          n: 'R3 · two stats, level as an eyebrow',
+          why: 'The level is a setting, not an outcome — so it moves above the headline where settings live, and the two figures that ARE outcomes get the width.',
+          cost: '✓ least crowded · ⚠ the eyebrow competes with the set name if that ever returns to this screen',
+          b: (S, set, r) =>
+            receiptShell(
+              '<div class="stack mid"><p class="eyebrow">Level 5</p>' +
+                '<h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                rule(set) +
+                '<div class="stat"><div><b>' +
+                counter(S.score, set.a) +
+                '</b><span>points</span></div>' +
+                '<div><b>' +
+                counter(r.clean) +
+                '<span class="den">/' +
+                r.taken +
+                '</span></b>' +
+                '<span>first try</span></div></div>' +
+                receiptActs(S, set) +
+                '</div>',
+              set
+            ),
+        },
+
+        {
+          n: 'R4 · rows, not columns',
+          why: 'A receipt is a list. Label left, value right, hairlines between — which is what the word actually describes, and it scales to a fourth line where three columns do not.',
+          cost: '✓ reads as a document · ⚠ taller than the column form · ⚠ left-aligned block inside a centred screen',
+          b: (S, set, r) =>
+            receiptShell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                '<div class="rows" style="color:' +
+                set.i +
+                '">' +
+                '<div><span>Points</span><b>' +
+                counter(S.score, set.a) +
+                '</b></div>' +
+                '<div style="border-color:color-mix(in srgb,' +
+                set.i +
+                ' 18%,transparent)"><span>First try</span>' +
+                '<b>' +
+                counter(r.clean) +
+                '<span class="den"> of ' +
+                r.taken +
+                '</span></b></div>' +
+                '<div style="border-color:color-mix(in srgb,' +
+                set.i +
+                ' 18%,transparent)"><span>Level</span><b>' +
+                counter(5) +
+                '</b></div>' +
+                '</div>' +
+                receiptActs(S, set) +
+                '</div>',
+              set
+            ),
+        },
+
+        {
+          n: 'R5 · the run, drawn',
+          why: 'One square per problem — filled for a first-try solve, hollow for one that took a second look. The receipt in the brand’s own pixel grammar, and the only version where a 20-for-20 and a 40-for-60 look different at a glance rather than differing by a numeral.',
+          cost: '⚠ solvedClean and missed are COUNTS, not a sequence — this can show how many, never in what order · ⚠ a 60-problem run wraps to five rows',
+          b: (S, set, r) =>
+            receiptShell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                '<p class="sub"><b style="color:' +
+                set.a +
+                '">' +
+                S.score +
+                ' points</b> at level 5.</p>' +
+                '<div class="strip">' +
+                Array.from(
+                  { length: Math.min(r.taken, 30) },
+                  (_, i) =>
+                    '<i style="background:' +
+                    (i < r.clean ? set.i : 'transparent') +
+                    ';box-shadow:inset 0 0 0 2px ' +
+                    set.i +
+                    '"></i>'
+                ).join('') +
+                '</div><p class="striplbl">' +
+                r.clean +
+                ' of ' +
+                r.taken +
+                ' first try</p>' +
+                receiptActs(S, set) +
+                '</div>',
+              set
+            ),
+        },
+
+        {
+          n: 'R6 · one sentence',
+          why: 'The receipt collapsed to prose. No stat furniture at all — the same three facts in the voice the rest of the screen already speaks.',
+          cost: '✓ nothing new to design · ⚠ nothing to screenshot, and the figures stop being scannable',
+          b: (S, set, r) =>
+            receiptShell(
+              '<div class="stack mid"><h2 class="msg">' +
+                S.msg +
+                '</h2>' +
+                '<p class="sub"><b style="color:' +
+                set.a +
+                '">' +
+                S.score +
+                ' points</b> at level 5, ' +
+                r.clean +
+                ' of ' +
+                r.taken +
+                ' first try.</p>' +
+                receiptActs(S, set) +
+                '</div>',
+              set
+            ),
+        },
+      ];
+
+      /* ---- the count-up -------------------------------------------------- */
+      /*
+       * TRIGGER  system, on mount. Nobody asks for this; the screen arriving is
+       *          the trigger (Saffer's system trigger).
+       * RULES    every animated figure starts at 0 and lands EXACTLY on its true
+       *          value. No overshoot and no bounce: an inflated score, even for
+       *          200ms, is dishonest feedback about a graded exercise. The
+       *          denominator is static — "of 22" is not an achievement. THE
+       *          LEVEL NEVER COUNTS: it is a setting the learner chose, and
+       *          animating it would claim it was earned.
+       * FEEDBACK scaled to significance — the score is the result and leads;
+       *          first-try is the skill figure and follows 120ms later. Same
+       *          easing and duration for both (the paired-elements rule), only
+       *          offset.
+       * LOOP     closed. Once per end screen, never repeated. If a learner ever
+       *          sees this dozens of times a session, a long loop should drop it
+       *          — progressive reduction — but a run is ~20 problems, so this is
+       *          firmly in "occasional".
+       */
+      // A CASCADE, not a queue (Malik, 2026-08-23 — revised twice).
+      //
+      // First it was a 120ms overlapping stagger; then strictly sequential, one
+      // figure finishing before the next began. Sequential was wrong for a
+      // reason worth writing down: a figure that sits at 0 for the 480ms its
+      // neighbour is counting does not read as "waiting its turn", it reads as
+      // BROKEN. Nothing on screen explains why that number is dead.
+      //
+      // So the offset is measured start-to-start, not end-to-start: each figure
+      // begins 130ms after the one before it STARTS. Every number is visibly
+      // moving within a sixth of a second, the eye still gets the left-to-right
+      // and top-to-bottom cascade, and the whole receipt settles in
+      // 480 + 2x130 = 740ms instead of 1.14s.
+      const COUNT_MS = 480;
+      const COUNT_OFFSET = 130;
+      // ease-out-quart, the value is ENTERING — matches --ease-out-quart in
+      // app/globals.css so the lab and the product share one curve.
+      const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+      const reduced = () =>
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function runCountUp(root) {
+        // Per STAGE, so each phone counts its own figures in its own order —
+        // otherwise the sixth card would start counting a second after the first.
+        root.querySelectorAll('.phone').forEach((stage) => {
+          countStage(stage);
+        });
+      }
+
+      function countStage(stage) {
+        [...stage.querySelectorAll('[data-count]')].forEach((el, i) => {
+          const to = Number(el.dataset.count);
+          const delay = i * COUNT_OFFSET;
+          if (reduced()) {
+            el.textContent = String(to);
+            return;
+          }
+          el.textContent = '0';
+          const start = performance.now() + delay;
+          // rAF + textContent on a ref'd node. NOT React state per frame — a
+          // re-render every frame is how a count-up drops frames.
+          const step = (now) => {
+            const t = Math.min(1, Math.max(0, (now - start) / COUNT_MS));
+            el.textContent = String(Math.round(easeOutQuart(t) * to));
+            if (t < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        });
+      }
+      // The counting node is aria-hidden and a static sr-only twin carries the
+      // real value, so a screen reader hears "100 points" once instead of
+      // hearing it recount sixty times.
+      // The box is sized to the FINAL value up front — `min-width` in `ch`,
+      // which with tabular figures is exactly one digit advance. So "7" occupies
+      // the same box as "100" from the first frame and nothing reflows while the
+      // digits arrive. Right-aligned inside it, so the ones column is the anchor.
+      // (Malik, 2026-08-23: "the layout shift feels a bit off" — it was, and
+      // tabular-nums alone cannot fix it, because a count changes digit COUNT.)
+      const counter = (value, colour) =>
+        '<span class="cnt" aria-hidden="true" data-count="' +
+        value +
+        '" style="min-width:' +
+        String(value).length +
+        'ch' +
+        (colour ? ';color:' + colour : '') +
+        '">0</span>' +
+        '<span class="sr">' +
+        value +
+        '</span>';
+
+      function renderReceipts() {
+        const set = SETS[state.set];
+        const r = RUNS[state.run];
+        const base = STATES[state.st];
+        // Praise replaces the headline only where the run actually SUCCEEDED —
+        // "Logic whiz" over "Out of problems." would be the app congratulating
+        // someone for running out of questions.
+        const S =
+          base.score >= 100
+            ? { ...base, msg: HEADS[state.head].pick(state.seed, r) }
+            : base;
+        document.getElementById('receipts').innerHTML = RECEIPTS.map(
+          (x) =>
+            '<div class="col"><h3>' +
+            x.n +
+            '</h3><p class="why">' +
+            x.why +
+            '</p>' +
+            x.b(S, set, r) +
+            '<p class="why" style="color:#e0b970;font:11.5px ui-monospace,monospace;min-height:0">' +
+            x.cost +
+            '</p></div>'
+        ).join('');
+        runCountUp(document.getElementById('receipts'));
+      }
+
+      function renderStages() {
+        const set = SETS[state.set],
+          S = STATES[state.st];
+        document.getElementById('stages').innerHTML = COMPOSITIONS.map(
+          (c) =>
+            '<div class="col"><h3>' +
+            c.n +
+            '</h3><p class="why">' +
+            c.why +
+            '</p>' +
+            c.b(S, set) +
+            '</div>'
+        ).join('');
+      }
+      const render = () => {
+        renderFinishes();
+        renderExits();
+        renderTreatments();
+        renderReceipts();
+        renderStages();
+      };
+
+      function dials() {
+        const d = document.getElementById('dials');
+        const opt = (o, sel) =>
+          Object.entries(o)
+            .map(
+              ([k, v]) =>
+                '<option value="' +
+                k +
+                '"' +
+                (k === sel ? ' selected' : '') +
+                '>' +
+                v +
+                '</option>'
+            )
+            .join('');
+        d.innerHTML =
+          '<div class="dial"><label for="set">Set</label><select id="set">' +
+          opt(
+            Object.fromEntries(Object.entries(SETS).map(([k, v]) => [k, v.n])),
+            state.set
+          ) +
+          '</select></div>' +
+          '<div class="dial"><label for="treat">Secondary treatment</label><select id="treat">' +
+          opt(
+            Object.fromEntries(
+              Object.entries(TREATMENTS).map(([k, v]) => [k, v.n])
+            ),
+            state.treat
+          ) +
+          '</select></div>' +
+          '<div class="dial"><label>&nbsp;</label>' +
+          '<button class="replay" id="recount">▶ Replay the count</button></div>' +
+          '<div class="dial"><label for="stage">Stage size</label><select id="stage">' +
+          opt(
+            Object.fromEntries(
+              Object.entries(STAGES).map(([k, v]) => [k, v.label])
+            ),
+            state.stage
+          ) +
+          '</select></div>' +
+          '<div class="dial"><label for="head">Headline</label><select id="head">' +
+          opt(
+            Object.fromEntries(
+              Object.entries(HEADS).map(([k, v]) => [k, v.label])
+            ),
+            state.head
+          ) +
+          '</select></div>' +
+          '<div class="dial"><label for="run">Run quality</label><select id="run">' +
+          opt(
+            Object.fromEntries(
+              Object.entries(RUNS).map(([k, v]) => [k, v.label])
+            ),
+            state.run
+          ) +
+          '</select></div>' +
+          '<div class="dial"><label for="st">Run outcome</label><select id="st">' +
+          opt(
+            {
+              next: 'reached 100 · a next drill exists',
+              done: 'reached 100 · no next drill',
+              short: 'ran out of problems',
+            },
+            state.st
+          ) +
+          '</select></div>' +
+          '<div class="dial"><label for="kind">Pattern</label><select id="kind">' +
+          opt(
+            {
+              camo: 'camo · classic (easy sets)',
+              'camo-giant': 'camo · giant (hard sets)',
+            },
+            state.kind
+          ) +
+          '</select></div>' +
+          '<div class="dial"><label for="seed">Scatter</label><select id="seed">' +
+          opt(
+            { 7: 'seed 7', 11: 'seed 11', 23: 'seed 23', 42: 'seed 42' },
+            String(state.seed)
+          ) +
+          '</select></div>';
+        d.querySelector('#recount').addEventListener('click', () =>
+          runCountUp(document.getElementById('receipts'))
+        );
+        d.querySelectorAll('select').forEach((s) =>
+          s.addEventListener('change', (e) => {
+            state[e.target.id] =
+              e.target.id === 'seed' ? +e.target.value : e.target.value;
+            render();
+          })
+        );
+      }
+
+      document.getElementById('notes').innerHTML = `
+<h3>The exit fork, and what it actually turns on</h3>
+<p>Three of these are the same idea at different volumes (<b>a</b>, <b>c</b>, <b>e</b>) and two are
+genuinely different claims about the screen.</p>
+<p><b>f · never take the exit away</b> is the one worth arguing with, because it fixes the cause
+rather than the symptom. The end screen has no exit precisely because it REPLACES the sticky header
+that carries the ✕ — so the alternative to adding an exit is not removing it in the first place. It
+introduces no new pattern, and the exit then exists at every moment of a run rather than at every
+moment except the last. Its cost is that a progress bar sitting above “Exercise complete.” has to be
+read as a full bar rather than as an unfinished one, and that is a real risk: the bar is the
+completion signal on the question screen and would be doing a second job here.</p>
+<p><b>d · the exit is the primary</b> is the one that contradicts the rest of the screen. The
+headline says “Exercise complete.” and the loudest control would say “leave”. That is coherent only
+if a drill is a one-off rather than a rung, and the catalogue's Easy → Hard pairs say it is a rung.</p>
+<p><b>b · a corner ✕</b> is the most consistent with the flow and the least self-explanatory. On the
+question screen the ✕ is unambiguous because there is obviously a thing in progress to close. On a
+terminal screen “close what?” is a real question, and the glyph carries no accessible name unless one
+is written for it — which is the moment it stops being cheaper than a word.</p>
+<p><b>What is NOT in dispute:</b> the destination. Every option lands on <code>/</code>, which has
+been the catalogue since 2026-08-17 and is where the question screen's own ✕ already goes. Option
+<b>e</b> is the one exception and it is blocked on an anchor that does not exist.</p>
+
+<h3>The measurement that decides the button question</h3>
+<p>Malik is right that the two buttons should differ, and the obvious way to do it is a soft
+&ldquo;tonal&rdquo; secondary. <b>It cannot be built here without a rim.</b> Measured across all
+seven palettes, a fill made by mixing the ink into the surface lands at
+<b>1.22&ndash;1.58:1 against that surface</b> — the label is legible but the BUTTON is not, which is
+a 1.4.11 failure, not a styling nit. Treatment <b>e</b> is that trap, shown so it is recognisable.</p>
+<table>
+<tr><th>secondary</th><th>label on fill</th><th>boundary vs surface</th><th></th></tr>
+<tr><td>solid accent</td><td class="n">4.55 (R)</td><td class="n">4.55 (R)</td><td class="pass">passes both</td></tr>
+<tr><td>ghost + ink rim</td><td class="n">7.04 (R)</td><td class="n">7.04 (R)</td><td class="pass">passes both</td></tr>
+<tr><td>tonal 18% + ink rim</td><td class="n">5.14 (R)</td><td class="n">7.04 (R)</td><td class="pass">passes both</td></tr>
+<tr><td>tonal 18%, no rim</td><td class="n">5.14 (R)</td><td class="n">1.35 (J)</td><td class="fail">fails 1.4.11</td></tr>
+<tr><td>accent fill, ink label</td><td class="n">1.54 (R)</td><td class="n">4.55 (R)</td><td class="fail">fails 1.4.3</td></tr>
+<tr><td>quiet link (shipped)</td><td class="n">4.86 (J)</td><td>n/a</td><td class="pass">passes</td></tr>
+</table>
+<p>So three secondaries are viable: <b>solid accent</b>, <b>ghost + rim</b>, <b>tonal + rim</b>. The
+accent is the only one that answers the note literally — a different <em>colour</em> rather than a
+different <em>weight</em> — and it is the one that ties the pair to the score, which is painted in
+the same accent two lines above. Its cost is that it sits at 4.55:1 on Set R, which passes AA for the
+16px semibold label with 0.05 to spare and nothing else.</p>
+<p>Note what a rim costs to build. A gem is <code>clip-path</code>ed, and clip-path removes outlines
+and box-shadows — this is the same fact that made the focus indicator a painted band rather than a
+ring. So &ldquo;outlined button&rdquo; here means a two-layer gem: an outer element filled with the
+rim colour, 3px of padding, an inner element in the fill. That is not a hack; it is what
+<code>ringBand</code> in <code>lib/pixel.ts</code> already does for focus.</p>
+
+<h3>What the desktop stage shows, and it is not flattering</h3>
+<p>Switch the stage dial to <b>Desktop &middot; 1280&times;760</b>. The receipt was designed against a
+390px phone and it shows: the stat block is ~290px of content adrift in a 1280px field, with the
+cleared pattern panel capping at 760px wide and the figures sitting small in the middle of it. The
+phone composition is not wrong on desktop, it is just <em>unscaled</em> — every element keeps its
+phone size while the canvas triples.</p>
+<p>That is a real open item and it is not solved by picking R2 or R4. The three obvious answers are
+to step the type up at <code>lg</code>, to cap the content column so the panel stops being so much
+wider than what it holds, or to accept that the end screen is a phone-first surface and let desktop
+be roomy. Worth deciding once, because it applies to the start screen too — that one was composed at
+the same width and has the same property.</p>
+
+<h3>R2 or R4 — and the count-up settles it</h3>
+<p>Malik&rsquo;s hypothesis was R4 on mobile and R2 on desktop. <b>Measured, the split is not needed
+and the direction is the other way round.</b></p>
+<table>
+<tr><th></th><th>R2 · columns</th><th>R4 · rows</th></tr>
+<tr><td>block on a 390px stage</td><td class="n">290 &times; 43</td><td class="n">280 &times; 104</td></tr>
+<tr><td>whole composition height</td><td class="n">309px</td><td class="n">351px</td></tr>
+<tr><td>cleared panel, iPhone SE (390&times;667)</td><td class="n" colspan="2">494px — both fit, 143px spare</td></tr>
+<tr><td>widest label vs its column</td><td class="n bad">97px in 96.7px</td><td class="n good">64px in 280px</td></tr>
+<tr><td><b>number drift while counting</b></td><td class="n bad">left 3.6px · right 3.7px</td><td class="n good">left 7.1px · <b>right 0px</b></td></tr>
+</table>
+<p><b>The vertical argument against R4 does not hold.</b> It costs 42px more, against 143px of spare
+panel on the smallest phone the product supports. That was my worry and the measurement retires it.</p>
+<p><b>R2 is the fragile one.</b> Its &ldquo;FIRST TRY&rdquo; label measures 97px inside a 96.7px
+column — it fits today with nothing to spare, so a longer label, a larger type step or any
+translation breaks it. R4&rsquo;s labels have 280px of row to sit in.</p>
+<p><b>And the count-up decides it.</b> A counting number changes digit COUNT, not just glyphs, so
+tabular figures do not save you. Centred in a column, the number grows in both directions — measured
+at 3.6px left and 3.7px right, so the figure shimmies for the whole 700ms. Right-aligned in a row,
+<b>the right edge never moves</b>: the ones digit stays put and the number grows leftward, which is
+why every ledger ever printed right-aligns its numerals. If the numbers animate, <b>R4 is the correct
+container</b> and R2 is fighting the animation.</p>
+<p><b>So: R4 everywhere, not a split.</b> Two layouts would mean two things to maintain and test
+across seven palettes and three run-quality states, for a screen seen once per run — and the
+measurement says one layout serves both sizes. R4&rsquo;s one real cost is that it introduces a
+second alignment axis: everything else on this screen is centred and the rows are justified. That is
+a taste call, not a constraint, and it is the thing to look at before committing.</p>
+
+<h3>The count-up, as a microinteraction</h3>
+<p><b>Trigger</b> — system, on mount. Nobody asks for it; the screen arriving is the trigger.</p>
+<p><b>Rules</b> — every animated figure starts at 0 and lands <em>exactly</em> on its true value. No
+overshoot and no bounce: an inflated score, even for 200ms, is dishonest feedback about a graded
+exercise, and Saffer&rsquo;s ethical boundary on feedback is explicit that progress must not deceive.
+The denominator is static, because &ldquo;of 22&rdquo; is not an achievement. <b>The level never
+counts</b> — it is a setting the learner chose, and animating it would claim it was earned.</p>
+<p><b>Feedback</b> — a cascade, measured start-to-start. Points at 0ms, first try at 130ms, level at
+260ms, each running 480ms on <code>ease-out-quart</code> (the curve globals.css already carries; the
+value is <em>entering</em>, which is what ease-out is for). Everything is settled by <b>740ms</b>.</p>
+<p>It was strictly sequential for one revision and that was wrong, for a reason worth keeping: a
+figure sitting at 0 while its neighbour counts does not read as <em>waiting its turn</em>, it reads
+as <b>broken</b> — nothing on screen explains why that number is dead. Start-to-start offsets keep
+the left-to-right, top-to-bottom cascade while every figure is visibly moving within a sixth of a
+second. The level counts too (Malik, 2026-08-23), which also retires my earlier argument that a
+setting should not animate: among two counting neighbours, the one static figure looked like a
+failure rather than a distinction.</p>
+<p><b>Loop</b> — closed, once per end screen. Worth revisiting if a learner ever meets it dozens of
+times a session, where progressive reduction would say drop it; a run is ~20 problems, so this sits
+in &ldquo;occasional&rdquo;, which is where the frequency rule permits an animation at all.</p>
+<p><b>Two implementation notes that are not optional.</b> The count is driven by
+<code>requestAnimationFrame</code> writing <code>textContent</code> on a ref&rsquo;d node —
+<em>never</em> React state per frame, because a re-render every frame is exactly how a counter drops
+them. And the animating node is <code>aria-hidden</code> with a static <code>sr-only</code> twin
+carrying the real value, so a screen reader hears &ldquo;100&rdquo; once instead of hearing it
+recount sixty times. Under <code>prefers-reduced-motion</code> the figure is written at its final
+value immediately — verified in this sheet.</p>
+
+<h3>Contrast is not visual weight, and that is what makes a colour-only hierarchy fragile</h3>
+<p>Look at treatment <b>b</b> on Set&nbsp;L. The magenta secondary has <em>lower</em> contrast than
+the plum primary (4.75:1 against 12.67:1) and yet it shouts louder. That is not an illusion; it is
+two dials pulling in opposite directions:</p>
+<table>
+<tr><th></th><th>the INK</th><th>the ACCENT</th></tr>
+<tr><td>lightness separation from its surface</td><td class="n">bigger on <b>7</b> of 7 sets</td><td class="n">smaller</td></tr>
+<tr><td>perceptual intensity (chroma, hue-weighted)</td><td class="n">lower on <b>6</b> of 7</td><td class="n">higher</td></tr>
+</table>
+<p>So &ldquo;which one reads as the primary&rdquo; depends on how you weight the two, and the answer
+genuinely differs by set — a 50/50 weighting puts the accent ahead on A, C, J, L and N, and the ink
+ahead on Q and R. <b>A hierarchy built on a colour swap therefore inverts on some palettes and not
+others</b>, and the product deliberately does not make per-set styling choices.</p>
+<p>A hierarchy built on <b>fill versus no fill</b> cannot invert, because a solid object always
+out-weighs a hollow one whatever colours they wear. That is why treatments <b>c</b>, <b>d</b> and
+<b>f</b> hold on 7 of 7 and <b>b</b> and <b>g</b> do not. <b>f · ghost with an accent rim</b> is the
+one that gets both things Malik asked for at once: the two buttons are visibly different
+<em>colours</em>, and the hierarchy is carried by weight, so it is stable.</p>
+
+<h3>Whether Try again should be a button at all</h3>
+<p>Tonight&rsquo;s rule demotes it to a quiet link after a completed run, because reaching 100 IS
+completion under the 2008 economy. Every treatment above except <b>a</b> promotes it back to a
+button, which is a real change of meaning and not only of styling: two gems say <em>choose</em>,
+a gem and a link say <em>go on, unless</em>. Switch the outcome dial to
+&ldquo;ran out of problems&rdquo; to see the case that matters most — there the primary IS Try Again
+and the secondary is the exit, and a two-gem row makes leaving look as expected as retrying.</p>
+
+<h3>The app already knows how well you got to 100 — and throws it away</h3>
+<p>Research round, verified against the source. <code>lib/scoring.ts</code> carries two fields on
+<code>ScoreState</code>:</p>
+<p><code>/** Problems solved first try — for the end screen. */ readonly solvedClean: number;</code><br>
+<code>/** Problems where at least one miss happened. */ readonly missed: number;</code></p>
+<p><b>&ldquo;For the end screen&rdquo; is in the docstring, and <code>solvedClean</code> appears
+nowhere else in the codebase.</b> The data was built for this screen and never wired to it. That
+matters because <em>&ldquo;graduated&rdquo; is not one thing</em>: under the shipped economy a
+translation set nets +5 for a clean solve and &minus;5 net for a problem missed once, so reaching 100
+means only <code>clean &minus; missed = 20</code>. A learner who went 20-for-20 and a learner who went
+40-for-60 land on the same headline and the same control hierarchy today.</p>
+<p>Two things follow. <b>Composition 4 · the receipt has real numbers to show</b> — it is currently
+padded with a hardcoded &ldquo;22 problems&rdquo; here, but <code>solvedClean</code> would make it
+&ldquo;18 of 22 first try&rdquo;, which is the only figure on the screen that says anything about
+skill. And <b>the primary could depend on run quality rather than on reaching the target</b>: clean
+run &rarr; the successor drill; marginal run &rarr; Try again, with the successor demoted but still
+visible. That is a genuine amendment to tonight&rsquo;s rule and it costs one prop.</p>
+<p>One more contradiction worth knowing before choosing &ldquo;All exercises&rdquo; as a primary: it
+routes to <code>/</code>, and <code>components/landing/resumeBanner.tsx</code> greets a returning
+learner with <em>&ldquo;Continue where you left off &mdash; you were at N points&rdquo;</em>. So the
+terminal screen&rsquo;s onward action currently hands a just-completed run to a surface that
+describes it as unfinished. Low severity &mdash; a wrong word in an 11px eyebrow &mdash; but the fix
+is a completion flag on <code>LastDrill</code>, not skipping the write.</p>
+
+<h3>Composition, and the inheritance worth questioning</h3>
+<p><b>1 · Centred</b> shipped. Its weakness is the one the question screen already found: on a tall
+phone the block floats mid-screen with the primary action far from the thumb, and the column&rsquo;s
+y position moves with the length of the message. <b>2 · Bottom-anchored</b> is the question
+screen&rsquo;s decided posture one screen later; judge it with the pattern on, because the cleared
+panel is what stops the empty middle reading as unfinished.</p>
+<p><b>3 · Score as the hero</b> is the biggest change and the most defensible on product grounds —
+the number is what the run produced, and it is the only version worth screenshotting, which is the
+only organic sharing surface a drill app has. The risk is tone: a 104px number reads as a game score,
+and this is a textbook companion used in graded courses.</p>
+<p><b>4 · The receipt</b> is closest to what the 2008 program did and the only one that shows the
+level. If the level dial ever returns to the start screen (one boolean in
+<code>startScreen.tsx</code>), this is the end screen that matches it.</p>
+<p><b>5 and 6</b> put the two gems in a row. Watch the 390px width — two gems side by side render
+&ldquo;Try the hard set&rdquo; at 14px, the smallest type any primary action in this product wears.</p>`;
+      dials();
+      render();
+    </script>
+  </body>
+</html>

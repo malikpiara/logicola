@@ -27,8 +27,9 @@
  */
 
 import type { Option, Question, Set } from '../types';
-import { rngFromSeed, pickFrom, type Rng } from '@/lib/rng';
+import { rngFromSeed, pickFresh, type Rng } from '@/lib/rng';
 import { adjectives, names, nounsProfessions } from '../lexicons';
+import { indefiniteArticle } from '@/lib/grammar';
 
 // =============================================================
 // KaTeX rendering of modal wffs
@@ -121,6 +122,10 @@ const HINT_NOT_WFF =
   'Your answer isn’t a wff — modal operators don’t take parentheses around their argument: write ‘☐A’, not ‘☐(A)’ or ‘(☐A)’.';
 const HINT_CONTINGENT_VS_TRUTH =
   'You translated ‘contingent truth’ instead of ‘contingent statement’ (or vice versa). A statement could be either true or false; a truth IS true.';
+// 2008 *56 `tb=y:` — aimed at the ◇-only mistake, which is NOT the
+// truth-vs-statement mixup (◇J isn't the translation of either idiom).
+const HINT_CONTINGENT_MORE_THAN_POSSIBLE =
+  '‘Contingent’ means more than ‘possible.’ (Necessary statements are also possible.)';
 const HINT_FORGOT_NOT = 'You forgot the ‘∼’.';
 const HINT_BOX_INSIDE_VS_OUTSIDE =
   '‘By itself’ / ‘intrinsically’ disambiguates to the box-inside form `(A ⊃ ☐B)`.';
@@ -217,7 +222,7 @@ function template0(rng: Rng, counter: number): Question {
   let prompt: string;
   let letter: string;
   if (useEnglish) {
-    const adj = pickFrom(rng, adjectives);
+    const adj = pickFresh(rng, adjectives);
     letter = adj[0]!.toUpperCase();
     prompt = `It’s a necessary truth that you’re ${adj}.`;
   } else {
@@ -245,8 +250,8 @@ function template1(rng: Rng, counter: number): Question {
   let prompt: string;
   let letter: string;
   if (useEnglish) {
-    const name = pickFrom(rng, names);
-    const adj = pickFrom(rng, adjectives);
+    const name = pickFresh(rng, names);
+    const adj = pickFresh(rng, adjectives);
     letter = adj[0]!.toUpperCase();
     prompt = `${name} could be ${adj}.`;
   } else {
@@ -274,8 +279,8 @@ function template2(rng: Rng, counter: number): Question {
   let prompt: string;
   let letter: string;
   if (useEnglish) {
-    const name = pickFrom(rng, names);
-    const adj = pickFrom(rng, adjectives);
+    const name = pickFresh(rng, names);
+    const adj = pickFresh(rng, adjectives);
     letter = adj[0]!.toUpperCase();
     prompt = `${name} couldn’t be ${adj}.`;
   } else {
@@ -308,7 +313,7 @@ function template3(rng: Rng, counter: number): Question {
     'is self-contradictory',
     'is inconsistent',
   ];
-  const phrase = pickFrom(rng, phrasings);
+  const phrase = pickFresh(rng, phrasings);
   const letter = pickDistinctLetters(rng, 1)[0]!;
   return buildQuestion(
     3,
@@ -340,7 +345,7 @@ function template4(rng: Rng, counter: number): Question {
   return buildQuestion(
     4,
     counter,
-    pickFrom(rng, phrasings),
+    pickFresh(rng, phrasings),
     [
       { raw: `☐(${h} ⊃ ${j})` },
       {
@@ -371,7 +376,7 @@ function template5(rng: Rng, counter: number): Question {
   return buildQuestion(
     5,
     counter,
-    pickFrom(rng, phrasings),
+    pickFresh(rng, phrasings),
     [
       { raw: `☐(${h} ⊃ ∼${j})` },
       { raw: `☐(${h} ⊃ ${j})`, layer2: HINT_FORGOT_NOT },
@@ -401,7 +406,7 @@ function template6(rng: Rng, counter: number): Question {
   return buildQuestion(
     6,
     counter,
-    pickFrom(rng, phrasings),
+    pickFresh(rng, phrasings),
     [
       { raw: `(${h} ⊃ ☐${j})` },
       { raw: `☐(${h} ⊃ ${j})`, layer2: HINT_BOX_INSIDE_VS_OUTSIDE },
@@ -428,7 +433,7 @@ function template7(rng: Rng, counter: number): Question {
   return buildQuestion(
     7,
     counter,
-    pickFrom(rng, phrasings),
+    pickFresh(rng, phrasings),
     [
       {
         raw: `Ambiguous between (${h} ⊃ ☐${j}) and ☐(${h} ⊃ ${j})`,
@@ -470,7 +475,7 @@ function template8(rng: Rng, counter: number): Question {
   return buildQuestion(
     8,
     counter,
-    pickFrom(rng, phrasings),
+    pickFresh(rng, phrasings),
     [
       {
         raw: `Ambiguous between (${h} ⊃ ∼◇${j}) and ☐(${h} ⊃ ∼${j})`,
@@ -511,7 +516,7 @@ function template9(rng: Rng, counter: number): Question {
   let prompt: string;
   let letter: string;
   if (useEnglish) {
-    const adj = pickFrom(rng, adjectives);
+    const adj = pickFresh(rng, adjectives);
     letter = adj[0]!.toUpperCase();
     prompt = `It isn’t necessary that you’re ${adj}.`;
   } else {
@@ -576,11 +581,11 @@ function template10(rng: Rng, counter: number): Question {
       useAdj: false,
     },
   ] as const;
-  const v = pickFrom(rng, variants);
+  const v = pickFresh(rng, variants);
   let prompt: string;
   let letter: string;
   if (v.useAdj) {
-    const adj = pickFrom(rng, adjectives);
+    const adj = pickFresh(rng, adjectives);
     letter = adj[0]!.toUpperCase();
     prompt = v.phrasing(adj);
   } else {
@@ -640,10 +645,10 @@ function template12(rng: Rng, counter: number): Question {
   let correct: string;
   if (useConditional) {
     if (useNL) {
-      const noun = pickFrom(rng, nounsProfessions);
-      const adj = pickFrom(rng, adjectives);
+      const noun = pickFresh(rng, nounsProfessions);
+      const adj = pickFresh(rng, adjectives);
       const [u, v] = [noun[0]!.toUpperCase(), adj[0]!.toUpperCase()];
-      prompt = `If you’re a ${noun} then you’re ${adj}.`;
+      prompt = `If you’re ${indefiniteArticle(noun)} ${noun} then you’re ${adj}.`;
       correct = `(${u} ⊃ ${v})`;
     } else {
       const [h, j] = pickDistinctLetters(rng, 2);
@@ -674,9 +679,9 @@ function template12(rng: Rng, counter: number): Question {
     );
   } else {
     if (useNL) {
-      const noun = pickFrom(rng, nounsProfessions);
+      const noun = pickFresh(rng, nounsProfessions);
       const u = noun[0]!.toUpperCase();
-      prompt = `You’re a ${noun}.`;
+      prompt = `You’re ${indefiniteArticle(noun)} ${noun}.`;
       correct = u;
     } else {
       const h = pickDistinctLetters(rng, 1)[0]!;
@@ -813,7 +818,7 @@ function template16(rng: Rng, counter: number): Question {
     [
       { raw: `(◇${letter} · ◇∼${letter})` },
       { raw: `(${letter} · ◇∼${letter})`, layer2: HINT_CONTINGENT_VS_TRUTH },
-      { raw: `◇${letter}`, layer2: HINT_CONTINGENT_VS_TRUTH },
+      { raw: `◇${letter}`, layer2: HINT_CONTINGENT_MORE_THAN_POSSIBLE },
       {
         raw: `(☐${letter} · ☐∼${letter})`,
         layer2:
@@ -951,7 +956,7 @@ function template21(rng: Rng, counter: number): Question {
 
 /** *22 — "It's possible that someone is W" → ◇(∃x)Wx */
 function template22(rng: Rng, counter: number): Question {
-  const adj = pickFrom(rng, adjectives);
+  const adj = pickFresh(rng, adjectives);
   const W = adj[0]!.toUpperCase();
   return buildQuestion(
     22,
@@ -979,7 +984,7 @@ function template22(rng: Rng, counter: number): Question {
 
 /** *23 — "It's necessary that everyone is V" → ☐(x)Vx */
 function template23(rng: Rng, counter: number): Question {
-  const adj = pickFrom(rng, adjectives);
+  const adj = pickFresh(rng, adjectives);
   const V = adj[0]!.toUpperCase();
   return buildQuestion(
     23,
@@ -1008,7 +1013,7 @@ function template23(rng: Rng, counter: number): Question {
 
 /** *24 — "It's possible for anyone to be W" → (x)◇Wx */
 function template24(rng: Rng, counter: number): Question {
-  const adj = pickFrom(rng, adjectives);
+  const adj = pickFresh(rng, adjectives);
   const W = adj[0]!.toUpperCase();
   return buildQuestion(
     24,
@@ -1034,7 +1039,7 @@ function template24(rng: Rng, counter: number): Question {
 
 /** *25 — "Everyone is necessarily V" (de re) → (x)☐Vx */
 function template25(rng: Rng, counter: number): Question {
-  const adj = pickFrom(rng, adjectives);
+  const adj = pickFresh(rng, adjectives);
   const V = adj[0]!.toUpperCase();
   // Only the disambiguated phrasing is used. Gensler §11.2 treats the
   // bare "Everyone is necessarily A" as AMBIGUOUS (de re (x)☐Vx vs de
@@ -1065,15 +1070,15 @@ function template25(rng: Rng, counter: number): Question {
 
 /** *26 — "Being V is a contingent property of X" → (Vn · ◇∼Vn) where n=name letter */
 function template26(rng: Rng, counter: number): Question {
-  const adj = pickFrom(rng, adjectives);
-  const name = pickFrom(rng, names);
+  const adj = pickFresh(rng, adjectives);
+  const name = pickFresh(rng, names);
   const V = adj[0]!.toUpperCase();
   const n = name[0]!.toLowerCase();
   const word = rng() < 0.5 ? 'contingent' : 'accidental';
   return buildQuestion(
     26,
     counter,
-    `Being ${adj} is a ${word} property of ${name}.`,
+    `Being ${adj} is ${indefiniteArticle(word)} ${word} property of ${name}.`,
     [
       { raw: `(${V}${n} · ◇∼${V}${n})` },
       {
@@ -1112,15 +1117,15 @@ function template26(rng: Rng, counter: number): Question {
 
 /** *27 — "Being W is a necessary property of X" → ☐Wn */
 function template27(rng: Rng, counter: number): Question {
-  const adj = pickFrom(rng, adjectives);
-  const name = pickFrom(rng, names);
+  const adj = pickFresh(rng, adjectives);
+  const name = pickFresh(rng, names);
   const W = adj[0]!.toUpperCase();
   const n = name[0]!.toLowerCase();
   const word = rng() < 0.5 ? 'necessary' : 'essential';
   return buildQuestion(
     27,
     counter,
-    `Being ${adj} is a ${word} property of ${name}.`,
+    `Being ${adj} is ${indefiniteArticle(word)} ${word} property of ${name}.`,
     [
       { raw: `☐${W}${n}` },
       { raw: `${W}${n}`, layer2: HINT_NEED_ANOTHER_MODAL },
@@ -1137,8 +1142,8 @@ function template27(rng: Rng, counter: number): Question {
 
 /** *28 — "All Us are necessarily W" → AMBIGUOUS */
 function template28(rng: Rng, counter: number): Question {
-  const noun = pickFrom(rng, nounsProfessions);
-  const adj = pickFrom(rng, adjectives);
+  const noun = pickFresh(rng, nounsProfessions);
+  const adj = pickFresh(rng, adjectives);
   const U = noun[0]!.toUpperCase();
   const W = adj[0]!.toUpperCase();
   const phrasings = [
@@ -1148,7 +1153,7 @@ function template28(rng: Rng, counter: number): Question {
   return buildQuestion(
     28,
     counter,
-    pickFrom(rng, phrasings),
+    pickFresh(rng, phrasings),
     [
       {
         raw: `Ambiguous between (x)(${U}x ⊃ ☐${W}x) and ☐(x)(${U}x ⊃ ${W}x)`,
@@ -1181,8 +1186,8 @@ function template28(rng: Rng, counter: number): Question {
 
 /** *29 — "It's necessary that all Us are W" → ☐(x)(Ux ⊃ Wx) */
 function template29(rng: Rng, counter: number): Question {
-  const noun = pickFrom(rng, nounsProfessions);
-  const adj = pickFrom(rng, adjectives);
+  const noun = pickFresh(rng, nounsProfessions);
+  const adj = pickFresh(rng, adjectives);
   const U = noun[0]!.toUpperCase();
   const W = adj[0]!.toUpperCase();
   return buildQuestion(
@@ -1210,8 +1215,8 @@ function template29(rng: Rng, counter: number): Question {
 
 /** *30 — "All Us have the property of being necessarily W" → (x)(Ux ⊃ ☐Wx) */
 function template30(rng: Rng, counter: number): Question {
-  const noun = pickFrom(rng, nounsProfessions);
-  const adj = pickFrom(rng, adjectives);
+  const noun = pickFresh(rng, nounsProfessions);
+  const adj = pickFresh(rng, adjectives);
   const U = noun[0]!.toUpperCase();
   const W = adj[0]!.toUpperCase();
   const phrasings = [
@@ -1221,7 +1226,7 @@ function template30(rng: Rng, counter: number): Question {
   return buildQuestion(
     30,
     counter,
-    pickFrom(rng, phrasings),
+    pickFresh(rng, phrasings),
     [
       { raw: `(x)(${U}x ⊃ ☐${W}x)` },
       {
@@ -1288,7 +1293,7 @@ export function* basicQuestions(seed?: number): Generator<Question> {
   const rng = rngFromSeed(seed);
   let counter = 0;
   while (true) {
-    const renderer = pickFrom(rng, basicTemplates);
+    const renderer = pickFresh(rng, basicTemplates);
     yield renderer(rng, counter++);
   }
 }
@@ -1297,7 +1302,7 @@ export function* quantifiedQuestions(seed?: number): Generator<Question> {
   const rng = rngFromSeed(seed);
   let counter = 0;
   while (true) {
-    const renderer = pickFrom(rng, quantifiedTemplates);
+    const renderer = pickFresh(rng, quantifiedTemplates);
     yield renderer(rng, counter++);
   }
 }
@@ -1336,6 +1341,8 @@ export function generateSetJ(seed?: number, perSubset = 10): Set {
         id: 4,
         title: 'Modal Translations: Basic',
         header: 'Translates into logic as:',
+        description:
+          'Translate claims about what is necessary, possible, and contingent into the box and diamond of modal logic.',
         questions: take(basicQuestions(seedFor(1)), perSubset),
       },
       {
@@ -1347,6 +1354,8 @@ export function generateSetJ(seed?: number, perSubset = 10): Set {
         id: 4,
         title: 'Modal Translations: Quantified',
         header: 'Translates into logic as:',
+        description:
+          'Mix modality with quantifiers, where the order of box, diamond, and “all” changes what a claim says.',
         questions: take(quantifiedQuestions(seedFor(2)), perSubset),
       },
     ],

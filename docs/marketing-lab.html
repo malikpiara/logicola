@@ -1,0 +1,2413 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+      Marketing lab — blog &amp; release notes (PROPOSED 2026-08-14)
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Roboto+Mono:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #111;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        background: #d9d9d2;
+        font-family: 'Roboto Flex', system-ui, sans-serif;
+        color: var(--ink);
+        padding: 48px 24px 96px;
+      }
+      .lab-head {
+        max-width: 1200px;
+        margin: 0 auto 12px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        color: #555;
+      }
+      .lab-head strong {
+        color: #111;
+      }
+      .screen-label {
+        max-width: 1200px;
+        margin: 56px auto 10px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #555;
+      }
+      .frame {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: var(--hl-ground, #fff);
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+        overflow: hidden;
+      }
+
+      .display {
+        font-stretch: 151%;
+        font-weight: 800;
+        letter-spacing: 0.01em;
+      }
+
+      /* nav — always on the scheme ground (decided 2026-08-13) */
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 40px;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 26px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 13.5px;
+        font-weight: 600;
+      }
+      .nav-links a {
+        opacity: 0.75;
+      }
+      .nav-links a.on,
+      .nav-links a.cta {
+        opacity: 1;
+      }
+      .nav-links .cta {
+        font-weight: 700;
+        padding: 9px 22px;
+        clip-path: polygon(
+          0px 24px,
+          0px 16px,
+          4px 16px,
+          4px 8px,
+          8px 8px,
+          8px 4px,
+          16px 4px,
+          16px 0px,
+          calc(100% - 16px) 0px,
+          calc(100% - 16px) 4px,
+          calc(100% - 8px) 4px,
+          calc(100% - 8px) 8px,
+          calc(100% - 4px) 8px,
+          calc(100% - 4px) 16px,
+          calc(100% - 0px) 16px,
+          calc(100% - 0px) 24px,
+          calc(100% - 0px) calc(100% - 24px),
+          calc(100% - 0px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 0px),
+          16px calc(100% - 0px),
+          16px calc(100% - 4px),
+          8px calc(100% - 4px),
+          8px calc(100% - 8px),
+          4px calc(100% - 8px),
+          4px calc(100% - 16px),
+          0px calc(100% - 16px),
+          0px calc(100% - 24px)
+        );
+      }
+
+      .page {
+        padding: 28px 40px 56px;
+        background: var(--hl-ground, #fff);
+      }
+      .page-narrow {
+        padding-left: 0;
+        padding-right: 0;
+        max-width: 820px;
+        margin: 0 auto;
+      }
+
+      /* pattern art. Ratios are named, not accidental: featured = 3:2 (the
+     premium slot), cards = 16:9 (the ratio covers actually come in —
+     a fixed-height slot was cropping real images to 2.58:1). */
+      .art {
+        clip-path: polygon(
+          0px 24px,
+          0px 16px,
+          4px 16px,
+          4px 8px,
+          8px 8px,
+          8px 4px,
+          16px 4px,
+          16px 0px,
+          calc(100% - 16px) 0px,
+          calc(100% - 16px) 4px,
+          calc(100% - 8px) 4px,
+          calc(100% - 8px) 8px,
+          calc(100% - 4px) 8px,
+          calc(100% - 4px) 16px,
+          calc(100% - 0px) 16px,
+          calc(100% - 0px) 24px,
+          calc(100% - 0px) calc(100% - 24px),
+          calc(100% - 0px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 0px),
+          16px calc(100% - 0px),
+          16px calc(100% - 4px),
+          8px calc(100% - 4px),
+          8px calc(100% - 8px),
+          4px calc(100% - 8px),
+          4px calc(100% - 16px),
+          0px calc(100% - 16px),
+          0px calc(100% - 24px)
+        );
+      }
+      .art-hero {
+        aspect-ratio: 3/2;
+        height: auto;
+      }
+      .art-card {
+        aspect-ratio: 16/9;
+        height: auto;
+      }
+      .art-band {
+        height: 280px;
+        margin: 30px 0 6px;
+      }
+
+      /* blog index */
+      .hero-split {
+        display: grid;
+        grid-template-columns: 1.15fr 1fr;
+        gap: 44px;
+        align-items: center;
+        padding: 16px 0 8px;
+      }
+      .hero-title {
+        font-size: 52px;
+        line-height: 1.03;
+        margin: 16px 0 0;
+        color: var(--hl-type, #111);
+      }
+      .dek {
+        font-size: 19px;
+        line-height: 1.45;
+        color: var(--hl-type, #444);
+        opacity: 0.82;
+        margin-top: 16px;
+      }
+      .byline {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12.5px;
+        color: var(--hl-type, #666);
+        opacity: 0.62;
+        margin-top: 12px;
+      }
+      .label {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--hl-type, #666);
+        opacity: 0.7;
+        margin: 40px 0 16px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 36px;
+      }
+      .card-title {
+        font-size: 24px;
+        margin-top: 16px;
+        color: var(--hl-type, #111);
+      }
+      .card-dek {
+        color: var(--hl-type, #444);
+        opacity: 0.82;
+        line-height: 1.5;
+        margin-top: 8px;
+      }
+      .chiprow {
+        display: flex;
+        gap: 6px;
+        margin-top: 14px;
+      }
+
+      /* chips: the square "abbreviation box" (pixel-ui.md). The gem/NewBadge
+     is app-only. NEW FEATURE emphasises by fill weight, never by shape. */
+      .hl-chip {
+        display: inline-flex;
+        height: 24px;
+        align-items: center;
+        padding: 0 10px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: color-mix(
+          in srgb,
+          var(--hl-ink) 14%,
+          var(--hl-ground, #fff)
+        );
+        color: var(--hl-type);
+      }
+      .hl-chip-new {
+        background: var(--hl-ink);
+        color: var(--hl-ground, #fff);
+      }
+
+      /* blog post */
+      .back {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--hl-type, #666);
+        opacity: 0.7;
+        margin: 6px 0 26px;
+      }
+      .post-title {
+        font-size: 46px;
+        line-height: 1.05;
+        color: var(--hl-type, #111);
+      }
+      .prose {
+        margin-top: 26px;
+        font-size: 17px;
+        line-height: 1.62;
+        color: var(--hl-type, #222);
+      }
+      .prose p {
+        margin: 14px 0;
+      }
+      .prose h2 {
+        font-size: 24px;
+        margin: 30px 0 6px;
+      }
+      .prose ul {
+        margin: 12px 0 12px 22px;
+      }
+      .prose li {
+        margin: 7px 0;
+      }
+
+      /* subscribe control — one wide box, button embedded right (decided) */
+      .subwide {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        margin-top: 20px;
+        background: #fff;
+        border: 1.5px solid #9c9c90;
+        padding: 6px 6px 6px 18px;
+      }
+      .subwide-text {
+        flex: 1;
+        text-align: left;
+        font-size: 14.5px;
+        color: #888;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .subwide-btn {
+        font-weight: 700;
+        font-size: 14px;
+        padding: 11px 26px;
+        clip-path: polygon(
+          0px 24px,
+          0px 16px,
+          4px 16px,
+          4px 8px,
+          8px 8px,
+          8px 4px,
+          16px 4px,
+          16px 0px,
+          calc(100% - 16px) 0px,
+          calc(100% - 16px) 4px,
+          calc(100% - 8px) 4px,
+          calc(100% - 8px) 8px,
+          calc(100% - 4px) 8px,
+          calc(100% - 4px) 16px,
+          calc(100% - 0px) 16px,
+          calc(100% - 0px) 24px,
+          calc(100% - 0px) calc(100% - 24px),
+          calc(100% - 0px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 0px),
+          16px calc(100% - 0px),
+          16px calc(100% - 4px),
+          8px calc(100% - 4px),
+          8px calc(100% - 8px),
+          4px calc(100% - 8px),
+          4px calc(100% - 16px),
+          0px calc(100% - 16px),
+          0px calc(100% - 24px)
+        );
+        white-space: nowrap;
+      }
+      .subwide-wrap {
+        position: relative;
+        width: 100%;
+        margin-top: 20px;
+      }
+      .subwide-wrap .subwide {
+        margin-top: 0;
+      }
+      .subwide-wrap::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: currentColor;
+        clip-path: polygon(
+          evenodd,
+          0px 50%,
+          0px 24px,
+          0px 16px,
+          4px 16px,
+          4px 8px,
+          8px 8px,
+          8px 4px,
+          16px 4px,
+          16px 0px,
+          calc(100% - 16px) 0px,
+          calc(100% - 16px) 4px,
+          calc(100% - 8px) 4px,
+          calc(100% - 8px) 8px,
+          calc(100% - 4px) 8px,
+          calc(100% - 4px) 16px,
+          calc(100% - 0px) 16px,
+          calc(100% - 0px) 24px,
+          calc(100% - 0px) calc(100% - 24px),
+          calc(100% - 0px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 0px),
+          16px calc(100% - 0px),
+          16px calc(100% - 4px),
+          8px calc(100% - 4px),
+          8px calc(100% - 8px),
+          4px calc(100% - 8px),
+          4px calc(100% - 16px),
+          0px calc(100% - 16px),
+          0px calc(100% - 24px),
+          0px 50%,
+          2px 50%,
+          2px 26px,
+          2px 18px,
+          6px 18px,
+          6px 10px,
+          10px 10px,
+          10px 6px,
+          18px 6px,
+          18px 2px,
+          calc(100% - 18px) 2px,
+          calc(100% - 18px) 6px,
+          calc(100% - 10px) 6px,
+          calc(100% - 10px) 10px,
+          calc(100% - 6px) 10px,
+          calc(100% - 6px) 18px,
+          calc(100% - 2px) 18px,
+          calc(100% - 2px) 26px,
+          calc(100% - 2px) calc(100% - 26px),
+          calc(100% - 2px) calc(100% - 18px),
+          calc(100% - 6px) calc(100% - 18px),
+          calc(100% - 6px) calc(100% - 10px),
+          calc(100% - 10px) calc(100% - 10px),
+          calc(100% - 10px) calc(100% - 6px),
+          calc(100% - 18px) calc(100% - 6px),
+          calc(100% - 18px) calc(100% - 2px),
+          18px calc(100% - 2px),
+          18px calc(100% - 6px),
+          10px calc(100% - 6px),
+          10px calc(100% - 10px),
+          6px calc(100% - 10px),
+          6px calc(100% - 18px),
+          2px calc(100% - 18px),
+          2px calc(100% - 26px),
+          2px 50%
+        );
+        pointer-events: none;
+        z-index: 2;
+      }
+      .subwide-wrap .subwide {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* in-post quiz widget (lab mock) */
+      .qe {
+        margin: 28px 0;
+        padding: 28px 32px 18px;
+        clip-path: polygon(
+          0px 24px,
+          0px 16px,
+          4px 16px,
+          4px 8px,
+          8px 8px,
+          8px 4px,
+          16px 4px,
+          16px 0px,
+          calc(100% - 16px) 0px,
+          calc(100% - 16px) 4px,
+          calc(100% - 8px) 4px,
+          calc(100% - 8px) 8px,
+          calc(100% - 4px) 8px,
+          calc(100% - 4px) 16px,
+          calc(100% - 0px) 16px,
+          calc(100% - 0px) 24px,
+          calc(100% - 0px) calc(100% - 24px),
+          calc(100% - 0px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 0px),
+          16px calc(100% - 0px),
+          16px calc(100% - 4px),
+          8px calc(100% - 4px),
+          8px calc(100% - 8px),
+          4px calc(100% - 8px),
+          4px calc(100% - 16px),
+          0px calc(100% - 16px),
+          0px calc(100% - 24px)
+        );
+      }
+      .qe .chiprow {
+        align-items: center;
+      }
+      .qe-set {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        font-weight: 600;
+        opacity: 0.75;
+        margin-left: 6px;
+      }
+      .qe-prompt {
+        font-size: 16.5px;
+        line-height: 1.55;
+        margin-top: 14px;
+        font-style: italic;
+      }
+      .qe-ask {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12.5px;
+        font-weight: 600;
+        margin: 14px 0 10px;
+        opacity: 0.8;
+      }
+      .qe-row {
+        margin: 8px 0;
+        cursor: pointer;
+        user-select: none;
+      }
+      .qe-opt {
+        display: flex;
+        align-items: center;
+        padding: 11px 18px;
+        font-size: 15px;
+        font-weight: 600;
+        clip-path: polygon(
+          0px 24px,
+          0px 16px,
+          4px 16px,
+          4px 8px,
+          8px 8px,
+          8px 4px,
+          16px 4px,
+          16px 0px,
+          calc(100% - 16px) 0px,
+          calc(100% - 16px) 4px,
+          calc(100% - 8px) 4px,
+          calc(100% - 8px) 8px,
+          calc(100% - 4px) 8px,
+          calc(100% - 4px) 16px,
+          calc(100% - 0px) 16px,
+          calc(100% - 0px) 24px,
+          calc(100% - 0px) calc(100% - 24px),
+          calc(100% - 0px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 0px),
+          16px calc(100% - 0px),
+          16px calc(100% - 4px),
+          8px calc(100% - 4px),
+          8px calc(100% - 8px),
+          4px calc(100% - 8px),
+          4px calc(100% - 16px),
+          0px calc(100% - 16px),
+          0px calc(100% - 24px)
+        );
+      }
+      .qe-optwrap {
+        display: block;
+        position: relative;
+      }
+      .qe-optwrap::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: currentColor;
+        clip-path: polygon(
+          evenodd,
+          0px 50%,
+          0px 24px,
+          0px 16px,
+          4px 16px,
+          4px 8px,
+          8px 8px,
+          8px 4px,
+          16px 4px,
+          16px 0px,
+          calc(100% - 16px) 0px,
+          calc(100% - 16px) 4px,
+          calc(100% - 8px) 4px,
+          calc(100% - 8px) 8px,
+          calc(100% - 4px) 8px,
+          calc(100% - 4px) 16px,
+          calc(100% - 0px) 16px,
+          calc(100% - 0px) 24px,
+          calc(100% - 0px) calc(100% - 24px),
+          calc(100% - 0px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 0px),
+          16px calc(100% - 0px),
+          16px calc(100% - 4px),
+          8px calc(100% - 4px),
+          8px calc(100% - 8px),
+          4px calc(100% - 8px),
+          4px calc(100% - 16px),
+          0px calc(100% - 16px),
+          0px calc(100% - 24px),
+          0px 50%,
+          2px 50%,
+          2px 26px,
+          2px 18px,
+          6px 18px,
+          6px 10px,
+          10px 10px,
+          10px 6px,
+          18px 6px,
+          18px 2px,
+          calc(100% - 18px) 2px,
+          calc(100% - 18px) 6px,
+          calc(100% - 10px) 6px,
+          calc(100% - 10px) 10px,
+          calc(100% - 6px) 10px,
+          calc(100% - 6px) 18px,
+          calc(100% - 2px) 18px,
+          calc(100% - 2px) 26px,
+          calc(100% - 2px) calc(100% - 26px),
+          calc(100% - 2px) calc(100% - 18px),
+          calc(100% - 6px) calc(100% - 18px),
+          calc(100% - 6px) calc(100% - 10px),
+          calc(100% - 10px) calc(100% - 10px),
+          calc(100% - 10px) calc(100% - 6px),
+          calc(100% - 18px) calc(100% - 6px),
+          calc(100% - 18px) calc(100% - 2px),
+          18px calc(100% - 2px),
+          18px calc(100% - 6px),
+          10px calc(100% - 6px),
+          10px calc(100% - 10px),
+          6px calc(100% - 10px),
+          6px calc(100% - 18px),
+          2px calc(100% - 18px),
+          2px calc(100% - 26px),
+          2px 50%
+        );
+        pointer-events: none;
+        z-index: 2;
+      }
+      .qe-optwrap .qe-opt {
+        position: relative;
+        z-index: 1;
+      }
+      .qe-actions {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        margin-top: 16px;
+      }
+      .qe-btn {
+        font-family: inherit;
+        border: none;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 14px;
+        padding: 11px 26px;
+        clip-path: polygon(
+          0px 24px,
+          0px 16px,
+          4px 16px,
+          4px 8px,
+          8px 8px,
+          8px 4px,
+          16px 4px,
+          16px 0px,
+          calc(100% - 16px) 0px,
+          calc(100% - 16px) 4px,
+          calc(100% - 8px) 4px,
+          calc(100% - 8px) 8px,
+          calc(100% - 4px) 8px,
+          calc(100% - 4px) 16px,
+          calc(100% - 0px) 16px,
+          calc(100% - 0px) 24px,
+          calc(100% - 0px) calc(100% - 24px),
+          calc(100% - 0px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 0px),
+          16px calc(100% - 0px),
+          16px calc(100% - 4px),
+          8px calc(100% - 4px),
+          8px calc(100% - 8px),
+          4px calc(100% - 8px),
+          4px calc(100% - 16px),
+          0px calc(100% - 16px),
+          0px calc(100% - 24px)
+        );
+      }
+      .qe-verdict {
+        margin-top: 16px;
+        font-weight: 700;
+        font-size: 15px;
+      }
+      .qe-link {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+      }
+      .qe-note {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 10.5px;
+        opacity: 0.45;
+        margin-top: 16px;
+      }
+
+      /* newsletter */
+      .news {
+        margin-top: 52px;
+        clip-path: polygon(
+          0px 24px,
+          0px 16px,
+          4px 16px,
+          4px 8px,
+          8px 8px,
+          8px 4px,
+          16px 4px,
+          16px 0px,
+          calc(100% - 16px) 0px,
+          calc(100% - 16px) 4px,
+          calc(100% - 8px) 4px,
+          calc(100% - 8px) 8px,
+          calc(100% - 4px) 8px,
+          calc(100% - 4px) 16px,
+          calc(100% - 0px) 16px,
+          calc(100% - 0px) 24px,
+          calc(100% - 0px) calc(100% - 24px),
+          calc(100% - 0px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 16px),
+          calc(100% - 4px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 8px),
+          calc(100% - 8px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 4px),
+          calc(100% - 16px) calc(100% - 0px),
+          16px calc(100% - 0px),
+          16px calc(100% - 4px),
+          8px calc(100% - 4px),
+          8px calc(100% - 8px),
+          4px calc(100% - 8px),
+          4px calc(100% - 16px),
+          0px calc(100% - 16px),
+          0px calc(100% - 24px)
+        );
+      }
+      .news-inner {
+        padding: 36px 40px 28px;
+      }
+      .news h2 {
+        font-size: 22px;
+      }
+      .news p {
+        margin-top: 8px;
+        max-width: 560px;
+      }
+      .news-fine {
+        font-size: 13px;
+        margin-top: 12px;
+      }
+      .news-band {
+        height: 64px;
+        overflow: hidden;
+      }
+      .news-band svg {
+        height: 96px;
+      }
+
+      /* release notes */
+      .rn-hero {
+        position: relative;
+      }
+      .rn-hero > svg {
+        width: 100%;
+        height: auto;
+      }
+      .rn-clearing {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .rn-title {
+        font-size: 58px;
+        margin-top: 10px;
+      }
+      .rn-row {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 48px;
+        padding: 32px 0;
+      }
+      .rn-row + .rn-row {
+        background-image: repeating-linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--hl-ink) 30%, transparent) 0 10px,
+          transparent 10px 20px
+        );
+        background-size: 100% 2px;
+        background-repeat: no-repeat;
+      }
+      .rn-h {
+        font-size: 26px;
+        line-height: 1.1;
+        color: var(--hl-type, #111);
+      }
+      .rn-h .rn-link,
+      .card-title .rn-link {
+        cursor: pointer;
+      }
+      .rn-h .rn-link:hover,
+      .card-title .rn-link:hover {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+      }
+      .rn-row .byline {
+        margin-top: 8px;
+      }
+      .rn-row .chiprow {
+        margin-top: 16px;
+      }
+      .rn-body {
+        margin-top: 2px;
+        font-size: 16px;
+      }
+
+      /* controls */
+      .hl-controls {
+        max-width: 1200px;
+        margin: 0 auto 14px;
+        background: #1d1d1b;
+        color: #ddd;
+        padding: 18px 22px 14px;
+      }
+      .hl-row {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        margin: 7px 0;
+      }
+      .hl-cap {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: #888;
+        flex: 0 0 64px;
+      }
+      .hl-opts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .opt {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #ccc;
+        background: #2c2c29;
+        border: 1px solid #3a3a36;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      .opt[aria-pressed='true'] {
+        background: #edede3;
+        color: #111;
+        border-color: #edede3;
+      }
+      .hl-sliders {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        align-items: center;
+      }
+      .hl-sliders label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11.5px;
+        color: #ccc;
+      }
+      .hl-sliders input[type='range'] {
+        width: 170px;
+      }
+      .hl-sliders em {
+        font-style: normal;
+        color: #888;
+        min-width: 120px;
+      }
+      .hl-seed input {
+        width: 56px;
+        background: #2c2c29;
+        color: #ddd;
+        border: 1px solid #3a3a36;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        padding: 4px 6px;
+      }
+      .hl-recipe {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 11px;
+        color: #7a7a74;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="lab-head">
+      <strong>Marketing lab — blog &amp; release notes.</strong> Status:
+      PROPOSED, 2026-08-14. One set of controls drives all three screens.
+      Hierarchy mirrors suno.com/blog + /release-notes; generators and colour
+      tables extracted verbatim from docs/brand-lab.html; clips from
+      lib/pixel.ts. Locked: nav on scheme ground, no hero card, wide subscribe
+      box, square chips (gem is app-only), user-meaningful categories. Open:
+      scheme, pattern, pool, dials, form treatment, content ground.
+    </p>
+
+    <div id="lab-live">
+      <div class="hl-controls">
+        <div class="hl-row">
+          <span class="hl-cap">Pins</span>
+          <div id="hl-presets" class="hl-opts"></div>
+        </div>
+        <div class="hl-row">
+          <span class="hl-cap">Scheme</span>
+          <div id="hl-scheme" class="hl-opts"></div>
+        </div>
+        <div class="hl-row">
+          <span class="hl-cap">Pattern</span>
+          <div id="hl-pattern" class="hl-opts"></div>
+        </div>
+        <div class="hl-row">
+          <span class="hl-cap">Pool</span>
+          <div id="hl-pool" class="hl-opts"></div>
+        </div>
+        <div class="hl-row">
+          <span class="hl-cap">Form</span>
+          <div id="hl-form" class="hl-opts"></div>
+        </div>
+        <div class="hl-row">
+          <span class="hl-cap">Content</span>
+          <div id="hl-content" class="hl-opts"></div>
+        </div>
+        <div class="hl-row">
+          <span class="hl-cap">Dials</span>
+          <div class="hl-sliders">
+            <label
+              ><input
+                id="hl-scale"
+                type="range"
+                min="1"
+                max="3"
+                step="0.01"
+                value="1.94"
+              /><em id="hl-scale-note">scale 1.94</em></label
+            >
+            <label
+              ><input
+                id="hl-rate"
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                value="75"
+              /><em id="hl-rate-note">accent 75%</em></label
+            >
+            <label class="hl-seed"
+              >seed
+              <input
+                id="hl-seed"
+                type="number"
+                min="0"
+                max="99"
+                value="99"
+              /><button id="hl-reroll" class="opt" type="button">
+                reroll
+              </button></label
+            >
+          </div>
+        </div>
+        <p id="hl-recipe" class="hl-recipe"></p>
+      </div>
+
+      <p class="screen-label">1 · Blog index</p>
+      <div class="frame" id="lab-blog"></div>
+
+      <p class="screen-label">2 · Blog post</p>
+      <div class="frame" id="lab-post"></div>
+
+      <p class="screen-label">3 · Release notes</p>
+      <div class="frame" id="lab-rn"></div>
+    </div>
+
+    <script>
+      function mulberry32(seed) {
+        let a = seed;
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function hexTriple(hex) {
+        const c = hex.replace('#', '');
+        return [
+          parseInt(c.slice(0, 2), 16),
+          parseInt(c.slice(2, 4), 16),
+          parseInt(c.slice(4, 6), 16),
+        ];
+      }
+      const srgbToLinear = (c) =>
+        c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+
+      function hexToOklch(hex) {
+        const [R, G, B] = hexTriple(hex).map((v) => srgbToLinear(v / 255));
+        const l = Math.cbrt(
+          0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B
+        );
+        const m = Math.cbrt(
+          0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B
+        );
+        const s = Math.cbrt(
+          0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B
+        );
+        const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
+        const a = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
+        const b = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+        return {
+          L,
+          C: Math.hypot(a, b),
+          h: ((Math.atan2(b, a) * 180) / Math.PI + 360) % 360,
+        };
+      }
+
+      function perceptualDist(hexA, hexB) {
+        const A = hexToOklch(hexA);
+        const B = hexToOklch(hexB);
+        const ha = (A.h * Math.PI) / 180;
+        const hb = (B.h * Math.PI) / 180;
+        return Math.hypot(
+          A.L - B.L,
+          A.C * Math.cos(ha) - B.C * Math.cos(hb),
+          A.C * Math.sin(ha) - B.C * Math.sin(hb)
+        );
+      }
+
+      /** The lab's pool filter — surface > 0.17, ink > 0.09, sorted by ΔL vs ink. */
+      function quiltAccentPool(surface, ink, candidates) {
+        const inkL = hexToOklch(ink).L;
+        return candidates
+          .filter(
+            (c) =>
+              perceptualDist(c, surface) > 0.17 && perceptualDist(c, ink) > 0.09
+          )
+          .sort(
+            (a, b) =>
+              Math.abs(hexToOklch(b).L - inkL) -
+              Math.abs(hexToOklch(a).L - inkL)
+          );
+      }
+
+      /** Whole-cell clearing: a shape renders whole or not at all. */
+      function hidden(clear, x, y, ww, hh) {
+        if (!clear) return false;
+        const c = clear;
+        if (x >= c.x + c.w || x + ww <= c.x || y >= c.y + c.h || y + hh <= c.y)
+          return false;
+        if (!c.r) return true;
+        if (x + ww > c.x + c.r && x < c.x + c.w - c.r) return true;
+        if (y + hh > c.y + c.r && y < c.y + c.h - c.r) return true;
+        const ccx = x + ww <= c.x + c.r + 0.01 ? c.x + c.r : c.x + c.w - c.r;
+        const ccy = y + hh <= c.y + c.r + 0.01 ? c.y + c.r : c.y + c.h - c.r;
+        const nx = Math.max(x, Math.min(ccx, x + ww));
+        const ny = Math.max(y, Math.min(ccy, y + hh));
+        return (nx - ccx) ** 2 + (ny - ccy) ** 2 <= c.r * c.r;
+      }
+
+      /**
+       * Quilt · pixel — each cell is a 7×7 sprite grid, every shape rebuilt
+       * from whole pixels. The `rate` argument is the lab's one addition to
+       * the shipped signature: the app hard-codes 0.28, but a 1500×500 cover
+       * is a far bigger field than a quiz card and the rhythm wants tuning at
+       * that size. Everything else is byte-for-byte lib/patterns.ts.
+       */
+      function quiltPixBody(opts) {
+        const { w, h, ink, pool, scale, seed, clear, rate = 0.28 } = opts;
+        const rng = mulberry32(seed >>> 0);
+        const t = 62 * scale;
+        const pad = t * 0.09;
+        const cell = t - pad * 2;
+        const cols = Math.ceil(w / t) + 1;
+        const rows = Math.ceil(h / t) + 1;
+        const accent = Array.from({ length: rows }, () =>
+          Array(cols).fill(false)
+        );
+        const P = 7;
+        let out = '';
+        for (let i = 0; i < rows; i++) {
+          for (let j = 0; j < cols; j++) {
+            const left = j > 0 && accent[i][j - 1];
+            const up = i > 0 && accent[i - 1][j];
+            let fillCol = ink;
+            if (pool.length && !left && !up && rng() < rate) {
+              fillCol = pool[Math.floor(rng() * pool.length)];
+              accent[i][j] = true;
+            }
+            const x = j * t + pad;
+            const y = i * t + pad;
+            const q = cell / P;
+            const roll = rng();
+            const fill = new Array(P * P);
+            if (roll < 0.4) {
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++)
+                  fill[jj * P + ii] = !(
+                    (ii === 0 || ii === P - 1) &&
+                    (jj === 0 || jj === P - 1)
+                  );
+            } else if (roll < 0.7) {
+              const R = P / 2;
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++) {
+                  const dx = ii + 0.5 - P / 2;
+                  const dy = jj + 0.5 - P / 2;
+                  fill[jj * P + ii] = dx * dx + dy * dy <= R * R;
+                }
+            } else {
+              const o = Math.floor(rng() * 4);
+              const cx = o === 0 || o === 3 ? 0 : P;
+              const cy = o === 0 || o === 1 ? 0 : P;
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++) {
+                  const dx = ii + 0.5 - cx;
+                  const dy = jj + 0.5 - cy;
+                  fill[jj * P + ii] = dx * dx + dy * dy <= P * P;
+                }
+            }
+            let piece = `<g fill="${fillCol}" shape-rendering="crispEdges">`;
+            for (let jj = 0; jj < P; jj++) {
+              let ii = 0;
+              while (ii < P) {
+                if (!fill[jj * P + ii]) {
+                  ii++;
+                  continue;
+                }
+                let len = 0;
+                while (ii + len < P && fill[jj * P + ii + len]) len++;
+                piece += `<rect x="${x + ii * q}" y="${y + jj * q}" width="${len * q}" height="${q + 0.4}"/>`;
+                ii += len;
+              }
+            }
+            piece += '</g>';
+            if (!hidden(clear, x, y, cell, cell)) out += piece;
+          }
+        }
+        return out;
+      }
+
+      function pixHash(u, v, seed) {
+        let x = (u * 374761393 + v * 668265263 + (seed | 0) * 971) | 0;
+        x = Math.imul(x ^ (x >>> 13), 1274126177);
+        return ((x ^ (x >>> 16)) >>> 0) / 4294967296;
+      }
+
+      function valueNoise(u, v, seed, cell) {
+        const gx = Math.floor(u / cell);
+        const gy = Math.floor(v / cell);
+        const sm = (t) => t * t * (3 - 2 * t);
+        const fx = sm((((u % cell) + cell) % cell) / cell);
+        const fy = sm((((v % cell) + cell) % cell) / cell);
+        const n00 = pixHash(gx, gy, seed);
+        const n10 = pixHash(gx + 1, gy, seed);
+        const n01 = pixHash(gx, gy + 1, seed);
+        const n11 = pixHash(gx + 1, gy + 1, seed);
+        return (
+          n00 * (1 - fx) * (1 - fy) +
+          n10 * fx * (1 - fy) +
+          n01 * (1 - fx) * fy +
+          n11 * fx * fy
+        );
+      }
+
+      function pixelLattice(w, h, q, clear, colorAt) {
+        const cols = Math.ceil(w / q);
+        const rows = Math.ceil(h / q);
+        let out = '<g shape-rendering="crispEdges">';
+        for (let v = 0; v < rows; v++) {
+          let u = 0;
+          while (u < cols) {
+            const c = colorAt(u, v);
+            if (!c || hidden(clear, u * q, v * q, q, q)) {
+              u++;
+              continue;
+            }
+            let len = 1;
+            while (
+              u + len < cols &&
+              colorAt(u + len, v) === c &&
+              !hidden(clear, (u + len) * q, v * q, q, q)
+            )
+              len++;
+            out += `<rect x="${u * q}" y="${v * q}" width="${len * q}" height="${q + 0.4}" fill="${c}"/>`;
+            u += len;
+          }
+        }
+        return out + '</g>';
+      }
+
+      const PIXEL_FIELD_MACRO = 1.7;
+
+      function camoBody(kind, opts) {
+        const { w, h, ink, pool, scale, seed, clear } = opts;
+        const s = PIXEL_FIELD_MACRO * scale;
+        const c1 = pool[0] || ink;
+        if (kind === 'camo') {
+          const q = 10 * s;
+          return pixelLattice(w, h, q, clear, (u, v) => {
+            if (valueNoise(u, v, seed, 6) > 0.58) return ink;
+            if (valueNoise(u, v, seed + 31, 6) > 0.62) return c1;
+            return null;
+          });
+        }
+        const q = 12 * s;
+        return pixelLattice(w, h, q, clear, (u, v) => {
+          const n = valueNoise(u, v, seed, 9);
+          if (n > 0.63) return ink;
+          if (n < 0.37) return c1;
+          return null;
+        });
+      }
+
+      function patternBody(kind, opts) {
+        return kind === 'quilt' ? quiltPixBody(opts) : camoBody(kind, opts);
+      }
+
+      /* ====================================================================
+     2 · THE COLOUR SYSTEM — the shipped palette, by role.
+     Surfaces / inks / accents lifted from components/quiz/quizColors.ts;
+     the brand pair from docs/color-system.md ("Crm", the social cover's
+     cream, flagged `brand: true` in the pattern lab's catalogue).
+     ==================================================================== */
+
+      const SETS = {
+        A: { surface: '#FFABC6', ink: '#4A1040', accent: '#674900' },
+        C: { surface: '#E7F099', ink: '#02302C', accent: '#BD00AD' },
+        J: { surface: '#E6ACF4', ink: '#1C3601', accent: '#674900' },
+        L: { surface: '#CFF6DD', ink: '#3F0167', accent: '#BD00AD' },
+        N: { surface: '#9EDAFF', ink: '#4A1040', accent: '#8D0381' },
+        Q: { surface: '#D9CCF9', ink: '#3E1060', accent: '#745400' },
+        R: { surface: '#E4BDF7', ink: '#751100', accent: '#824616' },
+      };
+
+      /* The brand green. THREE greens are currently in circulation and they
+     are not the same colour: #00A742 (app/icon.svg), #05A24B (the colour
+     system's Crm entry), and the mint plate baked into public/icon-512.png.
+     This lab commits to #05A24B — the one the colour system already
+     records — and treats the others as drift to be fixed at the source. */
+      const BRAND = {
+        cream: '#EDEDE3',
+        green: '#05A24B',
+        coral: '#FA6C5B',
+      };
+
+      /* Every colour the product owns, as candidate confetti. */
+      const ALL_CANDIDATES = [
+        ...Object.values(SETS).flatMap((s) => [s.surface, s.ink, s.accent]),
+        BRAND.coral,
+        BRAND.green,
+      ];
+
+      /* WHAT THE COVER IS ALLOWED TO SPEND — corrected 2026-08-12.
+     ---------------------------------------------------------------------
+     The first pass here reasoned toward the EXISTING cover's chord (coral,
+     magenta, indigo, gold, purple) and called that "continuity". Malik:
+     those colours are the pre-redesign palette, and replacing them is the
+     entire point of the exercise. So matching them was the exact wrong
+     objective — it optimised for the thing being retired.
+
+     What survives that correction is the measurement, which never depended
+     on the old cover: on cream with the green dominant, SIX OF THE SEVEN
+     SET SURFACES fail the quilt's own accent gate (0.045–0.157 against a
+     0.17 floor). The pale tier cannot carry a cream-ground cover no matter
+     which chord you want. So the pool has to come from the deep register —
+     and now it comes from the CURRENT one only. Nothing below is a
+     pre-legibility-pass value or a retired catalogue entry. */
+
+      /** The five shipped accents — every one a colour the app paints today. */
+      const ACCENTS = [
+        '#674900', // ochre   — A and J
+        '#BD00AD', // magenta — C and L
+        '#8D0381', // purple  — N
+        '#745400', // gold    — Q
+        '#824616', // rust    — R
+      ];
+
+      /**
+       * The seven set SURFACES — the colours a student actually associates
+       * with each set, because the surface is the whole screen while they
+       * drill it. The obvious pool, and for most of this lab's life an
+       * unusable one: on any PALE ground they fail the quilt's own gate.
+       * Measured, out of seven: cream ground 1/7, Set L's mint ground 3/7.
+       * They only read on a ground dark enough to clear them — see
+       * `brandField` below, where all 7/7 pass.
+       */
+      const SURFACES = Object.values(SETS).map((v) => v.surface);
+
+      /** The six shipped inks. Deeper, quieter, more editorial. */
+      const INKS = [
+        '#4A1040', // plum   — A and N
+        '#02302C', // teal   — C
+        '#1C3601', // forest — J
+        '#3F0167', // violet — L
+        '#3E1060', // indigo — Q
+        '#751100', // rust   — R
+      ];
+
+      const SCHEMES = {
+        brand: {
+          label: 'Brand · cream',
+          hint: 'green on cream',
+          ground: BRAND.cream,
+          ink: BRAND.green,
+          type: '#02302C',
+        },
+        brandInk: {
+          label: 'Brand · inverted',
+          hint: 'deep teal on cream',
+          ground: BRAND.cream,
+          ink: '#02302C',
+          type: '#02302C',
+        },
+        /* RETIRED THE DAY IT WAS BUILT — `brandField`, green ground, all
+       seven set surfaces reading as confetti (7/7, against 1/7 on cream).
+       It solved the measurement and broke the structure: every set surface
+       and every UI ground in this product is LIGHT, and the colour system
+       settled that deliberately — "with MD2 out, the light-surface rule is
+       now total rather than near-total; the catalogue has one structure,
+       not two" (color-system.md). MD2, the last dark ground, was cut as
+       "the most dissonant palette in the set, and user testing agreed."
+       Malik's word for the green ground was the same one: dissonant.
+
+       Kept here as a comment rather than a dial, the way retired palettes
+       are kept in the pattern lab's catalogue — and as the reminder that a
+       gate you can measure will happily lead you through a rule you
+       cannot:
+         brandField: { ground: '#05A24B', ink: '#02302C', type: cream }
+       If a dark mode ever ships, this is where it starts. */
+
+        /* THE ORIGINAL'S OWN PAIR, straight from the binaries (added
+       2026-08-13 when Malik raised going back to the original's colours).
+
+       Not an interpretation — these two hexes are extracted evidence.
+       `#BBFFFF` is the ground of Gensler's own help HTML, embedded in the
+       2008 exe. `#000077` is his hand-picked link colour, and it lands on
+       264° to the degree, the same hue as VGA Blue and VGA Navy — three
+       independent sources agreeing, which is why color-system.md says the
+       original's blue "is not approximately blue; it is a specific hue the
+       system can be held to."
+
+       Worth knowing what this is NOT: it is not Set L. Set L's mint is 39°
+       off that aqua and its violet 41° off that blue — the closest of the
+       seven on both axes, and still a ~40° rotation of the original rather
+       than the original. Nothing in the catalogue sits on 264°; the docs
+       already flag that gap.
+
+       The reason this is even arguable now, when the same colours were
+       rejected in 2024 as "too old school": the pixel treatment did not
+       exist then. Period-accurate colour with no period-accurate form
+       reads as unrenovated. With the quilt carrying the retro, the colour
+       is free to be authentic. */
+        brandOriginal: {
+          label: 'Brand · original',
+          hint: 'Gensler’s own two',
+          ground: '#BBFFFF',
+          ink: '#000077',
+          type: '#000077',
+        },
+        /* The provenance pick. Set L's mint is the closest of the seven
+       surfaces to Gensler's own help-page ground #BBFFFF (ΔE 0.045 —
+       under this project's own 0.17 "too close to tell apart" floor), and
+       it sits 7° in hue from the brand green, which in turn descends from
+       the original's VGA "Forest green" (ΔE 0.106). Mint and the brand
+       green are one hue family at two lightnesses, so this is a
+       near-monochrome — the most conservative cover here, and the one
+       with the strongest claim to the original's colour world. */
+        /* KILLED 2026-08-14 (nav lab session) — Malik, on seeing it carry
+       the exercises nav: "We can kill this one here and everywhere else.
+       I don't like it." The provenance argument above was real and is
+       kept for the record, but provenance is not a verdict. Note the
+       scope: this kills green-on-mint as a SCHEME; Set L's own palette
+       (plum on the same mint) stays a live candidate, and the mint
+       plates baked into the shipped icons are separate objects.
+         brandMint: { ground: '#CFF6DD', ink: BRAND.green, type: '#02302C' }
+       */
+      };
+      for (const [k, v] of Object.entries(SETS)) {
+        SCHEMES['set' + k] = {
+          label: 'Set ' + k,
+          hint: 'the set’s own three',
+          ground: v.surface,
+          ink: v.ink,
+          type: v.ink,
+          accent: v.accent,
+        };
+      }
+
+      /**
+       * THE GATE IS A STUDY-SURFACE RULE, and the cover is not a study surface
+       * (Malik, 2026-08-12/13).
+       *
+       * `quiltAccentPool` rejects anything within 0.17 of the ground. That
+       * exists so a pattern cannot muddy a surface a student is reading
+       * against for twenty minutes. It is why six of the seven set surfaces
+       * are unusable on cream — they are pale, cream is pale, and the rule
+       * cannot tell them apart.
+       *
+       * The 2024 cover is the counter-evidence: its cream tiles sit on a
+       * near-white ground at almost no separation, and it reads fine, because
+       * a quilt tile is a SHAPE with a hard edge and a gap around it. Edge
+       * does the work that contrast does on a text surface.
+       *
+       * So the ungated modes below keep the INK gate — a tile the same colour
+       * as the dominant really does vanish — and drop the ground gate. This is
+       * the same reasoning that let the brand palette ignore the accent tier's
+       * 4.5:1 floor: a rule earns its authority from the job it was written
+       * for, and neither job is this one.
+       */
+      const UNGATED = { sets: true, setsMix: true };
+
+      function poolFor(scheme, mode) {
+        const s = SCHEMES[scheme];
+        if (mode === 'mono') return [];
+        if (UNGATED[mode]) {
+          const base = mode === 'sets' ? SURFACES : [...SURFACES, ...INKS];
+          return base.filter(
+            (c) =>
+              c !== s.ink && c !== s.ground && perceptualDist(c, s.ink) > 0.09
+          );
+        }
+        const base =
+          mode === 'surfaces'
+            ? SURFACES
+            : mode === 'accents'
+              ? ACCENTS
+              : mode === 'inks'
+                ? INKS
+                : mode === 'both'
+                  ? [...ACCENTS, ...INKS]
+                  : [...new Set(ALL_CANDIDATES)];
+        return quiltAccentPool(
+          s.ground,
+          s.ink,
+          base.filter((c) => c !== s.ink && c !== s.ground)
+        );
+      }
+      const MARK_PATHS = [
+        [
+          'g',
+          'M46.6906 0.161408C57.5696 -0.164592 69.8788 0.103905 80.8853 0.104905L145.294 0.10991L192.186 0.108155C200.231 0.100405 208.401 0.0321546 216.451 0.137155C218.204 0.270405 220.751 0.609405 222.174 1.69116C226.361 4.87591 227.769 10.3359 224.689 14.7544C220.814 20.3117 216.991 18.2564 211.504 19.1112C204.589 20.1887 209.389 29.6969 205.761 33.7537C201.566 39.2404 198.519 37.1454 192.506 38.0452C191.284 38.2282 189.881 39.0922 189.256 40.1539C188.736 41.0349 188.631 43.5687 188.626 44.6802C188.594 52.5904 188.609 60.5202 188.609 68.4294L188.611 114.841L188.614 134.917C188.614 137.911 188.371 146.292 189.076 148.737L189.159 149.017C193.646 153.624 198.336 149.464 203.441 152.992C208.864 156.742 206.811 161.377 207.611 166.374C208.636 172.747 218.451 168.447 222.776 172.184C224.721 173.652 225.894 175.814 226.186 178.334C226.899 184.494 222.846 188.212 217.351 189.009C206.251 189.334 193.744 189.074 182.521 189.074L116.799 189.072L71.4336 189.079C63.6621 189.084 55.7211 189.154 47.9509 189.002C45.5939 188.954 43.1891 188.597 41.3261 187.147C36.8748 183.684 38.2761 178.894 37.6849 174.449C36.7366 167.319 27.4126 172.272 22.6956 168.369C17.7779 164.304 19.5241 160.712 18.8344 155.482C17.9114 148.484 8.23885 153.309 3.8656 149.467C1.8811 147.724 0.786605 146.782 0.448855 144.019C-0.208145 138.644 0.0503474 132.631 0.0490974 127.197L0.0421012 97.6994L0.0411018 63.6024C0.0418518 57.9299 -0.0501491 51.9744 0.174601 46.3057C0.235601 44.7617 1.2201 42.6354 2.1361 41.4264C5.31935 37.2247 9.88285 38.1274 14.4496 37.7237C21.9781 37.0579 16.7711 27.5629 20.7049 22.7587C24.6149 17.9834 28.3966 19.5624 33.3896 18.8894C40.8469 17.8844 35.6621 8.19541 39.7899 3.59566C41.9451 1.19391 43.5926 0.589908 46.6906 0.161408Z',
+        ],
+        [
+          'w',
+          'M145.744 54.0306C146.758 55.2444 146.463 57.0889 146.435 58.7701C143.725 58.6669 140.75 58.6934 138.019 58.6611C138.487 59.2931 138.903 59.9616 139.264 60.6606C145.296 72.2979 132.957 80.5394 122.517 78.4749C120.139 78.0046 118.923 77.8404 116.529 77.0431C116.476 83.3004 118.338 81.9321 123.33 83.1549C130.034 84.7974 145.484 84.8806 145.71 94.3509C145.981 105.723 134.142 108.63 125.053 109.083C125.049 114.704 124.456 145.962 125.585 148.892C125.988 149.937 127.528 150.469 128.464 150.937C128.68 151.099 128.574 150.979 128.661 151.377C127.513 151.804 112.349 151.622 109.903 151.644C111.559 150.549 114.077 149.589 114.196 147.394C114.424 143.184 114.33 138.918 114.326 134.695L114.294 107.601C105.002 103.166 107.952 95.5761 114.722 90.5934C106.606 86.4044 111.697 81.3381 115.578 76.4239C115.174 76.1754 114.766 75.9181 114.385 75.6366C112.102 73.9294 110.592 71.3846 110.188 68.5631C108.005 53.8986 127.686 50.7429 137.076 57.8364C141.077 56.8839 142.418 56.2011 145.744 54.0306Z',
+        ],
+        [
+          'g',
+          'M116.2 90.9899C117.76 91.4281 125.745 93.0781 127.29 93.0854C134.454 93.1184 143.813 98.9991 134.189 105.38C131.007 106.663 129.096 106.925 125.708 106.967C114.389 107.107 111.708 100.459 116.2 90.9899Z',
+        ],
+        [
+          'g',
+          'M124.002 55.8879C126.728 55.6792 129.194 56.3715 130.092 59.2965C131.55 64.0427 132.368 74.7399 126.688 76.9602C123.915 77.2542 121.597 76.6607 120.652 73.6412C119.244 69.1447 118.58 57.9889 124.002 55.8879Z',
+        ],
+        [
+          'w',
+          'M140.172 115.412C145.164 115.247 155.574 115.091 160.711 115.706C162.084 115.87 161.2 119.758 161.802 120.813C162.856 122.661 164.985 121.263 167.269 122.022C169.348 124.061 167.935 135.088 168.293 138.626C168.771 143.353 172.399 139.828 174.66 141.949C175.312 143.214 175.178 149.047 174.815 150.549C174.408 152.239 167.216 151.692 165.814 151.059C165.363 150.274 165.337 147.229 165.26 146.127C164.65 145.472 163.731 144.969 162.818 145.054C160.89 146.567 162.08 149.549 160.942 151.264C158.999 151.872 140.817 151.867 139.036 150.969C138.25 149.589 138.762 148.244 138.576 146.814C138.168 143.674 134.345 146.182 132.325 144.439C131.585 142.553 131.773 125.048 132.294 122.753C133.434 121.153 135.784 122.244 137.229 121.692C140.493 120.446 136.649 116.482 140.172 115.412Z',
+        ],
+        [
+          'g',
+          'M142.506 125.635C145.611 125.602 155.83 125.052 158.28 126.328C158.459 126.422 159.553 139.914 157.558 141.1C155.594 141.236 144.039 141.646 142.271 140.718C140.939 140.019 141.843 131.344 141.496 129.501C141.341 128.679 141.513 126.619 142.506 125.635Z',
+        ],
+        [
+          'w',
+          'M87.6493 114.222C98.2266 113.581 107.334 121.608 108.026 132.182C108.719 142.756 100.736 151.902 90.1656 152.647C79.5221 153.394 70.2993 145.347 69.6021 134.699C68.9048 124.052 76.9991 114.868 87.6493 114.222Z',
+        ],
+        [
+          'g',
+          'M87.6051 115.64C91.1858 115.462 93.8158 116.562 94.7626 120.329C96.4458 127.174 96.2288 134.775 95.6913 141.775C95.3798 145.832 94.4108 149.812 90.1056 151.072C87.9213 151.192 87.3593 151.082 85.3786 150.434C79.9796 144.937 81.2411 128.751 82.5146 121.417C83.0191 118.51 84.7506 116.547 87.6051 115.64Z',
+        ],
+        [
+          'w',
+          'M75.8353 55.5972C78.9531 55.4877 95.3841 55.1692 97.5043 55.8047C98.8873 57.1187 98.2178 58.7364 98.5258 60.5869C99.0198 63.5562 104.929 60.2897 104.932 63.7062C104.933 66.6654 105.625 83.3189 104.473 84.8199C103.471 85.2347 101.471 85.2812 100.272 85.3294C96.9941 85.4612 99.5154 89.1574 97.6356 91.5839C92.3839 91.8154 81.8616 91.9892 76.3201 91.3737C74.2291 91.1417 75.9893 87.9757 75.4893 86.5982C73.9578 85.0627 71.0589 85.1319 68.9384 84.9812C68.4756 82.2734 68.2748 65.0279 69.1058 62.8107C70.3718 61.3494 72.5066 62.4344 74.5611 61.5692C75.9576 60.4284 75.1283 57.9317 75.8353 55.5972Z',
+        ],
+        [
+          'g',
+          'M84.0741 65.704C86.6533 65.6705 92.7401 65.3034 94.7213 66.2237C95.7778 66.7144 95.7958 79.7117 94.7141 81.0284C93.5113 81.4519 91.8713 81.3484 90.5583 81.3467C88.2821 81.3339 80.2711 81.7977 78.8403 80.8132C78.0558 78.5265 78.0593 68.7002 78.6658 66.4334C79.6966 65.4397 82.5573 65.7017 84.0741 65.704Z',
+        ],
+        [
+          'w',
+          'M35.2156 102.184C40.8311 101.961 51.2843 101.577 56.6978 102.301C56.9878 104.036 56.9636 106.521 57.4668 107.82C59.9296 110.206 64.3493 105.662 63.8101 112.891C63.6133 115.529 64.1823 118.987 63.4916 121.682C63.2008 122.816 61.3743 122.535 60.4598 122.611C50.7743 123.274 55.0988 120.03 53.8518 113.517C53.5156 111.762 39.5586 112.472 37.7178 112.865C37.1446 112.988 37.0081 115.849 37.0596 116.376C37.4293 120.175 36.2961 138.243 37.6076 140.462C39.0141 141.256 51.2343 140.992 53.1746 140.708C53.9201 140.117 53.6828 140.345 53.9793 139.237C54.1758 133.566 52.1806 129.905 59.5968 130.539C60.9728 130.656 62.1843 130.347 63.3946 131.243C64.2068 133.198 63.8471 141.553 63.5173 144.053C63.3881 145.032 60.1221 144.722 59.3011 144.809C55.7763 145.182 57.0651 147.452 57.2978 149.609C57.0711 150.092 56.8761 150.504 56.3116 150.692C53.5161 151.614 36.7548 151.474 34.9288 150.892C33.7008 149.732 34.2196 147.734 33.7726 145.702C32.3471 143.968 30.1578 145.434 28.0303 144.362C27.1073 143.052 27.1433 112.791 27.6721 109.513C29.1261 107.826 31.6963 109.122 33.2783 108.291C35.1963 107.284 32.7873 103.305 35.2156 102.184Z',
+        ],
+        [
+          'w',
+          'M32.4663 41.9565C37.4778 41.8842 42.4901 41.916 47.5003 42.0517C45.5081 43.014 43.0056 43.8975 42.8923 46.4532C42.6823 51.2012 42.7793 55.985 42.7838 60.7425L42.7778 90.1955C47.0976 90.0672 53.9226 90.69 57.7653 89.4465C61.2078 86.1707 62.7786 79.663 64.1363 78.8775C64.8828 79.894 64.4173 84.0862 64.3298 85.5195C64.3056 87.529 64.1301 89.7645 64.0153 91.7872C60.2676 91.5422 55.5498 91.7435 51.7171 91.7407L26.5046 91.7437C28.0041 90.843 29.5531 89.9987 31.0823 89.0742C31.7453 85.8925 31.8086 46.5325 30.9683 44.6485C30.4396 43.4622 27.3481 42.6005 26.1658 42.15C28.1213 42.026 30.4836 42.0125 32.4663 41.9565Z',
+        ],
+        [
+          'w',
+          'M162.849 54.3854C164.46 55.3896 162.388 84.5729 163.607 88.6314C164.016 89.9934 166.297 91.0834 167.323 91.6921C161.724 91.7954 156.099 91.5649 150.476 91.7954C149.865 91.8529 149.69 91.9461 149.175 91.6351C149.771 90.4146 152.473 90.1571 152.543 87.8731C152.75 81.1159 152.589 74.3401 152.629 67.5779C152.641 65.5701 152.702 63.4151 152.422 61.4319C151.491 59.9329 149.912 59.7176 148.173 59.1636C153.025 57.4494 157.918 55.8561 162.849 54.3854Z',
+        ],
+        [
+          'w',
+          'M156.748 38.7834C159.938 38.1649 163.035 40.2194 163.705 43.3992C164.375 46.5789 162.371 49.7087 159.203 50.4304C157.107 50.9082 154.916 50.2184 153.472 48.6264C152.028 47.0342 151.554 44.7869 152.233 42.7474C152.912 40.7077 154.637 39.1924 156.748 38.7834Z',
+        ],
+        [
+          'g',
+          'M233.936 19.1349C251.789 17.7166 239.851 38.6129 250.379 37.8346C267.404 36.5761 264.041 50.1224 264.046 63.0414L264.051 91.2104V123.837C264.049 129.63 264.106 135.52 263.974 141.304C263.931 143.147 263.674 144.957 262.804 146.477C259.254 152.682 253.379 150.532 248.174 151.717C243.501 152.779 246.099 161.659 244.166 165.054C242.509 167.967 240.816 168.917 237.641 170.012C226.571 171.454 226.324 162.029 226.091 154.637C225.946 149.949 216.029 152.164 212.229 150.007C205.604 146.244 207.446 135.128 207.446 128.24V102.3L207.444 67.1759C207.439 60.8564 207.389 54.5269 207.509 48.1979C207.614 45.4284 207.969 43.0269 209.869 40.9321C213.554 36.8134 218.556 38.5514 223.106 37.5271C228.366 36.3426 225.146 27.3919 227.489 23.8069C229.366 20.9306 230.886 20.0861 233.936 19.1349Z',
+        ],
+        [
+          'w',
+          'M230.619 75.6939C234.654 75.6299 240.499 75.0077 243.824 76.8724C244.229 77.5092 244.676 78.1877 244.959 78.8882C245.599 80.4622 245.586 122.861 245.269 127.459C245.211 128.269 244.994 129.059 244.631 129.784C243.881 131.315 242.804 131.842 241.301 132.338C237.424 132.36 233.494 132.421 229.621 132.286C227.249 130.973 226.464 129.947 226.366 127.275C226.249 124.048 226.296 120.832 226.296 117.604L226.291 99.8182C226.291 95.8469 226.046 81.4009 226.661 78.2817C228.146 76.6649 228.519 76.2857 230.619 75.6939Z',
+        ],
+      ];
+      const SPRITE_CLIP =
+        'polygon(0px 24px, 0px 16px, 4px 16px, 4px 8px, 8px 8px, 8px 4px, 16px 4px, 16px 0px, calc(100% - 16px) 0px, calc(100% - 16px) 4px, calc(100% - 8px) 4px, calc(100% - 8px) 8px, calc(100% - 4px) 8px, calc(100% - 4px) 16px, calc(100% - 0px) 16px, calc(100% - 0px) 24px, calc(100% - 0px) calc(100% - 24px), calc(100% - 0px) calc(100% - 16px), calc(100% - 4px) calc(100% - 16px), calc(100% - 4px) calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) calc(100% - 4px), calc(100% - 16px) calc(100% - 4px), calc(100% - 16px) calc(100% - 0px), 16px calc(100% - 0px), 16px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 16px), 0px calc(100% - 16px), 0px calc(100% - 24px))';
+      const POSTS = [
+        {
+          slug: 'the-new-logicola',
+          title: 'The new LogiCola',
+          dek: 'A colour system that gives every exercise set its own character, a scored run that keeps you honest, and drills that finally feel at home on your phone.',
+          date: 'Aug 13, 2026',
+          author: 'Malik Piara',
+          category: 'Announcements',
+        },
+        {
+          slug: 'set-r-informal-fallacies',
+          title: 'Set R: Informal Fallacies',
+          dek: 'A new exercise set on the ways an argument goes wrong — and the first to use multi-option questions.',
+          date: 'Jul 15, 2026',
+          author: 'Malik Piara',
+          category: 'Product update',
+        },
+        {
+          slug: 'introducing-logicola-3',
+          title: 'Introducing LogiCola 3',
+          dek: 'A brand new, open-source version of LogiCola — one that works everywhere. On Windows. On Mac. On Chromebooks. On your phone.',
+          date: 'May 8, 2024',
+          author: 'Malik Piara',
+          category: 'Announcements',
+          cover:
+            '../public/blog/introducing-logicola-3/street-fighter-evolution.jpeg',
+        },
+      ];
+      const RELEASES = [
+        {
+          title: 'Scored runs hit harder, fairer',
+          date: 'Aug 12, 2026',
+          cats: [{ t: 'Improvement' }, { t: 'Web' }, { t: 'Mobile' }],
+          body: "<p>Two tuning passes on the scored run:</p><ul><li>The progress bar now <strong>flashes on a miss</strong>, so the cost of a wrong answer registers the moment it happens.</li><li>The run deficit is now <strong>bounded</strong> — a bad stretch can't dig a hole so deep that finishing the run stops feeling worthwhile.</li></ul>",
+        },
+        {
+          title: 'Every set now loads only itself',
+          date: 'Aug 10, 2026',
+          cats: [{ t: 'Improvement' }, { t: 'Web' }],
+          body: "<p>Each exercise set's question generator now ships in its own chunk. Opening one quiz used to download the generators for <em>all</em> sets (~204&nbsp;KB of JavaScript); now you get exactly the set you asked for. Faster first question, especially on phones and campus Wi-Fi.</p>",
+        },
+        {
+          title: 'Level 5 unlocked',
+          date: 'Aug 9, 2026',
+          cats: [{ t: 'New Feature', solid: true }, { t: 'Web' }],
+          body: "<p>The score ladder now goes to level 5, matching the classic program's top rank. The level dial stepped back from the quiz screen to keep the question front and centre — your level is still tracked, and the end screen tells you where you stand.</p>",
+        },
+        {
+          title: 'The redesign lands: a colour system per set',
+          date: 'Aug 8, 2026',
+          cats: [{ t: 'New Feature', solid: true }, { t: 'Web' }],
+          body: '<p>The quiz screens picked up the new design language:</p><ul><li><strong>A palette per exercise set</strong> — each set gets its own pale surface and dark ink, derived in OKLCH and contrast-checked for WCAG.</li><li><strong>The pixel treatment</strong> — icons, badges and corners follow a bitmap grammar: straight edges stay straight, only curves rasterise.</li></ul>',
+        },
+        {
+          title: 'Better on your phone',
+          date: 'Aug 8, 2026',
+          cats: [{ t: 'Improvement' }, { t: 'Mobile' }],
+          body: "<p>A round of fixes from testing on real devices: the installed app now draws <strong>edge to edge</strong>, and the Android status and navigation bars take on the current set's surface colour.</p>",
+        },
+      ];
+      const HERO_W = 1200,
+        HERO_H = 460;
+      // Decided: no card — the clearing is the panel.
+      const CLEARING = { x: 200, y: 80, w: 800, h: 300, r: 28 };
+
+      function latticeOffset(w, h, scale) {
+        const t = 62 * scale;
+        const span = (len) => Math.ceil(len / t) * t + t;
+        return { ox: -(span(w) - w) / 2, oy: -(span(h) - h) / 2 };
+      }
+
+      function slugSeed(slug) {
+        let a = 7;
+        for (const ch of slug) a = (a * 31 + ch.charCodeAt(0)) | 0;
+        return (a >>> 0) % 100;
+      }
+
+      function markSvg(height, body, knock) {
+        const k = height / 190;
+        const w = Math.round(265 * k);
+        let out =
+          '<svg xmlns="http://www.w3.org/2000/svg" width="' +
+          w +
+          '" height="' +
+          height +
+          '" viewBox="0 0 265 190" style="display:block">';
+        for (const p of MARK_PATHS) {
+          out +=
+            '<path d="' +
+            p[1] +
+            '" fill="' +
+            (p[0] === 'g' ? body : knock) +
+            '"/>';
+        }
+        return out + '</svg>';
+      }
+
+      const state = {
+        scheme: 'brandInk',
+        pattern: 'camo-giant',
+        pool: 'wide',
+        scale: 1.94,
+        seed: 99,
+        rate: 75,
+        form: 'pill',
+        content: 'white',
+      };
+
+      // The pinned recipes (brand lab, 2026-08-13).
+      const PRESETS = [
+        {
+          label: 'Lean · Brand inverted · camo XL',
+          s: {
+            scheme: 'brandInk',
+            pattern: 'camo-giant',
+            pool: 'wide',
+            scale: 1.94,
+            seed: 99,
+            rate: 75,
+          },
+        },
+        {
+          label: 'Pin · Brand cream · Everything',
+          s: {
+            scheme: 'brand',
+            pattern: 'quilt',
+            pool: 'wide',
+            scale: 2.08,
+            seed: 7,
+            rate: 55,
+          },
+        },
+        {
+          label: 'Pin · Set L · Sets full',
+          s: {
+            scheme: 'setL',
+            pattern: 'quilt',
+            pool: 'setsMix',
+            scale: 2.25,
+            seed: 45,
+            rate: 75,
+          },
+        },
+        {
+          label: 'Pin · Brand cream · Sets surfaces',
+          s: {
+            scheme: 'brand',
+            pattern: 'quilt',
+            pool: 'sets',
+            scale: 2.25,
+            seed: 28,
+            rate: 75,
+          },
+        },
+        {
+          label: 'Pin · Set N · camo XL',
+          s: {
+            scheme: 'setN',
+            pattern: 'camo-giant',
+            pool: 'wide',
+            scale: 2.6,
+            seed: 53,
+            rate: 55,
+          },
+        },
+        {
+          label: 'Pin · Set Q · camo XL',
+          s: {
+            scheme: 'setQ',
+            pattern: 'camo-giant',
+            pool: 'wide',
+            scale: 2.6,
+            seed: 53,
+            rate: 55,
+          },
+        },
+        {
+          label: 'Original · Sets full',
+          s: {
+            scheme: 'brandOriginal',
+            pattern: 'quilt',
+            pool: 'setsMix',
+            scale: 2.25,
+            seed: 45,
+            rate: 75,
+          },
+        },
+      ];
+
+      const SCHEME_ORDER = [
+        'brand',
+        'brandInk',
+        'brandOriginal',
+        'setL',
+        'setN',
+        'setQ',
+        'setC',
+        'setA',
+        'setJ',
+        'setR',
+      ];
+      const PATTERNS = [
+        { id: 'quilt', label: 'Quilt · pixel' },
+        { id: 'camo-giant', label: 'Camo · XL' },
+      ];
+      const POOL_OPTS = [
+        { id: 'setsMix', label: 'Sets · full' },
+        { id: 'sets', label: 'Sets · surfaces' },
+        { id: 'surfaces', label: 'Set surfaces' },
+        { id: 'accents', label: 'Shipped accents' },
+        { id: 'inks', label: 'Shipped inks' },
+        { id: 'both', label: 'Accents + inks' },
+        { id: 'wide', label: 'Everything' },
+        { id: 'mono', label: 'Mono' },
+      ];
+      const FORM_OPTS = [
+        { id: 'solid', label: 'White · hairline' },
+        { id: 'outline', label: 'Ink outline' },
+        { id: 'pill', label: 'Answer pill' },
+        { id: 'dash', label: 'Pixel dash' },
+        { id: 'blank', label: 'Fill-in blank' },
+      ];
+      const CONTENT_OPTS = [
+        { id: 'white', label: 'White' },
+        { id: 'scheme', label: 'Scheme ground' },
+      ];
+
+      function btnColors(s) {
+        return {
+          bg: s.ink,
+          fg: s.type && s.type !== s.ink ? s.type : s.ground,
+        };
+      }
+
+      // In-post quiz widget (lab mock of the native QuizEmbed). The real one
+      // reuses useQuizState + a client-side dynamic generator map; this mock
+      // only demonstrates placement, materials and the interaction feel.
+      const EMBED_Q = {
+        set: 'Set R \u00b7 Informal Fallacies',
+        prompt:
+          '\u201cPoliticians have been promising better schools for years, but my opponent \u2014 who, remember, didn\u2019t even grow up here \u2014 now claims her plan will work. Everyone in this town knows it won\u2019t.\u201d',
+        ask: 'Which fallacies appear? Select every one.',
+        options: [
+          { t: 'Ad hominem', ok: true },
+          { t: 'Appeal to the people', ok: true },
+          { t: 'Straw man', ok: false },
+          { t: 'Appeal to authority', ok: false },
+        ],
+      };
+      let embedSel = [];
+      let embedChecked = false;
+
+      function embedHtml(s, btn) {
+        const onWhite = state.content === 'white';
+        const bg = onWhite ? s.ground : '#ffffff';
+        let out =
+          '<aside class="qe" style="background:' +
+          bg +
+          '">' +
+          '<p class="chiprow" style="margin-top:0"><span class="hl-chip hl-chip-new">Try it</span>' +
+          '<span class="qe-set" style="color:' +
+          s.type +
+          '">' +
+          EMBED_Q.set +
+          '</span></p>' +
+          '<p class="qe-prompt" style="color:' +
+          s.type +
+          '">' +
+          EMBED_Q.prompt +
+          '</p>' +
+          '<p class="qe-ask" style="color:' +
+          s.type +
+          '">' +
+          EMBED_Q.ask +
+          '</p>';
+        EMBED_Q.options.forEach(function (o, i) {
+          const sel = embedSel.indexOf(i) >= 0;
+          let inner;
+          if (embedChecked && o.ok) {
+            inner =
+              '<span class="qe-opt" style="background:' +
+              s.ink +
+              ';color:' +
+              bg +
+              '">' +
+              o.t +
+              '</span>';
+          } else if (embedChecked && sel && !o.ok) {
+            inner =
+              '<span class="qe-opt" style="background:#fff;color:' +
+              s.type +
+              ';opacity:.45;text-decoration:line-through">' +
+              o.t +
+              '</span>';
+          } else if (sel) {
+            inner =
+              '<span class="qe-optwrap" style="color:' +
+              s.ink +
+              '"><span class="qe-opt" style="background:#fff;color:' +
+              s.type +
+              '">' +
+              o.t +
+              '</span></span>';
+          } else {
+            inner =
+              '<span class="qe-opt" style="background:color-mix(in srgb, ' +
+              s.ink +
+              ' 14%, ' +
+              bg +
+              ');color:' +
+              s.type +
+              '">' +
+              o.t +
+              '</span>';
+          }
+          out += '<div class="qe-row" data-i="' + i + '">' + inner + '</div>';
+        });
+        if (!embedChecked) {
+          out +=
+            '<p class="qe-actions"><button type="button" id="qe-check" class="qe-btn" style="background:' +
+            btn.bg +
+            ';color:' +
+            btn.fg +
+            '">Check answer</button></p>';
+        } else {
+          const right = EMBED_Q.options.every(function (o, i) {
+            return o.ok === embedSel.indexOf(i) >= 0;
+          });
+          out +=
+            '<p class="qe-verdict" style="color:' +
+            s.type +
+            '">' +
+            (right
+              ? 'Correct \u2014 both fallacies caught.'
+              : 'Not quite \u2014 it attacks the opponent (ad hominem) and leans on \u201ceveryone knows\u201d (appeal to the people).') +
+            '</p>' +
+            '<p class="qe-actions"><a id="qe-again" class="qe-link" style="color:' +
+            s.type +
+            '">Try again</a>' +
+            '<a class="qe-link qe-cta" style="color:' +
+            s.type +
+            '">Keep practising Set R \u2192</a></p>';
+        }
+        out +=
+          '<p class="qe-note">Lab mock \u2014 the shipped widget draws questions from the set\u2019s own generator.</p></aside>';
+        return out;
+      }
+
+      function wireEmbed() {
+        for (const row of document.querySelectorAll('.qe-row')) {
+          row.onclick = function () {
+            if (embedChecked) return;
+            const i = parseInt(row.dataset.i, 10);
+            const at = embedSel.indexOf(i);
+            if (at >= 0) embedSel.splice(at, 1);
+            else embedSel.push(i);
+            render();
+          };
+        }
+        const check = document.getElementById('qe-check');
+        if (check)
+          check.onclick = function () {
+            embedChecked = true;
+            render();
+          };
+        const again = document.getElementById('qe-again');
+        if (again)
+          again.onclick = function () {
+            embedChecked = false;
+            embedSel = [];
+            render();
+          };
+      }
+
+      // Post art: the real cover image when the post has one, generated
+      // pattern art otherwise.
+      function postArt(p, w, h, cls) {
+        if (p.cover) {
+          return (
+            '<div class="art ' +
+            cls +
+            '"><img src="' +
+            p.cover +
+            '" alt="" style="display:block;width:100%;height:100%;object-fit:cover"></div>'
+          );
+        }
+        return (
+          '<div class="art ' +
+          cls +
+          '">' +
+          fieldSvg(w, h, {
+            seedOffset: slugSeed(p.slug),
+            scaleMul: cls === 'art-hero' ? 0.9 : 0.8,
+          }) +
+          '</div>'
+        );
+      }
+
+      // A pattern field driven by the global recipe. scaleMul lets smaller
+      // canvases (cards, bands) take proportionally smaller cells — the same
+      // move as the LinkedIn cover's 0.6 multiplier.
+      function fieldSvg(w, h, opts) {
+        opts = opts || {};
+        const s = SCHEMES[state.scheme];
+        const pool = poolFor(state.scheme, state.pool);
+        const sc = state.scale * (opts.scaleMul || 1);
+        const seed = (state.seed + (opts.seedOffset || 0)) % 100;
+        const off = latticeOffset(w, h, sc);
+        const clear = opts.clear
+          ? {
+              x: opts.clear.x - off.ox,
+              y: opts.clear.y - off.oy,
+              w: opts.clear.w,
+              h: opts.clear.h,
+              r: opts.clear.r,
+            }
+          : null;
+        const body = patternBody(state.pattern, {
+          w: w - off.ox * 2,
+          h: h - off.oy * 2,
+          ink: s.ink,
+          pool: pool,
+          scale: sc,
+          seed: seed,
+          clear: clear,
+          rate: state.rate / 100,
+        });
+        return (
+          '<svg xmlns="http://www.w3.org/2000/svg" width="' +
+          w +
+          '" height="' +
+          h +
+          '" viewBox="0 0 ' +
+          w +
+          ' ' +
+          h +
+          '" preserveAspectRatio="xMidYMid slice" style="display:block;width:100%;height:100%">' +
+          '<rect width="' +
+          w +
+          '" height="' +
+          h +
+          '" fill="' +
+          s.ground +
+          '"/>' +
+          '<g transform="translate(' +
+          off.ox +
+          ' ' +
+          off.oy +
+          ')">' +
+          body +
+          '</g></svg>'
+        );
+      }
+
+      function chip(label, solid) {
+        return (
+          '<span class="hl-chip' +
+          (solid ? ' hl-chip-new' : '') +
+          '">' +
+          label +
+          '</span>'
+        );
+      }
+
+      // Form treatments (see FORM_OPTS). Each is a different answer to "what
+      // does an input slot look like in this grammar".
+      function subscribeHtml(s, btn, maxW) {
+        var mw = 'max-width:' + (maxW || '480px') + ';';
+        var btnHtml =
+          '<span class="subwide-btn" style="background:' +
+          btn.bg +
+          ';color:' +
+          btn.fg +
+          '">Subscribe</span>';
+        if (state.form === 'pill') {
+          return (
+            '<div class="subwide-wrap" style="' +
+            mw +
+            'color:' +
+            s.ink +
+            '">' +
+            '<div class="subwide" style="background:#fff;border:none;clip-path:' +
+            SPRITE_CLIP +
+            '">' +
+            '<span class="subwide-text">you@university.edu</span>' +
+            btnHtml +
+            '</div></div>'
+          );
+        }
+        if (state.form === 'blank') {
+          return (
+            '<div class="subwide" style="' +
+            mw +
+            'background:transparent;border:none;padding:0;gap:16px">' +
+            '<span class="subwide-text" style="border-bottom:2px solid ' +
+            s.ink +
+            ';padding:12px 2px 12px 4px;color:' +
+            s.type +
+            ';opacity:.72">you@university.edu</span>' +
+            btnHtml +
+            '</div>'
+          );
+        }
+        var box = mw;
+        var text = '';
+        if (state.form === 'solid') {
+          box += 'background:#fff;border:1.5px solid #9c9c90';
+        } else if (state.form === 'outline') {
+          box += 'background:transparent;border:2px solid ' + s.ink;
+          text = 'color:' + s.type + ';opacity:.75';
+        } else {
+          box +=
+            'background:transparent;border:none;padding:8px 8px 8px 18px;' +
+            'background-image:' +
+            'repeating-linear-gradient(90deg,' +
+            s.ink +
+            ' 0 10px,transparent 10px 20px),' +
+            'repeating-linear-gradient(90deg,' +
+            s.ink +
+            ' 0 10px,transparent 10px 20px),' +
+            'repeating-linear-gradient(180deg,' +
+            s.ink +
+            ' 0 10px,transparent 10px 20px),' +
+            'repeating-linear-gradient(180deg,' +
+            s.ink +
+            ' 0 10px,transparent 10px 20px);' +
+            'background-size:100% 2px,100% 2px,2px 100%,2px 100%;' +
+            'background-position:0 0,0 100%,0 0,100% 0;background-repeat:no-repeat';
+          text = 'color:' + s.type + ';opacity:.75';
+        }
+        return (
+          '<div class="subwide" style="' +
+          box +
+          '">' +
+          '<span class="subwide-text" style="' +
+          text +
+          '">you@university.edu</span>' +
+          btnHtml +
+          '</div>'
+        );
+      }
+
+      // The nav shares the ground of the surface it sits ON: the scheme
+      // ground over the release-notes hero field, the content ground on the
+      // blog pages (white nav on white content — Malik, 2026-08-14).
+      function navHtml(s, btn, active, bg) {
+        const blogOn = active === 'blog';
+        const link = function (label, on) {
+          if (on)
+            return (
+              '<a class="on" style="color:' +
+              s.type +
+              ';box-shadow:0 2px 0 ' +
+              s.ink +
+              '">' +
+              label +
+              '</a>'
+            );
+          return '<a>' + label + '</a>';
+        };
+        return (
+          '<header class="nav" style="background:' +
+          bg +
+          '">' +
+          '<div class="nav-mark">' +
+          markSvg(34, s.ink, bg) +
+          '</div>' +
+          '<nav class="nav-links" style="color:' +
+          s.type +
+          '">' +
+          link('Blog', blogOn) +
+          link('Release Notes', !blogOn) +
+          '<a class="cta" style="background:' +
+          btn.bg +
+          ';color:' +
+          btn.fg +
+          '">Practice</a></nav></header>'
+        );
+      }
+
+      function contentGround(s) {
+        return state.content === 'white' ? '#ffffff' : s.ground;
+      }
+
+      // The newsletter card inverts against the content ground so it keeps
+      // figure: scheme panel on white content, white panel on scheme content.
+      function newsletterHtml(s, btn) {
+        const onWhite = state.content === 'white';
+        const bg = onWhite ? s.ground : '#ffffff';
+        return (
+          '<section class="news" style="background:' +
+          bg +
+          '">' +
+          '<div class="news-inner">' +
+          '<h2 class="display" style="color:' +
+          s.type +
+          '">FOLLOW THE RELEASES</h2>' +
+          '<p style="color:' +
+          s.type +
+          ';opacity:.8">New exercise sets, new features, the occasional essay \u2014 straight to your inbox when they ship.</p>' +
+          subscribeHtml(s, btn, '560px') +
+          '<p class="news-fine" style="color:' +
+          s.type +
+          ';opacity:.6">No spam, and we never share your address.</p>' +
+          '</div>' +
+          '<div class="news-band">' +
+          fieldSvg(1120, 96, { scaleMul: 0.45, seedOffset: 11 }) +
+          '</div></section>'
+        );
+      }
+
+      function postMeta(p) {
+        return (
+          '<p class="byline">By ' + p.author + ' \u00b7 ' + p.date + '</p>'
+        );
+      }
+
+      function renderBlog(s, btn) {
+        const f = POSTS[0];
+        let out =
+          navHtml(s, btn, 'blog', contentGround(s)) + '<main class="page">';
+        out +=
+          '<section class="hero-split">' +
+          postArt(f, 762, 508, 'art-hero') +
+          '<div class="hero-copy">' +
+          chip(f.category) +
+          '<h1 class="display hero-title">' +
+          f.title +
+          '</h1>' +
+          '<p class="dek">' +
+          f.dek +
+          '</p>' +
+          postMeta(f) +
+          '</div></section>';
+        out += '<p class="label">Posts</p><section class="grid">';
+        for (const p of POSTS.slice(1)) {
+          out +=
+            '<article class="card">' +
+            postArt(p, 640, 360, 'art-card') +
+            '<h2 class="display card-title"><a class="rn-link">' +
+            p.title +
+            '</a></h2>' +
+            postMeta(p) +
+            '<p class="card-dek">' +
+            p.dek +
+            '</p>' +
+            '<p class="chiprow">' +
+            chip(p.category) +
+            '</p></article>';
+        }
+        out += '</section>' + newsletterHtml(s, btn) + '</main>';
+        return out;
+      }
+
+      function renderPost(s, btn) {
+        const p = POSTS[0];
+        let out =
+          navHtml(s, btn, 'blog', contentGround(s)) +
+          '<main class="page page-narrow">';
+        out +=
+          '<p class="back">\u2190&nbsp; Blog</p>' +
+          '<h1 class="display post-title">' +
+          p.title +
+          '</h1>' +
+          '<p class="dek">' +
+          p.dek +
+          '</p>' +
+          '<p class="byline">By ' +
+          p.author +
+          ' \u00b7 ' +
+          p.date +
+          ' &nbsp;</p><p class="chiprow">' +
+          chip(p.category) +
+          '</p>' +
+          '<div class="art art-band">' +
+          fieldSvg(1120, 340, { seedOffset: slugSeed(p.slug), scaleMul: 0.6 }) +
+          '</div>' +
+          '<div class="prose">' +
+          "<p>LogiCola 3 has a new face. Not a coat of paint \u2014 a redesign that started from a question we kept running into: what should a logic drill <em>feel</em> like when you're on your third run of the evening?</p>" +
+          embedHtml(s, btn) +
+          '<h2 class="display">A colour for every set</h2>' +
+          "<p>Each exercise set now has its own palette: a pale surface and a dark chromatic ink, tuned as a pair. Syllogisms don't look like fallacies; translations don't look like proofs. The palettes were derived in OKLCH and checked against WCAG contrast requirements across every set.</p>" +
+          '<h2 class="display">Scored runs</h2>' +
+          '<p>The classic ten-question drill has grown into a scored run. Answer well and the run builds; miss, and the bar flashes and takes the hit. The scoring economies come from the original 2008 LogiCola.</p>' +
+          '</div>' +
+          newsletterHtml(s, btn) +
+          '</main>';
+        return out;
+      }
+
+      function renderRN(s, btn) {
+        let out = navHtml(s, btn, 'rn', s.ground);
+        out +=
+          '<section class="rn-hero">' +
+          fieldSvg(HERO_W, HERO_H, { clear: CLEARING }) +
+          '<div class="rn-clearing" style="left:' +
+          CLEARING.x +
+          'px;top:' +
+          CLEARING.y +
+          'px;width:' +
+          CLEARING.w +
+          'px;height:' +
+          CLEARING.h +
+          'px">' +
+          '<p class="label" style="margin:0;color:' +
+          s.type +
+          '">Release notes</p>' +
+          '<h1 class="display rn-title" style="color:' +
+          s.type +
+          '">What\u2019s new</h1>' +
+          subscribeHtml(s, btn, '480px') +
+          '</div></section>';
+        out += '<main class="page">';
+        for (const r of RELEASES) {
+          out +=
+            '<article class="rn-row"><div class="rn-meta">' +
+            '<h2 class="display rn-h"><a class="rn-link">' +
+            r.title +
+            '</a></h2>' +
+            '<p class="byline">' +
+            r.date +
+            '</p>' +
+            '<p class="chiprow">' +
+            r.cats
+              .map(function (c) {
+                return chip(c.t, c.solid);
+              })
+              .join('') +
+            '</p>' +
+            '</div>' +
+            '<div class="prose rn-body">' +
+            r.body +
+            '</div></article>';
+        }
+        out += newsletterHtml(s, btn) + '</main>';
+        return out;
+      }
+
+      function render() {
+        const s = SCHEMES[state.scheme];
+        const btn = btnColors(s);
+
+        const live = document.getElementById('lab-live');
+        live.style.setProperty(
+          '--hl-ground',
+          state.content === 'white' ? '#ffffff' : s.ground
+        );
+        live.style.setProperty('--hl-ink', s.ink);
+        live.style.setProperty('--hl-type', s.type);
+
+        document.getElementById('lab-blog').innerHTML = renderBlog(s, btn);
+        document.getElementById('lab-post').innerHTML = renderPost(s, btn);
+        document.getElementById('lab-rn').innerHTML = renderRN(s, btn);
+
+        document.getElementById('hl-recipe').textContent =
+          (s.label || state.scheme) +
+          ' \u00b7 ' +
+          state.pattern +
+          ' \u00b7 ' +
+          state.pool +
+          ' \u00b7 scale ' +
+          state.scale.toFixed(2) +
+          ' \u00b7 seed ' +
+          state.seed +
+          ' \u00b7 accent ' +
+          state.rate +
+          '%' +
+          ' \u00b7 form ' +
+          state.form +
+          ' \u00b7 content ' +
+          state.content;
+
+        wireEmbed();
+
+        const rateEl = document.getElementById('hl-rate');
+        rateEl.disabled = state.pattern !== 'quilt';
+        document.getElementById('hl-rate-note').textContent =
+          state.pattern === 'quilt'
+            ? 'accent ' + state.rate + '%'
+            : 'camo mixes by noise; rate is inert';
+        document.getElementById('hl-scale-note').textContent =
+          'scale ' + state.scale.toFixed(2);
+        for (const host of document.querySelectorAll('[data-key]')) {
+          const key = host.getAttribute('data-key');
+          for (const b of host.querySelectorAll('button')) {
+            b.setAttribute('aria-pressed', String(state[key] === b.dataset.id));
+          }
+        }
+      }
+
+      function buildOpts(hostId, items, key) {
+        const host = document.getElementById(hostId);
+        host.setAttribute('data-key', key);
+        for (const it of items) {
+          const b = document.createElement('button');
+          b.className = 'opt';
+          b.type = 'button';
+          b.dataset.id = it.id;
+          b.textContent = it.label;
+          b.onclick = () => {
+            state[key] = it.id;
+            render();
+          };
+          host.append(b);
+        }
+      }
+
+      buildOpts(
+        'hl-scheme',
+        SCHEME_ORDER.map((id) => ({ id: id, label: SCHEMES[id].label })),
+        'scheme'
+      );
+      buildOpts('hl-pattern', PATTERNS, 'pattern');
+      buildOpts('hl-pool', POOL_OPTS, 'pool');
+      buildOpts('hl-form', FORM_OPTS, 'form');
+      buildOpts('hl-content', CONTENT_OPTS, 'content');
+
+      const presetHost = document.getElementById('hl-presets');
+      for (const p of PRESETS) {
+        const b = document.createElement('button');
+        b.className = 'opt';
+        b.type = 'button';
+        b.textContent = p.label;
+        b.onclick = () => {
+          Object.assign(state, p.s);
+          syncInputs();
+          render();
+        };
+        presetHost.append(b);
+      }
+
+      const scaleEl = document.getElementById('hl-scale');
+      const rateEl2 = document.getElementById('hl-rate');
+      const seedEl = document.getElementById('hl-seed');
+      function syncInputs() {
+        scaleEl.value = state.scale;
+        rateEl2.value = state.rate;
+        seedEl.value = state.seed;
+      }
+      scaleEl.oninput = () => {
+        state.scale = parseFloat(scaleEl.value);
+        render();
+      };
+      rateEl2.oninput = () => {
+        state.rate = parseInt(rateEl2.value, 10);
+        render();
+      };
+      seedEl.onchange = () => {
+        state.seed = Math.max(0, parseInt(seedEl.value, 10) || 0);
+        render();
+      };
+      document.getElementById('hl-reroll').onclick = () => {
+        state.seed = Math.floor(Math.random() * 100);
+        syncInputs();
+        render();
+      };
+
+      // Programmatic hook (used by the capture scripts; harmless otherwise).
+      window.headerLab = {
+        set(patch) {
+          Object.assign(state, patch);
+          syncInputs();
+          render();
+        },
+        get() {
+          return { ...state };
+        },
+      };
+
+      syncInputs();
+      render();
+    </script>
+  </body>
+</html>

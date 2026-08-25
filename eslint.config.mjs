@@ -6,7 +6,7 @@ const config = [
   ...nextVitals,
   ...tseslint.configs['flat/recommended'],
   {
-    ignores: ['artifacts/**', 'coverage/**'],
+    ignores: ['artifacts/**', 'coverage/**', '.content-collections/**'],
   },
   prettier,
 ];

@@ -60,3 +60,19 @@ Technical details and maintenance notes are documented in
   [docs/release-checks.md](docs/release-checks.md).
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to load Roboto Flex.
+
+## License
+
+LogiCola 3 is free and open source software under the
+[GNU Affero General Public License v3.0 or later](LICENSE) (changed
+from MIT on 2026-08-24 — see [NOTICE](NOTICE) for the history and the
+preserved MIT attribution).
+
+Use it, study it, share it, fork it. The one obligation that matters:
+if you run a **modified** version as a network service, AGPL section 13
+requires you to offer your users its complete source. Someone can
+charge for a fork — but they cannot keep it closed, which is the point.
+
+Versions published while the project was MIT-licensed remain MIT for
+those versions. Rights in the Gensler drill material are separate from
+the software licence.
