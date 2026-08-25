@@ -171,9 +171,15 @@ const GRID_THIRD_COLUMN_MIN = 13;
  */
 function optionGridVars(optionCount: number): React.CSSProperties {
   const cols = optionCount >= GRID_THIRD_COLUMN_MIN ? 3 : 2;
+  // A fourth column only for the sets that earned a third (Set R's 18);
+  // Set Q's 7 would leave a ragged 2-per-column grid. See the
+  // @container (min-width: 1100px) tier in globals.css.
+  const colsXl = optionCount >= GRID_THIRD_COLUMN_MIN ? 4 : cols;
   return {
     '--qcols': cols,
     '--qrows': Math.ceil(optionCount / cols),
+    '--qcols-xl': colsXl,
+    '--qrows-xl': Math.ceil(optionCount / colsXl),
     '--qcols-sm': 2,
     '--qrows-sm': Math.ceil(optionCount / 2),
   } as React.CSSProperties;
@@ -693,7 +699,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
     const raf = requestAnimationFrame(() => {
       const rect = target.getBoundingClientRect();
       // "On screen" is not the test — the collapsed controls sheet
-      // OVERLAYS the foot of the screen, and `block: 'nearest'` parks
+      // OVERLAYS the foot of the screen, and the minimum scroll parks
       // the option exactly at the scroller's bottom edge, i.e. under
       // it (measured: answer at 683–744 with the sheet starting ~716).
       // The answer has to clear the sheet to count as seen.
@@ -701,16 +707,46 @@ const QuizSession: React.FC<QuizSessionProps> = ({
         drawerRef.current?.getBoundingClientRect().top ?? window.innerHeight;
       const floor = Math.min(window.innerHeight, sheetTop);
       if (rect.top >= 0 && rect.bottom <= floor) return;
-      // Centre, not nearest: the minimum scroll is what put it under
-      // the sheet in the first place.
-      target.scrollIntoView({
-        block: 'center',
-        inline: 'nearest',
+      // Scroll THE SCROLLER, never scrollIntoView (Malik, 2026-08-24:
+      // "the new question started with a passage that is only showing
+      // the second line"). scrollIntoView walks EVERY scrollable
+      // ancestor, so centring an option in the grid also scrolled the
+      // card and shoved the passage off the top — and that scroll
+      // survived into the next question. Moving scrollTop by hand
+      // touches this one box and nothing else.
+      const viewH = scroller.clientHeight;
+      const delta =
+        rect.top -
+        scroller.getBoundingClientRect().top -
+        (viewH - rect.height) / 2;
+      scroller.scrollTo({
+        top: scroller.scrollTop + delta,
         behavior: prefersReducedMotion() ? 'auto' : 'smooth',
       });
     });
     return () => cancelAnimationFrame(raf);
   }, [showSolution, questionCounter]);
+
+  /**
+   * Does the options grid actually overflow? The edge-fade mask is
+   * gated on this (2026-08-24): its static values dissolved 16px of
+   * the FIRST ROW on sets that never scroll — Set Q's 7 options on a
+   * phone — and a scroll timeline over a container with no scrollable
+   * range resolves to its END state, which is the same fade. Measured
+   * here rather than guessed from the option count, because the hint
+   * insert changes the scroller's height mid-question on mobile.
+   */
+  const [optionsOverflow, setOptionsOverflow] = useState(false);
+  useEffect(() => {
+    const el = optionsGridRef.current;
+    if (!el) return;
+    const sync = () =>
+      setOptionsOverflow(el.scrollHeight > el.clientHeight + 1);
+    sync();
+    const observer = new ResizeObserver(sync);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [currentQuestion, showSolution]);
   const prevGuideOpenRef = useRef(isGuideOpen);
   useEffect(() => {
     if (prevGuideOpenRef.current === isGuideOpen) return;
@@ -1427,7 +1463,10 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                 surface={quizSurface}
                 ink={quizForeground}
                 treatment='footer'
-                className='pointer-events-none absolute inset-0 -z-10 hidden lg:block'
+                // The host IS the band: a bottom-anchored strip of
+                // FOOTER_BAND_PX, so its height never varies with the
+                // card's and the field stays put between questions.
+                className='pointer-events-none absolute inset-x-0 bottom-0 -z-10 hidden h-[112px] lg:block'
               />
             )}
             {/* Typeform-style progress line, desktop only (the mobile
@@ -1665,6 +1704,9 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                     <div
                       ref={optionsGridRef}
                       onScroll={handleOptionsScroll}
+                      // Gates the edge-fade mask: no fade where there
+                      // is nothing to scroll (globals.css).
+                      data-overflowing={optionsOverflow || undefined}
                       className={
                         isGridLayout
                           ? // Column-major (options read down each column),

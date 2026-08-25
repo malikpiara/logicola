@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { SubSet } from '@/content/types';
 import {
   clearRectFor,
+  FOOTER_BAND_PX,
   patternSvg,
   quiltAccentPool,
   type QuiltTreatment,
@@ -108,7 +109,17 @@ export function PatternLayer({
     let frame = 0;
     const draw = () => {
       const w = host.clientWidth;
-      const h = host.clientHeight;
+      // The FOOTER band draws itself at a FIXED height (2026-08-24,
+      // Malik: "the patterns on the bottom should not change from
+      // question to question. That's jarring."). The strip is anchored
+      // to the card's foot, so rendering the field at the card's full
+      // height meant a taller passage shifted WHICH lattice rows landed
+      // in the visible strip — the seed was stable, the crop was not,
+      // and the band reshuffled on every advance (measured: 958px card
+      // on one question, 963px on the next). Pinning the height makes
+      // the strip's rows the same rows forever; only a width change —
+      // a real resize — recomposes it.
+      const h = treatment === 'footer' ? FOOTER_BAND_PX : host.clientHeight;
       if (!w || !h) return;
       const mobile = w < MOBILE_WIDTH;
       setSvg(
@@ -119,7 +130,11 @@ export function PatternLayer({
           pool,
           scale: (mobile ? MOBILE_SCALE : 1) * QUIZ_PATTERN_SCALE,
           seed,
-          clear: clearRectFor(treatment, w, h, mobile),
+          // A footer host IS the band now, so nothing is cleared.
+          clear:
+            treatment === 'footer'
+              ? null
+              : clearRectFor(treatment, w, h, mobile),
         })
       );
     };

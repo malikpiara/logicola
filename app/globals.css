@@ -705,6 +705,23 @@
   }
 }
 
+/* A FOURTH column on a genuinely wide card (2026-08-24, Malik's ask —
+   the Set R reach problem). Set R's 18 options go from 6 rows to 5,
+   which measured 348px → 288px at a 1728px viewport with NO label
+   wrapping: the fourth column pulls Check Answer 60px up the screen.
+   A CONTAINER query, like the tier above, because the guide pane
+   resizes the card — a viewport rule would leave four cramped columns
+   in a narrow card whenever the pane is open. 1100px is the card width
+   where four columns still clear the longest label ('Appeal to
+   authority') on one line; JS supplies the row count to match
+   (optionGridVars). */
+@container (min-width: 1100px) {
+  .quiz-immersive .qoptions-grid {
+    grid-template-columns: repeat(var(--qcols-xl), minmax(0, 1fr));
+    grid-template-rows: repeat(var(--qrows-xl), auto);
+  }
+}
+
 /* Same voice and colour as the start screen's points line — the same
    information, one screen later. */
 .quiz-immersive .qcount {
@@ -1704,8 +1721,83 @@
   line-height: 1.6;
 }
 
+/* The reservation is CAPPED (2026-08-24, Malik's ask). The ghost sizes
+   the slot to the tallest hint the question could show, and on Set R
+   that is a constant 156px on EVERY question — because all 18 fallacy
+   options are shared, so one long hint sets the floor for the whole
+   set. Measured: only 2 of the 18 hints ('Appeal to authority', 'Ad
+   hominem', ~144px of clause list) are long; the other 16 run 24–48px.
+   So the old contract spent ~110px of blank space on every question to
+   accommodate two options, and on the 18-option grid that space is
+   exactly what pushed the answers and Check Answer off the screen.
+
+   4 lines at the slot's 15px/1.6 = 96px. The two outliers now scroll
+   inside the slot instead of the page — the live layer is absolutely
+   positioned, so it can never push the options no matter what it
+   holds, and the no-shift contract this slot exists for is unchanged. */
 .quiz-immersive .qfeed-ghost {
   visibility: hidden;
+}
+
+/* DESKTOP ONLY — this cap belongs to the ghost contract, and below
+   `lg` there is no ghost: the slot sizes to its live content and the
+   live layer is `position: static` (the 2026-08-19 mobile exception
+   further down). Capping there made a 200px hint overflow a 96px box
+   and paint straight over the options — caught on a 390px phone
+   before it shipped. */
+@media (width >= 64rem) {
+  .quiz-immersive .qfeed {
+    max-height: 96px;
+  }
+
+  /* No `overscroll-behavior: contain` (2026-08-24, Malik: "when your
+     mouse is on the position where there will be a scrollable hint,
+     users can't scroll anymore"). The live layer covers the slot at
+     all times — including when it is EMPTY — so containing the scroll
+     chain meant the wheel died wherever the pointer happened to rest
+     over that band. Default chaining lets the page scroll when this
+     box has nothing left to scroll, which is every question but the
+     two long hints. */
+  .quiz-immersive .qfeed-live {
+    overflow-y: auto;
+  }
+}
+
+/* A "there is more" cue for the two hints that outgrow the cap. The
+   same scroll-timeline edge fade the options scroller uses, so the
+   last visible line softens while there is more below and reaches full
+   strength at the end — the fade must never dim the final line of the
+   very text being read. Enhancement only: without scroll timelines the
+   box simply scrolls with no fade. (2026-08-24) */
+@supports (animation-timeline: scroll(self)) {
+  @media (width >= 64rem) {
+    .quiz-immersive .qfeed-live {
+      --qhint-fade: 20px;
+      mask-image: linear-gradient(
+        to bottom,
+        black calc(100% - var(--qhint-fade)),
+        transparent 100%
+      );
+      animation: qhintEdgeFade linear both;
+      animation-timeline: scroll(self block);
+    }
+  }
+}
+
+@keyframes qhintEdgeFade {
+  0%,
+  94% {
+    --qhint-fade: 20px;
+  }
+  100% {
+    --qhint-fade: 0px;
+  }
+}
+
+@property --qhint-fade {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
 }
 
 .quiz-immersive .qfeed-live {
@@ -1822,14 +1914,16 @@
     padding-inline: 1.5rem;
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;
-    /* Edge fades in the shadcn scroll-fade manner: a mask dissolves the
-       content itself near each edge, driven by the element's own scroll
-       timeline — no fade at an edge you can't scroll past. The bottom
-       boundary sits at the sheet line: content fades BEFORE passing
-       under the sheet, and at scroll-end the fade collapses so the last
-       row reads at full ink. Browsers without scroll-driven animations
-       keep these static values (the same graceful fallback shadcn
-       ships). */
+  }
+
+  /* The fade lives on [data-overflowing] ONLY (2026-08-24, Malik on a
+     phone: "on set Q there's a fade on top in a place where it doesn't
+     make sense because there's no overflow"). These static values were
+     unconditional, so a 7-option set that never scrolls still had 16px
+     of its FIRST ROW dissolved. The shell sets the attribute from a
+     real measurement (see index.tsx), and the scroll timeline below
+     modulates the fade only where there is something to scroll. */
+  .quiz-immersive.quiz-grid-set .qoptions-grid[data-overflowing] {
     --qfade-top: 16px;
     --qfade-bottom: 32px;
     mask-image: linear-gradient(
@@ -1855,8 +1949,16 @@
     content: none;
   }
 
+  /* The fade is gated on [data-overflowing] (2026-08-24, Malik on a
+     phone: "on set Q there's a fade on top in a place where it doesn't
+     make sense because there's no overflow"). A scroll timeline on a
+     container with NO scrollable range resolves to its end state, so
+     the mask sat at the 100% keyframe — top faded, bottom clear — and
+     ate the first row of a 7-option set that never scrolls. The shell
+     flips the attribute from a real measurement (see index.tsx), so
+     the mask exists only where there is something to scroll. */
   @supports (animation-timeline: scroll(self)) {
-    .quiz-immersive.quiz-grid-set .qoptions-grid {
+    .quiz-immersive.quiz-grid-set .qoptions-grid[data-overflowing] {
       animation: qoptsEdgeFade linear both;
       animation-timeline: scroll(self block);
     }
