@@ -19,7 +19,7 @@ import { SITE_URL } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Release Notes',
   description:
-    "What's new in LogiCola — every feature, improvement and fix, on one page.",
+    "What's new in LogiCola: every feature, improvement and fix, on one page.",
   alternates: {
     canonical: '/release-notes',
     types: {

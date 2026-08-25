@@ -195,7 +195,7 @@ function ComingSoon({ children }: { children: React.ReactNode }) {
         style={{ color: HEAD }}
       >
         {children}
-        <span className='sr-only'> — coming soon</span>
+        <span className='sr-only'>, coming soon</span>
       </span>
     </PixelTip>
   );
@@ -221,8 +221,8 @@ export function Footer() {
           className='mt-1.5 max-w-[60ch] text-[15px] leading-normal'
           style={{ color: LINK }}
         >
-          New exercise sets, new features, the occasional essay — straight to
-          your inbox when there&apos;s something new.
+          New exercise sets, new features, the occasional essay, sent when
+          there&apos;s something new.
         </p>
         <NewsletterForm
           source='footer'
@@ -252,7 +252,7 @@ export function Footer() {
               className='mt-3 max-w-[36ch] text-[14.5px] leading-normal'
               style={{ color: LINK }}
             >
-              Free logic practice in your browser — a remake of Harry Gensler’s
+              Free logic practice in your browser. A remake of Harry Gensler’s
               LogiCola, kept alive to honour his legacy.
             </p>
           </div>

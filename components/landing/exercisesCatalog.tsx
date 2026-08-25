@@ -66,11 +66,24 @@ const LX_VARS = {
 const CARD_CLIP: CSSProperties = { clipPath: spriteClip(0, 16) };
 const CHIP_CLIP = gemClip();
 
-// The old hero's copy, VERBATIM (Malik kept it over the lab's proposed
-// edit — LP6; the edit stays one dial away in the lab).
-const H1 = 'Master Formal Logic';
+// Rewritten 2026-08-24, Malik choosing from options: the masthead is
+// about what the STUDENT achieves, not about the software. The old line
+// described our machinery ('Generate' is our verb, 'smart' is
+// unfalsifiable, and 'error-free' is a claim about our own answer keys
+// that one bad question would break), and it led on provenance, which
+// is our story rather than a stuck student's reason to stay. Most
+// visitors know neither Gensler nor the textbook.
+//
+// SUBJECTS ARE THE PUBLISHED ONES. Malik's catch on the draft: it said
+// 'proofs', and we ship none — the thirteen drills are eleven
+// translation sets plus definitions (Q) and fallacies (R). Re-check
+// this line whenever a set lands; it is a promise, not decoration.
+//
+// No counts: the eyebrow immediately below renders '6 topics · 13
+// drills'.
+const H1 = 'Practise logic until it clicks';
 const ONELINER =
-  'Generate endless, error-free exercises with smart step-by-step hints. Works offline, directly in your browser.';
+  'Endless practice in translations, definitions and fallacies. Every answer checked on the spot, every mistake explained. Free, and it works offline.';
 
 function TopicCard({
   topic,

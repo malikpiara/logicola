@@ -1697,7 +1697,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                         promise something the grader doesn't do. */}
                       {multiSelect && (
                         <p className='qmulti'>
-                          More than one answer can be right — pick up to 3.
+                          More than one answer can be right. Pick up to 3.
                         </p>
                       )}
                     </div>

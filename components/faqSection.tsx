@@ -52,15 +52,15 @@ const CONTACT_MAILTO = 'mailto:malik@hey.com';
 export const faqData = [
   {
     q: 'What is LogiCola?',
-    a: 'LogiCola is the practice companion to Harry Gensler’s Introduction to Logic (Routledge). After Gensler — the original creator — passed away, I rebuilt it for the web to keep an important learning resource alive and to honour his legacy.',
+    a: 'LogiCola is the practice companion to Harry Gensler’s Introduction to Logic (Routledge). After Gensler, the original creator, passed away, I rebuilt it for the web to keep an important learning resource alive and to honour his legacy.',
   },
   {
     q: 'Do I have to pay anything to use it?',
-    a: 'No. LogiCola is open source, and the exercises are free — and will stay free. If it helps you, a contribution keeps the platform running and speeds up new content and exercises.',
+    a: 'No. LogiCola is open source, and the exercises are free, and will stay free. If it helps you, a contribution keeps the platform running and speeds up new content and exercises.',
   },
   {
     q: 'How is this different from the original software?',
-    a: 'It’s a remake of the 2008 program, rebuilt for the browser — it runs on any device with an internet connection, whatever the operating system. Some chapters and exercises from the original are still missing; they’re being added set by set.',
+    a: 'It’s a remake of the 2008 program, rebuilt for the browser: it runs on any device with an internet connection, whatever the operating system. Some chapters and exercises from the original are still missing; they’re being added set by set.',
   },
   {
     q: 'Is there also a new version of LogiSkor?',
@@ -68,11 +68,11 @@ export const faqData = [
   },
   {
     q: 'How can I support the project?',
-    a: 'LogiCola is free, open source, and run by one person. A donation pays for hosting and buys development time — that’s the fastest way to help. Telling a logic teacher or student about it helps nearly as much.',
+    a: 'LogiCola is free, open source, and run by one person. A donation pays for hosting and buys development time. That’s the fastest way to help. Telling a logic teacher or student about it helps nearly as much.',
   },
   {
     q: 'Can I use LogiCola in my classroom?',
-    a: 'Yes — that’s exactly what it’s for. The drills follow Gensler’s Introduction to Logic chapter by chapter, so you can assign sets alongside your syllabus. And LogiSkor will let you follow your students’ scores; email me if you’d like early access.',
+    a: 'Yes, that’s exactly what it’s for. The drills follow Gensler’s Introduction to Logic chapter by chapter, so you can assign sets alongside your syllabus. And LogiSkor will let you follow your students’ scores; email me if you’d like early access.',
   },
 ];
 
@@ -119,12 +119,12 @@ export function FaqSection() {
               hierarchy — the accordion's triggers are h3s. */}
           <h2 className='faq-display'>Frequently asked questions</h2>
           <p className='faq-sub'>
-            The project, the price (it’s free), and the classroom — in short
+            The project, the price (it’s free), and the classroom, in short
             answers.
           </p>
           <p className='faq-still'>
             Something the list doesn’t answer?{' '}
-            <a href={CONTACT_MAILTO}>Email me</a> — I’m Malik, and I read every
+            <a href={CONTACT_MAILTO}>Email me</a>. I’m Malik, and I read every
             message.
           </p>
         </div>

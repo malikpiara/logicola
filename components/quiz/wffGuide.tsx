@@ -76,7 +76,7 @@ const SET_Q_FLAW_EXAMPLES: ReadonlyArray<{
     num: 7,
     name: 'Has non-essential properties',
     example: '“Human” means “animal that cooks its food.”',
-    why: 'Maybe true of all and only humans — but cooking isn’t what makes someone human.',
+    why: 'Maybe true of all and only humans, but cooking isn’t what makes someone human.',
   },
 ];
 
@@ -227,7 +227,7 @@ export const WffGuide: React.FC<WffGuideProps> = ({ subSet }) => {
         <div>
           <h3 className='qguide-h'>Ways a definition can be flawed</h3>
           <p className='qguide-p'>
-            One worked example per flaw — the numbers match the answer options.
+            One worked example per flaw. The numbers match the answer options.
           </p>
           <table className='qguide-table'>
             <tbody>
@@ -301,9 +301,9 @@ export const WffGuide: React.FC<WffGuideProps> = ({ subSet }) => {
               might underline <Chip>B</Chip> but <i>not</i> <Chip>A</Chip>.
             </p>
             <p className='qguide-p'>
-              Deontic logic adds “ought,” “permissible,” and “forbidden” — but
-              at this imperative level, we focus on “Do A,” “Don’t do A,” etc.
-              You can treat them similarly, using underlined letters to indicate
+              Deontic logic adds “ought,” “permissible,” and “forbidden,” but at
+              this imperative level, we focus on “Do A,” “Don’t do A,” etc. You
+              can treat them similarly, using underlined letters to indicate
               what must or must not be done.
             </p>
           </div>

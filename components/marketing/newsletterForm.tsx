@@ -142,7 +142,7 @@ export function NewsletterForm({
         style={{ color: 'var(--mk-type)', opacity: 0.65 }}
       >
         {status === 'error'
-          ? 'That didn’t work — please try again in a moment.'
+          ? 'That didn’t work. Please try again in a moment.'
           : status === 'success'
             ? ''
             : 'No spam, and we never share your address.'}

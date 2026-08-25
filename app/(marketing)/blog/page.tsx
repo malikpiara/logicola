@@ -14,7 +14,7 @@ import { SITE_URL } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Blog',
   description:
-    'Announcements, product updates and essays from LogiCola — free logic practice exercises in your browser.',
+    'Announcements, product updates and essays from LogiCola. Free logic practice exercises in your browser.',
   alternates: {
     canonical: '/blog',
     types: {
