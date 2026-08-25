@@ -68,7 +68,7 @@ export const faqData = [
   },
   {
     q: 'How can I support the project?',
-    a: 'LogiCola is free, open source, and run by one person. A donation pays for hosting and buys development time. That’s the fastest way to help. Telling a logic teacher or student about it helps nearly as much.',
+    a: 'The exercises are free and open source, and behind them are years of one person’s work. This release alone took a year: the design, the research behind how the hints teach, every exercise checked against Gensler’s textbook and the original program, and the work of making it run on any device, phones included. It needs looking after too, since browsers keep changing and the drills have to keep working. A donation covers hosting and buys the time for all of that, and it is the biggest help there is. Telling a logic teacher or student about it helps as well.',
   },
   {
     q: 'Can I use LogiCola in my classroom?',
@@ -119,8 +119,7 @@ export function FaqSection() {
               hierarchy — the accordion's triggers are h3s. */}
           <h2 className='faq-display'>Frequently asked questions</h2>
           <p className='faq-sub'>
-            The project, the price (it’s free), and the classroom, in short
-            answers.
+            What LogiCola is, what it costs, and how to use it in class.
           </p>
           <p className='faq-still'>
             Something the list doesn’t answer?{' '}
