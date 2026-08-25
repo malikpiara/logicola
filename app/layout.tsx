@@ -127,13 +127,29 @@ export default function RootLayout({
   return (
     // suppressHydrationWarning is scoped to <html> and is the standard
     // cost of a pre-paint attribute script (the theme-switcher pattern):
-    // the landing page's inline script stamps `data-lx-resume` before
-    // React hydrates, so the server HTML legitimately lacks an attribute
-    // the client element has. It suppresses the attribute diff on THIS
+    // the head script below stamps `data-lx-resume` before React
+    // hydrates, so the server HTML legitimately lacks an attribute the
+    // client element has. It suppresses the attribute diff on THIS
     // element only — children still hydrate strictly (2026-08-24).
     <html lang='en' suppressHydrationWarning>
       <head>
         <link rel='manifest' href='/manifest.json' />
+        {/* Pre-paint, in the DOCUMENT head (2026-08-24): marks <html>
+            when a last drill exists so CSS can reserve the landing's
+            resume-banner box before anything below it paints. It lived
+            in app/(site)/page.tsx first, which React 19 rightly warned
+            about — a <script> inside a component never re-executes on
+            client navigation, so the reservation silently stopped
+            working on a soft nav to `/`. In the head it is part of the
+            document, runs once per document load, and the layout
+            persists across navigations. Cheap enough to run on every
+            route: one localStorage read, no parse, no network. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{localStorage.getItem('logicola.last_drill')&&document.documentElement.setAttribute('data-lx-resume','')}catch(e){}",
+          }}
+        />
       </head>
       <body
         className={`antialiased min-h-screen bg-white text-primaryColor ${robotoFlex.className}`}
