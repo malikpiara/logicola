@@ -51,3 +51,15 @@ export async function captureAnalyticsEvent(
 
   posthog?.capture(eventName, properties);
 }
+
+// Super-properties: attached to EVERY subsequent event, not one of
+// them. The offline work registers storage_persisted / offline_ready
+// here so any later event can be sliced by whether that visitor
+// actually had a warm cache (Malik, 2026-08-15).
+export async function registerAnalyticsProperties(
+  properties: AnalyticsProperties
+) {
+  const posthog = await getPostHogClient();
+
+  posthog?.register(properties);
+}
