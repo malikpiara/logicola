@@ -532,6 +532,10 @@ export default function useQuizState(subSet: SubSet, initialMode?: QuizMode) {
 
     // Current question
     currentQuestion,
+    /** The run's whole shuffled bank — the feedback slot sizes its
+     *  reservation across it so the slot's height never changes
+     *  between questions (2026-08-24). */
+    shuffledQuestions,
     willFinishOnNext,
 
     // Selection & correctness
