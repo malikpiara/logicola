@@ -31,17 +31,6 @@ export default function Home() {
           sections stop short of the viewport edges (Malik's catch,
           2026-08-17 — "white margins left and right"). */}
       <div className='flex w-full flex-col'>
-        {/* Pre-paint, parser-blocking on purpose (2026-08-24): marks
-            <html> when a last drill exists so CSS can reserve the
-            resume banner's box before anything below it paints — the
-            inline-script-for-client-only-data pattern. Must stay ABOVE
-            the catalogue in the tree. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "try{localStorage.getItem('logicola.last_drill')&&document.documentElement.setAttribute('data-lx-resume','')}catch(e){}",
-          }}
-        />
         {/* The old hero (mascot + green H1, components/header.tsx) was
             replaced 2026-08-17 by the masthead + exercises catalogue —
             docs/landing-lab.html, Malik's decided composition. The drills
