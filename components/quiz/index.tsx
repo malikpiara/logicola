@@ -613,14 +613,32 @@ const QuizSession: React.FC<QuizSessionProps> = ({
    * nothing's width — including the FIXED drawer, which body padding
    * never reached and which used to slide ~15px on classic-scrollbar
    * platforms at every start→question boundary.
+   *
+   * BELOW `lg` ONLY (2026-08-24, Malik's report — the lock as first
+   * written stranded Set R's lower options on desktop). The lock exists
+   * for the fixed sheet, and the sheet is `lg:hidden`; below that
+   * breakpoint the options grid owns its own scroller
+   * (`@media (width < 64rem)` in globals.css), so nothing needs the
+   * page to move. At `lg` and up there is no sheet, the grid does NOT
+   * scroll, and a tall set — 18 options on Set R — genuinely needs the
+   * PAGE to scroll to reach its own answers.
    */
   useEffect(() => {
     // An embed never locks the page it lives on.
     if (embedded || showStartScreen || showEndScreen) return;
-    const { overflow } = document.body.style;
-    document.body.style.overflow = 'hidden';
+    const sheetWidths = window.matchMedia('(width < 64rem)');
+    const apply = () => {
+      if (sheetWidths.matches) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.removeProperty('overflow');
+      }
+    };
+    apply();
+    sheetWidths.addEventListener('change', apply);
     return () => {
-      document.body.style.overflow = overflow;
+      sheetWidths.removeEventListener('change', apply);
+      document.body.style.removeProperty('overflow');
     };
   }, [embedded, showStartScreen, showEndScreen]);
 
