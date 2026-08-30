@@ -1,5 +1,6 @@
 import { defineCollection, defineConfig } from '@content-collections/core';
 import { compileMarkdown } from '@content-collections/markdown';
+import smartypants from 'remark-smartypants';
 import { z } from 'zod';
 import { imageSize } from 'image-size';
 import { readFileSync } from 'node:fs';
@@ -63,9 +64,14 @@ const posts = defineCollection({
     // <div data-quiz-embed> HTML in the markdown, and the default
     // pipeline strips raw HTML. Our own committed content only — no
     // user-generated markdown flows through here.
+    // Smart punctuation (2026-08-27): straight quotes, `--` and `...`
+    // become curly quotes, dashes and real ellipses at compile time.
+    // Inline code is a separate mdast node smartypants never visits, so
+    // logic notation in backticks keeps its straight marks.
     const html = sizeLocalImages(
       await compileMarkdown(ctx, doc, {
         allowDangerousHtml: true,
+        remarkPlugins: [smartypants],
       })
     );
     const slug = doc._meta.path;
@@ -93,7 +99,9 @@ const releaseNotes = defineCollection({
     content: z.string(),
   }),
   transform: async (doc, ctx) => {
-    const html = sizeLocalImages(await compileMarkdown(ctx, doc));
+    const html = sizeLocalImages(
+      await compileMarkdown(ctx, doc, { remarkPlugins: [smartypants] })
+    );
     // Stable fragment id so /release-notes#<anchor> survives reordering.
     const anchor = doc._meta.path;
     return { ...doc, html, anchor };
