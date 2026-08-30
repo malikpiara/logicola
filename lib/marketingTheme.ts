@@ -54,7 +54,7 @@ export function themeButton() {
 
 /* ---- pools (mirrors scripts/brand-assets.mjs) --------------------------- */
 
-const SETS = {
+export const SETS = {
   A: { surface: '#FFABC6', ink: '#4A1040' },
   C: { surface: '#E7F099', ink: '#02302C' },
   J: { surface: '#E6ACF4', ink: '#1C3601' },

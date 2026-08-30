@@ -2700,6 +2700,10 @@
      aspect-ratio + intrinsic img sizes reserve the box before bytes
      arrive. */
   .ba-wrap {
+    /* The drag chip's width. The overlay input is this much wider than
+       the stage (see beforeAfter.tsx § THUMB INSET) so the native thumb's
+       centre spans exactly 0-100% and the drawn chip never drifts. */
+    --ba-thumb: 40px;
     margin: 28px 0;
   }
   .ba-stage {
@@ -2707,6 +2711,14 @@
     overflow: hidden;
     border: 2px solid #3f0167;
     border-radius: 10px;
+    /* Vertical drags stay with the page, horizontal ones reach the input. */
+    touch-action: pan-y;
+  }
+  /* clip-path eats an outline, so the focus ring lives on the stage
+     rather than on the chip that has the sprite corners. */
+  .ba-stage:has(.ba-range:focus-visible) {
+    outline: 3px solid #3f0167;
+    outline-offset: 3px;
   }
   .ba-stage img {
     position: absolute;
@@ -2727,6 +2739,7 @@
     width: 2px;
     background: #3f0167;
     transform: translateX(-1px);
+    pointer-events: none;
   }
   .ba-tag {
     position: absolute;
@@ -2747,11 +2760,721 @@
   .ba-tag-right {
     right: 10px;
   }
+  /* The input supplies BEHAVIOUR (drag, arrow keys, the announced value)
+     and .ba-handle supplies APPEARANCE: a native thumb cannot host two
+     glyphs, and the chip has to sit on the divider, which is a sibling. */
   .ba-range {
+    position: absolute;
+    top: 0;
+    left: calc(var(--ba-thumb) / -2);
+    width: calc(100% + var(--ba-thumb));
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    cursor: ew-resize;
+    touch-action: pan-y;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+  }
+  .ba-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: var(--ba-thumb);
+    height: 100%;
+  }
+  .ba-range::-moz-range-thumb {
+    width: var(--ba-thumb);
+    height: 100%;
+    border: 0;
+  }
+  .ba-handle {
+    position: absolute;
+    top: 50%;
+    width: var(--ba-thumb);
+    height: var(--ba-thumb);
+    margin: calc(var(--ba-thumb) / -2) 0 0 calc(var(--ba-thumb) / -2);
+    background: #3f0167;
+    color: #cff6dd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .ba-chev {
+    width: 15px;
+    height: 15px;
+    flex: none;
+  }
+
+  .sp-wrap {
+    margin: 28px 0;
+  }
+  .sp-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .sp-tab {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 7px 11px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+  }
+  .sp-tab b {
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .sp-tab:focus-visible {
+    outline: 3px solid #3f0167;
+    outline-offset: 2px;
+  }
+  .sp-card {
+    margin-top: 14px;
+    padding: 18px 18px 16px;
+    border-radius: 12px;
+  }
+  .sp-bar {
+    height: 8px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--quiz-fg) 14%, transparent);
+  }
+  .sp-bar span {
     display: block;
-    width: 100%;
-    margin-top: 10px;
+    height: 100%;
+  }
+  .sp-prompt {
+    margin: 14px 0 12px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+  .sp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .sp-slider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 14px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11.5px;
+    color: color-mix(in srgb, #14110f 70%, transparent);
+  }
+  .sp-slider span {
+    flex: none;
+  }
+  .sp-slider input {
+    flex: 1;
     accent-color: #3f0167;
+  }
+  .sp-reset {
+    flex: none;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    color: #3f0167;
+    background: color-mix(in srgb, #3f0167 9%, transparent);
+  }
+  .sp-reset:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .sp-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px 22px;
+    margin: 14px 0 0;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11.5px;
+  }
+  .sp-meta div {
+    display: flex;
+    gap: 7px;
+    align-items: baseline;
+  }
+  .sp-meta dt {
+    opacity: 0.6;
+  }
+  .sp-meta dd {
+    margin: 0;
+    font-weight: 700;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+  .sp-meta dd i {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+  .sp-meta dd.is-ok i {
+    background: color-mix(in srgb, #05a24b 16%, transparent);
+    color: #046130;
+  }
+  .sp-meta dd.is-off i {
+    background: color-mix(in srgb, #b3261e 14%, transparent);
+    color: #8c1d18;
+  }
+
+  /* The Colour studio (2026-08-26) — the lab's instrument in the post. */
+  .cs-wrap {
+    margin: 28px 0;
+  }
+  .cs-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .cs-well {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 9px;
+    background: color-mix(in srgb, #3f0167 7%, transparent);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, #14110f 65%, transparent);
+  }
+  .cs-well input[type='color'] {
+    width: 34px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    border-radius: 5px;
+    background: none;
+    cursor: pointer;
+  }
+  .cs-hex {
+    /* px, not ch: the mono stack's advance width varies by platform and a
+       ch-based box clipped the last hex digit on macOS. */
+    width: 76px;
+    min-width: 76px;
+    font-family: inherit;
+    font-size: 11.5px;
+    letter-spacing: 0.03em;
+    /* No text-transform — the field accepts hsl() paste and must not
+       render text the clipboard would contradict. */
+    color: #14110f;
+    background: #fff;
+    border-radius: 5px;
+    padding: 4px 6px;
+  }
+  .cs-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 10px;
+  }
+  .cs-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .cs-lab {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 10.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, #14110f 55%, transparent);
+    width: 82px;
+    flex: none;
+  }
+  .cs-chip {
+    min-width: 30px;
+    padding: 6px 9px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11.5px;
+    font-weight: 700;
+    background: color-mix(in srgb, #3f0167 8%, transparent);
+    color: #3f0167;
+  }
+  .cs-chip.is-wide {
+    font-weight: 600;
+  }
+  .cs-chip[aria-pressed='true'] {
+    background: #3f0167;
+    color: #cff6dd;
+  }
+  .cs-chip:focus-visible,
+  .cs-well input:focus-visible {
+    outline: 3px solid #3f0167;
+    outline-offset: 2px;
+  }
+  .cs-swatch {
+    width: 30px;
+    height: 26px;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.14);
+  }
+  .cs-swatch:focus-visible {
+    outline: 3px solid #3f0167;
+    outline-offset: 2px;
+  }
+  .cs-stage {
+    position: relative;
+    isolation: isolate;
+    margin-top: 14px;
+    border-radius: 14px;
+    overflow: hidden;
+    min-height: 420px;
+    display: grid;
+    place-items: center;
+    padding: 26px 18px;
+  }
+  .cs-pattern {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .cs-panel {
+    position: relative;
+    z-index: 1;
+    width: min(430px, 100%);
+    text-align: center;
+  }
+  .cs-eyebrow {
+    margin: 0 0 6px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.72;
+  }
+  .cs-title {
+    margin: 0 0 6px;
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+  .cs-dek {
+    margin: 0 0 16px;
+    font-size: 14px;
+    line-height: 1.45;
+    opacity: 0.85;
+  }
+  .cs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    text-align: left;
+  }
+  .cs-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px 20px;
+    margin: 14px 0 0;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11.5px;
+  }
+  .cs-meta div {
+    display: flex;
+    gap: 7px;
+    align-items: baseline;
+  }
+  .cs-meta dt {
+    opacity: 0.6;
+  }
+  .cs-meta dd {
+    margin: 0;
+    font-weight: 700;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+  .cs-meta dd i {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+  .cs-meta dd.is-ok i {
+    background: color-mix(in srgb, #05a24b 16%, transparent);
+    color: #046130;
+  }
+  .cs-meta dd.is-off i,
+  .cs-meta dd.is-warn i {
+    background: color-mix(in srgb, #b3261e 14%, transparent);
+    color: #8c1d18;
+  }
+
+  /* The damage-bar lab, ported (2026-08-26). Cadences and timings are
+     docs/damage-bar-lab.html's; the lab is the reference, this is the copy. */
+  .db-wrap {
+    --db-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+    --db-s: #cff6dd;
+    --db-i: #3f0167;
+    --db-a: #bd00ad;
+    margin: 28px 0;
+  }
+  .db-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .db-tab {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 7px 11px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11.5px;
+    color: var(--db-i);
+    background: color-mix(in srgb, var(--db-i) 8%, transparent);
+  }
+  .db-tab b {
+    font-weight: 800;
+  }
+  .db-tab i {
+    font-style: normal;
+    color: var(--db-a);
+  }
+  .db-tab[aria-checked='true'] {
+    background: var(--db-i);
+    color: var(--db-s);
+  }
+  .db-tab[aria-checked='true'] i {
+    color: var(--db-s);
+  }
+  .db-tab:focus-visible {
+    outline: 3px solid var(--db-i);
+    outline-offset: 2px;
+  }
+  .db-stage {
+    margin-top: 14px;
+    padding: 22px 20px 16px;
+    border-radius: 12px;
+    background: var(--db-s);
+  }
+  .db-bar {
+    position: relative;
+    display: block;
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--db-i) 12%, transparent);
+  }
+  .db-fill,
+  .db-ghost,
+  .db-chunk {
+    position: absolute;
+    inset: 0 auto 0 0;
+    display: block;
+    height: 100%;
+  }
+  .db-fill {
+    background: var(--db-a);
+    transition: width 500ms var(--db-quart);
+    z-index: 2;
+  }
+  .db-ghost {
+    background: color-mix(in srgb, var(--db-i) 45%, transparent);
+    width: 0;
+    z-index: 1;
+  }
+  .db-chunk {
+    inset: 0 auto 0 auto;
+    background: var(--db-i);
+    z-index: 3;
+  }
+  .db-chunk.is-burning {
+    transition:
+      width 250ms var(--db-quart),
+      opacity 250ms var(--db-quart);
+  }
+  .db-pts {
+    display: block;
+    margin-top: 10px;
+    text-align: right;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--db-i);
+  }
+  .db-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .db-btn {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 9px 13px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--db-i);
+    background: color-mix(in srgb, var(--db-i) 9%, transparent);
+  }
+  .db-btn.is-miss {
+    background: var(--db-i);
+    color: var(--db-s);
+  }
+  .db-btn:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+  .db-btn:focus-visible {
+    outline: 3px solid var(--db-i);
+    outline-offset: 2px;
+  }
+  .db-note {
+    margin-top: 13px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: color-mix(in srgb, #14110f 76%, transparent);
+  }
+  .db-note b {
+    display: block;
+    color: #14110f;
+    font-size: 14px;
+  }
+  .db-note b span {
+    font-weight: 400;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-left: 7px;
+  }
+  .db-note em,
+  .db-note .db-rm {
+    display: block;
+    font-style: normal;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    opacity: 0.62;
+    margin-top: 4px;
+  }
+  @keyframes db-flicker {
+    0%,
+    24% { opacity: 1; }
+    25%,
+    49% { opacity: 0; }
+    50%,
+    74% { opacity: 1; }
+    75%,
+    99% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  .db-flicker { animation: db-flicker 340ms steps(1, end) both; }
+  @keyframes db-inkflicker {
+    0%,
+    24% { background-color: var(--db-i); }
+    25%,
+    49% { background-color: var(--db-a); }
+    50%,
+    74% { background-color: var(--db-i); }
+    75%,
+    100% { background-color: var(--db-a); }
+  }
+  .db-inkflicker { animation: db-inkflicker 340ms steps(1, end) both; }
+  @keyframes db-shake {
+    0% { transform: translateX(0); }
+    15% { transform: translateX(-5px); }
+    40% { transform: translateX(3px); }
+    70% { transform: translateX(-2px); }
+    100% { transform: translateX(0); }
+  }
+  .db-shake { animation: db-shake 260ms ease-out both; }
+  @keyframes db-pulse {
+    0%,
+    49% { background-color: var(--db-i); }
+    50%,
+    100% { background-color: var(--db-a); }
+  }
+  .db-pulse { animation: db-pulse 200ms linear both; }
+  @keyframes db-blink {
+    0%,
+    32% { opacity: 1; }
+    33%,
+    65% { opacity: 0; }
+    66%,
+    100% { opacity: 1; }
+  }
+  .db-blink { animation: db-blink 280ms steps(1, end) both; }
+  @keyframes db-track {
+    0% { background-color: color-mix(in srgb, var(--db-i) 32%, transparent); }
+    100% { background-color: color-mix(in srgb, var(--db-i) 12%, transparent); }
+  }
+  .db-track { animation: db-track 300ms var(--db-quart) both; }
+  @media (prefers-reduced-motion: reduce) {
+    .db-fill,
+    .db-chunk.is-burning { transition: none; }
+    .db-flicker,
+    .db-inkflicker,
+    .db-shake,
+    .db-pulse,
+    .db-blink,
+    .db-track { animation: none; }
+  }
+
+  /* ---- blog figure islands (2026-08-26) ----
+     Two figures that were PNGs and shouldn't have been: a shape is best
+     compared by watching one object change, and a state ladder is best
+     understood by causing it. Both are scoped to the post; the option
+     ladder brings the drill's own tokens with it. */
+  .sd-wrap,
+  .os-wrap {
+    margin: 28px 0;
+  }
+  .sd-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .sd-tab {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 7px 11px;
+    border-radius: 7px;
+    color: #3f0167;
+    background: color-mix(in srgb, #3f0167 8%, transparent);
+    cursor: pointer;
+  }
+  .sd-tab[aria-checked='true'] {
+    background: #3f0167;
+    color: #cff6dd;
+  }
+  .sd-tab:focus-visible {
+    outline: 3px solid #3f0167;
+    outline-offset: 2px;
+  }
+  .sd-stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 168px;
+    margin-top: 14px;
+    border-radius: 10px;
+    background: #cff6dd;
+  }
+  .sd-pill,
+  .sd-contour {
+    width: min(360px, 78%);
+    height: 92px;
+  }
+  .sd-pill {
+    position: relative;
+    display: grid;
+    place-items: center;
+    background: #3f0167;
+    color: #cff6dd;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .sd-contour {
+    position: absolute;
+    background: #170027;
+    transform: scale(1.035);
+  }
+  .sd-note {
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: color-mix(in srgb, #14110f 78%, transparent);
+  }
+  .sd-verdict {
+    display: inline-block;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 10px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    margin-right: 8px;
+    color: #fff;
+    background: #8a94a0;
+    vertical-align: 2px;
+  }
+  .sd-verdict.sd-shipped {
+    background: #3f0167;
+  }
+
+  .os-card {
+    padding: 20px 18px 18px;
+    border-radius: 12px;
+  }
+  .os-prompt {
+    margin: 0 0 14px;
+    font-size: 15.5px;
+  }
+  .os-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .os-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .os-btn {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 9px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .os-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .os-btn:focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 2px;
+  }
+  .os-hint {
+    font-size: 13px;
+    line-height: 1.5;
+    opacity: 0.75;
+    flex: 1 1 220px;
   }
 
   /* Blog quiz embed (2026-08-24, revised): the island hosts the REAL
@@ -3125,4 +3848,529 @@ html[data-qsheet-back-collapse] [data-vaul-drawer] {
 [data-sonner-toast] {
   transition-duration: 190ms;
   transition-timing-function: var(--ease-out-quart);
+}
+
+/* Blog post prose accents (Malik, 2026-08-28, superseding the 08-27
+   mint cards — they read as callouts, not text): blockquotes sit in the
+   text block with a plum left rule (Set L ink), and <mark> wears Set C's
+   chartreuse at 55% so it reads as highlighter, not fill. Custom
+   properties are set inline by app/(marketing)/blog/[slug]/page.tsx so
+   the palette stays in marketingTheme.ts. Deliberately unlayered: these
+   must outrank the typography plugin's layered blockquote rules (italic,
+   inserted quote marks). */
+.post-prose blockquote {
+  font-style: normal;
+  font-size: 0.95em;
+  border-inline-start: 3px solid var(--post-quote-ink);
+  padding-block: 0.1em;
+  padding-inline: 1.15em 0;
+  quotes: none;
+}
+.post-prose blockquote p:first-of-type::before,
+.post-prose blockquote p:last-of-type::after {
+  content: none;
+}
+.post-prose mark {
+  background: color-mix(in srgb, var(--post-mark) 55%, transparent);
+  color: inherit;
+  padding: 0.08em 0.22em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* The 2008 swatch row in the blog post (Malik, 2026-08-27): drawn the
+   way Gensler drew his own help tables — hard corners, 2px black
+   border (his tables were border=2 bordercolor=#000000). The hexes
+   live in the post's markdown; they are his, not the catalogue's. */
+.post-prose .post-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 1.7em 0;
+}
+.post-prose .post-swatches figure {
+  margin: 0;
+}
+.post-prose .post-swatches .swatch {
+  width: 96px;
+  height: 64px;
+  border: 2px solid #000;
+}
+.post-prose .post-swatches figcaption {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  margin-top: 6px;
+  opacity: 0.75;
+}
+
+/* Miniature 2008 screens in the blog post (Malik, 2026-08-28): each
+   figure composes the scheme the way LCEXE composes a real screen —
+   ground, panel card, and the bottom band, which the program produces
+   with InvertRect rather than a chosen colour. The white dash in the
+   band stands for the black title text the inversion flips to white.
+   Colours arrive via --g/--p/--b inline on each figure. */
+.post-prose .post-swatches figure {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+.post-swatches .screen2008 {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 11 / 8;
+  background: var(--g);
+  border: 2px solid #000;
+}
+.post-swatches .screen2008 .panel {
+  position: absolute;
+  left: 21%;
+  right: 21%;
+  top: 15%;
+  bottom: 40%;
+  background: var(--p);
+  border: 1px solid #000;
+}
+.post-swatches .screen2008 .band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 18.75%;
+  background: var(--b);
+}
+.post-swatches .screen2008 .band::after {
+  content: '';
+  position: absolute;
+  left: 31%;
+  right: 31%;
+  top: 37%;
+  height: 24%;
+  background: #fff;
+}
+
+/* The Pastel Random island's controls (Malik, 2026-08-28): the Colour
+   studio's control language — uppercase mono row labels, plum chips with
+   a solid pressed state — so the two instruments read as one family. The
+   die is DiceIcon from the quiz's pixel set, drawn for this post. */
+.post-prose .pr-wrap {
+  margin: 1.7em 0;
+}
+.pr-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+.pr-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.pr-lab {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, #14110f 55%, transparent);
+  width: 82px;
+  flex: none;
+}
+.pr-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 30px;
+  padding: 6px 11px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  background: color-mix(in srgb, #3f0167 8%, transparent);
+  color: #3f0167;
+}
+.pr-chip.is-wide {
+  font-weight: 600;
+}
+.pr-chip[aria-checked='true'] {
+  background: #3f0167;
+  color: #cff6dd;
+}
+.pr-chip:focus-visible {
+  outline: 3px solid #3f0167;
+  outline-offset: 2px;
+}
+.pr-die {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+
+/* Island motion (Malik, 2026-08-28 — the animations.dev pass): colour
+   crossfades so a state change reads as the same screen being retuned
+   rather than repainted, a short sweep on Pastel Random rolls, and press
+   feedback so the post's controls feel held rather than clicked. All
+   timings ride the app's own tokens. Colour transitions survive reduced
+   motion (nothing moves, they aid comprehension); transforms do not. */
+.post-swatches .screen2008,
+.post-swatches .screen2008 .panel,
+.post-swatches .screen2008 .band {
+  transition: background-color var(--motion-feedback) var(--ease-ui);
+  transition-delay: var(--roll-delay, 0ms);
+}
+.sp-card,
+.sp-card :where(div, span, p, button, output) {
+  transition:
+    background-color var(--motion-feedback) var(--ease-ui),
+    color var(--motion-feedback) var(--ease-ui),
+    border-color var(--motion-feedback) var(--ease-ui);
+}
+.sp-tab,
+.sd-tab,
+.db-tab,
+.db-btn,
+.pr-chip,
+.cs-chip,
+.cs-swatch {
+  transition:
+    transform var(--motion-feedback) var(--ease-out-quart),
+    background-color var(--motion-feedback) var(--ease-ui),
+    color var(--motion-feedback) var(--ease-ui);
+}
+.sp-tab:active,
+.sd-tab:active,
+.db-tab:active,
+.db-btn:active:not(:disabled),
+.pr-chip:active,
+.cs-chip:active,
+.cs-swatch:active {
+  transform: scale(0.97);
+}
+.ba-handle {
+  transition: transform var(--motion-feedback) var(--ease-out-quart);
+}
+.ba-range:active ~ .ba-handle {
+  transform: scale(0.96);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sp-tab:active,
+  .sd-tab:active,
+  .db-tab:active,
+  .db-btn:active:not(:disabled),
+  .pr-chip:active,
+  .cs-chip:active,
+  .cs-swatch:active,
+  .ba-range:active ~ .ba-handle {
+    transform: none;
+  }
+}
+
+/* Colour-studio candidates row (Malik, 2026-08-29): the row is always
+   rendered so generating candidates never shifts the stage; the hint
+   fills the reserved space, and the adopted candidate wears the same
+   plum ring the focus style uses. */
+.cs-picks {
+  min-height: 26px;
+}
+.cs-picks-empty {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  /* Swatch-height line so the row is exactly as tall empty as filled —
+     surfacing candidates must not move the stage below. */
+  line-height: 26px;
+  color: color-mix(in srgb, #14110f 45%, transparent);
+}
+.cs-swatch[aria-pressed='true'] {
+  outline: 3px solid #3f0167;
+  outline-offset: 2px;
+}
+
+/* Studio stage tweening (Malik, 2026-08-29): a *click* — preset,
+   candidate, pattern tab — raises .is-tweening for one tween, so the
+   stage colours crossfade instead of repainting; the colour wells never
+   raise it, so continuous drags keep tracking 1:1. The pattern field
+   crossfades the same way: the outgoing layer (.is-prev) fades to zero
+   while the incoming one starts transparent via @starting-style. */
+.cs-stage.is-tweening,
+.cs-stage.is-tweening :where(div, p, h3, span) {
+  transition:
+    background-color var(--motion-feedback) var(--ease-ui),
+    color var(--motion-feedback) var(--ease-ui);
+}
+.cs-pattern {
+  transition: opacity var(--motion-feedback) var(--ease-ui);
+}
+.cs-pattern.is-prev {
+  opacity: 0;
+}
+@starting-style {
+  .cs-pattern {
+    opacity: 0;
+  }
+  .cs-pattern.is-prev {
+    opacity: 1;
+  }
+}
+
+/* The studio's colour mixer (Malik, 2026-08-29; plane form 2026-08-30):
+   our own picker in a Radix popover — the canonical saturation ×
+   brightness plane over a hue strip, free across the full space, with
+   the role's measured band drawn on the plane as a dashed outline
+   (mix-blend difference: the region marks itself by inversion, the 2008
+   band's own trick) and the 2008 depths as one-click returns into it.
+   Rules are self-contained (the popover portals out of the cs-* scope).
+   The panel enters from its trigger per the course's origin rule;
+   reduced motion keeps the fade and drops the scale. */
+.cs-pick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 26px;
+  border-radius: 5px;
+  border: 1px solid color-mix(in srgb, #14110f 25%, transparent);
+  cursor: pointer;
+  transition:
+    transform var(--motion-feedback) var(--ease-out-quart),
+    background-color var(--motion-feedback) var(--ease-ui);
+}
+.cs-pick:active {
+  transform: scale(0.97);
+}
+.cs-pick-icon {
+  width: 13px;
+  height: 13px;
+}
+.cs-pop {
+  /* 240px of working width plus 16px of air on every side — the panel
+     is a small instrument, not a crammed one. */
+  width: 272px;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, #14110f 14%, transparent);
+  box-shadow: 0 12px 32px color-mix(in srgb, #14110f 18%, transparent);
+  padding: 16px;
+  transform-origin: var(--radix-popover-content-transform-origin);
+  animation: cs-pop-in var(--motion-feedback) var(--ease-out-quart);
+}
+@keyframes cs-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+.cs-mix {
+  display: flex;
+  flex-direction: column;
+  /* 16px between the three groups (picker / depths / value); 8px within
+     the picker group — spacing states the grouping, no labels needed. */
+  gap: 16px;
+}
+.cs-mix-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cs-plane {
+  position: relative;
+  width: 100%;
+  height: 148px;
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, #14110f 20%, transparent);
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.cs-plane-band {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  /* White stroke under difference = the outline inverts whatever it
+     crosses, so the band reads on every corner of the plane. */
+  mix-blend-mode: difference;
+}
+.cs-plane-band path {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+  vector-effect: non-scaling-stroke;
+}
+.cs-plane-thumb {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 2px solid #fff;
+  box-shadow:
+    0 0 0 1.5px color-mix(in srgb, #14110f 55%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, #14110f 25%, transparent);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.cs-mix-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cs-mix-now {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* The eyedropper — an icon square instead of the old "Sample" text
+   button; the tooltip carries its name. Chip-lavender like the depth
+   row, so the row's one action reads as an action. */
+.cs-mix-sample {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 26px;
+  flex: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background: color-mix(in srgb, #3f0167 8%, transparent);
+  color: #3f0167;
+  transition:
+    transform var(--motion-feedback) var(--ease-out-quart),
+    background-color var(--motion-feedback) var(--ease-ui);
+}
+.cs-mix-sample:active {
+  transform: scale(0.97);
+}
+.cs-mix-sample-icon {
+  width: 16px;
+  height: 16px;
+}
+/* A button now — clicking it flips the field's notation (hex ⇄ hsl). */
+.cs-mix-swatch {
+  width: 34px;
+  height: 24px;
+  flex: none;
+  padding: 0;
+  border-radius: 5px;
+  border: 1px solid color-mix(in srgb, #14110f 25%, transparent);
+  cursor: pointer;
+  transition:
+    transform var(--motion-feedback) var(--ease-out-quart),
+    background-color var(--motion-feedback) var(--ease-ui);
+}
+.cs-mix-swatch:active {
+  transform: scale(0.97);
+}
+.cs-mix-hexin {
+  flex: 1;
+  min-width: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+  /* No text-transform: the field now shows hsl() too, and rendering
+     "HSL(" while the copyable text says "hsl(" misstates the value.
+     Hex arrives pre-uppercased from displayValue. */
+  color: #14110f;
+  background: #fff;
+  border: 1px solid color-mix(in srgb, #14110f 20%, transparent);
+  border-radius: 5px;
+  padding: 4px 6px;
+}
+.cs-mix-hexin:focus-visible {
+  outline: 3px solid #3f0167;
+  outline-offset: 2px;
+}
+.cs-mix-range {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 16px;
+  border-radius: 5px;
+  border: 1px solid color-mix(in srgb, #14110f 20%, transparent);
+  /* The one slider left is hue, so the track is the honest rainbow. */
+  background: linear-gradient(
+    to right,
+    #f00,
+    #ff0,
+    #0f0,
+    #0ff,
+    #00f,
+    #f0f,
+    #f00
+  );
+  cursor: pointer;
+}
+.cs-mix-range::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 14px;
+  height: 22px;
+  border-radius: 4px;
+  background: #fff;
+  border: 2px solid #3f0167;
+  box-shadow: 0 1px 3px color-mix(in srgb, #14110f 25%, transparent);
+}
+.cs-mix-range::-moz-range-thumb {
+  width: 12px;
+  height: 20px;
+  border-radius: 4px;
+  background: #fff;
+  border: 2px solid #3f0167;
+}
+.cs-mix-depth {
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  background: color-mix(in srgb, #3f0167 8%, transparent);
+  color: #3f0167;
+  transition:
+    transform var(--motion-feedback) var(--ease-out-quart),
+    background-color var(--motion-feedback) var(--ease-ui),
+    color var(--motion-feedback) var(--ease-ui);
+}
+.cs-mix-depth:active {
+  transform: scale(0.97);
+}
+.cs-mix-depth[aria-pressed='true'] {
+  background: #3f0167;
+  color: #cff6dd;
+}
+.cs-mix-range:focus-visible,
+.cs-mix-depth:focus-visible,
+.cs-mix-swatch:focus-visible,
+.cs-mix-sample:focus-visible,
+.cs-plane:focus-visible,
+.cs-pick:focus-visible {
+  outline: 3px solid #3f0167;
+  outline-offset: 2px;
+}
+
+/* Metric terms carry PixelTip definitions (Malik, 2026-08-30): dotted
+   underline + help cursor, the standard "a definition lives here" cue.
+   fit-content keeps the underline under the word, not the column. */
+.cs-term {
+  width: fit-content;
+  border-bottom: 1px dotted color-mix(in srgb, #14110f 45%, transparent);
+  cursor: help;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cs-pop {
+    animation: cs-pop-fade var(--motion-feedback) var(--ease-ui);
+  }
+  .cs-pick:active,
+  .cs-mix-depth:active,
+  .cs-mix-swatch:active,
+  .cs-mix-sample:active {
+    transform: none;
+  }
+}
+@keyframes cs-pop-fade {
+  from {
+    opacity: 0;
+  }
 }

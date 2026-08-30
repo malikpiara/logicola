@@ -1,18 +1,19 @@
+import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { publishedPosts, formatDate } from '@/lib/marketingContent';
 import { MarketingNav } from '@/components/marketing/marketingNav';
 import { Chip } from '@/components/marketing/chip';
-import {
-  MARKETING_THEME,
-  fieldSvg,
-  slugSeed,
-  SPRITE_CLIP,
-} from '@/lib/marketingTheme';
+import { MARKETING_THEME, SETS } from '@/lib/marketingTheme';
 import { SITE_URL } from '@/lib/site';
 import { QuizEmbed } from '@/components/blog/quizEmbed';
 import { BeforeAfter } from '@/components/blog/beforeAfter';
+import { SilhouetteDial } from '@/components/blog/silhouetteDial';
+import { SetPalettes } from '@/components/blog/setPalettes';
+import { DamageBar } from '@/components/blog/damageBar';
+import { ColourStudio } from '@/components/blog/colourStudio';
+import { PastelRandom } from '@/components/blog/pastelRandom';
 
 interface PostPageProps {
   params: Promise<{ slug: string }>;
@@ -32,7 +33,34 @@ const ISLAND_MARKER =
 type PostSegment =
   | { kind: 'html'; html: string }
   | { kind: 'embed'; embed: string; count: number; fallbackHtml: string }
-  | { kind: 'before-after'; attrs: Record<string, string> };
+  | { kind: 'island'; island: string; attrs: Record<string, string> };
+
+/**
+ * The island registry. A figure that is better dragged, dialled or
+ * clicked than looked at gets an entry here rather than a branch in the
+ * renderer below — the post is a place to try things, and each new one
+ * would otherwise cost this file another `else if`. Keys are the
+ * `data-island` value; the marker's other data-attrs arrive as `attrs`.
+ */
+const ISLANDS: Record<
+  string,
+  (attrs: Record<string, string>) => React.ReactNode
+> = {
+  'before-after': (a) => (
+    <BeforeAfter
+      before={a.before ?? ''}
+      after={a.after ?? ''}
+      alt={a.alt ?? 'Comparison'}
+      width={Number(a.width ?? 1440)}
+      height={Number(a.height ?? 900)}
+    />
+  ),
+  silhouettes: () => <SilhouetteDial />,
+  'set-palettes': () => <SetPalettes />,
+  'damage-bar': () => <DamageBar />,
+  'colour-studio': () => <ColourStudio />,
+  'pastel-random': () => <PastelRandom />,
+};
 
 function dataAttrs(raw: string): Record<string, string> {
   const attrs: Record<string, string> = {};
@@ -58,8 +86,12 @@ function splitEmbeds(html: string): PostSegment[] {
         count: attrs.count ? Number(attrs.count) : 3,
         fallbackHtml: inner ?? '',
       });
-    } else if (key === 'before-after') {
-      segments.push({ kind: 'before-after', attrs: dataAttrs(rawAttrs ?? '') });
+    } else if (key && ISLANDS[key]) {
+      segments.push({
+        kind: 'island',
+        island: key,
+        attrs: dataAttrs(rawAttrs ?? ''),
+      });
     } else {
       // Unknown island key: pass the marker through untouched.
       segments.push({ kind: 'html', html: match[0] });
@@ -150,7 +182,7 @@ export default async function BlogPostPage({ params }: PostPageProps) {
           {post.title}
         </h1>
         <p
-          className='mt-4 text-lg leading-snug'
+          className='mt-4 text-lg leading-snug md:text-[22px]'
           style={{ color: t.type, opacity: 0.82 }}
         >
           {post.dek}
@@ -165,38 +197,22 @@ export default async function BlogPostPage({ params }: PostPageProps) {
           <Chip>{CATEGORY_LABELS[post.category]}</Chip>
         </p>
 
-        <div
-          className='mt-7 h-[280px] w-full overflow-hidden'
-          style={{ clipPath: SPRITE_CLIP }}
-        >
-          {post.cover ? (
-            // Local static covers of known size; next/image adds nothing here.
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={post.cover}
-              alt=''
-              className='block h-full w-full object-cover'
-            />
-          ) : (
-            <div
-              className='h-full w-full'
-              dangerouslySetInnerHTML={{
-                __html: fieldSvg(1120, 340, {
-                  seedOffset: slugSeed(post.slug),
-                  scaleMul: 0.6,
-                }),
-              }}
-            />
-          )}
-        </div>
+        {/* Covers render on the blog index cards only; the article page
+            opens with the text itself (Malik, 2026-08-27). */}
 
         {/* Compiled at build time from content/blog markdown — our own
             content, so rendering the HTML string directly is safe. The
             typography plugin's palette is re-pointed at the theme. */}
         <div
-          className='prose mt-7 max-w-none prose-headings:font-stretch'
+          className='post-prose prose prose-lg md:prose-xl mt-9 max-w-none prose-headings:font-stretch prose-a:decoration-1 prose-a:underline-offset-2'
           style={
             {
+              /* Quote rule wears Set L's plum; <mark> wears Set C's
+                 chartreuse (at 55% in CSS). Both from the catalogue — the
+                 .post-prose rules in globals.css read these.
+                 (Malik, 2026-08-28) */
+              '--post-quote-ink': SETS.L.ink,
+              '--post-mark': SETS.C.surface,
               '--tw-prose-body': t.type,
               '--tw-prose-headings': t.type,
               '--tw-prose-bold': t.type,
@@ -206,6 +222,8 @@ export default async function BlogPostPage({ params }: PostPageProps) {
               '--tw-prose-counters': t.type,
               '--tw-prose-captions': t.type,
               color: t.type,
+              textRendering: 'optimizeLegibility',
+              fontKerning: 'normal',
             } as React.CSSProperties
           }
         >
@@ -226,14 +244,9 @@ export default async function BlogPostPage({ params }: PostPageProps) {
                 fallbackHtml={segment.fallbackHtml}
               />
             ) : (
-              <BeforeAfter
-                key={index}
-                before={segment.attrs.before ?? ''}
-                after={segment.attrs.after ?? ''}
-                alt={segment.attrs.alt ?? 'Comparison'}
-                width={Number(segment.attrs.width ?? 1440)}
-                height={Number(segment.attrs.height ?? 900)}
-              />
+              <React.Fragment key={index}>
+                {ISLANDS[segment.island]!(segment.attrs)}
+              </React.Fragment>
             )
           )}
         </div>
