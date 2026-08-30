@@ -88,3 +88,62 @@ export function ArrowRightIcon({ className }: PixelIconProps) {
     </svg>
   );
 }
+
+/** 'paint-brush' (solid) — the colour-mixer trigger in the blog's studio. */
+export function PaintBrushIcon({ className }: PixelIconProps) {
+  return (
+    <svg {...iconProps(className)}>
+      <polygon points='20 2 20 12 3 12 3 2 4 2 4 1 7 1 7 4 9 4 9 1 11 1 11 6 13 6 13 1 19 1 19 2 20 2' />
+      <path d='M3,14v2H4v1H9v4h1v1h1v1h2V22h1V21h1V17h4V16h1V14Zm8,7V19h2v2Z' />
+    </svg>
+  );
+}
+
+/**
+ * An eyedropper. The library has none (checked against its full set,
+ * 2026-08-31), so — like the die below — it's drawn for the blog's
+ * colour studio on the same 24-unit grid, in the toolbars' diagonal
+ * pose: squeeze-bulb top-right, barrel stepping down to the tip. The
+ * barrel is a chain of overlapping squares (nonzero fill unions the
+ * subpaths), which is what keeps its staircase even. Marks the
+ * EyeDropper sampling button in the mixer.
+ */
+export function EyeDropperIcon({ className }: PixelIconProps) {
+  return (
+    <svg {...iconProps(className)}>
+      <path d='M16 2H20V4H22V8H20V10H16V8H14V4H16ZM12 9H16V13H12ZM10 11H14V15H10ZM8 13H12V17H8ZM6 15H10V19H6ZM4 17H7V20H4ZM3 19H5V21H3ZM2 20H4V22H2Z' />
+    </svg>
+  );
+}
+
+/**
+ * A die. The library has no dice, so this one is drawn for the blog's
+ * Pastel Random island on the same 24-unit grid: 2-unit stepped corners
+ * per the sprite rule, pips as even-odd holes. `face` picks the pip
+ * layout (default 5, the original drawing) — the island lands the die on
+ * a new face per roll, which is how a die reports an event: by face, not
+ * by movement.
+ */
+const PIP = (x: number, y: number) => `M${x} ${y}H${x + 4}V${y + 4}H${x}V${y}Z`;
+const DIE_FACES: Record<1 | 2 | 3 | 4 | 5 | 6, string> = {
+  1: [PIP(10, 10)].join(''),
+  2: [PIP(5, 5), PIP(15, 15)].join(''),
+  3: [PIP(5, 5), PIP(10, 10), PIP(15, 15)].join(''),
+  4: [PIP(5, 5), PIP(15, 5), PIP(5, 15), PIP(15, 15)].join(''),
+  5: [PIP(5, 5), PIP(15, 5), PIP(10, 10), PIP(5, 15), PIP(15, 15)].join(''),
+  6: [PIP(5, 4), PIP(15, 4), PIP(5, 10), PIP(15, 10), PIP(5, 16), PIP(15, 16)].join(''),
+};
+
+export function DiceIcon({
+  className,
+  face = 5,
+}: PixelIconProps & { face?: 1 | 2 | 3 | 4 | 5 | 6 }) {
+  return (
+    <svg {...iconProps(className)}>
+      <path
+        fillRule='evenodd'
+        d={`M4 2H20V4H22V20H20V22H4V20H2V4H4V2Z${DIE_FACES[face]}`}
+      />
+    </svg>
+  );
+}
