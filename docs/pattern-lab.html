@@ -1,4 +1,10 @@
 <!doctype html>
+<meta charset="utf-8" />
+<!-- Load-bearing over the docs-lab server (.claude/launch.json): python
+     http.server sends no charset, so without this the browser falls back
+     to latin-1 and every em dash and middot in the lab renders as mojibake.
+     Fine over file://, where the sniffer guesses right — which is why it
+     went unnoticed. -->
 <!--
   The doctype is LOAD-BEARING, added 2026-08-06. Without it the lab spent
   its whole life in quirks mode ("BackCompat") while the app (Next.js)

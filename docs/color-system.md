@@ -78,8 +78,9 @@ Scored with the ported ColorMoods model (surface vs ink):
 | R4 marigold & violet | 0.592 (slightly hotter)          |
 | R5 maroon & apricot  | 0.400 (calm; inverted structure) |
 
-**The LogiCola stimulation region is ≈ 0.54.** This is, in effect, the
-ColorMoods slider position Malik used when generating C and J originally.
+**The LogiCola stimulation region is ≈ 0.54.** C and J were made by hand
+and by feel, before this model was ported; 0.54 is that taste recovered
+as a number.
 Note the score alone doesn't catch R-with-navy (0.578, vibration 0) — its
 failure is the temperature crossing, which the studio flags separately.
 

@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LogiCola · before/after control lab</title>
+    <!--
+      DECIDED 2026-08-26 (Malik): **B**, with the chip carrying the pixel
+      library's own `angle-left-solid` / `angle-right-solid` rather than
+      hand-drawn chevrons, and sprite corners at R=12 instead of a circle
+      — a round handle is the one shape docs/pixel-ui.md's grammar does
+      not have. Shipped in `components/blog/beforeAfter.tsx`; this file is
+      the archive of what was compared, not the source of truth.
+
+      C was not taken, so the edge-content limit it fixes is still live —
+      see the note on trap 3 below.
+
+      WHY THIS EXISTS. `components/blog/beforeAfter.tsx` puts its range
+      input BELOW the stage. That was the cheap way to get the control
+      keyboard-accessible for free — the control IS a native range — but it
+      detaches the handle from the thing it moves, and every comparison
+      slider a reader has met (juxtapose, Apple's compare shots, every
+      phone-camera review) is dragged ON the image.
+
+      THE CONSTRAINT WORTH NOT LOSING. The native range is what gives us
+      arrow keys, Home/End, a focus ring, and a labelled, announced value.
+      Rebuilding the drag with pointer events means rebuilding all of that
+      by hand, and the accessibility bar here is a release blocker. So
+      every variant below keeps the same <input type="range"> and only
+      changes where it sits and what it looks like.
+
+      THE THREE TRAPS, all of which cost a variant on the first pass:
+
+      1. THUMB INSET. A native thumb's centre travels from thumbW/2 to
+         width - thumbW/2, NOT 0 to width. Overlay the input at width:100%
+         and the divider drifts from the pointer by up to half a thumb at
+         the ends. Fix: the input is thumbW WIDER than the stage and offset
+         by -thumbW/2, so the thumb centre spans exactly 0-100%.
+
+      2. TOUCH SCROLL. An input covering a 600px-tall image swallows
+         vertical drags, so a reader on a phone cannot scroll past the
+         widget. Fix: `touch-action: pan-y` hands vertical gestures back to
+         the browser and keeps horizontal ones for the input.
+
+      3. EDGE CONTENT IS UNREACHABLE. A wipe at 50% only ever shows the
+         left half of "then" and the right half of "now". Anything living
+         at an edge — the avatar sits at 3-25% of a profile header — is
+         only ever seen in ONE state unless the reader drags to the
+         extreme, which nothing invites them to do. Variant C's tags are
+         the fix, and this is the reason to prefer it.
+    -->
+    <style>
+      :root {
+        --plum: #3f0167;
+        --mint: #cff6dd;
+        --line: #e3e3dd;
+        --muted: #5f6b7a;
+        --thumb: 40px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 32px 24px 80px;
+        background: #fff;
+        color: #14110f;
+        font:
+          15px/1.6 -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+      }
+      .app {
+        max-width: 820px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 22px;
+        margin: 0 0 4px;
+      }
+      .sub {
+        color: var(--muted);
+        margin: 0 0 36px;
+      }
+      section {
+        margin: 0 0 52px;
+      }
+      h2 {
+        font-size: 16px;
+        margin: 0 0 2px;
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+      }
+      h2 b {
+        font:
+          700 11px/1 ui-monospace,
+          monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: var(--plum);
+        color: #fff;
+        padding: 4px 7px;
+        border-radius: 5px;
+      }
+      .note {
+        color: var(--muted);
+        font-size: 13.5px;
+        margin: 0 0 16px;
+        max-width: 68ch;
+      }
+      .note em {
+        color: #14110f;
+        font-style: normal;
+        font-weight: 600;
+      }
+
+      /* ---- shared stage (identical to app/globals.css today) ---- */
+      .ba-wrap {
+        margin: 0;
+      }
+      .ba-stage {
+        position: relative;
+        overflow: hidden;
+        border: 2px solid var(--plum);
+        border-radius: 10px;
+      }
+      .ba-stage img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        max-width: none;
+      }
+      .ba-before {
+        position: absolute;
+        inset: 0;
+      }
+      .ba-line {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: var(--plum);
+        transform: translateX(-1px);
+        pointer-events: none;
+      }
+      .ba-tag {
+        position: absolute;
+        top: 10px;
+        padding: 3px 8px;
+        font:
+          700 11px/1.45 ui-monospace,
+          monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        background: var(--plum);
+        color: #fff;
+        border-radius: 6px;
+      }
+      .ba-tag-left {
+        left: 10px;
+      }
+      .ba-tag-right {
+        right: 10px;
+      }
+
+      /* ---- A: the shipped control, bar under the stage ---- */
+      .v-a .ba-range {
+        display: block;
+        width: 100%;
+        margin-top: 10px;
+        accent-color: var(--plum);
+      }
+
+      /* ---- B and C: the input lies over the stage, invisible ----
+         Invisible rather than styled: a native thumb cannot host the
+         chevrons, and the visible handle has to sit on the divider, which
+         is a sibling. So the input supplies BEHAVIOUR and the handle
+         supplies APPEARANCE, and trap 1 above is what keeps them aligned. */
+      .v-b .ba-stage,
+      .v-c .ba-stage {
+        touch-action: pan-y;
+      }
+      .v-b .ba-range,
+      .v-c .ba-range {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        left: calc(var(--thumb) / -2);
+        width: calc(100% + var(--thumb));
+        margin: 0;
+        padding: 0;
+        opacity: 0;
+        cursor: ew-resize;
+        touch-action: pan-y;
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+      }
+      .v-b .ba-range::-webkit-slider-thumb,
+      .v-c .ba-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: var(--thumb);
+        height: 100%;
+      }
+      .v-b .ba-range::-moz-range-thumb,
+      .v-c .ba-range::-moz-range-thumb {
+        width: var(--thumb);
+        height: 100%;
+        border: 0;
+      }
+      .ba-handle {
+        position: absolute;
+        top: 50%;
+        width: var(--thumb);
+        height: var(--thumb);
+        margin: calc(var(--thumb) / -2) 0 0 calc(var(--thumb) / -2);
+        border-radius: 999px;
+        background: var(--plum);
+        color: var(--mint);
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+        box-shadow: 0 1px 6px rgb(0 0 0 / 0.28);
+      }
+      .ba-handle svg {
+        display: block;
+      }
+      /* The focus ring the invisible input can no longer show itself. */
+      .ba-range:focus-visible ~ .ba-handle {
+        outline: 3px solid #0a66c2;
+        outline-offset: 3px;
+      }
+
+      /* ---- C only: the tags become the two extremes ---- */
+      .v-c .ba-tag {
+        border: 0;
+        cursor: pointer;
+        font-family: ui-monospace, monospace;
+        background: color-mix(in srgb, var(--plum) 78%, transparent);
+        z-index: 3;
+      }
+      .v-c .ba-tag[aria-pressed='true'] {
+        background: var(--plum);
+        box-shadow: 0 0 0 2px #fff;
+      }
+      .v-c .ba-tag:focus-visible {
+        outline: 3px solid #0a66c2;
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <h1>Before/after — where does the control go?</h1>
+      <p class="sub">
+        Same stage, same native range input, three placements. Drag each
+        one, then tab to it and use the arrow keys.
+      </p>
+
+      <section class="v-a">
+        <h2><b>A</b> Bar below — what ships today</h2>
+        <p class="note">
+          The control is detached from the thing it moves, and nothing on
+          the image says it can be dragged. Its one virtue is that
+          <em>the control is visible</em>: you can see at a glance that
+          this is a slider and roughly where it sits.
+        </p>
+        <div class="ba-wrap" data-variant="a"></div>
+      </section>
+
+      <section class="v-b">
+        <h2><b>B</b> Handle on the divider</h2>
+        <p class="note">
+          The input now lies over the stage, invisible, with a drawn handle
+          riding the divider. Direct manipulation, and
+          <em>the keyboard behaviour is untouched</em> — it is still the
+          same native range. Grab anywhere on the image, not just the
+          handle.
+        </p>
+        <div class="ba-wrap" data-variant="b"></div>
+      </section>
+
+      <section class="v-c">
+        <h2><b>C</b> Handle, plus tags that jump to the extremes</h2>
+        <p class="note">
+          B, but <em>then</em> and <em>now</em> are buttons that snap the
+          wipe to 0% and 100%. This is the one that fixes edge content: the
+          avatar lives at the far left of a profile header, so at the
+          default 50% a reader never sees the new one unless they drag all
+          the way over. One tap, and it is a plain A/B.
+        </p>
+        <div class="ba-wrap" data-variant="c"></div>
+      </section>
+    </div>
+
+    <script>
+      (() => {
+        const SRC = {
+          before: '../public/blog/social-then-and-now/x-then.png',
+          after: '../public/blog/social-then-and-now/x-now.png',
+          alt: 'The LogiCola profile on X',
+          w: 1200,
+          h: 952,
+        };
+
+        const CHEV =
+          '<svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">' +
+          '<path d="M7.5 2 3 7l4.5 5M12.5 2 17 7l-4.5 5" stroke="currentColor" ' +
+          'stroke-width="2" stroke-linecap="square"/></svg>';
+
+        function build(wrap, variant) {
+          const overlay = variant !== 'a';
+          const tagsAreButtons = variant === 'c';
+          const tag = (side, text) =>
+            tagsAreButtons
+              ? `<button type="button" class="ba-tag ba-tag-${side}" ` +
+                `data-to="${side === 'left' ? 0 : 100}" aria-pressed="false">${text}</button>`
+              : `<span class="ba-tag ba-tag-${side}" aria-hidden="true">${text}</span>`;
+
+          const range =
+            `<input type="range" min="0" max="100" value="50" class="ba-range" ` +
+            `aria-label="${SRC.alt}: reveal the old version">`;
+
+          wrap.innerHTML =
+            `<div class="ba-stage" style="aspect-ratio:${SRC.w} / ${SRC.h}">` +
+            `<img src="${SRC.after}" alt="${SRC.alt} — now">` +
+            `<div class="ba-before"><img src="${SRC.before}" alt="${SRC.alt} — before"></div>` +
+            `<div class="ba-line"></div>` +
+            tag('left', 'then') +
+            tag('right', 'now') +
+            (overlay ? range + '<div class="ba-handle">' + CHEV + '</div>' : '') +
+            '</div>' +
+            (overlay ? '' : range);
+
+          const input = wrap.querySelector('.ba-range');
+          const before = wrap.querySelector('.ba-before');
+          const line = wrap.querySelector('.ba-line');
+          const handle = wrap.querySelector('.ba-handle');
+          const tags = [...wrap.querySelectorAll('.ba-tag[data-to]')];
+
+          function paint() {
+            const pct = Number(input.value);
+            before.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+            line.style.left = pct + '%';
+            if (handle) handle.style.left = pct + '%';
+            for (const t of tags)
+              t.setAttribute(
+                'aria-pressed',
+                String(Number(t.dataset.to) === pct)
+              );
+          }
+          input.addEventListener('input', paint);
+          for (const t of tags)
+            t.addEventListener('click', () => {
+              input.value = t.dataset.to;
+              paint();
+            });
+          paint();
+        }
+
+        for (const wrap of document.querySelectorAll('.ba-wrap'))
+          build(wrap, wrap.dataset.variant);
+      })();
+    </script>
+  </body>
+</html>
