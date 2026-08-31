@@ -36,7 +36,7 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "katex": "^0.16.47",
-    "lucide-react": "^1.24.0",
+    "lucide-react": "^1.35.0",
     "next": "16.2.10",
     "next-themes": "^0.4.6",
     "posthog-js": "^1.400.1",
