@@ -1,19 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import {
-  Book,
-  Brain,
-  Calculator,
-  GitCommit,
-  Library,
-  MessageSquare,
-} from 'lucide-react';
+import { TopicIcon } from '@/components/nav/topicIcon';
 
 const logicSections = [
   {
     title: 'Syllogistic',
-    icon: Brain,
+    topicId: 'syllogistic',
     progress: 50,
     items: [
       { label: 'A. Translations', href: '#' },
@@ -22,7 +15,7 @@ const logicSections = [
   },
   {
     title: 'Propositional',
-    icon: Calculator,
+    topicId: 'propositional',
     progress: 10,
     items: [
       { label: 'C. Translations', href: '#' },
@@ -34,7 +27,7 @@ const logicSections = [
   },
   {
     title: 'Quantificational',
-    icon: Library,
+    topicId: 'quantificational',
     progress: 0,
     items: [
       { label: 'H. Translations', href: '#' },
@@ -43,7 +36,7 @@ const logicSections = [
   },
   {
     title: 'Modal',
-    icon: GitCommit,
+    topicId: 'modal',
     progress: 30,
     items: [
       { label: 'J. Translations', href: '#' },
@@ -52,7 +45,7 @@ const logicSections = [
   },
   {
     title: 'Deontic',
-    icon: Book,
+    topicId: 'deontic',
     progress: 30,
     items: [
       { label: 'L. Translations', href: '#' },
@@ -61,7 +54,7 @@ const logicSections = [
   },
   {
     title: 'Belief',
-    icon: Brain,
+    topicId: 'belief',
     progress: 30,
     items: [
       { label: 'N. Translations', href: '#' },
@@ -70,7 +63,7 @@ const logicSections = [
   },
   {
     title: 'Informal',
-    icon: MessageSquare,
+    topicId: 'informal',
     progress: 66,
     items: [
       { label: 'P. Probability', href: '#' },
@@ -94,7 +87,12 @@ export default function LogicDashboard() {
               <CardHeader className='pb-2'>
                 <div className='flex items-center justify-between mb-2'>
                   <CardTitle className='text-xl text-green-800 flex items-center gap-2'>
-                    <section.icon className='h-5 w-5' />
+                    <TopicIcon
+                      topicId={section.topicId}
+                      color='currentColor'
+                      size={20}
+                      className='shrink-0'
+                    />
                     {section.title}
                   </CardTitle>
                   <span className='text-sm font-medium text-green-600'>

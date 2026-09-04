@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import KatexSpan from '@/components/katexSpanImpl';
-import { ClipboardCopy } from 'lucide-react';
+import { CopyIcon } from '@/components/quiz/pixelIcons';
 import { toast } from 'sonner';
 
 /** Shorthand replacements (each gets a trailing space). */
@@ -306,7 +306,7 @@ export default function LabelGeneratorPage() {
                 onClick={copyToClipboard}
                 className='w-full'
               >
-                <ClipboardCopy className='mr-2 h-4 w-4' />
+                <CopyIcon className='mr-2 h-4 w-4' />
                 Copy Everything
               </Button>
 
@@ -316,7 +316,7 @@ export default function LabelGeneratorPage() {
                 onClick={copyAsJsonFormat}
                 className='w-full'
               >
-                <ClipboardCopy className='mr-2 h-4 w-4' />
+                <CopyIcon className='mr-2 h-4 w-4' />
                 Copy JSON
               </Button>
             </div>

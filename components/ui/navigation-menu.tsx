@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
 import { cva } from 'class-variance-authority';
-import { ChevronDown } from 'lucide-react';
+import { AngleDownIcon } from '@/components/quiz/pixelIcons';
 
 import { cn } from '@/lib/utils';
 
@@ -81,10 +81,9 @@ const NavigationMenuTrigger = React.forwardRef<
     {...props}
   >
     {children}{' '}
-    <ChevronDown
-      className='motion-chevron relative top-[1px] ml-1 h-3 w-3 group-data-[state=open]:rotate-180'
-      aria-hidden='true'
-    />
+    {/* Pixel caret, not lucide's: the header was the one place a smooth
+        glyph survived the icon pass (Malik, 2026-09-04). */}
+    <AngleDownIcon className='motion-chevron relative top-[1px] ml-1 h-3 w-3 group-data-[state=open]:rotate-180' />
   </NavigationMenuPrimitive.Trigger>
 ));
 NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;

@@ -147,3 +147,70 @@ export function DiceIcon({
     </svg>
   );
 }
+
+/**
+ * 'angle-down-solid' — the caret on the FAQ accordion and, since
+ * 2026-09-04, the desktop nav trigger, where lucide's ChevronDown had been
+ * the last smooth glyph in the header (Malik, 2026-09-04: the release
+ * article says every glyph is stepped, so every glyph has to be). The
+ * landing page's drill links rotate it -90° into a "go" mark.
+ */
+export function AngleDownIcon({ className }: PixelIconProps) {
+  return (
+    <svg {...iconProps(className)}>
+      <polygon points='5 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 13 12 13 11 14 11 14 10 15 10 15 9 16 9 16 8 17 8 17 7 19 7 19 8 20 8 20 10 19 10 19 11 18 11 18 12 17 12 17 13 16 13 16 14 15 14 15 15 14 15 14 16 13 16 13 17 11 17 11 16 10 16 10 15 9 15 9 14 8 14 8 13 7 13 7 12 6 12 6 11 5 11 5 10 4 10 4 8 5 8 5 7' />
+    </svg>
+  );
+}
+
+/**
+ * 'bars' — the mobile header's exercises-menu trigger, replacing a
+ * hand-drawn three-stroke hamburger with round caps (Malik, 2026-09-04).
+ * Rendered at 24px so the 2-unit bars land on whole pixels; the solid
+ * variant's 4-unit bars read heavier than everything else in the row.
+ */
+export function BarsIcon({ className }: PixelIconProps) {
+  return (
+    <svg {...iconProps(className)}>
+      <rect x='1' y='3' width='22' height='2' />
+      <rect x='1' y='11' width='22' height='2' />
+      <rect x='1' y='19' width='22' height='2' />
+    </svg>
+  );
+}
+
+/**
+ * 'copy' — the Keyboard page's copy buttons, replacing lucide's
+ * ClipboardCopy (Malik, 2026-09-04).
+ */
+export function CopyIcon({ className }: PixelIconProps) {
+  return (
+    <svg {...iconProps(className)}>
+      <polygon points='16 20 16 22 15 22 15 23 3 23 3 22 2 22 2 6 3 6 3 5 6 5 6 20 16 20' />
+      <path d='m16,7V1h-8v1h-1v16h1v1h13v-1h1V7h-6Zm4,10h-11V3h5v6h6v8Z' />
+      <polygon points='22 5 22 6 17 6 17 1 18 1 18 2 19 2 19 3 20 3 20 4 21 4 21 5 22 5' />
+    </svg>
+  );
+}
+
+/**
+ * 'play-solid' / 'pause-solid' — the blog clips' toggle glyphs (Malik,
+ * 2026-09-04: the word "Pause" in a chip read as UI chrome; a glyph reads
+ * as a player). Solid over regular: at 14px the outlined pair blurs.
+ */
+export function PlayIcon({ className }: PixelIconProps) {
+  return (
+    <svg {...iconProps(className)}>
+      <polygon points='22 11 22 13 21 13 21 14 20 14 20 15 18 15 18 16 16 16 16 17 15 17 15 18 13 18 13 19 11 19 11 20 10 20 10 21 8 21 8 22 6 22 6 23 3 23 3 22 2 22 2 2 3 2 3 1 6 1 6 2 8 2 8 3 10 3 10 4 11 4 11 5 13 5 13 6 15 6 15 7 16 7 16 8 18 8 18 9 20 9 20 10 21 10 21 11 22 11' />
+    </svg>
+  );
+}
+
+export function PauseIcon({ className }: PixelIconProps) {
+  return (
+    <svg {...iconProps(className)}>
+      <polygon points='23 2 23 22 22 22 22 23 15 23 15 22 14 22 14 2 15 2 15 1 22 1 22 2 23 2' />
+      <polygon points='9 2 10 2 10 22 9 22 9 23 2 23 2 22 1 22 1 2 2 2 2 1 9 1 9 2' />
+    </svg>
+  );
+}

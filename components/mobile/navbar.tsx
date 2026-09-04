@@ -1,4 +1,5 @@
 'use client';
+import { BarsIcon } from '@/components/quiz/pixelIcons';
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
@@ -81,21 +82,10 @@ const Navbar = () => {
           aria-haspopup='dialog'
         >
           <span className='sr-only'>Open exercises menu</span>
-          <svg
-            className='w-5 h-5'
-            aria-hidden='true'
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 17 14'
-          >
-            <path
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              d='M1 1h15M1 7h15M1 13h15'
-            />
-          </svg>
+          {/* The library's 'bars', at 24px so its 2-unit bars are whole
+              pixels — the round-capped stroke hamburger was the mobile
+              header's one smooth glyph (Malik, 2026-09-04). */}
+          <BarsIcon className='h-6 w-6' />
         </button>
       </div>
       {open !== null && (
