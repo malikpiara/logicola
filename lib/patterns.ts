@@ -367,7 +367,7 @@ export function valueNoise(
  * thousands. Clearing happens per whole pixel — pixel patterns are
  * never sliced.
  */
-function pixelLattice(
+export function pixelLattice(
   w: number,
   h: number,
   q: number,

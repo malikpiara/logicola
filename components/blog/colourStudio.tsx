@@ -415,14 +415,17 @@ function Mixer({
  *   <div data-island="colour-studio"></div>
  */
 
-const PRESETS = [
-  { key: 'A', surface: '#FFABC6', ink: '#4A1040', accent: '#674900' },
-  { key: 'C', surface: '#E7F099', ink: '#02302C', accent: '#BD00AD' },
-  { key: 'J', surface: '#E6ACF4', ink: '#1C3601', accent: '#674900' },
-  { key: 'L', surface: '#CFF6DD', ink: '#3F0167', accent: '#BD00AD' },
-  { key: 'N', surface: '#9EDAFF', ink: '#4A1040', accent: '#8D0381' },
-  { key: 'Q', surface: '#D9CCF9', ink: '#3E1060', accent: '#745400' },
-  { key: 'R', surface: '#E4BDF7', ink: '#751100', accent: '#824616' },
+// `subject` names the set for the chips' tooltips (2026-09-02): the
+// set-palettes island that used to spell the names out was cut as a
+// duplicate of this studio, so the names ride on the letters here.
+export const PRESETS = [
+  { key: 'A', subject: 'Syllogistic', surface: '#FFABC6', ink: '#4A1040', accent: '#674900' },
+  { key: 'C', subject: 'Propositional', surface: '#E7F099', ink: '#02302C', accent: '#BD00AD' },
+  { key: 'J', subject: 'Modal', surface: '#E6ACF4', ink: '#1C3601', accent: '#674900' },
+  { key: 'L', subject: 'Deontic', surface: '#CFF6DD', ink: '#3F0167', accent: '#BD00AD' },
+  { key: 'N', subject: 'Belief', surface: '#9EDAFF', ink: '#4A1040', accent: '#8D0381' },
+  { key: 'Q', subject: 'Definitions', surface: '#D9CCF9', ink: '#3E1060', accent: '#745400' },
+  { key: 'R', subject: 'Fallacies', surface: '#E4BDF7', ink: '#751100', accent: '#824616' },
 ] as const;
 
 const PATTERNS: { key: QuizPatternKind; label: string }[] = [
@@ -639,16 +642,17 @@ export function ColourStudio() {
         <div className='cs-row'>
           <span className='cs-lab'>Start from</span>
           {PRESETS.map((p) => (
-            <button
-              key={p.key}
-              type='button'
-              className='cs-chip'
-              onClick={() => apply(p)}
-              style={{ background: p.surface, color: p.ink }}
-              aria-label={`Load Set ${p.key}`}
-            >
-              {p.key}
-            </button>
+            <PixelTip key={p.key} tip={`Set ${p.key} · ${p.subject}`}>
+              <button
+                type='button'
+                className='cs-chip'
+                onClick={() => apply(p)}
+                style={{ background: p.surface, color: p.ink }}
+                aria-label={`Load Set ${p.key}, ${p.subject}`}
+              >
+                {p.key}
+              </button>
+            </PixelTip>
           ))}
         </div>
         <div className='cs-row'>

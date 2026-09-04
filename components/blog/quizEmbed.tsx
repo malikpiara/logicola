@@ -36,7 +36,10 @@ import type { ComponentType } from 'react';
  * matching QuizProps' embedded branch) so the island doesn't become
  * its own layout shift.
  */
-const EMBEDS: Record<string, ComponentType<{ count: number }>> = {
+const EMBEDS: Record<
+  string,
+  ComponentType<{ count: number; pick?: string[] }>
+> = {
   'informal-definitions': dynamic(
     () => import('./embeds/setQEmbed').then((m) => m.SetQEmbed),
     {
@@ -57,10 +60,13 @@ const EMBEDS: Record<string, ComponentType<{ count: number }>> = {
 export function QuizEmbed({
   embed,
   count = 3,
+  pick,
   fallbackHtml,
 }: {
   embed: string;
   count?: number;
+  /** `data-pick="3.29,3.30"` — pin these question ids instead of drawing. */
+  pick?: string[];
   /** The marker's inner HTML — rendered when the key is unknown. */
   fallbackHtml?: string;
 }) {
@@ -70,5 +76,5 @@ export function QuizEmbed({
       <div dangerouslySetInnerHTML={{ __html: fallbackHtml }} />
     ) : null;
   }
-  return <Embed count={count} />;
+  return <Embed count={count} pick={pick} />;
 }

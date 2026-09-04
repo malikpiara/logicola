@@ -1,6 +1,7 @@
 import { defineCollection, defineConfig } from '@content-collections/core';
 import { compileMarkdown } from '@content-collections/markdown';
 import smartypants from 'remark-smartypants';
+import rehypeSlug from 'rehype-slug';
 import { z } from 'zod';
 import { imageSize } from 'image-size';
 import { readFileSync } from 'node:fs';
@@ -72,6 +73,10 @@ const posts = defineCollection({
       await compileMarkdown(ctx, doc, {
         allowDangerousHtml: true,
         remarkPlugins: [smartypants],
+        // Heading ids (Malik, 2026-09-02): every section is a deep link
+        // — the post's section rail writes the hash on jump, and a
+        // comment thread can point at one chapter.
+        rehypePlugins: [rehypeSlug],
       })
     );
     const slug = doc._meta.path;

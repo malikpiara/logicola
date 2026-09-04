@@ -3390,11 +3390,6 @@
     border-radius: 10px;
     background: #cff6dd;
   }
-  .sd-pill,
-  .sd-contour {
-    width: min(360px, 78%);
-    height: 92px;
-  }
   .sd-pill {
     position: relative;
     display: grid;
@@ -3405,10 +3400,16 @@
     font-size: 14px;
     font-weight: 700;
   }
-  .sd-contour {
-    position: absolute;
-    background: #170027;
-    transform: scale(1.035);
+  /* The primary button at its real size (h-11 × max-w-[15rem]), shown at
+     1.5× so the stairs read on a blog page. `transform` scales the clip
+     with the box, so the geometry on screen is the app's own, magnified;
+     nothing is redrawn at a different grid. (Malik, 2026-09-04) */
+  .sd-cta {
+    width: 240px;
+    height: 44px;
+    font-size: 13px;
+    transform: scale(1.5);
+    transform-origin: center;
   }
   .sd-note {
     margin-top: 12px;
@@ -3877,6 +3878,406 @@ html[data-qsheet-back-collapse] [data-vaul-drawer] {
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
+/* Inline code is data — byte values, the formula — and wears Set C's
+   accent (--post-code, set by the page): the post reads in Set C
+   already, so the values complete the trio. 5.5:1 on white. The
+   typography plugin decorates code with fake backtick pseudo-elements
+   that read as literal characters — off. */
+/* Inline only — a fenced block keeps the pre theme (accent-on-dark
+   would fail contrast there). */
+.post-prose :not(pre) > code {
+  color: var(--post-code);
+}
+
+/* The reconstruction snippet drawn as a 2008 screen (Malik,
+   2026-09-01): Pastel aqua ground, the program's own fixed navy for
+   code and its help pages' green for comments (both decompiled), hard
+   corners and a 2px black border like Gensler's help tables — and the
+   band along the foot is the ground's exact complement, so the block
+   enacts its own last line. One-off; ordinary fenced blocks keep the
+   pre theme. */
+.code2008 {
+  position: relative;
+  background: #cdffff;
+  border: 2px solid #000;
+  padding: 14px 16px 30px;
+  margin-block: 1.7em;
+}
+.code2008 pre {
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  background: none;
+  border-radius: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  line-height: 1.7;
+  color: #000066;
+}
+.code2008 code {
+  background: none;
+  color: inherit;
+  font-weight: 500;
+}
+.code2008 i {
+  font-style: normal;
+  color: #007700;
+}
+.code2008 .band {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 14px;
+  background: #320000;
+}
+
+/* The pattern gallery (Malik, 2026-09-02): the seventeen prototyped
+   fields drawn live, in the studio's control language. Tiles are
+   square SVG viewports over a larger body; the crop slider pans them.
+   Shipped tiles wear a small Set L badge. */
+/* One pattern holds the article width on a 2:1 stage; a strip of live
+   thumbnails selects it, the selected one ringed like an adopted
+   candidate in the studio. Shipped: a tag on the stage, a dot on the
+   thumb. */
+.pg-stage {
+  position: relative;
+  aspect-ratio: 2 / 1;
+  margin-top: 12px;
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, #14110f 18%, transparent);
+  overflow: hidden;
+}
+/* Layers stack; a change crossfades — the outgoing layer (.is-prev)
+   fades to zero while the incoming one starts transparent via
+   @starting-style. Same recipe as the studio's pattern field. The
+   sliders only move the viewBox, which is not a transition. */
+.pg-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity var(--motion-feedback) var(--ease-ui);
+}
+.pg-layer.is-prev {
+  opacity: 0;
+}
+@starting-style {
+  .pg-layer {
+    opacity: 0;
+  }
+  .pg-layer.is-prev {
+    opacity: 1;
+  }
+}
+.pg-shipped {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: #3f0167;
+  color: #cff6dd;
+  opacity: 0;
+  transition: opacity var(--motion-feedback) var(--ease-ui);
+}
+.pg-shipped.is-on {
+  opacity: 1;
+}
+.pg-caption {
+  margin: 8px 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: color-mix(in srgb, #14110f 70%, transparent);
+}
+.pg-caption strong {
+  color: #14110f;
+  font-weight: 700;
+  margin-right: 8px;
+}
+.pg-thumbs {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 6px;
+  margin-top: 12px;
+}
+@media (max-width: 560px) {
+  .pg-thumbs {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+/* The ring is always drawn, transparent until selected, so selection
+   fades in and out instead of popping; press is the family's
+   scale(0.97), hover a colour change only, gated to real pointers. */
+.pg-thumb {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: 3px solid transparent;
+  outline-offset: 2px;
+  transition:
+    transform var(--motion-feedback) var(--ease-out-quart),
+    outline-color var(--motion-feedback) var(--ease-ui);
+}
+.pg-thumb:active {
+  transform: scale(0.97);
+}
+.pg-thumb svg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 5px;
+  border: 1px solid color-mix(in srgb, #14110f 18%, transparent);
+  transition:
+    background-color var(--motion-feedback) var(--ease-ui),
+    border-color var(--motion-feedback) var(--ease-ui);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pg-thumb:hover svg {
+    border-color: color-mix(in srgb, #14110f 45%, transparent);
+  }
+}
+.pg-thumb[aria-checked='true'],
+.pg-thumb:focus-visible {
+  outline-color: #3f0167;
+}
+.pg-thumb.is-shipped::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: #3f0167;
+  box-shadow: 0 0 0 2px #cff6dd;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pg-thumb:active {
+    transform: none;
+  }
+}
+.pg-range {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 232px;
+  max-width: 100%;
+  height: 16px;
+  border-radius: 5px;
+  border: 1px solid color-mix(in srgb, #14110f 20%, transparent);
+  background: color-mix(in srgb, #3f0167 8%, transparent);
+  cursor: pointer;
+}
+.pg-range::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 14px;
+  height: 22px;
+  border-radius: 4px;
+  background: #fff;
+  border: 2px solid #3f0167;
+  box-shadow: 0 1px 3px color-mix(in srgb, #14110f 25%, transparent);
+}
+.pg-range::-moz-range-thumb {
+  width: 12px;
+  height: 20px;
+  border-radius: 4px;
+  background: #fff;
+  border: 2px solid #3f0167;
+}
+.pg-range:focus-visible {
+  outline: 3px solid #3f0167;
+  outline-offset: 2px;
+}
+
+/* Phone states (Malik, 2026-09-02): two phone frames as layers in one
+   stage, the active one dissolving in on the article's crossfade
+   token; the loop itself lives in the component. Sized like the
+   original figure's phones, centred in the column. */
+.ps-stage {
+  position: relative;
+  max-width: 320px;
+  margin: 0 auto;
+}
+.ps-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: auto;
+  opacity: 0;
+  transition: opacity var(--motion-feedback) var(--ease-ui);
+}
+.ps-layer.is-on {
+  opacity: 1;
+}
+.ps-rows {
+  margin-top: 12px;
+}
+.ps-rows .pr-row {
+  justify-content: center;
+}
+
+/* Clips (Malik, 2026-09-02): recordings of the real product. The
+   toggle is the whole stage (2026-09-04): a full-bleed transparent
+   button over the video, so a click anywhere pauses or resumes. Its
+   state lives in a corner chip carrying a pixel play/pause glyph,
+   faint while playing, solid when paused, hovered or focused, so the
+   loop is always visibly stoppable. */
+.clip-stage {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, #14110f 18%, transparent);
+}
+.clip-video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.clip-toggle {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.clip-glyph {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: #3f0167;
+  color: #cff6dd;
+  opacity: 0.55;
+  transition:
+    opacity var(--motion-feedback) var(--ease-ui),
+    transform var(--motion-feedback) var(--ease-out-quart);
+}
+.clip-glyph svg {
+  width: 14px;
+  height: 14px;
+}
+.clip-stage:hover .clip-glyph,
+.clip-toggle:focus-visible .clip-glyph,
+.clip-toggle:not(.is-playing) .clip-glyph {
+  opacity: 1;
+}
+.clip-toggle:active .clip-glyph {
+  transform: scale(0.97);
+}
+.clip-toggle:focus-visible {
+  outline: 3px solid #cff6dd;
+  outline-offset: -3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .clip-toggle:active .clip-glyph {
+    transform: none;
+  }
+}
+
+/* The section rail (Malik, 2026-09-01): one tick per h2 in the left
+   gutter, the active section named in a Set C pill — the post's own
+   chrome colours. Position and the wide-viewport gate live in the
+   component (inline fixed + a matchMedia check), so the rail can never
+   fall into the page flow unstyled; everything visual lives here. */
+.post-rail {
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 40;
+}
+/* Rows are tick-height only: the label is positioned out of the flow
+   so a hidden pill never pads the column — 16px pitch, like the rails
+   this is modelled on. */
+.post-rail-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.post-rail-item::before {
+  content: '';
+  flex: none;
+  width: 16px;
+  height: 2px;
+  background: color-mix(in srgb, #02302c 30%, transparent);
+  transition:
+    width var(--motion-feedback) var(--ease-out-quart),
+    background-color var(--motion-feedback) var(--ease-ui);
+}
+.post-rail-item:hover::before,
+.post-rail-item.is-active::before {
+  background: #02302c;
+}
+.post-rail-item.is-active::before {
+  width: 24px;
+}
+.post-rail-label {
+  position: absolute;
+  left: 34px;
+  top: 50%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #e7f099;
+  background: #02302c;
+  padding: 5px 11px;
+  border-radius: 7px;
+  white-space: nowrap;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transform: translate(-4px, -50%);
+  transition:
+    opacity var(--motion-feedback) var(--ease-ui),
+    transform var(--motion-feedback) var(--ease-out-quart);
+  pointer-events: none;
+}
+/* Labels are hover-only (and focus, for the keyboard); the active
+   section is told by its tick alone — longer and full ink. */
+.post-rail-item:hover .post-rail-label,
+.post-rail-item:focus-visible .post-rail-label {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+.post-rail-item:focus-visible {
+  outline: 3px solid #3f0167;
+  outline-offset: 2px;
+}
+/* Between the gate and a truly wide screen the gutter is tight, so the
+   pill stays short of the text column. */
+@media (max-width: 1360px) {
+  .post-rail-label {
+    max-width: 150px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .post-rail-label {
+    transform: translate(0, -50%);
+  }
+}
+.post-prose code::before,
+.post-prose code::after {
+  content: none;
+}
 
 /* The 2008 swatch row in the blog post (Malik, 2026-08-27): drawn the
    way Gensler drew his own help tables — hard corners, 2px black
@@ -3993,7 +4394,8 @@ html[data-qsheet-back-collapse] [data-vaul-drawer] {
 .pr-chip.is-wide {
   font-weight: 600;
 }
-.pr-chip[aria-checked='true'] {
+.pr-chip[aria-checked='true'],
+.pr-chip[aria-pressed='true'] {
   background: #3f0167;
   color: #cff6dd;
 }

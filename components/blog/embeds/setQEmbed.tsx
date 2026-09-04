@@ -17,18 +17,33 @@ import type { SubSet } from '@/content/types';
  * QuizProps.
  *
  * The bank is trimmed to `count` questions so a post-sized taste ends
- * somewhere; everything else is the product.
+ * somewhere; everything else is the product. `pick` (2026-09-02) pins
+ * named questions instead of drawing — the release post puts the
+ * exact question a bug report cited in front of the reader, with the
+ * multi-answer states live, where a screenshot pair used to stand in.
  */
-export function SetQEmbed({ count }: { count: number }) {
+export function SetQEmbed({
+  count,
+  pick,
+}: {
+  count: number;
+  /** Question ids to show, in order (e.g. ['3.29']); overrides the draw. */
+  pick?: string[];
+}) {
   // One draw per mount, in a lazy initializer (the shape
   // generatedQuiz.tsx uses — the purity lint permits impurity there).
   // Safe: the island is ssr:false, so no server draw exists to
   // mismatch during hydration.
   const [subSet] = useState<SubSet>(() => {
     const bank = setQ.subSets[0]!;
-    const questions = [...bank.questions]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, Math.max(1, Math.min(count, 20)));
+    const pinned = pick
+      ?.map((id) => bank.questions.find((q) => q.id === id))
+      .filter((q) => q !== undefined);
+    const questions = pinned?.length
+      ? pinned
+      : [...bank.questions]
+          .sort(() => Math.random() - 0.5)
+          .slice(0, Math.max(1, Math.min(count, 20)));
     return { ...bank, questions };
   });
 

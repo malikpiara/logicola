@@ -4,19 +4,21 @@ import { useState } from 'react';
 import { DiceIcon } from '@/components/quiz/pixelIcons';
 
 /**
- * "Pastel Random", reimplemented (Malik, 2026-08-28). This is the 2008
- * program's Random colour scheme — case 10 of the colour routine at
- * 0x433900 in LCEXE_2008 — ported line for line from the decompilation
- * recorded in logicola-ghidra/notes/09-colour-system.md. One channel
- * stays at FF, two random pulls come off the others (the pull range is
- * the depth dial), and the panel takes a complementary arrangement of
- * the same bytes. The band is not chosen here, and was not chosen in
- * 2008 either: the original painted the strip in the ground colour and
- * called InvertRect, so each band below is the exact complement of its
- * rolled ground.
+ * "Pastel Random", reimplemented (Malik, 2026-08-28; merged with the
+ * named schemes 2026-09-01). One artefact now plays the whole Color
+ * dialog: it opens on six of the named pairs, built from the decompiled
+ * recipe (FF/level channel combinations, level byte CD/B9/91 by depth,
+ * band = complement of the ground because the original produced it with
+ * InvertRect), and the die rolls it into Random mode — case 10 of the
+ * colour routine at 0x433900 in LCEXE_2008, ported line for line from
+ * logicola-ghidra/notes/09-colour-system.md. One channel stays at FF,
+ * two random pulls come off the others (the pull range is the depth
+ * dial), and the panel takes a complementary arrangement of the same
+ * bytes. The named chip brings the reference schemes back, so a rolled
+ * page can always return to the exhibit the prose describes.
  *
- * The initial six rolls come from a seeded PRNG so server and client
- * render identical markup; the buttons roll for real.
+ * The initial named state is deterministic, so server and client render
+ * identical markup with no seeded PRNG needed.
  *
  *   <div data-island="pastel-random"></div>
  */
@@ -27,7 +29,43 @@ type Rnd = (n: number) => number;
 const SPREADS = { 1: 0x2d, 2: 0x5a, 3: 0xb4 } as const;
 type Depth = keyof typeof SPREADS;
 
-function roll(depth: Depth, rnd: Rnd) {
+/** The named side of the dialog: every colour is an FF/level channel
+ *  combination — 1 pins a channel at FF, 0 drops it to the level byte. */
+const LEVELS: Record<Depth, number> = { 1: 0xcd, 2: 0xb9, 3: 0x91 };
+const HUES = {
+  Aqua: [0, 1, 1],
+  Rose: [1, 0, 0],
+  Blue: [0, 0, 1],
+  Cream: [1, 1, 0],
+  Lime: [0, 1, 0],
+  Magenta: [1, 0, 1],
+} as const;
+const NAMED: [keyof typeof HUES, keyof typeof HUES][] = [
+  ['Aqua', 'Rose'],
+  ['Rose', 'Aqua'],
+  ['Blue', 'Cream'],
+  ['Cream', 'Blue'],
+  ['Lime', 'Magenta'],
+  ['Magenta', 'Lime'],
+];
+
+type Screen = { ground: Rgb; panel: Rgb; band: Rgb; name?: string };
+
+const tint = (hue: keyof typeof HUES, depth: Depth): Rgb =>
+  HUES[hue].map((on) => (on ? 255 : LEVELS[depth])) as Rgb;
+
+const namedSix = (depth: Depth): Screen[] =>
+  NAMED.map(([g, p]) => {
+    const ground = tint(g, depth);
+    return {
+      ground,
+      panel: tint(p, depth),
+      band: ground.map((v) => 255 - v) as Rgb,
+      name: `${g}/${p}`,
+    };
+  });
+
+function roll(depth: Depth, rnd: Rnd): Screen {
   const spread = SPREADS[depth];
   let a = rnd(spread);
   let b = rnd(0x40);
@@ -57,30 +95,22 @@ function roll(depth: Depth, rnd: Rnd) {
 const hex = (c: Rgb) =>
   '#' + c.map((v) => v.toString(16).padStart(2, '0')).join('').toUpperCase();
 
-/** Deterministic PRNG for the SSR-safe initial rolls. */
-function mulberry32(seed: number): Rnd {
-  let t = seed;
-  return (n) => {
-    t |= 0;
-    t = (t + 0x6d2b79f5) | 0;
-    let r = Math.imul(t ^ (t >>> 15), 1 | t);
-    r = (r + Math.imul(r ^ (r >>> 7), 61 | r)) ^ r;
-    return Math.floor((((r ^ (r >>> 14)) >>> 0) / 4294967296) * n);
-  };
-}
-
 const DEPTHS: { depth: Depth; label: string }[] = [
   { depth: 1, label: 'Pastel' },
   { depth: 2, label: 'Moderate' },
   { depth: 3, label: 'Deep' },
 ];
 
-const sixRolls = (depth: Depth, rnd: Rnd) =>
-  Array.from({ length: 6 }, () => roll(depth, rnd));
+const sixRolls = (depth: Depth): Screen[] =>
+  Array.from({ length: 6 }, () =>
+    roll(depth, (n) => Math.floor(Math.random() * n))
+  );
 
 export function PastelRandom() {
   const [depth, setDepth] = useState<Depth>(1);
-  const [rolls, setRolls] = useState(() => sixRolls(1, mulberry32(2008)));
+  // 'named' shows the reference schemes (deterministic at any depth);
+  // rolling switches to Random and stays there until the named chip.
+  const [rolls, setRolls] = useState<Screen[] | null>(null);
   // The die lands on a new face per roll — always a *different* face, so
   // a reroll never looks like nothing happened. No movement: a die
   // reports by face. Fixed initial face keeps server and client markup
@@ -88,12 +118,14 @@ export function PastelRandom() {
   const [face, setFace] = useState<1 | 2 | 3 | 4 | 5 | 6>(5);
 
   const reroll = (d: Depth) => {
-    setRolls(sixRolls(d, (n) => Math.floor(Math.random() * n)));
+    setRolls(sixRolls(d));
     setFace((prev) => {
       const others = ([1, 2, 3, 4, 5, 6] as const).filter((f) => f !== prev);
       return others[Math.floor(Math.random() * others.length)]!;
     });
   };
+
+  const screens = rolls ?? namedSix(depth);
 
   return (
     <figure className='not-prose pr-wrap'>
@@ -111,7 +143,7 @@ export function PastelRandom() {
               className='pr-chip'
               onClick={() => {
                 setDepth(d.depth);
-                reroll(d.depth);
+                if (rolls) reroll(d.depth);
               }}
             >
               {d.label}
@@ -119,7 +151,15 @@ export function PastelRandom() {
           ))}
         </div>
         <div className='pr-row'>
-          <span className='pr-lab'>Random</span>
+          <span className='pr-lab'>Scheme</span>
+          <button
+            type='button'
+            className='pr-chip is-wide'
+            aria-pressed={!rolls}
+            onClick={() => setRolls(null)}
+          >
+            Named pairs
+          </button>
           <button
             type='button'
             className='pr-chip is-wide'
@@ -131,17 +171,17 @@ export function PastelRandom() {
         </div>
       </div>
       <div className='post-swatches'>
-        {rolls.map((r, i) => (
+        {screens.map((s, i) => (
           <figure key={i}>
             <div
               className='screen2008'
               style={
                 {
-                  '--g': hex(r.ground),
-                  '--p': hex(r.panel),
-                  '--b': hex(r.band),
-                  /* A 35ms sweep across the grid, so a roll reads as one
-                     wave rather than six simultaneous repaints. */
+                  '--g': hex(s.ground),
+                  '--p': hex(s.panel),
+                  '--b': hex(s.band),
+                  /* A 35ms sweep across the grid, so a change reads as
+                     one wave rather than six simultaneous repaints. */
                   '--roll-delay': `${i * 35}ms`,
                 } as React.CSSProperties
               }
@@ -150,7 +190,13 @@ export function PastelRandom() {
               <span className='band' />
             </div>
             <figcaption>
-              {hex(r.ground)} · {hex(r.panel)}
+              {s.name && (
+                <>
+                  {s.name}
+                  <br />
+                </>
+              )}
+              {hex(s.ground)} · {hex(s.panel)}
             </figcaption>
           </figure>
         ))}

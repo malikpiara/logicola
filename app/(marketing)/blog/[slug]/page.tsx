@@ -14,6 +14,10 @@ import { SetPalettes } from '@/components/blog/setPalettes';
 import { DamageBar } from '@/components/blog/damageBar';
 import { ColourStudio } from '@/components/blog/colourStudio';
 import { PastelRandom } from '@/components/blog/pastelRandom';
+import { SectionRail } from '@/components/blog/sectionRail';
+import { PatternGallery } from '@/components/blog/patternGallery';
+import { PhoneStates } from '@/components/blog/phoneStates';
+import { Clip } from '@/components/blog/clip';
 
 interface PostPageProps {
   params: Promise<{ slug: string }>;
@@ -32,7 +36,13 @@ const ISLAND_MARKER =
 
 type PostSegment =
   | { kind: 'html'; html: string }
-  | { kind: 'embed'; embed: string; count: number; fallbackHtml: string }
+  | {
+      kind: 'embed';
+      embed: string;
+      count: number;
+      pick?: string[];
+      fallbackHtml: string;
+    }
   | { kind: 'island'; island: string; attrs: Record<string, string> };
 
 /**
@@ -60,6 +70,26 @@ const ISLANDS: Record<
   'damage-bar': () => <DamageBar />,
   'colour-studio': () => <ColourStudio />,
   'pastel-random': () => <PastelRandom />,
+  'pattern-gallery': () => <PatternGallery />,
+  clip: (a) => (
+    <Clip
+      src={a.src ?? ''}
+      poster={a.poster}
+      alt={a.alt ?? 'A screen recording'}
+      width={Number(a.width ?? 1440)}
+      height={Number(a.height ?? 900)}
+      max={a.max ? Number(a.max) : undefined}
+    />
+  ),
+  'phone-states': (a) => (
+    <PhoneStates
+      before={a.before ?? ''}
+      after={a.after ?? ''}
+      alt={a.alt ?? 'A phone'}
+      width={Number(a.width ?? 679)}
+      height={Number(a.height ?? 1450)}
+    />
+  ),
 };
 
 function dataAttrs(raw: string): Record<string, string> {
@@ -84,6 +114,8 @@ function splitEmbeds(html: string): PostSegment[] {
         kind: 'embed',
         embed: key!,
         count: attrs.count ? Number(attrs.count) : 3,
+        // data-pick="3.29,3.30": pin questions instead of drawing.
+        pick: attrs.pick ? attrs.pick.split(',').map((s) => s.trim()) : undefined,
         fallbackHtml: inner ?? '',
       });
     } else if (key && ISLANDS[key]) {
@@ -203,6 +235,7 @@ export default async function BlogPostPage({ params }: PostPageProps) {
         {/* Compiled at build time from content/blog markdown — our own
             content, so rendering the HTML string directly is safe. The
             typography plugin's palette is re-pointed at the theme. */}
+        <SectionRail />
         <div
           className='post-prose prose prose-lg md:prose-xl mt-9 max-w-none prose-headings:font-stretch prose-a:decoration-1 prose-a:underline-offset-2'
           style={
@@ -213,6 +246,12 @@ export default async function BlogPostPage({ params }: PostPageProps) {
                  (Malik, 2026-08-28) */
               '--post-quote-ink': SETS.L.ink,
               '--post-mark': SETS.C.surface,
+              /* Inline code wears Set C's ACCENT (Malik, 2026-09-01):
+                 the post already reads in Set C — chartreuse marks, its
+                 dark green ink — so data completes the set's own trio.
+                 Literal because SETS mirrors brand-assets.mjs, which
+                 carries no accents. */
+              '--post-code': '#BD00AD',
               '--tw-prose-body': t.type,
               '--tw-prose-headings': t.type,
               '--tw-prose-bold': t.type,
@@ -241,6 +280,7 @@ export default async function BlogPostPage({ params }: PostPageProps) {
                 key={index}
                 embed={segment.embed}
                 count={segment.count}
+                pick={segment.pick}
                 fallbackHtml={segment.fallbackHtml}
               />
             ) : (
