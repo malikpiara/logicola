@@ -832,7 +832,7 @@ export function ColourStudio() {
           <dd>{Math.round(m.theta * 180)}°</dd>
         </div>
         <div>
-          <PixelTip tip='The ColorMoods score for the pair — the shipped sets land near 0.54.' side='top'>
+          <PixelTip tip='The ColorMoods score for the pair — the sets I picked land near 0.54.' side='top'>
             <dt className='cs-term'>stimulation</dt>
           </PixelTip>
           <dd>{m.score.toFixed(3)}</dd>

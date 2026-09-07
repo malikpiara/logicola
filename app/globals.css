@@ -3429,8 +3429,60 @@
     background: #8a94a0;
     vertical-align: 2px;
   }
-  .sd-verdict.sd-shipped {
+  .sd-verdict.sd-picked {
     background: #3f0167;
+  }
+
+  /* The install island (2026-09-05): the post's one real control. A
+     sprite pill in the marketing button colours, ringed the app's way —
+     an evenodd band on the wrapper's ::before, shown on :focus-visible,
+     because a clipped button paints no outline of its own. */
+  .ia-wrap {
+    margin: 22px 0 28px;
+  }
+  .ia-ring {
+    position: relative;
+    display: inline-block;
+  }
+  .ia-ring::before {
+    content: '';
+    position: absolute;
+    inset: var(--ia-ring-inset, -4px);
+    background: currentColor;
+    clip-path: var(--ia-ring-clip);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .ia-ring:has(:focus-visible)::before {
+    opacity: 1;
+  }
+  /* 48px tall on purpose: the sprite corner is R=24 and needs at least
+     that much height or the stairs overrun the label (the lab rule). The
+     side padding keeps the text clear of the corner steps. */
+  .ia-btn {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    min-height: 48px;
+    padding: 0 32px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 48px;
+    border: 0;
+  }
+  .ia-btn:focus-visible {
+    outline: none;
+  }
+  .ia-btn:disabled {
+    cursor: default;
+  }
+  .ia-steps {
+    margin: 12px 0 0;
+    min-height: 1.5em;
+    font-size: 15px;
+    line-height: 1.5;
   }
 
   .os-card {

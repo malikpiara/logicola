@@ -73,12 +73,20 @@ make right away.
 
 ## On soul sucking design
 
-Other commenters noted the design felt [too modern and out of
-place](https://news.ycombinator.com/item?id=40317838). The
-landing page [prioritised the wrong
+The landing page [prioritised the wrong
 goals](https://github.com/malikpiara/logicola/issues/45) and put more
 emphasis on user acquisition through an email subscription form than it
-did on the logic drills. My initial redesign made LogiCola 3 feel like enterprise software and was a departure from the original user interface.
+did on the logic drills:
+
+> The front page looks like you need to sign up, or that it's a newsletter
+> signup page. It spends a third of the page on the newsletter and the real
+> content is hidden behind a tiny "chapters" menu at the top. The front page
+> should be two big buttons for the two chapters so you can click through
+> and start
+> [directly](https://github.com/malikpiara/logicola/issues/45).
+
+Other commenters noted the design felt [too modern and out of
+place](https://news.ycombinator.com/item?id=40317838). My initial redesign made LogiCola 3 feel like enterprise software and was a departure from the original user interface.
 
 The original software is vibrant and full of personality. One of the main sources driving that feeling is the colourful backgrounds that change on every refresh. The Color dialog found in the 2008 program reveals nine colour schemes, each at three depths: Pastel, Moderate and Deep.
 
@@ -97,6 +105,14 @@ the one that opens it now.
 <div data-island="before-after" data-before="/blog/then-and-now/start-then.png" data-after="/blog/then-and-now/start-now.png" data-alt="The screen that opens an exercise" data-width="2466" data-height="1558"></div>
 
 Both the old headline, "Ready for a challenge?" and the description were taken directly from Khan Academy. Every set featured the same screen because they were afterthoughts for a release that was focused on bringing you logic practice. The new quiz window gives you context. You can see the set and type of logic before advancing to the exercises.
+
+The front page got the same treatment, and the fix is the shape the
+reporter asked for. Drag the line.
+
+<div data-island="before-after" data-before="/blog/then-and-now/landing-then.png" data-after="/blog/then-and-now/landing-now.png" data-alt="The LogiCola front page" data-width="1440" data-height="900"></div>
+
+The drills are the front page now. You land, you see the exercises, you
+pick one.
 
 ## How the original made its colours
 
@@ -165,7 +181,7 @@ The colour scheme he picked in 2024 (gold, violet, green, red) was inspired by c
 
 ## Patterns
 
-The social media covers inspired me to do a deeper exploration of pattern design, to expand the expression of the brand and in order to tie everything together. Now, the start screen of every exercise features a pattern. They also serve another purpose: helping you tell easy and hard sets apart. I use different patterns for each.
+The social media covers inspired me to do a deeper exploration of pattern design, to expand the expression of the brand and tie everything together. Now, the start screen of every exercise features a pattern. They also serve another purpose: helping you tell easy and hard sets apart. I use different patterns for each.
 
 The process behind picking the patterns took days and multiple iterations. Here are the generators that survived. Three of them are currently being used:
 
@@ -177,7 +193,7 @@ Following my decision to inject a retro feel into LogiCola 3, it made sense to m
 
 ![The pixel glyphs LogiCola uses, and one of them enlarged](/blog/the-new-logicola/icons.png)
 
-## Badges and pills
+## Retro-fying the UI
 
 A silhouette is a few lines of CSS now. `clip-path` takes a polygon, and
 the newer `corner-shape` property reshapes a corner without one; the
@@ -224,69 +240,30 @@ Set L's accent rather than a colour chosen for the badge. It was drawn at
 24px and shipped at 20: the stairs still read at that height, and it
 stopped shouting.
 
-## Buttons
-
-Vitor's can has one detail that runs through everything else: its
-corners are stairs, two steps each, with the edge of every step
-softened. The primary button was the first thing to reach for that
-corner, and the first try used a single new CSS property,
-`corner-shape`, which can notch a corner in one declaration but cannot
-step it. The notched button looked too much like a Duracell battery.
-
-Apply the rule from the icons section to the can's corner and the gem
-falls out: the steps are straight edges and stay, the softening is a
-curve and goes. Here is the same button under four silhouettes. Turn the
-dial.
+The gem then went onto every primary button in the drill. Here is that
+button under the four silhouettes it was judged against.
 
 <div data-island="silhouettes"></div>
 
-Gem is the can's corner drawn straight: two-step stairs on the
-four-pixel grid, the shape the NEW badge had just settled on, stretched
-to hold a label. Sprite is the answer pills' quantised round; on the
-drill's button it rhymes with the answers instead of the can, the wrong
-rhyme for the one solid-ink object on the screen. Gem went on every
-primary button inside the drill. The site's own buttons, Donate among
-them, still wear the sprite.
+## A new icon for mobile and desktop
 
-## One app, four icons
+Following my promise to make LogiCola accessible anywhere, I decided to pay more attention to the mobile and desktop versions this time around. Now you can install LogiCola on your device and practice logic drills even when you don't have an internet connection (as long as you opened a set/quiz before).
 
-Installing the app raises a question the browser never asks: what does it
-look like on a home screen next to everything else you own? The answer
-used to be a dark can on a mint plate, drawn before the palette existed.
+<div data-island="install"><p>Install LogiCola from your browser: on iPhone and iPad, tap Share, then Add to Home Screen; on Android and desktop Chrome, choose Install LogiCola from the browser menu; in Safari on a Mac, choose File, then Add to Dock.</p></div>
+
+Most of the efforts to make LogiCola 3 work on mobile were made before. But the offline mode had never been properly implemented. I used this opportunity to refine the app and to introduce an icon that is still able to stand out among other apps without having to scream.
 
 ![The installed app icon, before and after](/blog/the-new-logicola/icon-pair.png)
 
-The colours on the bubbled can didn't work, so the lab compared three
-marks, that can, the bare favicon can and the wordmark, across the same
-eight colour pairs, at three sizes down to 16 pixels. Two whole families
-died on measurement. The sets' tab colours fail as grounds: they were
-engineered to sit mid-value between light and dark chrome, and an icon
-ground wants one extreme. An ink ground under that set's own accent fails
-too, because two darks fight. What survives is one structure, a dark
-chromatic ground with a pale mark, which also holds its edge on a light
-dock, a dark dock and a photo wallpaper, where the old pale green
-dissolved into the first. The pair is chartreuse on maroon, Set C's
-surface under Set A's ink, so the icon stays inside the catalogue like
-everything else.
+Vitor designed 3 icons in 2024. A soda can with bubbles, a simpler soda can that we currently use on the browser tab, and a logotype. Below you can see some of the variations I played with before settling on the one we're using today.
 
-The mark then splits by surface. The can, small and dense, takes the
-browser tab and the iOS home screen; the wordmark takes everything the
-manifest feeds, Android's launcher and an installed desktop app. One part
-of that plan wasn't achievable: macOS reads the same manifest entry as
-Android, so the two share a mark by construction, and the wordmark took
-both. The tab icon keeps its magenta, because a bare mark has to survive
-light and dark tab strips and the new pair is invisible on one of them.
+![The three marks across the eight colour pairs at dock size: the 2024 bubbled can, the favicon can and the wordmark, with the picked cell marked](/blog/the-new-logicola/icon-marks.png)
 
-![The same mark as four files: any, maskable, and how Android and iOS crop them](/blog/the-new-logicola/app-icons.png)
+## Better feedback
 
-That shared entry is the maskable one, which is why the manifest carries
-four files: a plated pair for the platforms that show an icon whole, and
-a full-bleed pair for the ones that crop it to a circle, each fitted so
-the artwork's furthest corner stays inside the safe zone. iOS, outside
-the manifest, gets its own: square and unrounded, because it applies its
-own squircle.
+Another source of confusion came from how the options in a quiz were marked after you submitted an answer. I gave the same red outline to every option that was wrong. This meant it was impossible to tell which one was actually submitted by you. Seeing so many options turn red was also discouraging.
 
-## "It's confusing"
+As a user on Hacker News pointed out:
 
 > I'm taking one of the tests and the feedback seems strange: although it
 > appears I got it right, because the selected answer turns green, many of
@@ -294,127 +271,62 @@ own squircle.
 > other unselected answers also turn green. It's
 > [confusing](https://news.ycombinator.com/item?id=40317602).
 
-That was the first comment on the thread and it took me far too long to
-act on. Red meant "not the answer", so a clean run painted six options red
-on Set Q at the exact moment you got it right. On the phone grid of Set R,
-the new fallacies set, it painted seventeen.
-
-Here is the screen that comment was written about, just after checking
-an answer, and the same moment now.
+Here is the screen that comment was written about and the same screen now.
 
 <div data-island="before-after" data-before="/blog/then-and-now/exercise-then.png" data-after="/blog/then-and-now/exercise-now.png" data-alt="A Set Q question screen" data-width="2466" data-height="1558"></div>
 
-A white card, grey outlines and a blue focus ring: the same neutral
-furniture the front page had, carrying no signal about which set you were
-in or what any colour meant. When the only colours on screen arrive at the
-moment you check your answer, they had better mean exactly one thing each.
-They didn't.
+The exercise tells you that you are allowed to select more than one answer. When you pick a wrong option, the visual cue now goes beyond colour and includes marking that option with a different shape (an X). Now, you can try again, instead of getting the answer revealed right away.
 
-The error tone is now reserved for options you actually picked and got
-wrong. An option you simply never touched recedes instead: same quiet
-ground, the set's own ink, and it keeps its number.
+Here's what the states for an option look like now:
 
 ![The five states of an option, in the two moments they belong to](/blog/the-new-logicola/pills.png)
 
-Idle and spent are four percentage points of a transparent tint apart,
-close enough that they look identical side by side. And they never appear
-together, because one is before you answer and the other is after. The
-recede is carried by the ground and the badge, never by making the words
-harder to read; those labels are still content you came to see.
+## Picking multiple options
 
-<mark>Receding and being wrong are different messages, and only one of
-them is about you.</mark>
-
-## "Cannot select more than one answer"
+One of the limitations of the earlier versions LogiCola was the lack of support for picking multiple options. Definitions (Set R) can be wrong in more than one way, but you could only pick one. Now you can select more than one correct answer.
 
 > Few quiz questions require more than one selected answer. It's impossible
-> to select more than one, at least using my mobile Chrome browser.
-> — [issue #47](https://github.com/malikpiara/logicola/issues/47), alongside
-> [#10](https://github.com/malikpiara/logicola/issues/10), where
-> multi-answer questions marked every option wrong.
-
-The person who filed it did the work of pinning it down: the example they
-gave was Set Q, meanings and definitions, question 3.1, a definition that
-is wrong in two ways at once. Some of Gensler's questions genuinely have
-more than one answer, and the drill had no way to say so.
+> to select more than one (...)
+> — [issue #47](https://github.com/malikpiara/logicola/issues/47).
 
 <div data-island="phone-states" data-before="/blog/the-new-logicola/phone-picked.png" data-after="/blog/the-new-logicola/phone-checked.png" data-alt="Set Q on a phone, two answers" data-width="679" data-height="1450"></div>
 
-That's the same set on a phone, which is where it was reported broken.
-More than one answer can be right, you can pick up to three, and the rule
-is stated above the list rather than left for you to discover.
+Above you can see what picking and checking an answer looks like now on mobile.
+[Set R](/informal/definitions/quiz), the same set that issue was
+filed against, is live. Give it a try.
 
-The right-hand phone is the same screen after checking, and it carries the
-other fix too. "Poor match in emotional tone" is marked, because I picked
-it and it was wrong. "Too broad" keeps its ring, because it was one of the
-answers. Everything I never touched has simply gone quiet: no red, no
-green, no verdict on choices I didn't make.
+## A guide for every set
 
-(The question is Plato's definition of man, which Diogenes is supposed to
-have refuted by plucking a chicken.)
+For anyone who learned logic from a different book, nothing on the page said what counted as a [well-formed formula](https://news.ycombinator.com/item?id=40319634) (wff, the syntactical rules of that logical system).
 
-Nearly everything above this point was a decision about how that screen
-should look. Rather than take my word for any of it, the
-[Set Q drill](/informal/definitions/quiz), the same set that issue was
-filed against, is live: pick more than one answer, get one wrong on
-purpose, and watch what does and doesn't turn red.
-
-## "These pairs are the same"
+I received multiple comments pertaining to the notation and to an extra pair of parentheses outside of propositional expressions:
 
 > You may want to check how you normalize the logical representations.
 > `(R ^ L) v N` is marked incorrect and `((R ^ L) v N)` is marked correct.
 > These pairs are the
 > [same](https://news.ycombinator.com/item?id=40319634).
 
-This is my favourite thing that happened, because the person who reported
-it went away and
-[answered it themselves](https://news.ycombinator.com/item?id=40324902):
-Gensler's system has no precedence order for the connectives. Every binary
-connective takes its own parentheses, always. That isn't an oversight, it's
-a teaching decision: a student who never learns a precedence table can
-join any two formulas by writing them side by side and wrapping the result,
-and will never be wrong.
+In Gensler's system every binary connective takes its own parentheses. So the two expressions are not the same formula in this system: one is well-formed and one is not. A student who never learns about the precedence of logical operators can join any two wff by wrapping them and never be wrong.
 
-So the drill was being faithful. What it wasn't doing was explaining
-itself, and that's the fairer complaint.
-
-Finally, there were many accessibility issues that prevented people
-from [using the navigation
-properly](https://news.ycombinator.com/item?id=40320473) and kept
-people with visual impairments from [using the platform with screen
-readers](https://news.ycombinator.com/item?id=40317716). For people not
-acquainted with Gensler's pedagogy, it was not clear what made a
-[well-formed formula](https://news.ycombinator.com/item?id=40319634)
-(WFF: what are the grammatical and syntactical rules of that logical
-system?).
+Now most sets have a reference guide that you can check whenever you want to understand the notation or a concept that is a key to the completion of an exercise.
 
 <div data-island="clip" data-src="/blog/the-new-logicola/guide-open.mp4" data-poster="/blog/the-new-logicola/guide-open.png" data-alt="A translation question whose four options differ only in which letters are underlined; the Guide opens beside it with the rules for forming an imperative wff" data-width="1532" data-height="1080"><a href="/blog/the-new-logicola/guide-open.mp4">Watch the Guide open beside a translation question (video, 6 seconds)</a></div>
 
-That is what the Guide is for. Most drills now carry one, a click away
-from every question, with the rules for what counts as a well-formed
-formula in that set's own notation: the parentheses in propositional
-logic, the underlining in imperative logic, which is the set in the
-recording. It opens beside the question rather than on top of it, and it
-resizes, because you want it open _while_ you answer rather than instead
-of answering.
+Guides open beside the questions and they are resizable. This way, you can keep your focus on the exercises and understand the shape of a valid answer without interrupting your flow.
 
-I would generalise it this way. When a rule is unfamiliar enough that a
-capable person files a bug against it, the rule isn't necessarily wrong and
-neither is the person. <mark>The documentation is just in the wrong
-building.</mark>
+## Better accessibility
 
-## "Absolutely nothing happens"
+Despite setting out to make LogiCola more accessible, my considerations did not go beyond geography, operating systems and internet connection.
+
+Many people could not reach the drills at all because the
+menu ignored their screen reader. This essentially meant they couldn't use LogiCola 3 at all:
 
 > I'm using Firefox on Windows with a screen reader and when I press the
 > chapters button on the web page, absolutely nothing
 > [happens](https://news.ycombinator.com/item?id=40317716).
 
-This is the worst bug reported at launch and it isn't close. It doesn't
-degrade the experience, it ends it. LogiCola is assigned coursework in real
-universities; "absolutely nothing happens" means a student cannot do their
-homework.
-
-Someone else found the same door from the other side:
+Additionally, the navigation also vanished when the
+pointer strayed:
 
 > The button appears to be hover only, which [is
 > bad](https://news.ycombinator.com/item?id=40320473). On top of that, it
@@ -422,75 +334,24 @@ Someone else found the same door from the other side:
 > down, you exit the hover area and it closes. There are no visual
 > indications of the boundaries of the hover area.
 
-A menu that exists only while a pointer rests inside an invisible rectangle
-is not a menu. It's a trick that happens to work for people using a mouse
-on a large screen. The navigation is keyboard- and screen-reader-operable
-now, and accessibility stopped being something I got to at the end and
-became something a change doesn't ship without.
+The navigation is a real menu now: a button that opens
+a list of links, works from the keyboard, and tells a screen reader what
+it is.
 
-A third person went straight past the menu to the reason it mattered:
+The same standard now applies inside the drills. Every set's colours were
+checked for contrast before they were allowed in. A wrong pick is marked
+by shape as well as colour. There are still many accessibility challanges that were left unaddressed, but I'm aware of them now thanks to your feedback.
 
-> The front page looks like you need to sign up, or that it's a newsletter
-> signup page. It spends a third of the page on the newsletter and the real
-> content is hidden behind a tiny "chapters" menu at the top. The front page
-> should be two big buttons for the two chapters so you can click through
-> and start
-> [directly](https://github.com/malikpiara/logicola/issues/45).
-
-They were right, and the fix is the shape they asked for. Drag the line.
-
-<div data-island="before-after" data-before="/blog/then-and-now/landing-then.png" data-after="/blog/then-and-now/landing-now.png" data-alt="The LogiCola front page" data-width="1440" data-height="900"></div>
-
-The drills are the front page now. You land, you see the exercises, you
-pick one. The newsletter moved to the bottom, where something you might
-want later belongs.
-
-## From fixed to a point system and infinitely generated questions
+## Infinitely generated questions
 
 Fixed-length quizzes are gone. They have been replaced by a point system that works like the original. Your score climbs as you answer, takes a hit when you miss, and you finish only when you reach 100 points.
 
 This shape has a name in the learning literature: mastery learning, the idea Bloom proposed in 1968. The meta-analysis that followed ([Kulik, Kulik and Bangert-Drowns, 1990](https://doi.org/10.3102/00346543060002265)) found mastery-based courses raise exam performance by about half a standard deviation, with the largest gains going to the weakest students.
 
-The numbers underneath are the original's. Each set keeps the weights it always had, the ladder still tops
-out where it always did, and the explanation you get when you miss is
-Gensler's own. A score means what your instructor already thinks it means.
+Now the interface has a progress bar, so you can see how far along you are. To inject personality and make the platform feel more alive, I introduced micro-transitions and animations that were inspired by video games and the good old days of the internet.
 
-What I did decide was how a miss should _feel_. A wrong answer costs real
-points, so the bar can react like a health bar taking damage instead of
-politely re-easing its width. There are decades of games that already
-know how to do that. Six directions got built, each borrowing a different
-one. Press **Miss** and try them.
+Here are six of the directions I prototyped with Claude. Press **Miss** to try them.
 
 <div data-island="damage-bar"></div>
 
-Mega Man's invulnerability flicker won. Street Fighter II's ghost drain is
-direction B, and losing to Mega Man is the most on-brand outcome this
-project has produced.
-
-It won because it was tested, not because I argued for it. Each direction
-went into a prototype and in front of real people in usability sessions, and
-A is what came back. That is the whole point of building six: six directions
-are only worth having if something other than my own taste gets to choose
-between them.
-
-The lab did surface one thing a session wouldn't. On desktop the bar isn't
-the 10px capsule you're pressing above. It's a 6px hairline, and at that
-size A's blink-off empties the bar completely rather than flickering it.
-Direction G exists because of that: A's cadence wearing C's colour, so the
-fill hard-cuts to ink instead of vanishing.
-
-This is the part of the process I would most like to pass on. All six of
-these are real implementations rather than sketches, and building six
-working animations in an afternoon is a thing that only recently became
-possible for one person. That doesn't make the decision for you. It just
-means you arrive at a usability session with six things to test instead of
-one thing to defend. The old question was "does this feel right?", answered
-by whoever was most sure of themselves. The new one is "which of these six
-did people actually notice?", answered by watching them. <mark>Everything
-that hasn't been tested is an assumption or an opinion.</mark> Every design
-decision in this post went through a lab like the one above: ugly,
-throwaway, living in a `docs` folder. Those labs are the reason I can tell
-you why a shape was chosen instead of only showing you the shape.
-
-Of everything in this post, the scoring is the one part that can't be
-touched. Redraw it and it stops being LogiCola.
+To make decisions about what made it into the product, I ran in-person tests where I tried to gauge people's reactions. Through some iterations, option A (flash after taking damage) won.

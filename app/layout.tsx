@@ -150,6 +150,20 @@ export default function RootLayout({
               "try{localStorage.getItem('logicola.last_drill')&&document.documentElement.setAttribute('data-lx-resume','')}catch(e){}",
           }}
         />
+        {/* Install prompt stash (2026-09-05): Chromium fires
+            `beforeinstallprompt` as soon as it judges the page
+            installable, routinely before React hydrates, so a listener
+            added by a component misses it. Keep the event on window and
+            announce it; components/blog/installApp.tsx reads the stash.
+            preventDefault only under /blog, where the island supplies the
+            button — elsewhere Chrome's own Android mini-infobar keeps
+            nudging exactly as it does today. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "addEventListener('beforeinstallprompt',function(e){if(location.pathname.indexOf('/blog/')===0)e.preventDefault();window.__lcInstallPrompt=e;dispatchEvent(new Event('lc:installprompt'))})",
+          }}
+        />
       </head>
       <body
         className={`antialiased min-h-screen bg-white text-primaryColor ${robotoFlex.className}`}

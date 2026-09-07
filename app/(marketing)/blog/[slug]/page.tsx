@@ -5,7 +5,13 @@ import { notFound } from 'next/navigation';
 import { publishedPosts, formatDate } from '@/lib/marketingContent';
 import { MarketingNav } from '@/components/marketing/marketingNav';
 import { Chip } from '@/components/marketing/chip';
-import { MARKETING_THEME, SETS } from '@/lib/marketingTheme';
+import {
+  MARKETING_THEME,
+  SETS,
+  SPRITE_CLIP,
+  themeButton,
+} from '@/lib/marketingTheme';
+import { FOCUS_W, focusR, ringBand } from '@/lib/pixel';
 import { SITE_URL } from '@/lib/site';
 import { QuizEmbed } from '@/components/blog/quizEmbed';
 import { BeforeAfter } from '@/components/blog/beforeAfter';
@@ -18,6 +24,7 @@ import { SectionRail } from '@/components/blog/sectionRail';
 import { PatternGallery } from '@/components/blog/patternGallery';
 import { PhoneStates } from '@/components/blog/phoneStates';
 import { Clip } from '@/components/blog/clip';
+import { InstallApp } from '@/components/blog/installApp';
 
 interface PostPageProps {
   params: Promise<{ slug: string }>;
@@ -88,6 +95,19 @@ const ISLANDS: Record<
       alt={a.alt ?? 'A phone'}
       width={Number(a.width ?? 679)}
       height={Number(a.height ?? 1450)}
+    />
+  ),
+  install: () => (
+    <InstallApp
+      theme={{
+        buttonBg: themeButton().bg,
+        buttonFg: themeButton().fg,
+        ink: MARKETING_THEME.ink,
+        spriteClip: SPRITE_CLIP,
+        // Focus stands 2px off the silhouette, radius grown to match —
+        // the option pills' own band (components/option.tsx).
+        ringClip: ringBand('sprite', FOCUS_W, focusR(24)),
+      }}
     />
   ),
 };

@@ -177,7 +177,7 @@ export function PatternGallery() {
           className={`pg-shipped${pattern.shipped ? ' is-on' : ''}`}
           aria-hidden={!pattern.shipped}
         >
-          shipped
+          picked
         </span>
       </div>
       <p className='pg-caption'>

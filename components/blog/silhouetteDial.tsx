@@ -74,14 +74,14 @@ const SHAPES = [
     label: 'Gem',
     clip: gemClip(),
     note: "The can's corner drawn straight: two-step stairs on the four-pixel grid, the rounding rasterised away. Born on the NEW badge; on every primary button in the drill since.",
-    verdict: 'shipped',
+    verdict: 'picked',
   },
   {
     key: 'sprite',
     label: 'Sprite',
     clip: spriteClip(0, SPRITE_R),
     note: "A quantised round, its radius clamped to the button's height. It rhymes with the answer pills instead of the can: not the drill's button, but the answer pills and the site's own buttons wear it.",
-    verdict: 'shipped',
+    verdict: 'picked',
   },
 ] as const;
 

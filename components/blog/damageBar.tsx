@@ -203,7 +203,7 @@ export function DamageBar() {
             onClick={() => setDir(i)}
           >
             <b>{x.id}</b> {x.name}
-            {x.won && <i aria-label=' (shipped)'>✓</i>}
+            {x.won && <i aria-label=' (picked)'>✓</i>}
           </button>
         ))}
       </div>
