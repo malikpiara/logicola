@@ -25,6 +25,8 @@ import { PatternGallery } from '@/components/blog/patternGallery';
 import { PhoneStates } from '@/components/blog/phoneStates';
 import { Clip } from '@/components/blog/clip';
 import { InstallApp } from '@/components/blog/installApp';
+import { TemplateRoll } from '@/components/blog/templateRoll';
+import { MaterialShapesDial } from '@/components/blog/materialShapes';
 
 interface PostPageProps {
   params: Promise<{ slug: string }>;
@@ -110,6 +112,10 @@ const ISLANDS: Record<
       }}
     />
   ),
+  'template-roll': (a) => (
+    <TemplateRoll num={Number(a.num ?? 21)} letters={a.letters} />
+  ),
+  'material-shapes': () => <MaterialShapesDial />,
 };
 
 function dataAttrs(raw: string): Record<string, string> {
@@ -181,7 +187,7 @@ export async function generateMetadata({
       publishedTime: post.date,
       authors: [post.author],
     },
-    twitter: { card: 'summary_large_image' },
+    twitter: { card: 'summary_large_image', site: '@LogicolaThree' },
   };
 }
 
@@ -205,6 +211,9 @@ export default async function BlogPostPage({ params }: PostPageProps) {
     description: post.dek,
     datePublished: post.date,
     dateModified: post.date,
+    // The cover doubles as the article's image for rich results; the
+    // link card (opengraph-image.tsx) is a separate, headline-led surface.
+    ...(post.cover ? { image: `${SITE_URL}${post.cover}` } : {}),
     author: { '@type': 'Person', name: post.author },
     publisher: { '@type': 'Organization', name: 'LogiCola' },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}${post.url}` },

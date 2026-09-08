@@ -48,7 +48,7 @@ const SPRITE_GRID = geometryFor(12);
  * off the 4px grid. The square chip (`gemClip()` from lib/pixel) stays
  * the dormant alternative.
  */
-const BADGE_CLIP =
+export const BADGE_CLIP =
   'polygon(37.5% 0%, 62.5% 0%, 62.5% 12.5%, 75% 12.5%, 75% 25%, 87.5% 25%, ' +
   '87.5% 37.5%, 100% 37.5%, 100% 62.5%, 87.5% 62.5%, 87.5% 75%, 75% 75%, ' +
   '75% 87.5%, 62.5% 87.5%, 62.5% 100%, 37.5% 100%, 37.5% 87.5%, 25% 87.5%, ' +

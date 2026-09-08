@@ -3433,6 +3433,94 @@
     background: #3f0167;
   }
 
+  /* Material's shapes under the resolution dial (2026-09-07). Reuses the
+     silhouette dial's tabs, note and verdict so the two dials read as one
+     family. Seven columns at the column width, four on a phone. */
+  .ms-wrap {
+    margin: 28px 0;
+  }
+  .ms-dial {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 5px 10px;
+  }
+  .ms-dial .pr-lab {
+    line-height: 18px;
+  }
+  .ms-slider {
+    width: 232px;
+    max-width: 100%;
+  }
+  .ms-range {
+    display: block;
+    width: 100%;
+  }
+  .ms-ticks {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 2px 0;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, #14110f 45%, transparent);
+  }
+  .ms-tick {
+    /* the stop label hands over as a colour retune, not a pop (motion
+       pass, 2026-09-08) */
+    transition: color var(--motion-feedback) var(--ease-ui);
+  }
+  .ms-tick.is-on {
+    color: #3f0167;
+    font-weight: 700;
+  }
+  .ms-grid {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 10px 4px;
+  }
+  .ms-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0 6px;
+    border-radius: 8px;
+    color: #3f0167;
+    min-width: 0;
+  }
+  .ms-tile.is-picked {
+    background: #cff6dd;
+  }
+  .ms-shape {
+    width: 100%;
+    max-width: 96px;
+    height: auto;
+    display: block;
+  }
+  .ms-name {
+    margin-top: 6px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    color: #14110f;
+  }
+  .ms-verdict {
+    margin: 5px 0 0;
+    font-size: 9px;
+    vertical-align: 0;
+  }
+  @media (max-width: 640px) {
+    .ms-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
   /* The install island (2026-09-05): the post's one real control. A
      sprite pill in the marketing button colours, ringed the app's way —
      an evenodd band on the wrapper's ::before, shown on :focus-visible,
@@ -3480,9 +3568,123 @@
   }
   .ia-steps {
     margin: 12px 0 0;
-    min-height: 1.5em;
+    /* two lines reserved: the menu instruction wraps, and the click must
+       not shove the prose below (motion pass, 2026-09-08) */
+    min-height: 3em;
     font-size: 15px;
     line-height: 1.5;
+  }
+  .ia-status {
+    display: block;
+    animation: post-arrive var(--motion-feedback) var(--ease-ui) both;
+  }
+
+  /* The generator figure (2026-09-07): one 2008 template, re-rolled.
+     Plain rows rather than the drill's pills on purpose — this is a
+     figure showing a draw, with the answer marked, not a thing to
+     answer. Plum and mint, the island palette. */
+  .tr-wrap {
+    margin: 28px 0;
+    padding: 18px 20px 20px;
+    background: #fff;
+    border: 2px solid #3f0167;
+    border-radius: 10px;
+  }
+  .tr-eyebrow {
+    margin: 0 0 12px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6b21a8;
+  }
+  .tr-prompt {
+    margin: 0 0 14px;
+    font-size: 19px;
+    line-height: 1.35;
+    font-weight: 600;
+    color: #14110f;
+  }
+  .tr-options {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .tr-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    background: color-mix(in srgb, #3f0167 5%, transparent);
+    font-size: 17px;
+    color: #14110f;
+  }
+  .tr-option.is-answer {
+    background: #cff6dd;
+  }
+  /* A draw is a roll, the way pastel-random's is: the new prompt, rows
+     and legend fade in, each row 35ms after the last. Opacity only, so
+     it survives reduced motion the way the sweep does (motion pass,
+     2026-09-08). The rows remount on every draw (key={draw}), which is
+     the intended "fresh draw" read. */
+  .tr-prompt,
+  .tr-option,
+  .tr-legend {
+    animation: post-arrive var(--motion-feedback) var(--ease-ui) both;
+  }
+  .tr-option {
+    animation-delay: calc(var(--i, 0) * 35ms);
+  }
+  /* The drill's diamond badge (components/option.tsx BADGE_CLIP), at the
+     32px the drill draws it, where the eighths land on the 4px grid. */
+  .tr-badge {
+    flex: none;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 13px;
+    font-weight: 700;
+    color: #3f0167;
+    background: color-mix(in srgb, #3f0167 12%, transparent);
+  }
+  .tr-option.is-answer .tr-badge {
+    background: #3f0167;
+    color: #cff6dd;
+  }
+  .tr-wff {
+    flex: 1;
+  }
+  .tr-answer {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #3f0167;
+  }
+  .tr-check {
+    width: 12px;
+    height: 12px;
+  }
+  .tr-legend {
+    margin: 0 0 14px;
+    line-height: 1.5;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 12.5px;
+    color: #6e5f68;
+  }
+  .tr-legend b {
+    color: #14110f;
   }
 
   .os-card {
@@ -3948,6 +4150,47 @@ html[data-qsheet-back-collapse] [data-vaul-drawer] {
    band along the foot is the ground's exact complement, so the block
    enacts its own last line. One-off; ordinary fenced blocks keep the
    pre theme. */
+/* The generator figure's button is the drill's GemButton (2026-09-07).
+   Its wrapper is Tailwind `block` and the button `w-full`; these sit
+   UNLAYERED so they outrank those utilities — the same reason the
+   .gem-button-wrap rules above are unlayered. The wrap carries the ink
+   because the focus band paints in currentColor. */
+.tr-roll-wrap {
+  display: inline-block;
+  width: auto;
+  color: #3f0167;
+}
+.tr-roll-wrap .tr-roll {
+  width: auto;
+  color: #cff6dd;
+  background: #3f0167;
+}
+
+/* Inline country badge in the release post (2026-09-07): the X-style
+   flag chip, emoji flag then the name. Emoji, so Windows renders the
+   flag as the letters PH — accepted. */
+.post-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0 0.5em 0 0.35em;
+  border-radius: 999px;
+  background: color-mix(in srgb, #02302c 7%, transparent);
+  font-weight: inherit;
+  line-height: 1.25;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+/* The flag is Twemoji's SVG (jdecked/twemoji v15.1.0, CC BY 4.0),
+   inlined so it renders the same on every platform — the system emoji
+   would be the letters PH on Windows. */
+.post-badge-flag {
+  width: 1em;
+  height: 1em;
+  flex: none;
+  transform: translateY(0.02em);
+}
+
 .code2008 {
   position: relative;
   background: #cdffff;
@@ -4101,6 +4344,13 @@ html[data-qsheet-back-collapse] [data-vaul-drawer] {
 .pg-thumb:focus-visible {
   outline-color: #3f0167;
 }
+/* Roving tabindex lands Tab on the checked thumb, whose ring is already
+   plum — so focus needs its own mark. Offset is not in the transition
+   list: focus marks appear instantly (WCAG 2.4.7; motion pass,
+   2026-09-08). */
+.pg-thumb:focus-visible {
+  outline-offset: 5px;
+}
 .pg-thumb.is-shipped::after {
   content: '';
   position: absolute;
@@ -4137,6 +4387,13 @@ html[data-qsheet-back-collapse] [data-vaul-drawer] {
   background: #fff;
   border: 2px solid #3f0167;
   box-shadow: 0 1px 3px color-mix(in srgb, #14110f 25%, transparent);
+  /* the grab is acknowledged in colour, as the before/after handle
+     acknowledges its own; a 14px thumb at scale(.97) is sub-pixel
+     (motion pass, 2026-09-08) */
+  transition: background-color var(--motion-feedback) var(--ease-ui);
+}
+.pg-range:active::-webkit-slider-thumb {
+  background: #cff6dd;
 }
 .pg-range::-moz-range-thumb {
   width: 12px;
@@ -4144,6 +4401,10 @@ html[data-qsheet-back-collapse] [data-vaul-drawer] {
   border-radius: 4px;
   background: #fff;
   border: 2px solid #3f0167;
+  transition: background-color var(--motion-feedback) var(--ease-ui);
+}
+.pg-range:active::-moz-range-thumb {
+  background: #cff6dd;
 }
 .pg-range:focus-visible {
   outline: 3px solid #3f0167;
@@ -4231,12 +4492,25 @@ html[data-qsheet-back-collapse] [data-vaul-drawer] {
   transform: scale(0.97);
 }
 .clip-toggle:focus-visible {
-  outline: 3px solid #cff6dd;
-  outline-offset: -3px;
+  outline: none;
+}
+/* The ring sits on the stage (the before/after pattern): a mint inset
+   over arbitrary video frames cannot promise 3:1 (1.4.11; motion pass,
+   2026-09-08). */
+.clip-stage:has(.clip-toggle:focus-visible) {
+  outline: 3px solid #3f0167;
+  outline-offset: 3px;
 }
 @media (prefers-reduced-motion: reduce) {
   .clip-toggle:active .clip-glyph {
     transform: none;
+  }
+}
+/* Shared by the islands whose only visible consequence of a press is new
+   text or rows: opacity only, 140ms, kept under reduced motion. */
+@keyframes post-arrive {
+  from {
+    opacity: 0;
   }
 }
 

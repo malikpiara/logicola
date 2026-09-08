@@ -25,7 +25,10 @@ const subscribeReduce = (cb: () => void) => {
 };
 
 /** Each state holds this long before the other dissolves in. */
-const HOLD_MS = 2400;
+// Asymmetric hold (motion pass, 2026-09-08): the check is the response
+// the section is about, so it lingers; the pick snaps back sooner.
+const PICKED_MS = 1600;
+const CHECKED_MS = 3200;
 
 export function PhoneStates({
   before,
@@ -56,9 +59,12 @@ export function PhoneStates({
 
   useEffect(() => {
     if (reduce || manual || hovering) return;
-    const t = setInterval(() => setChecked((c) => !c), HOLD_MS);
-    return () => clearInterval(t);
-  }, [reduce, manual, hovering]);
+    const t = setTimeout(
+      () => setChecked((c) => !c),
+      checked ? CHECKED_MS : PICKED_MS
+    );
+    return () => clearTimeout(t);
+  }, [reduce, manual, hovering, checked]);
 
   const choose = (next: boolean) => {
     setManual(true);
@@ -77,8 +83,10 @@ export function PhoneStates({
           margin: '0 auto',
           aspectRatio: `${width} / ${height}`,
         }}
-        onPointerEnter={() => setHovering(true)}
-        onPointerLeave={() => setHovering(false)}
+        // Mouse only: on touch, pointerenter fires on the tap and the
+        // leave may never come, which would freeze the loop.
+        onPointerEnter={(e) => e.pointerType === 'mouse' && setHovering(true)}
+        onPointerLeave={(e) => e.pointerType === 'mouse' && setHovering(false)}
       >
         <Image
           src={before}
@@ -98,7 +106,11 @@ export function PhoneStates({
         />
       </div>
       <div className='pr-rows ps-rows'>
-        <div className='pr-row' role='radiogroup' aria-label='State'>
+        <div
+          className='pr-row'
+          role='radiogroup'
+          aria-label='State (choosing one stops the loop)'
+        >
           <button
             type='button'
             role='radio'

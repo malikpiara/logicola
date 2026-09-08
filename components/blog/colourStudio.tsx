@@ -777,7 +777,9 @@ export function ColourStudio() {
         />
         <div className='cs-panel'>
           <p className='cs-eyebrow'>Your set</p>
-          <h3 className='cs-title'>Meanings and Definitions</h3>
+          {/* A <p>, not a heading: the island is an illustration and must
+              not add a section to the post's outline (SEO pass, 2026-09-08). */}
+          <p className='cs-title'>Meanings and Definitions</p>
           <p className='cs-dek'>
             Spot what is wrong with a definition — too broad, too narrow,
             circular, or worse.

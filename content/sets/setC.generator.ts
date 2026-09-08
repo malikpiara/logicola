@@ -618,11 +618,29 @@ function qid(num: number, n: number): string {
 // Render — turn one TemplateSpec into one concrete Question
 // =============================================================
 
+/** What one draw bound: the adjectives, their letters, and which prompt form it used. */
+export interface SetCDrawBindings {
+  /** `$B`/`$C`/`$D` → the adjective drawn for each. */
+  adjectives: Readonly<Record<string, string>>;
+  /** `$j`/`$k`/`$q` → the uppercase first letter each became. */
+  letters: Readonly<Record<string, string>>;
+  /** Which of the two prompt forms this draw used. */
+  form: 'english' | 'abstract';
+}
+
 function renderTemplate(
   spec: TemplateSpec,
   rng: Rng,
   counter: number
 ): Question {
+  return drawTemplate(spec, rng, counter).question;
+}
+
+function drawTemplate(
+  spec: TemplateSpec,
+  rng: Rng,
+  counter: number
+): { question: Question; bindings: SetCDrawBindings } {
   // Pick adjectives — one per var the template uses
   const adjs = pickDistinctLetterAdj(rng, spec.vars.length as 1 | 2 | 3);
 
@@ -655,10 +673,17 @@ function renderTemplate(
   });
 
   return {
-    id: qid(spec.num, counter),
-    prompt,
-    ...buildOptions(renderedOptions, 0),
-    answer: '',
+    question: {
+      id: qid(spec.num, counter),
+      prompt,
+      ...buildOptions(renderedOptions, 0),
+      answer: '',
+    },
+    bindings: {
+      adjectives: adjVars,
+      letters: letterVars,
+      form: useNL ? 'english' : 'abstract',
+    },
   };
 }
 
@@ -686,6 +711,35 @@ export function* hardQuestions(seed?: number): Generator<Question> {
     yield renderTemplate(spec, rng, counter++);
   }
 }
+
+/**
+ * One template, one draw (Malik, 2026-09-07). The release article's
+ * generator figure asks for a template by its 2008 number and re-rolls
+ * it, so the reader watches the wording change while the logic holds.
+ * Same renderer as the drills; a `seed` makes a draw reproducible.
+ */
+export function renderSetCTemplate(
+  num: number,
+  seed?: number
+): Question | undefined {
+  return drawSetCTemplate(num, seed)?.question;
+}
+
+/**
+ * The same draw, with what it bound — so a figure can say "$B sensitive,
+ * $D notorious, so $j S, $q N" next to the question it produced.
+ */
+export function drawSetCTemplate(
+  num: number,
+  seed?: number
+): { question: Question; bindings: SetCDrawBindings } | undefined {
+  const spec = SPECS.find((s) => s.num === num);
+  if (!spec) return undefined;
+  return drawTemplate(spec, rngFromSeed(seed), 0);
+}
+
+/** How many templates the 2008 set carries (`*0`..`*33`). */
+export const SET_C_TEMPLATE_COUNT = SPECS.length;
 
 // =============================================================
 // Top-level Set generator

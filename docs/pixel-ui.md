@@ -166,6 +166,17 @@ Question CTA). The repo is directly fetchable —
 `raw.githubusercontent.com/hackernoon/pixel-icon-library/main/icons/SVG/…` —
 so future icons need not be pasted by hand.
 
+**Wanted, in-house (Malik, 2026-09-08):** the four angle glyphs
+(`angle-down/up/left/right`) redrawn on the app's own 4px cells. The
+library's are 24-unit glyphs with 1-unit stairs, and the nav trigger
+renders them at 12px and the FAQ accordion at 16px, so a stair is
+0.5–0.67px and the chevron antialiases smooth — the one place the pixel
+identity does not reach the screen. Reference: Mistral's chevrons, five
+4-unit cells on a 30-unit box, one cell thick, cells linked at their
+corners, rendered at 20–24px. Spec to try: five corner-linked 4px cells,
+12×20 (left/right) and 20×12 (up/down), drawn like the topic icons; lab
+first, judged in the nav, the accordion and the drill links at real size.
+
 ## Option-chip shapes (kept as affordances)
 
 An `Option chip` control offers two silhouettes for the option-index chips

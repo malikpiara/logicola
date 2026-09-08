@@ -156,10 +156,20 @@ export function InstallApp({ theme }: { theme: InstallAppTheme }) {
           Install LogiCola
         </button>
       </span>
-      <p className='ia-steps' role='status' aria-live='polite'>
-        {phase === 'accepted' &&
-          'Installing. It will appear on your home screen or in your dock.'}
-        {phase === 'steps' && steps}
+      {/* The status is the button's only visible consequence, so it
+          arrives (opacity, 140ms) instead of popping (motion pass,
+          2026-09-08); keyed on the phase so a change replays it. */}
+      <p className='ia-steps' role='status'>
+        {phase === 'accepted' && (
+          <span className='ia-status' key='accepted'>
+            Installing. It will appear on your home screen or in your dock.
+          </span>
+        )}
+        {phase === 'steps' && (
+          <span className='ia-status' key='steps'>
+            {steps}
+          </span>
+        )}
       </p>
     </div>
   );

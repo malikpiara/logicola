@@ -71,9 +71,9 @@ const SHAPES = [
   },
   {
     key: 'gem',
-    label: 'Gem',
+    label: 'Diamond',
     clip: gemClip(),
-    note: "The can's corner drawn straight: two-step stairs on the four-pixel grid, the rounding rasterised away. Born on the NEW badge; on every primary button in the drill since.",
+    note: "The can's corner drawn straight: two-step stairs on the 4 px grid, the rounding rasterised away. Born on the NEW badge; on every primary button in the drill since.",
     verdict: 'picked',
   },
   {

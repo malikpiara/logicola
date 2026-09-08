@@ -8,7 +8,14 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { easyQuestions, generateSetC, hardQuestions } from './setC.generator';
+import {
+  drawSetCTemplate,
+  easyQuestions,
+  generateSetC,
+  hardQuestions,
+  renderSetCTemplate,
+  SET_C_TEMPLATE_COUNT,
+} from './setC.generator';
 
 const TEST_SEED = 42;
 const TEST_PER_SUBSET = 10;
@@ -216,6 +223,47 @@ describe('setC generator — streaming iterators', () => {
     const b = easyQuestions(TEST_SEED);
     for (let i = 0; i < 20; i++) {
       expect(a.next().value).toEqual(b.next().value);
+    }
+  });
+});
+
+describe('renderSetCTemplate — one template, one draw', () => {
+  it('carries every 2008 template, *0 through *33', () => {
+    expect(SET_C_TEMPLATE_COUNT).toBe(34);
+    for (let num = 0; num < SET_C_TEMPLATE_COUNT; num++) {
+      const q = renderSetCTemplate(num, TEST_SEED);
+      expect(q, `template *${num}`).toBeDefined();
+      expect(q!.options).toHaveLength(4);
+      expect(q!.correctId).toEqual([0]);
+    }
+  });
+
+  it('is reproducible for a seed and varies across seeds', () => {
+    expect(renderSetCTemplate(21, 7)).toEqual(renderSetCTemplate(21, 7));
+    const prompts = new Set(
+      [1, 2, 3, 4, 5, 6].map((seed) => renderSetCTemplate(21, seed)!.prompt)
+    );
+    expect(prompts.size).toBeGreaterThan(1);
+  });
+
+  it('returns undefined for a number the set never had', () => {
+    expect(renderSetCTemplate(99)).toBeUndefined();
+  });
+
+  it('reports the bindings behind a draw', () => {
+    for (const seed of [1, 2, 3, 4, 5, 6]) {
+      const draw = drawSetCTemplate(21, seed)!;
+      const { adjectives, letters, form } = draw.bindings;
+      // *21 uses $j and $q, bound to $B and $D.
+      expect(Object.keys(letters).sort()).toEqual(['j', 'q']);
+      expect(letters.j).toBe(adjectives.B![0]!.toUpperCase());
+      expect(letters.q).toBe(adjectives.D![0]!.toUpperCase());
+      if (form === 'english') {
+        expect(draw.question.prompt).toContain(adjectives.B!);
+      } else {
+        expect(draw.question.prompt).toContain(letters.j!);
+      }
+      expect(draw.question).toEqual(renderSetCTemplate(21, seed));
     }
   });
 });

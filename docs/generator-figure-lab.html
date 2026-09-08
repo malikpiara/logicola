@@ -1,0 +1,414 @@
+<!doctype html>
+<meta charset="utf-8" />
+<!-- Load-bearing over the docs-lab server (.claude/launch.json): python
+     http.server sends no charset; without this the em dashes and the
+     ⊃ / ≡ glyphs below render as mojibake. -->
+<title>The generator figure — LogiCola Lab</title>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+/>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+></script>
+<style>
+  :root {
+    --bg: #f7f2f4;
+    --ink: #231a20;
+    --muted: #6e5f68;
+    --card: #ffffff;
+    --line: color-mix(in srgb, #231a20 14%, transparent);
+    --plum: #3f0167;
+    --mint: #cff6dd;
+    --cyan: #cdffff;
+    --mono:
+      ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Monaco, 'Courier New',
+      monospace;
+    --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.5 var(--sans);
+  }
+  header {
+    padding: 28px 32px 8px;
+    max-width: 90ch;
+  }
+  h1 {
+    margin: 0 0 6px;
+    font-size: 22px;
+  }
+  .sub {
+    color: var(--muted);
+    margin: 0;
+  }
+  .controls {
+    display: flex;
+    gap: 8px;
+    padding: 14px 32px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .controls b {
+    font: 700 11px var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 6px;
+  }
+  .chip {
+    font: 700 11.5px var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 7px 11px;
+    border: 0;
+    border-radius: 7px;
+    color: var(--plum);
+    background: color-mix(in srgb, var(--plum) 8%, transparent);
+    cursor: pointer;
+  }
+  .chip[aria-pressed='true'] {
+    background: var(--plum);
+    color: var(--mint);
+  }
+  .stage {
+    padding: 8px 32px 40px;
+  }
+  .column {
+    /* the blog's prose column, roughly */
+    width: 760px;
+    max-width: 100%;
+    background: #fff;
+    padding: 24px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    transition: width 200ms;
+  }
+  .column.phone {
+    width: 375px;
+    padding: 16px;
+  }
+  .column p {
+    margin: 0 0 14px;
+    font-size: 17px;
+    line-height: 1.55;
+    max-width: 65ch;
+  }
+  .column p.small {
+    font-size: 15px;
+  }
+  .column p code {
+    font: 0.9em var(--mono);
+  }
+
+  /* ---- The figure: one frame, two materials ---- */
+  .gf {
+    margin: 22px 0;
+    border: 2px solid var(--plum);
+    border-radius: 10px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto repeat(4, auto) auto auto;
+    background: #fff;
+  }
+  .gf > * {
+    padding: 8px 14px;
+    min-height: 0;
+  }
+  /* the record column: 2008 cyan, the colour section's block */
+  .gf .rec {
+    background: var(--cyan);
+    font: 14px/1.45 var(--mono);
+    border-right: 1px solid color-mix(in srgb, #000 22%, transparent);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .gf .drw {
+    background: #fff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 17px;
+  }
+  /* row 1: eyebrows */
+  .gf .eyebrow {
+    font: 700 11px var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding-top: 12px;
+    padding-bottom: 2px;
+  }
+  .gf .rec.eyebrow {
+    color: color-mix(in srgb, #000 62%, transparent);
+  }
+  .gf .drw.eyebrow {
+    color: #6b21a8;
+  }
+  /* rows 2–3: the two prompts; the used one is marked */
+  .gf .rec.prompt {
+    color: color-mix(in srgb, #000 45%, transparent);
+    border-left: 3px solid transparent;
+    padding-left: 11px;
+  }
+  .gf .rec.prompt.is-used {
+    color: #000;
+    border-left-color: var(--plum);
+  }
+  .gf .drw.prompt {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+  }
+  .gf .drw.prompt.filler {
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 13px;
+    font-family: var(--mono);
+  }
+  /* option rows */
+  .gf .letter {
+    display: inline-grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    font: 700 12px var(--mono);
+    color: var(--plum);
+    background: color-mix(in srgb, var(--plum) 10%, transparent);
+    margin-right: 10px;
+    vertical-align: middle;
+    flex: none;
+  }
+  .gf .rec .letter {
+    background: color-mix(in srgb, #000 8%, transparent);
+    color: #000;
+  }
+  .gf .is-answer {
+    background: var(--mint);
+  }
+  .gf .rec.is-answer {
+    background: color-mix(in srgb, var(--mint) 55%, var(--cyan));
+  }
+  .gf .is-answer .letter {
+    background: var(--plum);
+    color: var(--mint);
+  }
+  .gf .ans {
+    margin-left: auto;
+    font: 700 10.5px var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--plum);
+  }
+  .gf .expand {
+    color: color-mix(in srgb, #000 45%, transparent);
+  }
+  .tok {
+    background: color-mix(in srgb, var(--plum) 14%, transparent);
+    border-radius: 3px;
+    padding: 0 2px;
+  }
+  /* row: unused fields */
+  .gf .rec.rest {
+    color: color-mix(in srgb, #000 42%, transparent);
+    font-size: 12.5px;
+    padding-bottom: 12px;
+  }
+  /* row: legend + roll */
+  .gf .drw.legend {
+    font: 13px var(--mono);
+    color: var(--muted);
+    flex-wrap: wrap;
+    gap: 6px 14px;
+  }
+  .gf .drw.foot {
+    padding-top: 6px;
+    padding-bottom: 14px;
+  }
+  .roll {
+    font: 700 11.5px var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 9px 14px;
+    border: 0;
+    border-radius: 7px;
+    color: var(--mint);
+    background: var(--plum);
+    cursor: pointer;
+  }
+  .roll:active {
+    transform: scale(0.97);
+  }
+  /* phone: stack the panes, keep the row order */
+  .column.phone .gf {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    grid-auto-flow: row;
+  }
+  .column.phone .gf .rec {
+    border-right: 0;
+  }
+  .column.phone .gf .rec.rest {
+    border-bottom: 1px solid color-mix(in srgb, #000 22%, transparent);
+  }
+  .column.phone .gf > .rec {
+    order: 0;
+  }
+  .column.phone .gf > .drw {
+    order: 1;
+  }
+  .column.phone .gf .drw.eyebrow {
+    padding-top: 14px;
+  }
+  .column.phone .gf .rec:empty {
+    display: none;
+  }
+  .column.phone .gf .rec.rest {
+    white-space: normal;
+  }
+
+  .notes {
+    padding: 8px 32px 60px;
+    max-width: 90ch;
+    color: var(--muted);
+  }
+  .notes h2 {
+    font-size: 15px;
+    margin: 22px 0 6px;
+    color: var(--ink);
+  }
+</style>
+
+<header>
+  <h1>The generator figure — one frame, two materials</h1>
+  <p class="sub">
+    Malik, 2026-09-07: the 2008 record and the live draw were two figures
+    with nothing between them. Here they share one frame and one set of
+    rows, so the eye moves from template to instance along each row. The
+    six draws are real output of <code>renderSetCTemplate(21, seed)</code>
+    for seeds 1–6; Roll cycles them.
+  </p>
+</header>
+
+<div class="controls">
+  <b>Column</b>
+  <button class="chip" data-w="desktop" aria-pressed="true">Desktop</button>
+  <button class="chip" data-w="phone" aria-pressed="false">Phone</button>
+  <b style="margin-left: 18px">Record</b>
+  <button class="chip" data-rest="show" aria-pressed="true">Unused fields greyed</button>
+  <button class="chip" data-rest="hide" aria-pressed="false">Unused fields hidden</button>
+</div>
+
+<div class="stage">
+  <div class="column" id="col">
+    <p>
+      The translation drills run on templates. Most are Gensler's, decoded
+      from the 2008 program. Here is the twenty-first of Set C's
+      thirty-four, as the program stored it, beside what the drill makes of
+      it.
+    </p>
+
+    <figure class="gf" id="gf" aria-label="Template 21: the 2008 record and one draw">
+      <div class="rec eyebrow">*21 · Set C · 2008</div>
+      <div class="drw eyebrow" id="drwEyebrow">Draw 1 · press Roll</div>
+
+      <div class="rec prompt" id="recNL">Only if you’re <span class="tok">$B</span> are you <span class="tok">$D</span>.</div>
+      <div class="drw prompt" id="drwPrompt"></div>
+
+      <div class="rec prompt" id="recAbs">Only if <span class="tok">$j</span>, <span class="tok">$q</span></div>
+      <div class="drw prompt filler" id="drwForm"></div>
+
+      <div class="rec is-answer"><span class="letter">a</span>(<span class="tok">$q</span> ⊃ <span class="tok">$j</span>)</div>
+      <div class="drw is-answer"><span class="letter">a</span><span class="kx" data-i="0"></span><span class="ans">✓ answer</span></div>
+
+      <div class="rec"><span class="letter">b</span>(<span class="tok">$j</span> ≡ <span class="tok">$q</span>)</div>
+      <div class="drw"><span class="letter">b</span><span class="kx" data-i="1"></span></div>
+
+      <div class="rec"><span class="letter">d</span><span class="tok">$j</span> ⊃ <span class="tok">$q</span> <span class="expand">· bare, no parentheses</span></div>
+      <div class="drw"><span class="letter">d</span><span class="kx" data-i="2"></span></div>
+
+      <div class="rec"><span class="letter">c</span>($d) <span class="expand">· d, wrapped</span></div>
+      <div class="drw"><span class="letter">c</span><span class="kx" data-i="3"></span></div>
+
+      <div class="rec rest" id="recRest">R:Gk. · R(~$j ⊃ ~$q) · j:y — fields the drill doesn't read</div>
+      <div class="drw legend" id="drwLegend"></div>
+
+      <div class="rec"></div>
+      <div class="drw foot"><button class="roll" id="roll">Roll again</button></div>
+    </figure>
+
+    <p class="small">
+      I decoded records like this one and rebuilt each as a generator that
+      draws new names every time; the rule, the options and the hints stay
+      his.
+    </p>
+  </div>
+</div>
+
+<div class="notes">
+  <h2>What to judge</h2>
+  <p>
+    Whether the row alignment reads as a mapping without being told. Whether
+    cyan-beside-white says "then, now" or just looks like two boxes. Whether
+    the 2008 letters on the draw side (a b d c, the program's own order)
+    connect better than 1–4 would. Whether the legend line replaces the
+    "$B and $D are adjectives" paragraph.
+  </p>
+  <h2>What's real</h2>
+  <p>
+    Draws, prompts, option order and the answer mark come from the shipped
+    generator. The letter order a·b·d·c is the program's for *21, per the
+    generator's provenance note; it is not stored per template, so the
+    shipped figure would carry it for the one or two templates it shows.
+  </p>
+</div>
+
+<script>
+  const DRAWS = [
+    { seed: 1, prompt: 'Only if B, S.', options: ['(S \\supset B)', '(B \\equiv S)', 'B \\supset S', '(B \\supset S)'], adjs: null, letters: ['B', 'S'] },
+    { seed: 2, prompt: "Only if you're sensitive are you notorious.", options: ['(N \\supset S)', '(S \\equiv N)', 'S \\supset N', '(S \\supset N)'], adjs: ['sensitive', 'notorious'], letters: ['S', 'N'] },
+    { seed: 3, prompt: "Only if you're outgoing are you clean.", options: ['(C \\supset O)', '(O \\equiv C)', 'O \\supset C', '(O \\supset C)'], adjs: ['outgoing', 'clean'], letters: ['O', 'C'] },
+    { seed: 4, prompt: "Only if you're practical are you famous.", options: ['(F \\supset P)', '(P \\equiv F)', 'P \\supset F', '(P \\supset F)'], adjs: ['practical', 'famous'], letters: ['P', 'F'] },
+    { seed: 5, prompt: "Only if you're brave are you relatable.", options: ['(R \\supset B)', '(B \\equiv R)', 'B \\supset R', '(B \\supset R)'], adjs: ['brave', 'relatable'], letters: ['B', 'R'] },
+    { seed: 6, prompt: 'Only if D, S.', options: ['(S \\supset D)', '(D \\equiv S)', 'D \\supset S', '(D \\supset S)'], adjs: null, letters: ['D', 'S'] },
+  ];
+  let i = 0, n = 1;
+  function render() {
+    const d = DRAWS[i];
+    document.getElementById('drwEyebrow').textContent = `Draw ${n} · seed ${d.seed}`;
+    document.getElementById('drwPrompt').textContent = d.prompt;
+    const nl = d.adjs !== null;
+    document.getElementById('recNL').classList.toggle('is-used', nl);
+    document.getElementById('recAbs').classList.toggle('is-used', !nl);
+    document.getElementById('drwForm').textContent = nl ? 'the English prompt this time' : 'the abstract prompt this time';
+    document.querySelectorAll('.kx').forEach((el) => {
+      const tex = d.options[Number(el.dataset.i)];
+      if (window.katex) katex.render(tex, el, { throwOnError: false });
+      else el.textContent = tex.replace(/\\supset/g, '⊃').replace(/\\equiv/g, '≡');
+    });
+    const [j, q] = d.letters;
+    const legend = nl
+      ? `<span>$B <b>${d.adjs[0]}</b></span><span>$D <b>${d.adjs[1]}</b></span><span>so $j <b>${j}</b>, $q <b>${q}</b></span>`
+      : `<span>$j <b>${j}</b></span><span>$q <b>${q}</b></span><span>abstract form, no adjectives drawn</span>`;
+    document.getElementById('drwLegend').innerHTML = legend;
+  }
+  document.getElementById('roll').addEventListener('click', () => { i = (i + 1) % DRAWS.length; n++; render(); });
+  document.querySelectorAll('[data-w]').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('[data-w]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    document.getElementById('col').classList.toggle('phone', b.dataset.w === 'phone');
+  }));
+  document.querySelectorAll('[data-rest]').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('[data-rest]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    document.getElementById('recRest').style.display = b.dataset.rest === 'hide' ? 'none' : '';
+  }));
+  if (location.search.includes('phone')) document.getElementById('col').classList.add('phone');
+  if (location.search.includes('roll')) { i = 1; n = 2; }
+  window.addEventListener('DOMContentLoaded', render);
+  window.addEventListener('load', render);
+</script>
