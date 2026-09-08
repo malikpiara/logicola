@@ -23,11 +23,7 @@
  * the island collects the signals and re-runs it when they change.
  */
 export type InstallTarget =
-  | 'installed'
-  | 'prompt'
-  | 'ios'
-  | 'safari_mac'
-  | 'menu';
+  'installed' | 'prompt' | 'ios' | 'safari_mac' | 'menu';
 
 export interface InstallSignals {
   /** `navigator.userAgent`. */

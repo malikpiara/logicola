@@ -101,7 +101,11 @@ export function DamageBar() {
     () => matchMedia(RM).matches,
     () => false
   );
-  const [chunk, setChunk] = useState<{ left: number; width: number; burning: boolean } | null>(null);
+  const [chunk, setChunk] = useState<{
+    left: number;
+    width: number;
+    burning: boolean;
+  } | null>(null);
 
   const fillRef = useRef<HTMLSpanElement>(null);
   const ghostRef = useRef<HTMLSpanElement>(null);
@@ -187,7 +191,8 @@ export function DamageBar() {
     setBusy(false);
   }, [busy, pct, reduced, d.id]);
 
-  const hit = () => !busy && setPct((p) => Math.min(1, +(p + HIT_GAIN).toFixed(4)));
+  const hit = () =>
+    !busy && setPct((p) => Math.min(1, +(p + HIT_GAIN).toFixed(4)));
   const reset = () => !busy && setPct(START);
 
   return (
@@ -232,13 +237,23 @@ export function DamageBar() {
       </div>
 
       <div className='db-actions'>
-        <button type='button' className='db-btn is-miss' onClick={miss} disabled={busy}>
+        <button
+          type='button'
+          className='db-btn is-miss'
+          onClick={miss}
+          disabled={busy}
+        >
           Miss −12
         </button>
         <button type='button' className='db-btn' onClick={hit} disabled={busy}>
           Correct +8
         </button>
-        <button type='button' className='db-btn' onClick={reset} disabled={busy}>
+        <button
+          type='button'
+          className='db-btn'
+          onClick={reset}
+          disabled={busy}
+        >
           Reset
         </button>
       </div>

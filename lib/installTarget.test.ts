@@ -28,17 +28,22 @@ describe('installTarget', () => {
       installTarget({ ...base, ua: UA.iphoneSafari, standalone: true })
     ).toBe('installed');
     expect(
-      installTarget({ ...base, ua: UA.macChrome, standalone: true, hasPrompt: true })
+      installTarget({
+        ...base,
+        ua: UA.macChrome,
+        standalone: true,
+        hasPrompt: true,
+      })
     ).toBe('installed');
   });
 
   it('uses the captured prompt wherever Chromium offered one', () => {
-    expect(installTarget({ ...base, ua: UA.androidChrome, hasPrompt: true })).toBe(
-      'prompt'
-    );
-    expect(installTarget({ ...base, ua: UA.windowsEdge, hasPrompt: true })).toBe(
-      'prompt'
-    );
+    expect(
+      installTarget({ ...base, ua: UA.androidChrome, hasPrompt: true })
+    ).toBe('prompt');
+    expect(
+      installTarget({ ...base, ua: UA.windowsEdge, hasPrompt: true })
+    ).toBe('prompt');
     expect(installTarget({ ...base, ua: UA.macChrome, hasPrompt: true })).toBe(
       'prompt'
     );
@@ -50,12 +55,12 @@ describe('installTarget', () => {
   });
 
   it('tells an iPad from a Mac by its touch points', () => {
-    expect(installTarget({ ...base, ua: UA.ipadAsMac, maxTouchPoints: 5 })).toBe(
-      'ios'
-    );
-    expect(installTarget({ ...base, ua: UA.macSafari, maxTouchPoints: 0 })).toBe(
-      'safari_mac'
-    );
+    expect(
+      installTarget({ ...base, ua: UA.ipadAsMac, maxTouchPoints: 5 })
+    ).toBe('ios');
+    expect(
+      installTarget({ ...base, ua: UA.macSafari, maxTouchPoints: 0 })
+    ).toBe('safari_mac');
   });
 
   it('sends Chromium without a prompt yet, and Firefox, to the menu', () => {

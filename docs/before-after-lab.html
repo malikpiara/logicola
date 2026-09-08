@@ -259,17 +259,17 @@
     <div class="app">
       <h1>Before/after — where does the control go?</h1>
       <p class="sub">
-        Same stage, same native range input, three placements. Drag each
-        one, then tab to it and use the arrow keys.
+        Same stage, same native range input, three placements. Drag each one,
+        then tab to it and use the arrow keys.
       </p>
 
       <section class="v-a">
         <h2><b>A</b> Bar below — what ships today</h2>
         <p class="note">
-          The control is detached from the thing it moves, and nothing on
-          the image says it can be dragged. Its one virtue is that
-          <em>the control is visible</em>: you can see at a glance that
-          this is a slider and roughly where it sits.
+          The control is detached from the thing it moves, and nothing on the
+          image says it can be dragged. Its one virtue is that
+          <em>the control is visible</em>: you can see at a glance that this is
+          a slider and roughly where it sits.
         </p>
         <div class="ba-wrap" data-variant="a"></div>
       </section>
@@ -279,9 +279,8 @@
         <p class="note">
           The input now lies over the stage, invisible, with a drawn handle
           riding the divider. Direct manipulation, and
-          <em>the keyboard behaviour is untouched</em> — it is still the
-          same native range. Grab anywhere on the image, not just the
-          handle.
+          <em>the keyboard behaviour is untouched</em> — it is still the same
+          native range. Grab anywhere on the image, not just the handle.
         </p>
         <div class="ba-wrap" data-variant="b"></div>
       </section>
@@ -289,11 +288,11 @@
       <section class="v-c">
         <h2><b>C</b> Handle, plus tags that jump to the extremes</h2>
         <p class="note">
-          B, but <em>then</em> and <em>now</em> are buttons that snap the
-          wipe to 0% and 100%. This is the one that fixes edge content: the
-          avatar lives at the far left of a profile header, so at the
-          default 50% a reader never sees the new one unless they drag all
-          the way over. One tap, and it is a plain A/B.
+          B, but <em>then</em> and <em>now</em> are buttons that snap the wipe
+          to 0% and 100%. This is the one that fixes edge content: the avatar
+          lives at the far left of a profile header, so at the default 50% a
+          reader never sees the new one unless they drag all the way over. One
+          tap, and it is a plain A/B.
         </p>
         <div class="ba-wrap" data-variant="c"></div>
       </section>
@@ -334,7 +333,9 @@
             `<div class="ba-line"></div>` +
             tag('left', 'then') +
             tag('right', 'now') +
-            (overlay ? range + '<div class="ba-handle">' + CHEV + '</div>' : '') +
+            (overlay
+              ? range + '<div class="ba-handle">' + CHEV + '</div>'
+              : '') +
             '</div>' +
             (overlay ? '' : range);
 

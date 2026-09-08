@@ -1,77 +1,461 @@
 <!doctype html>
 <meta charset="utf-8" />
 <title>The generator island, branded — LogiCola Lab</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+/>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+></script>
 <style>
-  :root { --bg:#f7f2f4; --ink:#231a20; --muted:#6e5f68; --mono: ui-monospace,'SF Mono',SFMono-Regular,Menlo,monospace; --sans: system-ui,-apple-system,'Segoe UI',sans-serif;
-    /* Set C, verbatim from quizColors.ts */ --c-surface:#E7F099; --c-ink:#02302C; --c-accent:#BD00AD;
-    /* the island palette */ --plum:#3f0167; --mint:#cff6dd; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 var(--sans); }
-  header { padding:28px 32px 8px; max-width:90ch; } h1 { margin:0 0 6px; font-size:22px; } .sub { color:var(--muted); margin:0; }
-  .stage { display:flex; gap:28px; padding:16px 32px 48px; flex-wrap:wrap; align-items:flex-start; }
-  .col { width:760px; max-width:100%; background:#fff; padding:24px; box-sizing:border-box; border-radius:12px; border:1px solid color-mix(in srgb,#231a20 14%,transparent); }
-  .col h2 { font:700 11px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:0 0 14px; }
-  .col p.prose { font-size:17px; line-height:1.55; margin:0 0 14px; }
+  :root {
+    --bg: #f7f2f4;
+    --ink: #231a20;
+    --muted: #6e5f68;
+    --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace;
+    --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    /* Set C, verbatim from quizColors.ts */
+    --c-surface: #e7f099;
+    --c-ink: #02302c;
+    --c-accent: #bd00ad;
+    /* the island palette */
+    --plum: #3f0167;
+    --mint: #cff6dd;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.5 var(--sans);
+  }
+  header {
+    padding: 28px 32px 8px;
+    max-width: 90ch;
+  }
+  h1 {
+    margin: 0 0 6px;
+    font-size: 22px;
+  }
+  .sub {
+    color: var(--muted);
+    margin: 0;
+  }
+  .stage {
+    display: flex;
+    gap: 28px;
+    padding: 16px 32px 48px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .col {
+    width: 760px;
+    max-width: 100%;
+    background: #fff;
+    padding: 24px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    border: 1px solid color-mix(in srgb, #231a20 14%, transparent);
+  }
+  .col h2 {
+    font: 700 11px var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 14px;
+  }
+  .col p.prose {
+    font-size: 17px;
+    line-height: 1.55;
+    margin: 0 0 14px;
+  }
 
   /* ---- shared island skeleton ---- */
-  .tr { margin:22px 0; padding:18px 20px 20px; border-radius:10px; }
-  .tr-eyebrow { margin:0 0 12px; font:700 11px var(--mono); letter-spacing:.08em; text-transform:uppercase; }
-  .tr-prompt { margin:0 0 14px; font-size:19px; line-height:1.35; font-weight:600; }
-  .tr-options { list-style:none; margin:0 0 14px; padding:0; display:flex; flex-direction:column; gap:8px; }
-  .tr-option { display:flex; align-items:center; gap:14px; min-height:48px; padding:0 14px 0 8px; font-size:17px; }
-  .tr-badge { flex:none; width:32px; height:32px; display:grid; place-items:center; font:700 13px var(--mono); }
-  .tr-wff { flex:1; }
-  .tr-answer { display:inline-flex; align-items:center; gap:6px; font:700 10.5px var(--mono); letter-spacing:.08em; text-transform:uppercase; }
-  .tr-legend { margin:0 0 14px; font:12.5px/1.5 var(--mono); }
-  .tr-roll { font:700 13.5px var(--mono); letter-spacing:.02em; border:0; cursor:pointer; padding:0 32px; height:44px; line-height:44px; }
-  .tick { width:12px; height:12px; }
+  .tr {
+    margin: 22px 0;
+    padding: 18px 20px 20px;
+    border-radius: 10px;
+  }
+  .tr-eyebrow {
+    margin: 0 0 12px;
+    font: 700 11px var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .tr-prompt {
+    margin: 0 0 14px;
+    font-size: 19px;
+    line-height: 1.35;
+    font-weight: 600;
+  }
+  .tr-options {
+    list-style: none;
+    margin: 0 0 14px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .tr-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 48px;
+    padding: 0 14px 0 8px;
+    font-size: 17px;
+  }
+  .tr-badge {
+    flex: none;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    font: 700 13px var(--mono);
+  }
+  .tr-wff {
+    flex: 1;
+  }
+  .tr-answer {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font: 700 10.5px var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .tr-legend {
+    margin: 0 0 14px;
+    font: 12.5px/1.5 var(--mono);
+  }
+  .tr-roll {
+    font: 700 13.5px var(--mono);
+    letter-spacing: 0.02em;
+    border: 0;
+    cursor: pointer;
+    padding: 0 32px;
+    height: 44px;
+    line-height: 44px;
+  }
+  .tick {
+    width: 12px;
+    height: 12px;
+  }
 
   /* ---- A: Set C, the drill's own grammar ---- */
-  .A .tr { background:var(--c-surface); color:var(--c-ink); border:0; }
-  .A .tr-eyebrow { color:color-mix(in srgb,var(--c-ink) 72%,transparent); }
-  .A .tr-option { clip-path:polygon(0px 24px, 0px 16px, 4px 16px, 4px 8px, 8px 8px, 8px 4px, 16px 4px, 16px 0px, calc(100% - 16px) 0px, calc(100% - 16px) 4px, calc(100% - 8px) 4px, calc(100% - 8px) 8px, calc(100% - 4px) 8px, calc(100% - 4px) 16px, calc(100% - 0px) 16px, calc(100% - 0px) 24px, calc(100% - 0px) calc(100% - 24px), calc(100% - 0px) calc(100% - 16px), calc(100% - 4px) calc(100% - 16px), calc(100% - 4px) calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) calc(100% - 4px), calc(100% - 16px) calc(100% - 4px), calc(100% - 16px) calc(100% - 0px), 16px calc(100% - 0px), 16px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 16px), 0px calc(100% - 16px), 0px calc(100% - 24px)); background:color-mix(in srgb,var(--c-ink) 9%,transparent); }
-  .A .tr-option.is-answer { background:var(--c-ink); color:var(--c-surface); }
-  .A .tr-badge { clip-path:polygon(37.5% 0%, 62.5% 0%, 62.5% 12.5%, 75% 12.5%, 75% 25%, 87.5% 25%, 87.5% 37.5%, 100% 37.5%, 100% 62.5%, 87.5% 62.5%, 87.5% 75%, 75% 75%, 75% 87.5%, 62.5% 87.5%, 62.5% 100%, 37.5% 100%, 37.5% 87.5%, 25% 87.5%, 25% 75%, 12.5% 75%, 12.5% 62.5%, 0% 62.5%, 0% 37.5%, 12.5% 37.5%, 12.5% 25%, 25% 25%, 25% 12.5%, 37.5% 12.5%); background:var(--c-ink); color:var(--c-surface); }
-  .A .tr-option.is-answer .tr-badge { background:var(--c-surface); color:var(--c-ink); }
-  .A .tr-answer { color:var(--c-surface); }
-  .A .tr-legend { color:color-mix(in srgb,var(--c-ink) 72%,transparent); } .A .tr-legend b { color:var(--c-ink); }
-  .A .tr-roll { clip-path:polygon(0px 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0px, calc(100% - 8px) 0px, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, calc(100% - 0px) 8px, calc(100% - 0px) calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) calc(100% - 0px), 8px calc(100% - 0px), 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0px calc(100% - 8px)); background:var(--c-ink); color:var(--c-surface); }
+  .A .tr {
+    background: var(--c-surface);
+    color: var(--c-ink);
+    border: 0;
+  }
+  .A .tr-eyebrow {
+    color: color-mix(in srgb, var(--c-ink) 72%, transparent);
+  }
+  .A .tr-option {
+    clip-path: polygon(
+      0px 24px,
+      0px 16px,
+      4px 16px,
+      4px 8px,
+      8px 8px,
+      8px 4px,
+      16px 4px,
+      16px 0px,
+      calc(100% - 16px) 0px,
+      calc(100% - 16px) 4px,
+      calc(100% - 8px) 4px,
+      calc(100% - 8px) 8px,
+      calc(100% - 4px) 8px,
+      calc(100% - 4px) 16px,
+      calc(100% - 0px) 16px,
+      calc(100% - 0px) 24px,
+      calc(100% - 0px) calc(100% - 24px),
+      calc(100% - 0px) calc(100% - 16px),
+      calc(100% - 4px) calc(100% - 16px),
+      calc(100% - 4px) calc(100% - 8px),
+      calc(100% - 8px) calc(100% - 8px),
+      calc(100% - 8px) calc(100% - 4px),
+      calc(100% - 16px) calc(100% - 4px),
+      calc(100% - 16px) calc(100% - 0px),
+      16px calc(100% - 0px),
+      16px calc(100% - 4px),
+      8px calc(100% - 4px),
+      8px calc(100% - 8px),
+      4px calc(100% - 8px),
+      4px calc(100% - 16px),
+      0px calc(100% - 16px),
+      0px calc(100% - 24px)
+    );
+    background: color-mix(in srgb, var(--c-ink) 9%, transparent);
+  }
+  .A .tr-option.is-answer {
+    background: var(--c-ink);
+    color: var(--c-surface);
+  }
+  .A .tr-badge {
+    clip-path: polygon(
+      37.5% 0%,
+      62.5% 0%,
+      62.5% 12.5%,
+      75% 12.5%,
+      75% 25%,
+      87.5% 25%,
+      87.5% 37.5%,
+      100% 37.5%,
+      100% 62.5%,
+      87.5% 62.5%,
+      87.5% 75%,
+      75% 75%,
+      75% 87.5%,
+      62.5% 87.5%,
+      62.5% 100%,
+      37.5% 100%,
+      37.5% 87.5%,
+      25% 87.5%,
+      25% 75%,
+      12.5% 75%,
+      12.5% 62.5%,
+      0% 62.5%,
+      0% 37.5%,
+      12.5% 37.5%,
+      12.5% 25%,
+      25% 25%,
+      25% 12.5%,
+      37.5% 12.5%
+    );
+    background: var(--c-ink);
+    color: var(--c-surface);
+  }
+  .A .tr-option.is-answer .tr-badge {
+    background: var(--c-surface);
+    color: var(--c-ink);
+  }
+  .A .tr-answer {
+    color: var(--c-surface);
+  }
+  .A .tr-legend {
+    color: color-mix(in srgb, var(--c-ink) 72%, transparent);
+  }
+  .A .tr-legend b {
+    color: var(--c-ink);
+  }
+  .A .tr-roll {
+    clip-path: polygon(
+      0px 8px,
+      4px 8px,
+      4px 4px,
+      8px 4px,
+      8px 0px,
+      calc(100% - 8px) 0px,
+      calc(100% - 8px) 4px,
+      calc(100% - 4px) 4px,
+      calc(100% - 4px) 8px,
+      calc(100% - 0px) 8px,
+      calc(100% - 0px) calc(100% - 8px),
+      calc(100% - 4px) calc(100% - 8px),
+      calc(100% - 4px) calc(100% - 4px),
+      calc(100% - 8px) calc(100% - 4px),
+      calc(100% - 8px) calc(100% - 0px),
+      8px calc(100% - 0px),
+      8px calc(100% - 4px),
+      4px calc(100% - 4px),
+      4px calc(100% - 8px),
+      0px calc(100% - 8px)
+    );
+    background: var(--c-ink);
+    color: var(--c-surface);
+  }
 
   /* ---- B: the island palette, gem button + diamond badges only ---- */
-  .B .tr { background:#fff; border:2px solid var(--plum); color:#14110f; }
-  .B .tr-eyebrow { color:#6b21a8; }
-  .B .tr-option { border-radius:8px; background:color-mix(in srgb,var(--plum) 5%,transparent); }
-  .B .tr-option.is-answer { background:var(--mint); }
-  .B .tr-badge { clip-path:polygon(37.5% 0%, 62.5% 0%, 62.5% 12.5%, 75% 12.5%, 75% 25%, 87.5% 25%, 87.5% 37.5%, 100% 37.5%, 100% 62.5%, 87.5% 62.5%, 87.5% 75%, 75% 75%, 75% 87.5%, 62.5% 87.5%, 62.5% 100%, 37.5% 100%, 37.5% 87.5%, 25% 87.5%, 25% 75%, 12.5% 75%, 12.5% 62.5%, 0% 62.5%, 0% 37.5%, 12.5% 37.5%, 12.5% 25%, 25% 25%, 25% 12.5%, 37.5% 12.5%); background:color-mix(in srgb,var(--plum) 12%,transparent); color:var(--plum); }
-  .B .tr-option.is-answer .tr-badge { background:var(--plum); color:var(--mint); }
-  .B .tr-answer { color:var(--plum); }
-  .B .tr-legend { color:#6e5f68; } .B .tr-legend b { color:#14110f; }
-  .B .tr-roll { clip-path:polygon(0px 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0px, calc(100% - 8px) 0px, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, calc(100% - 0px) 8px, calc(100% - 0px) calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) calc(100% - 0px), 8px calc(100% - 0px), 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0px calc(100% - 8px)); background:var(--plum); color:var(--mint); }
+  .B .tr {
+    background: #fff;
+    border: 2px solid var(--plum);
+    color: #14110f;
+  }
+  .B .tr-eyebrow {
+    color: #6b21a8;
+  }
+  .B .tr-option {
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--plum) 5%, transparent);
+  }
+  .B .tr-option.is-answer {
+    background: var(--mint);
+  }
+  .B .tr-badge {
+    clip-path: polygon(
+      37.5% 0%,
+      62.5% 0%,
+      62.5% 12.5%,
+      75% 12.5%,
+      75% 25%,
+      87.5% 25%,
+      87.5% 37.5%,
+      100% 37.5%,
+      100% 62.5%,
+      87.5% 62.5%,
+      87.5% 75%,
+      75% 75%,
+      75% 87.5%,
+      62.5% 87.5%,
+      62.5% 100%,
+      37.5% 100%,
+      37.5% 87.5%,
+      25% 87.5%,
+      25% 75%,
+      12.5% 75%,
+      12.5% 62.5%,
+      0% 62.5%,
+      0% 37.5%,
+      12.5% 37.5%,
+      12.5% 25%,
+      25% 25%,
+      25% 12.5%,
+      37.5% 12.5%
+    );
+    background: color-mix(in srgb, var(--plum) 12%, transparent);
+    color: var(--plum);
+  }
+  .B .tr-option.is-answer .tr-badge {
+    background: var(--plum);
+    color: var(--mint);
+  }
+  .B .tr-answer {
+    color: var(--plum);
+  }
+  .B .tr-legend {
+    color: #6e5f68;
+  }
+  .B .tr-legend b {
+    color: #14110f;
+  }
+  .B .tr-roll {
+    clip-path: polygon(
+      0px 8px,
+      4px 8px,
+      4px 4px,
+      8px 4px,
+      8px 0px,
+      calc(100% - 8px) 0px,
+      calc(100% - 8px) 4px,
+      calc(100% - 4px) 4px,
+      calc(100% - 4px) 8px,
+      calc(100% - 0px) 8px,
+      calc(100% - 0px) calc(100% - 8px),
+      calc(100% - 4px) calc(100% - 8px),
+      calc(100% - 4px) calc(100% - 4px),
+      calc(100% - 8px) calc(100% - 4px),
+      calc(100% - 8px) calc(100% - 0px),
+      8px calc(100% - 0px),
+      8px calc(100% - 4px),
+      4px calc(100% - 4px),
+      4px calc(100% - 8px),
+      0px calc(100% - 8px)
+    );
+    background: var(--plum);
+    color: var(--mint);
+  }
 </style>
 <header>
   <h1>The generator island, branded</h1>
-  <p class="sub">Malik, 2026-09-07: "more branded, use the gem shapes". A: the figure wears Set C's own colours and the drill's grammar — sprite pills at the idle 9% wash, the answer in the reveal state (solid ink), diamond badges, a gem button. B: the island palette kept, only the badges and the button change. Same real draws as the shipped island.</p>
+  <p class="sub">
+    Malik, 2026-09-07: "more branded, use the gem shapes". A: the figure wears
+    Set C's own colours and the drill's grammar — sprite pills at the idle 9%
+    wash, the answer in the reveal state (solid ink), diamond badges, a gem
+    button. B: the island palette kept, only the badges and the button change.
+    Same real draws as the shipped island.
+  </p>
 </header>
 <div class="stage">
-  <div class="col A"><h2>A · Set C's colours, the drill's grammar</h2><div id="a"></div></div>
-  <div class="col B"><h2>B · island palette, gem button and diamond badges</h2><div id="b"></div></div>
+  <div class="col A">
+    <h2>A · Set C's colours, the drill's grammar</h2>
+    <div id="a"></div>
+  </div>
+  <div class="col B">
+    <h2>B · island palette, gem button and diamond badges</h2>
+    <div id="b"></div>
+  </div>
 </div>
 <script>
-  const DRAWS = [{"seed": 1, "prompt": "Only if B, S.", "options": ["(S \\supset B)", "(B \\equiv S)", "B \\supset S", "(B \\supset S)"], "adjs": null, "letters": ["B", "S"]}, {"seed": 2, "prompt": "Only if you're sensitive are you notorious.", "options": ["(N \\supset S)", "(S \\equiv N)", "S \\supset N", "(S \\supset N)"], "adjs": ["sensitive", "notorious"], "letters": ["S", "N"]}, {"seed": 3, "prompt": "Only if you're outgoing are you clean.", "options": ["(C \\supset O)", "(O \\equiv C)", "O \\supset C", "(O \\supset C)"], "adjs": ["outgoing", "clean"], "letters": ["O", "C"]}, {"seed": 4, "prompt": "Only if you're practical are you famous.", "options": ["(F \\supset P)", "(P \\equiv F)", "P \\supset F", "(P \\supset F)"], "adjs": ["practical", "famous"], "letters": ["P", "F"]}];
-  const LETTERS = ['a','b','d','c'];
-  const state = { a:{i:1,n:1}, b:{i:1,n:1} };
+  const DRAWS = [
+    {
+      seed: 1,
+      prompt: 'Only if B, S.',
+      options: [
+        '(S \\supset B)',
+        '(B \\equiv S)',
+        'B \\supset S',
+        '(B \\supset S)',
+      ],
+      adjs: null,
+      letters: ['B', 'S'],
+    },
+    {
+      seed: 2,
+      prompt: "Only if you're sensitive are you notorious.",
+      options: [
+        '(N \\supset S)',
+        '(S \\equiv N)',
+        'S \\supset N',
+        '(S \\supset N)',
+      ],
+      adjs: ['sensitive', 'notorious'],
+      letters: ['S', 'N'],
+    },
+    {
+      seed: 3,
+      prompt: "Only if you're outgoing are you clean.",
+      options: [
+        '(C \\supset O)',
+        '(O \\equiv C)',
+        'O \\supset C',
+        '(O \\supset C)',
+      ],
+      adjs: ['outgoing', 'clean'],
+      letters: ['O', 'C'],
+    },
+    {
+      seed: 4,
+      prompt: "Only if you're practical are you famous.",
+      options: [
+        '(F \\supset P)',
+        '(P \\equiv F)',
+        'P \\supset F',
+        '(P \\supset F)',
+      ],
+      adjs: ['practical', 'famous'],
+      letters: ['P', 'F'],
+    },
+  ];
+  const LETTERS = ['a', 'b', 'd', 'c'];
+  const state = { a: { i: 1, n: 1 }, b: { i: 1, n: 1 } };
   function figure(key) {
-    const st = state[key]; const d = DRAWS[st.i];
-    const nl = d.adjs !== null; const [j,q] = d.letters;
-    const legend = nl ? `$B <b>${d.adjs[0]}</b>, $D <b>${d.adjs[1]}</b>, so $j <b>${j}</b> and $q <b>${q}</b>.` : `The abstract prompt this time: $j <b>${j}</b>, $q <b>${q}</b>.`;
-    return `<figure class="tr"><p class="tr-eyebrow">Set C · template 21 of 34 · draw ${st.n}</p><p class="tr-prompt">${d.prompt}</p><ol class="tr-options">${d.options.map((o,i)=>`<li class="tr-option${i===0?' is-answer':''}"><span class="tr-badge">${LETTERS[i]}</span><span class="tr-wff kx" data-tex="${o}"></span>${i===0?'<span class="tr-answer"><svg class="tick" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="22 4 22 6 21 6 21 7 20 7 20 8 19 8 19 9 18 9 18 10 17 10 17 11 16 11 16 12 15 12 15 13 14 13 14 14 13 14 13 15 12 15 12 16 11 16 11 17 10 17 10 18 8 18 8 17 7 17 7 16 6 16 6 15 5 15 5 14 4 14 4 13 3 13 3 12 2 12 2 10 4 10 4 11 5 11 5 12 6 12 6 13 7 13 7 14 8 14 8 15 10 15 10 14 11 14 11 13 12 13 12 12 13 12 13 11 14 11 14 10 15 10 15 9 16 9 16 8 17 8 17 7 18 7 18 6 19 6 19 5 20 5 20 4 22 4"/></svg>answer</span>':''}</li>`).join('')}</ol><p class="tr-legend">${legend}</p><button type="button" class="tr-roll" data-key="${key}">Draw another</button></figure>`;
+    const st = state[key];
+    const d = DRAWS[st.i];
+    const nl = d.adjs !== null;
+    const [j, q] = d.letters;
+    const legend = nl
+      ? `$B <b>${d.adjs[0]}</b>, $D <b>${d.adjs[1]}</b>, so $j <b>${j}</b> and $q <b>${q}</b>.`
+      : `The abstract prompt this time: $j <b>${j}</b>, $q <b>${q}</b>.`;
+    return `<figure class="tr"><p class="tr-eyebrow">Set C · template 21 of 34 · draw ${st.n}</p><p class="tr-prompt">${d.prompt}</p><ol class="tr-options">${d.options.map((o, i) => `<li class="tr-option${i === 0 ? ' is-answer' : ''}"><span class="tr-badge">${LETTERS[i]}</span><span class="tr-wff kx" data-tex="${o}"></span>${i === 0 ? '<span class="tr-answer"><svg class="tick" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="22 4 22 6 21 6 21 7 20 7 20 8 19 8 19 9 18 9 18 10 17 10 17 11 16 11 16 12 15 12 15 13 14 13 14 14 13 14 13 15 12 15 12 16 11 16 11 17 10 17 10 18 8 18 8 17 7 17 7 16 6 16 6 15 5 15 5 14 4 14 4 13 3 13 3 12 2 12 2 10 4 10 4 11 5 11 5 12 6 12 6 13 7 13 7 14 8 14 8 15 10 15 10 14 11 14 11 13 12 13 12 12 13 12 13 11 14 11 14 10 15 10 15 9 16 9 16 8 17 8 17 7 18 7 18 6 19 6 19 5 20 5 20 4 22 4"/></svg>answer</span>' : ''}</li>`).join('')}</ol><p class="tr-legend">${legend}</p><button type="button" class="tr-roll" data-key="${key}">Draw another</button></figure>`;
   }
   function render() {
     document.getElementById('a').innerHTML = figure('a');
     document.getElementById('b').innerHTML = figure('b');
-    document.querySelectorAll('.kx').forEach(el => { const tex = el.dataset.tex; if (window.katex) katex.render(tex, el, {throwOnError:false}); else el.textContent = tex.replace(/\\supset/g,'⊃').replace(/\\equiv/g,'≡'); });
-    document.querySelectorAll('.tr-roll').forEach(b => b.addEventListener('click', () => { const st = state[b.dataset.key]; st.i = (st.i+1) % DRAWS.length; st.n++; render(); }));
+    document.querySelectorAll('.kx').forEach((el) => {
+      const tex = el.dataset.tex;
+      if (window.katex) katex.render(tex, el, { throwOnError: false });
+      else
+        el.textContent = tex.replace(/\\supset/g, '⊃').replace(/\\equiv/g, '≡');
+    });
+    document.querySelectorAll('.tr-roll').forEach((b) =>
+      b.addEventListener('click', () => {
+        const st = state[b.dataset.key];
+        st.i = (st.i + 1) % DRAWS.length;
+        st.n++;
+        render();
+      })
+    );
   }
   window.addEventListener('load', render);
 </script>

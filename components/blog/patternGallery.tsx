@@ -43,10 +43,7 @@ export function PatternGallery() {
   const [crop, setCrop] = useState(0.2);
 
   const set = PRESETS.find((p) => p.key === setKey) ?? PRESETS[3]!;
-  const palette = useMemo(
-    () => ({ ink: set.ink, accent: set.accent }),
-    [set]
-  );
+  const palette = useMemo(() => ({ ink: set.ink, accent: set.accent }), [set]);
   const pattern =
     LAB_PATTERNS.find((p) => p.id === selected) ?? LAB_PATTERNS[0]!;
   const stageBody = useMemo(

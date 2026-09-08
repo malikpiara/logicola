@@ -24,13 +24,55 @@ import { stimulationOf, contrastRatio } from '@/lib/stimulation';
  */
 
 const SETS = [
-  { key: 'A', name: 'Syllogistic', surface: '#FFABC6', fg: '#4A1040', accent: '#674900' },
-  { key: 'C', name: 'Propositional', surface: '#E7F099', fg: '#02302C', accent: '#BD00AD' },
-  { key: 'J', name: 'Modal', surface: '#E6ACF4', fg: '#1C3601', accent: '#674900' },
-  { key: 'L', name: 'Deontic', surface: '#CFF6DD', fg: '#3F0167', accent: '#BD00AD' },
-  { key: 'N', name: 'Belief', surface: '#9EDAFF', fg: '#4A1040', accent: '#8D0381' },
-  { key: 'Q', name: 'Definitions', surface: '#D9CCF9', fg: '#3E1060', accent: '#745400' },
-  { key: 'R', name: 'Fallacies', surface: '#E4BDF7', fg: '#751100', accent: '#824616' },
+  {
+    key: 'A',
+    name: 'Syllogistic',
+    surface: '#FFABC6',
+    fg: '#4A1040',
+    accent: '#674900',
+  },
+  {
+    key: 'C',
+    name: 'Propositional',
+    surface: '#E7F099',
+    fg: '#02302C',
+    accent: '#BD00AD',
+  },
+  {
+    key: 'J',
+    name: 'Modal',
+    surface: '#E6ACF4',
+    fg: '#1C3601',
+    accent: '#674900',
+  },
+  {
+    key: 'L',
+    name: 'Deontic',
+    surface: '#CFF6DD',
+    fg: '#3F0167',
+    accent: '#BD00AD',
+  },
+  {
+    key: 'N',
+    name: 'Belief',
+    surface: '#9EDAFF',
+    fg: '#4A1040',
+    accent: '#8D0381',
+  },
+  {
+    key: 'Q',
+    name: 'Definitions',
+    surface: '#D9CCF9',
+    fg: '#3E1060',
+    accent: '#745400',
+  },
+  {
+    key: 'R',
+    name: 'Fallacies',
+    surface: '#E4BDF7',
+    fg: '#751100',
+    accent: '#824616',
+  },
 ] as const;
 
 export function SetPalettes() {

@@ -141,7 +141,9 @@ function splitEmbeds(html: string): PostSegment[] {
         embed: key!,
         count: attrs.count ? Number(attrs.count) : 3,
         // data-pick="3.29,3.30": pin questions instead of drawing.
-        pick: attrs.pick ? attrs.pick.split(',').map((s) => s.trim()) : undefined,
+        pick: attrs.pick
+          ? attrs.pick.split(',').map((s) => s.trim())
+          : undefined,
         fallbackHtml: inner ?? '',
       });
     } else if (key && ISLANDS[key]) {

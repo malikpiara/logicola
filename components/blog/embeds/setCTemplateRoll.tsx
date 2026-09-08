@@ -72,66 +72,66 @@ export function SetCTemplateRoll({
           are in it. The children are keyed on the draw so they remount
           and play the arrive sweep (motion pass, 2026-09-08). */}
       <div className='tr-live' aria-live='polite' aria-atomic='true'>
-      <p className='tr-prompt' key={`prompt-${draw}`}>
-        {question.prompt}
-      </p>
-      <ol className='tr-options' key={`options-${draw}`}>
-        {question.options.map((option, index) => {
-          const isAnswer = question.correctId.includes(option.id);
-          return (
-            <li
-              key={option.id}
-              className={`tr-option${isAnswer ? ' is-answer' : ''}`}
-              style={{ '--i': index } as React.CSSProperties}
-            >
-              <span
-                className='tr-badge'
-                style={{ clipPath: BADGE_CLIP }}
-                aria-hidden='true'
+        <p className='tr-prompt' key={`prompt-${draw}`}>
+          {question.prompt}
+        </p>
+        <ol className='tr-options' key={`options-${draw}`}>
+          {question.options.map((option, index) => {
+            const isAnswer = question.correctId.includes(option.id);
+            return (
+              <li
+                key={option.id}
+                className={`tr-option${isAnswer ? ' is-answer' : ''}`}
+                style={{ '--i': index } as React.CSSProperties}
               >
-                {badge(index)}
-              </span>
-              <KatexSpan text={option.label} className='tr-wff' />
-              {isAnswer && (
-                <span className='tr-answer'>
-                  <CheckIcon className='tr-check' />
-                  answer
+                <span
+                  className='tr-badge'
+                  style={{ clipPath: BADGE_CLIP }}
+                  aria-hidden='true'
+                >
+                  {badge(index)}
                 </span>
-              )}
-            </li>
-          );
-        })}
-      </ol>
-      {/* A punctuated sentence, not a row of chips: it has to read even
+                <KatexSpan text={option.label} className='tr-wff' />
+                {isAnswer && (
+                  <span className='tr-answer'>
+                    <CheckIcon className='tr-check' />
+                    answer
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+        {/* A punctuated sentence, not a row of chips: it has to read even
           where the stylesheet hasn't arrived (Malik, 2026-09-07). */}
-      <p className='tr-legend' key={`legend-${draw}`}>
-        {bindings.form === 'english' ? (
-          <>
-            {adjectives.map(([key, adjective], i) => (
-              <span key={key}>
-                {i > 0 && ', '}${key} <b>{adjective}</b>
-              </span>
-            ))}
-            {', so '}
-            {varLetters.map(([key, letter], i) => (
-              <span key={key}>
-                {i > 0 && ' and '}${key} <b>{letter}</b>
-              </span>
-            ))}
-            .
-          </>
-        ) : (
-          <>
-            {'The abstract prompt this time: '}
-            {varLetters.map(([key, letter], i) => (
-              <span key={key}>
-                {i > 0 && ', '}${key} <b>{letter}</b>
-              </span>
-            ))}
-            .
-          </>
-        )}
-      </p>
+        <p className='tr-legend' key={`legend-${draw}`}>
+          {bindings.form === 'english' ? (
+            <>
+              {adjectives.map(([key, adjective], i) => (
+                <span key={key}>
+                  {i > 0 && ', '}${key} <b>{adjective}</b>
+                </span>
+              ))}
+              {', so '}
+              {varLetters.map(([key, letter], i) => (
+                <span key={key}>
+                  {i > 0 && ' and '}${key} <b>{letter}</b>
+                </span>
+              ))}
+              .
+            </>
+          ) : (
+            <>
+              {'The abstract prompt this time: '}
+              {varLetters.map(([key, letter], i) => (
+                <span key={key}>
+                  {i > 0 && ', '}${key} <b>{letter}</b>
+                </span>
+              ))}
+              .
+            </>
+          )}
+        </p>
       </div>
       <GemButton
         containerClassName='tr-roll-wrap'

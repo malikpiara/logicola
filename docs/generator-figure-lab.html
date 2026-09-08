@@ -288,10 +288,10 @@
 <header>
   <h1>The generator figure — one frame, two materials</h1>
   <p class="sub">
-    Malik, 2026-09-07: the 2008 record and the live draw were two figures
-    with nothing between them. Here they share one frame and one set of
-    rows, so the eye moves from template to instance along each row. The
-    six draws are real output of <code>renderSetCTemplate(21, seed)</code>
+    Malik, 2026-09-07: the 2008 record and the live draw were two figures with
+    nothing between them. Here they share one frame and one set of rows, so the
+    eye moves from template to instance along each row. The six draws are real
+    output of <code>renderSetCTemplate(21, seed)</code>
     for seeds 1–6; Roll cycles them.
   </p>
 </header>
@@ -301,52 +301,89 @@
   <button class="chip" data-w="desktop" aria-pressed="true">Desktop</button>
   <button class="chip" data-w="phone" aria-pressed="false">Phone</button>
   <b style="margin-left: 18px">Record</b>
-  <button class="chip" data-rest="show" aria-pressed="true">Unused fields greyed</button>
-  <button class="chip" data-rest="hide" aria-pressed="false">Unused fields hidden</button>
+  <button class="chip" data-rest="show" aria-pressed="true">
+    Unused fields greyed
+  </button>
+  <button class="chip" data-rest="hide" aria-pressed="false">
+    Unused fields hidden
+  </button>
 </div>
 
 <div class="stage">
   <div class="column" id="col">
     <p>
-      The translation drills run on templates. Most are Gensler's, decoded
-      from the 2008 program. Here is the twenty-first of Set C's
-      thirty-four, as the program stored it, beside what the drill makes of
-      it.
+      The translation drills run on templates. Most are Gensler's, decoded from
+      the 2008 program. Here is the twenty-first of Set C's thirty-four, as the
+      program stored it, beside what the drill makes of it.
     </p>
 
-    <figure class="gf" id="gf" aria-label="Template 21: the 2008 record and one draw">
+    <figure
+      class="gf"
+      id="gf"
+      aria-label="Template 21: the 2008 record and one draw"
+    >
       <div class="rec eyebrow">*21 · Set C · 2008</div>
       <div class="drw eyebrow" id="drwEyebrow">Draw 1 · press Roll</div>
 
-      <div class="rec prompt" id="recNL">Only if you’re <span class="tok">$B</span> are you <span class="tok">$D</span>.</div>
+      <div class="rec prompt" id="recNL">
+        Only if you’re <span class="tok">$B</span> are you
+        <span class="tok">$D</span>.
+      </div>
       <div class="drw prompt" id="drwPrompt"></div>
 
-      <div class="rec prompt" id="recAbs">Only if <span class="tok">$j</span>, <span class="tok">$q</span></div>
+      <div class="rec prompt" id="recAbs">
+        Only if <span class="tok">$j</span>, <span class="tok">$q</span>
+      </div>
       <div class="drw prompt filler" id="drwForm"></div>
 
-      <div class="rec is-answer"><span class="letter">a</span>(<span class="tok">$q</span> ⊃ <span class="tok">$j</span>)</div>
-      <div class="drw is-answer"><span class="letter">a</span><span class="kx" data-i="0"></span><span class="ans">✓ answer</span></div>
+      <div class="rec is-answer">
+        <span class="letter">a</span>(<span class="tok">$q</span> ⊃
+        <span class="tok">$j</span>)
+      </div>
+      <div class="drw is-answer">
+        <span class="letter">a</span><span class="kx" data-i="0"></span
+        ><span class="ans">✓ answer</span>
+      </div>
 
-      <div class="rec"><span class="letter">b</span>(<span class="tok">$j</span> ≡ <span class="tok">$q</span>)</div>
-      <div class="drw"><span class="letter">b</span><span class="kx" data-i="1"></span></div>
+      <div class="rec">
+        <span class="letter">b</span>(<span class="tok">$j</span> ≡
+        <span class="tok">$q</span>)
+      </div>
+      <div class="drw">
+        <span class="letter">b</span><span class="kx" data-i="1"></span>
+      </div>
 
-      <div class="rec"><span class="letter">d</span><span class="tok">$j</span> ⊃ <span class="tok">$q</span> <span class="expand">· bare, no parentheses</span></div>
-      <div class="drw"><span class="letter">d</span><span class="kx" data-i="2"></span></div>
+      <div class="rec">
+        <span class="letter">d</span><span class="tok">$j</span> ⊃
+        <span class="tok">$q</span>
+        <span class="expand">· bare, no parentheses</span>
+      </div>
+      <div class="drw">
+        <span class="letter">d</span><span class="kx" data-i="2"></span>
+      </div>
 
-      <div class="rec"><span class="letter">c</span>($d) <span class="expand">· d, wrapped</span></div>
-      <div class="drw"><span class="letter">c</span><span class="kx" data-i="3"></span></div>
+      <div class="rec">
+        <span class="letter">c</span>($d)
+        <span class="expand">· d, wrapped</span>
+      </div>
+      <div class="drw">
+        <span class="letter">c</span><span class="kx" data-i="3"></span>
+      </div>
 
-      <div class="rec rest" id="recRest">R:Gk. · R(~$j ⊃ ~$q) · j:y — fields the drill doesn't read</div>
+      <div class="rec rest" id="recRest">
+        R:Gk. · R(~$j ⊃ ~$q) · j:y — fields the drill doesn't read
+      </div>
       <div class="drw legend" id="drwLegend"></div>
 
       <div class="rec"></div>
-      <div class="drw foot"><button class="roll" id="roll">Roll again</button></div>
+      <div class="drw foot">
+        <button class="roll" id="roll">Roll again</button>
+      </div>
     </figure>
 
     <p class="small">
-      I decoded records like this one and rebuilt each as a generator that
-      draws new names every time; the rule, the options and the hints stay
-      his.
+      I decoded records like this one and rebuilt each as a generator that draws
+      new names every time; the rule, the options and the hints stay his.
     </p>
   </div>
 </div>
@@ -355,42 +392,113 @@
   <h2>What to judge</h2>
   <p>
     Whether the row alignment reads as a mapping without being told. Whether
-    cyan-beside-white says "then, now" or just looks like two boxes. Whether
-    the 2008 letters on the draw side (a b d c, the program's own order)
-    connect better than 1–4 would. Whether the legend line replaces the
-    "$B and $D are adjectives" paragraph.
+    cyan-beside-white says "then, now" or just looks like two boxes. Whether the
+    2008 letters on the draw side (a b d c, the program's own order) connect
+    better than 1–4 would. Whether the legend line replaces the "$B and $D are
+    adjectives" paragraph.
   </p>
   <h2>What's real</h2>
   <p>
     Draws, prompts, option order and the answer mark come from the shipped
     generator. The letter order a·b·d·c is the program's for *21, per the
-    generator's provenance note; it is not stored per template, so the
-    shipped figure would carry it for the one or two templates it shows.
+    generator's provenance note; it is not stored per template, so the shipped
+    figure would carry it for the one or two templates it shows.
   </p>
 </div>
 
 <script>
   const DRAWS = [
-    { seed: 1, prompt: 'Only if B, S.', options: ['(S \\supset B)', '(B \\equiv S)', 'B \\supset S', '(B \\supset S)'], adjs: null, letters: ['B', 'S'] },
-    { seed: 2, prompt: "Only if you're sensitive are you notorious.", options: ['(N \\supset S)', '(S \\equiv N)', 'S \\supset N', '(S \\supset N)'], adjs: ['sensitive', 'notorious'], letters: ['S', 'N'] },
-    { seed: 3, prompt: "Only if you're outgoing are you clean.", options: ['(C \\supset O)', '(O \\equiv C)', 'O \\supset C', '(O \\supset C)'], adjs: ['outgoing', 'clean'], letters: ['O', 'C'] },
-    { seed: 4, prompt: "Only if you're practical are you famous.", options: ['(F \\supset P)', '(P \\equiv F)', 'P \\supset F', '(P \\supset F)'], adjs: ['practical', 'famous'], letters: ['P', 'F'] },
-    { seed: 5, prompt: "Only if you're brave are you relatable.", options: ['(R \\supset B)', '(B \\equiv R)', 'B \\supset R', '(B \\supset R)'], adjs: ['brave', 'relatable'], letters: ['B', 'R'] },
-    { seed: 6, prompt: 'Only if D, S.', options: ['(S \\supset D)', '(D \\equiv S)', 'D \\supset S', '(D \\supset S)'], adjs: null, letters: ['D', 'S'] },
+    {
+      seed: 1,
+      prompt: 'Only if B, S.',
+      options: [
+        '(S \\supset B)',
+        '(B \\equiv S)',
+        'B \\supset S',
+        '(B \\supset S)',
+      ],
+      adjs: null,
+      letters: ['B', 'S'],
+    },
+    {
+      seed: 2,
+      prompt: "Only if you're sensitive are you notorious.",
+      options: [
+        '(N \\supset S)',
+        '(S \\equiv N)',
+        'S \\supset N',
+        '(S \\supset N)',
+      ],
+      adjs: ['sensitive', 'notorious'],
+      letters: ['S', 'N'],
+    },
+    {
+      seed: 3,
+      prompt: "Only if you're outgoing are you clean.",
+      options: [
+        '(C \\supset O)',
+        '(O \\equiv C)',
+        'O \\supset C',
+        '(O \\supset C)',
+      ],
+      adjs: ['outgoing', 'clean'],
+      letters: ['O', 'C'],
+    },
+    {
+      seed: 4,
+      prompt: "Only if you're practical are you famous.",
+      options: [
+        '(F \\supset P)',
+        '(P \\equiv F)',
+        'P \\supset F',
+        '(P \\supset F)',
+      ],
+      adjs: ['practical', 'famous'],
+      letters: ['P', 'F'],
+    },
+    {
+      seed: 5,
+      prompt: "Only if you're brave are you relatable.",
+      options: [
+        '(R \\supset B)',
+        '(B \\equiv R)',
+        'B \\supset R',
+        '(B \\supset R)',
+      ],
+      adjs: ['brave', 'relatable'],
+      letters: ['B', 'R'],
+    },
+    {
+      seed: 6,
+      prompt: 'Only if D, S.',
+      options: [
+        '(S \\supset D)',
+        '(D \\equiv S)',
+        'D \\supset S',
+        '(D \\supset S)',
+      ],
+      adjs: null,
+      letters: ['D', 'S'],
+    },
   ];
-  let i = 0, n = 1;
+  let i = 0,
+    n = 1;
   function render() {
     const d = DRAWS[i];
-    document.getElementById('drwEyebrow').textContent = `Draw ${n} · seed ${d.seed}`;
+    document.getElementById('drwEyebrow').textContent =
+      `Draw ${n} · seed ${d.seed}`;
     document.getElementById('drwPrompt').textContent = d.prompt;
     const nl = d.adjs !== null;
     document.getElementById('recNL').classList.toggle('is-used', nl);
     document.getElementById('recAbs').classList.toggle('is-used', !nl);
-    document.getElementById('drwForm').textContent = nl ? 'the English prompt this time' : 'the abstract prompt this time';
+    document.getElementById('drwForm').textContent = nl
+      ? 'the English prompt this time'
+      : 'the abstract prompt this time';
     document.querySelectorAll('.kx').forEach((el) => {
       const tex = d.options[Number(el.dataset.i)];
       if (window.katex) katex.render(tex, el, { throwOnError: false });
-      else el.textContent = tex.replace(/\\supset/g, '⊃').replace(/\\equiv/g, '≡');
+      else
+        el.textContent = tex.replace(/\\supset/g, '⊃').replace(/\\equiv/g, '≡');
     });
     const [j, q] = d.letters;
     const legend = nl
@@ -398,17 +506,36 @@
       : `<span>$j <b>${j}</b></span><span>$q <b>${q}</b></span><span>abstract form, no adjectives drawn</span>`;
     document.getElementById('drwLegend').innerHTML = legend;
   }
-  document.getElementById('roll').addEventListener('click', () => { i = (i + 1) % DRAWS.length; n++; render(); });
-  document.querySelectorAll('[data-w]').forEach((b) => b.addEventListener('click', () => {
-    document.querySelectorAll('[data-w]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-    document.getElementById('col').classList.toggle('phone', b.dataset.w === 'phone');
-  }));
-  document.querySelectorAll('[data-rest]').forEach((b) => b.addEventListener('click', () => {
-    document.querySelectorAll('[data-rest]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-    document.getElementById('recRest').style.display = b.dataset.rest === 'hide' ? 'none' : '';
-  }));
-  if (location.search.includes('phone')) document.getElementById('col').classList.add('phone');
-  if (location.search.includes('roll')) { i = 1; n = 2; }
+  document.getElementById('roll').addEventListener('click', () => {
+    i = (i + 1) % DRAWS.length;
+    n++;
+    render();
+  });
+  document.querySelectorAll('[data-w]').forEach((b) =>
+    b.addEventListener('click', () => {
+      document
+        .querySelectorAll('[data-w]')
+        .forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      document
+        .getElementById('col')
+        .classList.toggle('phone', b.dataset.w === 'phone');
+    })
+  );
+  document.querySelectorAll('[data-rest]').forEach((b) =>
+    b.addEventListener('click', () => {
+      document
+        .querySelectorAll('[data-rest]')
+        .forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      document.getElementById('recRest').style.display =
+        b.dataset.rest === 'hide' ? 'none' : '';
+    })
+  );
+  if (location.search.includes('phone'))
+    document.getElementById('col').classList.add('phone');
+  if (location.search.includes('roll')) {
+    i = 1;
+    n = 2;
+  }
   window.addEventListener('DOMContentLoaded', render);
   window.addEventListener('load', render);
 </script>

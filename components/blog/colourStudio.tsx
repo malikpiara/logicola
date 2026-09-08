@@ -250,9 +250,8 @@ function Mixer({
   );
   const sample = () => {
     type ED = { open: () => Promise<{ sRGBHex: string }> };
-    const Dropper = (
-      window as unknown as { EyeDropper: new () => ED }
-    ).EyeDropper;
+    const Dropper = (window as unknown as { EyeDropper: new () => ED })
+      .EyeDropper;
     new Dropper()
       .open()
       .then((r) => onPick(r.sRGBHex, true))
@@ -419,13 +418,55 @@ function Mixer({
 // set-palettes island that used to spell the names out was cut as a
 // duplicate of this studio, so the names ride on the letters here.
 export const PRESETS = [
-  { key: 'A', subject: 'Syllogistic', surface: '#FFABC6', ink: '#4A1040', accent: '#674900' },
-  { key: 'C', subject: 'Propositional', surface: '#E7F099', ink: '#02302C', accent: '#BD00AD' },
-  { key: 'J', subject: 'Modal', surface: '#E6ACF4', ink: '#1C3601', accent: '#674900' },
-  { key: 'L', subject: 'Deontic', surface: '#CFF6DD', ink: '#3F0167', accent: '#BD00AD' },
-  { key: 'N', subject: 'Belief', surface: '#9EDAFF', ink: '#4A1040', accent: '#8D0381' },
-  { key: 'Q', subject: 'Definitions', surface: '#D9CCF9', ink: '#3E1060', accent: '#745400' },
-  { key: 'R', subject: 'Fallacies', surface: '#E4BDF7', ink: '#751100', accent: '#824616' },
+  {
+    key: 'A',
+    subject: 'Syllogistic',
+    surface: '#FFABC6',
+    ink: '#4A1040',
+    accent: '#674900',
+  },
+  {
+    key: 'C',
+    subject: 'Propositional',
+    surface: '#E7F099',
+    ink: '#02302C',
+    accent: '#BD00AD',
+  },
+  {
+    key: 'J',
+    subject: 'Modal',
+    surface: '#E6ACF4',
+    ink: '#1C3601',
+    accent: '#674900',
+  },
+  {
+    key: 'L',
+    subject: 'Deontic',
+    surface: '#CFF6DD',
+    ink: '#3F0167',
+    accent: '#BD00AD',
+  },
+  {
+    key: 'N',
+    subject: 'Belief',
+    surface: '#9EDAFF',
+    ink: '#4A1040',
+    accent: '#8D0381',
+  },
+  {
+    key: 'Q',
+    subject: 'Definitions',
+    surface: '#D9CCF9',
+    ink: '#3E1060',
+    accent: '#745400',
+  },
+  {
+    key: 'R',
+    subject: 'Fallacies',
+    surface: '#E4BDF7',
+    ink: '#751100',
+    accent: '#824616',
+  },
 ] as const;
 
 const PATTERNS: { key: QuizPatternKind; label: string }[] = [
@@ -816,7 +857,10 @@ export function ColourStudio() {
           desktop-only tips cost touch readers nothing essential. */}
       <dl className='cs-meta' aria-live='polite'>
         <div>
-          <PixelTip tip='The pair’s combined saturation, weighted by hue.' side='top'>
+          <PixelTip
+            tip='The pair’s combined saturation, weighted by hue.'
+            side='top'
+          >
             <dt className='cs-term'>σ intensity</dt>
           </PixelTip>
           <dd>{m.sigma.toFixed(2)}</dd>
@@ -828,19 +872,28 @@ export function ColourStudio() {
           <dd>{m.dL.toFixed(2)}</dd>
         </div>
         <div>
-          <PixelTip tip='How far apart the two hues sit on the colour wheel.' side='top'>
+          <PixelTip
+            tip='How far apart the two hues sit on the colour wheel.'
+            side='top'
+          >
             <dt className='cs-term'>hue Δ</dt>
           </PixelTip>
           <dd>{Math.round(m.theta * 180)}°</dd>
         </div>
         <div>
-          <PixelTip tip='The ColorMoods score for the pair — the sets I picked land near 0.54.' side='top'>
+          <PixelTip
+            tip='The ColorMoods score for the pair — the sets I picked land near 0.54.'
+            side='top'
+          >
             <dt className='cs-term'>stimulation</dt>
           </PixelTip>
           <dd>{m.score.toFixed(3)}</dd>
         </div>
         <div>
-          <PixelTip tip='Shimmer between saturated near-opposites — past 0.20 a pair buzzes.' side='top'>
+          <PixelTip
+            tip='Shimmer between saturated near-opposites — past 0.20 a pair buzzes.'
+            side='top'
+          >
             <dt className='cs-term'>vibration</dt>
           </PixelTip>
           <dd className={m.vibr > 0.2 ? 'is-off' : undefined}>
@@ -849,7 +902,10 @@ export function ColourStudio() {
           </dd>
         </div>
         <div>
-          <PixelTip tip='A true warm-plus-cool crossing can make a pair feel restless.' side='top'>
+          <PixelTip
+            tip='A true warm-plus-cool crossing can make a pair feel restless.'
+            side='top'
+          >
             <dt className='cs-term'>temperature</dt>
           </PixelTip>
           <dd className={crossing ? 'is-warn' : undefined}>
@@ -858,7 +914,10 @@ export function ColourStudio() {
           </dd>
         </div>
         <div>
-          <PixelTip tip='WCAG contrast — 4.5:1 is the AA floor for body text.' side='top'>
+          <PixelTip
+            tip='WCAG contrast — 4.5:1 is the AA floor for body text.'
+            side='top'
+          >
             <dt className='cs-term'>ink on surface</dt>
           </PixelTip>
           <dd className={readable ? 'is-ok' : 'is-off'}>

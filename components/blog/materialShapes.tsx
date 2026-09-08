@@ -31,9 +31,19 @@ import {
 const SIZE = 96;
 
 const STEPS = [
-  { key: 'smooth', label: 'Smooth', cell: 0, note: "Material's shapes, from its own definitions." },
+  {
+    key: 'smooth',
+    label: 'Smooth',
+    cell: 0,
+    note: "Material's shapes, from its own definitions.",
+  },
   { key: '2', label: '2 px', cell: 2, note: '2 px cells, 48 across.' },
-  { key: '4', label: '4 px', cell: 4, note: '4 px cells, 24 across: the grid the app draws on.' },
+  {
+    key: '4',
+    label: '4 px',
+    cell: 4,
+    note: '4 px cells, 24 across: the grid the app draws on.',
+  },
   { key: '8', label: '8 px', cell: 8, note: '8 px cells, 12 across.' },
   { key: '16', label: '16 px', cell: 16, note: '16 px cells, 6 across.' },
 ] as const;

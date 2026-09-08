@@ -94,7 +94,12 @@ export function PhoneStates({
           width={width}
           height={height}
           className={`ps-layer${checked ? '' : ' is-on'}`}
-          style={{ position: 'absolute', inset: 0, width: '100%', height: 'auto' }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: 'auto',
+          }}
         />
         <Image
           src={after}
@@ -102,7 +107,12 @@ export function PhoneStates({
           width={width}
           height={height}
           className={`ps-layer${checked ? ' is-on' : ''}`}
-          style={{ position: 'absolute', inset: 0, width: '100%', height: 'auto' }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: 'auto',
+          }}
         />
       </div>
       <div className='pr-rows ps-rows'>

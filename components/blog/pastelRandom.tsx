@@ -93,7 +93,11 @@ function roll(depth: Depth, rnd: Rnd): Screen {
 }
 
 const hex = (c: Rgb) =>
-  '#' + c.map((v) => v.toString(16).padStart(2, '0')).join('').toUpperCase();
+  '#' +
+  c
+    .map((v) => v.toString(16).padStart(2, '0'))
+    .join('')
+    .toUpperCase();
 
 const DEPTHS: { depth: Depth; label: string }[] = [
   { depth: 1, label: 'Pastel' },

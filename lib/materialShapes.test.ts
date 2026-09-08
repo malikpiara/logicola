@@ -1,18 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import {
-  MATERIAL_SHAPES,
-  gridToPath,
-  rasterise,
-} from './materialShapes';
+import { MATERIAL_SHAPES, gridToPath, rasterise } from './materialShapes';
 
-const byName = (name: string) =>
-  MATERIAL_SHAPES.find((s) => s.name === name)!;
+const byName = (name: string) => MATERIAL_SHAPES.find((s) => s.name === name)!;
 
-const rows = (grid: boolean[][]) =>
-  grid.map((r) => r.filter(Boolean).length);
+const rows = (grid: boolean[][]) => grid.map((r) => r.filter(Boolean).length);
 
 describe('MATERIAL_SHAPES', () => {
-  it('carries all 35 of Material\'s shapes, each a closed outline in the unit square', () => {
+  it("carries all 35 of Material's shapes, each a closed outline in the unit square", () => {
     expect(MATERIAL_SHAPES).toHaveLength(35);
     for (const s of MATERIAL_SHAPES) {
       expect(s.outline.length).toBeGreaterThan(8);
@@ -37,7 +31,7 @@ describe('MATERIAL_SHAPES', () => {
     expect(Math.max(...r)).toBe(r[11]);
   });
 
-  it('keeps Boom\'s spikes apart at 24 cells', () => {
+  it("keeps Boom's spikes apart at 24 cells", () => {
     const g = rasterise(byName('Boom').outline, 24);
     // some row crosses the spikes as separate runs
     const runs = (row: boolean[]) =>
@@ -45,17 +39,21 @@ describe('MATERIAL_SHAPES', () => {
     expect(Math.max(...g.map(runs))).toBeGreaterThanOrEqual(4);
     // and a burst covers far less than the disc it fits in
     const filled = g.flat().filter(Boolean).length;
-    const disc = rasterise(byName('Circle').outline, 24).flat().filter(Boolean).length;
+    const disc = rasterise(byName('Circle').outline, 24)
+      .flat()
+      .filter(Boolean).length;
     expect(filled).toBeLessThan(disc * 0.6);
   });
 
-  it('draws Material\'s own Pixel circle when given their Circle at 14 cells', () => {
+  it("draws Material's own Pixel circle when given their Circle at 14 cells", () => {
     // Their Pixel circle is hand-made; our rule applied to their Circle
     // must land on the same stairs, row for row.
     const circle = rows(rasterise(byName('Circle').outline, 14));
     const pixel = rows(rasterise(byName('Pixel circle').outline, 14));
     expect(circle).toEqual(pixel);
-    expect(circle).toEqual([6, 10, 12, 12, 14, 14, 14, 14, 14, 14, 12, 12, 10, 6]);
+    expect(circle).toEqual([
+      6, 10, 12, 12, 14, 14, 14, 14, 14, 14, 12, 12, 10, 6,
+    ]);
   });
 
   it('pins three shapes at the grid the app draws on', () => {

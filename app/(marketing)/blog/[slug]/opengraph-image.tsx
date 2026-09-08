@@ -137,7 +137,9 @@ export default async function OpengraphImage({
   const { slug } = await params;
   const post = publishedPosts.find((candidate) => candidate.slug === slug);
   const title = post?.title ?? 'LogiCola Blog';
-  const meta = post ? `${formatDate(post.date)} · logicola.org` : 'logicola.org';
+  const meta = post
+    ? `${formatDate(post.date)} · logicola.org`
+    : 'logicola.org';
   const [display, mono] = await Promise.all([
     font('RobotoFlex-Display.ttf'),
     font('IBMPlexMono-Medium.ttf'),
@@ -146,80 +148,83 @@ export default async function OpengraphImage({
   const fontSize = titleSize(title);
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        width: W,
+        height: H,
+        display: 'flex',
+        position: 'relative',
+        backgroundColor: PLATE,
+      }}
+    >
+      <img
+        src={field}
+        width={W}
+        height={H}
+        alt=''
+        style={{ position: 'absolute', top: 0, left: 0 }}
+      />
       <div
         style={{
-          width: W,
-          height: H,
+          position: 'absolute',
+          left: PLATE_RECT.x,
+          top: PLATE_RECT.y,
+          width: PLATE_RECT.w,
+          height: PLATE_RECT.h,
           display: 'flex',
-          position: 'relative',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          padding: '44px 60px',
           backgroundColor: PLATE,
+          color: INK,
         }}
       >
-        <img
-          src={field}
-          width={W}
-          height={H}
-          alt=''
-          style={{ position: 'absolute', top: 0, left: 0 }}
-        />
         <div
           style={{
-            position: 'absolute',
-            left: PLATE_RECT.x,
-            top: PLATE_RECT.y,
-            width: PLATE_RECT.w,
-            height: PLATE_RECT.h,
             display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            padding: '44px 60px',
-            backgroundColor: PLATE,
-            color: INK,
+            fontFamily: 'IBMPlexMono',
+            fontSize: 24,
+            fontWeight: 500,
+            letterSpacing: 1.44,
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              fontFamily: 'IBMPlexMono',
-              fontSize: 24,
-              fontWeight: 500,
-              letterSpacing: 1.44,
-            }}
-          >
-            LOGICOLA · BLOG
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              fontFamily: 'RobotoFlexDisplay',
-              fontSize,
-              fontWeight: 800,
-              lineHeight: 1.04,
-              letterSpacing: -0.01 * fontSize,
-              maxWidth: PLATE_RECT.w - 120,
-            }}
-          >
-            {title}
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              fontFamily: 'IBMPlexMono',
-              fontSize: 26,
-              fontWeight: 500,
-              letterSpacing: 0.26,
-            }}
-          >
-            {meta}
-          </div>
+          LOGICOLA · BLOG
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            fontFamily: 'RobotoFlexDisplay',
+            fontSize,
+            fontWeight: 800,
+            lineHeight: 1.04,
+            letterSpacing: -0.01 * fontSize,
+            maxWidth: PLATE_RECT.w - 120,
+          }}
+        >
+          {title}
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            fontFamily: 'IBMPlexMono',
+            fontSize: 26,
+            fontWeight: 500,
+            letterSpacing: 0.26,
+          }}
+        >
+          {meta}
         </div>
       </div>
-    ),
+    </div>,
     {
       ...size,
       fonts: [
-        { name: 'RobotoFlexDisplay', data: display, weight: 800, style: 'normal' },
+        {
+          name: 'RobotoFlexDisplay',
+          data: display,
+          weight: 800,
+          style: 'normal',
+        },
         { name: 'IBMPlexMono', data: mono, weight: 500, style: 'normal' },
       ],
     }

@@ -131,7 +131,14 @@ const DIE_FACES: Record<1 | 2 | 3 | 4 | 5 | 6, string> = {
   3: [PIP(5, 5), PIP(10, 10), PIP(15, 15)].join(''),
   4: [PIP(5, 5), PIP(15, 5), PIP(5, 15), PIP(15, 15)].join(''),
   5: [PIP(5, 5), PIP(15, 5), PIP(10, 10), PIP(5, 15), PIP(15, 15)].join(''),
-  6: [PIP(5, 4), PIP(15, 4), PIP(5, 10), PIP(15, 10), PIP(5, 16), PIP(15, 16)].join(''),
+  6: [
+    PIP(5, 4),
+    PIP(15, 4),
+    PIP(5, 10),
+    PIP(15, 10),
+    PIP(5, 16),
+    PIP(15, 16),
+  ].join(''),
 };
 
 export function DiceIcon({

@@ -50,7 +50,9 @@ describe('the recovered stimulation setting', () => {
       expect(score, `Set ${name} scored ${score.toFixed(3)}`).toBeGreaterThan(
         0.44
       );
-      expect(score, `Set ${name} scored ${score.toFixed(3)}`).toBeLessThan(0.59);
+      expect(score, `Set ${name} scored ${score.toFixed(3)}`).toBeLessThan(
+        0.59
+      );
     }
   });
 
@@ -157,7 +159,9 @@ describe('suggestPartners', () => {
   it('dedupes perceptually, so the list is not one colour eight times', () => {
     for (let i = 0; i < inks.length; i++) {
       for (let j = i + 1; j < inks.length; j++) {
-        expect(perceptualDist(inks[i]!.hex, inks[j]!.hex)).toBeGreaterThan(0.09);
+        expect(perceptualDist(inks[i]!.hex, inks[j]!.hex)).toBeGreaterThan(
+          0.09
+        );
       }
     }
   });

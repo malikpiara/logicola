@@ -99,7 +99,10 @@ export function Clip({
       className='not-prose clip-wrap'
       style={{ maxWidth: max ?? '100%', margin: '0 auto' }}
     >
-      <div className='clip-stage' style={{ aspectRatio: `${width} / ${height}` }}>
+      <div
+        className='clip-stage'
+        style={{ aspectRatio: `${width} / ${height}` }}
+      >
         <video
           ref={video}
           className='clip-video'

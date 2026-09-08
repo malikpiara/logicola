@@ -91,10 +91,12 @@ function custom(
   const pts: Pt[] = [];
   const rs: number[] = [];
   if (mirroring) {
-    const angles = pnr.map(([p]) =>
-      (Math.atan2(p[1] - center[1], p[0] - center[0]) * 180) / Math.PI
+    const angles = pnr.map(
+      ([p]) => (Math.atan2(p[1] - center[1], p[0] - center[0]) * 180) / Math.PI
     );
-    const dists = pnr.map(([p]) => Math.hypot(p[0] - center[0], p[1] - center[1]));
+    const dists = pnr.map(([p]) =>
+      Math.hypot(p[0] - center[0], p[1] - center[1])
+    );
     const actual = reps * 2;
     const section = 360 / actual;
     for (let it = 0; it < actual; it++) {
@@ -214,17 +216,24 @@ const P = (x: number, y: number, r = 0): PNR => [[x, y], r];
 const DEFS: readonly [string, () => Shape][] = [
   ['Circle', () => regular(10, R100)],
   ['Square', () => rectangle(1, 1, [R30, R30, R30, R30])],
-  ['Slanted', () => custom([P(0.926, 0.97, 0.189), P(-0.021, 0.967, 0.187)], 2)],
+  [
+    'Slanted',
+    () => custom([P(0.926, 0.97, 0.189), P(-0.021, 0.967, 0.187)], 2),
+  ],
   [
     'Arch',
-    () =>
-      transform(regular(4, 0, [R100, R100, R20, R20]), (p) => rot(p, -135)),
+    () => transform(regular(4, 0, [R100, R100, R20, R20]), (p) => rot(p, -135)),
   ],
   [
     'Fan',
     () =>
       custom(
-        [P(1.004, 1, 0.148), P(0, 1, 0.151), P(0, -0.003, 0.148), P(0.978, 0.02, 0.803)],
+        [
+          P(1.004, 1, 0.148),
+          P(0, 1, 0.151),
+          P(0, -0.003, 0.148),
+          P(0.978, 0.02, 0.803),
+        ],
         1
       ),
   ],
@@ -252,14 +261,22 @@ const DEFS: readonly [string, () => Shape][] = [
   ],
   [
     'Pill',
-    () => custom([P(0.961, 0.039, 0.426), P(1.001, 0.428), P(1, 0.609, 1)], 2, true),
+    () =>
+      custom(
+        [P(0.961, 0.039, 0.426), P(1.001, 0.428), P(1, 0.609, 1)],
+        2,
+        true
+      ),
   ],
   ['Triangle', () => transform(regular(3, R20), (p) => rot(p, -90))],
   ['Diamond', () => custom([P(0.5, 1.096, 0.151), P(0.04, 0.5, 0.159)], 2)],
   [
     'Clamshell',
     () =>
-      custom([P(0.171, 0.841, 0.159), P(-0.02, 0.5, 0.14), P(0.17, 0.159, 0.159)], 2),
+      custom(
+        [P(0.171, 0.841, 0.159), P(-0.02, 0.5, 0.14), P(0.17, 0.159, 0.159)],
+        2
+      ),
   ],
   [
     'Pentagon',
@@ -285,9 +302,18 @@ const DEFS: readonly [string, () => Shape][] = [
       ),
   ],
   ['Sunny', () => star(8, 0.8, R15)],
-  ['Very sunny', () => custom([P(0.5, 1.08, 0.085), P(0.358, 0.843, 0.085)], 8)],
-  ['4-sided cookie', () => custom([P(1.237, 1.236, 0.258), P(0.5, 0.918, 0.233)], 4)],
-  ['6-sided cookie', () => custom([P(0.723, 0.884, 0.394), P(0.5, 1.099, 0.398)], 6)],
+  [
+    'Very sunny',
+    () => custom([P(0.5, 1.08, 0.085), P(0.358, 0.843, 0.085)], 8),
+  ],
+  [
+    '4-sided cookie',
+    () => custom([P(1.237, 1.236, 0.258), P(0.5, 0.918, 0.233)], 4),
+  ],
+  [
+    '6-sided cookie',
+    () => custom([P(0.723, 0.884, 0.394), P(0.5, 1.099, 0.398)], 6),
+  ],
   ['7-sided cookie', () => transform(star(7, 0.75, R50), (p) => rot(p, -90))],
   ['9-sided cookie', () => transform(star(9, 0.8, R50), (p) => rot(p, -90))],
   ['12-sided cookie', () => transform(star(12, 0.8, R50), (p) => rot(p, -90))],
@@ -300,16 +326,27 @@ const DEFS: readonly [string, () => Shape][] = [
         true
       ),
   ],
-  ['4-leaf clover', () => custom([P(0.5, 0.074), P(0.725, -0.099, 0.476)], 4, true)],
+  [
+    '4-leaf clover',
+    () => custom([P(0.5, 0.074), P(0.725, -0.099, 0.476)], 4, true),
+  ],
   ['8-leaf clover', () => custom([P(0.5, 0.036), P(0.758, -0.101, 0.209)], 8)],
   ['Burst', () => custom([P(0.5, -0.006, 0.006), P(0.592, 0.158, 0.006)], 12)],
-  ['Soft burst', () => custom([P(0.193, 0.277, 0.053), P(0.176, 0.055, 0.053)], 10)],
+  [
+    'Soft burst',
+    () => custom([P(0.193, 0.277, 0.053), P(0.176, 0.055, 0.053)], 10),
+  ],
   ['Boom', () => custom([P(0.457, 0.296, 0.007), P(0.5, -0.051, 0.007)], 15)],
   [
     'Soft boom',
     () =>
       custom(
-        [P(0.733, 0.454), P(0.839, 0.437, 0.532), P(0.949, 0.449, 0.439), P(0.998, 0.478, 0.174)],
+        [
+          P(0.733, 0.454),
+          P(0.839, 0.437, 0.532),
+          P(0.949, 0.449, 0.439),
+          P(0.998, 0.478, 0.174),
+        ],
         16,
         true
       ),
@@ -317,7 +354,11 @@ const DEFS: readonly [string, () => Shape][] = [
   [
     'Flower',
     () =>
-      custom([P(0.37, 0.187), P(0.416, 0.049, 0.381), P(0.479, 0.001, 0.095)], 8, true),
+      custom(
+        [P(0.37, 0.187), P(0.416, 0.049, 0.381), P(0.479, 0.001, 0.095)],
+        8,
+        true
+      ),
   ],
   [
     'Puffy',
@@ -346,7 +387,11 @@ const DEFS: readonly [string, () => Shape][] = [
   [
     'Puffy diamond',
     () =>
-      custom([P(0.87, 0.13, 0.146), P(0.818, 0.357), P(1, 0.332, 0.853)], 4, true),
+      custom(
+        [P(0.87, 0.13, 0.146), P(0.818, 0.357), P(1, 0.332, 0.853)],
+        4,
+        true
+      ),
   ],
   [
     'Pixel circle',
@@ -392,13 +437,22 @@ const DEFS: readonly [string, () => Shape][] = [
   [
     'Bun',
     () =>
-      custom([P(0.796, 0.5), P(0.853, 0.518, 1), P(0.992, 0.631, 1), P(0.968, 1, 1)], 2, true),
+      custom(
+        [P(0.796, 0.5), P(0.853, 0.518, 1), P(0.992, 0.631, 1), P(0.968, 1, 1)],
+        2,
+        true
+      ),
   ],
   [
     'Heart',
     () =>
       custom(
-        [P(0.5, 0.268, 0.016), P(0.792, -0.066, 0.958), P(1.064, 0.276, 1), P(0.501, 0.946, 0.129)],
+        [
+          P(0.5, 0.268, 0.016),
+          P(0.792, -0.066, 0.958),
+          P(1.064, 0.276, 1),
+          P(0.501, 0.946, 0.129),
+        ],
         1,
         true
       ),
@@ -482,9 +536,14 @@ export function tidyGrid(grid: readonly boolean[][]): boolean[][] {
   return grid.map((row, y) =>
     row.map((v, x) => {
       const n8 =
-        at(y - 1, x - 1) + at(y - 1, x) + at(y - 1, x + 1) +
-        at(y, x - 1) + at(y, x + 1) +
-        at(y + 1, x - 1) + at(y + 1, x) + at(y + 1, x + 1);
+        at(y - 1, x - 1) +
+        at(y - 1, x) +
+        at(y - 1, x + 1) +
+        at(y, x - 1) +
+        at(y, x + 1) +
+        at(y + 1, x - 1) +
+        at(y + 1, x) +
+        at(y + 1, x + 1);
       const n4 = at(y - 1, x) + at(y + 1, x) + at(y, x - 1) + at(y, x + 1);
       if (v && n8 <= 1) return false;
       if (!v && n4 >= 3) return true;

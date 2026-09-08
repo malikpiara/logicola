@@ -148,7 +148,11 @@ export function stimulationOf(hexA: string, hexB: string): Stimulation {
   const lerpAt = (arr: number[], x: number) => {
     const c = Math.max(0, Math.min(x, (arr.length - 1) / 10));
     const f = Math.floor(c * 10);
-    return arr[f]! + (c * 10 - f) * ((arr[Math.min(f + 1, arr.length - 1)] ?? arr[f]!) - arr[f]!);
+    return (
+      arr[f]! +
+      (c * 10 - f) *
+        ((arr[Math.min(f + 1, arr.length - 1)] ?? arr[f]!) - arr[f]!)
+    );
   };
   let vibr =
     1 -

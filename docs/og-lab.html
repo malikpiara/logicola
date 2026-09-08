@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>OG card lab — LogiCola</title>
-<!--
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OG card lab — LogiCola</title>
+    <!--
   OG CARD LAB (Malik asked for a redesign of the social preview, 2026-09-08).
 
   The link card is the one brand surface that carries a headline
@@ -68,280 +68,630 @@
     chrome --headless=new --window-size=1200,630 --screenshot=A.png \
       "file://…/docs/og-lab.html?card=A&only=1&scheme=L"
 -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap"
-  rel="stylesheet"
-/>
-<style>
-  :root {
-    --cream: #edede3;
-    --ink: #02302c;
-    --green: #05a24b;
-    --mono: ui-monospace, 'SF Mono', Menlo, monospace;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: #f6f6f1;
-    color: var(--ink);
-    font-family: 'Roboto Flex', system-ui, sans-serif;
-  }
-  .lab { padding: 28px 32px 80px; max-width: 1320px; margin: 0 auto; }
-  .lab h1 { font-stretch: 151%; font-weight: 800; letter-spacing: -0.01em; font-size: 30px; margin: 0 0 6px; }
-  .lab p.note { font-family: var(--mono); font-size: 12.5px; color: #4c5b58; margin: 0 0 20px; max-width: 760px; line-height: 1.5; }
-  .dials { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; margin-bottom: 26px; font-family: var(--mono); font-size: 12.5px; }
-  .dials label { display: flex; gap: 8px; align-items: center; }
-  .dials input[type=text] { width: 320px; font: inherit; padding: 4px 6px; }
-  .dials input[type=range] { width: 120px; }
-  .row { display: grid; grid-template-columns: 1fr 560px; gap: 28px; align-items: start; margin-bottom: 44px; }
-  .row h2 { grid-column: 1 / -1; font-family: var(--mono); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 -10px; color: #4c5b58; }
-  .fit { width: 100%; aspect-ratio: 1200 / 630; overflow: hidden; border: 1px solid #d9d9cf; }
-  .fit .card { transform-origin: 0 0; }
-  .feed { font-family: var(--mono); font-size: 12px; color: #4c5b58; }
-  .feed .frame { width: 520px; border: 1px solid #d9d9cf; border-radius: 12px; overflow: hidden; background: #fff; }
-  .feed .thumb { width: 520px; height: 273px; overflow: hidden; }
-  .feed .thumb .card { transform: scale(0.43333); transform-origin: 0 0; }
-  .feed .meta { padding: 10px 14px 12px; color: #111; font-family: system-ui, sans-serif; font-size: 14px; }
-  .feed .meta small { display: block; color: #6b6b6b; font-size: 12px; margin-top: 2px; }
-
-  /* ---- the card ---- */
-  .card { width: 1200px; height: 630px; position: relative; overflow: hidden; background: var(--cream); color: var(--ink); }
-  .card svg.field { position: absolute; inset: 0; width: 1200px; height: 630px; display: block; }
-  .title {
-    font-stretch: 151%;
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    line-height: 1.04;
-    margin: 0;
-  }
-  .meta-line { font-family: var(--mono); font-weight: 500; font-size: 26px; letter-spacing: 0.01em; }
-  .eyebrow { font-family: var(--mono); font-weight: 600; font-size: 24px; letter-spacing: 0.06em; text-transform: uppercase; }
-
-  /* A · SCREEN */
-  .card.A .panel { position: absolute; left: 64px; top: 64px; right: 64px; bottom: 150px; background: #fff; padding: 52px 60px; display: flex; flex-direction: column; justify-content: space-between; }
-  .card.A .band { position: absolute; left: 0; right: 0; bottom: 0; height: 86px; display: flex; align-items: center; padding: 0 64px; }
-
-  /* B · MARK */
-  .card.B .mark { position: absolute; left: 64px; top: 56px; height: 92px; width: auto; }
-  .card.B .copy { position: absolute; left: 64px; top: 200px; width: 660px; }
-  .card.B .foot { position: absolute; left: 64px; bottom: 56px; }
-
-  /* C · COVER */
-  .card.C .strip { position: absolute; left: 0; top: 0; width: 1200px; height: 400px; object-fit: cover; object-position: center; image-rendering: pixelated; display: block; }
-  /* 400 = the 3:1 cover shown whole at 1200 wide; the rows must not be cropped. */
-  .card.C .copy { position: absolute; left: 64px; right: 64px; top: 428px; }
-  .card.C .foot { position: absolute; left: 64px; bottom: 34px; }
-
-  /* E · FOOTER (plate) and F · FOOTER (no plate) */
-  .card.E .plate { position: absolute; left: 72px; right: 72px; top: 64px; height: 388px; background: var(--cream); padding: 44px 60px; display: flex; flex-direction: column; justify-content: space-between; }
-  .card.F .copy { position: absolute; left: 72px; right: 72px; top: 64px; height: 388px; padding: 44px 0; display: flex; flex-direction: column; justify-content: space-between; }
-
-  /* D · PLATE */
-  .card.D .plate { position: absolute; left: 72px; right: 72px; top: 96px; bottom: 96px; background: var(--cream); padding: 52px 60px; display: flex; flex-direction: column; justify-content: space-between; }
-
-  body.only { background: transparent; }
-  body.only .lab { display: none; }
-  body.only .card { position: fixed; left: 0; top: 0; }
-</style>
-</head>
-<body>
-<div class="lab">
-  <h1>OG card lab</h1>
-  <p class="note">Four directions for the link card. Left: 1:1 (scaled to fit). Right: how a feed shows it, 520px wide under a title line. Judge on the right; the left is for reading the type. Dials apply to every card.</p>
-  <div class="dials">
-    <label>Scheme
-      <select id="scheme">
-        <option value="brand">brand · cream</option>
-        <option value="L" selected>L · mint / plum</option>
-        <option value="C">C · lime / teal</option>
-        <option value="A">A · rose / plum</option>
-        <option value="J">J · lilac / green</option>
-        <option value="N">N · sky / plum</option>
-        <option value="Q">Q · lavender / violet</option>
-        <option value="R">R · orchid / rust</option>
-      </select>
-    </label>
-    <label>Title <input id="title" type="text" value="Back to the original formula" /></label>
-    <label>Seed <input id="seed" type="range" min="1" max="60" value="45" /><span id="seedv">45</span></label>
-    <label>Quilt scale <input id="scale" type="range" min="0.6" max="2.6" step="0.02" value="2" /><span id="scalev">2.00</span></label>
-    <label>Rate <input id="rate" type="range" min="0.1" max="0.8" step="0.01" value="0.75" /><span id="ratev">0.75</span></label>
-  </div>
-  <div id="rows"></div>
-</div>
-
-<template id="wordmark">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 265 190" class="mark" aria-hidden="true">
-<path class="mk-body" d="M46.6906 0.161408C57.5696 -0.164592 69.8788 0.103905 80.8853 0.104905L145.294 0.10991L192.186 0.108155C200.231 0.100405 208.401 0.0321546 216.451 0.137155C218.204 0.270405 220.751 0.609405 222.174 1.69116C226.361 4.87591 227.769 10.3359 224.689 14.7544C220.814 20.3117 216.991 18.2564 211.504 19.1112C204.589 20.1887 209.389 29.6969 205.761 33.7537C201.566 39.2404 198.519 37.1454 192.506 38.0452C191.284 38.2282 189.881 39.0922 189.256 40.1539C188.736 41.0349 188.631 43.5687 188.626 44.6802C188.594 52.5904 188.609 60.5202 188.609 68.4294L188.611 114.841L188.614 134.917C188.614 137.911 188.371 146.292 189.076 148.737L189.159 149.017C193.646 153.624 198.336 149.464 203.441 152.992C208.864 156.742 206.811 161.377 207.611 166.374C208.636 172.747 218.451 168.447 222.776 172.184C224.721 173.652 225.894 175.814 226.186 178.334C226.899 184.494 222.846 188.212 217.351 189.009C206.251 189.334 193.744 189.074 182.521 189.074L116.799 189.072L71.4336 189.079C63.6621 189.084 55.7211 189.154 47.9509 189.002C45.5939 188.954 43.1891 188.597 41.3261 187.147C36.8748 183.684 38.2761 178.894 37.6849 174.449C36.7366 167.319 27.4126 172.272 22.6956 168.369C17.7779 164.304 19.5241 160.712 18.8344 155.482C17.9114 148.484 8.23885 153.309 3.8656 149.467C1.8811 147.724 0.786605 146.782 0.448855 144.019C-0.208145 138.644 0.0503474 132.631 0.0490974 127.197L0.0421012 97.6994L0.0411018 63.6024C0.0418518 57.9299 -0.0501491 51.9744 0.174601 46.3057C0.235601 44.7617 1.2201 42.6354 2.1361 41.4264C5.31935 37.2247 9.88285 38.1274 14.4496 37.7237C21.9781 37.0579 16.7711 27.5629 20.7049 22.7587C24.6149 17.9834 28.3966 19.5624 33.3896 18.8894C40.8469 17.8844 35.6621 8.19541 39.7899 3.59566C41.9451 1.19391 43.5926 0.589908 46.6906 0.161408Z"/>
-<path class="mk-cut" d="M145.744 54.0306C146.758 55.2444 146.463 57.0889 146.435 58.7701C143.725 58.6669 140.75 58.6934 138.019 58.6611C138.487 59.2931 138.903 59.9616 139.264 60.6606C145.296 72.2979 132.957 80.5394 122.517 78.4749C120.139 78.0046 118.923 77.8404 116.529 77.0431C116.476 83.3004 118.338 81.9321 123.33 83.1549C130.034 84.7974 145.484 84.8806 145.71 94.3509C145.981 105.723 134.142 108.63 125.053 109.083C125.049 114.704 124.456 145.962 125.585 148.892C125.988 149.937 127.528 150.469 128.464 150.937C128.68 151.099 128.574 150.979 128.661 151.377C127.513 151.804 112.349 151.622 109.903 151.644C111.559 150.549 114.077 149.589 114.196 147.394C114.424 143.184 114.33 138.918 114.326 134.695L114.294 107.601C105.002 103.166 107.952 95.5761 114.722 90.5934C106.606 86.4044 111.697 81.3381 115.578 76.4239C115.174 76.1754 114.766 75.9181 114.385 75.6366C112.102 73.9294 110.592 71.3846 110.188 68.5631C108.005 53.8986 127.686 50.7429 137.076 57.8364C141.077 56.8839 142.418 56.2011 145.744 54.0306Z"/>
-<path class="mk-body" d="M116.2 90.9899C117.76 91.4281 125.745 93.0781 127.29 93.0854C134.454 93.1184 143.813 98.9991 134.189 105.38C131.007 106.663 129.096 106.925 125.708 106.967C114.389 107.107 111.708 100.459 116.2 90.9899Z"/>
-<path class="mk-body" d="M124.002 55.8879C126.728 55.6792 129.194 56.3715 130.092 59.2965C131.55 64.0427 132.368 74.7399 126.688 76.9602C123.915 77.2542 121.597 76.6607 120.652 73.6412C119.244 69.1447 118.58 57.9889 124.002 55.8879Z"/>
-<path class="mk-cut" d="M140.172 115.412C145.164 115.247 155.574 115.091 160.711 115.706C162.084 115.87 161.2 119.758 161.802 120.813C162.856 122.661 164.985 121.263 167.269 122.022C169.348 124.061 167.935 135.088 168.293 138.626C168.771 143.353 172.399 139.828 174.66 141.949C175.312 143.214 175.178 149.047 174.815 150.549C174.408 152.239 167.216 151.692 165.814 151.059C165.363 150.274 165.337 147.229 165.26 146.127C164.65 145.472 163.731 144.969 162.818 145.054C160.89 146.567 162.08 149.549 160.942 151.264C158.999 151.872 140.817 151.867 139.036 150.969C138.25 149.589 138.762 148.244 138.576 146.814C138.168 143.674 134.345 146.182 132.325 144.439C131.585 142.553 131.773 125.048 132.294 122.753C133.434 121.153 135.784 122.244 137.229 121.692C140.493 120.446 136.649 116.482 140.172 115.412Z"/>
-<path class="mk-body" d="M142.506 125.635C145.611 125.602 155.83 125.052 158.28 126.328C158.459 126.422 159.553 139.914 157.558 141.1C155.594 141.236 144.039 141.646 142.271 140.718C140.939 140.019 141.843 131.344 141.496 129.501C141.341 128.679 141.513 126.619 142.506 125.635Z"/>
-<path class="mk-cut" d="M87.6493 114.222C98.2266 113.581 107.334 121.608 108.026 132.182C108.719 142.756 100.736 151.902 90.1656 152.647C79.5221 153.394 70.2993 145.347 69.6021 134.699C68.9048 124.052 76.9991 114.868 87.6493 114.222Z"/>
-<path class="mk-body" d="M87.6051 115.64C91.1858 115.462 93.8158 116.562 94.7626 120.329C96.4458 127.174 96.2288 134.775 95.6913 141.775C95.3798 145.832 94.4108 149.812 90.1056 151.072C87.9213 151.192 87.3593 151.082 85.3786 150.434C79.9796 144.937 81.2411 128.751 82.5146 121.417C83.0191 118.51 84.7506 116.547 87.6051 115.64Z"/>
-<path class="mk-cut" d="M75.8353 55.5972C78.9531 55.4877 95.3841 55.1692 97.5043 55.8047C98.8873 57.1187 98.2178 58.7364 98.5258 60.5869C99.0198 63.5562 104.929 60.2897 104.932 63.7062C104.933 66.6654 105.625 83.3189 104.473 84.8199C103.471 85.2347 101.471 85.2812 100.272 85.3294C96.9941 85.4612 99.5154 89.1574 97.6356 91.5839C92.3839 91.8154 81.8616 91.9892 76.3201 91.3737C74.2291 91.1417 75.9893 87.9757 75.4893 86.5982C73.9578 85.0627 71.0589 85.1319 68.9384 84.9812C68.4756 82.2734 68.2748 65.0279 69.1058 62.8107C70.3718 61.3494 72.5066 62.4344 74.5611 61.5692C75.9576 60.4284 75.1283 57.9317 75.8353 55.5972Z"/>
-<path class="mk-body" d="M84.0741 65.704C86.6533 65.6705 92.7401 65.3034 94.7213 66.2237C95.7778 66.7144 95.7958 79.7117 94.7141 81.0284C93.5113 81.4519 91.8713 81.3484 90.5583 81.3467C88.2821 81.3339 80.2711 81.7977 78.8403 80.8132C78.0558 78.5265 78.0593 68.7002 78.6658 66.4334C79.6966 65.4397 82.5573 65.7017 84.0741 65.704Z"/>
-<path class="mk-cut" d="M35.2156 102.184C40.8311 101.961 51.2843 101.577 56.6978 102.301C56.9878 104.036 56.9636 106.521 57.4668 107.82C59.9296 110.206 64.3493 105.662 63.8101 112.891C63.6133 115.529 64.1823 118.987 63.4916 121.682C63.2008 122.816 61.3743 122.535 60.4598 122.611C50.7743 123.274 55.0988 120.03 53.8518 113.517C53.5156 111.762 39.5586 112.472 37.7178 112.865C37.1446 112.988 37.0081 115.849 37.0596 116.376C37.4293 120.175 36.2961 138.243 37.6076 140.462C39.0141 141.256 51.2343 140.992 53.1746 140.708C53.9201 140.117 53.6828 140.345 53.9793 139.237C54.1758 133.566 52.1806 129.905 59.5968 130.539C60.9728 130.656 62.1843 130.347 63.3946 131.243C64.2068 133.198 63.8471 141.553 63.5173 144.053C63.3881 145.032 60.1221 144.722 59.3011 144.809C55.7763 145.182 57.0651 147.452 57.2978 149.609C57.0711 150.092 56.8761 150.504 56.3116 150.692C53.5161 151.614 36.7548 151.474 34.9288 150.892C33.7008 149.732 34.2196 147.734 33.7726 145.702C32.3471 143.968 30.1578 145.434 28.0303 144.362C27.1073 143.052 27.1433 112.791 27.6721 109.513C29.1261 107.826 31.6963 109.122 33.2783 108.291C35.1963 107.284 32.7873 103.305 35.2156 102.184Z"/>
-<path class="mk-cut" d="M32.4663 41.9565C37.4778 41.8842 42.4901 41.916 47.5003 42.0517C45.5081 43.014 43.0056 43.8975 42.8923 46.4532C42.6823 51.2012 42.7793 55.985 42.7838 60.7425L42.7778 90.1955C47.0976 90.0672 53.9226 90.69 57.7653 89.4465C61.2078 86.1707 62.7786 79.663 64.1363 78.8775C64.8828 79.894 64.4173 84.0862 64.3298 85.5195C64.3056 87.529 64.1301 89.7645 64.0153 91.7872C60.2676 91.5422 55.5498 91.7435 51.7171 91.7407L26.5046 91.7437C28.0041 90.843 29.5531 89.9987 31.0823 89.0742C31.7453 85.8925 31.8086 46.5325 30.9683 44.6485C30.4396 43.4622 27.3481 42.6005 26.1658 42.15C28.1213 42.026 30.4836 42.0125 32.4663 41.9565Z"/>
-<path class="mk-cut" d="M162.849 54.3854C164.46 55.3896 162.388 84.5729 163.607 88.6314C164.016 89.9934 166.297 91.0834 167.323 91.6921C161.724 91.7954 156.099 91.5649 150.476 91.7954C149.865 91.8529 149.69 91.9461 149.175 91.6351C149.771 90.4146 152.473 90.1571 152.543 87.8731C152.75 81.1159 152.589 74.3401 152.629 67.5779C152.641 65.5701 152.702 63.4151 152.422 61.4319C151.491 59.9329 149.912 59.7176 148.173 59.1636C153.025 57.4494 157.918 55.8561 162.849 54.3854Z"/>
-<path class="mk-cut" d="M156.748 38.7834C159.938 38.1649 163.035 40.2194 163.705 43.3992C164.375 46.5789 162.371 49.7087 159.203 50.4304C157.107 50.9082 154.916 50.2184 153.472 48.6264C152.028 47.0342 151.554 44.7869 152.233 42.7474C152.912 40.7077 154.637 39.1924 156.748 38.7834Z"/>
-<path class="mk-body" d="M233.936 19.1349C251.789 17.7166 239.851 38.6129 250.379 37.8346C267.404 36.5761 264.041 50.1224 264.046 63.0414L264.051 91.2104V123.837C264.049 129.63 264.106 135.52 263.974 141.304C263.931 143.147 263.674 144.957 262.804 146.477C259.254 152.682 253.379 150.532 248.174 151.717C243.501 152.779 246.099 161.659 244.166 165.054C242.509 167.967 240.816 168.917 237.641 170.012C226.571 171.454 226.324 162.029 226.091 154.637C225.946 149.949 216.029 152.164 212.229 150.007C205.604 146.244 207.446 135.128 207.446 128.24V102.3L207.444 67.1759C207.439 60.8564 207.389 54.5269 207.509 48.1979C207.614 45.4284 207.969 43.0269 209.869 40.9321C213.554 36.8134 218.556 38.5514 223.106 37.5271C228.366 36.3426 225.146 27.3919 227.489 23.8069C229.366 20.9306 230.886 20.0861 233.936 19.1349Z"/>
-<path class="mk-cut" d="M230.619 75.6939C234.654 75.6299 240.499 75.0077 243.824 76.8724C244.229 77.5092 244.676 78.1877 244.959 78.8882C245.599 80.4622 245.586 122.861 245.269 127.459C245.211 128.269 244.994 129.059 244.631 129.784C243.881 131.315 242.804 131.842 241.301 132.338C237.424 132.36 233.494 132.421 229.621 132.286C227.249 130.973 226.464 129.947 226.366 127.275C226.249 124.048 226.296 120.832 226.296 117.604L226.291 99.8182C226.291 95.8469 226.046 81.4009 226.661 78.2817C228.146 76.6649 228.519 76.2857 230.619 75.6939Z"/>
-</svg>
-</template>
-
-<script>
-/* ---- colour system (lifted from docs/brand-lab.html § 2) ---- */
-const SETS = {
-  A: { surface: '#FFABC6', ink: '#4A1040', accent: '#674900' },
-  C: { surface: '#E7F099', ink: '#02302C', accent: '#BD00AD' },
-  J: { surface: '#E6ACF4', ink: '#1C3601', accent: '#674900' },
-  L: { surface: '#CFF6DD', ink: '#3F0167', accent: '#BD00AD' },
-  N: { surface: '#9EDAFF', ink: '#4A1040', accent: '#8D0381' },
-  Q: { surface: '#D9CCF9', ink: '#3E1060', accent: '#745400' },
-  R: { surface: '#E4BDF7', ink: '#751100', accent: '#824616' },
-};
-const BRAND = { cream: '#EDEDE3', green: '#05A24B', ink: '#02302C' };
-
-function schemeFor(key) {
-  if (key === 'brand') {
-    // The X header's chord: green shapes on cream, olive/brown/magenta accents.
-    return { key, ground: BRAND.cream, ink: BRAND.green, type: BRAND.ink,
-             pool: ['#674900', '#824616', '#BD00AD'], plate: '#ffffff' };
-  }
-  const s = SETS[key];
-  // coverPool (lib/marketingTheme.ts): every other set's surface and ink,
-  // minus inks too close to this set's own (the 0.09 ink gate). For L that
-  // drops A/N (#4A1040) and Q (#3E1060) and leaves the footer's nine.
-  const NEAR = { L: ['#4A1040', '#3E1060'], A: ['#3F0167', '#3E1060'], N: ['#3F0167', '#3E1060'], Q: ['#3F0167', '#4A1040'] }[key] || [];
-  const pool = Object.entries(SETS).filter(([k]) => k !== key)
-    .flatMap(([, o]) => [o.surface, o.ink])
-    .filter((c) => c !== s.ink && c !== s.surface && !NEAR.includes(c));
-  return { key, ground: s.surface, ink: s.ink, type: s.ink, pool, plate: BRAND.cream };
-}
-
-/* InvertRect: the band is the ground with every bit flipped (the article's rule). */
-function invert(hex) {
-  const n = parseInt(hex.slice(1), 16) ^ 0xffffff;
-  return '#' + n.toString(16).padStart(6, '0');
-}
-
-/* ---- generators (docs/brand-lab.html, byte for byte) ---- */
-function mulberry32(seed) {
-  let a = seed >>> 0;
-  return function () {
-    a |= 0; a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-function hidden(clear, x, y, ww, hh) {
-  if (!clear) return false;
-  const c = clear;
-  if (x >= c.x + c.w || x + ww <= c.x || y >= c.y + c.h || y + hh <= c.y) return false;
-  return true;
-}
-function quiltPixBody(opts) {
-  const { w, h, ink, pool, scale, seed, clear, rate = 0.28 } = opts;
-  const rng = mulberry32(seed >>> 0);
-  const t = 62 * scale;
-  const pad = t * 0.09;
-  const cell = t - pad * 2;
-  const cols = Math.ceil(w / t) + 1;
-  const rows = Math.ceil(h / t) + 1;
-  const accent = Array.from({ length: rows }, () => Array(cols).fill(false));
-  const P = 7;
-  let out = '';
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      const left = j > 0 && accent[i][j - 1];
-      const up = i > 0 && accent[i - 1][j];
-      let fillCol = ink;
-      if (pool.length && !left && !up && rng() < rate) {
-        fillCol = pool[Math.floor(rng() * pool.length)];
-        accent[i][j] = true;
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --cream: #edede3;
+        --ink: #02302c;
+        --green: #05a24b;
+        --mono: ui-monospace, 'SF Mono', Menlo, monospace;
       }
-      const x = j * t + pad;
-      const y = i * t + pad;
-      const q = cell / P;
-      const roll = rng();
-      const fill = new Array(P * P);
-      if (roll < 0.4) {
-        for (let jj = 0; jj < P; jj++)
-          for (let ii = 0; ii < P; ii++)
-            fill[jj * P + ii] = !((ii === 0 || ii === P - 1) && (jj === 0 || jj === P - 1));
-      } else if (roll < 0.7) {
-        const R = P / 2;
-        for (let jj = 0; jj < P; jj++)
-          for (let ii = 0; ii < P; ii++) {
-            const dx = ii + 0.5 - P / 2, dy = jj + 0.5 - P / 2;
-            fill[jj * P + ii] = dx * dx + dy * dy <= R * R;
-          }
-      } else {
-        const o = Math.floor(rng() * 4);
-        const cx = o === 0 || o === 3 ? 0 : P;
-        const cy = o === 0 || o === 1 ? 0 : P;
-        for (let jj = 0; jj < P; jj++)
-          for (let ii = 0; ii < P; ii++) {
-            const dx = ii + 0.5 - cx, dy = jj + 0.5 - cy;
-            fill[jj * P + ii] = dx * dx + dy * dy <= P * P;
-          }
+      * {
+        box-sizing: border-box;
       }
-      let piece = `<g fill="${fillCol}" shape-rendering="crispEdges">`;
-      for (let jj = 0; jj < P; jj++) {
-        let ii = 0;
-        while (ii < P) {
-          if (!fill[jj * P + ii]) { ii++; continue; }
-          let len = 0;
-          while (ii + len < P && fill[jj * P + ii + len]) len++;
-          piece += `<rect x="${x + ii * q}" y="${y + jj * q}" width="${len * q}" height="${q + 0.4}"/>`;
-          ii += len;
+      body {
+        margin: 0;
+        background: #f6f6f1;
+        color: var(--ink);
+        font-family: 'Roboto Flex', system-ui, sans-serif;
+      }
+      .lab {
+        padding: 28px 32px 80px;
+        max-width: 1320px;
+        margin: 0 auto;
+      }
+      .lab h1 {
+        font-stretch: 151%;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        font-size: 30px;
+        margin: 0 0 6px;
+      }
+      .lab p.note {
+        font-family: var(--mono);
+        font-size: 12.5px;
+        color: #4c5b58;
+        margin: 0 0 20px;
+        max-width: 760px;
+        line-height: 1.5;
+      }
+      .dials {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px 22px;
+        align-items: center;
+        margin-bottom: 26px;
+        font-family: var(--mono);
+        font-size: 12.5px;
+      }
+      .dials label {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .dials input[type='text'] {
+        width: 320px;
+        font: inherit;
+        padding: 4px 6px;
+      }
+      .dials input[type='range'] {
+        width: 120px;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 560px;
+        gap: 28px;
+        align-items: start;
+        margin-bottom: 44px;
+      }
+      .row h2 {
+        grid-column: 1 / -1;
+        font-family: var(--mono);
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin: 0 0 -10px;
+        color: #4c5b58;
+      }
+      .fit {
+        width: 100%;
+        aspect-ratio: 1200 / 630;
+        overflow: hidden;
+        border: 1px solid #d9d9cf;
+      }
+      .fit .card {
+        transform-origin: 0 0;
+      }
+      .feed {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: #4c5b58;
+      }
+      .feed .frame {
+        width: 520px;
+        border: 1px solid #d9d9cf;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #fff;
+      }
+      .feed .thumb {
+        width: 520px;
+        height: 273px;
+        overflow: hidden;
+      }
+      .feed .thumb .card {
+        transform: scale(0.43333);
+        transform-origin: 0 0;
+      }
+      .feed .meta {
+        padding: 10px 14px 12px;
+        color: #111;
+        font-family: system-ui, sans-serif;
+        font-size: 14px;
+      }
+      .feed .meta small {
+        display: block;
+        color: #6b6b6b;
+        font-size: 12px;
+        margin-top: 2px;
+      }
+
+      /* ---- the card ---- */
+      .card {
+        width: 1200px;
+        height: 630px;
+        position: relative;
+        overflow: hidden;
+        background: var(--cream);
+        color: var(--ink);
+      }
+      .card svg.field {
+        position: absolute;
+        inset: 0;
+        width: 1200px;
+        height: 630px;
+        display: block;
+      }
+      .title {
+        font-stretch: 151%;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        line-height: 1.04;
+        margin: 0;
+      }
+      .meta-line {
+        font-family: var(--mono);
+        font-weight: 500;
+        font-size: 26px;
+        letter-spacing: 0.01em;
+      }
+      .eyebrow {
+        font-family: var(--mono);
+        font-weight: 600;
+        font-size: 24px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      /* A · SCREEN */
+      .card.A .panel {
+        position: absolute;
+        left: 64px;
+        top: 64px;
+        right: 64px;
+        bottom: 150px;
+        background: #fff;
+        padding: 52px 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .card.A .band {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 86px;
+        display: flex;
+        align-items: center;
+        padding: 0 64px;
+      }
+
+      /* B · MARK */
+      .card.B .mark {
+        position: absolute;
+        left: 64px;
+        top: 56px;
+        height: 92px;
+        width: auto;
+      }
+      .card.B .copy {
+        position: absolute;
+        left: 64px;
+        top: 200px;
+        width: 660px;
+      }
+      .card.B .foot {
+        position: absolute;
+        left: 64px;
+        bottom: 56px;
+      }
+
+      /* C · COVER */
+      .card.C .strip {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1200px;
+        height: 400px;
+        object-fit: cover;
+        object-position: center;
+        image-rendering: pixelated;
+        display: block;
+      }
+      /* 400 = the 3:1 cover shown whole at 1200 wide; the rows must not be cropped. */
+      .card.C .copy {
+        position: absolute;
+        left: 64px;
+        right: 64px;
+        top: 428px;
+      }
+      .card.C .foot {
+        position: absolute;
+        left: 64px;
+        bottom: 34px;
+      }
+
+      /* E · FOOTER (plate) and F · FOOTER (no plate) */
+      .card.E .plate {
+        position: absolute;
+        left: 72px;
+        right: 72px;
+        top: 64px;
+        height: 388px;
+        background: var(--cream);
+        padding: 44px 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .card.F .copy {
+        position: absolute;
+        left: 72px;
+        right: 72px;
+        top: 64px;
+        height: 388px;
+        padding: 44px 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      /* D · PLATE */
+      .card.D .plate {
+        position: absolute;
+        left: 72px;
+        right: 72px;
+        top: 96px;
+        bottom: 96px;
+        background: var(--cream);
+        padding: 52px 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      body.only {
+        background: transparent;
+      }
+      body.only .lab {
+        display: none;
+      }
+      body.only .card {
+        position: fixed;
+        left: 0;
+        top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="lab">
+      <h1>OG card lab</h1>
+      <p class="note">
+        Four directions for the link card. Left: 1:1 (scaled to fit). Right: how
+        a feed shows it, 520px wide under a title line. Judge on the right; the
+        left is for reading the type. Dials apply to every card.
+      </p>
+      <div class="dials">
+        <label
+          >Scheme
+          <select id="scheme">
+            <option value="brand">brand · cream</option>
+            <option value="L" selected>L · mint / plum</option>
+            <option value="C">C · lime / teal</option>
+            <option value="A">A · rose / plum</option>
+            <option value="J">J · lilac / green</option>
+            <option value="N">N · sky / plum</option>
+            <option value="Q">Q · lavender / violet</option>
+            <option value="R">R · orchid / rust</option>
+          </select>
+        </label>
+        <label
+          >Title
+          <input id="title" type="text" value="Back to the original formula"
+        /></label>
+        <label
+          >Seed
+          <input id="seed" type="range" min="1" max="60" value="45" /><span
+            id="seedv"
+            >45</span
+          ></label
+        >
+        <label
+          >Quilt scale
+          <input
+            id="scale"
+            type="range"
+            min="0.6"
+            max="2.6"
+            step="0.02"
+            value="2"
+          /><span id="scalev">2.00</span></label
+        >
+        <label
+          >Rate
+          <input
+            id="rate"
+            type="range"
+            min="0.1"
+            max="0.8"
+            step="0.01"
+            value="0.75"
+          /><span id="ratev">0.75</span></label
+        >
+      </div>
+      <div id="rows"></div>
+    </div>
+
+    <template id="wordmark">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 265 190"
+        class="mark"
+        aria-hidden="true"
+      >
+        <path
+          class="mk-body"
+          d="M46.6906 0.161408C57.5696 -0.164592 69.8788 0.103905 80.8853 0.104905L145.294 0.10991L192.186 0.108155C200.231 0.100405 208.401 0.0321546 216.451 0.137155C218.204 0.270405 220.751 0.609405 222.174 1.69116C226.361 4.87591 227.769 10.3359 224.689 14.7544C220.814 20.3117 216.991 18.2564 211.504 19.1112C204.589 20.1887 209.389 29.6969 205.761 33.7537C201.566 39.2404 198.519 37.1454 192.506 38.0452C191.284 38.2282 189.881 39.0922 189.256 40.1539C188.736 41.0349 188.631 43.5687 188.626 44.6802C188.594 52.5904 188.609 60.5202 188.609 68.4294L188.611 114.841L188.614 134.917C188.614 137.911 188.371 146.292 189.076 148.737L189.159 149.017C193.646 153.624 198.336 149.464 203.441 152.992C208.864 156.742 206.811 161.377 207.611 166.374C208.636 172.747 218.451 168.447 222.776 172.184C224.721 173.652 225.894 175.814 226.186 178.334C226.899 184.494 222.846 188.212 217.351 189.009C206.251 189.334 193.744 189.074 182.521 189.074L116.799 189.072L71.4336 189.079C63.6621 189.084 55.7211 189.154 47.9509 189.002C45.5939 188.954 43.1891 188.597 41.3261 187.147C36.8748 183.684 38.2761 178.894 37.6849 174.449C36.7366 167.319 27.4126 172.272 22.6956 168.369C17.7779 164.304 19.5241 160.712 18.8344 155.482C17.9114 148.484 8.23885 153.309 3.8656 149.467C1.8811 147.724 0.786605 146.782 0.448855 144.019C-0.208145 138.644 0.0503474 132.631 0.0490974 127.197L0.0421012 97.6994L0.0411018 63.6024C0.0418518 57.9299 -0.0501491 51.9744 0.174601 46.3057C0.235601 44.7617 1.2201 42.6354 2.1361 41.4264C5.31935 37.2247 9.88285 38.1274 14.4496 37.7237C21.9781 37.0579 16.7711 27.5629 20.7049 22.7587C24.6149 17.9834 28.3966 19.5624 33.3896 18.8894C40.8469 17.8844 35.6621 8.19541 39.7899 3.59566C41.9451 1.19391 43.5926 0.589908 46.6906 0.161408Z"
+        />
+        <path
+          class="mk-cut"
+          d="M145.744 54.0306C146.758 55.2444 146.463 57.0889 146.435 58.7701C143.725 58.6669 140.75 58.6934 138.019 58.6611C138.487 59.2931 138.903 59.9616 139.264 60.6606C145.296 72.2979 132.957 80.5394 122.517 78.4749C120.139 78.0046 118.923 77.8404 116.529 77.0431C116.476 83.3004 118.338 81.9321 123.33 83.1549C130.034 84.7974 145.484 84.8806 145.71 94.3509C145.981 105.723 134.142 108.63 125.053 109.083C125.049 114.704 124.456 145.962 125.585 148.892C125.988 149.937 127.528 150.469 128.464 150.937C128.68 151.099 128.574 150.979 128.661 151.377C127.513 151.804 112.349 151.622 109.903 151.644C111.559 150.549 114.077 149.589 114.196 147.394C114.424 143.184 114.33 138.918 114.326 134.695L114.294 107.601C105.002 103.166 107.952 95.5761 114.722 90.5934C106.606 86.4044 111.697 81.3381 115.578 76.4239C115.174 76.1754 114.766 75.9181 114.385 75.6366C112.102 73.9294 110.592 71.3846 110.188 68.5631C108.005 53.8986 127.686 50.7429 137.076 57.8364C141.077 56.8839 142.418 56.2011 145.744 54.0306Z"
+        />
+        <path
+          class="mk-body"
+          d="M116.2 90.9899C117.76 91.4281 125.745 93.0781 127.29 93.0854C134.454 93.1184 143.813 98.9991 134.189 105.38C131.007 106.663 129.096 106.925 125.708 106.967C114.389 107.107 111.708 100.459 116.2 90.9899Z"
+        />
+        <path
+          class="mk-body"
+          d="M124.002 55.8879C126.728 55.6792 129.194 56.3715 130.092 59.2965C131.55 64.0427 132.368 74.7399 126.688 76.9602C123.915 77.2542 121.597 76.6607 120.652 73.6412C119.244 69.1447 118.58 57.9889 124.002 55.8879Z"
+        />
+        <path
+          class="mk-cut"
+          d="M140.172 115.412C145.164 115.247 155.574 115.091 160.711 115.706C162.084 115.87 161.2 119.758 161.802 120.813C162.856 122.661 164.985 121.263 167.269 122.022C169.348 124.061 167.935 135.088 168.293 138.626C168.771 143.353 172.399 139.828 174.66 141.949C175.312 143.214 175.178 149.047 174.815 150.549C174.408 152.239 167.216 151.692 165.814 151.059C165.363 150.274 165.337 147.229 165.26 146.127C164.65 145.472 163.731 144.969 162.818 145.054C160.89 146.567 162.08 149.549 160.942 151.264C158.999 151.872 140.817 151.867 139.036 150.969C138.25 149.589 138.762 148.244 138.576 146.814C138.168 143.674 134.345 146.182 132.325 144.439C131.585 142.553 131.773 125.048 132.294 122.753C133.434 121.153 135.784 122.244 137.229 121.692C140.493 120.446 136.649 116.482 140.172 115.412Z"
+        />
+        <path
+          class="mk-body"
+          d="M142.506 125.635C145.611 125.602 155.83 125.052 158.28 126.328C158.459 126.422 159.553 139.914 157.558 141.1C155.594 141.236 144.039 141.646 142.271 140.718C140.939 140.019 141.843 131.344 141.496 129.501C141.341 128.679 141.513 126.619 142.506 125.635Z"
+        />
+        <path
+          class="mk-cut"
+          d="M87.6493 114.222C98.2266 113.581 107.334 121.608 108.026 132.182C108.719 142.756 100.736 151.902 90.1656 152.647C79.5221 153.394 70.2993 145.347 69.6021 134.699C68.9048 124.052 76.9991 114.868 87.6493 114.222Z"
+        />
+        <path
+          class="mk-body"
+          d="M87.6051 115.64C91.1858 115.462 93.8158 116.562 94.7626 120.329C96.4458 127.174 96.2288 134.775 95.6913 141.775C95.3798 145.832 94.4108 149.812 90.1056 151.072C87.9213 151.192 87.3593 151.082 85.3786 150.434C79.9796 144.937 81.2411 128.751 82.5146 121.417C83.0191 118.51 84.7506 116.547 87.6051 115.64Z"
+        />
+        <path
+          class="mk-cut"
+          d="M75.8353 55.5972C78.9531 55.4877 95.3841 55.1692 97.5043 55.8047C98.8873 57.1187 98.2178 58.7364 98.5258 60.5869C99.0198 63.5562 104.929 60.2897 104.932 63.7062C104.933 66.6654 105.625 83.3189 104.473 84.8199C103.471 85.2347 101.471 85.2812 100.272 85.3294C96.9941 85.4612 99.5154 89.1574 97.6356 91.5839C92.3839 91.8154 81.8616 91.9892 76.3201 91.3737C74.2291 91.1417 75.9893 87.9757 75.4893 86.5982C73.9578 85.0627 71.0589 85.1319 68.9384 84.9812C68.4756 82.2734 68.2748 65.0279 69.1058 62.8107C70.3718 61.3494 72.5066 62.4344 74.5611 61.5692C75.9576 60.4284 75.1283 57.9317 75.8353 55.5972Z"
+        />
+        <path
+          class="mk-body"
+          d="M84.0741 65.704C86.6533 65.6705 92.7401 65.3034 94.7213 66.2237C95.7778 66.7144 95.7958 79.7117 94.7141 81.0284C93.5113 81.4519 91.8713 81.3484 90.5583 81.3467C88.2821 81.3339 80.2711 81.7977 78.8403 80.8132C78.0558 78.5265 78.0593 68.7002 78.6658 66.4334C79.6966 65.4397 82.5573 65.7017 84.0741 65.704Z"
+        />
+        <path
+          class="mk-cut"
+          d="M35.2156 102.184C40.8311 101.961 51.2843 101.577 56.6978 102.301C56.9878 104.036 56.9636 106.521 57.4668 107.82C59.9296 110.206 64.3493 105.662 63.8101 112.891C63.6133 115.529 64.1823 118.987 63.4916 121.682C63.2008 122.816 61.3743 122.535 60.4598 122.611C50.7743 123.274 55.0988 120.03 53.8518 113.517C53.5156 111.762 39.5586 112.472 37.7178 112.865C37.1446 112.988 37.0081 115.849 37.0596 116.376C37.4293 120.175 36.2961 138.243 37.6076 140.462C39.0141 141.256 51.2343 140.992 53.1746 140.708C53.9201 140.117 53.6828 140.345 53.9793 139.237C54.1758 133.566 52.1806 129.905 59.5968 130.539C60.9728 130.656 62.1843 130.347 63.3946 131.243C64.2068 133.198 63.8471 141.553 63.5173 144.053C63.3881 145.032 60.1221 144.722 59.3011 144.809C55.7763 145.182 57.0651 147.452 57.2978 149.609C57.0711 150.092 56.8761 150.504 56.3116 150.692C53.5161 151.614 36.7548 151.474 34.9288 150.892C33.7008 149.732 34.2196 147.734 33.7726 145.702C32.3471 143.968 30.1578 145.434 28.0303 144.362C27.1073 143.052 27.1433 112.791 27.6721 109.513C29.1261 107.826 31.6963 109.122 33.2783 108.291C35.1963 107.284 32.7873 103.305 35.2156 102.184Z"
+        />
+        <path
+          class="mk-cut"
+          d="M32.4663 41.9565C37.4778 41.8842 42.4901 41.916 47.5003 42.0517C45.5081 43.014 43.0056 43.8975 42.8923 46.4532C42.6823 51.2012 42.7793 55.985 42.7838 60.7425L42.7778 90.1955C47.0976 90.0672 53.9226 90.69 57.7653 89.4465C61.2078 86.1707 62.7786 79.663 64.1363 78.8775C64.8828 79.894 64.4173 84.0862 64.3298 85.5195C64.3056 87.529 64.1301 89.7645 64.0153 91.7872C60.2676 91.5422 55.5498 91.7435 51.7171 91.7407L26.5046 91.7437C28.0041 90.843 29.5531 89.9987 31.0823 89.0742C31.7453 85.8925 31.8086 46.5325 30.9683 44.6485C30.4396 43.4622 27.3481 42.6005 26.1658 42.15C28.1213 42.026 30.4836 42.0125 32.4663 41.9565Z"
+        />
+        <path
+          class="mk-cut"
+          d="M162.849 54.3854C164.46 55.3896 162.388 84.5729 163.607 88.6314C164.016 89.9934 166.297 91.0834 167.323 91.6921C161.724 91.7954 156.099 91.5649 150.476 91.7954C149.865 91.8529 149.69 91.9461 149.175 91.6351C149.771 90.4146 152.473 90.1571 152.543 87.8731C152.75 81.1159 152.589 74.3401 152.629 67.5779C152.641 65.5701 152.702 63.4151 152.422 61.4319C151.491 59.9329 149.912 59.7176 148.173 59.1636C153.025 57.4494 157.918 55.8561 162.849 54.3854Z"
+        />
+        <path
+          class="mk-cut"
+          d="M156.748 38.7834C159.938 38.1649 163.035 40.2194 163.705 43.3992C164.375 46.5789 162.371 49.7087 159.203 50.4304C157.107 50.9082 154.916 50.2184 153.472 48.6264C152.028 47.0342 151.554 44.7869 152.233 42.7474C152.912 40.7077 154.637 39.1924 156.748 38.7834Z"
+        />
+        <path
+          class="mk-body"
+          d="M233.936 19.1349C251.789 17.7166 239.851 38.6129 250.379 37.8346C267.404 36.5761 264.041 50.1224 264.046 63.0414L264.051 91.2104V123.837C264.049 129.63 264.106 135.52 263.974 141.304C263.931 143.147 263.674 144.957 262.804 146.477C259.254 152.682 253.379 150.532 248.174 151.717C243.501 152.779 246.099 161.659 244.166 165.054C242.509 167.967 240.816 168.917 237.641 170.012C226.571 171.454 226.324 162.029 226.091 154.637C225.946 149.949 216.029 152.164 212.229 150.007C205.604 146.244 207.446 135.128 207.446 128.24V102.3L207.444 67.1759C207.439 60.8564 207.389 54.5269 207.509 48.1979C207.614 45.4284 207.969 43.0269 209.869 40.9321C213.554 36.8134 218.556 38.5514 223.106 37.5271C228.366 36.3426 225.146 27.3919 227.489 23.8069C229.366 20.9306 230.886 20.0861 233.936 19.1349Z"
+        />
+        <path
+          class="mk-cut"
+          d="M230.619 75.6939C234.654 75.6299 240.499 75.0077 243.824 76.8724C244.229 77.5092 244.676 78.1877 244.959 78.8882C245.599 80.4622 245.586 122.861 245.269 127.459C245.211 128.269 244.994 129.059 244.631 129.784C243.881 131.315 242.804 131.842 241.301 132.338C237.424 132.36 233.494 132.421 229.621 132.286C227.249 130.973 226.464 129.947 226.366 127.275C226.249 124.048 226.296 120.832 226.296 117.604L226.291 99.8182C226.291 95.8469 226.046 81.4009 226.661 78.2817C228.146 76.6649 228.519 76.2857 230.619 75.6939Z"
+        />
+      </svg>
+    </template>
+
+    <script>
+      /* ---- colour system (lifted from docs/brand-lab.html § 2) ---- */
+      const SETS = {
+        A: { surface: '#FFABC6', ink: '#4A1040', accent: '#674900' },
+        C: { surface: '#E7F099', ink: '#02302C', accent: '#BD00AD' },
+        J: { surface: '#E6ACF4', ink: '#1C3601', accent: '#674900' },
+        L: { surface: '#CFF6DD', ink: '#3F0167', accent: '#BD00AD' },
+        N: { surface: '#9EDAFF', ink: '#4A1040', accent: '#8D0381' },
+        Q: { surface: '#D9CCF9', ink: '#3E1060', accent: '#745400' },
+        R: { surface: '#E4BDF7', ink: '#751100', accent: '#824616' },
+      };
+      const BRAND = { cream: '#EDEDE3', green: '#05A24B', ink: '#02302C' };
+
+      function schemeFor(key) {
+        if (key === 'brand') {
+          // The X header's chord: green shapes on cream, olive/brown/magenta accents.
+          return {
+            key,
+            ground: BRAND.cream,
+            ink: BRAND.green,
+            type: BRAND.ink,
+            pool: ['#674900', '#824616', '#BD00AD'],
+            plate: '#ffffff',
+          };
         }
+        const s = SETS[key];
+        // coverPool (lib/marketingTheme.ts): every other set's surface and ink,
+        // minus inks too close to this set's own (the 0.09 ink gate). For L that
+        // drops A/N (#4A1040) and Q (#3E1060) and leaves the footer's nine.
+        const NEAR =
+          {
+            L: ['#4A1040', '#3E1060'],
+            A: ['#3F0167', '#3E1060'],
+            N: ['#3F0167', '#3E1060'],
+            Q: ['#3F0167', '#4A1040'],
+          }[key] || [];
+        const pool = Object.entries(SETS)
+          .filter(([k]) => k !== key)
+          .flatMap(([, o]) => [o.surface, o.ink])
+          .filter((c) => c !== s.ink && c !== s.surface && !NEAR.includes(c));
+        return {
+          key,
+          ground: s.surface,
+          ink: s.ink,
+          type: s.ink,
+          pool,
+          plate: BRAND.cream,
+        };
       }
-      piece += '</g>';
-      if (!hidden(clear, x, y, cell, cell)) out += piece;
-    }
-  }
-  return out;
-}
 
-/* Centred lattice over a region (the brand lab's cover-only offset). */
-function field(region, s, cfg, clear) {
-  const t = 62 * cfg.scale;
-  const span = (len) => Math.ceil(len / t) * t + t;
-  const ox = -(span(region.w) - region.w) / 2;
-  const oy = -(span(region.h) - region.h) / 2;
-  const clearLocal = clear ? { x: clear.x - region.x - ox, y: clear.y - region.y - oy, w: clear.w, h: clear.h } : null;
-  return `<svg class="field" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">` +
-    `<rect width="1200" height="630" fill="${s.ground}"/>` +
-    `<g transform="translate(${region.x + ox} ${region.y + oy})">` +
-    quiltPixBody({ w: region.w - ox * 2, h: region.h - oy * 2, ink: s.ink, pool: s.pool,
-                   scale: cfg.scale, seed: cfg.seed, clear: clearLocal, rate: cfg.rate }) +
-    `</g></svg>`;
-}
+      /* InvertRect: the band is the ground with every bit flipped (the article's rule). */
+      function invert(hex) {
+        const n = parseInt(hex.slice(1), 16) ^ 0xffffff;
+        return '#' + n.toString(16).padStart(6, '0');
+      }
 
-/* The footer band's lay: centred across, rows from the band's TOP so the
+      /* ---- generators (docs/brand-lab.html, byte for byte) ---- */
+      function mulberry32(seed) {
+        let a = seed >>> 0;
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      function hidden(clear, x, y, ww, hh) {
+        if (!clear) return false;
+        const c = clear;
+        if (x >= c.x + c.w || x + ww <= c.x || y >= c.y + c.h || y + hh <= c.y)
+          return false;
+        return true;
+      }
+      function quiltPixBody(opts) {
+        const { w, h, ink, pool, scale, seed, clear, rate = 0.28 } = opts;
+        const rng = mulberry32(seed >>> 0);
+        const t = 62 * scale;
+        const pad = t * 0.09;
+        const cell = t - pad * 2;
+        const cols = Math.ceil(w / t) + 1;
+        const rows = Math.ceil(h / t) + 1;
+        const accent = Array.from({ length: rows }, () =>
+          Array(cols).fill(false)
+        );
+        const P = 7;
+        let out = '';
+        for (let i = 0; i < rows; i++) {
+          for (let j = 0; j < cols; j++) {
+            const left = j > 0 && accent[i][j - 1];
+            const up = i > 0 && accent[i - 1][j];
+            let fillCol = ink;
+            if (pool.length && !left && !up && rng() < rate) {
+              fillCol = pool[Math.floor(rng() * pool.length)];
+              accent[i][j] = true;
+            }
+            const x = j * t + pad;
+            const y = i * t + pad;
+            const q = cell / P;
+            const roll = rng();
+            const fill = new Array(P * P);
+            if (roll < 0.4) {
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++)
+                  fill[jj * P + ii] = !(
+                    (ii === 0 || ii === P - 1) &&
+                    (jj === 0 || jj === P - 1)
+                  );
+            } else if (roll < 0.7) {
+              const R = P / 2;
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++) {
+                  const dx = ii + 0.5 - P / 2,
+                    dy = jj + 0.5 - P / 2;
+                  fill[jj * P + ii] = dx * dx + dy * dy <= R * R;
+                }
+            } else {
+              const o = Math.floor(rng() * 4);
+              const cx = o === 0 || o === 3 ? 0 : P;
+              const cy = o === 0 || o === 1 ? 0 : P;
+              for (let jj = 0; jj < P; jj++)
+                for (let ii = 0; ii < P; ii++) {
+                  const dx = ii + 0.5 - cx,
+                    dy = jj + 0.5 - cy;
+                  fill[jj * P + ii] = dx * dx + dy * dy <= P * P;
+                }
+            }
+            let piece = `<g fill="${fillCol}" shape-rendering="crispEdges">`;
+            for (let jj = 0; jj < P; jj++) {
+              let ii = 0;
+              while (ii < P) {
+                if (!fill[jj * P + ii]) {
+                  ii++;
+                  continue;
+                }
+                let len = 0;
+                while (ii + len < P && fill[jj * P + ii + len]) len++;
+                piece += `<rect x="${x + ii * q}" y="${y + jj * q}" width="${len * q}" height="${q + 0.4}"/>`;
+                ii += len;
+              }
+            }
+            piece += '</g>';
+            if (!hidden(clear, x, y, cell, cell)) out += piece;
+          }
+        }
+        return out;
+      }
+
+      /* Centred lattice over a region (the brand lab's cover-only offset). */
+      function field(region, s, cfg, clear) {
+        const t = 62 * cfg.scale;
+        const span = (len) => Math.ceil(len / t) * t + t;
+        const ox = -(span(region.w) - region.w) / 2;
+        const oy = -(span(region.h) - region.h) / 2;
+        const clearLocal = clear
+          ? {
+              x: clear.x - region.x - ox,
+              y: clear.y - region.y - oy,
+              w: clear.w,
+              h: clear.h,
+            }
+          : null;
+        return (
+          `<svg class="field" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">` +
+          `<rect width="1200" height="630" fill="${s.ground}"/>` +
+          `<g transform="translate(${region.x + ox} ${region.y + oy})">` +
+          quiltPixBody({
+            w: region.w - ox * 2,
+            h: region.h - oy * 2,
+            ink: s.ink,
+            pool: s.pool,
+            scale: cfg.scale,
+            seed: cfg.seed,
+            clear: clearLocal,
+            rate: cfg.rate,
+          }) +
+          `</g></svg>`
+        );
+      }
+
+      /* The footer band's lay: centred across, rows from the band's TOP so the
    second row is cut by the canvas bottom, never by a plate. */
-function bandField(region, s, cfg, canvasGround = s.ground) {
-  const t = 62 * cfg.scale;
-  const span = (len) => Math.ceil(len / t) * t + t;
-  const ox = -(span(region.w) - region.w) / 2;
-  return `<svg class="field" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">` +
-    `<rect width="1200" height="630" fill="${canvasGround}"/>` +
-    `<rect x="${region.x}" y="${region.y}" width="${region.w}" height="${region.h}" fill="${s.ground}"/>` +
-    `<g transform="translate(${region.x + ox} ${region.y})">` +
-    quiltPixBody({ w: region.w - ox * 2, h: region.h + t, ink: s.ink, pool: s.pool,
-                   scale: cfg.scale, seed: cfg.seed, clear: null, rate: cfg.rate }) +
-    `</g></svg>`;
-}
+      function bandField(region, s, cfg, canvasGround = s.ground) {
+        const t = 62 * cfg.scale;
+        const span = (len) => Math.ceil(len / t) * t + t;
+        const ox = -(span(region.w) - region.w) / 2;
+        return (
+          `<svg class="field" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">` +
+          `<rect width="1200" height="630" fill="${canvasGround}"/>` +
+          `<rect x="${region.x}" y="${region.y}" width="${region.w}" height="${region.h}" fill="${s.ground}"/>` +
+          `<g transform="translate(${region.x + ox} ${region.y})">` +
+          quiltPixBody({
+            w: region.w - ox * 2,
+            h: region.h + t,
+            ink: s.ink,
+            pool: s.pool,
+            scale: cfg.scale,
+            seed: cfg.seed,
+            clear: null,
+            rate: cfg.rate,
+          }) +
+          `</g></svg>`
+        );
+      }
 
-const BAND = { x: 0, y: 476, w: 1200, h: 154 };
+      const BAND = { x: 0, y: 476, w: 1200, h: 154 };
 
-function cardE(s, cfg, title) {
-  return `<div class="card E" style="background:${s.ground};color:${s.type}">
+      function cardE(s, cfg, title) {
+        return `<div class="card E" style="background:${s.ground};color:${s.type}">
     ${bandField(BAND, s, cfg)}
     <div class="plate" style="background:${s.plate}">
       <div class="eyebrow" style="color:${s.ink}">LogiCola · Blog</div>
@@ -349,10 +699,10 @@ function cardE(s, cfg, title) {
       <div class="meta-line" style="color:${s.ink}">${META}</div>
     </div>
   </div>`;
-}
+      }
 
-function cardF(s, cfg, title) {
-  return `<div class="card F" style="background:${s.ground};color:${s.type}">
+      function cardF(s, cfg, title) {
+        return `<div class="card F" style="background:${s.ground};color:${s.type}">
     ${bandField(BAND, s, cfg)}
     <div class="copy">
       <div class="eyebrow" style="color:${s.ink}">LogiCola · Blog</div>
@@ -360,10 +710,10 @@ function cardF(s, cfg, title) {
       <div class="meta-line" style="color:${s.ink}">${META}</div>
     </div>
   </div>`;
-}
+      }
 
-function cardG(s, cfg, title) {
-  return `<div class="card E" style="background:${BRAND.cream};color:${s.type}">
+      function cardG(s, cfg, title) {
+        return `<div class="card E" style="background:${BRAND.cream};color:${s.type}">
     ${bandField(BAND, s, cfg, BRAND.cream)}
     <div class="plate" style="background:${BRAND.cream}">
       <div class="eyebrow" style="color:${s.ink}">LogiCola · Blog</div>
@@ -371,56 +721,62 @@ function cardG(s, cfg, title) {
       <div class="meta-line" style="color:${s.ink}">${META}</div>
     </div>
   </div>`;
-}
+      }
 
-const META = 'Sep 8, 2026 · logicola.org';
+      const META = 'Sep 8, 2026 · logicola.org';
 
-function titleSize(title, maxWidth) {
-  // Two lines at most. Roughly 0.5em per character at wdth 151.
-  const perLine = maxWidth / (0.55 * 84);
-  if (title.length <= perLine) return 84;
-  if (title.length <= perLine * 2 * 0.95) return 84;
-  return 68;
-}
+      function titleSize(title, maxWidth) {
+        // Two lines at most. Roughly 0.5em per character at wdth 151.
+        const perLine = maxWidth / (0.55 * 84);
+        if (title.length <= perLine) return 84;
+        if (title.length <= perLine * 2 * 0.95) return 84;
+        return 68;
+      }
 
-function cardA(s, cfg, title) {
-  const band = invert(s.ground);
-  return `<div class="card A" style="background:${s.ground};color:${s.type}">
+      function cardA(s, cfg, title) {
+        const band = invert(s.ground);
+        return `<div class="card A" style="background:${s.ground};color:${s.type}">
     <div class="panel">
       <div class="eyebrow" style="color:${s.ink}">LogiCola · Blog</div>
       <h2 class="title" style="font-size:${titleSize(title, 1000)}px;color:${s.ink}">${title}</h2>
     </div>
     <div class="band" style="background:${band};color:${s.ground}"><span class="meta-line">${META}</span></div>
   </div>`;
-}
+      }
 
-function cardB(s, cfg, title) {
-  const b = schemeFor('brand');
-  const region = { x: 780, y: 0, w: 420, h: 630 };
-  const mark = document.getElementById('wordmark').innerHTML
-    .replace(/class="mk-body"/g, `fill="${BRAND.green}"`)
-    .replace(/class="mk-cut"/g, `fill="${BRAND.cream}"`);
-  return `<div class="card B" style="background:${BRAND.cream};color:${BRAND.ink}">
+      function cardB(s, cfg, title) {
+        const b = schemeFor('brand');
+        const region = { x: 780, y: 0, w: 420, h: 630 };
+        const mark = document
+          .getElementById('wordmark')
+          .innerHTML.replace(/class="mk-body"/g, `fill="${BRAND.green}"`)
+          .replace(/class="mk-cut"/g, `fill="${BRAND.cream}"`);
+        return `<div class="card B" style="background:${BRAND.cream};color:${BRAND.ink}">
     ${field(region, { ...b, ground: BRAND.cream }, cfg, null)}
     ${mark}
     <div class="copy"><h2 class="title" style="font-size:${titleSize(title, 660)}px">${title}</h2></div>
     <div class="foot meta-line" style="color:#4c5b58">${META}</div>
   </div>`;
-}
+      }
 
-function cardC(s, cfg, title) {
-  return `<div class="card C" style="background:${BRAND.cream};color:${BRAND.ink}">
+      function cardC(s, cfg, title) {
+        return `<div class="card C" style="background:${BRAND.cream};color:${BRAND.ink}">
     <img class="strip" src="../public/blog/the-new-logicola/cover.png" alt="" />
     <div class="copy"><h2 class="title" style="font-size:${title.length <= 30 ? 60 : 50}px">${title}</h2></div>
     <div class="foot meta-line" style="color:#4c5b58">${META}</div>
   </div>`;
-}
+      }
 
-function cardD(s, cfg, title) {
-  const plate = { x: 72, y: 96, w: 1056, h: 438 };
-  const margin = 10;
-  const clear = { x: plate.x - margin, y: plate.y - margin, w: plate.w + margin * 2, h: plate.h + margin * 2 };
-  return `<div class="card D" style="background:${s.ground};color:${s.type}">
+      function cardD(s, cfg, title) {
+        const plate = { x: 72, y: 96, w: 1056, h: 438 };
+        const margin = 10;
+        const clear = {
+          x: plate.x - margin,
+          y: plate.y - margin,
+          w: plate.w + margin * 2,
+          h: plate.h + margin * 2,
+        };
+        return `<div class="card D" style="background:${s.ground};color:${s.type}">
     ${field({ x: 0, y: 0, w: 1200, h: 630 }, s, cfg, clear)}
     <div class="plate" style="background:${s.plate}">
       <div class="eyebrow" style="color:${s.ink}">LogiCola · Blog</div>
@@ -428,67 +784,83 @@ function cardD(s, cfg, title) {
       <div class="meta-line" style="color:${s.ink}">${META}</div>
     </div>
   </div>`;
-}
+      }
 
-const CARDS = {
-  E: ['E · Footer — mint, cream plate, one quilt band along the bottom (ships)', cardE],
-  F: ['F · Footer, no plate — the title straight on the mint', cardF],
-  G: ['G · Cream — E with mint only behind the band', cardG],
-  A: ['A · Screen — the 2008 composition: surface, panel, band = ~surface', cardA],
-  B: ['B · Mark — wordmark, brand quilt on the right, title left', cardB],
-  C: ['C · Cover — the post’s cover as a strip, title below', cardC],
-  D: ['D · Plate — the set’s quilt full-bleed, cream plate for the title', cardD],
-};
+      const CARDS = {
+        E: [
+          'E · Footer — mint, cream plate, one quilt band along the bottom (ships)',
+          cardE,
+        ],
+        F: ['F · Footer, no plate — the title straight on the mint', cardF],
+        G: ['G · Cream — E with mint only behind the band', cardG],
+        A: [
+          'A · Screen — the 2008 composition: surface, panel, band = ~surface',
+          cardA,
+        ],
+        B: ['B · Mark — wordmark, brand quilt on the right, title left', cardB],
+        C: ['C · Cover — the post’s cover as a strip, title below', cardC],
+        D: [
+          'D · Plate — the set’s quilt full-bleed, cream plate for the title',
+          cardD,
+        ],
+      };
 
-function readDials() {
-  return {
-    scheme: document.getElementById('scheme').value,
-    title: document.getElementById('title').value,
-    seed: +document.getElementById('seed').value,
-    scale: +document.getElementById('scale').value,
-    rate: +document.getElementById('rate').value,
-  };
-}
+      function readDials() {
+        return {
+          scheme: document.getElementById('scheme').value,
+          title: document.getElementById('title').value,
+          seed: +document.getElementById('seed').value,
+          scale: +document.getElementById('scale').value,
+          rate: +document.getElementById('rate').value,
+        };
+      }
 
-function render() {
-  const d = readDials();
-  document.getElementById('seedv').textContent = d.seed;
-  document.getElementById('scalev').textContent = d.scale.toFixed(2);
-  document.getElementById('ratev').textContent = d.rate.toFixed(2);
-  const s = schemeFor(d.scheme);
-  const rows = document.getElementById('rows');
-  rows.innerHTML = '';
-  for (const [key, [label, fn]] of Object.entries(CARDS)) {
-    const html = fn(s, d, d.title);
-    const row = document.createElement('section');
-    row.className = 'row';
-    row.innerHTML = `<h2>${label}</h2>
+      function render() {
+        const d = readDials();
+        document.getElementById('seedv').textContent = d.seed;
+        document.getElementById('scalev').textContent = d.scale.toFixed(2);
+        document.getElementById('ratev').textContent = d.rate.toFixed(2);
+        const s = schemeFor(d.scheme);
+        const rows = document.getElementById('rows');
+        rows.innerHTML = '';
+        for (const [key, [label, fn]] of Object.entries(CARDS)) {
+          const html = fn(s, d, d.title);
+          const row = document.createElement('section');
+          row.className = 'row';
+          row.innerHTML = `<h2>${label}</h2>
       <div class="fit"><div class="fitin">${html}</div></div>
       <div class="feed"><div class="frame"><div class="thumb">${html}</div>
         <div class="meta">${d.title}<small>logicola.org</small></div></div></div>`;
-    rows.appendChild(row);
-  }
-  // scale the 1:1 previews to their column
-  document.querySelectorAll('.fit').forEach((el) => {
-    const k = el.clientWidth / 1200;
-    el.querySelector('.card').style.transform = `scale(${k})`;
-  });
-}
+          rows.appendChild(row);
+        }
+        // scale the 1:1 previews to their column
+        document.querySelectorAll('.fit').forEach((el) => {
+          const k = el.clientWidth / 1200;
+          el.querySelector('.card').style.transform = `scale(${k})`;
+        });
+      }
 
-const qs = new URLSearchParams(location.search);
-if (qs.get('only')) {
-  document.body.classList.add('only');
-  const key = qs.get('card') || 'A';
-  const scheme = qs.get('scheme') || 'L';
-  const title = qs.get('title') || 'Back to the original formula';
-  const cfg = { seed: +(qs.get('seed') || 45), scale: +(qs.get('scale') || 2), rate: +(qs.get('rate') || 0.75) };
-  document.body.insertAdjacentHTML('beforeend', CARDS[key][1](schemeFor(scheme), cfg, title));
-} else {
-  for (const id of ['scheme', 'title', 'seed', 'scale', 'rate'])
-    document.getElementById(id).addEventListener('input', render);
-  window.addEventListener('resize', render);
-  render();
-}
-</script>
-</body>
+      const qs = new URLSearchParams(location.search);
+      if (qs.get('only')) {
+        document.body.classList.add('only');
+        const key = qs.get('card') || 'A';
+        const scheme = qs.get('scheme') || 'L';
+        const title = qs.get('title') || 'Back to the original formula';
+        const cfg = {
+          seed: +(qs.get('seed') || 45),
+          scale: +(qs.get('scale') || 2),
+          rate: +(qs.get('rate') || 0.75),
+        };
+        document.body.insertAdjacentHTML(
+          'beforeend',
+          CARDS[key][1](schemeFor(scheme), cfg, title)
+        );
+      } else {
+        for (const id of ['scheme', 'title', 'seed', 'scale', 'rate'])
+          document.getElementById(id).addEventListener('input', render);
+        window.addEventListener('resize', render);
+        render();
+      }
+    </script>
+  </body>
 </html>

@@ -3286,65 +3286,123 @@
   }
   @keyframes db-flicker {
     0%,
-    24% { opacity: 1; }
+    24% {
+      opacity: 1;
+    }
     25%,
-    49% { opacity: 0; }
+    49% {
+      opacity: 0;
+    }
     50%,
-    74% { opacity: 1; }
+    74% {
+      opacity: 1;
+    }
     75%,
-    99% { opacity: 0; }
-    100% { opacity: 1; }
+    99% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
-  .db-flicker { animation: db-flicker 340ms steps(1, end) both; }
+  .db-flicker {
+    animation: db-flicker 340ms steps(1, end) both;
+  }
   @keyframes db-inkflicker {
     0%,
-    24% { background-color: var(--db-i); }
+    24% {
+      background-color: var(--db-i);
+    }
     25%,
-    49% { background-color: var(--db-a); }
+    49% {
+      background-color: var(--db-a);
+    }
     50%,
-    74% { background-color: var(--db-i); }
+    74% {
+      background-color: var(--db-i);
+    }
     75%,
-    100% { background-color: var(--db-a); }
+    100% {
+      background-color: var(--db-a);
+    }
   }
-  .db-inkflicker { animation: db-inkflicker 340ms steps(1, end) both; }
+  .db-inkflicker {
+    animation: db-inkflicker 340ms steps(1, end) both;
+  }
   @keyframes db-shake {
-    0% { transform: translateX(0); }
-    15% { transform: translateX(-5px); }
-    40% { transform: translateX(3px); }
-    70% { transform: translateX(-2px); }
-    100% { transform: translateX(0); }
+    0% {
+      transform: translateX(0);
+    }
+    15% {
+      transform: translateX(-5px);
+    }
+    40% {
+      transform: translateX(3px);
+    }
+    70% {
+      transform: translateX(-2px);
+    }
+    100% {
+      transform: translateX(0);
+    }
   }
-  .db-shake { animation: db-shake 260ms ease-out both; }
+  .db-shake {
+    animation: db-shake 260ms ease-out both;
+  }
   @keyframes db-pulse {
     0%,
-    49% { background-color: var(--db-i); }
+    49% {
+      background-color: var(--db-i);
+    }
     50%,
-    100% { background-color: var(--db-a); }
+    100% {
+      background-color: var(--db-a);
+    }
   }
-  .db-pulse { animation: db-pulse 200ms linear both; }
+  .db-pulse {
+    animation: db-pulse 200ms linear both;
+  }
   @keyframes db-blink {
     0%,
-    32% { opacity: 1; }
+    32% {
+      opacity: 1;
+    }
     33%,
-    65% { opacity: 0; }
+    65% {
+      opacity: 0;
+    }
     66%,
-    100% { opacity: 1; }
+    100% {
+      opacity: 1;
+    }
   }
-  .db-blink { animation: db-blink 280ms steps(1, end) both; }
+  .db-blink {
+    animation: db-blink 280ms steps(1, end) both;
+  }
   @keyframes db-track {
-    0% { background-color: color-mix(in srgb, var(--db-i) 32%, transparent); }
-    100% { background-color: color-mix(in srgb, var(--db-i) 12%, transparent); }
+    0% {
+      background-color: color-mix(in srgb, var(--db-i) 32%, transparent);
+    }
+    100% {
+      background-color: color-mix(in srgb, var(--db-i) 12%, transparent);
+    }
   }
-  .db-track { animation: db-track 300ms var(--db-quart) both; }
+  .db-track {
+    animation: db-track 300ms var(--db-quart) both;
+  }
   @media (prefers-reduced-motion: reduce) {
     .db-fill,
-    .db-chunk.is-burning { transition: none; }
+    .db-chunk.is-burning {
+      transition: none;
+    }
     .db-flicker,
     .db-inkflicker,
     .db-shake,
     .db-pulse,
     .db-blink,
-    .db-track { animation: none; }
+    .db-track {
+      animation: none;
+    }
   }
 
   /* ---- blog figure islands (2026-08-26) ----
