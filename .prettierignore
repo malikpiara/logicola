@@ -1,0 +1,6 @@
+# Prettier 3 reads .gitignore and this file by default; the scripts in
+# package.json pass no --ignore-path so both apply.
+# pnpm writes the lockfile in its own YAML style and rewrites it on
+# every dependency change; formatting it is 5,000 lines of churn that
+# the next install undoes (2026-09-08, the release push).
+pnpm-lock.yaml
