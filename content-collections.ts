@@ -57,6 +57,12 @@ const posts = defineCollection({
     // Site-relative path to the post's cover image (card + hero art).
     // Posts without one get generated pattern art instead.
     cover: z.string().optional(),
+    // An animated SVG of the same cover (Malik, 2026-09-23), inlined into
+    // the card (see `coverMotionSvg` below). It gates its own motion on
+    // prefers-reduced-motion: no-preference, must play once inside five
+    // seconds, and must end on exactly `cover`, which stays the static
+    // frame and the rich-results image (Google wants a raster).
+    coverMotion: z.string().optional(),
     // The raw markdown body (explicit per content-collections >= 0.15).
     content: z.string(),
   }),
@@ -80,7 +86,18 @@ const posts = defineCollection({
       })
     );
     const slug = doc._meta.path;
-    return { ...doc, html, slug, url: `/blog/${slug}` };
+    // The motion cover's markup, read at build time (Malik, 2026-09-23:
+    // replay it "whenever the user hovers out and again in that
+    // article"). An SVG in an <img> is a sealed document that plays once
+    // on load and cannot be rewound from the page, so the card inlines
+    // it instead. A wrong path fails the build rather than the card.
+    const coverMotionSvg = doc.coverMotion
+      ? readFileSync(
+          path.join(process.cwd(), 'public', doc.coverMotion),
+          'utf8'
+        ).replace(/<!--[\s\S]*?-->\s*/g, '')
+      : undefined;
+    return { ...doc, html, slug, url: `/blog/${slug}`, coverMotionSvg };
   },
 });
 

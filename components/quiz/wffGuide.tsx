@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import KatexSpan from '../katexSpan';
 import { SubSet } from '@/content/types';
@@ -101,6 +101,34 @@ const CHIP_CLIP_STYLE: React.CSSProperties = { clipPath: spriteClip(0, 8) };
 
 export function hasWffGuide(subSet: SubSet) {
   return GUIDE_SUBSET_IDS.has(subSet.id);
+}
+
+/**
+ * Warm the Set R guide's chunk (2026-09-21), the same head start
+ * `preloadKatex()` gives KaTeX and for the same reason: without it the
+ * pane finished its 500ms slide and THEN the eighteen-row table popped
+ * in, because the fallacy corpus rides its own lazy chunk. Nothing else
+ * in the app loads at that moment, and the Guide button only exists
+ * once the question flow has started — so by the time it can be
+ * pressed, the chunk has long landed.
+ *
+ * A head start, not a guarantee (the note on preloadKatex applies
+ * here too): a slow enough connection still opens the pane on empty.
+ * The honest fix for that is a fallback with the table's own shape, and
+ * it is NOT here, because on mobile the sheet measures this content to
+ * pick its snap point — a skeleton of the wrong height would trade the
+ * pop for a sheet that resizes under the reader's thumb.
+ */
+let guideChunk: Promise<unknown> | null = null;
+
+export function preloadWffGuide(subSet: SubSet): void {
+  if (subSet.id !== SET_R_SUBSET_ID) return;
+  // The promise is HELD, not discarded. A bare `void import(...)` reads
+  // as a no-op to the optimizer and was dropped from the production
+  // bundle: KaTeX preloaded (its own preload keeps a `.then`), the guide
+  // never did, and the first open still fetched a chunk. Verified by
+  // resource timing, not by reading the bundle (2026-09-21).
+  guideChunk ??= import('./setRGuide');
 }
 
 /** A `symbol · caps label · example` notation row (the lab's guideRow). */
@@ -310,7 +338,22 @@ export const WffGuide: React.FC<WffGuideProps> = ({ subSet }) => {
         </div>
       )}
 
-      {subSet.id === SET_R_SUBSET_ID && <SetRGuide />}
+      {subSet.id === SET_R_SUBSET_ID && (
+        /* Its OWN boundary (2026-09-21). Without one, this lazy chunk
+           suspends at whatever boundary happens to be above it — and in
+           a blog post that is the one `next/dynamic` wraps around the
+           WHOLE embed, so opening the guide replaced the entire quiz
+           with the island's loading skeleton for ~300ms. A local
+           boundary keeps any suspension inside the pane, where the
+           worst case is a panel that fills a beat late instead of a
+           drill that blinks out. `null`, not a skeleton: the pane's own
+           height is measured from this content on mobile, so a
+           wrong-height placeholder would trade the blink for a sheet
+           that resizes under the reader's thumb. */
+        <Suspense fallback={null}>
+          <SetRGuide />
+        </Suspense>
+      )}
     </div>
   );
 };

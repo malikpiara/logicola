@@ -36,6 +36,65 @@
   animation: animateIn var(--motion-page-enter) var(--ease-out-quart) 80ms both;
 }
 
+/* The blog arrives by opacity alone (Malik, 2026-09-23: "remove the
+   article Y translations ... subtle but refined, perhaps with opacity").
+   A page of cards has no one thing arriving, so 8px of travel reads as
+   the whole list jolting up as it appears; a fade lets it settle where
+   it stands. Posts took the same entrance that day, so the whole blog
+   arrives one way. No hold, since nothing waits on it, and `backwards`,
+   not `both`: `.motion-enter`'s filled translateY(0) left a transform
+   on the wrapper for good, and a transformed ancestor becomes the
+   containing block for position:fixed (see sectionRail.tsx). Opacity is
+   not motion, so reduced motion keeps it: the two-variant rule's "keep
+   the meaning" half. */
+.motion-fade-in {
+  animation: lxFadeIn var(--motion-page-enter) var(--ease-ui) backwards;
+}
+
+@keyframes lxFadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+/* The embed's quieter entrance (Malik, 2026-09-21: "quieter, softer").
+   `.motion-enter` is a PAGE arrival — 8px of travel, and an 80ms hold at
+   opacity 0 before it starts. In an article the box is already on the
+   page, so that hold reads as the figure blinking out and the travel as
+   the figure jumping. Same curve, same family, dialled down: no hold,
+   about three quarters the duration, and a third of the travel — enough
+   that content arrives rather than cuts, not enough to notice.
+   Unlayered and more specific, because `.motion-enter` above is itself
+   unlayered: a rule inside @layer would lose to it whatever its
+   specificity. */
+.lx-quiz-embed .motion-enter {
+  animation: lxCardIn 170ms var(--ease-out-quart) both;
+}
+
+@keyframes lxCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Keep the arrival, drop the travel — the two-variant rule. */
+  .lx-quiz-embed .motion-enter {
+    animation: lxCardFade 140ms var(--ease-ui) both;
+  }
+
+  @keyframes lxCardFade {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
 @layer utilities {
   .font-stretch {
     font-stretch: ultra-expanded;
@@ -3796,14 +3855,71 @@
      paint` scopes the card's sticky descendants to the embed instead
      of letting them stick to the page. */
   .lx-quiz-embed {
-    margin: 32px 0;
+    /* Outset, the way Medium sets a wide image (Malik, 2026-09-21): the
+       drill breaks out of the 756px prose column by up to --embed-bleed a
+       side, but never closer than --embed-gutter to the viewport edge —
+       100% here is the column, 100vw the page, so the min() is exactly
+       the room the page has spare. Phones have none and stay in column;
+       the embedded card widens its own layout by container query. */
+    --embed-bleed: 176px;
+    --embed-gutter: 24px;
+    margin-block: 32px;
+    margin-inline: calc(
+      -1 *
+        max(
+          0px,
+          min(var(--embed-bleed), (100vw - 100% - 2 * var(--embed-gutter)) / 2)
+        )
+    );
     border-radius: 12px;
     overflow: clip;
     contain: paint;
+    /* THE GROUND (2026-09-21). The figure paints the set's own surface,
+       and every state that sits in it — the reserved box, then the drill
+       — is the same colour on top of it. Without this the wrapper is
+       transparent, and the card arrives through `.motion-enter`: a
+       PAGE entrance, 80ms of held opacity 0 plus a 220ms fade. Measured
+       frame by frame, that left the box fully invisible for ~100ms, so a
+       solid lilac rectangle became the white page and then lilac again —
+       the reload flash. With the ground painted, the card's own surface
+       fades in over an identical surface: nothing but the content
+       actually appears. */
+    background: var(--lx-embed-surface, transparent);
+    /* The growth eases (Malik's call, 2026-09-21). The frame writes its
+       measured height (components/blog/embeds/embedFrame.tsx); this is
+       what makes that change a movement instead of a jump. 300ms on the
+       house entrance curve is deliberately the SAME pair the quiz's own
+       layout change already uses — `.quiz-pane-push` when the reference
+       pane opens — so a box that grows and a card that yields read as
+       one grammar. */
+    transition: height 300ms var(--ease-out-quart);
   }
 
-  /* The bespoke card, now only the loading placeholder and the
-     unknown-key fallback. */
+  @media (prefers-reduced-motion: reduce) {
+    /* The height still tracks its content; it just arrives. */
+    .lx-quiz-embed {
+      transition: none;
+    }
+  }
+
+  /* THE LANDING (2026-09-21). The island is `ssr: false`, so a post
+     always paints a reserved box first and swaps the drill in when its
+     chunk arrives. That swap used to be a hard cut between two different
+     things: a white bordered card ~640px tall, replaced by a lilac
+     viewport-tall one. Nothing about it was a motion problem — the box
+     simply wasn't the thing it was reserving.
+     So this is the same box the drill lands in: same width, same 12px
+     radius, same surface colour, same `h-dvh` height as the start screen
+     it gives way to. The card's own `.motion-enter` fade-up is then the
+     one entrance the container gets — no second animation here, because
+     two fades on one element is how a swap starts reading as a pop. */
+  .lx-embed-skeleton {
+    min-height: 100dvh;
+    border-radius: 12px;
+    background: var(--lx-embed-surface, #efeaf5);
+  }
+
+  /* The bespoke card, now only the unknown-key fallback. */
   .lx-embed {
     margin: 28px 0;
     padding: 18px 20px 20px;
@@ -4171,6 +4287,24 @@ html[data-qsheet-back-collapse] [data-vaul-drawer] {
    the palette stays in marketingTheme.ts. Deliberately unlayered: these
    must outrank the typography plugin's layered blockquote rules (italic,
    inserted quote marks). */
+/* Section headings, one notch down from the typography plugin's 36px
+   (Malik, 2026-09-21, against his Medium draft): the plugin's h2 sits at
+   1.8x the body and opens 56px of air above; Medium's small heading is
+   ~1.1x with the body tight beneath it. This lands between — 1.4x the
+   body (25px on phones, 28px on desktop), a 1.6em lead and half an em
+   to the paragraph, so a heading reads as the top of its section rather
+   than a chapter plate. Every post shares it.
+   The `not-prose` guard mirrors the typography plugin's own exclusion:
+   this is a PLAIN rule, so unlike the plugin's it does not respect
+   `not-prose` on its own, and any island dropped into a post that
+   happens to carry an <h2> would be restyled by it (2026-09-21). */
+.post-prose h2:not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  font-size: clamp(1.375rem, 1.4em, 1.75rem);
+  line-height: 1.2;
+  margin-top: 1.6em;
+  margin-bottom: 0.5em;
+}
+
 .post-prose blockquote {
   font-style: normal;
   font-size: 0.95em;

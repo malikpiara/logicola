@@ -1,0 +1,1778 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pixel cover lab — Set R article</title>
+    <!--
+  PIXEL COVER LAB — round 4, started from scratch (Malik, 2026-09-23:
+  "I'm not satisfied. Let's start from scratch. Read the article to get
+  inspiration"). Rounds 1-3 are archived in docs/cover-lab.html.
+
+  WHY 1-3 MISSED. Every direction was an abstract diagram — fields,
+  tiles, splits. Opinion-page art is almost never a diagram; it is a
+  recognisable object or scene bent into a metaphor. The rounds drew the
+  IDEA of a fallacy instead of drawing things.
+
+  THE BRIEF (answered 2026-09-23):
+    Ideas     "Seems sound", "The feed", "Tinted lenses" — all three,
+              each taken from the article's own text (below).
+    Figures   figurative objects, "and we can also have people
+              pixelated like retro games".
+    Language  the site's pixel language.
+    Output    a finished cover: 2250x750, wired into the post.
+
+  WHERE EACH IDEA COMES FROM IN THE ARTICLE:
+    S - SEEMS SOUND    para 1: fallacies "often seem sound". Drawn as
+                       the cartoon moment everyone knows: the character
+                       has walked off the edge and is standing on air,
+                       not yet looking down. An argument holds exactly
+                       until someone checks what it is standing on.
+    T - THE FEED       para 2: "your Instagram feed", "comment sections
+                       of Reddit or YouTube", "a coffee break". The feed
+                       redrawn as a JRPG conversation — portrait box,
+                       dialogue box, next speaker.
+    U - TINTED LENSES  Final Notes: "the risk of letting my personal
+                       leanings and worldview blend in". One scene, a
+                       pair of glasses, and each lens reading it in a
+                       different colour. The only one about the author
+                       rather than the reader.
+
+  THE PIXEL LANGUAGE (docs/pixel-ui.md): straight edges stay
+  ruler-straight; only curves rasterise, as regular stairs. Retro
+  sprites obey that rule natively, which is why this round can be
+  figurative at all — drawn people are beyond clean code-drawing,
+  sprites are not.
+
+  THE PALETTE — a Game Boy ramp made of the set's own pair. The original
+  Game Boy drew everything in four tones of one hue; this builds those
+  four tones from Set R. The fourth tone is the OKLab midpoint of rust
+  and lilac, which is Duru's halfway-blend gut check made literal: if the
+  midpoint is a colour you would want, the pair shares DNA. It is
+  #AF6B7D, a dusty rose. Measured lightness steps (OKLab L):
+
+      cream #EDEDE3  0.943   ground
+      lilac #E4BDF7  0.851   light — skin, glass, highlights
+      rose  #AF6B7D  0.607   mid — clothes, bricks, text
+      rust  #751100  0.363   dark — hair, outlines-by-colour, shadow
+
+  Four distinct steps. Set L and Set C cannot do this: their surfaces
+  sit at the cream's own lightness (0.939, 0.929 vs 0.943), so their top
+  two tones collapse into one. The article's set is the one whose pair
+  makes a ramp. Other ramps are in the control bar for comparison.
+
+  THE CROP (measured in round 1): a 2250x750 cover shows only its
+  middle 1333px on the blog card and 1125px on the featured card. Every
+  scene below keeps its subject inside the middle 1125px; the dashed
+  guides show both windows, and the life-size mocks at the bottom are
+  the ones to judge.
+
+  ROUND 5 (Malik, 2026-09-23: "S doesn't work. The visual is pretty but
+  it doesn't translate. I love T - THE FEED and would like to see crazier
+  variations of it. A magnifying glass or a person/detective with a
+  magnifying glass pixelated could be an interesting direction").
+
+  S is gone. The two asks combine: the magnifier is the tool, the feed
+  is where you use it — so the lens directions ARE feed directions.
+
+  THE UNLOCK: READABLE TEXT. T's bars stand in for words, which lets a
+  feed hint at a flaw but never show one. A 5x7 bitmap font, drawn on
+  the same pixel grid rather than imported, lets the flaw be READ when
+  you look closer — which is exactly what a magnifying glass is for.
+  The lettering obeys the pixel rule like everything else: every stroke
+  a whole cell.
+
+  THE NEW SIX:
+    V - BATTLE      the feed as a JRPG battle. "A WILD STRAW MAN
+                    APPEARED!" — the opponent is a scarecrow, which is
+                    what a straw man is.
+    W - INFINITE    the feed at the scale it actually runs at: a wall of
+                    speakers, one wrong line in it somewhere.
+    X - LOOP        the feed as circular reasoning, in words: "IT'S
+                    TRUE." / "HOW DO YOU KNOW?" / "BECAUSE IT'S TRUE." —
+                    and the continue arrow runs back to the top.
+    Y - STADIUM     para 2's "friends at a football game": a crowd in
+                    the stands, a handful talking, one of them wrong.
+    Z - DETECTIVE   a deerstalkered detective holding a magnifier over a
+                    dialogue box; inside the lens, the flaw is legible.
+    L - LENS        the magnifier alone over T's own feed — no figure,
+                    the flaw legible only where the glass is.
+
+  Nothing here is decided. -->
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 28px 32px 80px;
+        background: #fafaf7;
+        color: #02302c;
+        font:
+          14px/1.5 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+      }
+      h1 {
+        font-size: 17px;
+        margin: 0 0 4px;
+        letter-spacing: 0.02em;
+      }
+      .sub {
+        margin: 0 0 22px;
+        color: #5c6b68;
+        max-width: 80ch;
+      }
+      .controls {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        align-items: center;
+        padding: 12px 14px;
+        margin-bottom: 26px;
+        background: #fff;
+        border: 2px solid #02302c;
+      }
+      .controls label {
+        display: flex;
+        gap: 7px;
+        align-items: center;
+      }
+      select,
+      input[type='range'] {
+        font: inherit;
+      }
+      .swatches {
+        display: flex;
+        gap: 4px;
+      }
+      .swatches i {
+        width: 22px;
+        height: 22px;
+        display: block;
+      }
+      .dir {
+        margin: 0 0 44px;
+      }
+      .dirhead {
+        display: flex;
+        gap: 12px;
+        align-items: baseline;
+        margin-bottom: 9px;
+      }
+      .dirhead b {
+        font-size: 15px;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+      .dirhead span {
+        color: #5c6b68;
+        max-width: 78ch;
+      }
+      .views {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+      .view p {
+        margin: 0 0 5px;
+        font-size: 11px;
+        color: #5c6b68;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .view svg {
+        display: block;
+        border: 1px solid #c8ccc6;
+      }
+      .mocks {
+        border-top: 2px solid #02302c;
+        padding-top: 22px;
+      }
+      .review {
+        margin: 0 0 40px;
+      }
+      .review h2 {
+        font-size: 14px;
+        margin: 26px 0 8px;
+        letter-spacing: 0.04em;
+      }
+      /* The blog layout paints contentGround, #FFFFFF: judge the cards on it. */
+      .whitepage {
+        background: #ffffff;
+        padding: 28px;
+        border: 1px solid #d8dcd6;
+        display: flex;
+        gap: 28px;
+        flex-wrap: wrap;
+      }
+      .whitepage .card .art {
+        outline: none;
+      }
+      .strip {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .strip figure {
+        margin: 0;
+      }
+      .strip figcaption {
+        font-size: 11px;
+        color: #5c6b68;
+        margin-top: 3px;
+      }
+      .strip svg {
+        display: block;
+        border: 1px solid #c8ccc6;
+      }
+      .mockrow {
+        display: flex;
+        gap: 26px;
+        flex-wrap: wrap;
+      }
+      .card {
+        width: 542px;
+      }
+      .card .art {
+        width: 542px;
+        height: 305px;
+        overflow: hidden;
+      }
+      .cardtitle {
+        font:
+          700 19px/1.25 ui-sans-serif,
+          system-ui,
+          sans-serif;
+        margin: 12px 0 4px;
+      }
+      .carddek {
+        font:
+          13px/1.45 ui-sans-serif,
+          system-ui,
+          sans-serif;
+        color: #4a5654;
+      }
+      /* ROUND 5b — MOTION (Malik, 2026-09-23: "Can we animate the images?
+         Like simple pixelated sprites often were animated? Very simple and
+         subtle").
+
+         FRAMES, NOT TWEENS. A retro sprite jumps a whole cell at a few
+         frames a second; easing would put it between pixels and break the
+         grid. So every timing function below is step-end or steps(), and
+         every movement is exactly one cell.
+
+         THE REST STATE IS THE HERO FRAME. Text fully typed, eyes open, the
+         sprite at rest, no glint. That makes reduced motion a single rule —
+         `animation: none` — and it still shows the whole picture. The
+         trap it avoids: a typewriter paused on frame 0 is an empty box.
+
+         FOUR IDLES, one vocabulary: blink (the continue cursor), bob (one
+         cell — breathing, or talking), type (dialogue, letter by letter),
+         glint (a spark on glass). Plus eyes that blink now and then. */
+      .sp-blink {
+        animation: sp-blink 1.06s step-end infinite;
+      }
+      @keyframes sp-blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+      .sp-bob {
+        animation: sp-bob 1.2s step-end infinite;
+      }
+      .sp-bob.late {
+        animation-delay: -0.6s;
+      }
+      @keyframes sp-bob {
+        0% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(var(--up));
+        }
+      }
+      .sp-wave {
+        animation: sp-bob 1.8s step-end infinite;
+        animation-delay: calc(var(--d) * -1.8s);
+      }
+      .sp-tA {
+        animation: sp-tA 4.8s steps(var(--n)) infinite;
+      }
+      .sp-tB {
+        animation: sp-tB 4.8s steps(var(--n)) infinite;
+      }
+      @keyframes sp-tA {
+        0% {
+          clip-path: inset(0 100% 0 0);
+        }
+        40%,
+        100% {
+          clip-path: inset(0 0 0 0);
+        }
+      }
+      @keyframes sp-tB {
+        0%,
+        44% {
+          clip-path: inset(0 100% 0 0);
+        }
+        74%,
+        100% {
+          clip-path: inset(0 0 0 0);
+        }
+      }
+      .sp-x1 {
+        animation: sp-x1 4.8s steps(var(--n)) infinite;
+      }
+      .sp-x2 {
+        animation: sp-x2 4.8s steps(var(--n)) infinite;
+      }
+      .sp-x3 {
+        animation: sp-x3 4.8s steps(var(--n)) infinite;
+      }
+      @keyframes sp-x1 {
+        0% {
+          clip-path: inset(0 100% 0 0);
+        }
+        18%,
+        100% {
+          clip-path: inset(0 0 0 0);
+        }
+      }
+      @keyframes sp-x2 {
+        0%,
+        26% {
+          clip-path: inset(0 100% 0 0);
+        }
+        50%,
+        100% {
+          clip-path: inset(0 0 0 0);
+        }
+      }
+      @keyframes sp-x3 {
+        0%,
+        58% {
+          clip-path: inset(0 100% 0 0);
+        }
+        82%,
+        100% {
+          clip-path: inset(0 0 0 0);
+        }
+      }
+      .sp-point {
+        animation: sp-point 4.8s step-end infinite;
+      }
+      @keyframes sp-point {
+        0% {
+          transform: translateX(0);
+        }
+        86% {
+          transform: translateX(var(--left));
+        }
+        90% {
+          transform: translateX(0);
+        }
+        94% {
+          transform: translateX(var(--left));
+        }
+        98% {
+          transform: translateX(0);
+        }
+      }
+      .sp-eye {
+        opacity: 0;
+        animation: sp-eye 3.4s step-end infinite;
+      }
+      @keyframes sp-eye {
+        0% {
+          opacity: 0;
+        }
+        92% {
+          opacity: 1;
+        }
+        96% {
+          opacity: 0;
+        }
+      }
+      .sp-glint {
+        opacity: 0;
+        animation: sp-glint 2.6s step-end infinite;
+      }
+      @keyframes sp-glint {
+        0% {
+          opacity: 0;
+        }
+        78% {
+          opacity: 1;
+        }
+        84% {
+          opacity: 0;
+        }
+      }
+
+      /* REVIEW PROPOSALS (2026-09-23). T-talk: the mouth flaps in a short
+         burst, closed at rest; the newest line types in. L-scan: the glass
+         drifts one cell each way. Same rules: stepped, one cell, rest state
+         is the hero frame (mouth closed, line typed, glass centred). */
+      .sp-talk {
+        opacity: 0;
+        animation: sp-talk 2.4s step-end infinite;
+      }
+      @keyframes sp-talk {
+        0% {
+          opacity: 1;
+        }
+        8% {
+          opacity: 0;
+        }
+        16% {
+          opacity: 1;
+        }
+        24% {
+          opacity: 0;
+        }
+        32% {
+          opacity: 1;
+        }
+        40% {
+          opacity: 0;
+        }
+        48% {
+          opacity: 1;
+        }
+        56% {
+          opacity: 0;
+        }
+      }
+      .sp-typeline {
+        animation: sp-typeline 2.4s steps(var(--n)) infinite;
+      }
+      @keyframes sp-typeline {
+        0% {
+          clip-path: inset(0 100% 0 0);
+        }
+        56%,
+        100% {
+          clip-path: inset(0 0 0 0);
+        }
+      }
+      .sp-scan {
+        animation: sp-scan 3.2s step-end infinite;
+      }
+      @keyframes sp-scan {
+        0% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(var(--cell));
+        }
+        50% {
+          transform: translateX(0);
+        }
+        75% {
+          transform: translateX(calc(var(--cell) * -1));
+        }
+      }
+
+      /* ONE SUBJECT PER PICTURE (Malik, 2026-09-23: "My problem with T and L
+         are the person jumping. I'm not sure if that should be the animated
+         element?"). It should not. Motion is a pointer — the eye goes where
+         something moves — so what moves has to be what the image is ABOUT.
+         T is about what is being said: the words move. L is about looking
+         closer: the glass moves, and nothing else does. The person is in
+         neither sentence.
+
+         And the hop was the wrong grammar anyway: at this size one cell is a
+         tenth of the face, so the head read as jumping. Portraits talk with
+         the mouth, and only while text is appearing.
+
+         T: the cursor is hidden while the line types and blinks once it is
+         done — a JRPG waits for you. Synced to sp-typeline / sp-talk (2.4s).
+         L: the glass steps in along the line one cell at a time; the words
+         resolve only when it stops on the flaw; one glint marks the moment
+         it is spotted. Rest state: glass on the flaw, words legible. */
+      .sp-after {
+        animation: sp-after 2.4s step-end infinite;
+      }
+      @keyframes sp-after {
+        0% {
+          opacity: 0;
+        }
+        58% {
+          opacity: 1;
+        }
+        70% {
+          opacity: 0;
+        }
+        82% {
+          opacity: 1;
+        }
+        94% {
+          opacity: 0;
+        }
+      }
+      .sp-arrive {
+        animation: sp-arrive 4.4s steps(10) infinite;
+      }
+      @keyframes sp-arrive {
+        0% {
+          transform: translateX(var(--dist));
+        }
+        30%,
+        76% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(var(--dist));
+        }
+      }
+      .sp-resolve {
+        animation: sp-resolve 4.4s step-end infinite;
+      }
+      @keyframes sp-resolve {
+        0% {
+          opacity: 0;
+        }
+        30% {
+          opacity: 1;
+        }
+        76% {
+          opacity: 0;
+        }
+      }
+      .sp-spotted {
+        opacity: 0;
+        animation: sp-spotted 4.4s step-end infinite;
+      }
+      @keyframes sp-spotted {
+        0% {
+          opacity: 0;
+        }
+        31% {
+          opacity: 1;
+        }
+        36% {
+          opacity: 0;
+        }
+      }
+      /* Ship: arrive ONCE and stay — the loop's walk back off the flaw is for
+         judging the feel, never for the published cover. */
+      @keyframes sp-arrive-once {
+        0% {
+          transform: translateX(var(--dist));
+        }
+        40%,
+        100% {
+          transform: translateX(0);
+        }
+      }
+      @keyframes sp-resolve-once {
+        0% {
+          opacity: 0;
+        }
+        40%,
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes sp-spotted-once {
+        0% {
+          opacity: 0;
+        }
+        41% {
+          opacity: 1;
+        }
+        47%,
+        100% {
+          opacity: 0;
+        }
+      }
+      .motion-ship .sp-arrive {
+        animation: sp-arrive-once 3.3s steps(10) 1;
+      }
+      .motion-ship .sp-resolve {
+        animation: sp-resolve-once 3.3s step-end 1;
+      }
+      .motion-ship .sp-spotted {
+        animation: sp-spotted-once 3.3s step-end 1;
+      }
+      .motion-ship .sp-after {
+        animation-iteration-count: 2;
+      }
+
+      /* SHIP: every performance ends inside WCAG 2.2.2's five seconds and
+         settles on the hero frame, so no pause control is needed. */
+      .motion-ship .sp-blink,
+      .motion-ship .sp-bob {
+        animation-iteration-count: 4;
+      }
+      .motion-ship .sp-wave {
+        animation-iteration-count: 2;
+      }
+      .motion-ship .sp-tA,
+      .motion-ship .sp-tB,
+      .motion-ship .sp-x1,
+      .motion-ship .sp-x2,
+      .motion-ship .sp-x3,
+      .motion-ship .sp-point,
+      .motion-ship .sp-eye,
+      .motion-ship .sp-glint {
+        animation-iteration-count: 1;
+      }
+      .motion-ship .sp-talk,
+      .motion-ship .sp-typeline {
+        animation-iteration-count: 2;
+      }
+      .motion-ship .sp-scan {
+        animation-iteration-count: 1;
+      }
+
+      /* STILL: the lab's emulation of reduced motion — and the real rule. */
+      .motion-still [class*='sp-'] {
+        animation: none !important;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        [class*='sp-'] {
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Pixel cover lab — round 4</h1>
+    <p class="sub">
+      Three ideas from the article, drawn as a retro game in a four-tone ramp
+      built from Set R's own pair. Judge on the life-size cards at the bottom.
+    </p>
+
+    <div class="controls">
+      <label
+        >Ramp
+        <select id="ramp">
+          <option value="own">each direction in its own set</option>
+          <option value="R">all in Set R</option>
+          <option value="Rinv">all in Set R, inverted</option>
+        </select>
+      </label>
+      <span class="swatches" id="sw"></span>
+      <label
+        >Pixel
+        <input id="px" type="range" min="14" max="30" value="20" />
+        <output id="pxout">20</output>
+      </label>
+      <label
+        >Motion
+        <select id="motion">
+          <option value="loop">loop — to judge</option>
+          <option value="ship">ship — plays ≤5s, rests</option>
+          <option value="still">still — reduced motion</option>
+        </select>
+      </label>
+      <button id="replay" type="button">replay</button>
+      <label><input type="checkbox" id="guides" checked /> crop guides</label>
+    </div>
+
+    <section class="review">
+      <h1>Review — T and L</h1>
+      <p class="sub">
+        On the page they will actually sit on: the blog layout's white. Three
+        grounds from Set R's own ramp — coral is out, it is the release post's.
+        Numbers are OKLab distance and contrast against the white page, and the
+        contrast of rust on the ground.
+      </p>
+      <div class="whitepage" id="rv"></div>
+      <h2>Frame by frame — every state each animation passes through</h2>
+      <div id="strips"></div>
+    </section>
+
+    <div id="dirs"></div>
+
+    <div class="mocks">
+      <h1>Life size — the blog index card</h1>
+      <p class="sub">
+        542×305, the measured card. Everything above is about twice this.
+      </p>
+      <div class="mockrow" id="mocks"></div>
+    </div>
+
+    <script>
+      const W = 2250,
+        H = 750;
+      /* COLOUR, ROUND 2 (Malik, 2026-09-23: "we should also be using the
+         green/yellow from the set R, it's a tertiary colour that would work
+         greatly here. And we should update the other examples, removing the
+         cream and introducing other colours from logicola").
+
+         NO COLOUR HERE IS CHOSEN BY HAND. Each set's triad is its surface,
+         its ink, and the first accent of its own quiz pattern —
+         quiltAccentPool(surface, ink, QUIZ_SURFACE_POOL), the function the
+         start screens call (lib/patterns.ts), run for every set on
+         2026-09-23. The first accent is the one the pattern favours: the
+         candidate furthest in lightness from the ink. For Set R that is
+         #E7F099, the yellow-green on its start screen. The fourth tone is
+         the OKLab midpoint of surface and ink, as before.
+
+         ROLES. g ground; box/por the dialogue and portrait windows (the
+         accent — this is where the cream was); sk the skin of a sprite
+         standing ON the ground; 1 accent; 2 surface; 3 midpoint; 4 ink.
+         `sk` exists because a coloured ground swallows any face drawn in
+         the surface colour: sprites on the ground take the accent for
+         skin, faces inside portrait windows keep the surface. */
+      function toOk(h) {
+        const f = (c) => {
+          c /= 255;
+          return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+        };
+        const [r, g, b] = [1, 3, 5].map((i) =>
+          f(parseInt(h.slice(i, i + 2), 16))
+        );
+        const l = Math.cbrt(
+          0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b
+        );
+        const m = Math.cbrt(
+          0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b
+        );
+        const q = Math.cbrt(
+          0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b
+        );
+        return [
+          0.2104542553 * l + 0.793617785 * m - 0.0040720468 * q,
+          1.9779984951 * l - 2.428592205 * m + 0.4505937099 * q,
+          0.0259040371 * l + 0.7827717662 * m - 0.808675766 * q,
+        ];
+      }
+      function fromOk([L, a, b]) {
+        const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+        const m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+        const q = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
+        return (
+          '#' +
+          [
+            4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * q,
+            -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * q,
+            -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * q,
+          ]
+            .map((c) => {
+              c = Math.max(0, Math.min(1, c));
+              const v =
+                c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055;
+              return Math.round(v * 255)
+                .toString(16)
+                .padStart(2, '0');
+            })
+            .join('')
+            .toUpperCase()
+        );
+      }
+      const mixOk = (a, b, t) => {
+        const A = toOk(a),
+          B = toOk(b);
+        return fromOk(A.map((v, i) => v + (B[i] - v) * t));
+      };
+      const okDist = (a, b) => {
+        const A = toOk(a),
+          B = toOk(b);
+        return Math.hypot(A[0] - B[0], A[1] - B[1], A[2] - B[2]);
+      };
+      function lumi(h) {
+        const f = (c) => {
+          c /= 255;
+          return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+        };
+        const [r, g, b] = [1, 3, 5].map((i) =>
+          f(parseInt(h.slice(i, i + 2), 16))
+        );
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      }
+      const contrast = (a, b) => {
+        const [x, y] = [lumi(a), lumi(b)].sort((m, n) => n - m);
+        return (x + 0.05) / (y + 0.05);
+      };
+
+      function rampFrom(surface, ink, accent) {
+        return {
+          g: surface,
+          box: accent,
+          por: accent,
+          sk: accent,
+          1: accent,
+          2: surface,
+          3: mixOk(surface, ink, 0.5),
+          4: ink,
+        };
+      }
+      // surface, ink, first pattern accent — quiltAccentPool, 2026-09-23.
+      const TRIADS = {
+        R: ['#E4BDF7', '#751100', '#E7F099'],
+        A: ['#FFABC6', '#4A1040', '#E7F099'],
+        C: ['#E7F099', '#02302C', '#E6ACF4'],
+        J: ['#E6ACF4', '#1C3601', '#E7F099'],
+        L: ['#CFF6DD', '#3F0167', '#E6ACF4'],
+        N: ['#9EDAFF', '#4A1040', '#E7F099'],
+        Q: ['#D9CCF9', '#3E1060', '#E7F099'],
+      };
+      const RAMPS = Object.fromEntries(
+        Object.entries(TRIADS).map(([k, t]) => [k, rampFrom(...t)])
+      );
+      // Set R turned inside out: chartreuse ground, lilac windows.
+      RAMPS.Rinv = rampFrom('#E7F099', '#751100', '#E4BDF7');
+      // Which set each direction wears when it is not wearing R. T and L are
+      // the candidates for the Set R post; the rest are dressed for reuse.
+      const DIR_SET = {
+        T: 'R',
+        L: 'R',
+        V: 'A',
+        W: 'N',
+        X: 'L',
+        Y: 'C',
+        Z: 'Q',
+        U: 'J',
+      };
+      const onGround = (p) => ({ ...p, 2: p.sk });
+
+      /* Sprites are authored as rows of palette digits ('.' is empty).
+         Runs of one colour merge into one rect, and the SVG renders
+         crispEdges, so there are no hairline seams between pixels. */
+      function sprite(rows, pal, x, y, px, flip = false) {
+        let out = '';
+        rows.forEach((row, j) => {
+          const r = flip ? [...row].reverse().join('') : row;
+          let i = 0;
+          while (i < r.length) {
+            const c = r[i];
+            let k = i;
+            while (k < r.length && r[k] === c) k++;
+            if (c !== '.')
+              out += `<rect x="${x + i * px}" y="${y + j * px}" width="${(k - i) * px}" height="${px}" fill="${pal[c]}"/>`;
+            i = k;
+          }
+        });
+        return out;
+      }
+
+      /* --- the cast ------------------------------------------------ */
+
+      // Walking right, mid-stride, chin up. 12x17.
+      const WALKER = [
+        '...4444.....',
+        '..444444....',
+        '..4444444...',
+        '..44422222..',
+        '..44224222..',
+        '..4422222...',
+        '...422222...',
+        '....4222....',
+        '...33333....',
+        '..3333333...',
+        '..33333322..',
+        '..333333....',
+        '..333333....',
+        '...33.33....',
+        '...33..33...',
+        '..33....33..',
+        '.444....444.',
+      ];
+
+      // Front-facing heads for the dialogue portraits: three different
+      // people, so the feed reads as a conversation, not one voice. 10x10.
+      const HEADS = [
+        [
+          '..444444..',
+          '.44444444.',
+          '.44222244.',
+          '.42422424.',
+          '.42222224.',
+          '.42222224.',
+          '..422224..',
+          '...4224...',
+          '..333333..',
+          '.33333333.',
+        ],
+        [
+          '...4444...',
+          '..444444..',
+          '.4422224..',
+          '.4242242..',
+          '.4222222..',
+          '..222222..',
+          '..422224..',
+          '...2222...',
+          '..333333..',
+          '.33333333.',
+        ],
+        [
+          '.44....44.',
+          '.44444444.',
+          '.44222244.',
+          '.42422424.',
+          '.42222224.',
+          '..222222..',
+          '..422224..',
+          '...2222...',
+          '..444444..',
+          '.44444444.',
+        ],
+      ];
+
+      // Standing, front. 10x16.
+      const STANDER = [
+        '..4444....',
+        '.444444...',
+        '.4222224..',
+        '.4242424..',
+        '.4222224..',
+        '..42224...',
+        '...222....',
+        '..33333...',
+        '.3333333..',
+        '23333332..',
+        '23333332..',
+        '.333333...',
+        '..33.33...',
+        '..33.33...',
+        '..33.33...',
+        '.444.444..',
+      ];
+
+      /* S - SEEMS SOUND ---------------------------------------------- */
+      function dirS(p, px) {
+        const top = 450; // platform surface
+        const edge = W / 2 - 60; // the cliff edge
+        let s = `<rect width="${W}" height="${H}" fill="${p.g}"/>`;
+        s += wall(0, top, edge, H - top, p, px);
+        // Past the edge: nothing. The walker is already out over it, feet
+        // exactly at platform height, stride unbroken.
+        const wx = edge + px * 7;
+        s += sprite(WALKER, p, wx, top - WALKER.length * px, px);
+        return s;
+      }
+      // Running bond: courses of bricks offset by half a brick, mortar in
+      // the ground colour, a lit top edge on the surface course only.
+      function wall(x0, y0, w, h, p, px) {
+        const bw = px * 6,
+          bh = px * 3,
+          m = px;
+        let s = `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="${p[4]}"/>`;
+        for (let j = 0, y = y0; y < y0 + h; j++, y += bh) {
+          const off = j % 2 ? -bw / 2 : 0;
+          for (let x = x0 + off; x < x0 + w; x += bw) {
+            const bx = Math.max(x0, x),
+              bxe = Math.min(x0 + w, x + bw - m);
+            if (bxe <= bx) continue;
+            s += `<rect x="${bx}" y="${y}" width="${bxe - bx}" height="${bh - m}" fill="${p[3]}"/>`;
+          }
+        }
+        s += `<rect x="${x0}" y="${y0}" width="${w}" height="${px}" fill="${p[2]}"/>`;
+        return s;
+      }
+
+      /* T - THE FEED --------------------------------------------------- */
+      function dirT(p, px, v = 'talk') {
+        let s = `<rect width="${W}" height="${H}" fill="${p.g}"/>`;
+        const rowH = 190,
+          gap = 34,
+          startY = (H - (rowH * 3 + gap * 2)) / 2;
+        const portrait = rowH,
+          boxW = 780;
+        const x0 = (W - (portrait + 28 + boxW)) / 2;
+        const lines = [
+          [0.86, 0.62],
+          [0.74, 0.9, 0.4],
+          [0.92, 0.55],
+        ];
+        for (let r = 0; r < 3; r++) {
+          const y = startY + r * (rowH + gap);
+          // Portrait frame: a light ground with a dark border, the head in it.
+          s += `<rect x="${x0}" y="${y}" width="${portrait}" height="${rowH}" fill="${p[4]}"/>`;
+          s += `<rect x="${x0 + px}" y="${y + px}" width="${portrait - 2 * px}" height="${rowH - 2 * px}" fill="${p.por}"/>`;
+          const head = sprite(
+            HEADS[r],
+            p,
+            x0 + (portrait - 10 * px * 0.7) / 2,
+            y + px * 1.5,
+            px * 0.7
+          );
+          if (r === 2 && v === 'hop') {
+            // The speaker whose turn it is bobs — talking.
+            s += `<g class="sp-bob" style="--up:${-px * 0.7}px">${head}</g>`;
+          } else {
+            s += head;
+          }
+          if (r === 2 && v === 'talk') {
+            // A mouth, two cells wide, that opens and shuts in a burst. At
+            // rest it is closed: the hero frame is a face, not a shout.
+            const c = px * 0.7,
+              hx = x0 + (portrait - 10 * c) / 2,
+              hy = y + px * 1.5;
+            s += `<g class="sp-talk"><rect x="${hx + 4 * c}" y="${hy + 5 * c}" width="${2 * c}" height="${c}" fill="${p[4]}"/></g>`;
+          }
+          // The dialogue box.
+          const bx = x0 + portrait + 28;
+          s += `<rect x="${bx}" y="${y}" width="${boxW}" height="${rowH}" fill="${p[4]}"/>`;
+          s += `<rect x="${bx + px}" y="${y + px}" width="${boxW - 2 * px}" height="${rowH - 2 * px}" fill="${p.box}"/>`;
+          lines[r].forEach((f, k) => {
+            const ly = y + px * 2.4 + k * px * 2.1;
+            // One line in the middle speaker's box is the flaw: same shape,
+            // the wrong colour. Quiet on purpose.
+            const flaw = r === 1 && k === 1;
+            const bar = `<rect x="${bx + px * 2}" y="${ly}" width="${(boxW - px * 4) * f}" height="${px * 1.1}" fill="${flaw ? p[4] : p[3]}"/>`;
+            // Talk: the newest line of the newest message types itself in.
+            s +=
+              v === 'talk' && r === 2 && k === 1
+                ? `<g class="sp-typeline" style="--n:14">${bar}</g>`
+                : bar;
+          });
+          // The ▼ that says "press to continue" — the feed never ends.
+          if (r === 2) {
+            const tri = `<path d="M${bx + boxW - px * 3.4},${y + rowH - px * 3} h${px * 1.6} l${-px * 0.8},${px * 1} Z" fill="${p[4]}"/>`;
+            // talk: the cursor waits for the line. still: it simply sits
+            // there, so nothing in L competes with the glass.
+            s +=
+              v === 'still'
+                ? tri
+                : v === 'talk'
+                  ? `<g class="sp-after">${tri}</g>`
+                  : `<g class="sp-blink">${tri}</g>`;
+          }
+        }
+        return s;
+      }
+
+      /* U - TINTED LENSES ------------------------------------------- */
+      function dirU(p, px) {
+        const lensW = 520,
+          lensH = 440,
+          cy = H / 2 + 10,
+          bridge = 110;
+        const lx = W / 2 - bridge / 2 - lensW,
+          rx = W / 2 + bridge / 2;
+        const lens = (x, inset = 0) =>
+          stairRect(
+            x + inset,
+            cy - lensH / 2 + inset,
+            lensW - 2 * inset,
+            lensH - 2 * inset,
+            px * 4,
+            px
+          );
+        // The same small scene in BOTH lenses — one person, one speech
+        // bubble, the same words — because two eyes see one scene. Only
+        // the colour each lens adds is different.
+        const scene = (x, tint) => {
+          const cx = x + lensW / 2;
+          let out = `<rect x="${x}" y="${cy - lensH / 2}" width="${lensW}" height="${lensH}" fill="${tint.bg}"/>`;
+          const sx = cx - 5 * px - 60,
+            sy = cy + 30;
+          out += sprite(STANDER, tint.pal, sx, sy, px);
+          out += `<g class="sp-eye"><rect x="${sx + 3 * px}" y="${sy + 3 * px}" width="${px}" height="${px}" fill="${tint.pal[2]}"/><rect x="${sx + 5 * px}" y="${sy + 3 * px}" width="${px}" height="${px}" fill="${tint.pal[2]}"/></g>`;
+          const bx = cx - 60,
+            by = cy - lensH / 2 + px * 4;
+          out += `<rect x="${bx}" y="${by}" width="${px * 11}" height="${px * 6}" fill="${tint.pal[1]}"/>`;
+          out += `<path d="M${bx + px * 2},${by + px * 6} v${px * 2} l${px * 2},${-px * 2} Z" fill="${tint.pal[1]}"/>`;
+          out += `<rect x="${bx + px * 1.5}" y="${by + px * 1.5}" width="${px * 8}" height="${px}" fill="${tint.pal[3]}"/>`;
+          out += `<rect x="${bx + px * 1.5}" y="${by + px * 3.5}" width="${px * 5}" height="${px}" fill="${tint.pal[3]}"/>`;
+          return out;
+        };
+        // Two readings of one ramp: the left lens pulls everything toward
+        // rust, the right toward lilac. Same content, different weight.
+        const warm = { bg: p[3], pal: { 1: p[1], 2: p[1], 3: p[4], 4: p[4] } };
+        const cool = { bg: p[2], pal: { 1: p[1], 2: p[1], 3: p[3], 4: p[4] } };
+        let s = `<rect width="${W}" height="${H}" fill="${p.g}"/>`;
+        s += `<defs><clipPath id="lL"><path d="${lens(lx)}"/></clipPath><clipPath id="lR"><path d="${lens(rx)}"/></clipPath></defs>`;
+        s += `<g clip-path="url(#lL)">${scene(lx, warm)}</g>`;
+        s += `<g clip-path="url(#lR)">${scene(rx, cool)}</g>`;
+        const gy = cy - lensH / 2 + px * 0.75 - px * 0.3;
+        s += glint(lx + px * 7, gy, px * 0.6, p);
+        s += glint(rx + px * 7, gy, px * 0.6, p);
+        // The frame: stair-cornered rims, a bridge, the temples.
+        const rim = px * 1.5;
+        s += `<path d="${lens(lx)} ${lens(lx, rim)}" fill="${p[4]}" fill-rule="evenodd"/>`;
+        s += `<path d="${lens(rx)} ${lens(rx, rim)}" fill="${p[4]}" fill-rule="evenodd"/>`;
+        s += `<rect x="${lx + lensW - px}" y="${cy - lensH / 2 + px * 4}" width="${bridge + 2 * px}" height="${rim}" fill="${p[4]}"/>`;
+        s += `<rect x="0" y="${cy - lensH / 2 + px * 3}" width="${lx + px}" height="${rim}" fill="${p[4]}"/>`;
+        s += `<rect x="${rx + lensW - px}" y="${cy - lensH / 2 + px * 3}" width="${W - rx - lensW + px}" height="${rim}" fill="${p[4]}"/>`;
+        return s;
+      }
+
+      // A rectangle whose corners are quarter-circles quantised to stairs:
+      // the pixel-ui rule, straight sides straight, only curves stepped.
+      function stairRect(x, y, w, h, R, u) {
+        const steps = [];
+        const n = Math.max(1, Math.round(R / u));
+        for (let k = 0; k < n; k++) {
+          const dy = R - (k + 0.5) * u;
+          const hw = Math.sqrt(Math.max(0, R * R - dy * dy));
+          steps.push(R - Math.min(R, Math.round(hw / u) * u));
+        }
+        let d = `M${x + steps[0]},${y} H${x + w - steps[0]} `;
+        for (let k = 0; k < n; k++)
+          d += `V${y + (k + 1) * u} H${x + w - (steps[k + 1] ?? 0)} `;
+        d += `V${y + h - R} `;
+        for (let k = n - 1; k >= 0; k--)
+          d += `H${x + w - steps[k]} V${y + h - k * u} `;
+        d += `H${x + steps[0]} `;
+        for (let k = 0; k < n; k++)
+          d += `V${y + h - (k + 1) * u} H${x + (steps[k + 1] ?? 0)} `;
+        d += `V${y + R} `;
+        for (let k = n - 1; k >= 0; k--) d += `H${x + steps[k]} V${y + k * u} `;
+        return d + 'Z';
+      }
+
+      /* ================= ROUND 5 ================================= */
+
+      function rng(seed) {
+        let s = seed * 9301 + 49297;
+        return () => (s = (s * 9301 + 49297) % 233280) / 233280;
+      }
+
+      /* A 5x7 bitmap font, drawn on the grid rather than imported, so
+         every stroke of the lettering is a whole cell like everything
+         else in the picture. Uppercase and the punctuation the lines use. */
+      const FONT = {
+        A: ['.###.', '#...#', '#...#', '#####', '#...#', '#...#', '#...#'],
+        B: ['####.', '#...#', '#...#', '####.', '#...#', '#...#', '####.'],
+        C: ['.###.', '#...#', '#....', '#....', '#....', '#...#', '.###.'],
+        D: ['####.', '#...#', '#...#', '#...#', '#...#', '#...#', '####.'],
+        E: ['#####', '#....', '#....', '####.', '#....', '#....', '#####'],
+        F: ['#####', '#....', '#....', '####.', '#....', '#....', '#....'],
+        G: ['.###.', '#...#', '#....', '#.###', '#...#', '#...#', '.###.'],
+        H: ['#...#', '#...#', '#...#', '#####', '#...#', '#...#', '#...#'],
+        I: ['.###.', '..#..', '..#..', '..#..', '..#..', '..#..', '.###.'],
+        J: ['..###', '...#.', '...#.', '...#.', '...#.', '#..#.', '.##..'],
+        K: ['#...#', '#..#.', '#.#..', '##...', '#.#..', '#..#.', '#...#'],
+        L: ['#....', '#....', '#....', '#....', '#....', '#....', '#####'],
+        M: ['#...#', '##.##', '#.#.#', '#.#.#', '#...#', '#...#', '#...#'],
+        N: ['#...#', '#...#', '##..#', '#.#.#', '#..##', '#...#', '#...#'],
+        O: ['.###.', '#...#', '#...#', '#...#', '#...#', '#...#', '.###.'],
+        P: ['####.', '#...#', '#...#', '####.', '#....', '#....', '#....'],
+        Q: ['.###.', '#...#', '#...#', '#...#', '#.#.#', '#..#.', '.##.#'],
+        R: ['####.', '#...#', '#...#', '####.', '#.#..', '#..#.', '#...#'],
+        S: ['.####', '#....', '#....', '.###.', '....#', '....#', '####.'],
+        T: ['#####', '..#..', '..#..', '..#..', '..#..', '..#..', '..#..'],
+        U: ['#...#', '#...#', '#...#', '#...#', '#...#', '#...#', '.###.'],
+        V: ['#...#', '#...#', '#...#', '#...#', '#...#', '.#.#.', '..#..'],
+        W: ['#...#', '#...#', '#...#', '#.#.#', '#.#.#', '#.#.#', '.#.#.'],
+        X: ['#...#', '#...#', '.#.#.', '..#..', '.#.#.', '#...#', '#...#'],
+        Y: ['#...#', '#...#', '.#.#.', '..#..', '..#..', '..#..', '..#..'],
+        Z: ['#####', '....#', '...#.', '..#..', '.#...', '#....', '#####'],
+        '!': ['..#..', '..#..', '..#..', '..#..', '..#..', '.....', '..#..'],
+        '?': ['.###.', '#...#', '....#', '...#.', '..#..', '.....', '..#..'],
+        '.': ['.....', '.....', '.....', '.....', '.....', '.....', '..#..'],
+        ',': ['.....', '.....', '.....', '.....', '.....', '..#..', '.#...'],
+        "'": ['..#..', '..#..', '.....', '.....', '.....', '.....', '.....'],
+        ' ': ['.....', '.....', '.....', '.....', '.....', '.....', '.....'],
+      };
+      function ptext(str, x, y, s, fill) {
+        let out = '',
+          cx = x;
+        for (const ch of str.toUpperCase()) {
+          const g = FONT[ch] || FONT[' '];
+          g.forEach((row, j) => {
+            let i = 0;
+            while (i < 5) {
+              if (row[i] !== '#') {
+                i++;
+                continue;
+              }
+              let k = i;
+              while (k < 5 && row[k] === '#') k++;
+              out += `<rect x="${cx + i * s}" y="${y + j * s}" width="${(k - i) * s}" height="${s}" fill="${fill}"/>`;
+              i = k;
+            }
+          });
+          cx += 6 * s;
+        }
+        return out;
+      }
+      const textW = (str, s) => str.length * 6 * s - s;
+
+      // An ellipse whose curve is quantised to stairs — the pixel-ui rule
+      // applied to a round thing (lens, shadow, centre circle).
+      function stairEllipse(cx, cy, rx, ry, u) {
+        const n = Math.max(2, Math.round((2 * ry) / u));
+        const bu = (2 * ry) / n;
+        const hw = [];
+        for (let k = 0; k < n; k++) {
+          const t = -ry + (k + 0.5) * bu;
+          hw.push(
+            Math.round(
+              (rx * Math.sqrt(Math.max(0, 1 - (t * t) / (ry * ry)))) / u
+            ) * u
+          );
+        }
+        let d = `M${cx},${cy - ry} `;
+        hw.forEach((w, k) => {
+          d += `H${cx + w} V${cy - ry + (k + 1) * bu} `;
+        });
+        for (let k = n - 1; k >= 0; k--)
+          d += `H${cx - hw[k]} V${cy - ry + k * bu} `;
+        return d + 'Z';
+      }
+
+      function frame(x, y, w, h, p, t, fill) {
+        return (
+          `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${p[4]}"/>` +
+          `<rect x="${x + t}" y="${y + t}" width="${w - 2 * t}" height="${h - 2 * t}" fill="${fill ?? p.box}"/>`
+        );
+      }
+
+      // The straw man, literally: a scarecrow. 15x19.
+      const SCARECROW = [
+        '.....44444.....',
+        '....4444444....',
+        '..44444444444..',
+        '....2222222....',
+        '....2422242....',
+        '....2222222....',
+        '....2244422....',
+        '.....22222.....',
+        '223333333333322',
+        '2.33333333333.2',
+        '....3333333....',
+        '....3333333....',
+        '....3333333....',
+        '.....2.2.2.....',
+        '......444......',
+        '......444......',
+        '......444......',
+        '......444......',
+        '....4444444....',
+      ];
+      // The player, from behind, as the battle screen draws it. 12x13.
+      const PLAYER_BACK = [
+        '...444444...',
+        '..44444444..',
+        '..44444444..',
+        '..44444444..',
+        '...444444...',
+        '....2222....',
+        '..33333333..',
+        '.3333333333.',
+        '.3333333333.',
+        '.3333333333.',
+        '.3333333333.',
+        '..33333333..',
+        '..33333333..',
+      ];
+      // A detective in a deerstalker, arm out to hold the glass. 15x18.
+      const DETECTIVE = [
+        '...4444444.....',
+        '.44444444444...',
+        '...4444444.....',
+        '...4222222.....',
+        '...4224222.....',
+        '...4222222.....',
+        '....42222......',
+        '.....4222......',
+        '...33333333....',
+        '..3333333333222',
+        '..33333333.....',
+        '..33333333.....',
+        '..33333333.....',
+        '..33333333.....',
+        '...33..33......',
+        '...33..33......',
+        '...33..33......',
+        '..444..444.....',
+      ];
+      const SPEC_A = ['.444.', '42224', '.222.', '33333', '33333', '.333.'];
+      const SPEC_B = ['.333.', '32223', '.222.', '44444', '44444', '.444.'];
+
+      // A spark on glass: a plus of five cells, there for a moment.
+      function glint(x, y, c, p) {
+        // The ramp's lightest tone, not white: a four-tone palette has no
+        // white, so its lightest step IS the highlight. It sits on the dark
+        // rim, where cream reads as light.
+        return `<g class="sp-glint" fill="${p[1]}">
+          <rect x="${x}" y="${y}" width="${c}" height="${c}"/>
+          <rect x="${x - c}" y="${y}" width="${c}" height="${c}"/><rect x="${x + c}" y="${y}" width="${c}" height="${c}"/>
+          <rect x="${x}" y="${y - c}" width="${c}" height="${c}"/><rect x="${x}" y="${y + c}" width="${c}" height="${c}"/></g>`;
+      }
+
+      /* V - BATTLE ------------------------------------------------------ */
+      function dirV(p, px) {
+        let s = `<rect width="${W}" height="${H}" fill="${p.g}"/>`;
+        // The opponent, top right, on its patch of ground.
+        const op = px,
+          ox = 1330,
+          oy = 40;
+        s += `<path d="${stairEllipse(ox + 7.5 * op, oy + 18.6 * op, 190, 36, px)}" fill="${p[1]}"/>`;
+        s += `<g class="sp-bob" style="--up:${-op}px">${sprite(SCARECROW, onGround(p), ox, oy, op)}</g>`;
+        // Its status box.
+        s += frame(640, 80, 500, 128, p, 12);
+        s += ptext('STRAW MAN', 672, 106, 6, p[4]);
+        s += ptext('HP', 672, 162, 4, p[4]);
+        s += `<rect x="740" y="160" width="356" height="24" fill="${p[4]}"/>`;
+        s += `<rect x="746" y="166" width="${344 * 0.9}" height="12" fill="${p[3]}"/>`;
+        // The player, from behind, cut off by the window as the genre does.
+        const pp = px * 1.25;
+        s += `<path d="${stairEllipse(830, 548, 210, 36, px)}" fill="${p[1]}"/>`;
+        s += `<g class="sp-bob late" style="--up:${-pp}px">${sprite(PLAYER_BACK, onGround(p), 830 - 6 * pp, 548 - 11 * pp, pp)}</g>`;
+        // The message window.
+        s += frame(580, 520, 1090, 212, p, 14);
+        s += `<rect x="596" y="536" width="1058" height="4" fill="${p[3]}"/>`;
+        s += `<g class="sp-tA" style="--n:16">${ptext('A WILD STRAW MAN', 630, 572, 8, p[4])}</g>`;
+        s += `<g class="sp-tB" style="--n:9">${ptext('APPEARED!', 630, 652, 8, p[4])}</g>`;
+        s += `<g class="sp-blink"><path d="M1600,690 h28 l-14,16 Z" fill="${p[4]}"/></g>`;
+        return s;
+      }
+
+      /* W - INFINITE --------------------------------------------------- */
+      function dirW(p, px) {
+        let s = `<rect width="${W}" height="${H}" fill="${p.g}"/>`;
+        const r = rng(7);
+        const por = 96,
+          uw = 480,
+          uh = 96,
+          gx = 24,
+          gy = 22,
+          cols = 5,
+          rows = 6;
+        const tw = cols * uw + (cols - 1) * gx,
+          th = rows * uh + (rows - 1) * gy;
+        const X0 = (W - tw) / 2,
+          Y0 = (H - th) / 2;
+        const t = 9,
+          hp = (por - 2 * t) / 11;
+        for (let c = 0; c < cols; c++)
+          for (let q = 0; q < rows; q++) {
+            const x = X0 + c * (uw + gx),
+              y = Y0 + q * (uh + gy);
+            s += frame(x, y, por, uh, p, t, p.por);
+            const head = sprite(
+              HEADS[(c * 2 + q) % 3],
+              p,
+              x + t + hp * 0.5,
+              y + t + hp * 0.3,
+              hp
+            );
+            s +=
+              (c * 7 + q * 3) % 5 === 0
+                ? `<g class="sp-bob" style="--up:${-hp}px; animation-delay:${-((c + q) % 4) * 0.3}s">${head}</g>`
+                : head;
+            const bx = x + por + 10,
+              bw = uw - por - 10;
+            s += frame(bx, y, bw, uh, p, t);
+            for (let k = 0; k < 2; k++) {
+              const f = 0.35 + r() * 0.55;
+              const flaw = c === 2 && q === 3 && k === 1;
+              s += `<rect x="${bx + t * 2.4}" y="${y + t * 2.6 + k * t * 3.4}" width="${(bw - t * 4.8) * f}" height="${t * 1.5}" fill="${flaw ? p[4] : p[3]}"/>`;
+            }
+          }
+        return s;
+      }
+
+      /* X - LOOP ------------------------------------------------------- */
+      function dirX(p, px) {
+        let s = `<rect width="${W}" height="${H}" fill="${p.g}"/>`;
+        const LINES = [
+          [0, "IT'S TRUE."],
+          [1, 'HOW DO YOU KNOW?'],
+          [0, "BECAUSE IT'S TRUE."],
+        ];
+        const ts = 6,
+          por = 150,
+          gap = 24,
+          boxW = textW(LINES[2][1], ts) + 90,
+          rowH = 150,
+          rg = 32;
+        const total = por + gap + boxW;
+        const x0 = W / 2 - total / 2 - 50,
+          y0 = (H - (rowH * 3 + rg * 2)) / 2;
+        const t = 11,
+          hp = (por - 2 * t) / 11;
+        const bx = x0 + por + gap;
+        LINES.forEach(([who, line], r) => {
+          const y = y0 + r * (rowH + rg);
+          s += frame(x0, y, por, rowH, p, t, p.por);
+          s += sprite(HEADS[who], p, x0 + t + hp * 0.5, y + t + hp * 0.5, hp);
+          s += frame(bx, y, boxW, rowH, p, t);
+          s += `<g class="sp-x${r + 1}" style="--n:${line.length}">${ptext(line, bx + 45, y + (rowH - 7 * ts) / 2, ts, p[4])}</g>`;
+        });
+        // The continue arrow does not go on. It goes back up.
+        const ax = bx + boxW + 26,
+          ay3 = y0 + 2 * (rowH + rg) + rowH / 2,
+          ay1 = y0 + rowH / 2,
+          w = 16;
+        s += `<rect x="${bx + boxW}" y="${ay3 - w / 2}" width="${ax - bx - boxW + w}" height="${w}" fill="${p[4]}"/>`;
+        s += `<rect x="${ax}" y="${ay1 - w / 2}" width="${w}" height="${ay3 - ay1 + w / 2}" fill="${p[4]}"/>`;
+        s += `<rect x="${bx + boxW + 30}" y="${ay1 - w / 2}" width="${ax - bx - boxW - 30 + w}" height="${w}" fill="${p[4]}"/>`;
+        s += `<g class="sp-point" style="--left:-16px"><path d="M${bx + boxW + 2},${ay1} l32,-26 v52 Z" fill="${p[4]}"/></g>`;
+        return s;
+      }
+
+      /* Y - STADIUM ---------------------------------------------------- */
+      function dirY(p, px) {
+        let s = `<rect width="${W}" height="${H}" fill="${p.g}"/>`;
+        const r = rng(3);
+        const tiers = 4,
+          tierH = 116,
+          top = 36,
+          sp = 11,
+          sw = 5 * sp,
+          gap = sp * 2.6;
+        const talkers = [];
+        for (let t = 0; t < tiers; t++) {
+          const y = top + t * tierH;
+          s += `<rect x="0" y="${y + tierH - sp * 2}" width="${W}" height="${sp * 2}" fill="${p[4]}"/>`;
+          const off = t % 2 ? (sw + gap) / 2 : 0;
+          for (let x = -sw + off; x < W; x += sw + gap) {
+            const yy = y + tierH - sp * 2 - 6 * sp;
+            s += `<g class="sp-wave" style="--up:${-sp}px; --d:${(1 - x / W).toFixed(3)}">${sprite(r() < 0.5 ? SPEC_A : SPEC_B, onGround(p), x, yy, sp)}</g>`;
+            if (t > 0 && r() < 0.16 && x > 560 && x < 1640)
+              talkers.push([x, yy]);
+          }
+        }
+        let best = talkers[0];
+        for (const q of talkers)
+          if (Math.abs(q[0] - W / 2) < Math.abs(best[0] - W / 2)) best = q;
+        for (const [x, y] of talkers) {
+          const flaw = x === best[0] && y === best[1];
+          const bw = flaw ? 190 : 104,
+            bh = flaw ? 70 : 46;
+          const bx = x + sw / 2 - bw / 2,
+            by = y - bh - 14;
+          const fill = flaw ? p[4] : p.box;
+          s += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" fill="${fill}"/>`;
+          s += `<path d="M${x + sw / 2 - 9},${by + bh} h18 l-9,12 Z" fill="${fill}"/>`;
+          s += `<rect x="${bx + 14}" y="${by + bh / 2 - 6}" width="${bw - 28}" height="12" fill="${flaw ? p[1] : p[3]}"/>`;
+        }
+        // The pitch, and the centre circle cut by the bottom edge.
+        const py = top + tiers * tierH;
+        s += `<rect x="0" y="${py}" width="${W}" height="${H - py}" fill="${p[1]}"/>`;
+        s += `<rect x="${W / 2 - 5}" y="${py}" width="10" height="${H - py}" fill="${p.g}"/>`;
+        s += `<path d="${stairEllipse(W / 2, H + 40, 200, 200, px)} ${stairEllipse(W / 2, H + 40, 190, 190, px)}" fill="${p.g}" fill-rule="evenodd"/>`;
+        return s;
+      }
+
+      /* Z - DETECTIVE -------------------------------------------------- */
+      function dirZ(p, px) {
+        let s = `<rect width="${W}" height="${H}" fill="${p.g}"/>`;
+        const bx = 880,
+          by = 96,
+          bw = 760,
+          bh = 318,
+          t = 16;
+        s += frame(bx, by, bw, bh, p, t);
+        const lineY = (k) => by + 56 + k * 62;
+        [0.82, 0.62, 0.9, 0.48].forEach(
+          (f, k) =>
+            (s += `<rect x="${bx + 44}" y="${lineY(k)}" width="${(bw - 88) * f}" height="22" fill="${p[3]}"/>`)
+        );
+        // The glass sits on line 2. Inside it, the line is words.
+        const lcx = bx + 300,
+          lcy = lineY(2) + 11,
+          lr = 176;
+        const rim = stairEllipse(lcx, lcy, lr, lr, 10);
+        s += `<defs><clipPath id="zl"><path d="${rim}"/></clipPath></defs>`;
+        s += `<g clip-path="url(#zl)"><rect x="${lcx - lr}" y="${lcy - lr}" width="${2 * lr}" height="${2 * lr}" fill="${p[1]}"/>`;
+        s += `<rect x="${lcx - lr}" y="${lcy - 70}" width="${2 * lr}" height="140" fill="${p[2]}"/>`;
+        s += ptext(
+          'EVERYONE',
+          lcx - textW('EVERYONE', 6) / 2,
+          lcy - 56,
+          6,
+          p[4]
+        );
+        s += ptext('AGREES.', lcx - textW('AGREES.', 6) / 2, lcy + 12, 6, p[4]);
+        s += `</g>`;
+        s += `<path d="${rim} ${stairEllipse(lcx, lcy, lr - 24, lr - 24, 10)}" fill="${p[4]}" fill-rule="evenodd"/>`;
+        // The handle, a stepped diagonal down-left to the detective's hand.
+        const hs = 18;
+        let hx = lcx - lr * 0.7,
+          hy = lcy + lr * 0.7;
+        for (let k = 0; k < 9; k++)
+          s += `<rect x="${hx - k * hs}" y="${hy + k * hs - hs}" width="${hs * 2}" height="${hs * 2}" fill="${p[4]}"/>`;
+        const dp = 18,
+          handX = hx - 8 * hs,
+          handY = hy + 8 * hs;
+        const dx = handX - 13 * dp,
+          dy = handY - 9.5 * dp;
+        s += sprite(DETECTIVE, onGround(p), dx, dy, dp);
+        s += `<g class="sp-eye"><rect x="${dx + 6 * dp}" y="${dy + 4 * dp}" width="${dp}" height="${dp}" fill="${p.sk}"/></g>`;
+        s += glint(lcx - (lr - 12) * 0.707, lcy - (lr - 12) * 0.707, 10, p);
+        return s;
+      }
+
+      /* L - LENS ------------------------------------------------------- */
+      function dirL(p, px, v = 'arrive') {
+        // The feed is still: in L the glass is the only thing that moves.
+        let s = dirT(p, px, 'still');
+        // T's middle box, second line: the flaw. The glass rests on it.
+        const y1 = 56 + 190 + 34,
+          ly = y1 + px * 2.4 + px * 2.1,
+          bx = 844;
+        const lcx = bx + 330,
+          lcy = ly + px * 0.55,
+          lr = 222;
+        const rim = stairEllipse(lcx, lcy, lr, lr, 10);
+        const words =
+          ptext(
+            'YOU WOULD',
+            lcx - textW('YOU WOULD', 6) / 2,
+            lcy - 56,
+            6,
+            p[4]
+          ) +
+          ptext(
+            'SAY THAT.',
+            lcx - textW('SAY THAT.', 6) / 2,
+            lcy + 12,
+            6,
+            p[4]
+          );
+        let g = `<defs><clipPath id="ll"><path d="${rim}"/></clipPath></defs>`;
+        g += `<g clip-path="url(#ll)"><rect x="${lcx - lr}" y="${lcy - lr}" width="${2 * lr}" height="${2 * lr}" fill="${p.box}"/>`;
+        g += `<rect x="${lcx - lr}" y="${lcy - 76}" width="${2 * lr}" height="152" fill="${p[2]}"/>`;
+        // arrive: while the glass travels the band is empty; the words
+        // resolve only when it stops on the flaw. That IS the post's title.
+        g += v === 'arrive' ? `<g class="sp-resolve">${words}</g>` : words;
+        g += `</g>`;
+        g += `<path d="${rim} ${stairEllipse(lcx, lcy, lr - 26, lr - 26, 10)}" fill="${p[4]}" fill-rule="evenodd"/>`;
+        const gx = lcx - (lr - 13) * 0.707,
+          gy = lcy - (lr - 13) * 0.707;
+        // One glint, at the moment of spotting — not a periodic sparkle.
+        g +=
+          v === 'arrive'
+            ? glint(gx, gy, 10, p).replace(
+                'class="sp-glint"',
+                'class="sp-spotted"'
+              )
+            : glint(gx, gy, 10, p);
+        const hs = 20,
+          hx = lcx + lr * 0.7,
+          hy = lcy + lr * 0.7;
+        for (let k = 0; k < 10; k++)
+          g += `<rect x="${hx + k * hs - hs}" y="${hy + k * hs - hs}" width="${hs * 2.2}" height="${hs * 2.2}" fill="${p[4]}"/>`;
+        if (v === 'arrive')
+          return (
+            s + `<g class="sp-arrive" style="--dist:${px * 10}px">${g}</g>`
+          );
+        if (v === 'scan')
+          return s + `<g class="sp-scan" style="--cell:${px}px">${g}</g>`;
+        return s + g;
+      }
+
+      const DIRS = [
+        [
+          'T',
+          'THE FEED · seed',
+          'Round 4. The feed as a JRPG conversation; one line in the middle box the wrong colour. The one everything below grows out of.',
+          dirT,
+        ],
+        [
+          'V',
+          'BATTLE',
+          'The feed as a JRPG battle. "A WILD STRAW MAN APPEARED!" — and the opponent is a scarecrow, which is what a straw man is.',
+          dirV,
+        ],
+        [
+          'W',
+          'INFINITE',
+          'The feed at the scale it actually runs at: a wall of speakers, and one wrong line in it somewhere. The crop cannot hurt it — any part of a wall is a wall.',
+          dirW,
+        ],
+        [
+          'X',
+          'LOOP',
+          'Circular reasoning, readable: "IT\'S TRUE." / "HOW DO YOU KNOW?" / "BECAUSE IT\'S TRUE." — and the continue arrow runs back to the top.',
+          dirX,
+        ],
+        [
+          'Y',
+          'STADIUM',
+          'Para 2\'s "friends at a football game": the stands, a handful of people talking, one of them wrong.',
+          dirY,
+        ],
+        [
+          'Z',
+          'DETECTIVE',
+          'A detective in a deerstalker holds a magnifier over a dialogue box. Outside the glass, bars; inside it, the flaw is legible.',
+          dirZ,
+        ],
+        [
+          'L',
+          'LENS',
+          'The magnifier alone over the feed from T. No figure — the words only exist where the glass is.',
+          dirL,
+        ],
+        [
+          'U',
+          'TINTED LENSES',
+          'Round 4, not yet ruled on. The same scene in both lenses; only the colour each adds differs.',
+          dirU,
+        ],
+      ];
+
+      const el = (h) => {
+        const d = document.createElement('div');
+        d.innerHTML = h.trim();
+        return d.firstElementChild;
+      };
+
+      function svg(body, vx, vw, dispW, guides) {
+        const g = guides
+          ? `<g fill="none" stroke-width="5" stroke-dasharray="20 14">
+               <rect x="${(W - 1333) / 2}" y="3" width="1333" height="${H - 6}" stroke="#02302C"/>
+               <rect x="${(W - 1125) / 2}" y="3" width="1125" height="${H - 6}" stroke="#BD00AD"/></g>`
+          : '';
+        const dispH = Math.round((dispW * H) / vw);
+        return `<svg viewBox="${vx} 0 ${vw} ${H}" width="${dispW}" height="${dispH}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">${body}${g}</svg>`;
+      }
+
+      function render() {
+        const px = Number(pxin.value);
+        const palOf = (letter) =>
+          ramp.value === 'own' ? RAMPS[DIR_SET[letter]] : RAMPS[ramp.value];
+        const setOf = (letter) =>
+          ramp.value === 'own'
+            ? DIR_SET[letter]
+            : ramp.value === 'R'
+              ? 'R'
+              : 'R inverted';
+        pxout.value = px;
+        const sp = RAMPS[ramp.value === 'own' ? 'R' : ramp.value];
+        sw.innerHTML = [sp.g, sp[1], sp[3], sp[4]]
+          .map((c) => `<i style="background:${c}" title="${c}"></i>`)
+          .join('');
+        dirs.innerHTML = '';
+        mocks.innerHTML = '';
+        for (const c of [dirs, mocks]) {
+          c.classList.remove('motion-loop', 'motion-ship', 'motion-still');
+          c.classList.add('motion-' + motion.value);
+        }
+        for (const [letter, name, note, fn] of DIRS) {
+          const p = palOf(letter);
+          const body = fn(p, px);
+          const chips = [p.g, p[1], p[3], p[4]]
+            .map(
+              (c) =>
+                `<i style="display:inline-block;width:12px;height:12px;background:${c};margin-right:2px" title="${c}"></i>`
+            )
+            .join('');
+          dirs.append(
+            el(`<section class="dir">
+            <div class="dirhead"><b>${letter} · ${name}</b><span>${chips} Set ${setOf(letter)} · ${note}</span></div>
+            <div class="views">
+              <div class="view"><p>full 2250×750</p>${svg(body, 0, W, 690, guides.checked)}</div>
+              <div class="view"><p>blog card · centre 59%</p>${svg(body, (W - 1333) / 2, 1333, 409, false)}</div>
+              <div class="view"><p>featured · centre 50%</p>${svg(body, (W - 1125) / 2, 1125, 345, false)}</div>
+            </div></section>`)
+          );
+          mocks.append(
+            el(`<div class="card">
+              <div class="art">${svg(body, (W - 1333) / 2, 1333, 542, false)}</div>
+              <p class="cardtitle">Learn how to spot hidden flaws in everyday reasoning</p>
+              <p class="carddek">${letter} · ${name} · Set ${setOf(letter)}</p></div>`)
+          );
+        }
+      }
+
+      const GROUNDS = [
+        ['R', 'lilac ground, chartreuse windows'],
+        ['Rinv', 'chartreuse ground, lilac windows'],
+      ];
+      // Each strip names the frames that reach every state of its loop:
+      // T's cursor and talking head have periods 1.06s and 1.2s, so four
+      // frames catch all four on/off x up/down combinations.
+      const STRIPS = [
+        [
+          'T·talk',
+          (q, x) => dirT(q, x, 'talk'),
+          [0, 0.2, 0.45, 1.0, 1.4, 1.7, 2.0],
+          [600, 470, 1070, 260],
+        ],
+        [
+          'L·arrive',
+          (q, x) => dirL(q, x, 'arrive'),
+          [0, 0.5, 1.0, 1.35, 1.45, 2.5, 3.6],
+          [700, 150, 900, 470],
+        ],
+      ];
+      function renderReview() {
+        const px = Number(pxin.value);
+        rv.innerHTML = '';
+        const VARIANTS = [
+          ['T', 'talk — the words move', (q) => dirT(q, px, 'talk')],
+          ['L', 'arrive — the glass moves', (q) => dirL(q, px, 'arrive')],
+          ['L', 'scan — the glass moves', (q) => dirL(q, px, 'scan')],
+          ['T', 'hop — was: the person moves', (q) => dirT(q, px, 'hop')],
+        ];
+        for (const [letter, vname, fn] of VARIANTS) {
+          const body = fn(RAMPS.R);
+          rv.append(
+            el(`<div class="card">
+            <div class="art">${svg(body, (W - 1333) / 2, 1333, 542, false)}</div>
+            <p class="cardtitle">Learn how to spot hidden flaws in everyday reasoning</p>
+            <p class="carddek">${letter} · ${vname} · Set R</p></div>`)
+          );
+        }
+        rv.append(
+          el(
+            `<p class="sub" style="width:100%;margin:6px 0 0">Grounds, on white:</p>`
+          )
+        );
+        for (const [key, name] of GROUNDS)
+          for (const [letter, fn] of [
+            ['T', dirT],
+            ['L', dirL],
+          ]) {
+            const q = RAMPS[key];
+            // Measured, not typed: distance and contrast against the page's
+            // white, and rust on the ground.
+            const stats = `ΔE ${okDist(q.g, '#FFFFFF').toFixed(3)} · ${contrast(q.g, '#FFFFFF').toFixed(2)}:1 · ink ${contrast(q[4], q.g).toFixed(2)}:1 · ink on window ${contrast(q[4], q.box).toFixed(2)}:1`;
+            const body = fn(q, px);
+            rv.append(
+              el(`<div class="card">
+              <div class="art">${svg(body, (W - 1333) / 2, 1333, 542, false)}</div>
+              <p class="cardtitle">Learn how to spot hidden flaws in everyday reasoning</p>
+              <p class="carddek">${letter} · ${name} · ${stats}</p></div>`)
+            );
+          }
+        strips.innerHTML = '';
+        const p = RAMPS[ramp.value === 'own' ? 'R' : ramp.value];
+        for (const [letter, fn, times, [vx, vy, vw, vh]] of STRIPS) {
+          // Attach BEFORE seeking: a detached element has no computed style,
+          // so it has no CSS animations to pause — the first version of this
+          // strip froze nothing and showed live frames under the labels.
+          const row = el(`<div class="strip"></div>`);
+          strips.append(row);
+          for (const t of times) {
+            const body = fn(p, px);
+            const fig = el(
+              `<figure><svg viewBox="${vx} ${vy} ${vw} ${vh}" width="300" height="${Math.round((300 * vh) / vw)}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">${body}</svg><figcaption>${letter} · ${t.toFixed(2)}s</figcaption></figure>`
+            );
+            row.append(fig);
+            for (const a of fig.getAnimations({ subtree: true })) {
+              a.pause();
+              a.currentTime = t * 1000;
+            }
+          }
+        }
+        for (const c of [rv]) {
+          c.classList.remove('motion-loop', 'motion-ship', 'motion-still');
+          c.classList.add('motion-' + motion.value);
+        }
+      }
+
+      const pxin = document.getElementById('px');
+      const renderAll = () => {
+        render();
+        renderReview();
+      };
+      for (const c of [ramp, pxin, guides, motion])
+        c.addEventListener('input', renderAll);
+      replay.addEventListener('click', renderAll);
+      renderAll();
+    </script>
+  </body>
+</html>

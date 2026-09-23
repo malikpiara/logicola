@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Quiz from '@/components/quiz';
+import { getQuizScreenColors } from '@/components/quiz/quizColors';
+import { EmbedFrame } from './embedFrame';
 import { setQ } from '@/content/sets/setQ';
 import type { SubSet } from '@/content/types';
 
@@ -48,8 +50,8 @@ export function SetQEmbed({
   });
 
   return (
-    <div className='not-prose lx-quiz-embed'>
+    <EmbedFrame surface={getQuizScreenColors(subSet).surfaceColor}>
       <Quiz subSet={subSet} embedded />
-    </div>
+    </EmbedFrame>
   );
 }

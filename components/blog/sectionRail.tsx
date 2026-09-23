@@ -40,7 +40,9 @@ export function SectionRail() {
   // while the article is under it, growing as the article's end rises
   // past its band — so it leaves with the content instead of floating
   // over the footer, the way a sticky element leaves its container.
-  const [park, setPark] = useState(0);
+  // Written straight to the nav's style, not held in state: it changes
+  // on every scroll frame near the footer and nothing but `top` reads
+  // it (React pass, 2026-09-08).
   const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -67,7 +69,10 @@ export function SectionRail() {
       const railH = navRef.current?.offsetHeight ?? 0;
       const railBottom = window.innerHeight / 2 + railH / 2 + 24;
       const end = prose?.getBoundingClientRect().bottom ?? Infinity;
-      setPark(Math.max(0, Math.round(railBottom - end)));
+      const park = Math.max(0, Math.round(railBottom - end));
+      if (navRef.current) {
+        navRef.current.style.top = park ? `calc(50% - ${park}px)` : '50%';
+      }
       // The first pass runs before the nav exists (it renders off this
       // very measure), so its height reads 0; measure once more after
       // the commit so a page loaded at the footer parks correctly.
@@ -114,10 +119,12 @@ export function SectionRail() {
     if (el.id) history.pushState(null, '', `#${el.id}`);
   };
 
-  // Portalled to <body>: the article wrapper animates in with a
-  // transform, and a transformed ancestor becomes the containing block
-  // for position:fixed — anchored to a 30,000px article, "fixed" put
-  // the rail at the column's literal middle, off every screen.
+  // Portalled to <body>: the article wrapper animated in with a
+  // transform until 2026-09-23 (posts now fade, opacity only), and a
+  // transformed ancestor becomes the containing block for
+  // position:fixed — anchored to a 30,000px article, "fixed" put the
+  // rail at the column's literal middle, off every screen. The portal
+  // stays, so no future wrapper can do that again.
   return createPortal(
     <nav
       ref={navRef}
@@ -126,7 +133,7 @@ export function SectionRail() {
       style={{
         position: 'fixed',
         left: 0,
-        top: park ? `calc(50% - ${park}px)` : '50%',
+        top: '50%',
       }}
     >
       {entries.map((e, i) => (

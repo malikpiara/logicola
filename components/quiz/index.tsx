@@ -1,6 +1,7 @@
 'use client';
 
 import React, {
+  startTransition,
   useCallback,
   useEffect,
   useMemo,
@@ -43,7 +44,7 @@ import { PatternLayer, patternKindForSubSet } from './patternLayer';
 import { useSafeAreaBottom } from './useSafeAreaBottom';
 import { useQuizChrome } from './useQuizChrome';
 import { useQuizFavicon } from './useQuizFavicon';
-import { hasWffGuide, WffGuide } from './wffGuide';
+import { hasWffGuide, preloadWffGuide, WffGuide } from './wffGuide';
 
 export interface QuizProps {
   subSet: SubSet;
@@ -75,7 +76,10 @@ export default function Quiz({ subSet, embedded = false }: QuizProps) {
   // formulas never render through the raw-text fallback.
   useEffect(() => {
     preloadKatex();
-  }, []);
+    // Same idle window, same reason: the reference guide's own chunk, so
+    // the pane never finishes opening onto an empty panel (2026-09-21).
+    preloadWffGuide(subSet);
+  }, [subSet]);
   return (
     <QuizSession
       key={`${subSet.id}:${run.attempt}`}
@@ -1611,7 +1615,21 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                 <button
                   type='button'
                   ref={guideToggleRef}
-                  onClick={() => setIsGuideOpen((open) => !open)}
+                  // A TRANSITION, not a plain setState (2026-09-21). The
+                  // guide's table is its own lazy chunk, and in a blog
+                  // post the nearest Suspense boundary is the one
+                  // `next/dynamic` wraps around the WHOLE embed — so the
+                  // first open replaced the entire quiz with the island's
+                  // loading skeleton for ~300ms and then faded it back
+                  // in. That was the blink. Marking the update as a
+                  // transition tells React to keep the current UI on
+                  // screen until the new content is ready instead of
+                  // falling back, which is exactly what it is for. Cheap
+                  // and correct on the full page too, where the chunk is
+                  // usually already warm and nothing visibly changes.
+                  onClick={() =>
+                    startTransition(() => setIsGuideOpen((open) => !open))
+                  }
                   aria-expanded={isGuideOpen}
                   aria-controls='quiz-reference-pane'
                   className='qguide-btn motion-button'
@@ -1882,8 +1900,12 @@ const QuizSession: React.FC<QuizSessionProps> = ({
                   anything protruding past its own box. Rides paneWidth;
                   arrows nudge the width on the 16px grid (WCAG 2.1.1 —
                   left = wider, the direction the edge moves). z-40:
-                  above the pane (z-30), below the navbar (z-50). */}
-              {isGuideOpen && (
+                  above the pane (z-30), below the navbar (z-50).
+                  NOT in an embed (2026-09-21): the grip is a page-level
+                  affordance, and in a post it reads as a floating pill
+                  with a "Resize" tip sitting over the option grid. The
+                  pane itself opens exactly as it does on a quiz page. */}
+              {isGuideOpen && !embedded && (
                 <PixelTip tip='Resize' side='left' suppressed={isPaneResizing}>
                   <div
                     role='separator'

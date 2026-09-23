@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cover lab — Set R article</title>
+    <!--
+  COVER LAB (Malik asked for cover art for the Set R article, 2026-09-23:
+  "illustrating something that alludes to polarisation or that resembles
+  some opinion column images like the ones from NYT").
+
+  WHAT A COVER IS HERE. `cover:` in a post's front matter feeds three
+  surfaces: the blog index card, the featured card, and the `image` in
+  the article's structured data (so it can appear in Google rich
+  results). It does NOT feed the link card — that is direction G in
+  docs/og-lab.html, the cream card with the footer's quilt band, and it
+  ignores covers entirely.
+
+  THE HOUSE LANGUAGE, read off the one cover that exists
+  (public/blog/the-new-logicola/cover.png, 2250x750): flat colour, hard
+  edges, a black keyline, ONE centred object on a saturated ground, and
+  nothing else. That cover is the 2008 window rebuilt — aqua ground,
+  rose panel, the InvertRect band with its white bar — floating on
+  coral. It is already close to op-ed illustration: one idea, few
+  shapes, no gradient, no texture.
+
+  THE CONSTRAINT THAT DECIDES THESE. Covers are 3:1 but every card is
+  3:2 or 16:9 with `object-cover`, so the art is centre-cropped on the
+  WIDTH. Measured on the live index, not assumed: a 2250x750 cover shows
+  its middle 1333px in a 16:9 card (59%) and its middle 1125px in a 3:2
+  featured card (50%). The outer 41-50% is seen only in rich results and
+  when the file is opened directly. So a composition either survives the
+  middle half or it does not exist. Every direction below is drawn with
+  that in mind and every one is shown cropped as well as whole — and the
+  card mocks at the bottom are LIFE SIZE, because this lab's big
+  previews are ~2x the size anyone will see (the lesson from the brand
+  lab: judge on the composed mocks).
+
+  SIX DIRECTIONS:
+
+    A - EXCLUDED MIDDLE   the black-and-white fallacy as a full-bleed
+                          split, with the middle crushed to a stepped
+                          sliver. The set has this passage: "Either you
+                          accept the risk of another Chernobyl, or you
+                          close the reactors. There is nothing in
+                          between."
+    B - TWO CROWDS        polarisation as counting: two blocks of tiles
+                          facing off, a few stranded between them.
+                          Appeal to the crowd, drawn.
+    C - CRACKED WINDOW    the-new-logicola's own cover, split down the
+                          middle and offset. Family resemblance, and the
+                          reasoning visibly not lining up.
+    D - TWO MOUTHS        two speech bubbles colliding; the overlap is a
+                          third colour. The most literal op-ed image.
+    E - THEREFORE         the three dots of the therefore sign, pulled
+                          apart so the conclusion sits off the line it
+                          was supposed to follow from.
+    F - TIPPED SCALE      pro-con: everything stacked on one pan, one
+                          tile on the other, the beam hard over.
+
+  ROUND 2 (Malik, 2026-09-23: "I don't like C. D and B seem interesting
+  directions. Let's try again... you can draw from our learnings on color
+  theory"). C, E and F are gone. B and D stay at the top as the two seeds,
+  and six new directions grow out of them: three that count (B's tiles)
+  and three that speak (D's bubbles).
+
+  THE COLOUR ARGUMENT, computed not asserted. Every pair below is scored
+  with lib/stimulation.ts — the project's own port of ColorMoods, the one
+  every set palette was derived from. Two findings decided this round:
+
+    1. Every candidate scores vibration 0.000, because each pairs a deep
+       ink with a pale surface and the lightness gap is vibration
+       insurance (Duru's rule). The family is structurally safe, so the
+       choice is free to be about meaning.
+    2. Set R's own rust/lilac sits at stimulation 0.530 — the middle of
+       the 0.46-0.64 band the palette spans — and its hue distance is
+       theta 0.491, which is ~88 degrees: a HALFWAY COMBINATION, the
+       thing Duru calls the underused sweet spot.
+
+  That second number is the idea for this round. A complementary duotone
+  would make the two camps read as completing each other, which is the
+  wrong picture: real polarisation is two positions that are NOT
+  opposites being drawn as if they were. A halfway pair says exactly
+  that - distinct, not oppositional. So the two sides in every drawing
+  below are a halfway pair, and where a third colour appears (the
+  stranded tiles, the squeezed middle) it is the accent, used the way
+  Duru uses a complement: to finish, never to converse.
+
+  ROUND 3 (Malik, 2026-09-23: "Let's go beyond the 'polarisation' word.
+  Maybe we can also lean on the title of the blog post. And
+  shape/illustration-wise, we can go beyond what you're doing (which is
+  a bit ugly with the big black outlines)").
+
+  TWO CHANGES. The keyline is gone — rounds 1 and 2 put a 6px black
+  outline on everything, which is the 2008 window's grammar borrowed
+  where it does not belong, and it made every shape look stamped. These
+  are flat shapes with no stroke; colour does the separating, which is
+  what contemporary editorial illustration actually does.
+
+  And the brief is the TITLE now, not the theme: "Learn how to spot
+  hidden flaws in everyday reasoning". Four words to draw:
+
+    SPOT     the picture should make the reader do the finding, not
+             watch someone else find it
+    HIDDEN   so the flaw cannot be the loudest thing in the frame
+    FLAW     a defect in something otherwise regular - which means the
+             frame needs regularity first, and the regularity is the
+             subject as much as the break is
+    EVERYDAY an ordinary surface: tiling, brickwork, a field. Not a
+             diagram, not a symbol.
+
+  That reading also solves the crop constraint for free: a FIELD is
+  crop-proof by construction — any 59% of it is still the picture — and
+  a field is what rounds 1 and 2 kept almost finding. It is also the
+  product's own language, since the quiz surfaces are already patterned
+  fields (lib/patterns.ts, the quilt).
+
+  Nothing here is decided. -->
+    <style>
+      :root {
+        --cream: #edede3;
+        --plum: #3f0167;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 28px 32px 80px;
+        background: #fafaf7;
+        color: #02302c;
+        font:
+          14px/1.5 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+      }
+      h1 {
+        font-size: 17px;
+        margin: 0 0 4px;
+        letter-spacing: 0.02em;
+      }
+      .sub {
+        margin: 0 0 22px;
+        color: #5c6b68;
+        max-width: 78ch;
+      }
+      .controls {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        align-items: center;
+        padding: 12px 14px;
+        margin-bottom: 26px;
+        background: #fff;
+        border: 2px solid #02302c;
+      }
+      .controls label {
+        display: flex;
+        gap: 7px;
+        align-items: center;
+      }
+      select,
+      input[type='range'] {
+        font: inherit;
+      }
+      .dir {
+        margin: 0 0 42px;
+      }
+      .dirhead {
+        display: flex;
+        gap: 12px;
+        align-items: baseline;
+        margin-bottom: 9px;
+      }
+      .dirhead b {
+        font-size: 15px;
+        letter-spacing: 0.04em;
+      }
+      .dirhead span {
+        color: #5c6b68;
+        max-width: 70ch;
+      }
+      .views {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+      .view {
+      }
+      .view p {
+        margin: 0 0 5px;
+        font-size: 11px;
+        color: #5c6b68;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .full svg,
+      .crop svg {
+        display: block;
+        border: 1px solid #c8ccc6;
+      }
+      .mocks {
+        border-top: 2px solid #02302c;
+        padding-top: 22px;
+      }
+      .mockrow {
+        display: flex;
+        gap: 26px;
+        flex-wrap: wrap;
+      }
+      .card {
+        width: 542px;
+      }
+      .card .art {
+        width: 542px;
+        height: 305px;
+        overflow: hidden;
+      }
+      .card .art svg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .cardtitle {
+        font:
+          700 19px/1.25 ui-sans-serif,
+          system-ui,
+          sans-serif;
+        margin: 12px 0 4px;
+      }
+      .carddek {
+        font:
+          13px/1.45 ui-sans-serif,
+          system-ui,
+          sans-serif;
+        color: #4a5654;
+      }
+      .guide {
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Cover lab — Set R, informal fallacies</h1>
+    <p class="sub">
+      Six directions for the article's cover. The middle column is what the blog
+      card actually shows (centre 59%); the right column is the featured card
+      (centre 50%). If a direction only works in the left column, it does not
+      work.
+    </p>
+
+    <div class="controls">
+      <label
+        >Ground
+        <select id="ground">
+          <option value="cream">cream #EDEDE3</option>
+          <option value="coral">coral #FA6C5B</option>
+          <option value="lilac">Set R lilac #E4BDF7</option>
+          <option value="plum">plum #3F0167</option>
+        </select>
+      </label>
+      <label
+        >Pair
+        <select id="pair">
+          <option value="rustlilac">rust / lilac (Set R)</option>
+          <option value="plumcoral">plum / coral</option>
+          <option value="plummint">plum / mint (Set L)</option>
+          <option value="inkchart">ink / chartreuse (Set C)</option>
+        </select>
+      </label>
+      <label
+        >Keyline
+        <select id="keyline">
+          <option value="0">none</option>
+          <option value="6">6px</option>
+          <option value="12">12px</option>
+        </select>
+      </label>
+      <label
+        >Seed
+        <input id="seed" type="range" min="1" max="60" value="12" />
+        <output id="seedout">12</output>
+      </label>
+      <label><input type="checkbox" id="guides" checked /> crop guides</label>
+    </div>
+
+    <div id="dirs"></div>
+
+    <div class="mocks">
+      <h1>Life size — the blog index card</h1>
+      <p class="sub">
+        542&times;305, the measured card. This is the only size that matters for
+        the decision; everything above is about twice it.
+      </p>
+      <div class="mockrow" id="mocks"></div>
+    </div>
+
+    <script>
+      const W = 2250,
+        H = 750;
+      const GROUNDS = {
+        cream: '#EDEDE3',
+        coral: '#FA6C5B',
+        lilac: '#E4BDF7',
+        plum: '#3F0167',
+      };
+      const PAIRS = {
+        rustlilac: { a: '#751100', b: '#E4BDF7', c: '#824616' },
+        plumcoral: { a: '#3F0167', b: '#FA6C5B', c: '#E7F099' },
+        plummint: { a: '#3F0167', b: '#CFF6DD', c: '#FA6C5B' },
+        inkchart: { a: '#02302C', b: '#E7F099', c: '#BD00AD' },
+      };
+
+      // Deterministic per-seed noise, so a direction is reproducible.
+      function rng(seed) {
+        let s = seed * 9301 + 49297;
+        return () => (s = (s * 9301 + 49297) % 233280) / 233280;
+      }
+      const K = (o) => (o.k ? ` stroke="#000" stroke-width="${o.k}"` : '');
+
+      /* ROUND 3 — the title, drawn. No keylines: flat shapes only, and
+         a field rather than an object, so any crop is still the picture. */
+
+      // A slightly different tone of the same colour: "hidden" needs a
+      // difference the eye can find but not immediately. Mixes toward the
+      // ground by t, which keeps hue and moves lightness only.
+      function shade(hex, ground, t) {
+        const h = (c) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16));
+        const [r1, g1, b1] = h(hex),
+          [r2, g2, b2] = h(ground);
+        const m = (a, b) =>
+          Math.round(a + (b - a) * t)
+            .toString(16)
+            .padStart(2, '0');
+        return `#${m(r1, r2)}${m(g1, g2)}${m(b1, b2)}`;
+      }
+
+      /* M - THE FAULT: a regular field, and one tile off the grid. The
+         flaw is geometric, not chromatic, so it stays quiet until found. */
+      function dirM(o) {
+        const t = 74,
+          gap = 30,
+          cell = t + gap,
+          r = rng(o.seed);
+        const cols = Math.ceil(W / cell) + 1,
+          rows = Math.ceil(H / cell) + 1;
+        const ox = -(cols * cell - W) / 2,
+          oy = -(rows * cell - H) / 2;
+        const fi = Math.floor(cols / 2) + Math.round((r() - 0.5) * 2);
+        const fj = Math.floor(rows / 2);
+        let s = `<rect width="${W}" height="${H}" fill="${o.ground}"/>`;
+        for (let i = 0; i < cols; i++)
+          for (let j = 0; j < rows; j++) {
+            const x = ox + i * cell,
+              y = oy + j * cell;
+            if (i === fi && j === fj) {
+              s += `<g transform="rotate(14 ${x + t / 2} ${y + t / 2})"><rect x="${x + 16}" y="${y + 10}" width="${t}" height="${t}" fill="${o.a}"/></g>`;
+            } else {
+              s += `<rect x="${x}" y="${y}" width="${t}" height="${t}" fill="${o.a}"/>`;
+            }
+          }
+        return s;
+      }
+
+      /* N - HAIRLINE: one solid field, one fine crack. The most restrained
+         thing in the lab, and the only one that works at any size. */
+      function dirN(o) {
+        const r = rng(o.seed);
+        let d = `M${W * 0.46},0 `,
+          x = W * 0.46;
+        for (let y = 0; y <= H; y += 26) {
+          x += (r() - 0.45) * 26;
+          d += `L${x},${y} `;
+        }
+        let back = '';
+        for (let y = H; y >= 0; y -= 26)
+          back += `L${x + 9 + (H - y) * 0.012},${y} `;
+        return `<rect width="${W}" height="${H}" fill="${o.a}"/>
+          <path d="${d} ${back} Z" fill="${o.ground}"/>`;
+      }
+
+      /* O - ALMOST THE SAME: every tile one colour except one, a few
+         points of lightness away. Literally "hidden" — and the test of
+         whether a cover can ask for a second look. */
+      function dirO(o) {
+        const t = 96,
+          gap = 26,
+          cell = t + gap,
+          r = rng(o.seed);
+        const cols = Math.ceil(W / cell) + 1,
+          rows = Math.ceil(H / cell) + 1;
+        const ox = -(cols * cell - W) / 2,
+          oy = -(rows * cell - H) / 2;
+        const fi = Math.floor(cols * 0.55),
+          fj = Math.floor(rows / 2);
+        const near = shade(o.a, o.ground, 0.22);
+        let s = `<rect width="${W}" height="${H}" fill="${o.ground}"/>`;
+        for (let i = 0; i < cols; i++)
+          for (let j = 0; j < rows; j++)
+            s += `<rect x="${ox + i * cell}" y="${oy + j * cell}" width="${t}" height="${t}" fill="${i === fi && j === fj ? near : o.a}"/>`;
+        return s;
+      }
+
+      /* P - MISALIGNED COURSE: brickwork, everyday and regular, with one
+         course slid out of bond. The flaw is structural: it breaks the
+         whole wall, not one brick. */
+      function dirP(o) {
+        const bh = 74,
+          gap = 14,
+          bw = 210;
+        const rows = Math.ceil(H / (bh + gap)) + 1;
+        const bad = Math.floor(rows / 2);
+        let s = `<rect width="${W}" height="${H}" fill="${o.ground}"/>`;
+        for (let j = 0; j < rows; j++) {
+          const y = j * (bh + gap) - 20;
+          const stagger = (j % 2 ? bw / 2 : 0) + (j === bad ? bw * 0.34 : 0);
+          for (let x = -bw + stagger; x < W + bw; x += bw + gap)
+            s += `<rect x="${x}" y="${y}" width="${bw}" height="${bh}" fill="${j === bad ? o.a : o.a}" opacity="${j === bad ? 1 : 1}"/>`;
+        }
+        return s;
+      }
+
+      /* Q - UNDER: the field lifts at one tile and something else is
+         beneath it. "Hidden" as a layer rather than a difference. */
+      function dirQ(o) {
+        const t = 88,
+          gap = 28,
+          cell = t + gap;
+        const cols = Math.ceil(W / cell) + 1,
+          rows = Math.ceil(H / cell) + 1;
+        const ox = -(cols * cell - W) / 2,
+          oy = -(rows * cell - H) / 2;
+        const fi = Math.floor(cols / 2),
+          fj = Math.floor(rows / 2);
+        let s = `<rect width="${W}" height="${H}" fill="${o.ground}"/>`;
+        // The thing underneath, revealed only through the gap.
+        s += `<rect x="${ox + (fi - 1) * cell}" y="${oy + (fj - 1) * cell}" width="${cell * 3}" height="${cell * 3}" fill="${o.b}"/>`;
+        for (let i = 0; i < cols; i++)
+          for (let j = 0; j < rows; j++) {
+            if (i === fi && j === fj) continue;
+            s += `<rect x="${ox + i * cell}" y="${oy + j * cell}" width="${t}" height="${t}" fill="${o.a}"/>`;
+          }
+        return s;
+      }
+
+      /* R - MAGNIFIED: the same field, with one tile pulled out and
+         enlarged — and at that size it is plainly a different shape. The
+         drill's own move: look closer and the flaw names itself. */
+      function dirR(o) {
+        const t = 70,
+          gap = 26,
+          cell = t + gap;
+        const cols = Math.ceil(W / cell) + 1,
+          rows = Math.ceil(H / cell) + 1;
+        const ox = -(cols * cell - W) / 2,
+          oy = -(rows * cell - H) / 2;
+        let s = `<rect width="${W}" height="${H}" fill="${o.ground}"/>`;
+        for (let i = 0; i < cols; i++)
+          for (let j = 0; j < rows; j++)
+            s += `<rect x="${ox + i * cell}" y="${oy + j * cell}" width="${t}" height="${t}" fill="${o.a}" opacity="0.5"/>`;
+        const bx = W / 2 - 170,
+          by = H / 2 - 170;
+        s += `<rect x="${bx}" y="${by}" width="340" height="340" fill="${o.ground}"/>`;
+        s += `<path d="M${bx + 60},${by + 60} h220 v150 l-60,-40 v130 h-160 Z" fill="${o.a}"/>`;
+        return s;
+      }
+
+      const DIRS = [
+        [
+          'M',
+          'THE FAULT',
+          'A regular field with one tile off the grid and turned. The flaw is geometric, not coloured, so it stays quiet until you find it — which is the reading the title asks for.',
+          dirM,
+        ],
+        [
+          'N',
+          'HAIRLINE',
+          'One solid field, one fine crack. The most restrained thing here and the only one that survives any size, down to a favicon.',
+          dirN,
+        ],
+        [
+          'O',
+          'ALMOST THE SAME',
+          'Every tile one colour except one, a few points of lightness away. The literal "hidden", and the test of whether a cover may ask for a second look.',
+          dirO,
+        ],
+        [
+          'P',
+          'MISALIGNED COURSE',
+          'Brickwork — everyday, regular — with one course slid out of bond. The flaw is structural: it breaks the wall, not the brick.',
+          dirP,
+        ],
+        [
+          'Q',
+          'UNDER',
+          'The field with one tile missing, and something else beneath it. Hidden as a layer rather than as a difference.',
+          dirQ,
+        ],
+        [
+          'R',
+          'MAGNIFIED',
+          'The field faded back, one tile pulled out and enlarged — at that size it is plainly a different shape. Look closer and the flaw names itself.',
+          dirR,
+        ],
+      ];
+
+      const el = (h) => {
+        const d = document.createElement('div');
+        d.innerHTML = h;
+        return d.firstElementChild;
+      };
+
+      function opts() {
+        return {
+          ground: GROUNDS[ground.value],
+          ...PAIRS[pair.value],
+          k: Number(keyline.value),
+          seed: Number(seed.value),
+        };
+      }
+
+      function svg(body, vw, vx, showGuides) {
+        const guides = showGuides
+          ? `<g class="guide" fill="none" stroke="#02302C" stroke-width="4" stroke-dasharray="18 14">
+               <rect x="${(W - 1333) / 2}" y="2" width="1333" height="${H - 4}"/>
+               <rect x="${(W - 1125) / 2}" y="2" width="1125" height="${H - 4}" stroke="#BD00AD"/>
+             </g>`
+          : '';
+        return `<svg viewBox="${vx} 0 ${vw} ${H}" width="${vw / (vw / 460)}" height="${H / (vw / 460)}"
+            xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">${body}${vw === W ? guides : ''}</svg>`;
+      }
+
+      function render() {
+        seedout.value = seed.value;
+        const o = opts();
+        dirs.innerHTML = '';
+        mocks.innerHTML = '';
+        for (const [letter, name, note, fn] of DIRS) {
+          const body = fn(o);
+          dirs.append(
+            el(`
+            <section class="dir">
+              <div class="dirhead"><b>${letter} · ${name}</b><span>${note}</span></div>
+              <div class="views">
+                <div class="view full"><p>full 2250×750</p>${svg(body, W, 0, guides.checked)}</div>
+                <div class="view crop"><p>blog card · centre 59%</p>${svg(body, 1333, (W - 1333) / 2, false)}</div>
+                <div class="view crop"><p>featured · centre 50%</p>${svg(body, 1125, (W - 1125) / 2, false)}</div>
+              </div>
+            </section>`)
+          );
+          mocks.append(
+            el(`
+            <div class="card">
+              <div class="art">${svg(body, 1333, (W - 1333) / 2, false).replace(/width="[^"]*" height="[^"]*"/, 'width="542" height="305"')}</div>
+              <p class="cardtitle">Learn how to spot hidden flaws in everyday reasoning</p>
+              <p class="carddek">${letter} · ${name}</p>
+            </div>`)
+          );
+        }
+      }
+
+      for (const c of [ground, pair, keyline, seed, guides])
+        c.addEventListener('input', render);
+      render();
+    </script>
+  </body>
+</html>

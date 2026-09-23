@@ -5,28 +5,13 @@ import { notFound } from 'next/navigation';
 import { publishedPosts, formatDate } from '@/lib/marketingContent';
 import { MarketingNav } from '@/components/marketing/marketingNav';
 import { Chip } from '@/components/marketing/chip';
-import {
-  MARKETING_THEME,
-  SETS,
-  SPRITE_CLIP,
-  themeButton,
-} from '@/lib/marketingTheme';
-import { FOCUS_W, focusR, ringBand } from '@/lib/pixel';
+import { MARKETING_THEME, SETS, themeButton } from '@/lib/marketingTheme';
 import { SITE_URL } from '@/lib/site';
 import { QuizEmbed } from '@/components/blog/quizEmbed';
-import { BeforeAfter } from '@/components/blog/beforeAfter';
-import { SilhouetteDial } from '@/components/blog/silhouetteDial';
-import { SetPalettes } from '@/components/blog/setPalettes';
-import { DamageBar } from '@/components/blog/damageBar';
-import { ColourStudio } from '@/components/blog/colourStudio';
-import { PastelRandom } from '@/components/blog/pastelRandom';
 import { SectionRail } from '@/components/blog/sectionRail';
-import { PatternGallery } from '@/components/blog/patternGallery';
-import { PhoneStates } from '@/components/blog/phoneStates';
-import { Clip } from '@/components/blog/clip';
-import { InstallApp } from '@/components/blog/installApp';
-import { TemplateRoll } from '@/components/blog/templateRoll';
-import { MaterialShapesDial } from '@/components/blog/materialShapes';
+import { Island } from '@/components/blog/islands';
+import { isIslandKey, type IslandKey } from '@/components/blog/islandKeys';
+import type { InstallAppTheme } from '@/components/blog/installApp';
 
 interface PostPageProps {
   params: Promise<{ slug: string }>;
@@ -52,70 +37,20 @@ type PostSegment =
       pick?: string[];
       fallbackHtml: string;
     }
-  | { kind: 'island'; island: string; attrs: Record<string, string> };
+  | { kind: 'island'; island: IslandKey; attrs: Record<string, string> };
 
 /**
- * The island registry. A figure that is better dragged, dialled or
- * clicked than looked at gets an entry here rather than a branch in the
- * renderer below — the post is a place to try things, and each new one
- * would otherwise cost this file another `else if`. Keys are the
- * `data-island` value; the marker's other data-attrs arrive as `attrs`.
+ * The island registry lives in components/blog/islands.tsx, behind a
+ * client-side `next/dynamic` boundary (React pass, 2026-09-08): a
+ * figure that is better dragged, dialled or clicked than looked at gets
+ * an entry there, and this page only validates keys and passes the
+ * marker's data-attrs through. The install island's colours are the one
+ * thing computed here — the marketing theme is server-only.
  */
-const ISLANDS: Record<
-  string,
-  (attrs: Record<string, string>) => React.ReactNode
-> = {
-  'before-after': (a) => (
-    <BeforeAfter
-      before={a.before ?? ''}
-      after={a.after ?? ''}
-      alt={a.alt ?? 'Comparison'}
-      width={Number(a.width ?? 1440)}
-      height={Number(a.height ?? 900)}
-    />
-  ),
-  silhouettes: () => <SilhouetteDial />,
-  'set-palettes': () => <SetPalettes />,
-  'damage-bar': () => <DamageBar />,
-  'colour-studio': () => <ColourStudio />,
-  'pastel-random': () => <PastelRandom />,
-  'pattern-gallery': () => <PatternGallery />,
-  clip: (a) => (
-    <Clip
-      src={a.src ?? ''}
-      poster={a.poster}
-      alt={a.alt ?? 'A screen recording'}
-      width={Number(a.width ?? 1440)}
-      height={Number(a.height ?? 900)}
-      max={a.max ? Number(a.max) : undefined}
-    />
-  ),
-  'phone-states': (a) => (
-    <PhoneStates
-      before={a.before ?? ''}
-      after={a.after ?? ''}
-      alt={a.alt ?? 'A phone'}
-      width={Number(a.width ?? 679)}
-      height={Number(a.height ?? 1450)}
-    />
-  ),
-  install: () => (
-    <InstallApp
-      theme={{
-        buttonBg: themeButton().bg,
-        buttonFg: themeButton().fg,
-        ink: MARKETING_THEME.ink,
-        spriteClip: SPRITE_CLIP,
-        // Focus stands 2px off the silhouette, radius grown to match —
-        // the option pills' own band (components/option.tsx).
-        ringClip: ringBand('sprite', FOCUS_W, focusR(24)),
-      }}
-    />
-  ),
-  'template-roll': (a) => (
-    <TemplateRoll num={Number(a.num ?? 21)} letters={a.letters} />
-  ),
-  'material-shapes': () => <MaterialShapesDial />,
+const INSTALL_THEME: InstallAppTheme = {
+  buttonBg: themeButton().bg,
+  buttonFg: themeButton().fg,
+  ink: MARKETING_THEME.ink,
 };
 
 function dataAttrs(raw: string): Record<string, string> {
@@ -146,7 +81,7 @@ function splitEmbeds(html: string): PostSegment[] {
           : undefined,
         fallbackHtml: inner ?? '',
       });
-    } else if (key && ISLANDS[key]) {
+    } else if (key && isIslandKey(key)) {
       segments.push({
         kind: 'island',
         island: key,
@@ -224,7 +159,7 @@ export default async function BlogPostPage({ params }: PostPageProps) {
   return (
     <>
       <MarketingNav active='blog' />
-      <article className='mx-auto max-w-[820px] px-6 pb-14 pt-7 sm:px-8 motion-enter'>
+      <article className='mx-auto max-w-[820px] px-6 pb-14 pt-7 sm:px-8 motion-fade-in'>
         <script
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -315,9 +250,12 @@ export default async function BlogPostPage({ params }: PostPageProps) {
                 fallbackHtml={segment.fallbackHtml}
               />
             ) : (
-              <React.Fragment key={index}>
-                {ISLANDS[segment.island]!(segment.attrs)}
-              </React.Fragment>
+              <Island
+                key={index}
+                kind={segment.island}
+                attrs={segment.attrs}
+                install={INSTALL_THEME}
+              />
             )
           )}
         </div>

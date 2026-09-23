@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { publishedPosts, formatDate, type Post } from '@/lib/marketingContent';
 import { MarketingNav } from '@/components/marketing/marketingNav';
 import { Chip } from '@/components/marketing/chip';
+import { MotionCover } from '@/components/blog/motionCover';
 import {
   MARKETING_THEME,
   fieldSvg,
@@ -32,6 +33,8 @@ const CATEGORY_LABELS: Record<Post['category'], string> = {
 };
 
 /** Cover image when the post has one, generated pattern art otherwise.
+ *  A moving cover renders inline so it can replay when the pointer comes
+ *  back onto its post (the `data-cover-hover` region, 2026-09-23).
  *  Ratios are named (featured 3:2, cards 16:9), corners take the sprite
  *  silhouette — see the lab's aspect review, 2026-08-14. */
 function PostArt({
@@ -47,7 +50,9 @@ function PostArt({
       className={`${aspect} w-full overflow-hidden`}
       style={{ clipPath: SPRITE_CLIP }}
     >
-      {post.cover ? (
+      {post.coverMotionSvg ? (
+        <MotionCover svg={post.coverMotionSvg} />
+      ) : post.cover ? (
         // Local static covers of known size; next/image adds nothing here.
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -110,14 +115,17 @@ export default function BlogIndexPage() {
   return (
     <>
       <MarketingNav active='blog' />
-      <main className='mx-auto max-w-[1200px] px-6 pb-14 pt-7 sm:px-10 motion-enter'>
+      <main className='mx-auto max-w-[1200px] px-6 pb-14 pt-7 sm:px-10 motion-fade-in'>
         <script
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
 
         {featured && (
-          <section className='grid items-center gap-8 py-2 md:grid-cols-[1.15fr_1fr] md:gap-11'>
+          <section
+            data-cover-hover
+            className='grid items-center gap-8 py-2 md:grid-cols-[1.15fr_1fr] md:gap-11'
+          >
             <Link href={featured.url} aria-label={featured.title}>
               <PostArt post={featured} featured />
             </Link>
@@ -157,7 +165,7 @@ export default function BlogIndexPage() {
 
         <section className='grid gap-9 sm:grid-cols-2'>
           {rest.map((post) => (
-            <article key={post.slug}>
+            <article key={post.slug} data-cover-hover>
               <Link href={post.url} aria-label={post.title}>
                 <PostArt post={post} />
               </Link>
