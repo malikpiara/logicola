@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Toaster } from '@/components/ui/sonner';
 
 /**
  * Metadata carrier for `/keyboard`, which is a client component and so can't
@@ -15,5 +16,13 @@ export const metadata: Metadata = {
 export default function KeyboardLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return children;
+  return (
+    <>
+      {children}
+      {/* The only page that calls toast() (copy confirmations), so the
+          only page that carries sonner — it used to sit in the root
+          layout, 27 KB on every route (React pass, 2026-09-08). */}
+      <Toaster />
+    </>
+  );
 }

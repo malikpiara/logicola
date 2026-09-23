@@ -133,12 +133,13 @@ const Option = React.forwardRef<HTMLButtonElement, OptionProps>(
 
     // Long loop (lib/shortcutTeaching.ts): once this device has selected
     // by key, the shortcut-tip scaffold retires. Hooks live ABOVE the
-    // non-immersive early return (rules of hooks); effect-gated so SSR
-    // and first paint agree. Retirement lands from the next question on.
-    const [tipRetired, setTipRetired] = React.useState(false);
-    React.useEffect(() => {
-      setTipRetired(shortcutsUsed());
-    }, []);
+    // non-immersive early return (rules of hooks). A lazy initializer,
+    // not an effect (React pass, 2026-09-08): the flag only gates a
+    // tooltip that starts closed, so server and client markup agree
+    // either way, and the effect cost every option a post-mount render.
+    // Retirement still lands from the next question on — the read is at
+    // mount.
+    const [tipRetired] = React.useState(() => shortcutsUsed());
 
     if (!immersive) {
       return (

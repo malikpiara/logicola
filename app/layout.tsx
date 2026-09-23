@@ -6,7 +6,6 @@ import thumbnail from '../public/thumbnail.jpg';
 import { SITE_URL } from '@/lib/site';
 import RegisterSW from '@/components/providers/service-worker';
 import WebsiteAnalytics from '@/components/providers/website-analytics';
-import { Toaster } from '@/components/ui/sonner';
 
 const robotoFlex = Roboto_Flex({
   subsets: ['latin'],
@@ -171,7 +170,6 @@ export default function RootLayout({
         {/* One tooltip provider for the whole app: Radix's delay
             grouping (300ms first, neighbors instant) lives here. */}
         <PixelTipProvider>{children}</PixelTipProvider>
-        <Toaster />
         <RegisterSW />
         <WebsiteAnalytics />
       </body>

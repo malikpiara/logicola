@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useMemo, useState } from 'react';
+import { useId, useState } from 'react';
 import {
   MATERIAL_SHAPES,
   gridToPath,
@@ -50,20 +50,29 @@ const STEPS = [
 
 const PICKED = 'Diamond';
 
+/** One set of paths per stop, computed once per page: the useMemo it
+ *  replaced held a single value, so sliding 4→2→4 re-rasterised all 35
+ *  shapes each time (12 ms at 2 px on a laptop; a dropped frame or two
+ *  on a phone). Five keys at most (React pass, 2026-09-08). */
+const PATHS = new Map<number, string[]>();
 function pathsFor(cell: number): string[] {
-  return MATERIAL_SHAPES.map((s) =>
-    cell === 0
-      ? outlineToPath(s.outline, SIZE)
-      : gridToPath(rasterise(s.outline, SIZE / cell), cell)
-  );
+  let paths = PATHS.get(cell);
+  if (!paths) {
+    paths = MATERIAL_SHAPES.map((s) =>
+      cell === 0
+        ? outlineToPath(s.outline, SIZE)
+        : gridToPath(rasterise(s.outline, SIZE / cell), cell)
+    );
+    PATHS.set(cell, paths);
+  }
+  return paths;
 }
 
 export function MaterialShapesDial() {
   const [i, setI] = useState(2);
   const rangeId = useId();
   const step = STEPS[i]!;
-  // One set of paths per step, computed the first time a step is shown.
-  const paths = useMemo(() => pathsFor(step.cell), [step.cell]);
+  const paths = pathsFor(step.cell);
 
   return (
     <figure className='not-prose ms-wrap'>

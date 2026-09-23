@@ -1,11 +1,4 @@
 import type { Metadata } from 'next';
-import { Roboto_Flex } from 'next/font/google';
-
-const robotoFlex = Roboto_Flex({
-  subsets: ['latin'],
-  weight: 'variable',
-  axes: ['wdth'],
-});
 
 // This was a verbatim copy of the root layout's metadata. Everything in it
 // except the title was already inherited, and the title — 'Logicola' — only
@@ -26,9 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main
-      className={`antialiased min-h-screen bg-white text-primaryColor w-full ${robotoFlex.className}`}
-    >
+    // No second Roboto_Flex here: <body> already carries the family from
+    // the root layout, and this copy's default display:swap re-introduced
+    // the swap re-layout the 2026-08-24 CLS audit removed (React pass,
+    // 2026-09-08).
+    <main className='antialiased min-h-screen bg-white text-primaryColor w-full'>
       {children}
     </main>
   );

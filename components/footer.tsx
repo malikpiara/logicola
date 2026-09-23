@@ -3,14 +3,8 @@ import { TrackedFooterLink } from './trackedFooterLink';
 import { NewBadge } from './newBadge';
 import { CurrentYear } from './currentYear';
 import { NewsletterForm } from '@/components/marketing/newsletterForm';
-import {
-  markSvg,
-  SPRITE_CLIP,
-  RING_BAND,
-  coverPool,
-} from '@/lib/marketingTheme';
+import { markSvg, SPRITE_CLIP, RING_BAND } from '@/lib/marketingTheme';
 import { PixelTip } from '@/components/ui/pixelTip';
-import { patternBody } from '@/lib/patterns';
 import { gemClip } from '@/lib/pixel';
 
 /**
@@ -82,57 +76,6 @@ const LINKEDIN_URL = 'https://www.linkedin.com/company/logicola';
 // Malik's personal account — Logicola has no Bluesky of its own yet, so the
 // maintainer's handle stands in for it here (Malik, 2026-08-18).
 const BLUESKY_URL = 'https://bsky.app/profile/malikpiara.bsky.social';
-
-/** The band: 1600×56 once, `slice`-cropped at any viewport so the
- *  features keep their proportion instead of squeezing (the LinkedIn
- *  cover's lesson).
- *
- *  THE COVER RECIPE, AT A ROW AND A THIRD (Malik, 2026-08-24, from
- *  docs/footer-band-lab.html). The band was camo at 0.35 reading a
- *  single magenta — camo takes only `pool[0]`, so two colours and a
- *  ground was the most it could ever show. It now runs the quilt the
- *  social covers run, on the nine, at rate 0.75: the page's last object
- *  and a profile's first object are the same pattern.
- *
- *  0.72 IS A CROP, DELIBERATELY. A cell is `62 × scale` and rows lay
- *  from y=0, so whole-row scales are the family `h / (62 × N)` — 0.90
- *  for one row, 0.45 for two. Both were judged and both lost: one row
- *  of 56px shapes reads as a border rather than a quilt (a quilt needs
- *  a second axis before the eye sees a field), and two rows shrink the
- *  cell to 28px, well under the covers' own. 0.74 keeps a 46px cell and
- *  carries 1.21 rows, so the second row shows as a 10px sliver. The cut
- *  lands on the band's BOTTOM edge — the bottom of the page — where a
- *  pattern running off-canvas is what a cover does anyway.
- *
- *  SHAPE SIZE AND SECOND-ROW VISIBILITY ARE ONE DIAL, pulling opposite
- *  ways: the sliver is `56 − 62 × scale`, so every pixel of cell costs
- *  a pixel of row two. It closes entirely at 0.90 — which is the
- *  one-row border again — and the cell falls below the covers' own
- *  register under ~0.70. 0.74 sits where both still read. Wanting
- *  bigger shapes AND more of row two means raising the band's HEIGHT,
- *  which is the one thing the original brief fixed (Malik, 2026-08-24).
- *
- *  Seed 45 is the covers' seed, and it is fixed forever: a short window
- *  onto a large-featured field is largely decided by its seed, so this
- *  number is part of the design, not an arbitrary default. */
-function bandSvg() {
-  const body = patternBody('quilt', {
-    w: 1600,
-    h: 56,
-    ink: TYPE,
-    pool: coverPool(GROUND, TYPE),
-    scale: 0.74,
-    seed: 45,
-    clear: null,
-    rate: 0.75,
-  });
-  return (
-    `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="56" viewBox="0 0 1600 56" preserveAspectRatio="xMidYMid slice" style="display:block;width:100%;height:56px">` +
-    `<rect width="1600" height="56" fill="${GROUND}"/>` +
-    body +
-    '</svg>'
-  );
-}
 
 function SocialChip({
   href,
@@ -472,7 +415,23 @@ export function Footer() {
         </div>
       </div>
 
-      <div aria-hidden='true' dangerouslySetInnerHTML={{ __html: bandSvg() }} />
+      {/* The band as a cached asset, not inline (React pass, 2026-09-08):
+          inline, its 47 KB of SVG sat in the HTML and again in the flight
+          payload of every page — half of a site page's bytes — for a
+          picture that is identical everywhere by design. /footer-band.svg
+          is the same recipe, prerendered once (lib/footerBand.ts,
+          app/footer-band.svg/route.ts) and in the offline precache.
+          object-cover is the SVG's own xMidYMid slice. */}
+      {/* eslint-disable-next-line @next/next/no-img-element -- a static SVG asset */}
+      <img
+        src='/footer-band.svg'
+        alt=''
+        aria-hidden='true'
+        width={1600}
+        height={56}
+        decoding='async'
+        className='block h-14 w-full object-cover'
+      />
     </footer>
   );
 }

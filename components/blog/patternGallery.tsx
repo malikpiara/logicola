@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { PRESETS } from '@/components/blog/colourStudio';
+import { PRESETS } from '@/components/blog/presets';
 import { LAB_PATTERNS } from '@/components/blog/labFields';
 import { PixelTip } from '@/components/ui/pixelTip';
 

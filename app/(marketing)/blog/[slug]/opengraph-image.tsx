@@ -100,10 +100,20 @@ function titleSize(title: string): number {
   return title.length <= 28 ? 84 : 68;
 }
 
-async function font(file: string): Promise<ArrayBuffer> {
-  const buf = await readFile(path.join(process.cwd(), 'assets', 'og', file));
-  return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
-}
+/** Read once per instance, not per request, and the band rendered once:
+ *  both depend on nothing the request carries (server-hoist-static-io,
+ *  React pass 2026-09-08). Literal paths keep output tracing to the two
+ *  files rather than the directory. */
+const toArrayBuffer = (buf: Buffer): ArrayBuffer =>
+  buf.buffer.slice(
+    buf.byteOffset,
+    buf.byteOffset + buf.byteLength
+  ) as ArrayBuffer;
+const FONTS = Promise.all([
+  readFile(path.join(process.cwd(), 'assets/og/RobotoFlex-Display.ttf')),
+  readFile(path.join(process.cwd(), 'assets/og/IBMPlexMono-Medium.ttf')),
+]).then((bufs) => bufs.map(toArrayBuffer) as [ArrayBuffer, ArrayBuffer]);
+const FIELD = `data:image/svg+xml;base64,${Buffer.from(fieldSvg()).toString('base64')}`;
 
 export function generateStaticParams() {
   return publishedPosts.map((post) => ({ slug: post.slug }));
@@ -140,11 +150,7 @@ export default async function OpengraphImage({
   const meta = post
     ? `${formatDate(post.date)} · logicola.org`
     : 'logicola.org';
-  const [display, mono] = await Promise.all([
-    font('RobotoFlex-Display.ttf'),
-    font('IBMPlexMono-Medium.ttf'),
-  ]);
-  const field = `data:image/svg+xml;base64,${Buffer.from(fieldSvg()).toString('base64')}`;
+  const [display, mono] = await FONTS;
   const fontSize = titleSize(title);
 
   return new ImageResponse(
@@ -158,7 +164,7 @@ export default async function OpengraphImage({
       }}
     >
       <img
-        src={field}
+        src={FIELD}
         width={W}
         height={H}
         alt=''

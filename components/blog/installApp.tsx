@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { captureAnalyticsEvent } from '@/lib/analytics';
 import { installTarget, type InstallTarget } from '@/lib/installTarget';
-import { FOCUS_GAP, FOCUS_W } from '@/lib/pixel';
+import { FOCUS_GAP, FOCUS_W, focusR, ringBand, spriteClip } from '@/lib/pixel';
 
 /**
  * The install island (Malik, 2026-09-05): the release post's
@@ -23,17 +23,22 @@ import { FOCUS_GAP, FOCUS_W } from '@/lib/pixel';
  *
  * The prompt event is stashed by the head script in app/layout.tsx
  * (it fires before hydration); this component reads the stash and
- * listens for the announcement. Colours and clips arrive as props from
- * the server page, the newsletter form's pattern — the marketing theme
- * is server-only.
+ * listens for the announcement. Colours arrive as props from the server
+ * page, the newsletter form's pattern — the marketing theme is
+ * server-only. The clips do not: lib/pixel is in this chunk already,
+ * and 2.6 KB of clip-path text has no business in the flight payload
+ * (React pass, 2026-09-08).
  */
 export interface InstallAppTheme {
   buttonBg: string;
   buttonFg: string;
   ink: string;
-  spriteClip: string;
-  ringClip: string;
 }
+
+/** The button's silhouette and, 2px off it, its focus band — the option
+ *  pills' own (components/option.tsx). */
+const SPRITE_CLIP = spriteClip(0);
+const RING_CLIP = ringBand('sprite', FOCUS_W, focusR(24));
 
 type Phase = 'idle' | 'steps' | 'prompting' | 'accepted';
 
@@ -136,7 +141,7 @@ export function InstallApp({ theme }: { theme: InstallAppTheme }) {
         className='ia-ring'
         style={
           {
-            '--ia-ring-clip': theme.ringClip,
+            '--ia-ring-clip': RING_CLIP,
             '--ia-ring-inset': RING_INSET,
           } as React.CSSProperties
         }
@@ -147,7 +152,7 @@ export function InstallApp({ theme }: { theme: InstallAppTheme }) {
           style={{
             background: theme.buttonBg,
             color: theme.buttonFg,
-            clipPath: theme.spriteClip,
+            clipPath: SPRITE_CLIP,
           }}
           onClick={onClick}
           disabled={target === null || phase === 'prompting'}

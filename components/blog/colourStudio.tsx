@@ -23,6 +23,7 @@ import {
   type Suggestion,
 } from '@/lib/stimulation';
 import { perceptualDist } from '@/lib/patterns';
+import { PRESETS, PATTERNS } from '@/components/blog/presets';
 
 /**
  * The mixer (Malik, 2026-08-29; plane form 2026-08-30). The native colour
@@ -414,67 +415,6 @@ function Mixer({
  *   <div data-island="colour-studio"></div>
  */
 
-// `subject` names the set for the chips' tooltips (2026-09-02): the
-// set-palettes island that used to spell the names out was cut as a
-// duplicate of this studio, so the names ride on the letters here.
-export const PRESETS = [
-  {
-    key: 'A',
-    subject: 'Syllogistic',
-    surface: '#FFABC6',
-    ink: '#4A1040',
-    accent: '#674900',
-  },
-  {
-    key: 'C',
-    subject: 'Propositional',
-    surface: '#E7F099',
-    ink: '#02302C',
-    accent: '#BD00AD',
-  },
-  {
-    key: 'J',
-    subject: 'Modal',
-    surface: '#E6ACF4',
-    ink: '#1C3601',
-    accent: '#674900',
-  },
-  {
-    key: 'L',
-    subject: 'Deontic',
-    surface: '#CFF6DD',
-    ink: '#3F0167',
-    accent: '#BD00AD',
-  },
-  {
-    key: 'N',
-    subject: 'Belief',
-    surface: '#9EDAFF',
-    ink: '#4A1040',
-    accent: '#8D0381',
-  },
-  {
-    key: 'Q',
-    subject: 'Definitions',
-    surface: '#D9CCF9',
-    ink: '#3E1060',
-    accent: '#745400',
-  },
-  {
-    key: 'R',
-    subject: 'Fallacies',
-    surface: '#E4BDF7',
-    ink: '#751100',
-    accent: '#824616',
-  },
-] as const;
-
-const PATTERNS: { key: QuizPatternKind; label: string }[] = [
-  { key: 'camo', label: 'Camo' },
-  { key: 'camo-giant', label: 'Camo · giant' },
-  { key: 'quilt', label: 'Quilt' },
-];
-
 // The mixer panel opens beside the wells so the stage it repaints stays
 // visible — but only where a 272px panel fits beside them. Radix flips
 // side only to the opposite side and shifts only along the align axis,
@@ -517,15 +457,10 @@ export function ColourStudio() {
   const tweenTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined
   );
-  const discreteRef = useRef(false);
   const discrete = () => {
-    discreteRef.current = true;
     setTweening(true);
     clearTimeout(tweenTimer.current);
-    tweenTimer.current = setTimeout(() => {
-      discreteRef.current = false;
-      setTweening(false);
-    }, 220);
+    tweenTimer.current = setTimeout(() => setTweening(false), 220);
   };
 
   /**
@@ -535,24 +470,33 @@ export function ColourStudio() {
    * hard-swap, as they always did.
    */
   const layerKey = `${pattern}-${surface}-${ink}`;
-  const [prevLayer, setPrevLayer] = useState<{
+  type Layer = {
     key: string;
     kind: QuizPatternKind;
     surface: string;
     ink: string;
-  } | null>(null);
-  const lastLayer = useRef({ key: layerKey, kind: pattern, surface, ink });
+  };
+  // Derive-during-render, the gallery's own recipe (React pass,
+  // 2026-09-08): the effect version cost one extra commit per discrete
+  // change. `tweening` is set in the same event as the colour change,
+  // so the render that sees the new layerKey also sees the flag; a
+  // ref would say the same but may not be read during render.
+  const [shownLayer, setShownLayer] = useState<Layer>({
+    key: layerKey,
+    kind: pattern,
+    surface,
+    ink,
+  });
+  const [prevLayer, setPrevLayer] = useState<Layer | null>(null);
+  if (shownLayer.key !== layerKey) {
+    setPrevLayer(tweening ? shownLayer : null);
+    setShownLayer({ key: layerKey, kind: pattern, surface, ink });
+  }
   useEffect(() => {
-    if (lastLayer.current.key === layerKey) return;
-    if (discreteRef.current) {
-      setPrevLayer(lastLayer.current);
-      const t = setTimeout(() => setPrevLayer(null), 240);
-      lastLayer.current = { key: layerKey, kind: pattern, surface, ink };
-      return () => clearTimeout(t);
-    }
-    lastLayer.current = { key: layerKey, kind: pattern, surface, ink };
-    setPrevLayer(null);
-  }, [layerKey, pattern, surface, ink]);
+    if (!prevLayer) return;
+    const t = setTimeout(() => setPrevLayer(null), 240);
+    return () => clearTimeout(t);
+  }, [prevLayer]);
 
   const m = useMemo(() => stimulationOf(surface, ink), [surface, ink]);
   const ratio = contrastRatio(surface, ink);

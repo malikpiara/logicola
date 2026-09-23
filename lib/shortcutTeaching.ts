@@ -9,7 +9,14 @@
  */
 const KEY = 'lc-shortcuts-used';
 
+// Read once, then remembered: every Option asked storage at mount — 18
+// synchronous reads per Set R question — for a flag only this module
+// changes. On the server the read throws and the cache holds false,
+// which is the right answer there (React pass, 2026-09-08).
+let cached: boolean | null = null;
+
 export function markShortcutsUsed(): void {
+  cached = true;
   try {
     localStorage.setItem(KEY, '1');
   } catch {
@@ -18,9 +25,12 @@ export function markShortcutsUsed(): void {
 }
 
 export function shortcutsUsed(): boolean {
-  try {
-    return localStorage.getItem(KEY) === '1';
-  } catch {
-    return false;
+  if (cached === null) {
+    try {
+      cached = localStorage.getItem(KEY) === '1';
+    } catch {
+      cached = false;
+    }
   }
+  return cached;
 }

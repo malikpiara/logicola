@@ -57,6 +57,9 @@ const STATIC_URLS = [
   '/icon-512.png',
   '/icon-192-maskable.png',
   '/icon-512-maskable.png',
+  // The footer band (app/footer-band.svg/route.ts): every precached
+  // page references it, so the precache carries it (2026-09-08).
+  '/footer-band.svg',
 ];
 
 async function readJson(filePath) {
