@@ -63,6 +63,13 @@ const posts = defineCollection({
     // seconds, and must end on exactly `cover`, which stays the static
     // frame and the rich-results image (Google wants a raster).
     coverMotion: z.string().optional(),
+    // The link card shows `cover` instead of the headline card (Malik,
+    // 2026-09-24, for the Set R post: "I want the social media preview
+    // to be the image we use for the blog"). Opt-in per post: the card
+    // is a centred 1.91:1 crop of the cover, so only a cover whose
+    // subject sits inside that window should set it. Set L's headline
+    // card (opengraph-image.tsx) stays the default.
+    socialCover: z.boolean().default(false),
     // The raw markdown body (explicit per content-collections >= 0.15).
     content: z.string(),
   }),

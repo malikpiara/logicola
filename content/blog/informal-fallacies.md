@@ -5,6 +5,7 @@ date: '2026-09-23'
 category: 'product'
 cover: '/blog/informal-fallacies/cover.png'
 coverMotion: '/blog/informal-fallacies/cover.svg'
+socialCover: true
 draft: false
 ---
 
