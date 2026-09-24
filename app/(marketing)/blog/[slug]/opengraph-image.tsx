@@ -115,6 +115,31 @@ const FONTS = Promise.all([
 ]).then((bufs) => bufs.map(toArrayBuffer) as [ArrayBuffer, ArrayBuffer]);
 const FIELD = `data:image/svg+xml;base64,${Buffer.from(fieldSvg()).toString('base64')}`;
 
+/**
+ * The cover as the card (Malik, 2026-09-24, for the Set R post). The
+ * covers are 3:1 with the subject centred on a flat ground, so a centred
+ * 1.91:1 window keeps the whole subject and crops only ground; Satori's
+ * object-fit does the crop. Read per request, not hoisted: it depends on
+ * the slug, and the PNG under public/ is the same bytes the blog card
+ * and the rich-results image use, so the three previews agree.
+ */
+async function coverCard(cover: string) {
+  const png = await readFile(path.join(process.cwd(), 'public', cover));
+  const src = `data:image/png;base64,${png.toString('base64')}`;
+  return new ImageResponse(
+    <div style={{ width: W, height: H, display: 'flex' }}>
+      <img
+        src={src}
+        width={W}
+        height={H}
+        alt=''
+        style={{ width: W, height: H, objectFit: 'cover' }}
+      />
+    </div>,
+    size
+  );
+}
+
 export function generateStaticParams() {
   return publishedPosts.map((post) => ({ slug: post.slug }));
 }
@@ -146,6 +171,7 @@ export default async function OpengraphImage({
 }) {
   const { slug } = await params;
   const post = publishedPosts.find((candidate) => candidate.slug === slug);
+  if (post?.socialCover && post.cover) return coverCard(post.cover);
   const title = post?.title ?? 'LogiCola Blog';
   const meta = post
     ? `${formatDate(post.date)} · logicola.org`
