@@ -37,6 +37,12 @@
   // were. public/_headers marks every workers.dev host noindex.
   "workers_dev": true,
   "preview_urls": true,
+  // Workers Builds runs `npx wrangler preview` for every non-main branch,
+  // and it refuses to run without this block (the first build failed on
+  // exactly that, 2026-09-24). Empty on purpose: a Preview inherits
+  // nothing from production — no route, no secrets — so its newsletter
+  // answers 503 and branch testing can't subscribe anyone.
+  "previews": {},
   // Workers Logs: where newsletter failures (console.error) show up.
   "observability": {
     "enabled": true,
