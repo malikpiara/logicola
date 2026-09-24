@@ -42,5 +42,6 @@ yarn-error.log*
 next-env.d.ts
 
 
-# cloudflare (wrangler dev state)
+# cloudflare (wrangler dev state, and local Worker secrets)
 .wrangler/
+.dev.vars*

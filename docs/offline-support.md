@@ -22,8 +22,11 @@ shells — see "What broke before" below.
 
 - `content/quiz-catalog.json` lists the published quizzes.
 - `pnpm build` (postbuild) runs
-  `scripts/generate-offline-manifest.mjs`, which emits
-  `public/offline-manifest.json`. The URL set is the union of:
+  `scripts/generate-offline-manifest.mjs`, which writes
+  `out/offline-manifest.json` — straight into the static export, since
+  `next build` has already copied `public/` into `out/` by then
+  (2026-09-24; it was `public/offline-manifest.json` on Vercel). The
+  URL set is the union of:
   - static URLs and quiz routes from the catalog,
   - the quiz route's entry JS/CSS (build + RSC manifests),
   - **dynamic-import chunks** from the quiz page's
@@ -49,8 +52,18 @@ shells — see "What broke before" below.
   analytics super properties.
 
 Current payload: ~2 MB of static assets + the prerendered quiz pages
-(114→74 URLs after the woff2 trim; see the manifest for the live
-number).
+(114→74 URLs after the woff2 trim; 115 since every emitted chunk joined
+on 2026-08-25 — 13 quiz pages, 92 `/_next/` assets, the shell and its
+icons; see the manifest for the live number).
+
+What the precache costs to serve: on Cloudflare (since 2026-09-24)
+every one of those fetches is a static-asset request — free and
+unmetered, and the Worker never runs. On Vercel each was a metered
+edge request, ~115 per new visitor, and by the log sample taken at the
+time the precache was the largest share of the Hobby plan's
+edge-request overage (`docs/deployment.md`).
+Precaching every quiz is a product choice that costs nothing at the
+host now; keep it in mind if the site ever moves to a metered host.
 
 ## What broke before (2026-08-15)
 
@@ -70,7 +83,8 @@ apply to service worker fetches).
 
 1. Add the quiz content.
 2. Add the published route to `content/quiz-catalog.json`.
-3. Run `pnpm build`.
+3. Run `pnpm build`, then `pnpm test` — with a build present,
+   `scripts/offlineManifest.test.ts` checks the manifest against it.
 4. Test the route offline per `docs/release-checks.md` — including
    Start Quiz, not just the start screen.
 

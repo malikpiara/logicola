@@ -19,6 +19,11 @@ hostnames). Every table below is filtered to
 `properties.$host = 'logicola.org'`. Any query that omits that filter
 overstates traffic by ~25% and book clicks by ~15%.
 
+Since the move to Cloudflare (2026-09-24), previews and the Worker's
+own URL are `*.upfra-me.workers.dev` hosts instead of Vercel ones, and
+a local production run (`pnpm start`) is `localhost:3000`. The
+`logicola.org` filter excludes all of them, same as before.
+
 **2. Instrumentation landed in stages, so months are not comparable.**
 Event first-seen dates:
 

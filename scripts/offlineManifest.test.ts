@@ -23,7 +23,10 @@ const projectRoot = path.resolve(
   '..'
 );
 const chunksDir = path.join(projectRoot, '.next', 'static', 'chunks');
-const manifestPath = path.join(projectRoot, 'public', 'offline-manifest.json');
+// In the static export since the move to Cloudflare (2026-09-24): the
+// generator writes the manifest into out/. Pointed at public/, this
+// suite skipped itself silently — no manifest there any more.
+const manifestPath = path.join(projectRoot, 'out', 'offline-manifest.json');
 
 const hasBuild = existsSync(chunksDir) && existsSync(manifestPath);
 
