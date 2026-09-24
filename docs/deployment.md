@@ -135,9 +135,12 @@ your machine (wrangler is logged in to the "Malik" account).
 | `LOOPS_MAILING_LIST_ID`    | Worker secret, optional                                      | `worker/index.ts`                     | Not set as of 2026-09-24, so signups become subscribed contacts without a list. |
 
 Secrets survive deploys. `wrangler secret list` shows names, never
-values. Previews keep their own secrets (`wrangler preview secret`); a
-preview without `LOOPS_API_KEY` answers 503 on the newsletter, which
-keeps branch testing from subscribing anyone.
+values. Previews inherit nothing from production (no route, no secrets;
+they keep their own, `wrangler preview secret`), so a preview's newsletter
+answers 503, which keeps branch testing from subscribing anyone. The
+empty `previews` block in `wrangler.jsonc` is required: without it
+`wrangler preview` refuses to run, which is how the first branch build
+failed.
 
 ### Local development
 
