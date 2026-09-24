@@ -19,6 +19,14 @@
     "html_handling": "auto-trailing-slash",
     "run_worker_first": ["/api/*"],
   },
+  // A route, not a custom domain (Malik, 2026-09-24): the Worker answers
+  // logicola.org in front of the zone's old DNS records, which still
+  // point at Vercel. Removing this route (here, or under Workers Routes
+  // in the dashboard) sends traffic straight back to Vercel. Once
+  // Cloudflare has proven itself, a custom domain can replace both.
+  // www.logicola.org is left to a zone Redirect Rule (www → apex): a
+  // route there would serve the site's assets on www without redirecting.
+  "routes": [{ "pattern": "logicola.org/*", "zone_name": "logicola.org" }],
   // Workers Logs: where newsletter failures (console.error) show up.
   "observability": {
     "enabled": true,
