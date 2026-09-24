@@ -44,9 +44,20 @@ import { patternBody } from '@/lib/patterns';
  * OFL variable font; licence beside it). The mono is IBM Plex Mono
  * Medium (OFL): the site's `ui-monospace` is a system face Satori
  * cannot see.
+ *
+ * A PLAIN ROUTE, NOT THE opengraph-image CONVENTION (2026-09-24, the
+ * move to Cloudflare). This was opengraph-image.tsx with
+ * generateImageMetadata, for the per-post alt text. That combination
+ * never prerendered: Next's image-metadata wrapper replaces the file's
+ * generateStaticParams with its own, which fills only the image id and
+ * never `slug`, so on Vercel every card rendered on demand and each
+ * expiry was an ISR write (~55 KB, 7 write units) — one of the sources
+ * that put the Hobby plan over its ISR-write limit. A static export
+ * refuses it outright. As a route, generateStaticParams below is the one
+ * that runs: one card.png per post, written at build. The alt text moved
+ * to the post page's generateMetadata, next to the og:image it describes.
  */
-export const size = { width: 1200, height: 630 };
-export const contentType = 'image/png';
+const size = { width: 1200, height: 630 };
 
 const W = size.width;
 const H = size.height;
@@ -128,6 +139,7 @@ async function coverCard(cover: string) {
   const src = `data:image/png;base64,${png.toString('base64')}`;
   return new ImageResponse(
     <div style={{ width: W, height: H, display: 'flex' }}>
+      {/* eslint-disable-next-line @next/next/no-img-element -- Satori takes <img> only */}
       <img
         src={src}
         width={W}
@@ -140,35 +152,17 @@ async function coverCard(cover: string) {
   );
 }
 
+export const dynamic = 'force-static';
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return publishedPosts.map((post) => ({ slug: post.slug }));
 }
 
-/** One image per post, with the post's own alt text (the static `alt`
- *  export can only say "LogiCola blog post" for every post). */
-export async function generateImageMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const post = publishedPosts.find((candidate) => candidate.slug === slug);
-  return [
-    {
-      id: 'card',
-      alt: post ? `${post.title} — LogiCola blog` : 'LogiCola blog',
-      size,
-      contentType,
-    },
-  ];
-}
-
-export default async function OpengraphImage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-  id: string;
-}) {
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ slug: string }> }
+) {
   const { slug } = await params;
   const post = publishedPosts.find((candidate) => candidate.slug === slug);
   if (post?.socialCover && post.cover) return coverCard(post.cover);
@@ -189,6 +183,7 @@ export default async function OpengraphImage({
         backgroundColor: PLATE,
       }}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element -- Satori takes <img> only */}
       <img
         src={FIELD}
         width={W}

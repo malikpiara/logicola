@@ -1,6 +1,10 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/site';
 
+// The static export needs every route handler, metadata ones included,
+// declared static (2026-09-24).
+export const dynamic = 'force-static';
+
 /**
  * Open to every crawler, including the AI ones (GPTBot, ClaudeBot,
  * PerplexityBot, Google-Extended, CCBot).

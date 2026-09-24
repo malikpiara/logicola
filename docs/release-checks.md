@@ -21,13 +21,15 @@ Verify these routes load and behave correctly:
 
 ## Offline Check
 
-In a production build (`pnpm build && pnpm exec next start`):
+In a production build (`pnpm build && pnpm start` — `wrangler dev`
+serving out/ with production's asset routing, since the 2026-09-24
+move to Cloudflare):
 
 1. In a **fresh browser profile** (or after Clear site data), load `/`
    while online and wait for the service worker to finish installing —
    DevTools → Application → Cache Storage should show the
    `logicola-offline-*` cache with the URL count from the build's
-   `public/offline-manifest.json`.
+   `out/offline-manifest.json`.
 2. Go offline by **stopping the server** (or airplane mode on a
    device). Do NOT use the DevTools "Offline" throttle for this check:
    network emulation is per-target and does not apply to the service

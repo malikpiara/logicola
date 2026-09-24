@@ -1,0 +1,26 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // LogiCola on Cloudflare Workers since 2026-09-24 (moved from Vercel,
+  // whose Hobby limits the site had outgrown). The site is the Next
+  // static export in out/ (next.config.mjs `output: 'export'`), served
+  // as static assets: those requests never run the Worker and are not
+  // metered. worker/index.ts runs only for /api/* — the newsletter.
+  "name": "logicola",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-09-24",
+  "assets": {
+    "directory": "./out",
+    "binding": "ASSETS",
+    // Unknown paths get the export's 404.html with a 404 status, without
+    // invoking the Worker (bots probing for backups included).
+    "not_found_handling": "404-page",
+    // /blog serves blog.html and /blog/ redirects to /blog, matching
+    // Next's default (trailingSlash: false) on Vercel.
+    "html_handling": "auto-trailing-slash",
+    "run_worker_first": ["/api/*"],
+  },
+  // Workers Logs: where newsletter failures (console.error) show up.
+  "observability": {
+    "enabled": true,
+  },
+}

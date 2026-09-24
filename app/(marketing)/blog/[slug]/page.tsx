@@ -123,6 +123,18 @@ export async function generateMetadata({
       url: post.url,
       publishedTime: post.date,
       authors: [post.author],
+      // The link card, with the post's own alt text: card.png/route.tsx
+      // renders the image; its alt lives here since the card stopped
+      // being an opengraph-image file (2026-09-24).
+      images: [
+        {
+          url: `${post.url}/card.png`,
+          width: 1200,
+          height: 630,
+          type: 'image/png',
+          alt: `${post.title} — LogiCola blog`,
+        },
+      ],
     },
     twitter: { card: 'summary_large_image', site: '@LogicolaThree' },
   };
@@ -149,7 +161,7 @@ export default async function BlogPostPage({ params }: PostPageProps) {
     datePublished: post.date,
     dateModified: post.date,
     // The cover doubles as the article's image for rich results; the
-    // link card (opengraph-image.tsx) is a separate, headline-led surface.
+    // link card (card.png/route.tsx) is a separate, headline-led surface.
     ...(post.cover ? { image: `${SITE_URL}${post.cover}` } : {}),
     author: { '@type': 'Person', name: post.author },
     publisher: { '@type': 'Organization', name: 'LogiCola' },

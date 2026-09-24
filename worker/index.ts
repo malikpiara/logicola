@@ -1,5 +1,24 @@
-import { NextResponse } from 'next/server';
 import { z } from 'zod';
+
+/**
+ * The site's only server code (Cloudflare migration, 2026-09-24).
+ *
+ * Everything else on logicola.org is the static export in out/, served
+ * straight from Workers static assets without ever invoking this script
+ * (wrangler.jsonc: `run_worker_first` is `["/api/*"]`, and asset
+ * requests are free and unmetered). The newsletter endpoint moved here
+ * from app/api/newsletter/route.ts, because a static export cannot
+ * contain a route that answers POST.
+ *
+ * The status codes are the old route's, unchanged: the newsletter form
+ * reads `response.ok`, and its failure event reports `status_code`.
+ */
+
+interface Env {
+  ASSETS: { fetch(request: Request): Promise<Response> };
+  LOOPS_API_KEY?: string;
+  LOOPS_MAILING_LIST_ID?: string;
+}
 
 // Loops.so is the newsletter backend (decided 2026-08-24, replacing the
 // 2026-08-13 Supabase stopgap outright — the Supabase project had
@@ -12,32 +31,32 @@ const bodySchema = z.object({
   source: z.string().max(80).optional(),
 });
 
-export async function POST(request: Request) {
+async function subscribe(request: Request, env: Env): Promise<Response> {
   let payload: unknown;
   try {
     payload = await request.json();
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400 });
+    return Response.json({ error: 'Invalid JSON.' }, { status: 400 });
   }
 
   const parsed = bodySchema.safeParse(payload);
   if (!parsed.success) {
-    return NextResponse.json(
+    return Response.json(
       { error: 'A valid email address is required.' },
       { status: 400 }
     );
   }
 
-  const apiKey = process.env.LOOPS_API_KEY;
+  const apiKey = env.LOOPS_API_KEY;
   if (!apiKey) {
-    return NextResponse.json(
+    return Response.json(
       { error: 'Subscriptions are not configured.' },
       { status: 503 }
     );
   }
 
   const { email, source } = parsed.data;
-  const mailingListId = process.env.LOOPS_MAILING_LIST_ID;
+  const mailingListId = env.LOOPS_MAILING_LIST_ID;
 
   try {
     const response = await fetch(
@@ -62,7 +81,7 @@ export async function POST(request: Request) {
     // { success: false, message } (e.g. a stale LOOPS_MAILING_LIST_ID),
     // which response.ok alone would wave through — the form would show
     // success while every signup silently dropped. Reading it also
-    // releases the socket back to undici's pool.
+    // releases the connection.
     const body: unknown = await response.json().catch(() => null);
     const succeeded =
       response.ok && (body as { success?: boolean } | null)?.success !== false;
@@ -72,13 +91,33 @@ export async function POST(request: Request) {
       );
     }
   } catch (error) {
-    // The one place newsletter failures become visible server-side.
+    // The one place newsletter failures become visible server-side
+    // (Workers Logs; wrangler.jsonc turns observability on).
     console.error('newsletter subscribe failed:', error);
-    return NextResponse.json(
+    return Response.json(
       { error: 'Could not subscribe right now.' },
       { status: 500 }
     );
   }
 
-  return NextResponse.json({ ok: true });
+  return Response.json({ ok: true });
 }
+
+const worker = {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const { pathname } = new URL(request.url);
+
+    if (pathname === '/api/newsletter') {
+      if (request.method !== 'POST') {
+        return new Response(null, { status: 405, headers: { Allow: 'POST' } });
+      }
+      return subscribe(request, env);
+    }
+
+    // Any other /api/* path: hand back to the assets, which answer with
+    // the export's 404 page.
+    return env.ASSETS.fetch(request);
+  },
+};
+
+export default worker;

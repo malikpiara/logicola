@@ -1,0 +1,15 @@
+# Read by Cloudflare Workers static assets; never served as a file.
+# Moved here from next.config.mjs redirects(), which a static export
+# cannot run (2026-09-24). 308 is what Next's `permanent: true` sent.
+
+# Moved posts (2026-09-23). The Set R post was live at
+# /blog/set-r-informal-fallacies from the blog's launch until it was
+# unpublished on 2026-08-25, so the feed and the sitemap listed that
+# address. It returns at a shorter one; permanent, so old links and
+# any index entry follow it.
+/blog/set-r-informal-fallacies /blog/informal-fallacies 308
+
+# The blog link cards moved when they stopped being opengraph-image
+# files (2026-09-24). Social platforms cache the og:image URL they
+# scraped, so the old addresses follow to the new ones.
+/blog/:slug/opengraph-image-yqks0s/card /blog/:slug/card.png 308
