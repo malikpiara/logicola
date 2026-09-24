@@ -27,6 +27,12 @@
   // www.logicola.org is left to a zone Redirect Rule (www → apex): a
   // route there would serve the site's assets on www without redirecting.
   "routes": [{ "pattern": "logicola.org/*", "zone_name": "logicola.org" }],
+  // Wrangler turns both off once a route exists unless they are stated.
+  // Kept on: the workers.dev URL and per-version preview URLs are how a
+  // branch gets looked at before it reaches main, as Vercel previews
+  // were. public/_headers marks every workers.dev host noindex.
+  "workers_dev": true,
+  "preview_urls": true,
   // Workers Logs: where newsletter failures (console.error) show up.
   "observability": {
     "enabled": true,
