@@ -19,13 +19,17 @@
     "html_handling": "auto-trailing-slash",
     "run_worker_first": ["/api/*"],
   },
-  // A route, not a custom domain (Malik, 2026-09-24): the Worker answers
-  // logicola.org in front of the zone's old DNS records, which still
-  // point at Vercel. Removing this route (here, or under Workers Routes
-  // in the dashboard) sends traffic straight back to Vercel. Once
-  // Cloudflare has proven itself, a custom domain can replace both.
-  // www.logicola.org is left to a zone Redirect Rule (www → apex): a
-  // route there would serve the site's assets on www without redirecting.
+  // A route, not a custom domain (Malik, 2026-09-24). The Worker answers
+  // logicola.org/* in front of the zone's own proxied DNS record, which
+  // is an originless placeholder (A 192.0.2.0) since Vercel was retired
+  // the same day: requests never reach it. A custom domain was tried and
+  // refused — Cloudflare won't attach one while the hostname has a record
+  // it doesn't manage (code 100117), and deleting that record first opens
+  // a gap resolvers can cache for up to ~30 minutes. The route needs the
+  // proxied record to exist; don't delete it. There is no Vercel fallback
+  // any more — roll back with a Worker version (docs/deployment.md).
+  // www.logicola.org is a zone Redirect Rule (www → apex, 301), not a
+  // route here: a route would serve the site on www instead.
   "routes": [{ "pattern": "logicola.org/*", "zone_name": "logicola.org" }],
   // Wrangler turns both off once a route exists unless they are stated.
   // Kept on: the workers.dev URL and per-version preview URLs are how a
