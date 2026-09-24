@@ -1,0 +1,40 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // LogiCola on Cloudflare Workers since 2026-09-24 (moved from Vercel,
+  // whose Hobby limits the site had outgrown). The site is the Next
+  // static export in out/ (next.config.mjs `output: 'export'`), served
+  // as static assets: those requests never run the Worker and are not
+  // metered. worker/index.ts runs only for /api/* — the newsletter.
+  "name": "logicola",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-09-24",
+  "assets": {
+    "directory": "./out",
+    "binding": "ASSETS",
+    // Unknown paths get the export's 404.html with a 404 status, without
+    // invoking the Worker (bots probing for backups included).
+    "not_found_handling": "404-page",
+    // /blog serves blog.html and /blog/ redirects to /blog, matching
+    // Next's default (trailingSlash: false) on Vercel.
+    "html_handling": "auto-trailing-slash",
+    "run_worker_first": ["/api/*"],
+  },
+  // A route, not a custom domain (Malik, 2026-09-24): the Worker answers
+  // logicola.org in front of the zone's old DNS records, which still
+  // point at Vercel. Removing this route (here, or under Workers Routes
+  // in the dashboard) sends traffic straight back to Vercel. Once
+  // Cloudflare has proven itself, a custom domain can replace both.
+  // www.logicola.org is left to a zone Redirect Rule (www → apex): a
+  // route there would serve the site's assets on www without redirecting.
+  "routes": [{ "pattern": "logicola.org/*", "zone_name": "logicola.org" }],
+  // Wrangler turns both off once a route exists unless they are stated.
+  // Kept on: the workers.dev URL and per-version preview URLs are how a
+  // branch gets looked at before it reaches main, as Vercel previews
+  // were. public/_headers marks every workers.dev host noindex.
+  "workers_dev": true,
+  "preview_urls": true,
+  // Workers Logs: where newsletter failures (console.error) show up.
+  "observability": {
+    "enabled": true,
+  },
+}

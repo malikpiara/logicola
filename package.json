@@ -11,7 +11,8 @@
     "dev": "next dev",
     "build": "next build",
     "postbuild": "node scripts/generate-offline-manifest.mjs",
-    "start": "next start",
+    "start": "wrangler dev --port 3000",
+    "cf:deploy": "wrangler deploy",
     "lint": "eslint .",
     "content:build": "content-collections build",
     "eslint": "eslint . --ext .ts,.tsx && tsc --noEmit",
@@ -78,6 +79,7 @@
     "typescript": "^6.0.3",
     "vite": "^8.1.4",
     "vitest": "^4.1.10",
+    "wrangler": "^4.138.0",
     "zod": "^4.4.3"
   },
   "pnpm": {

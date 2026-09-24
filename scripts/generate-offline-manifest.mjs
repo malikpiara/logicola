@@ -28,7 +28,12 @@ const QUIZ_CATALOG_PATH = path.join(
   'content',
   'quiz-catalog.json'
 );
-const OUTPUT_PATH = path.join(projectRoot, 'public', 'offline-manifest.json');
+// Straight into the static export (2026-09-24, the move to Cloudflare).
+// `next build` copies public/ into out/ BEFORE this postbuild runs, so a
+// manifest written to public/ would miss the deploy and the previous
+// build's copy would ship instead — a precache naming chunks that no
+// longer exist.
+const OUTPUT_PATH = path.join(projectRoot, 'out', 'offline-manifest.json');
 const QUIZ_MANIFEST_KEY = '/(quiz)/[...slugs]/page';
 const LOADABLE_MANIFEST_PATH = path.join(
   projectRoot,

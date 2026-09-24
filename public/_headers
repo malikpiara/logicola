@@ -1,0 +1,24 @@
+# Read by Cloudflare Workers static assets; never served as a file
+# (2026-09-24, the move from Vercel). Assets default to
+# `Cache-Control: public, max-age=0, must-revalidate` plus an ETag,
+# which is right for the HTML, sw.js and everything else that keeps its
+# URL across deploys.
+
+# Next's build output is content-hashed, so a URL never changes meaning:
+# cache it for a year, as Vercel did.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# The feeds were route handlers answering application/rss+xml. Exported,
+# they are plain .xml files, which would otherwise go out as
+# application/xml.
+/blog/feed.xml
+  Content-Type: application/rss+xml; charset=utf-8
+/release-notes/feed.xml
+  Content-Type: application/rss+xml; charset=utf-8
+
+# The workers.dev copies (the Worker's own URL and every preview) are
+# not the site; canonical tags already point at logicola.org, and this
+# keeps them out of the index outright, as Vercel did for its previews.
+https://:worker.:subdomain.workers.dev/*
+  X-Robots-Tag: noindex

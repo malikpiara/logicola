@@ -34,6 +34,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the app by modifying files in `app/`, `components/`, and
 `content/`.
 
+Copy `.env.example` to `.env.local` for analytics and the newsletter. Both are
+optional: without them the site runs, it just doesn't report or subscribe.
+
 ## Verification
 
 Run the core verification checks:
@@ -43,7 +46,29 @@ pnpm build
 pnpm test
 ```
 
-The production build also regenerates the offline cache manifest used by the service worker.
+`pnpm build` produces a static export in `out/` and writes the offline cache
+manifest used by the service worker into it. To run that build the way
+production serves it (on the Cloudflare Workers runtime, with the site's
+redirects, headers and 404 page), use:
+
+```bash
+pnpm start
+```
+
+The newsletter endpoint only exists in that mode: under `pnpm dev` the signup
+form shows its error state.
+
+## Deployment
+
+logicola.org is a static export served by
+[Cloudflare Workers](https://developers.cloudflare.com/workers/static-assets/).
+Pushes to `main` deploy through Workers Builds; other branches get a preview
+URL. The only server code is `worker/index.ts`, which handles newsletter
+signups. The site moved from Vercel on 2026-09-24.
+
+How deploys work, the rules a static export imposes, configuration, rollback,
+and retiring the old Vercel project are in
+[docs/deployment.md](docs/deployment.md).
 
 ## Offline Support
 
@@ -58,6 +83,8 @@ Technical details and maintenance notes are documented in
 - The offline service worker is intentionally scoped to published quizzes and the app shell they need.
 - For maintenance and release verification, see
   [docs/release-checks.md](docs/release-checks.md).
+- For deploys, configuration and rollback, see
+  [docs/deployment.md](docs/deployment.md).
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to load Roboto Flex.
 

@@ -3,6 +3,10 @@ import { quizCatalog } from '@/lib/quizCatalog';
 import { publishedPosts } from '@/lib/marketingContent';
 import { SITE_URL } from '@/lib/site';
 
+// The static export needs every route handler, metadata ones included,
+// declared static (2026-09-24).
+export const dynamic = 'force-static';
+
 /**
  * Every canonical, indexable URL on the site.
  *
