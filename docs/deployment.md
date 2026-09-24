@@ -6,8 +6,8 @@ Cloudflare Workers**. Every page, chunk, image and feed is a file in
 request is `worker/index.ts`, and only for `/api/*` (the newsletter).
 
 This is the runbook: how a deploy is shaped, the rules the static
-export imposes, how to ship, configure, verify and roll back, and how
-to retire the Vercel fallback. The move itself is PR #176.
+export imposes, and how to ship, configure, verify and roll back. The
+move itself is PR #176; Vercel was retired the same day.
 
 ## Why it moved
 
@@ -41,9 +41,11 @@ browser ──▶ Cloudflare (zone logicola.org, account "Malik")
                                          └─ anything else           → out/404.html, status 404
 ```
 
-- The zone's DNS records for `logicola.org` still point at Vercel. The
-  route answers first, so they are only reached if the route is removed
-  (see [Rollback](#rollback)).
+- `logicola.org`'s DNS record is an originless placeholder,
+  `A 192.0.2.0` (proxied). A route only runs for a hostname that has a
+  proxied record, so the record has to exist, but requests never reach
+  its address. **Don't delete it.** `www`'s record is there for the same
+  reason: the Redirect Rule needs something proxied to act on.
 - Mail on logicola.org is Cloudflare Email Routing (the MX records).
   The move didn't touch it.
 
@@ -95,7 +97,6 @@ fail `next build` loudly; rule 7 fails quietly.
 | `public/_redirects`                     | The moved Set R post; old link-card URLs → `card.png`                                                               |
 | `public/_headers`                       | Year-long cache on `/_next/static/*`, RSS content types, `noindex` on `*.workers.dev`                               |
 | `scripts/generate-offline-manifest.mjs` | Postbuild: writes `out/offline-manifest.json`                                                                       |
-| `vercel.json`                           | Vercel standby: `ignoreCommand: exit 0` skips every Vercel build                                                    |
 
 ## Deploying
 
@@ -155,13 +156,11 @@ keeps branch testing from subscribing anyone.
 ## Verify a deploy
 
 ```bash
-curl -sI https://logicola.org/ | grep -iE "^(HTTP|x-vercel-id|cache-control)"
+curl -sI https://logicola.org/ | grep -iE "^(HTTP|cache-control)"
 ```
 
-Expect a 200 and **no `x-vercel-id`**. That header means the request
-reached Vercel, so the route isn't applied. Right after a route change
-a few requests can still reach Vercel for up to a minute, which is
-propagation, so check again before worrying. What each path should do:
+Expect a 200. Right after a route change, give it up to a minute to
+propagate across Cloudflare before worrying. What each path should do:
 
 | Request                                         | Expected                                      |
 | ----------------------------------------------- | --------------------------------------------- |
@@ -181,44 +180,40 @@ as `newsletter subscribe failed:`.
 
 ## Rollback
 
-Two different problems have two different tools:
-
 - **A bad build.** Roll the Worker back to its previous version, either
   in the dashboard (logicola → Deployments) or with
-  `pnpm exec wrangler rollback`. The route stays; only the code and
-  assets change.
-- **Cloudflare itself is the problem.** Delete the `logicola.org/*`
-  route (logicola → Settings → Domains & Routes). Traffic goes straight
-  back to Vercel's frozen production deployment: `53eb88f`
-  (`dpl_86L5vi1kS8mavtKwEjzQBfcNmeAi`), which still has the newsletter
-  API. DNS doesn't change, so this takes seconds. Then remove the route
-  from `wrangler.jsonc`, or the next deploy puts it back.
+  `pnpm exec wrangler rollback`. Only the code and assets change; the
+  route stays.
+- **There is no second host.** Vercel was retired on 2026-09-24, so a
+  Cloudflare outage takes the site down with it. In an emergency, `out/`
+  is plain files that any static host can serve; only `/api/newsletter`
+  would need an equivalent. Point the zone's `logicola.org` record at
+  that host and delete the `logicola.org/*` route.
 
-The Vercel fallback only works while Vercel still serves the project.
-Its Hobby window was over its limits in September 2026 and should
-clear by mid-to-late October.
+## Vercel (retired 2026-09-24)
 
-## Vercel on standby, and retiring it
+Vercel ran LogiCola until 2026-09-24 and was retired the same day, once
+Cloudflare was serving:
 
-- `vercel.json` (`ignoreCommand: exit 0`) skips every Vercel build.
-  Pushes show as "Canceled" there, and nothing replaces the fallback
-  deployment.
-- The Vercel project still lists `logicola.org` and `www` as domains.
-  That's harmless while Cloudflare answers first.
+- The cutover used a Worker **route** in front of Vercel's DNS records,
+  so deleting the route was an instant way back while that mattered.
+- To retire Vercel, the `logicola.org` record was repointed in place to
+  the placeholder `192.0.2.0`, keeping the route, and `www`'s record was
+  repointed away from Vercel too. A custom domain was tried first and
+  refused: Cloudflare won't attach one while the hostname has a record
+  it doesn't manage (code 100117). Deleting the record first would work,
+  but it opens a gap that resolvers can cache as "no address" for up to
+  ~30 minutes.
+- `beta.logicola.org`, an old branch domain that only returned Vercel's
+  404, went with the Vercel project, and so did `vercel.json`.
 
-Once Cloudflare has proven itself (a few weeks), retire Vercel:
-
-1. **Route → custom domain.** Delete the zone's DNS records for
-   `logicola.org` that point at Vercel, then in `wrangler.jsonc` swap
-   the route for `{ "pattern": "logicola.org", "custom_domain": true }`
-   and deploy right away. Cloudflare creates the DNS record and
-   certificate. A custom domain can't be created while a CNAME record
-   exists on that hostname.
-2. **www.** Keep the Redirect Rule. Its DNS record only needs to be
-   proxied, so point it at the placeholder `AAAA 100::` instead of
-   Vercel.
-3. **Vercel.** Delete `vercel.json`, remove the domains from the Vercel
-   project, then delete the project.
+**If you want a custom domain later:** it's tidier (Cloudflare manages
+the record and the certificate) but gains nothing functional. Do it at a
+quiet hour: delete the `logicola.org` record, then straight away swap
+the route in `wrangler.jsonc` for
+`{ "pattern": "logicola.org", "custom_domain": true }` and deploy. Then
+delete the leftover route in the dashboard, because wrangler never
+deletes routes removed from its config.
 
 ## Costs and limits (Workers Free)
 
@@ -243,9 +238,14 @@ As checked in Cloudflare's docs on 2026-09-24:
   `out/`, so run `pnpm build` before trusting a green `pnpm test` on
   manifest changes.
 - A route (not a custom domain) needs a proxied DNS record for its
-  hostname. Here the old Vercel records play that part.
+  hostname. Here that's the placeholder `A 192.0.2.0` record.
 - Wrangler turns off the `workers.dev` URL and preview URLs once a
   route exists, unless `wrangler.jsonc` sets them. Both are set.
+- Cloudflare won't attach a Workers custom domain to a hostname that
+  has a DNS record it doesn't manage (code 100117), even though wrangler
+  offers to override conflicts; the record has to be deleted first.
+- Wrangler never deletes a route you remove from `wrangler.jsonc`. It
+  warns and leaves it, so delete routes in the dashboard.
 - `/blog/` redirects with a 307 on Workers (Vercel sent a 308). The
   difference doesn't matter.
 - The `cloudflare-api` MCP (mcp.cloudflare.com) can't sign in from the

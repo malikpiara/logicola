@@ -13,8 +13,7 @@ In that order: `scripts/offlineManifest.test.ts` reads the build in
 `out/` and skips itself when there is none.
 
 After a deploy, check the live site against the table in
-`docs/deployment.md` (Verify a deploy) — above all, no `x-vercel-id`
-on any response.
+`docs/deployment.md` (Verify a deploy).
 
 ## Manual Smoke Checks
 
