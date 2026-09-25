@@ -218,19 +218,27 @@ the route in `wrangler.jsonc` for
 delete the leftover route in the dashboard, because wrangler never
 deletes routes removed from its config.
 
-## Costs and limits (Workers Free)
+## Costs and limits (Workers Paid)
 
-As checked in Cloudflare's docs on 2026-09-24:
+The Cloudflare account is on **Workers Paid** ($5/month, shared by every
+Worker in the account, Cherrydock included). As checked in Cloudflare's docs on
+2026-09-24:
 
-- **Static asset requests: free and unlimited.** That covers every
-  page, chunk, image and the service worker's precache.
-- **Worker requests: 100,000 a day**, resetting at 00:00 UTC. Only
-  `/api/*` runs the Worker. On launch day that was 3 invocations, all
+- **Static asset requests: free and unlimited** on every plan. That covers
+  every page, chunk, image and the service worker's precache, which is almost
+  all of LogiCola's traffic.
+- **Worker requests: 10 million a month included**, then $0.30 per million.
+  Only `/api/*` runs the Worker. On launch day that was 3 invocations, all
   newsletter checks.
-- **10 ms of CPU per request.** The newsletter handler mostly waits on
-  Loops, and waiting isn't CPU time.
-- **20,000 files per version** (the export is about 480) and 25 MiB
-  per file.
+- **CPU: 30 million CPU-ms a month included**, and up to 30 s per request by
+  default. The newsletter handler mostly waits on Loops, and waiting isn't CPU
+  time.
+- **100,000 files per version** (the export is about 480) and 25 MiB per file.
+
+So LogiCola adds nothing to the bill: static requests are free, and the
+newsletter's Worker requests are a rounding error inside what's included.
+(Corrected 2026-09-24: this section first described Workers Free, whose 100,000
+requests a day and 10 ms CPU cap don't apply to this account.)
 
 ## Found during the move
 
